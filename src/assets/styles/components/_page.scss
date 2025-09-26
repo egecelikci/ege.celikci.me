@@ -1,0 +1,41 @@
+@use "../utils/mixins";
+
+.page {
+  &__header {
+    padding: 2rem 0;
+  }
+  &__subtitle {
+    @extend .lead !optional;
+  }
+  &__content {
+    @include mixins.container-narrow;
+    padding-bottom: 2rem;
+
+    &--fullwidth {
+      max-width: none;
+    }
+  }
+
+  @include mixins.mq(md) {
+    &__header {
+      padding: 4rem 0;
+      text-align: center;
+    }
+    &__title {
+      font-size: 5rem;
+      letter-spacing: -2px;
+    }
+    &__content {
+      padding-bottom: 4rem;
+    }
+  }
+
+  @include mixins.mq(lg) {
+    &__header {
+      padding: 5rem 0;
+    }
+    &__title {
+      font-size: 7rem;
+    }
+  }
+}

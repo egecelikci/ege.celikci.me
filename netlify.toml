@@ -1,0 +1,52 @@
+[build]
+    command = "npm run build"
+    publish = "dist"
+    functions = "functions"
+
+[[headers]]
+    for = "/*"
+    [headers.values]
+        X-Frame-Options = "DENY"
+        X-XSS-Protection = "1; mode=block"
+        X-Content-Type-Options = "nosniff"
+        Referrer-Policy= "no-referrer-when-downgrade"
+        Permissions-Policy = "interest-cohort=()"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    cache-control = "max-age=0,no-cache,no-store,must-revalidate"
+
+# Netlify subdomain
+[[redirects]]
+    from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app
+/*"
+    to = "https://ege.celikci.me/:splat"
+    status = 301
+    force = true
+
+[[redirects]]
+    from = "https://celikci.me/*"
+    to = "https://ege.celikci.me/:splat"
+    status = 301
+    force = true
+
+# Bots
+[[redirects]]
+    from = "/wp-login.php"
+    to = "https://www.fbi.gov"
+    status = 302
+    force = true
+
+# Favicon
+[[redirects]]
+    from = "/assets/images/touch/*"
+    to = "/assets/images/favicon/:splat"
+    status = 301
+    force = true
+
+# 404s
+[[redirects]]
+    from = "*"
+    to = "/404"
+    status = 404
