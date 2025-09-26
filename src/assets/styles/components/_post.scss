@@ -1,5 +1,4 @@
 @use "../utils/mixins";
-@use "../utils/variables";
 
 .post {
   &__header {
@@ -11,7 +10,7 @@
     align-items: center;
     font-size: 1rem;
     margin: 1rem 0;
-    color: var(variables.$text-color-offset);
+    color: var(--color-text-offset);
 
     @include mixins.mq(md) {
       justify-content: center;
@@ -20,7 +19,7 @@
   }
   &__canonical {
     margin: 1rem 0;
-    color: var(variables.$text-color-offset);
+    color: var(--color-text-offset);
   }
   &__tags {
     font-family: Georgia, Times, serif;
@@ -48,7 +47,7 @@
   }
   &__footer-info {
     margin: 1rem 0;
-    color: var(variables.$text-color-offset);
+    color: var(--color-text-offset);
     font-style: italic;
   }
   &__footer-incomplete {
@@ -80,10 +79,10 @@
   &__info {
     display: flex;
     align-items: center;
-    color: var(variables.$text-color-offset);
+    color: var(--color-text-offset);
 
     @include mixins.hover-focus {
-      color: var(variables.$text-color);
+      color: var(--color-text);
     }
 
     .icon {
