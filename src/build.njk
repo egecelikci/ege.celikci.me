@@ -1,0 +1,9 @@
+{# prettier-ignore-start #}
+---
+permalink: build.txt
+eleventyExcludeFromCollections: true
+---
+
+LAST BUILD: {{ build.timestamp | dateToISO }}
+ENV: {{ build.env }}
+{# prettier-ignore-end #}

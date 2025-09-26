@@ -1,0 +1,53 @@
+// @font-face {
+//     font-family: 'Noe Display';
+//     font-style: normal;
+//     font-display: swap;
+//     font-weight: 400;
+//     src: local('Noe Display'), local('NoeDisplay-Regular'),
+//         url('/assets/fonts/noe-display-regular.woff2') format('woff2'),
+//         url('/assets/fonts/noe-display-regular.woff') format('woff');
+// }
+
+@font-face {
+  font-family: "Josefin Sans", sans-serif;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  src:
+    url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
+    url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Josefin Sans Italic", sans-serif;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  src:
+    url("/assets/fonts/JosefinSans-Italic-VariableFont_wght.woff2")
+      format("woff2"),
+    url("/assets/fonts/JosefinSans-Italic-VariableFont_wght.woff")
+      format("woff");
+}
+
+@font-face {
+  font-family: "Josefin Sans", sans-serif;
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  src:
+    url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
+    url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Inconsolata", monospace;
+  font-style: normal;
+  font-display: swap;
+  font-variation-settings: "wdth" 100;
+  font-optical-sizing: auto;
+  src: url("/assets/fonts/Inconsolata.ttf") format("truetype");
+}

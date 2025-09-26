@@ -1,0 +1,18 @@
+@use "../utils/variables";
+
+.header {
+  padding: variables.$spacing-y 0;
+
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    color: var(variables.$text-color);
+    font-weight: 700;
+  }
+}
