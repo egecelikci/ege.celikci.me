@@ -22,9 +22,9 @@
       border-bottom: 1px solid currentColor;
 
       @include mixins.hover-focus {
-        color: variables.$brand-color-primary;
-        box-shadow: inset 0 -1.25em 0 0 var(variables.$brand-color-primary);
-        border-bottom-color: var(variables.$brand-color-primary);
+        color: #fff;
+        box-shadow: inset 0 -1.25em 0 0 var(--color-primary);
+        border-bottom-color: var(--color-primary);
         outline: none;
       }
     }
@@ -37,7 +37,7 @@
     max-width: 100%;
     height: auto;
     margin: 0 auto 2rem;
-    color: var(variables.$text-color-offset);
+    color: var(--color-text-offset);
     font-style: italic;
     text-align: center;
   }
@@ -132,7 +132,7 @@
   }
 
   mark {
-    color: var(variables.$text-color);
+    color: var(--color-text);
     background-color: var(--color-border);
   }
 
