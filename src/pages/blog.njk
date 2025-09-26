@@ -1,0 +1,19 @@
+---
+layout: base
+tags: nav
+title: blog
+eleventyNavigation:
+  key: blog
+  order: 2
+permalink: /blog/
+---
+
+<div class="container">
+  <header>
+    <h1>{{ title }}</h1>
+  </header>
+  <div class="page__content">
+    {%- set postlist = collections.posts -%}
+    {% include "postlist.njk" %}
+  </div>
+</div>

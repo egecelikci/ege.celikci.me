@@ -1,0 +1,15 @@
+/.yarn/**            linguist-vendored
+/.yarn/releases/*    binary
+/.yarn/plugins/**/*  binary
+/.pnp.*              binary linguist-generated
+src/assets/images/events/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+src/assets/images/events/**/*.png filter=lfs diff=lfs merge=lfs -text
+src/assets/images/gallery/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+src/assets/images/gallery/**/*.png filter=lfs diff=lfs merge=lfs -text
+src/assets/images/posters/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+src/assets/images/covers/**/*.webp filter=lfs diff=lfs merge=lfs -text
+src/assets/images/covers/**/*.png filter=lfs diff=lfs merge=lfs -text
+src/assets/images/**/*.{jpg filter=lfs diff=lfs merge=lfs -text
+png filter=lfs diff=lfs merge=lfs -text
+webp} filter=lfs diff=lfs merge=lfs -text
+src/_data/*.json !text !filter !merge !diff

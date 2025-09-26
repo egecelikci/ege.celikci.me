@@ -1,0 +1,40 @@
+// ---------------------------------
+// MASTER STYLESHEET INDEX
+// ---------------------------------
+
+//--------------------
+// UTILITIES
+//--------------------
+
+@use "utils/functions";
+@use "utils/variables";
+@use "utils/mixins";
+
+//--------------------
+// BASE MODULES
+// partials with global scope
+//--------------------
+
+@use "base/fonts";
+@use "base/normalize";
+@use "base/reboot";
+@use "base/layout";
+@use "base/typography";
+@use "base/focus";
+@use "base/utilities";
+@use "base/screenreader";
+@use "base/animation";
+@use "base/syntax";
+
+//--------------------
+// COMPONENTS
+// partials with local scope to a component
+//--------------------
+
+@use "components/footer";
+@use "components/header";
+@use "components/icon";
+@use "components/markdown";
+@use "components/nav";
+@use "components/page";
+@use "components/post";
