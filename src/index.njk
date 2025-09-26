@@ -4,11 +4,33 @@ eleventyNavigation:
   key: home
   order: 1
 permalink: /
-numberOfLatestPostsToShow: 3
 ---
 
 <div class="container">
   <header>
     <h1>home</h1>
   </header>
+  <div class="about">
+    <div class="about__header"></div>
+    <div class="about__content markdown">
+      <h2>where to find me?</h2>
+      <p>if you want or need to</p>
+      <ul class="about__social">
+        <li>
+          {% icon "music" %}<a href="{{ author.social.listenbrainz.url }}"
+            >ListenBrainz</a
+          >
+        </li>
+        <li>
+          {% icon "gamepad" %}<a href="{{ author.social.steam.url }}">Steam</a>
+        </li>
+        <li>
+          {% icon "mail" %}<a
+            href="mailto:{{ author.email | obfuscate | safe }}"
+            >Email</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
