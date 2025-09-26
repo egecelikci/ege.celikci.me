@@ -7,7 +7,7 @@
 a:focus,
 button:focus,
 input:focus {
-  outline: 5px solid variables.$brand-color-primary;
+  outline: 5px solid var(--color-primary);
 }
 
 // =================
