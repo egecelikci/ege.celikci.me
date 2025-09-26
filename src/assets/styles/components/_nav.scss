@@ -1,0 +1,35 @@
+@use "../utils/mixins";
+
+.nav {
+  &__menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+  }
+  &__link {
+    display: block;
+    padding: 0.5em 1em;
+  }
+  &__toggle {
+    @include mixins.button-reset;
+  }
+
+  @include mixins.mq-down(lg) {
+    &.is-open &__menu {
+      display: block;
+    }
+  }
+
+  @include mixins.mq(lg) {
+    &__toggle {
+      display: none;
+    }
+    &__menu {
+      display: flex;
+      position: static;
+      background-color: transparent;
+    }
+  }
+}
