@@ -19,8 +19,7 @@
 
 # Netlify subdomain
 [[redirects]]
-    from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app
-/*"
+    from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
     to = "https://ege.celikci.me/:splat"
     status = 301
     force = true
