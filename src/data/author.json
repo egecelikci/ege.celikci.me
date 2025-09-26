@@ -9,6 +9,14 @@
     "mastodon": {
       "name": "eg@ieji.de",
       "url": "https://ieji.de/@eg"
+    },
+    "listenbrainz": {
+      "name": "egecelikci",
+      "url": "https://listenbrainz.org/user/egecelikci"
+    },
+    "steam": {
+      "name": "egecelikci",
+      "url": "https://steamcommunity.com/id/egecelikci"
     }
   }
 }
