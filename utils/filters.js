@@ -121,5 +121,5 @@ export default {
 
   decodeBase64: function (string) {
     return atob(string);
-  }
+  },
 };
