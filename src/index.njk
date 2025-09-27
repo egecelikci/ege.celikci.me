@@ -1,5 +1,6 @@
 ---
 layout: base
+title: home
 eleventyNavigation:
   key: home
   order: 1
@@ -8,13 +9,10 @@ permalink: /
 
 <div class="container">
   <header>
-    <h1>home</h1>
+    <h1>{{ title }}</h1>
   </header>
-  <div class="about">
-    <div class="about__header"></div>
-    <div class="about__content markdown">
-      <h2>where to find me?</h2>
-      <p>if you want or need to</p>
+  <div class="about markdown">
+      <p>where to find me?</p>
       <ul class="about__social">
         <li>
           {% icon "music" %}<a href="{{ author.social.listenbrainz.url }}"
