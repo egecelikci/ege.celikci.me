@@ -26,13 +26,14 @@ const CONTENT_GLOBS = {
 };
 
 export default function (config) {
-  config.on("eleventy.before", async () => {
-    execSync(
-      "fish ./scripts/albumart.fish ./.cache/covers ./src/assets/images/covers",
-      { stdio: "inherit" },
-    );
-  });
-
+  if (!IS_PRODUCTION) {
+    config.on("eleventy.before", async () => {
+      execSync(
+        "fish ./scripts/albumart.fish ./.cache/covers ./src/assets/images/covers",
+        { stdio: "inherit" },
+      );
+    });
+  }
   // Plugins
   config.addPlugin(pluginRss);
   config.addPlugin(pluginNavigation);
