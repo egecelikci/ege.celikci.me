@@ -3,6 +3,9 @@
     publish = "dist"
     functions = "functions"
 
+[[plugins]]
+    package = "./plugins/cache"
+
 [[headers]]
     for = "/*"
     [headers.values]
