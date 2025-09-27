@@ -9307,6 +9307,7 @@ __metadata:
   resolution: "website@workspace:."
   dependencies:
     "@11ty/eleventy": "npm:^3.1.2"
+    "@11ty/eleventy-fetch": "npm:^5.1.0"
     "@11ty/eleventy-img": "npm:^6.0.4"
     "@11ty/eleventy-navigation": "npm:^1.0.4"
     "@11ty/eleventy-plugin-rss": "npm:^2.0.4"
