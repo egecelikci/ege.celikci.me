@@ -1,6 +1,8 @@
 // import dotenv from 'dotenv'
 // dotenv.config()
 
+import { execSync } from "child_process";
+
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
@@ -24,6 +26,13 @@ const CONTENT_GLOBS = {
 };
 
 export default function (config) {
+  config.on("eleventy.before", async () => {
+    execSync(
+      "fish ./scripts/albumart.fish ./.cache/covers ./src/assets/images/covers",
+      { stdio: "inherit" },
+    );
+  });
+
   // Plugins
   config.addPlugin(pluginRss);
   config.addPlugin(pluginNavigation);

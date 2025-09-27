@@ -1,0 +1,42 @@
+---
+layout: base
+tags: nav
+title: "favorite albums"
+eleventyNavigation:
+  key: music
+  order: 2
+permalink: /music/
+---
+
+<div class="container">
+  <header>
+    <h1>{{ title }}</h1>
+  </header>
+  <div class="album" class="markdown">
+    {% for album in music.albums %}
+      <div class="album__item">
+        <a
+          href="https://musicbrainz.org/release-group/{{ album.id }}"
+          title="{{ album.title }} by {{ album.artists }}"
+        >
+          <img
+            class="album__item__mono"
+            alt="{{ album.title }} by {{ album.artists }}"
+            src="{{ album.cover | url }}"
+          />
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <ul>
+    {% for album in music.albums %}
+      <li>
+        <a href="https://musicbrainz.org/release-group/{{ album.id }}"
+          >({{ album.firstReleaseDate | dateFromISO | readableDate("yyyy") }})
+          <cite>{{ album.title }}</cite> by {{ album.artists }}</a
+        >
+      </li>
+    {% endfor %}
+  </ul>
+</div>
