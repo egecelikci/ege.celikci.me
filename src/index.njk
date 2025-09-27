@@ -23,6 +23,9 @@ permalink: /
           {% icon "gamepad" %}<a href="{{ author.social.steam.url }}">Steam</a>
         </li>
         <li>
+          {% icon "message-circle-dashed" %}<a href="{{ author.social.signal.url | decodeBase64 }}">Signal</a>
+        </li>
+        <li>
           {% icon "mail" %}<a
             href="mailto:{{ author.email | obfuscate | safe }}"
             >Email</a
