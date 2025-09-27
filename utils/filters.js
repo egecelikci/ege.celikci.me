@@ -118,4 +118,8 @@ export default {
   findById: function (array, id) {
     return array.find((i) => i.id === id);
   },
+
+  decodeBase64: function (string) {
+    return atob(string);
+  }
 };
