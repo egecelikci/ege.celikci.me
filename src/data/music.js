@@ -7,27 +7,44 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const CACHE_DIR = ".cache/";
 
 const userId = "4d5dbf68-7a90-4166-b15a-16e92f549758";
-const critiqueUrl = `https://critiquebrainz.org/ws/1/review?user_id=${userId}`;
-
-const critiqueData = await Fetch(critiqueUrl, {
-  duration: "1d",
-  type: "json",
-  directory: CACHE_DIR,
-  fetchOptions: {
-    headers: {
-      "User-Agent": "eleventy-fetch/5.1.0 (https://ege.celikci.me)",
-    },
-  },
-});
-
-const favReviews = critiqueData.reviews.filter(
-  (r) => r.rating === 5 && r.entity_type === "release_group",
-);
-
-let albums = [];
+const limit = 50; // Number of entries to fetch per request
+let offset = 0; // Starting offset
+let critiqueData = [];
+let favReviews = [];
+let albums = []; // Ensure albums is defined here
 
 try {
-  await sleep(1100);
+  // Fetch reviews in batches until no more reviews are available
+  while (true) {
+    const critiqueUrl = `https://critiquebrainz.org/ws/1/review?user_id=${userId}&limit=${limit}&offset=${offset}`;
+
+    const batchData = await Fetch(critiqueUrl, {
+      duration: "1d",
+      type: "json",
+      directory: CACHE_DIR,
+      fetchOptions: {
+        headers: {
+          "User-Agent": "eleventy-fetch/5.1.0 (https://ege.celikci.me)",
+        },
+      },
+    });
+
+    // If no reviews are returned, break the loop
+    if (batchData.reviews.length === 0) {
+      break;
+    }
+
+    critiqueData = critiqueData.concat(batchData.reviews);
+    offset += limit; // Increment offset for the next batch
+    await sleep(1000); // Sleep for 1 second between requests
+  }
+
+  // Filter for favorite reviews
+  favReviews = critiqueData.filter(
+    (r) => r.rating === 5 && r.entity_type === "release_group",
+  );
+
+  await sleep(1000); // Initial sleep before processing reviews
   for (let review of favReviews) {
     const rgid = review.entity_id;
     const coverDir = path.join(CACHE_DIR, "covers/");
@@ -68,6 +85,7 @@ try {
         .join(", "),
       cover: `/assets/images/covers/${rgid}.png`,
     });
+    await sleep(1000); // Sleep for 1 second after each cover fetch
   }
 } catch (coverErr) {}
 
