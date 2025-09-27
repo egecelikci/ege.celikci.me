@@ -26,6 +26,7 @@ const CONTENT_GLOBS = {
 };
 
 export default function (config) {
+  /*
   if (!IS_PRODUCTION) {
     config.on("eleventy.before", async () => {
       execSync(
@@ -34,6 +35,7 @@ export default function (config) {
       );
     });
   }
+  */
   // Plugins
   config.addPlugin(pluginRss);
   config.addPlugin(pluginNavigation);
