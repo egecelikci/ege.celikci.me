@@ -14,7 +14,7 @@
       height: auto; // Maintain aspect ratio
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // Optional: add shadow for depth
     }
-    
+
     &__mono {
       mix-blend-mode: darken;
       @media (prefers-color-scheme: dark) {
@@ -34,7 +34,7 @@
     position: relative;
     font-family: monospace, monospace;
     color: var(--color-text);
-    
+
     & + li {
       margin-top: 0.5rem; // spacing between items
     }
