@@ -30,17 +30,9 @@
 
         {% if post.data.draft %}
           <span aria-hidden="true">&sdot;</span>
-          <span class="postlist__status">(Draft)</span>
+          <span class="postlist__status">(draft)</span>
         {% endif %}
       </div>
-
-      <p class="postlist__excerpt p-summary">
-        {% if post.data.description %}
-          {{ post.data.description }}
-        {% else %}
-          {{ post.templateContent | excerpt | striptags }}
-        {% endif %}
-      </p>
     </li>
   {% endfor %}
 </ol>

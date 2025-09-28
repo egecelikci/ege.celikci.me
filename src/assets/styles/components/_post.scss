@@ -1,15 +1,13 @@
 @use "../utils/mixins";
+@import "../components/page";
+@import "../base/typography";
 
 .post {
   &__header {
-    @extend .page__header !optional;
+    @extend .page__header;
   }
   &__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    font-size: 1rem;
-    margin: 1rem 0;
+    word-spacing: -0.5px;
     color: var(--color-text-offset);
 
     @include mixins.mq(md) {
@@ -22,9 +20,8 @@
     color: var(--color-text-offset);
   }
   &__tags {
-    font-family: Georgia, Times, serif;
-    text-transform: uppercase;
-    letter-spacing: 4px;
+    align-self: center;
+    font-style: italic;
   }
   &__status {
     font-weight: 700;
@@ -72,23 +69,8 @@
   }
 
   &__title {
-    @extend .smalltitle !optional;
+    @extend .smalltitle;
     margin-bottom: 1rem;
-  }
-
-  &__info {
-    display: flex;
-    align-items: center;
-    color: var(--color-text-offset);
-
-    @include mixins.hover-focus {
-      color: var(--color-text);
-    }
-
-    .icon {
-      display: block;
-      margin-right: 0.1875em;
-    }
   }
 
   @include mixins.mq(md) {
