@@ -1,5 +1,5 @@
 ---
-layout: base
+layout: page
 tags: nav
 title: "favorite albums"
 eleventyNavigation:
@@ -8,35 +8,29 @@ eleventyNavigation:
 permalink: /music/
 ---
 
-<div class="container">
-  <header>
-    <h1>{{ title }}</h1>
-  </header>
-  <div class="album" class="markdown">
+<div class="album">
+  {% for album in music.albums %}
+    <div class="album__item">
+      <a
+        href="https://listenbrainz.org/album/{{ album.id }}"
+        title="{{ album.title }} by {{ album.artists }}"
+      >
+        <img
+          class="album__item__mono"
+          alt="{{ album.title }} by {{ album.artists }}"
+          src="{{ album.cover | url }}"
+        />
+      </a>
+    </div>
+  {% endfor %}
+  <ul>
     {% for album in music.albums %}
-      <div class="album__item">
-        <a
-          href="https://listenbrainz.org/album/{{ album.id }}"
-          title="{{ album.title }} by {{ album.artists }}"
+      <li>
+        <a href="https://musicbrainz.org/release-group/{{ album.id }}"
+          >({{ album.firstReleaseDate | dateFromISO | readableDate("yyyy") }})
+          <cite>{{ album.title }}</cite> by {{ album.artists }}</a
         >
-          <img
-            class="album__item__mono"
-            alt="{{ album.title }} by {{ album.artists }}"
-            src="{{ album.cover | url }}"
-          />
-        </a>
-      </div>
+      </li>
     {% endfor %}
-    <ul>
-      {% for album in music.albums %}
-        <li>
-          {% icon "disc" %}<a
-            href="https://musicbrainz.org/release-group/{{ album.id }}"
-            >({{ album.firstReleaseDate | dateFromISO | readableDate("yyyy") }})
-            <cite>{{ album.title }}</cite> by {{ album.artists }}</a
-          >
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  </ul>
 </div>

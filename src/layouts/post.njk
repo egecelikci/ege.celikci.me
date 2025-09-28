@@ -10,7 +10,7 @@ layout: base
   itemtype="http://schema.org/BlogPosting"
   aria-labelledby="{{ title | slug }}-title"
 >
-  <header class="post__header container">
+  <header class="post__header">
     <h1
       id="{{ title | slug }}-title"
       class="post__title p-name title"
@@ -32,7 +32,7 @@ layout: base
         {% endif %}
         {% if draft %}
           <span aria-hidden="true">&middot;</span>
-          <span class="post__status">(Draft)</span>
+          <span class="post__status">(draft)</span>
         {% endif %}
       </p>
 
@@ -55,25 +55,6 @@ layout: base
           >{% icon "external" %} {{ canonicalSource }}</a
         >
       </p>
-    {% endif %}
-
-    {% if draft %}
-      <div class="post__disclaimer">
-        <div class="callout callout--info">
-          <span class="callout__icon">{% icon "info" %}</span>
-          <div class="callout__content">
-            <p>
-              <strong>This post is an unfinished draft.</strong>
-              It might become a post someday, or maybe I'll forget it forever.
-              It's just an idea for now. Want to read more about this? Or maybe
-              you want to take this topic and write something yourself?
-              <a href="mailto:hello@mxb.dev?subject={{ title|urlencode }}"
-                >Let me know.</a
-              >
-            </p>
-          </div>
-        </div>
-      </div>
     {% endif %}
   </header>
 
@@ -102,12 +83,10 @@ layout: base
       <p class="post__footer-incomplete" aria-hidden="true">&hellip;</p>
     {% else %}
       <p class="post__footer-info">
-        Published in [{{ tags | join(', ') }}] &middot;
-        {{ page.date | readableDate('dd LLL yyyy') }} <br />
         <a
           href="{{ site.repo }}/tree/main/{{ page.inputPath }}"
           title="suggest a change to this post by submitting a PR"
-          >Edit this Post</a
+          >edit this post</a
         >
       </p>
 
@@ -118,7 +97,7 @@ layout: base
         title="Follow {{ author.name }} on Mastodon"
         class="btn btn--mastodon"
       >
-        {% icon "mastodon" %} Follow @{{ author.social.mastodon.name }}
+        follow me on Mastodon
       </a>
     {% endif %}
   </div>

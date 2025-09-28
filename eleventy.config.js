@@ -21,7 +21,6 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CONTENT_GLOBS = {
   posts: "src/posts/**/*.md",
   drafts: "src/drafts/**/*.md",
-  notes: "src/notes/*.md",
   media: "*.jpg|*.png|*.gif|*.mp4|*.webp|*.webm",
 };
 
@@ -36,11 +35,13 @@ export default function (config) {
     });
   }
   */
+
   // Plugins
   config.addPlugin(pluginRss);
   config.addPlugin(pluginNavigation);
   config.addPlugin(pluginSyntaxHighlight);
   config.addPlugin(pluginPageAssets, {
+    mode: "directory",
     postsMatching: "src/posts/*/*.md",
     assetsMatching: CONTENT_GLOBS.media,
     silent: true,
@@ -90,11 +91,9 @@ export default function (config) {
   config.addLayoutAlias("page", "page.njk");
   config.addLayoutAlias("post", "post.njk");
   config.addLayoutAlias("draft", "draft.njk");
-  config.addLayoutAlias("note", "note.njk");
 
   // Pass-through files
   config.addPassthroughCopy("src/site.webmanifest");
-  config.addPassthroughCopy("src/robots.txt");
   config.addPassthroughCopy("src/assets/images");
   config.addPassthroughCopy("src/assets/fonts");
 
@@ -106,8 +105,7 @@ export default function (config) {
     return collection
       .getFilteredByGlob(CONTENT_GLOBS.posts)
       .filter((item) => item.data.permalink !== false)
-      .filter((item) => !(item.data.draft && IS_PRODUCTION))
-      .reverse();
+      .filter((item) => !(item.data.draft && IS_PRODUCTION));
   });
 
   // Collections: Drafts
@@ -115,19 +113,6 @@ export default function (config) {
     return collection
       .getFilteredByGlob(CONTENT_GLOBS.drafts)
       .filter((item) => item.data.permalink !== false);
-  });
-
-  // Collections: Notes
-  config.addCollection("notes", function (collection) {
-    return collection.getFilteredByGlob(CONTENT_GLOBS.notes).reverse();
-  });
-
-  // Collections: Featured Posts
-  config.addCollection("featured", function (collection) {
-    return collection
-      .getFilteredByGlob(CONTENT_GLOBS.posts)
-      .filter((item) => item.data.featured)
-      .sort((a, b) => b.date - a.date);
   });
 
   // Base Config
