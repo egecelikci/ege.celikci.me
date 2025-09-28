@@ -15,7 +15,7 @@ $breakpoints: (
 );
 
 $container-max-width: 1200px;
-$container-narrow-max-width: 41rem;
+$container-narrow-max-width: 100rem;
 
 // Z-Index Stack
 //
@@ -85,7 +85,7 @@ $animation-curve-default: $animation-curve-fast-out-slow-in;
 $spacing-x: 2rem;
 $spacing-y: 2rem;
 
-$box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+$box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 $box-shadow-elevated: 0 6px 12px 0 rgba(0, 0, 0, 0.1);
 
 $border-radius: 0.25rem;

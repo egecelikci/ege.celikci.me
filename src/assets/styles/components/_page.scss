@@ -4,9 +4,6 @@
   &__header {
     padding: 2rem 0;
   }
-  &__subtitle {
-    @extend .lead !optional;
-  }
   &__content {
     @include mixins.container-narrow;
     padding-bottom: 2rem;

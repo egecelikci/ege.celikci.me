@@ -1,18 +1,20 @@
+@use "../utils/variables";
+
 .album {
   display: flex;
-  flex-wrap: wrap; // Allows items to wrap to the next line
-  justify-content: center; // Center the items horizontally
-  margin: -5px; // Adjust margin to create a tighter layout
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: -5px;
 
   &__item {
-    margin: 5px; // Space between images
-    flex: 0 1 calc(33.33% - 10px); // Adjust the width of each item (3 items per row)
-    max-width: 290px; // Limit the maximum width of each item
+    margin: 5px;
+    flex: 0 1 calc(33.33% - 10px);
+    max-width: 290px;
 
     img {
-      width: 100%; // Make images responsive
-      height: auto; // Maintain aspect ratio
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); // Optional: add shadow for depth
+      width: 100%;
+      height: auto;
+      box-shadow: variables.$box-shadow;
     }
 
     &__mono {
@@ -24,38 +26,11 @@
     }
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
   li {
-    position: relative;
     font-family: monospace, monospace;
-    color: var(--color-text);
 
     & + li {
-      margin-top: 0.5rem; // spacing between items
-    }
-
-    .icon {
-      display: inline-flex;
-      align-items: center;
-      font-size: 1rem;
-      margin-right: 0.1875em;
-      vertical-align: middle;
-    }
-
-    a {
-      color: var(--color-primary);
-      text-decoration: none;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: var(--color-primary-offset);
-        text-decoration: underline;
-      }
+      margin-top: 0.5rem;
     }
   }
 }

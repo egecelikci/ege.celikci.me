@@ -1,0 +1,44 @@
+@use "../utils/mixins";
+
+.postlist {
+  @include mixins.container-narrow;
+
+  &__item {
+    flex-wrap: wrap;
+    align-items: baseline;
+    counter-increment: start-from -1;
+    margin-bottom: 1em;
+
+    @include mixins.mq(md) {
+      margin-bottom: 3rem;
+    }
+    li::marker {
+      content: "✝ ";
+    }
+  }
+  &__link {
+    display: block;
+
+    .postlist__item--draft & {
+      color: var(--color-secondary);
+    }
+  }
+  &__title {
+    margin-bottom: 0;
+  }
+  &__meta {
+    word-spacing: -0.5px;
+    color: var(--color-text-offset);
+  }
+  &__tags {
+    align-self: center;
+    font-style: italic;
+  }
+  &__status {
+    font-weight: 700;
+    color: var(--color-secondary);
+  }
+  &__excerpt {
+    @include mixins.body-text();
+  }
+}
