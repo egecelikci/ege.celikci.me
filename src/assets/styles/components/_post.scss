@@ -1,6 +1,6 @@
 @use "../utils/mixins";
-@import "../components/page";
-@import "../base/typography";
+@use "../components/page";
+@use "../base/typography";
 
 .post {
   &__header {
