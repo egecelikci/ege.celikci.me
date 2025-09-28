@@ -2567,7 +2567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.11.0, acorn@npm:^8.14.0, acorn@npm:^8.2.4":
+"acorn@npm:^8.11.0, acorn@npm:^8.14.0":
   version: 8.14.0
   resolution: "acorn@npm:8.14.0"
   bin:
@@ -2576,7 +2576,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^8.14.1, acorn@npm:^8.15.0":
+"acorn@npm:^8.14.1, acorn@npm:^8.15.0, acorn@npm:^8.2.4":
   version: 8.15.0
   resolution: "acorn@npm:8.15.0"
   bin:
@@ -3675,9 +3675,9 @@ __metadata:
   linkType: hard
 
 "decimal.js@npm:^10.2.1":
-  version: 10.5.0
-  resolution: "decimal.js@npm:10.5.0"
-  checksum: 10c0/785c35279df32762143914668df35948920b6c1c259b933e0519a69b7003fc0a5ed2a766b1e1dda02574450c566b21738a45f15e274b47c2ac02072c0d1f3ac3
+  version: 10.6.0
+  resolution: "decimal.js@npm:10.6.0"
+  checksum: 10c0/07d69fbcc54167a340d2d97de95f546f9ff1f69d2b45a02fd7a5292412df3cd9eb7e23065e532a318f5474a2e1bccf8392fdf0443ef467f97f3bf8cb0477e5aa
   languageName: node
   linkType: hard
 
@@ -3928,15 +3928,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eleventy-plugin-page-assets@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "eleventy-plugin-page-assets@npm:0.3.0"
+"eleventy-plugin-page-assets@git+https://github.com/maxboeck/eleventy-plugin-page-assets.git":
+  version: 0.2.0
+  resolution: "eleventy-plugin-page-assets@https://github.com/maxboeck/eleventy-plugin-page-assets.git#commit=6ec9905f37178a76b93c098213e107c00b4fb38c"
   dependencies:
     jsdom: "npm:^16.4.0"
     picomatch: "npm:^2.2.2"
   peerDependencies:
     "@11ty/eleventy": ">=0.8.x"
-  checksum: 10c0/c182ee767d1629cf020c5262eedb6394d60ef8ec1d3c21e81043a528948a3a78133762c9a519a77ef4daaba7892f4e5500fbe491c564d89ccb339c1630251f12
+  checksum: 10c0/afda4793c8525919c4876db95918900d9d4321c2f75324f07347a5b944966d96d2ce079e28ab3c0087d6886f5d321cb4b68b89e392257235c2cf50a16bb6ed6e
   languageName: node
   linkType: hard
 
@@ -4650,13 +4650,15 @@ __metadata:
   linkType: hard
 
 "form-data@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "form-data@npm:3.0.2"
+  version: 3.0.4
+  resolution: "form-data@npm:3.0.4"
   dependencies:
     asynckit: "npm:^0.4.0"
     combined-stream: "npm:^1.0.8"
-    mime-types: "npm:^2.1.12"
-  checksum: 10c0/1157ba53ce3a381ea3321b5506ae843ead4027e1b4567b74afa7d84df7043b33c5e518bb267dac56036c3dd8f4d8268be3e7181691488fff766bfccdc98d3bf7
+    es-set-tostringtag: "npm:^2.1.0"
+    hasown: "npm:^2.0.2"
+    mime-types: "npm:^2.1.35"
+  checksum: 10c0/2451043b3e931653ce9690ba051b0bf1b5855a63029279bd7bdf8d02e4b5b42f4582b23ed3637df27a0d21bac2013c37d165ec9486e1af2470c13114aee83acc
   languageName: node
   linkType: hard
 
@@ -6377,7 +6379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.35":
+"mime-types@npm:^2.1.35":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -6765,9 +6767,9 @@ __metadata:
   linkType: hard
 
 "nwsapi@npm:^2.2.0":
-  version: 2.2.16
-  resolution: "nwsapi@npm:2.2.16"
-  checksum: 10c0/0aa0637f4d51043d0183d994e08336bae996b03b42984381bf09ebdf3ff4909c018eda6b2a8aba0a08f3ea8303db8a0dad0608b38dc0bff15fd87017286ae21a
+  version: 2.2.22
+  resolution: "nwsapi@npm:2.2.22"
+  checksum: 10c0/b6a0e5ea6754aacfdfe551c8c0f1b374eaf94d48b0a4e7eac666f879ecbc1892ef1d7c457e9b02eefad3fa1323ea1faebcba533eeab6582e24c9c503411bf879
   languageName: node
   linkType: hard
 
@@ -9313,7 +9315,7 @@ __metadata:
     "@11ty/eleventy-plugin-rss": "npm:^2.0.4"
     "@11ty/eleventy-plugin-syntaxhighlight": "npm:^5.0.2"
     del-cli: "npm:^7.0.0"
-    eleventy-plugin-page-assets: "npm:^0.3.0"
+    eleventy-plugin-page-assets: "git+https://github.com/maxboeck/eleventy-plugin-page-assets.git"
     eleventy-plugin-svg-sprite: "npm:^2.4.5"
     focus-trap: "npm:^7.6.5"
     html-minifier: "npm:^4.0.0"
