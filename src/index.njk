@@ -7,31 +7,33 @@ eleventyNavigation:
 permalink: /
 ---
 
-      <p>where to find me?</p>
-      <ul class="about__social">
-        <li>
-          {% icon "music" %}<a href="{{ author.social.listenbrainz.url }}"
-            >ListenBrainz</a
-          >
-        </li>
-        <li>
-          {% icon "gamepad" %}<a href="{{ author.social.steam.url }}">Steam</a>
-        </li>
-        <li>
-          {% icon "message-circle-dashed" %}<a href="{{ author.social.signal.url | decodeBase64 }}">Signal</a>
-        </li>
-        <li>
-          {% icon "mail" %}<a
-            href="mailto:{{ author.email | obfuscate | safe }}"
-            >Email</a
-          >
-        </li>
-        <li hidden>
-          {% icon "github" %}<a href="{{ author.social.github.url }}" rel="me">GitHub</a>
-        </li>
-        <li hidden>
-          {% icon "mastodon" %}<a href="{{ author.social.mastodon.url }}" rel="me">Mastodon</a>
-        </li>
-      </ul>
-    </div>
-  </div>
+<p>where to find me?</p>
+<ul class="about__social">
+  <li>
+    {% icon "music" %}<a href="{{ author.social.listenbrainz.url }}"
+      >ListenBrainz</a
+    >
+  </li>
+  <li>{% icon "gamepad" %}<a href="{{ author.social.steam.url }}">Steam</a></li>
+  <li>
+    {% icon "message-circle-dashed" %}<a
+      href="{{ author.social.signal.url | decodeBase64 }}"
+      >Signal</a
+    >
+  </li>
+  <li>
+    {% icon "mail" %}<a href="mailto:{{ author.email | obfuscate | safe }}"
+      >Email</a
+    >
+  </li>
+  <li hidden>
+    {% icon "github" %}<a href="{{ author.social.github.url }}" rel="me"
+      >GitHub</a
+    >
+  </li>
+  <li hidden>
+    {% icon "mastodon" %}<a href="{{ author.social.mastodon.url }}" rel="me"
+      >Mastodon</a
+    >
+  </li>
+</ul>
