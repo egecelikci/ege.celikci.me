@@ -23,6 +23,7 @@
   transition: transform 0.3s variables.$animation-curve-default;
   cursor: pointer;
   margin: 0 auto;
+  color: var(--color-text);
 
   &__bar {
     display: block;
