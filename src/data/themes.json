@@ -17,13 +17,13 @@
     "id": "dark",
     "name": "Dark",
     "colors": {
-      "primary": "#f3ab87",
-      "secondary": "#e78fb3",
-      "text": "#fffffe",
-      "border": "#271c19",
-      "background": "#55423d",
-      "primaryOffset": "#ffc0ad",
-      "textOffset": "#ffc0ad",
+      "primary": "#ff6e6c",
+      "secondary": "#abd1c6",
+      "text": "#c9bae2",
+      "border": "#cabae2",
+      "background": "#463366",
+      "primaryOffset": "#67568c",
+      "textOffset": "#b8c1ec",
       "backgroundOffset": "#41312E"
     }
   }
