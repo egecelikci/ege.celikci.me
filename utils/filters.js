@@ -122,4 +122,16 @@ export default {
   decodeBase64: function (string) {
     return atob(string);
   },
+
+  getKeys: function (target) {
+    return Object.keys(target);
+  },
+
+  filterTagList: function (tags) {
+    return (tags || []).filter((tag) => ["all", "posts"].indexOf(tag) === -1);
+  },
+
+  sortAlphabetically: function (array) {
+    return (array || []).sort((b, a) => b.localeCompare(a));
+  },
 };

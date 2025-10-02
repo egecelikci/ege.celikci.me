@@ -4,7 +4,7 @@
 .footer {
   font-size: 0.875rem;
   padding: variables.$spacing-y 0;
-  background-color: var(--color-bg);
+  border-top: 1px solid var(--color-border);
 
   a,
   button {
@@ -39,6 +39,9 @@
     & + & {
       margin-left: 1rem;
     }
+  }
+  &__speedlify {
+    text-decoration: none !important;
   }
 
   @include mixins.mq(md) {

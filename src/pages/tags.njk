@@ -1,0 +1,11 @@
+---
+layout: page
+tags: nav
+title: tags
+permalink: /tags/
+---
+
+{% for tag in collections | getKeys | filterTagList | sortAlphabetically %}
+  {% set tagUrl %}/tags/{{ tag | slugify }}/{% endset %}
+  <li><a href="{{ tagUrl }}" class="post-tag">{{ tag }}</a></li>
+{% endfor %}
