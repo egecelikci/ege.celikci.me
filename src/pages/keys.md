@@ -23,6 +23,8 @@ this info is also available at [Codeberg](https://codeberg.org/egecelikci/egecel
 
 - public key: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFThAK4bQKmz31+wv5lAK5BF1QLf0CT/qhr30iPtmiGT`
 
+for the HTML page, you can [clone the site source]({{ site.repo }}) and verify the commit history for [` {{ page.inputPath }} `]({{ site.repo }}/tree/main/{{ page.inputPath }}) file
+
 ## Matrix
 
 - Cinny Desktop: `EZXJQFNEQT`
