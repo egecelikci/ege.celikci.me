@@ -26,4 +26,5 @@ this info is also available at [Codeberg](https://codeberg.org/egecelikci/egecel
 ## Matrix
 
 - Cinny Desktop: `EZXJQFNEQT`
+- Element Desktop: `VDLRANHLIM`
 - Element X Android: `HMKZNWCFXJ`
