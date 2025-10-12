@@ -114,6 +114,7 @@ for (const review of favReviews) {
     );
     await sleep(1000);
   }
+
   if (!(await fileExists(cacheCoverPath))) {
     await Fetch(`https://coverartarchive.org/release-group/${rgid}/front-500`, {
       duration: "30d",
@@ -129,9 +130,10 @@ for (const review of favReviews) {
     });
     await sleep(1000);
   }
+
   if (!(await fileExists(publicCoverPath))) {
-    if (hasMagick) await convertWithMagick(cacheCoverPath, publicCoverPath);
-    else await fs.copyFile(cacheCoverPath, publicCoverPath);
+    if (!hasMagick) continue;
+    await convertWithMagick(cacheCoverPath, publicCoverPath);
   }
 }
 
@@ -139,6 +141,13 @@ let albums = [];
 
 for (const file of await fs.readdir(DATA_DIR)) {
   if (!file.endsWith(".json")) continue;
+
+  const publicCoverPath = path.join(
+    PUBLIC_COVER_DIR,
+    `${path.basename(file, ".json")}.png`,
+  );
+  if (!(await fileExists(publicCoverPath))) continue;
+
   const content = JSON.parse(
     await fs.readFile(path.join(DATA_DIR, file), "utf-8"),
   );
