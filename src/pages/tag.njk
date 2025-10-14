@@ -1,0 +1,13 @@
+---
+layout: page
+pagination:
+  data: collections
+  size: 1
+  alias: tag
+permalink: /tag/{{ tag | slug }}/
+eleventyComputed:
+  title: "tagged “{{ tag }}”"
+---
+
+{%- set postlist = collections[tag] | default([]) -%}
+{% include "postlist.njk" %}

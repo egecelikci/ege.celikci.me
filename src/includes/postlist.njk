@@ -24,7 +24,7 @@
         {% if post.data.tags %}
           <span aria-hidden="true">&sdot;</span>
           <span class="postlist__tags p-category">
-            {{ post.data.tags|join(', ') }}
+            {% renderTags post.data.tags %}
           </span>
         {% endif %}
 

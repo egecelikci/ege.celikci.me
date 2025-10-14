@@ -1,8 +1,6 @@
 // import dotenv from 'dotenv'
 // dotenv.config()
 
-import { execSync } from "child_process";
-
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
@@ -62,7 +60,9 @@ export default function (config) {
   });
 
   // Shortcodes
-  config.addShortcode("icon", shortcodes.icon);
+  Object.keys(shortcodes).forEach((shortcodeName) => {
+    config.addShortcode(shortcodeName, shortcodes[shortcodeName]);
+  });
 
   // Vite Shortcodes
   Object.keys(viteHelpers).forEach((shortcodeName) => {
