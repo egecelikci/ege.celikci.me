@@ -1,22 +1,11 @@
 {
   "name": "Ege Çelikçi",
   "email": "ege@celikci.me",
+  "username": "egecelikci",
   "social": {
-    "github": {
-      "name": "egecelikci",
-      "url": "https://github.com/egecelikci"
-    },
     "mastodon": {
       "name": "@eg@ieji.de",
       "url": "https://ieji.de/@eg"
-    },
-    "listenbrainz": {
-      "name": "egecelikci",
-      "url": "https://listenbrainz.org/user/egecelikci"
-    },
-    "steam": {
-      "name": "egecelikci",
-      "url": "https://steamcommunity.com/id/egecelikci"
     },
     "signal": {
       "url": "aHR0cHM6Ly9zaWduYWwubWUvI2V1L2owYXBhQThUZVNRLUJjUlE1RkhhWnZ1b2Y5X05XME9sY2VqYTFLUGg2NkdwWjZxYUxxcExoN0M2UTFVM2J6eTM="

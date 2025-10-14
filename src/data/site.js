@@ -5,5 +5,4 @@ export default {
   lang: "en",
   locale: "en_US",
   url: "https://ege.celikci.me",
-  repo: "https://github.com/egecelikci/ege.celikci.me",
 };
