@@ -8,11 +8,11 @@
     </p>
     <p class="footer__item footer__item--right u-desktop-only">
       <a
-        href="https://speedlify.ege.celikci.me/ege.celikci.me/"
+        href="https://speedlify.{{ site.host }}/{{ site.host }}/"
         class="footer__speedlify"
       >
         <speedlify-score
-          speedlify-url="https://speedlify.ege.celikci.me"
+          speedlify-url="https://speedlify.{{ site.host }}"
           hash="1abcb16"
           score
           weight
@@ -21,7 +21,7 @@
     </p>
     <p class="footer__item footer__item--right">
       <a
-        href="{{ site.repo }}/tree/main/{{ page.inputPath }}"
+        href="https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}"
         class="footer__icon"
         title="Edit this page on Github"
       >

@@ -10,11 +10,17 @@ permalink: /
 <p>where to find me?</p>
 <ul class="about__social">
   <li>
-    {% icon "music" %}<a href="{{ author.social.listenbrainz.url }}"
+    {% icon "music" %}<a
+      href="https://listenbrainz.org/user/{{ author.username }}"
       >ListenBrainz</a
     >
   </li>
-  <li>{% icon "gamepad" %}<a href="{{ author.social.steam.url }}">Steam</a></li>
+  <li>
+    {% icon "gamepad" %}<a
+      href="https://steamcommunity.com/id/{{ author.username }}"
+      >Steam</a
+    >
+  </li>
   <li>
     {% icon "message-circle-dashed" %}<a
       href="{{ author.social.signal.url | decodeBase64 }}"
@@ -36,7 +42,9 @@ permalink: /
     </a>
   </li>
   <li hidden>
-    {% icon "github" %}<a href="{{ author.social.github.url }}" rel="me"
+    {% icon "github" %}<a
+      href="https://github.com/{{ author.username }}"
+      rel="me"
       >GitHub</a
     >
   </li>

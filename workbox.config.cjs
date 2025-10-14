@@ -1,5 +1,4 @@
 module.exports = {
-  cacheId: "egecelikci",
   globDirectory: "./dist",
   globPatterns: ["**/*.woff2"],
   swDest: "./dist/sw.js",
