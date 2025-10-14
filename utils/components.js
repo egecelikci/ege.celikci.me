@@ -18,6 +18,39 @@ export const Icon = (iconName, useInline = false) => {
   return minify(output);
 };
 
+export const renderTags = (tags) => {
+  if (!tags || !Array.isArray(tags) || tags.length === 0) {
+    return "";
+  }
+  const escaped = tags.map((tag) => {
+    return {
+      name: tag,
+      url: "/tag/" + encodeURIComponent(tag),
+    };
+  });
+
+  let output = "";
+
+  escape: {
+    const len = escaped.length;
+    escaped.forEach((tagObj, idx) => {
+      output += `<a href="${tagObj.url}">${tagObj.name}</a>`;
+      if (len === 2 && idx === 0) {
+        output += "&nbsp;&amp; ";
+      } else if (len > 2) {
+        if (idx < len - 2) {
+          output += ", ";
+        } else if (idx === len - 2) {
+          output += "&nbsp;&amp; ";
+        }
+      }
+    });
+  }
+
+  return minify(output);
+};
+
 export default {
   Icon,
+  renderTags,
 };
