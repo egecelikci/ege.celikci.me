@@ -6,19 +6,6 @@
   &__header {
     @extend .page__header;
   }
-  &__meta {
-    word-spacing: -0.5px;
-    color: var(--color-text-offset);
-
-    @include mixins.mq(md) {
-      justify-content: center;
-      font-size: 1.25rem;
-    }
-  }
-  &__canonical {
-    margin: 1rem 0;
-    color: var(--color-text-offset);
-  }
   &__tags {
     align-self: center;
     font-style: italic;

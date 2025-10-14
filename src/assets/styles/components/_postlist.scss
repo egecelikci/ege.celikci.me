@@ -27,8 +27,9 @@
     margin-bottom: 0;
   }
   &__meta {
-    word-spacing: -0.5px;
+    margin: 1rem 0;
     color: var(--color-text-offset);
+    font-style: italic;
   }
   &__tags {
     align-self: center;
