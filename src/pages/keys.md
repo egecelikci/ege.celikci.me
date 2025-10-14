@@ -8,10 +8,10 @@ permalink: /keys/
 
 I don’t use PGP, but you might want to check [age-encryption](https://age-encryption.org/#encrypting-to-a-github-user) as an encryption method for sensitive information you might send me over insecure channels.
 
-- [codeberg.org/egecelikci.keys](https://codeberg.org/egecelikci.keys)
-- [github.com/egecelikci.keys](https://github.com/egecelikci.keys)
-- [gitlab.com/egecelikci.keys](https://gitlab.com/egecelikci.keys)
-- [meta.sr.ht/~egecelikci.keys](https://meta.sr.ht/~egecelikci.keys)
+- [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
+- [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
+- [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
+- [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
 
 ### authentication
 
@@ -19,11 +19,11 @@ I don’t use PGP, but you might want to check [age-encryption](https://age-encr
 
 ### signing
 
-this info is also available at [Codeberg](https://codeberg.org/egecelikci/egecelikci), [GitLab](https://gitlab.com/egecelikci/egecelikci) & [GitHub](https://github.com/egecelikci/egecelikci). all three repositories should be identical and show commits signed with the key below
+this info is also available at [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitLab](https://gitlab.com/{{ author.username }}/{{ author.username }}) & [GitHub](https://github.com/{{ author.username }}/{{ author.username }}). all three repositories should be identical and show commits signed with the key below
 
 - public key: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFThAK4bQKmz31+wv5lAK5BF1QLf0CT/qhr30iPtmiGT`
 
-for the HTML page, you can [clone the site source]({{ site.repo }}) and verify the commit history for [` {{ page.inputPath }} `]({{ site.repo }}/tree/main/{{ page.inputPath }}) file
+for the HTML page, you can [clone the site source](https://github.com/{{ author.username }}/{{ site.host }}) and verify the commit history for [` {{ page.inputPath }} `](https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}) file
 
 ## Matrix
 
