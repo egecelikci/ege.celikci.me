@@ -1,4 +1,5 @@
 import htmlmin from "html-minifier";
+import slugify from "@sindresorhus/slugify";
 
 const minify = (content) =>
   htmlmin.minify(content, {
@@ -25,13 +26,13 @@ export const renderTags = (tags) => {
   const escaped = tags.map((tag) => {
     return {
       name: tag,
-      url: "/tag/" + encodeURIComponent(tag),
+      url: "/tag/" + slugify(tag),
     };
   });
 
   let output = "";
 
-  escape: {
+  {
     const len = escaped.length;
     escaped.forEach((tagObj, idx) => {
       output += `<a href="${tagObj.url}">${tagObj.name}</a>`;

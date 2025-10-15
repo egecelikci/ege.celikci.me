@@ -3,16 +3,16 @@ layout: base
 ---
 
 <article
-  id="{{ title | slug }}"
+  id="{{ title | slugify }}"
   class="post h-entry"
   role="article"
   itemscope
   itemtype="http://schema.org/BlogPosting"
-  aria-labelledby="{{ title | slug }}-title"
+  aria-labelledby="{{ title | slugify }}-title"
 >
   <header class="post__header">
     <h1
-      id="{{ title | slug }}-title"
+      id="{{ title | slugify }}-title"
       class="post__title p-name title"
       itemprop="headline"
     >
