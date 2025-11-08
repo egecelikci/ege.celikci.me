@@ -11,7 +11,13 @@
       "url": "aHR0cHM6Ly9zaWduYWwubWUvI2V1L2owYXBhQThUZVNRLUJjUlE1RkhhWnZ1b2Y5X05XME9sY2VqYTFLUGg2NkdwWjZxYUxxcExoN0M2UTFVM2J6eTM="
     },
     "matrix": {
-      "url": "https://matrix.to/#/@eg:envs.net"
+      "username": "eg",
+      "envs": {
+        "host": "envs.net"
+      },
+      "metropolis": {
+        "host": "metropolis.nexus"
+      }
     }
   }
 }

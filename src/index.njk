@@ -33,7 +33,9 @@ permalink: /
     >
   </li>
   <li>
-    {% icon "matrix" %}<a href="{{ author.social.matrix.url }}" rel="me"
+    {% icon "matrix" %}<a
+      href="https://matrix.to/#/@{{ author.social.matrix.envs.username }}:{{ author.social.matrix.envs.host }}"
+      rel="me"
       >Matrix</a
     >
     <a href="keys#matrix" title="view Matrix encryption keys">
