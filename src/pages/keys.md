@@ -27,12 +27,9 @@ for the HTML page, you can [clone the site source](https://github.com/{{ author.
 
 ## Matrix
 
-- [@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})
-  - Cinny Desktop: `EZXJQFNEQT`
-  - Element Desktop: `VDLRANHLIM`
-  - Element X Android: `HMKZNWCFXJ`
-  - FluffyChat Android: `PWXWIELJTV`
-
 - [@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})
-  - Element Web: `JodzFErT1w`
-  - FluffyChat Android: `Ym5sKH9Qrs`
+  - Bilgisayar: `JodzFErT1w`
+  - Telefon: `9ovMRDnfeY`
+
+- [@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})
+  - Cinny: `EZXJQFNEQT`
