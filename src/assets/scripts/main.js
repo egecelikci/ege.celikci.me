@@ -10,3 +10,4 @@ import "./common/lazyload";
 import "./common/preload";
 import "./common/speedlify";
 import "./common/register-serviceworker";
+import "./common/gsap";

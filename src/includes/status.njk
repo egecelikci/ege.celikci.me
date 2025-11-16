@@ -1,0 +1,44 @@
+<li>
+  {% icon "headphones" %}<span data-chars="X" data-status="loading…"
+    >XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span
+  >
+</li>
+<script type="module">
+  function unscrambleText(el) {
+    // Animate text nodes inside links and text spans
+    const nodes = Array.from(el.childNodes);
+
+    nodes.forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        let i = 0;
+        const interval = setInterval(() => {
+          node.textContent = text.slice(0, i) + "X".repeat(text.length - i);
+          i++;
+          if (i > text.length) clearInterval(interval);
+        }, 18);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        unscrambleText(node); // recursive for <a> tags
+      }
+    });
+  }
+
+  async function loadStatus() {
+    const el = document.querySelector(".status [data-status]");
+    try {
+      const res = await fetch("/.netlify/functions/status", {
+        headers: { Accept: "text/html" },
+      });
+      if (!res.ok) return;
+
+      const html = await res.text();
+      el.innerHTML = html;
+      el.dataset.status = el.textContent;
+      unscrambleText(el);
+    } catch (err) {
+      console.error("Status fetch error:", err);
+    }
+  }
+
+  loadStatus();
+</script>

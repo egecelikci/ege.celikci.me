@@ -1,0 +1,10 @@
+.status {
+  font-family: "Sixtyfour", monospace;
+  list-style-type: none !important;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  .icon {
+    font-size: 1.5rem;
+    margin-right: 0.25rem;
+  }
+}
