@@ -30,6 +30,7 @@
     "eleventy-plugin-page-assets": "git+https://github.com/maxboeck/eleventy-plugin-page-assets.git",
     "eleventy-plugin-svg-sprite": "^2.4.5",
     "focus-trap": "^7.6.6",
+    "gsap": "^3.13.0",
     "html-minifier": "^4.0.0",
     "lodash": "^4.17.21",
     "luxon": "^3.7.2",
