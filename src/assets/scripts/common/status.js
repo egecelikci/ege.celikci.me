@@ -3,8 +3,8 @@ import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
 gsap.registerPlugin(ScrambleTextPlugin);
 
 async function loadStatus() {
-  const statusEl = document.querySelector(".status [data-status]");
-  if (!statusEl) return;
+  const statusElements = document.querySelectorAll(".status [data-status]");
+  if (!statusElements.length) return;
 
   try {
     const res = await fetch("/.netlify/functions/status");
@@ -13,26 +13,31 @@ async function loadStatus() {
     const html = await res.text();
     const temp = document.createElement("div");
     temp.innerHTML = html;
-    const newEl = temp.firstElementChild;
-    if (!newEl) return;
+    const newElements = temp.querySelectorAll("[data-status]");
 
-    const targetText = newEl.dataset.status;
-    const targetHTML = newEl.innerHTML;
+    // Update each status element
+    newElements.forEach((newEl, index) => {
+      const statusEl = statusElements[index];
+      if (!statusEl) return;
 
-    statusEl.dataset.status = targetText;
-    statusEl.dataset.chars = "X";
+      const targetText = newEl.dataset.status;
+      const targetHTML = newEl.innerHTML;
 
-    gsap.to(statusEl, {
-      scrambleText: {
-        text: targetText,
-        chars: "X",
-        speed: 0.1,
-      },
-      duration: 1.5,
-      ease: "power2.inOut",
-      onComplete: () => {
-        statusEl.innerHTML = targetHTML;
-      },
+      statusEl.dataset.status = targetText;
+      statusEl.dataset.chars = "X";
+
+      gsap.to(statusEl, {
+        scrambleText: {
+          text: targetText,
+          chars: "X",
+          speed: 0.1,
+        },
+        duration: 1.5,
+        ease: "power2.inOut",
+        onComplete: () => {
+          statusEl.innerHTML = targetHTML;
+        },
+      });
     });
   } catch (err) {
     console.error("Status error:", err);
