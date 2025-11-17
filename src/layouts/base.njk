@@ -18,13 +18,15 @@
       type="font/woff2"
       crossorigin
     />
+    {% if page.url == '/' %}
     <link
       rel="preload"
-      href="{{ '/assets/fonts/DotGothic16.ttf' | url }}"
+      href="{{ '/assets/fonts/DotGothic16.woff2' | url }}"
       as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
+    {% endif %}
     <link
       rel="preload"
       href="{{ '/.netlify/functions/status' | url }}"
