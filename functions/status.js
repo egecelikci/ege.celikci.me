@@ -7,8 +7,13 @@ export default async (req, context) => {
   let recent = null;
 
   try {
-    const playingRes = await fetch(playingUrl);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const playingRes = await fetch(playingUrl, { signal: controller.signal });
     const playingData = await playingRes.json();
+    clearTimeout(timeoutId);
+
     if (
       playingData?.payload?.playing_now &&
       playingData.payload.listens.length > 0
@@ -21,15 +26,20 @@ export default async (req, context) => {
     recent = recentData?.payload?.listens?.[0];
   } catch (err) {
     console.error("Error fetching ListenBrainz data:", err);
+    return new Response(
+      `<span data-chars="X" data-status="Error loading status">Error loading status</span>`,
+      {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "public, max-age=30",
+        },
+      },
+    );
   }
 
   function formatListen(listen) {
-    if (!listen)
-      return {
-        trackLink: "Unknown",
-        artistLinks: "Unknown",
-        text: "Unknown track",
-      };
+    if (!listen) return null;
+
     const track = listen.track_metadata.track_name;
     const recordingMbid =
       listen.track_metadata.additional_info.recording_mbid ||
@@ -38,53 +48,41 @@ export default async (req, context) => {
       listen.track_metadata.additional_info.artist_names || [];
     const artistMbids =
       listen.track_metadata.additional_info.artist_mbids || [];
-    const artists = artistNames.map((name, i) => ({
-      name,
-      mbid: artistMbids[i] || null,
-    }));
 
     const trackLink = recordingMbid
-      ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer">${track}</a>`
-      : track;
+      ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${track}</cite></a>`
+      : `<cite>${track}</cite>`;
 
-    const artistLinks = artists
-      .map((a) =>
-        a.mbid
-          ? `<a href="https://listenbrainz.org/artist/${a.mbid}" target="_blank" rel="noopener noreferrer">${a.name}</a>`
-          : a.name,
-      )
+    const artistLinks = artistNames
+      .map((name, i) => {
+        const mbid = artistMbids[i];
+        return mbid
+          ? `<a href="https://listenbrainz.org/artist/${mbid}" target="_blank" rel="noopener noreferrer">${name}</a>`
+          : name;
+      })
       .join(", ");
 
-    return {
-      trackLink,
-      artistLinks,
-      text: `${track} by ${artists.map((a) => a.name).join(", ")}`,
-    };
+    // Plain text version for data-status
+    const plainText = `${track}, ${artistNames.join(", ")}`;
+
+    return { trackLink, artistLinks, plainText };
   }
 
-  let html = `<span data-chars="X" data-status="No recent listens">No recent listens</span>`;
+  const listen = formatListen(current || recent);
 
-  if (current) {
-    const listen = formatListen(current);
-    html = `<span data-chars="X" data-status="${listen.text}">listening to ${listen.trackLink} by ${listen.artistLinks}</span>`;
-  } else if (recent) {
-    const listen = formatListen(recent);
-    const listenedAt = new Date(recent.listened_at * 1000);
-    const secondsAgo = Math.floor((Date.now() - listenedAt) / 1000);
-    const minutes = Math.floor(secondsAgo / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    let relativeTime = "";
-    if (days > 0) relativeTime = `${days} day${days > 1 ? "s" : ""} ago`;
-    else if (hours > 0)
-      relativeTime = `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    else if (minutes > 0)
-      relativeTime = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    else relativeTime = "just now";
-
-    html = `<span data-chars="X" data-status="${listen.text}, ${relativeTime}">listened to ${listen.trackLink} by ${listen.artistLinks}, ${relativeTime}</span>`;
+  if (!listen) {
+    return new Response(
+      `<span data-chars="X" data-status="No recent listens">No recent listens</span>`,
+      {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "public, max-age=60",
+        },
+      },
+    );
   }
+
+  const html = `<span data-chars="X" data-status="${listen.plainText}">${listen.trackLink}, ${listen.artistLinks}</span>`;
 
   return new Response(html, {
     headers: {
