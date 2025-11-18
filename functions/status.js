@@ -54,25 +54,25 @@ export default async (req, context) => {
               ? `<a href="https://listenbrainz.org/artist/${mbid}" target="_blank" rel="noopener noreferrer">${name}</a>`
               : name;
           })
-          .join(", ");
+          .join(" · ");
 
-        const plainText = `${track}, ${artistNames.join(", ")}`;
+        const plainText = `${track} by ${artistNames.join(" · ")}`;
 
         statuses.push({
           type: "music",
-          html: `<span data-chars="X" data-status="${plainText}">${trackLink}, ${artistLinks}</span>`,
+          html: `<span data-chars="█" data-status="${plainText}">${trackLink} by ${artistLinks}</span>`,
         });
       } else {
         statuses.push({
           type: "music",
-          html: `<span data-chars="X" data-status="No recent listens">No recent listens</span>`,
+          html: `<span data-chars="█" data-status="No recent listens">No recent listens</span>`,
         });
       }
     } catch (err) {
       console.error("Error fetching music:", err);
       statuses.push({
         type: "music",
-        html: `<span data-chars="X" data-status="Error loading music">Error loading music</span>`,
+        html: `<span data-chars="█" data-status="Error loading music">Error loading music</span>`,
       });
     }
   }
@@ -104,7 +104,7 @@ export default async (req, context) => {
 
         statuses.push({
           type: "steam",
-          html: `<span data-chars="X" data-status="${player.gameextrainfo}">${gameLink}</span>`,
+          html: `<span data-chars="█" data-status="${player.gameextrainfo}">${gameLink}</span>`,
         });
       } else if (recentGame) {
         // Recently played
@@ -112,19 +112,19 @@ export default async (req, context) => {
 
         statuses.push({
           type: "steam",
-          html: `<span data-chars="X" data-status="${recentGame.name}">${gameLink}</span>`,
+          html: `<span data-chars="█" data-status="${recentGame.name}">${gameLink}</span>`,
         });
       } else {
         statuses.push({
           type: "steam",
-          html: `<span data-chars="X" data-status="No recent game">No recent game</span>`,
+          html: `<span data-chars="█" data-status="No recent game">No recent game</span>`,
         });
       }
     } catch (err) {
       console.error("Error fetching Steam:", err);
       statuses.push({
         type: "steam",
-        html: `<span data-chars="X" data-status="Error loading Steam">Error loading Steam</span>`,
+        html: `<span data-chars="█" data-status="Error loading Steam">Error loading Steam</span>`,
       });
     }
   }
