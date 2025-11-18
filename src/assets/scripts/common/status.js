@@ -24,12 +24,12 @@ async function loadStatus() {
       const targetHTML = newEl.innerHTML;
 
       statusEl.dataset.status = targetText;
-      statusEl.dataset.chars = "X";
+      statusEl.dataset.chars = "█";
 
       gsap.to(statusEl, {
         scrambleText: {
           text: targetText,
-          chars: "X",
+          chars: "█",
           speed: 0.1,
         },
         duration: 1.5,
