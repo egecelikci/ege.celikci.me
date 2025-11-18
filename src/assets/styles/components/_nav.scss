@@ -1,35 +1,69 @@
 @use "../utils/mixins";
 
 .nav {
+  position: relative;
+
   &__menu {
-    display: none;
-    position: absolute;
-    left: 0;
-    right: 0;
-    background-color: var(--color-bg);
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0; // başlığın altına boşluk
+    display: flex; // artık toggle yok, her zaman göster
+    flex-direction: column;
+    gap: 0.5rem;
+
+    @include mixins.mq(lg) {
+      flex-direction: row;
+      gap: 1.5rem;
+      margin: 0 0 0 2rem; // masaüstünde başlıktan boşluk
+    }
   }
+
   &__link {
-    display: block;
-    padding: 0.5em 1em;
-  }
-  &__toggle {
-    @include mixins.button-reset;
-  }
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    position: relative;
 
-  @include mixins.mq-down(lg) {
-    &.is-open &__menu {
-      display: block;
-    }
-  }
+    @include mixins.mq(lg) {
+      font-size: 0.85rem;
+      padding: 0.25rem 0;
 
-  @include mixins.mq(lg) {
-    &__toggle {
-      display: none;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: currentColor;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+      }
+
+      &:is(:hover, :focus-visible)::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
     }
-    &__menu {
-      display: flex;
-      position: static;
-      background-color: transparent;
+
+    &--active {
+      color: var(--color-primary);
+
+      &:hover {
+        color: var(--color-primary);
+      }
+
+      @include mixins.mq(lg) {
+        &::after {
+          transform: scaleX(1);
+          background: var(--color-primary);
+        }
+      }
     }
   }
 }
