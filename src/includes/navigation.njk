@@ -1,21 +1,5 @@
-<nav class="nav js-nav" role="navigation" tabindex="-1">
-  {# Menu Toggle Button #}
-  <button
-    class="nav__toggle js-nav-toggle"
-    aria-expanded="false"
-    aria-controls="nav-menu"
-  >
-    <span class="sr-only">toggle menu</span>
-    <span class="menuicon">
-      <span class="menuicon__bar"></span>
-      <span class="menuicon__bar"></span>
-      <span class="menuicon__bar"></span>
-      <span class="menuicon__bar"></span>
-    </span>
-  </button>
-
-  {# Nav Links  #}
-  <ul class="nav__menu js-nav-menu" id="nav-menu">
+<nav class="nav" role="navigation">
+  <ul class="nav__menu">
     {%- for item in collections.all | eleventyNavigation -%}
       {%- if item.url -%}
         {%- set isCurrent = (item.url == page.url) -%}
@@ -24,7 +8,7 @@
           class="nav__item{% if isCurrent or isParent %}nav__item--active{% endif %}"
         >
           <a
-            class="nav__link"
+            class="nav__link {% if isCurrent or isParent %}nav__link--active{% endif %}"
             href="{% if isCurrent %}#main{% else %}{{ item.url | url }}{% endif %}"
             {% if isCurrent %}aria-current="page"{% endif %}
           >
