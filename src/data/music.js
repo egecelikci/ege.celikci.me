@@ -1,7 +1,7 @@
 import Fetch from "@11ty/eleventy-fetch";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { spawn } from "node:child_process";
+import sharp from "sharp";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -9,8 +9,9 @@ const CACHE_DIR = ".cache";
 const DATA_DIR = path.join(CACHE_DIR, "albums", "data");
 const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
 const PUBLIC_COVER_DIR = "src/assets/images/covers";
-const USER_ID = "4d5dbf68-7a90-4166-b15a-16e92f549758";
+const CRITIQUEBRAINZ_USER_ID = "4d5dbf68-7a90-4166-b15a-16e92f549758";
 const LIMIT = 50;
+const USER_AGENT = "eleventy-music-data-fetcher/1.0 ( https://ege.celikci.me )";
 
 await fs.mkdir(DATA_DIR, { recursive: true });
 await fs.mkdir(COVER_DIR, { recursive: true });
@@ -25,143 +26,191 @@ async function fileExists(filePath) {
   }
 }
 
-function magickExists() {
-  return new Promise((resolve) => {
-    const check = spawn("magick", ["-version"]);
-    check.on("error", () => resolve(false));
-    check.on("exit", (code) => resolve(code === 0));
-  });
-}
+async function ditherWithSharp(inputPath, outputPath) {
+  // Get the image data in grayscale
+  const { data, info } = await sharp(inputPath)
+    .resize(290, 290, { fit: "cover" })
+    .greyscale()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
 
-function convertWithMagick(inputPath, outputPath) {
-  return new Promise((resolve, reject) => {
-    const proc = spawn("magick", [
-      inputPath,
-      "-dither",
-      "FloydSteinberg",
-      "-scale",
-      "290x290",
-      "-monochrome",
-      outputPath,
-    ]);
-    proc.on("exit", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`magick exited with code ${code}`));
-    });
-  });
-}
+  const width = info.width;
+  const height = info.height;
+  const pixels = new Uint8Array(data);
 
-let offset = 0;
-let critiqueData = [];
+  // Floyd-Steinberg dithering algorithm
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const idx = y * width + x;
+      const oldPixel = pixels[idx];
+      const newPixel = oldPixel < 128 ? 0 : 255;
+      pixels[idx] = newPixel;
 
-while (true) {
-  const critiqueUrl = `https://critiquebrainz.org/ws/1/review?user_id=${USER_ID}&limit=${LIMIT}&offset=${offset}`;
-  const batchData = await Fetch(critiqueUrl, {
-    duration: "0s",
-    type: "json",
-    fetchOptions: {
-      headers: {
-        "User-Agent": "eleventy-fetch (https://ege.celikci.me)",
-      },
+      const error = oldPixel - newPixel;
+
+      // Distribute error to neighboring pixels
+      if (x + 1 < width) {
+        pixels[idx + 1] += (error * 7) / 16;
+      }
+      if (y + 1 < height) {
+        if (x > 0) {
+          pixels[idx + width - 1] += (error * 3) / 16;
+        }
+        pixels[idx + width] += (error * 5) / 16;
+        if (x + 1 < width) {
+          pixels[idx + width + 1] += (error * 1) / 16;
+        }
+      }
+    }
+  }
+
+  // Save as PNG
+  await sharp(Buffer.from(pixels), {
+    raw: {
+      width: width,
+      height: height,
+      channels: 1,
     },
-  });
-
-  if (!batchData.reviews?.length) break;
-  critiqueData.push(...batchData.reviews);
-  offset += LIMIT;
-  await sleep(1000);
+  })
+    .png()
+    .toFile(outputPath);
 }
 
-const favReviews = critiqueData.filter(
-  (r) => r.rating === 5 && r.entity_type === "release_group",
-);
-const favIds = new Set(favReviews.map((r) => r.entity_id));
-
-const cachedFiles = (await fs.readdir(DATA_DIR)).filter((f) =>
-  f.endsWith(".json"),
-);
-const cachedIds = new Set(cachedFiles.map((f) => path.basename(f, ".json")));
-
-for (const id of cachedIds) {
-  if (!favIds.has(id)) {
-    await fs.rm(path.join(DATA_DIR, `${id}.json`), { force: true });
-    await fs.rm(path.join(COVER_DIR, id), { force: true });
-    await fs.rm(path.join(PUBLIC_COVER_DIR, `${id}.png`), { force: true });
-  }
-}
-
-const hasMagick = await magickExists();
-
-for (const review of favReviews) {
-  const rgid = review.entity_id;
-  const jsonPath = path.join(DATA_DIR, `${rgid}.json`);
-  const cacheCoverPath = path.join(COVER_DIR, `${rgid}.buffer`);
-  const publicCoverPath = path.join(PUBLIC_COVER_DIR, `${rgid}.png`);
-
-  if (!(await fileExists(jsonPath))) {
-    await Fetch(
-      `https://musicbrainz.org/ws/2/release-group/${rgid}?inc=releases+artists&fmt=json`,
-      {
+/**
+ * Fetches all 5-star album reviews from CritiqueBrainz.
+ */
+async function getFavoriteAlbumIds() {
+  let offset = 0;
+  let allReviews = [];
+  while (true) {
+    const url = `https://critiquebrainz.org/ws/1/review?user_id=${CRITIQUEBRAINZ_USER_ID}&limit=${LIMIT}&offset=${offset}`;
+    try {
+      const batch = await Fetch(url, {
+        duration: "1d", // Cache critiquebrainz results for a day
         type: "json",
-        directory: DATA_DIR,
-        filenameFormat: () => rgid,
-        fetchOptions: {
-          headers: {
-            "User-Agent": "eleventy-fetch (https://ege.celikci.me)",
-          },
-        },
-      },
-    );
-    await sleep(1000);
+        fetchOptions: { headers: { "User-Agent": USER_AGENT } },
+      });
+      if (!batch.reviews?.length) break;
+      allReviews.push(...batch.reviews);
+      offset += LIMIT;
+      await sleep(1000); // Respect API rate limits
+    } catch (e) {
+      console.error(
+        `[music.js] Failed to fetch reviews from CritiqueBrainz: ${e.message}`,
+      );
+      // If the API fails, we can still proceed with what we have from the cache.
+      break;
+    }
   }
+  const favReviews = allReviews.filter(
+    (r) => r.rating === 5 && r.entity_type === "release_group",
+  );
+  return new Set(favReviews.map((r) => r.entity_id));
+}
 
-  if (!(await fileExists(cacheCoverPath))) {
-    await Fetch(`https://coverartarchive.org/release-group/${rgid}/front-500`, {
-      duration: "30d",
+/**
+ * Fetches album metadata from MusicBrainz.
+ */
+async function fetchAlbumData(rgid) {
+  const url = `https://musicbrainz.org/ws/2/release-group/${rgid}?inc=releases+artists&fmt=json`;
+  try {
+    await Fetch(url, {
+      duration: "30d", // It's metadata, cache for a long time
+      type: "json",
+      directory: DATA_DIR,
+      filenameFormat: () => rgid,
+      fetchOptions: { headers: { "User-Agent": USER_AGENT } },
+    });
+  } catch (e) {
+    console.error(
+      `[music.js] Failed to fetch album data for ${rgid}: ${e.message}`,
+    );
+  }
+}
+
+/**
+ * Fetches album cover from Cover Art Archive.
+ */
+async function fetchAlbumCover(rgid) {
+  const url = `https://coverartarchive.org/release-group/${rgid}/front-500`;
+  try {
+    await Fetch(url, {
+      duration: "30d", // Covers don't change, cache for a long time
       type: "buffer",
       directory: COVER_DIR,
       filenameFormat: () => rgid,
-      fetchOptions: {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.10 Safari/605.1.1",
-        },
-      },
+      fetchOptions: { headers: { "User-Agent": USER_AGENT } },
     });
-    await sleep(1000);
-  }
-
-  if (!(await fileExists(publicCoverPath))) {
-    if (!hasMagick) continue;
-    await convertWithMagick(cacheCoverPath, publicCoverPath);
+  } catch (e) {
+    console.error(
+      `[music.js] Failed to fetch album cover for ${rgid}: ${e.message}`,
+    );
   }
 }
 
-let albums = [];
+/**
+ * Main data fetching and processing function.
+ */
+async function getMusicData() {
+  const favAlbumIds = await getFavoriteAlbumIds();
 
-for (const file of await fs.readdir(DATA_DIR)) {
-  if (!file.endsWith(".json")) continue;
+  // Process each favorite album sequentially to respect API rate limits
+  for (const rgid of favAlbumIds) {
+    const jsonPath = path.join(DATA_DIR, `${rgid}.json`);
+    const cacheCoverPath = path.join(COVER_DIR, `${rgid}.buffer`);
+    const publicCoverPath = path.join(PUBLIC_COVER_DIR, `${rgid}.png`);
 
-  const publicCoverPath = path.join(
-    PUBLIC_COVER_DIR,
-    `${path.basename(file, ".json")}.png`,
-  );
-  if (!(await fileExists(publicCoverPath))) continue;
+    if (!(await fileExists(jsonPath))) {
+      await fetchAlbumData(rgid);
+      await sleep(1000); // Wait 1s after fetching data
+    }
 
-  const content = JSON.parse(
-    await fs.readFile(path.join(DATA_DIR, file), "utf-8"),
-  );
-  albums.push(content);
+    if (!(await fileExists(cacheCoverPath))) {
+      await fetchAlbumCover(rgid);
+      await sleep(1000); // Wait 1s after fetching cover
+    }
+
+    if (
+      !(await fileExists(publicCoverPath)) &&
+      (await fileExists(cacheCoverPath))
+    ) {
+      try {
+        await ditherWithSharp(cacheCoverPath, publicCoverPath);
+      } catch (e) {
+        console.error(
+          `[music.js] Failed to convert cover for ${rgid}: ${e.message}`,
+        );
+      }
+    }
+  }
+
+  // Read all processed data and prepare it for Eleventy
+  let albums = [];
+  for (const file of await fs.readdir(DATA_DIR)) {
+    if (!file.endsWith(".json")) continue;
+    const rgid = path.basename(file, ".json");
+    const publicCoverPath = path.join(PUBLIC_COVER_DIR, `${rgid}.png`);
+
+    if (await fileExists(publicCoverPath)) {
+      const content = JSON.parse(
+        await fs.readFile(path.join(DATA_DIR, file), "utf-8"),
+      );
+      albums.push(content);
+    }
+  }
+
+  // Sort albums by release date
+  albums.sort((a, b) => {
+    const dateA = a["first-release-date"]
+      ? new Date(a["first-release-date"])
+      : new Date(0);
+    const dateB = b["first-release-date"]
+      ? new Date(b["first-release-date"])
+      : new Date(0);
+    return dateB - dateA;
+  });
+
+  return { albums };
 }
 
-albums.sort((a, b) => {
-  const dateA = a["first-release-date"]
-    ? new Date(a["first-release-date"])
-    : new Date(0);
-  const dateB = b["first-release-date"]
-    ? new Date(b["first-release-date"])
-    : new Date(0);
-  return dateB - dateA;
-});
-
-export default { albums };
+export default getMusicData();
