@@ -1,135 +1,139 @@
-export default async (req, context) => {
-  const LISTENBRAINZ_USERNAME = process.env.LISTENBRAINZ_USERNAME;
-  const STEAM_API_KEY = process.env.STEAM_API_KEY;
-  const STEAM_ID = process.env.STEAM_ID;
+const LISTENBRAINZ_USERNAME = process.env.LISTENBRAINZ_USERNAME;
+const STEAM_API_KEY = process.env.STEAM_API_KEY;
+const STEAM_ID = process.env.STEAM_ID;
 
-  const statuses = [];
+async function getMusicStatus() {
+  if (!LISTENBRAINZ_USERNAME) return null;
 
-  // ============================================
-  // MUSIC STATUS (ListenBrainz)
-  // ============================================
-  if (LISTENBRAINZ_USERNAME) {
-    try {
-      const playingUrl = `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/playing-now`;
-      const recentUrl = `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/listens?count=1`;
+  try {
+    const playingUrl = `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/playing-now`;
+    const recentUrl = `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/listens?count=1`;
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      const playingRes = await fetch(playingUrl, { signal: controller.signal });
+    const playingRes = await fetch(playingUrl, {
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timeoutId));
+
+    let listen = null;
+    if (playingRes.ok) {
       const playingData = await playingRes.json();
-      clearTimeout(timeoutId);
-
-      let listen = null;
-
       if (
         playingData?.payload?.playing_now &&
         playingData.payload.listens.length > 0
       ) {
         listen = playingData.payload.listens[0];
-      } else {
-        const recentRes = await fetch(recentUrl);
+      }
+    }
+
+    if (!listen) {
+      const recentRes = await fetch(recentUrl);
+      if (recentRes.ok) {
         const recentData = await recentRes.json();
         listen = recentData?.payload?.listens?.[0];
       }
-
-      if (listen) {
-        const track = listen.track_metadata.track_name;
-        const recordingMbid =
-          listen.track_metadata.additional_info.recording_mbid ||
-          listen.track_metadata.recording_msid;
-        const artistNames =
-          listen.track_metadata.additional_info.artist_names || [];
-        const artistMbids =
-          listen.track_metadata.additional_info.artist_mbids || [];
-
-        const trackLink = recordingMbid
-          ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${track}</cite></a>`
-          : `<cite>${track}</cite>`;
-
-        const artistLinks = artistNames
-          .map((name, i) => {
-            const mbid = artistMbids[i];
-            return mbid
-              ? `<a href="https://listenbrainz.org/artist/${mbid}" target="_blank" rel="noopener noreferrer">${name}</a>`
-              : name;
-          })
-          .join(" · ");
-
-        const plainText = `${track} by ${artistNames.join(" · ")}`;
-
-        statuses.push({
-          type: "music",
-          html: `<span data-chars="█" data-status="${plainText}">${trackLink} by ${artistLinks}</span>`,
-        });
-      } else {
-        statuses.push({
-          type: "music",
-          html: `<span data-chars="█" data-status="No recent listens">No recent listens</span>`,
-        });
-      }
-    } catch (err) {
-      console.error("Error fetching music:", err);
-      statuses.push({
-        type: "music",
-        html: `<span data-chars="█" data-status="Error loading music">Error loading music</span>`,
-      });
     }
+
+    if (!listen) return null;
+
+    const track = listen.track_metadata;
+    const trackName = track.track_name;
+    const recordingMbid =
+      track.additional_info?.recording_mbid || track.recording_msid;
+    const artistNames = track.additional_info?.artist_names || [];
+    const artistMbids = track.additional_info?.artist_mbids || [];
+
+    const trackLink = recordingMbid
+      ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
+      : `<cite>${trackName}</cite>`;
+
+    const artistLinks = artistNames
+      .map((name, i) => {
+        const mbid = artistMbids[i];
+        return mbid
+          ? `<a href="https://listenbrainz.org/artist/${mbid}" target="_blank" rel="noopener noreferrer">${name}</a>`
+          : name;
+      })
+      .join(" · ");
+
+    const plainText = `${trackName} by ${artistNames.join(" · ")}`;
+    return `<span data-chars="█" data-status="${plainText}">${trackLink} by ${artistLinks}</span>`;
+  } catch (err) {
+    console.error("Error fetching music:", err);
+    return null;
+  }
+}
+
+async function getGameStatus() {
+  if (!STEAM_API_KEY || !STEAM_ID) return null;
+
+  try {
+    const steamUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${STEAM_API_KEY}&steamids=${STEAM_ID}`;
+    const recentGamesUrl = `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${STEAM_API_KEY}&steamid=${STEAM_ID}&count=1`;
+
+    const [summaryRes, recentRes] = await Promise.all([
+      fetch(steamUrl),
+      fetch(recentGamesUrl),
+    ]);
+
+    if (!summaryRes.ok || !recentRes.ok) {
+      console.error("Steam API request failed");
+      return null;
+    }
+
+    const [summaryData, recentData] = await Promise.all([
+      summaryRes.json(),
+      recentRes.json(),
+    ]);
+
+    const player = summaryData.response?.players?.[0];
+    if (player?.gameextrainfo) {
+      const gameName = player.gameextrainfo;
+      const gameLink = player.gameid
+        ? `<a href="https://store.steampowered.com/app/${player.gameid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`
+        : `<cite>${gameName}</cite>`;
+      return `<span data-chars="█" data-status="${gameName}">${gameLink}</span>`;
+    }
+
+    const recentGame = recentData.response?.games?.[0];
+    if (recentGame) {
+      const gameName = recentGame.name;
+      const gameLink = `<a href="https://store.steampowered.com/app/${recentGame.appid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`;
+      return `<span data-chars="█" data-status="${gameName}">${gameLink}</span>`;
+    }
+
+    return `<span data-chars="█" data-status="No recent game">No recent game</span>`;
+  } catch (err) {
+    console.error("Error fetching Steam:", err);
+    return null;
+  }
+}
+
+export default async (req, context) => {
+  const [musicResult, gameResult] = await Promise.allSettled([
+    getMusicStatus(),
+    getGameStatus(),
+  ]);
+
+  const statuses = [];
+  if (musicResult.status === "fulfilled" && musicResult.value) {
+    statuses.push(musicResult.value);
+  }
+  if (gameResult.status === "fulfilled" && gameResult.value) {
+    statuses.push(gameResult.value);
   }
 
-  // ============================================
-  // STEAM STATUS
-  // ============================================
-  if (STEAM_API_KEY && STEAM_ID) {
-    try {
-      const steamUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${STEAM_API_KEY}&steamids=${STEAM_ID}`;
-      const recentGamesUrl = `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${STEAM_API_KEY}&steamid=${STEAM_ID}&count=1`;
-
-      const [summaryRes, recentRes] = await Promise.all([
-        fetch(steamUrl),
-        fetch(recentGamesUrl),
-      ]);
-
-      const summaryData = await summaryRes.json();
-      const recentData = await recentRes.json();
-
-      const player = summaryData?.response?.players?.[0];
-      const recentGame = recentData?.response?.games?.[0];
-
-      if (player?.gameextrainfo) {
-        // Currently playing
-        const gameLink = player.gameid
-          ? `<a href="https://store.steampowered.com/app/${player.gameid}" target="_blank" rel="noopener noreferrer"><cite>${player.gameextrainfo}</cite></a>`
-          : `<cite>${player.gameextrainfo}</cite>`;
-
-        statuses.push({
-          type: "steam",
-          html: `<span data-chars="█" data-status="${player.gameextrainfo}">${gameLink}</span>`,
-        });
-      } else if (recentGame) {
-        // Recently played
-        const gameLink = `<a href="https://store.steampowered.com/app/${recentGame.appid}" target="_blank" rel="noopener noreferrer"><cite>${recentGame.name}</cite></a>`;
-
-        statuses.push({
-          type: "steam",
-          html: `<span data-chars="█" data-status="${recentGame.name}">${gameLink}</span>`,
-        });
-      } else {
-        statuses.push({
-          type: "steam",
-          html: `<span data-chars="█" data-status="No recent game">No recent game</span>`,
-        });
-      }
-    } catch (err) {
-      console.error("Error fetching Steam:", err);
-      statuses.push({
-        type: "steam",
-        html: `<span data-chars="█" data-status="Error loading Steam">Error loading Steam</span>`,
-      });
-    }
+  if (statuses.length === 0) {
+    // Return a 204 No Content if no statuses could be generated,
+    // which tells the client not to update anything.
+    return new Response(null, {
+      status: 204,
+      headers: { "Cache-Control": "public, max-age=60" },
+    });
   }
 
-  const html = statuses.map((s) => s.html).join("\n");
+  const html = statuses.join("\n");
 
   return new Response(html, {
     headers: {
