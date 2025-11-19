@@ -33,7 +33,11 @@ async function loadStatus() {
         chars: "█",
         speed: 0.3,
       },
-      innerHTML: (i) => newElements[i].innerHTML,
+      onComplete() {
+        statusElements.forEach(
+          (el, i) => (el.innerHTML = newElements[i].innerHTML),
+        );
+      },
     });
   } catch (err) {
     console.error("Status error:", err);
