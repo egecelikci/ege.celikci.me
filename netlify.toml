@@ -4,7 +4,7 @@
     functions = "functions"
 
 [dev]
-    targetPort = 8081
+    targetPort = 8080
     port = 8888
 
 [[plugins]]
