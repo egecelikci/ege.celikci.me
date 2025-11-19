@@ -32,7 +32,6 @@ if (!STEAM_API_KEY) {
 
       if (data?.response?.games) {
         for (const game of data.response.games) {
-          // Only add if not already in map (first user wins)
           if (!allGamesMap.has(game.appid)) {
             allGamesMap.set(game.appid, game);
           }
@@ -45,7 +44,6 @@ if (!STEAM_API_KEY) {
     }
   }
 
-  // Convert to array and sort alphabetically by name
   games = Array.from(allGamesMap.values()).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
