@@ -37,6 +37,12 @@
     status = 301
     force = true
 
+[[redirects]]
+    from = "https://ege.celikci.me/wiki/*"
+    to = "https://wiki.ege.celikci.me/:splat"
+    status = 301
+    force = true
+
 # Bots
 [[redirects]]
     from = "/wp-login.php"
