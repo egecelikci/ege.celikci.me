@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 const timestamp = new Date();
 const env = process.env.NODE_ENV;
 
@@ -9,10 +10,15 @@ function isCSSNakedDay() {
   return startEpoch <= now && now <= endEpoch;
 }
 
+function gitHash() {
+  return execSync("git rev-parse HEAD").toString().trim();
+}
+
 export default {
   env: env,
   dev: env !== "production",
   timestamp: timestamp,
   id: timestamp.valueOf(),
   naked: isCSSNakedDay(),
+  git: gitHash(),
 };
