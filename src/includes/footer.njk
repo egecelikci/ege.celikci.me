@@ -5,6 +5,13 @@
       <a class="p-name u-url" rel="me" href="{{ site.url }}"
         >{{ author.name }}</a
       >
+      ·
+      {% if build.git %}
+        <a
+          href="https://github.com/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+          >{{ build.git | slice(0, 7) }}</a
+        >
+      {% endif %}
     </p>
     <p class="footer__item footer__item--right u-desktop-only">
       <a
@@ -23,9 +30,9 @@
       <a
         href="https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}"
         class="footer__icon"
-        title="Edit this page on Github"
+        title="Edit this page on GitHub"
       >
-        <span class="sr-only">Edit this page on Github</span>
+        <span class="sr-only">Edit this page on GitHub</span>
         {% icon "github" %}
       </a>
       <a href="{{ "/feed.atom" | url }}" class="footer__icon" title="RSS Feed">
