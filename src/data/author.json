@@ -12,11 +12,11 @@
     },
     "matrix": {
       "username": "eg",
-      "envs": {
-        "host": "envs.net"
-      },
       "metropolis": {
         "host": "metropolis.nexus"
+      },
+      "envs": {
+        "host": "envs.net"
       }
     }
   }

@@ -1,6 +1,7 @@
 const LISTENBRAINZ_USERNAME = process.env.LISTENBRAINZ_USERNAME;
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID;
+const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
 function createStatusHtml(id, plainText, richContent) {
   const span = `<span data-chars="█" data-status="${plainText}">${richContent}</span>`;
@@ -18,6 +19,7 @@ async function getMusicStatus() {
     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     const playingRes = await fetch(playingUrl, {
+      headers: { "User-Agent": USER_AGENT },
       signal: controller.signal,
     }).finally(() => clearTimeout(timeoutId));
 
@@ -33,7 +35,9 @@ async function getMusicStatus() {
     }
 
     if (!listen) {
-      const recentRes = await fetch(recentUrl).catch(() => null);
+      const recentRes = await fetch(recentUrl, {
+        headers: { "User-Agent": USER_AGENT },
+      }).catch(() => null);
       if (recentRes?.ok) {
         const recentData = await recentRes.json();
         listen = recentData?.payload?.listens?.[0];
@@ -82,8 +86,8 @@ async function getGameStatus() {
     const recentGamesUrl = `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${STEAM_API_KEY}&steamid=${STEAM_ID}&count=1`;
 
     const [summaryRes, recentRes] = await Promise.all([
-      fetch(steamUrl),
-      fetch(recentGamesUrl),
+      fetch(steamUrl, { headers: { "User-Agent": USER_AGENT } }),
+      fetch(recentGamesUrl, { headers: { "User-Agent": USER_AGENT } }),
     ]);
 
     if (!summaryRes.ok || !recentRes.ok) {
