@@ -2,6 +2,11 @@ const LISTENBRAINZ_USERNAME = process.env.LISTENBRAINZ_USERNAME;
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID;
 
+function createStatusHtml(id, plainText, richContent) {
+  const span = `<span data-chars="█" data-status="${plainText}">${richContent}</span>`;
+  return `<div id="${id}">${span}</div>`;
+}
+
 async function getMusicStatus() {
   if (!LISTENBRAINZ_USERNAME) return null;
 
@@ -28,8 +33,8 @@ async function getMusicStatus() {
     }
 
     if (!listen) {
-      const recentRes = await fetch(recentUrl);
-      if (recentRes.ok) {
+      const recentRes = await fetch(recentUrl).catch(() => null);
+      if (recentRes?.ok) {
         const recentData = await recentRes.json();
         listen = recentData?.payload?.listens?.[0];
       }
@@ -38,7 +43,7 @@ async function getMusicStatus() {
     if (!listen) return null;
 
     const track = listen.track_metadata;
-    const trackName = track.track_name;
+    const trackName = track.track_name || "Unknown Track";
     const recordingMbid =
       track.additional_info?.recording_mbid || track.recording_msid;
     const artistNames = track.additional_info?.artist_names || [];
@@ -58,7 +63,11 @@ async function getMusicStatus() {
       .join(" · ");
 
     const plainText = `${trackName} by ${artistNames.join(" · ")}`;
-    return `<span data-chars="█" data-status="${plainText}">${trackLink} by ${artistLinks}</span>`;
+    return createStatusHtml(
+      "music-status",
+      plainText,
+      `${trackLink} by ${artistLinks}`,
+    );
   } catch (err) {
     console.error("Error fetching music:", err);
     return null;
@@ -93,17 +102,17 @@ async function getGameStatus() {
       const gameLink = player.gameid
         ? `<a href="https://store.steampowered.com/app/${player.gameid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`
         : `<cite>${gameName}</cite>`;
-      return `<span data-chars="█" data-status="${gameName}">${gameLink}</span>`;
+      return createStatusHtml("game-status", gameName, gameLink);
     }
 
     const recentGame = recentData.response?.games?.[0];
     if (recentGame) {
       const gameName = recentGame.name;
       const gameLink = `<a href="https://store.steampowered.com/app/${recentGame.appid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`;
-      return `<span data-chars="█" data-status="${gameName}">${gameLink}</span>`;
+      return createStatusHtml("game-status", gameName, gameLink);
     }
 
-    return `<span data-chars="█" data-status="No recent game">No recent game</span>`;
+    return null;
   } catch (err) {
     console.error("Error fetching Steam:", err);
     return null;
@@ -125,8 +134,6 @@ export default async (req, context) => {
   }
 
   if (statuses.length === 0) {
-    // Return a 204 No Content if no statuses could be generated,
-    // which tells the client not to update anything.
     return new Response(null, {
       status: 204,
       headers: { "Cache-Control": "public, max-age=60" },
