@@ -1,5 +1,5 @@
 export default {
-  title: "egecelikci",
+  title: "ege.celikci.me",
   host: "ege.celikci.me",
   description: "website",
   lang: "en",
