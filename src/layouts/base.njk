@@ -18,12 +18,22 @@
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="{{ '/.netlify/functions/status' | url }}"
-      as="fetch"
-      crossorigin
-    />
+    {# Preload status island for faster replacement #}
+    {% if build.dev %}
+      <link
+        rel="preload"
+        as="fetch"
+        href="http://localhost:9999/.netlify/functions/status"
+        crossorigin="anonymous"
+      />
+    {% else %}
+      <link
+        rel="preload"
+        as="fetch"
+        href="/.netlify/functions/status"
+        crossorigin="anonymous"
+      />
+    {% endif %}
     <link rel="preconnect" href="https://webmention.io" />
     <link rel="stylesheet" href="{{ '/assets/styles/themes.css' | url }}" />
 
