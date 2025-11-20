@@ -11,7 +11,7 @@ const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
 const PUBLIC_COVER_DIR = "src/assets/images/covers";
 const CRITIQUEBRAINZ_USER_ID = "4d5dbf68-7a90-4166-b15a-16e92f549758";
 const LIMIT = 50;
-const USER_AGENT = "eleventy-music-data-fetcher/1.0 ( https://ege.celikci.me )";
+const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
 await fs.mkdir(DATA_DIR, { recursive: true });
 await fs.mkdir(COVER_DIR, { recursive: true });
