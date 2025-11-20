@@ -16,6 +16,10 @@
   .status-text-wrapper {
     overflow: hidden;
     flex-grow: 1;
+
+    &:hover span[data-status] {
+      animation-play-state: paused;
+    }
   }
 
   span[data-status] {

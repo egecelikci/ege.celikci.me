@@ -75,7 +75,7 @@ async function loadStatus() {
       };
 
       processStatus(musicPlaceholder, newMusicDiv, 0);
-      processStatus(gamePlaceholder, newGameDiv, 0.125);
+      processStatus(gamePlaceholder, newGameDiv, 0);
     });
   } catch (err) {
     console.error("Status error:", err);
