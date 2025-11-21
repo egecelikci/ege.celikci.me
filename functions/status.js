@@ -1,6 +1,7 @@
 const LISTENBRAINZ_USERNAME = process.env.LISTENBRAINZ_USERNAME;
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID;
+const ANILIST_ID = process.env.ANILIST_ID;
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
 function createStatusHtml(id, plainText, richContent) {
@@ -123,10 +124,64 @@ async function getGameStatus() {
   }
 }
 
+async function getMangaStatus() {
+  if (!ANILIST_ID) return null;
+
+  const query = `
+    query ($userId: Int) {
+      Page(page: 1, perPage: 1) {
+        mediaList(userId: $userId, type: MANGA, sort: UPDATED_TIME_DESC, status_in: [CURRENT, REPEATING, COMPLETED]) {
+          media {
+            title {
+              romaji
+              english
+            }
+            siteUrl
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": USER_AGENT,
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: { userId: ANILIST_ID },
+      }),
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const entry = data?.data?.Page?.mediaList?.[0];
+
+    if (!entry) return null;
+
+    const title = entry.media.title.english || entry.media.title.romaji;
+    const url = entry.media.siteUrl;
+
+    const plainText = title;
+    const richLink = `<a href="${url}" target="_blank" rel="noopener noreferrer"><cite>${title}</cite></a>`;
+
+    return createStatusHtml("manga-status", plainText, richLink);
+  } catch (err) {
+    console.error("Error fetching AniList:", err);
+    return null;
+  }
+}
+
 export default async (req, context) => {
-  const [musicResult, gameResult] = await Promise.allSettled([
+  const [musicResult, gameResult, mangaResult] = await Promise.allSettled([
     getMusicStatus(),
     getGameStatus(),
+    getMangaStatus(),
   ]);
 
   const statuses = [];
@@ -135,6 +190,9 @@ export default async (req, context) => {
   }
   if (gameResult.status === "fulfilled" && gameResult.value) {
     statuses.push(gameResult.value);
+  }
+  if (mangaResult.status === "fulfilled" && mangaResult.value) {
+    statuses.push(mangaResult.value);
   }
 
   if (statuses.length === 0) {
