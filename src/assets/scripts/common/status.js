@@ -42,12 +42,19 @@ async function loadStatus() {
         "#music-status-container",
       );
       const gamePlaceholder = document.querySelector("#game-status-container");
+      const AniListPlaceholder = document.querySelector(
+        "#manga-status-container",
+      );
 
       const newMusicDiv = temp.querySelector("#music-status");
       const newGameDiv = temp.querySelector("#game-status");
+      const newAniListDiv = temp.querySelector("#manga-status");
 
       const processStatus = (placeholder, newData, delay) => {
-        if (!placeholder || !newData) return;
+        if (!placeholder || !newData) {
+          if (placeholder) placeholder.closest("li").hidden = true;
+          return;
+        }
 
         const newSpan = newData.querySelector("span");
         if (!newSpan) return;
@@ -74,8 +81,10 @@ async function loadStatus() {
         });
       };
 
+      // 3. Execute
       processStatus(musicPlaceholder, newMusicDiv, 0);
       processStatus(gamePlaceholder, newGameDiv, 0);
+      processStatus(AniListPlaceholder, newAniListDiv, 0);
     });
   } catch (err) {
     console.error("Status error:", err);
