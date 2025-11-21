@@ -27,7 +27,7 @@ function createMarqueeAnimation(element, originalHTML) {
 }
 
 async function loadStatus() {
-  if (!document.querySelector(".status")) return;
+  if (!document.querySelector(".link-list--status")) return;
 
   try {
     const res = await fetch("/.netlify/functions/status");

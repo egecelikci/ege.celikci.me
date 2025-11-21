@@ -1,0 +1,55 @@
+@use "../utils/mixins";
+
+.link-list {
+  list-style-type: none !important;
+  padding-left: 0;
+
+  .icon {
+    font-size: 1.5rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.link-list--status {
+  > li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    max-width: 100%;
+
+    .status-text-wrapper {
+      overflow: hidden;
+      flex-grow: 1;
+
+      &:hover span[data-status] {
+        animation-play-state: paused;
+      }
+    }
+
+    span[data-status] {
+      display: inline-block;
+      will-change: transform;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none !important;
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    @include mixins.hyphenate;
+
+    cite {
+      font-style: normal;
+    }
+  }
+}

@@ -8,7 +8,7 @@ permalink: /
 ---
 
 <h2>links</h2>
-<ul class="about__social">
+<ul class="link-list link-list--social">
   <li>
     {% icon "music" %}<a
       href="https://listenbrainz.org/user/{{ author.username }}"
@@ -62,20 +62,20 @@ permalink: /
 </ul>
 
 <h2>status</h2>
-<ul>
-  <li class="status">
+<ul class="link-list link-list--status">
+  <li>
     {% icon "headphones" %}
     <div class="status-text-wrapper" id="music-status-container">
       <span data-chars="█" data-status="">███████████████</span>
     </div>
   </li>
-  <li class="status">
+  <li>
     {% icon "gamepad" %}
     <div class="status-text-wrapper" id="game-status-container">
       <span data-chars="█" data-status="">███████████████</span>
     </div>
   </li>
-  <li class="status">
+  <li>
     {% icon "book" %}
     <div class="status-text-wrapper" id="manga-status-container">
       <span data-chars="█" data-status="">███████████████</span>

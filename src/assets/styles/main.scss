@@ -31,17 +31,16 @@
 // partials with local scope to a component
 //--------------------
 
-@use "components/about";
 @use "components/album";
 @use "components/footer";
 @use "components/header";
 @use "components/icon";
+@use "components/linklist";
 @use "components/markdown";
 @use "components/nav";
 @use "components/page";
 @use "components/post";
 @use "components/postlist";
-@use "components/status";
 
 //--------------------
 // VENDOR
