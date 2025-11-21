@@ -17,6 +17,10 @@
     white-space: nowrap;
     max-width: 100%;
 
+    .icon {
+      flex-shrink: 0;
+    }
+
     .status-text-wrapper {
       overflow: hidden;
       flex-grow: 1;
