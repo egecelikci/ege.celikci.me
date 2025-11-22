@@ -11,7 +11,7 @@ const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
 const PUBLIC_COVER_DIR = "src/assets/images/covers";
 const CRITIQUEBRAINZ_USER_ID = "4d5dbf68-7a90-4166-b15a-16e92f549758";
 const LIMIT = 50;
-const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
+const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
 await fs.mkdir(DATA_DIR, { recursive: true });
 await fs.mkdir(COVER_DIR, { recursive: true });
@@ -86,19 +86,23 @@ async function getFavoriteAlbumIds() {
     const url = `https://critiquebrainz.org/ws/1/review?user_id=${CRITIQUEBRAINZ_USER_ID}&limit=${LIMIT}&offset=${offset}`;
     try {
       const batch = await Fetch(url, {
-        duration: "1d", // Cache critiquebrainz results for a day
+        duration: "0s",
         type: "json",
-        fetchOptions: { headers: { "User-Agent": USER_AGENT } },
+        fetchOptions: {
+          headers: {
+            "User-Agent": USER_AGENT,
+            Accept: "application/json",
+          },
+        },
       });
       if (!batch.reviews?.length) break;
       allReviews.push(...batch.reviews);
       offset += LIMIT;
-      await sleep(1000); // Respect API rate limits
+      await sleep(1000);
     } catch (e) {
       console.error(
         `[music.js] Failed to fetch reviews from CritiqueBrainz: ${e.message}`,
       );
-      // If the API fails, we can still proceed with what we have from the cache.
       break;
     }
   }
@@ -115,11 +119,16 @@ async function fetchAlbumData(rgid) {
   const url = `https://musicbrainz.org/ws/2/release-group/${rgid}?inc=releases+artists&fmt=json`;
   try {
     await Fetch(url, {
-      duration: "30d", // It's metadata, cache for a long time
+      duration: "30d",
       type: "json",
       directory: DATA_DIR,
       filenameFormat: () => rgid,
-      fetchOptions: { headers: { "User-Agent": USER_AGENT } },
+      fetchOptions: {
+        headers: {
+          "User-Agent": USER_AGENT,
+          Accept: "application/json",
+        },
+      },
     });
   } catch (e) {
     console.error(
