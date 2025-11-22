@@ -1,10 +1,15 @@
 @use "../utils/variables";
+@use "../utils/mixins";
 
 .album {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: variables.$spacing-x;
   padding: 1rem 0;
+
+  @include mixins.mq(md) {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
 
   &__item {
     display: flex;
@@ -18,7 +23,6 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
 
-    /* INTERACTION: Instantly bring card to front on Hover/Focus */
     &:hover,
     &:focus-visible,
     &:focus-within {
@@ -26,11 +30,6 @@
       outline: none !important;
       box-shadow: none !important;
       background: transparent !important;
-
-      /* REMOVED: This is now handled by GSAP for a cooler effect */
-      /* .album__cover__color {
-        opacity: 1;
-      } */
 
       .album__title {
         text-decoration: underline;
@@ -66,10 +65,6 @@
       left: 0;
       z-index: 2;
       opacity: 0;
-      /* REMOVED: Handled by GSAP */
-      /* transition: opacity 0.3s ease; */
-
-      /* Added filter and transform to tell the browser to prepare for these animations */
       will-change: opacity, filter, transform;
     }
 
@@ -77,16 +72,7 @@
       position: relative;
       z-index: 1;
 
-      /* NO MIX-BLEND-MODE NEEDED! 
-         The image is transparent png (Black ink + Transparent).
-         It sits perfectly on any background. 
-      */
-
       @media (prefers-color-scheme: dark) {
-        /* DARK MODE: 
-           Invert Black Ink -> White Ink.
-           Transparent -> Stays Transparent. 
-        */
         filter: invert(1);
         opacity: 0.9;
       }
