@@ -1,36 +1,115 @@
 @use "../utils/variables";
 
 .album {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: -5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: variables.$spacing-x;
+  padding: 1rem 0;
 
   &__item {
-    margin: 5px;
-    flex: 0 1 calc(33.33% - 10px);
-    max-width: 290px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    z-index: 1;
+    will-change: transform, opacity;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 
-    img {
-      width: 100%;
-      height: auto;
-      box-shadow: variables.$box-shadow;
-    }
+    /* INTERACTION: Instantly bring card to front on Hover/Focus */
+    &:hover,
+    &:focus-visible,
+    &:focus-within {
+      z-index: 100;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
 
-    &__mono {
-      mix-blend-mode: darken;
-      @media (prefers-color-scheme: dark) {
-        mix-blend-mode: lighten;
-        filter: invert(100%) brightness(68%) sepia(100%) hue-rotate(225deg);
+      /* REMOVED: This is now handled by GSAP for a cooler effect */
+      /* .album__cover__color {
+        opacity: 1;
+      } */
+
+      .album__title {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
       }
     }
   }
 
-  li {
-    font-family: monospace, monospace;
+  &__cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: block;
+    position: relative;
+    z-index: 10;
 
-    & + li {
-      margin-top: 0.5rem;
+    border: 2px solid variables.$gray;
+    background-color: transparent;
+
+    @media (prefers-color-scheme: dark) {
+      border-color: variables.$gray-dark;
     }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    &__color {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      opacity: 0;
+      /* REMOVED: Handled by GSAP */
+      /* transition: opacity 0.3s ease; */
+
+      /* Added filter and transform to tell the browser to prepare for these animations */
+      will-change: opacity, filter, transform;
+    }
+
+    &__mono {
+      position: relative;
+      z-index: 1;
+
+      /* NO MIX-BLEND-MODE NEEDED! 
+         The image is transparent png (Black ink + Transparent).
+         It sits perfectly on any background. 
+      */
+
+      @media (prefers-color-scheme: dark) {
+        /* DARK MODE: 
+           Invert Black Ink -> White Ink.
+           Transparent -> Stays Transparent. 
+        */
+        filter: invert(1);
+        opacity: 0.9;
+      }
+    }
+  }
+
+  &__meta {
+    font-family: variables.$font-family-monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    position: relative;
+    z-index: 5;
+  }
+
+  &__title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+
+  &__artist {
+    display: block;
+    opacity: 0.8;
+    font-size: 0.85rem;
   }
 }

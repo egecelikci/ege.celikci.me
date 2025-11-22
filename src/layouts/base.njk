@@ -19,20 +19,22 @@
       crossorigin
     />
     {# Preload status island for faster replacement #}
-    {% if build.dev %}
-      <link
-        rel="preload"
-        as="fetch"
-        href="http://localhost:9999/.netlify/functions/status"
-        crossorigin="anonymous"
-      />
-    {% else %}
-      <link
-        rel="preload"
-        as="fetch"
-        href="/.netlify/functions/status"
-        crossorigin="anonymous"
-      />
+    {% if page.url == "/" %}
+      {% if build.dev %}
+        <link
+          rel="preload"
+          as="fetch"
+          href="http://localhost:9999/.netlify/functions/status"
+          crossorigin="anonymous"
+        />
+      {% else %}
+        <link
+          rel="preload"
+          as="fetch"
+          href="/.netlify/functions/status"
+          crossorigin="anonymous"
+        />
+      {% endif %}
     {% endif %}
     <link rel="preconnect" href="https://webmention.io" />
     <link rel="stylesheet" href="{{ '/assets/styles/themes.css' | url }}" />
