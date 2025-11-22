@@ -3,7 +3,7 @@
 
 .album {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: variables.$spacing-x;
   padding: 1rem 0;
 
@@ -64,8 +64,10 @@
       top: 0;
       left: 0;
       z-index: 2;
-      opacity: 0;
-      will-change: opacity, filter, transform;
+      will-change: clip-path;
+      clip-path: inset(
+        0 100% 0 0
+      ); /* top, right, bottom, left - clipped from the right */
     }
 
     &__mono {

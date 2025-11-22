@@ -35,15 +35,6 @@ items.forEach((item) => {
   const colorImg = item.querySelector(".lazy-hover");
   let isHovering = false;
 
-  if (colorImg) {
-    gsap.set(colorImg, {
-      opacity: 0,
-      filter: "blur(3px)",
-      scale: 0.9,
-      transformOrigin: "center center",
-    });
-  }
-
   const onEnter = () => {
     isHovering = true;
 
@@ -55,20 +46,16 @@ items.forEach((item) => {
           if (isHovering) {
             gsap.fromTo(
               colorImg,
-
-              { opacity: 0, filter: "blur(3px)", scale: 0.9 },
-
+              { clipPath: "inset(0 100% 0 0)" },
               {
-                opacity: 1,
-                filter: "blur(0px)",
-                scale: 1,
-                duration: 1.0,
-                ease: "sine.out",
+                clipPath: "inset(0 0% 0 0)",
+                duration: 0.6,
+                ease: "power3.inOut",
                 overwrite: "auto",
               },
             );
           } else {
-            gsap.set(colorImg, { filter: "blur(0px)", scale: 1, opacity: 0 });
+            gsap.set(colorImg, { scale: 1, opacity: 0 });
           }
         };
 
@@ -76,10 +63,8 @@ items.forEach((item) => {
         delete colorImg.dataset.src;
       } else if (colorImg.complete && colorImg.naturalWidth > 0) {
         gsap.to(colorImg, {
-          opacity: 1,
-          filter: "blur(0px)",
-          scale: 1,
-          duration: 0.3,
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.4,
           ease: "power2.out",
           overwrite: "auto",
         });
@@ -101,9 +86,9 @@ items.forEach((item) => {
 
     if (colorImg) {
       gsap.to(colorImg, {
-        opacity: 0,
+        clipPath: "inset(0 100% 0 0)",
         duration: 0.3,
-        ease: "power2.in",
+        ease: "power2.out",
         overwrite: "auto",
       });
     }
@@ -127,34 +112,8 @@ items.forEach((item) => {
     });
   };
 
-  const onMove = (e) => {
-    const rect = item.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const xPct = (x - centerX) / centerX;
-    const yPct = (y - centerY) / centerY;
-
-    const tiltStrength = 10;
-    const magneticPull = 12;
-
-    gsap.to(cover, {
-      rotationX: -yPct * tiltStrength,
-      rotationY: xPct * tiltStrength,
-      x: xPct * magneticPull,
-      y: yPct * magneticPull,
-      duration: 0.4,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
-  };
-
   item.addEventListener("mouseenter", onEnter);
   item.addEventListener("mouseleave", onLeave);
-  item.addEventListener("mousemove", onMove);
   item.addEventListener("focus", onEnter);
   item.addEventListener("blur", onLeave);
 });
