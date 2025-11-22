@@ -15,33 +15,36 @@ permalink: /music/
       {% set artistNames = artistNames + ac.name %}
     {% endfor %}
 
-    <div class="album__item">
-      <a
-        href="https://listenbrainz.org/album/{{ album.id }}"
-        title="{{ album.title }} by {{ artistNames }}"
-      >
+    <a
+      href="https://listenbrainz.org/album/{{ album.id }}"
+      class="album__item"
+      title="{{ album.title }} by {{ artistNames }}"
+    >
+      <div class="album__cover">
         <img
-          class="album__item__mono"
-          alt="{{ album.title }} by {{ artistNames }}"
-          src="/assets/images/covers/{{ album.id }}.png"
+          class="album__cover__color lazy-hover"
+          data-src="/assets/images/covers/{{ album.id }}_color.png"
+          alt=""
+          width="290"
+          height="290"
         />
-      </a>
-    </div>
-  {% endfor %}
+        <img
+          class="album__cover__mono"
+          src="/assets/images/covers/{{ album.id }}.png"
+          alt="{{ album.title }} by {{ artistNames }}"
+          loading="lazy"
+          width="290"
+          height="290"
+        />
+      </div>
 
-  <ul>
-    {% for album in music.albums %}
-      {% set artistNames = "" %}
-      {% for ac in album["artist-credit"] %}
-        {% if not loop.first %}{% set artistNames = artistNames + ", " %}{% endif %}
-        {% set artistNames = artistNames + ac.name %}
-      {% endfor %}
-      <li>
-        <a href="https://musicbrainz.org/release-group/{{ album.id }}">
+      <div class="album__meta">
+        <span class="album__title">{{ album.title }}</span>
+        <span class="album__artist">{{ artistNames }}</span>
+        <span class="album__year" style="opacity: 0.5">
           ({{ album["first-release-date"] | dateFromISO | readableDate("yyyy") }})
-          <cite>{{ album.title }}</cite> by {{ artistNames }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+        </span>
+      </div>
+    </a>
+  {% endfor %}
 </div>
