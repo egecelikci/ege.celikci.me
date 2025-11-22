@@ -9,7 +9,7 @@ const CACHE_DIR = ".cache";
 const DATA_DIR = path.join(CACHE_DIR, "albums", "data");
 const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
 const PUBLIC_COVER_DIR = "src/assets/images/covers";
-const CRITIQUEBRAINZ_USER_ID = "4d5dbf68-7a90-4166-b15a-16e92f549758";
+const CRITIQUEBRAINZ_USER_ID = process.env.CRITIQUEBRAINZ_USER_ID;
 const LIMIT = 50;
 const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
