@@ -7,6 +7,7 @@ pagination:
 permalink: /tag/{{ tag | slugify }}/
 eleventyComputed:
   title: "tagged “{{ tag }}”"
+  description: "Posts tagged with “{{ tag }}”."
 ---
 
 {%- set postlist = collections[tag] | default([]) -%}
