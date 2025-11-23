@@ -57,11 +57,17 @@
 
     border: 2px solid variables.$gray;
     background-color: transparent;
+
     transition:
       transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       border-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
     will-change: transform, box-shadow;
+
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
 
     @media (prefers-color-scheme: dark) {
       border-color: variables.$gray-dark;
@@ -72,6 +78,10 @@
       height: 100%;
       object-fit: cover;
       display: block;
+
+      /* 4. Prevent Chrome from recalculating image quality during scale */
+      backface-visibility: hidden;
+      transform: translateZ(0);
     }
 
     &__color {
@@ -79,11 +89,12 @@
       top: 0;
       left: 0;
       z-index: 2;
-      clip-path: inset(
-        0 100% 0 0
-      ); /* top, right, bottom, left - clipped from the right */
+
+      clip-path: inset(0 100% 0 0);
       transition: clip-path 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: clip-path;
+
+      transform: translateZ(0);
 
       .album__item:hover &,
       .album__item:focus-visible & {
