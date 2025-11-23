@@ -9,6 +9,14 @@ function createStatusHtml(id, plainText, richContent) {
   return `<div id="${id}">${span}</div>`;
 }
 
+const withTimeout = (promise, ms = 4000) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), ms),
+    ),
+  ]);
+
 async function getMusicStatus() {
   if (!LISTENBRAINZ_USERNAME) return null;
 
@@ -179,26 +187,28 @@ async function getMangaStatus() {
 
 export default async (req, context) => {
   const [musicResult, gameResult, mangaResult] = await Promise.allSettled([
-    getMusicStatus(),
-    getGameStatus(),
-    getMangaStatus(),
+    withTimeout(getMusicStatus(), 4500),
+    withTimeout(getGameStatus(), 4500),
+    withTimeout(getMangaStatus(), 4500),
   ]);
 
   const statuses = [];
-  if (musicResult.status === "fulfilled" && musicResult.value) {
+  if (musicResult.status === "fulfilled" && musicResult.value)
     statuses.push(musicResult.value);
-  }
-  if (gameResult.status === "fulfilled" && gameResult.value) {
+  if (gameResult.status === "fulfilled" && gameResult.value)
     statuses.push(gameResult.value);
-  }
-  if (mangaResult.status === "fulfilled" && mangaResult.value) {
+  if (mangaResult.status === "fulfilled" && mangaResult.value)
     statuses.push(mangaResult.value);
-  }
+
+  const cacheHeader = "public, s-maxage=15, stale-while-revalidate=60";
 
   if (statuses.length === 0) {
     return new Response(null, {
       status: 204,
-      headers: { "Cache-Control": "public, max-age=60" },
+      headers: {
+        "Cache-Control": cacheHeader,
+        "Netlify-CDN-Cache-Control": cacheHeader,
+      },
     });
   }
 
@@ -207,7 +217,8 @@ export default async (req, context) => {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=60",
+      "Cache-Control": cacheHeader,
+      "Netlify-CDN-Cache-Control": cacheHeader,
     },
   });
 };
