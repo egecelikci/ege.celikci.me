@@ -1,4 +1,7 @@
 ---
+layout: page
+title: "wiki"
+description: "Personal wiki."
 eleventyNavigation:
   key: wiki
   order: 4

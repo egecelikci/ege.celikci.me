@@ -64,6 +64,10 @@ export default function (config) {
     config.addShortcode(shortcodeName, shortcodes[shortcodeName]);
   });
 
+  config.addPairedShortcode("markdown", (content) => {
+    return markdown.render(content);
+  });
+
   // Vite Shortcodes
   Object.keys(viteHelpers).forEach((shortcodeName) => {
     config.addNunjucksAsyncShortcode(shortcodeName, viteHelpers[shortcodeName]);
