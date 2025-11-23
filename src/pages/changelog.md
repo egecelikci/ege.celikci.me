@@ -17,4 +17,4 @@ permalink: /changelog/
 
 ## 21 November 2025
 
-- add manga to
+- add manga to [status](/#status) section
