@@ -1,5 +1,4 @@
 ---
-layout: page
 title: "wiki"
 description: "Personal wiki."
 eleventyNavigation:
