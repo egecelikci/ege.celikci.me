@@ -9,7 +9,7 @@ permalink: /changelog/
 
 ## 23 November 2025
 
-- status is now updated without refreshing the page
+- [status](/#status) is now updated without refreshing the page
 
 ## 22 November 2025
 
