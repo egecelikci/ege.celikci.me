@@ -29,19 +29,3 @@ ScrollTrigger.batch(items, {
       ease: "elastic.out(1, 0.75)",
     }),
 });
-
-items.forEach((item) => {
-  const colorImg = item.querySelector(".lazy-hover");
-
-  const onEnter = () => {
-    if (colorImg) {
-      if (colorImg.dataset.src) {
-        colorImg.src = colorImg.dataset.src;
-        delete colorImg.dataset.src;
-      }
-    }
-  };
-
-  item.addEventListener("mouseenter", onEnter);
-  item.addEventListener("focus", onEnter);
-});
