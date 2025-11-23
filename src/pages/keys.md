@@ -1,6 +1,7 @@
 ---
 layout: page
 title: "keys"
+description: "Public keys for SSH and Matrix."
 permalink: /keys/
 ---
 
