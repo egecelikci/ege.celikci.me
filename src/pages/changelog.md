@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: journal
 title: "changelog"
 description: "website development changelog."
 permalink: /changelog/
