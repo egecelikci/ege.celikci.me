@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "changelog"
-description: "Website development changelog."
+description: "website development changelog."
 permalink: /changelog/
 ---
 
