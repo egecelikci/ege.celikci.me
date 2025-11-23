@@ -9,7 +9,7 @@ permalink: /music/
 ---
 
 <div class="album">
-  {% for album in music.albums %}
+  {% for album in music.albums | shuffle %}
     {% set artistNames = "" %}
     {% for ac in album["artist-credit"] %}
       {% if not loop.first %}{% set artistNames = artistNames + ", " %}{% endif %}

@@ -10,6 +10,7 @@ permalink: /changelog/
 ## 23 November 2025
 
 - [status](/#status) is now updated without refreshing the page
+- [music](/music) page albums is now sorted in randomized order instead of by release date
 
 ## 22 November 2025
 
