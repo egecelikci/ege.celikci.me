@@ -1,11 +1,11 @@
 ---
-layout: journal
+layout: post
 title: "changelog"
 description: "website development changelog."
 permalink: /changelog/
 ---
 
-release notes are inspired by [slashpages.net/#changelog](https://slashpages.net/#changelog). This changelog is also available as an [Atom feed](https://journal.miso.town/atom?url=https://ege.celikci.me/changelog) via [HTML Journal](https://journal.miso.town)
+release notes are inspired by [slashpages.net/#changelog](https://slashpages.net/#changelog). this changelog is also available as an [Atom feed](https://journal.miso.town/atom?url=https://ege.celikci.me/changelog) via [HTML Journal](https://journal.miso.town)
 
 ## 23 November 2025
 
