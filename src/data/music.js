@@ -114,6 +114,12 @@ async function ditherWithSharp(inputPath, outputPath) {
  * Fetches all 5-star album reviews from CritiqueBrainz.
  */
 async function getFavoriteAlbumIds() {
+  if (!CRITIQUEBRAINZ_USER_ID) {
+    console.warn(
+      "[music.js] CRITIQUEBRAINZ_USER_ID environment variable not set. Skipping favorite album fetch.",
+    );
+    return new Set();
+  }
   let offset = 0;
   let allReviews = [];
   while (true) {
