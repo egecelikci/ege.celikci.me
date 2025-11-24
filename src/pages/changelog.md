@@ -6,7 +6,7 @@ permalink: /changelog/
 ---
 
 a [slash page](https://slashpages.net/#changelog) for website development changelogs.
-this changelog is also available as an [Atom feed](https://journal.miso.town/atom?url=https://ege.celikci.me/changelog) via [![HTML Journal](/assets/images/88x31/banner-htmlj.png)](https://journal.miso.town)
+this changelog is also available as an [Atom feed](/feeds#changelog-entries) via [![HTML Journal](/assets/images/88x31/banner-htmlj.png)](https://journal.miso.town)
 
 ## 2025-11-23
 
