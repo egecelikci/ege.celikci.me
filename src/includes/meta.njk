@@ -24,7 +24,20 @@
   href="{{ '/assets/images/favicon/favicon.ico' | url }}"
 />
 <link rel="manifest" href="{{ '/site.webmanifest' | url }}" />
-<meta name="theme-color" content="#1a1a1a" />
+{%- set defaultTheme = themes | findById('default') -%}
+{%- set darkTheme = themes | findById('dark') -%}
+<!-- Light mode -->
+<meta
+  name="theme-color"
+  content="{{ defaultTheme.colors.background }}"
+  media="(prefers-color-scheme: light)"
+/>
+<!-- Dark mode -->
+<meta
+  name="theme-color"
+  content="{{ darkTheme.colors.background }}"
+  media="(prefers-color-scheme: dark)"
+/>
 
 {# RSS Feed #}
 <link
