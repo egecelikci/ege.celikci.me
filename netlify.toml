@@ -3,6 +3,10 @@
     publish = "dist"
     functions = "functions"
 
+[functions."daily-job"]
+    # Runs at 00:00 Europe/Istanbul time (21:00 UTC)
+    schedule = "0 21 * * *"
+
 [dev]
     targetPort = 8080
     port = 8888
