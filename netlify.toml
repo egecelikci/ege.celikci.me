@@ -14,20 +14,6 @@
 [[plugins]]
     package = "./plugins/cache"
 
-[[headers]]
-    for = "/*"
-    [headers.values]
-        X-Frame-Options = "DENY"
-        X-XSS-Protection = "1; mode=block"
-        X-Content-Type-Options = "nosniff"
-        Referrer-Policy= "no-referrer-when-downgrade"
-        Permissions-Policy = "interest-cohort=()"
-
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    cache-control = "max-age=0,no-cache,no-store,must-revalidate"
-
 # Netlify subdomain
 [[redirects]]
     from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
