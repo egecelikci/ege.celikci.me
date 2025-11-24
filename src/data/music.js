@@ -9,7 +9,7 @@ const CACHE_DIR = ".cache";
 const DATA_DIR = path.join(CACHE_DIR, "albums", "data");
 const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
 const PUBLIC_COVER_DIR = "src/assets/images/covers";
-const CRITIQUEBRAINZ_USER_ID = process.env.CRITIQUEBRAINZ_USER_ID;
+const CRITIQUEBRAINZ_ID = process.env.CRITIQUEBRAINZ_ID;
 const LIMIT = 50;
 const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
@@ -114,16 +114,16 @@ async function ditherWithSharp(inputPath, outputPath) {
  * Fetches all 5-star album reviews from CritiqueBrainz.
  */
 async function getFavoriteAlbumIds() {
-  if (!CRITIQUEBRAINZ_USER_ID) {
+  if (!CRITIQUEBRAINZ_ID) {
     console.warn(
-      "[music.js] CRITIQUEBRAINZ_USER_ID environment variable not set. Skipping favorite album fetch.",
+      "[music.js] CRITIQUEBRAINZ_ID environment variable not set. Skipping favorite album fetch.",
     );
     return new Set();
   }
   let offset = 0;
   let allReviews = [];
   while (true) {
-    const url = `https://critiquebrainz.org/ws/1/review?user_id=${CRITIQUEBRAINZ_USER_ID}&limit=${LIMIT}&offset=${offset}`;
+    const url = `https://critiquebrainz.org/ws/1/review?user_id=${CRITIQUEBRAINZ_ID}&limit=${LIMIT}&offset=${offset}`;
     try {
       const batch = await Fetch(url, {
         duration: "0s",
