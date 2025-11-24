@@ -5,6 +5,8 @@ pagination:
   size: 1
   alias: tag
   filter:
+    - all
+    - drafts
     - posts
 permalink: /tag/{{ tag | slugify }}/
 eleventyComputed:
