@@ -1,3 +1,4 @@
+src/_headers.njk
 src/feed-blogroll.njk
 src/robots.njk
 src/sitemap.njk
