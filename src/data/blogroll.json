@@ -7,6 +7,6 @@
   {
     "title": "crescentrose",
     "url": "https://crescentro.se",
-    "feed": "https://crescentro.se/posts/rss.xml"
+    "feed": "https://crescentro.se/posts/atom.xml"
   }
 ]
