@@ -2,30 +2,18 @@
 layout: base
 ---
 
-{# 
-   JOURNAL LAYOUT
-   Structure:
-   <h1>Title</h1>
-   <div>Intro</div>
-   <article>Entry 1</article>
-   <article>Entry 2</article>
-#}
-
-{# Added 'title' class here so it picks up global typography styles without Sass @extend errors #}
 <h1 class="journal__title title">
   {{ title }}
 </h1>
 
 {% set entries = content.split("<h2") %}
 
-{# 1. The Intro (Content before the first h2) #}
 {% if entries[0] %}
   <div class="journal__intro markdown">
     {{ entries[0] | safe }}
   </div>
 {% endif %}
 
-{# 2. The Entries (Iterate and wrap each in <article>) #}
 {% for entry in entries %}
   {% if not loop.first %}
     <article class="journal__entry markdown">
