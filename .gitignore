@@ -6,8 +6,9 @@
 .cache
 .DS_Store
 .env
+.netlify
 .pnp.*
 .yarn/*
 dist
 node_modules
-.netlify
+src/drafts
