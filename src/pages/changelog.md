@@ -17,8 +17,8 @@ this changelog is also available as an [Atom feed](https://journal.miso.town/ato
 
 ## 2025-11-22
 
-- improved the appearance of the [music](/music) page, which is powered by [CritiqueBrainz](https://critiquebrainz.org/), [MusicBrainz](https://musicbrainz.org/), [Cover Art Archive](https://coverartarchive.org/) and [ListenBrainz](https://listenbrainz.org/)
+improved the appearance of the [music](/music) page, which is powered by [CritiqueBrainz](https://critiquebrainz.org/), [MusicBrainz](https://musicbrainz.org/), [Cover Art Archive](https://coverartarchive.org/) and [ListenBrainz](https://listenbrainz.org/)
 
 ## 2025-11-21
 
-- add manga to the [status](/#status) section
+add manga to the [status](/#status) section
