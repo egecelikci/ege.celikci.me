@@ -5,7 +5,14 @@ description: "a list of all Atom feeds available on this website."
 permalink: /feeds/
 ---
 
-here you can find all the Atom feeds for this website.
+## [blog entries](/blog)
 
-- [`/feed.atom`](/feed.atom) only includes the [blog](/blog) posts
-- [changelog on journal.miso.town](https://journal.miso.town/atom?url=https://ege.celikci.me/changelog) only includes the [changelog](/changelog)
+```
+{{ site.url }}/feed.atom
+```
+
+## [changelog entries](/changelog)
+
+```
+https://journal.miso.town/atom?url={{ site.url }}/changelog
+```
