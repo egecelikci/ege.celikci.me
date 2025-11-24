@@ -2,7 +2,7 @@ import markdownIt from "markdown-it";
 import anchor from "markdown-it-anchor";
 
 const anchorOpts = {
-  placement: "before",
+  placement: "after",
   class: "heading-anchor",
 };
 
