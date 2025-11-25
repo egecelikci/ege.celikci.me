@@ -143,15 +143,11 @@
     padding: 2rem 1.5rem;
     overflow-x: auto;
 
-    .post & {
-      margin: 2rem calc(50% - 50vw);
-    }
     .note & {
       border-radius: 0.5rem;
     }
 
     > code {
-      @include mixins.container-narrow;
       display: block;
     }
 
@@ -160,8 +156,6 @@
     }
     @media screen and (min-width: 1040px) {
       .post & {
-        margin-left: -180px;
-        margin-right: -180px;
         border-radius: variables.$border-radius * 2;
       }
     }
