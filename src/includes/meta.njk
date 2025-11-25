@@ -27,11 +27,7 @@
 {%- set defaultTheme = themes | findById('default') -%}
 {%- set darkTheme = themes | findById('dark') -%}
 <!-- Light mode -->
-<meta
-  name="theme-color"
-  content="{{ defaultTheme.colors.background }}"
-  media="(prefers-color-scheme: light)"
-/>
+<meta name="theme-color" content="{{ defaultTheme.colors.background }}" />
 <!-- Dark mode -->
 <meta
   name="theme-color"
