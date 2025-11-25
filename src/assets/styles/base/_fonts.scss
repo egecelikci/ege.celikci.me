@@ -1,18 +1,10 @@
-// @font-face {
-//     font-family: 'Noe Display';
-//     font-style: normal;
-//     font-display: swap;
-//     font-weight: 400;
-//     src: local('Noe Display'), local('NoeDisplay-Regular'),
-//         url('/assets/fonts/noe-display-regular.woff2') format('woff2'),
-//         url('/assets/fonts/noe-display-regular.woff') format('woff');
-// }
-
+/* 1. Fixed Syntax: Removed ", sans-serif" from the name */
+/* 2. Fixed Weight: Added specific range 100 900 for the variable font */
 @font-face {
-  font-family: "Josefin Sans", sans-serif;
+  font-family: "Josefin Sans";
   font-style: normal;
   font-display: swap;
-  font-weight: 500;
+  font-weight: 100 900;
   font-optical-sizing: auto;
   src:
     url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
@@ -20,10 +12,10 @@
 }
 
 @font-face {
-  font-family: "Josefin Sans Italic", sans-serif;
-  font-style: normal;
+  font-family: "Josefin Sans Italic";
+  font-style: italic;
   font-display: swap;
-  font-weight: 500;
+  font-weight: 100 900;
   font-optical-sizing: auto;
   src:
     url("/assets/fonts/JosefinSans-Italic-VariableFont_wght.woff2")
@@ -33,20 +25,10 @@
 }
 
 @font-face {
-  font-family: "Josefin Sans", sans-serif;
+  font-family: "Inconsolata";
   font-style: normal;
   font-display: swap;
-  font-weight: 500;
-  font-optical-sizing: auto;
-  src:
-    url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
-    url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Inconsolata", monospace;
-  font-style: normal;
-  font-display: swap;
+  font-weight: 100 900;
   font-variation-settings: "wdth" 100;
   font-optical-sizing: auto;
   src: url("/assets/fonts/Inconsolata.woff2") format("woff2");
@@ -56,6 +38,7 @@
   font-family: "DotGothic16";
   font-style: normal;
   font-display: swap;
+  font-weight: 400;
   font-variation-settings: "wdth" 100;
   font-optical-sizing: auto;
   src: url("/assets/fonts/DotGothic16.woff2") format("woff2");
