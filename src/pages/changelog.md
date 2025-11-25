@@ -8,6 +8,10 @@ permalink: /changelog/
 a [slash page](https://slashpages.net/#changelog) for website development changelogs.
 this changelog is also available as an [Atom feed](/feeds#changelog-entries) via [![HTML Journal](/assets/images/88x31/banner-htmlj.png)](https://journal.miso.town)
 
+## 2025-11-25
+
+improved the appearence of the [post list](/blog)
+
 ## 2025-11-23
 
 - [status](/#status) updates are now updated without refreshing the page
