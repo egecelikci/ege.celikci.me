@@ -11,4 +11,4 @@
 .yarn/*
 dist
 node_modules
-src/drafts
+src/posts/.obsidian

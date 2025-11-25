@@ -7,7 +7,7 @@ permalink: /blogroll/
 
 a [slash page](https://slashpages.net/#blogroll), listing the websites and feeds that I read as soon as they appear in my feed reader (in random order)
 
-[follow them via RSS](/blogroll.xml)
+[follow them via your feed reader](/blogroll.xml)
 
 ## people
 
