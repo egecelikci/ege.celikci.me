@@ -1,18 +1,24 @@
 ---
 layout: page
-title: "favorite albums"
-description: "A collection of favorite albums."
+title: "music"
+description: "a collection of favorite music albums."
 eleventyNavigation:
   key: music
   order: 2
 permalink: /music/
+subtitle: >-
+  favorite music albums, in random order.
 ---
+
+automatically fetched from my public
+<a href="https://critiquebrainz.org/user/{{ author.username }}">album ratings</a
+>.<br /><a href="{{ "/blog/music-page" | url }}">learn more about this page</a>
 
 <div class="album">
   {% for album in music.albums | shuffle %}
     {% set artistNames = "" %}
     {% for ac in album["artist-credit"] %}
-      {% if not loop.first %}{% set artistNames = artistNames + ", " %}{% endif %}
+      {% if not loop.first %}{% set artistNames = artistNames + " · " %}{% endif %}
       {% set artistNames = artistNames + ac.name %}
     {% endfor %}
 
