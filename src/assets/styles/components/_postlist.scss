@@ -2,34 +2,40 @@
 
 .postlist {
   @include mixins.container-narrow;
+  list-style: none;
+  padding: 0;
 
   &__item {
-    flex-wrap: wrap;
-    align-items: baseline;
-    counter-increment: start-from -1;
-    margin-bottom: 1em;
+    border-bottom: 1px solid var(--color-border);
+    padding: 1.5rem 0;
+    transition: background-color 0.2s ease-in-out;
 
-    @include mixins.mq(md) {
-      margin-bottom: 3rem;
+    &:last-child {
+      border-bottom: none;
     }
-    li::marker {
-      content: "✝ ";
+
+    &:hover {
+      background-color: var(--color-background-offset);
     }
   }
+
   &__link {
-    display: block;
+    text-decoration: none;
 
     .postlist__item--draft & {
       color: var(--color-secondary);
     }
   }
+
   &__title {
-    margin-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
   }
+
   &__meta {
-    margin: 1rem 0;
     color: var(--color-text-offset);
-    font-style: italic;
+    font-size: 0.875rem;
   }
   &__tags {
     align-self: center;
