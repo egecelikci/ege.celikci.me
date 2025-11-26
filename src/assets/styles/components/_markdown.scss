@@ -140,7 +140,7 @@
   /* Tables */
   .table-wrapper {
     width: 100%;
-    overflow-x: auto; /* Adds a scrollbar on mobile if table is too wide */
+    overflow-x: auto;
     margin: 2rem 0;
     border: 1px solid var(--color-border);
     border-radius: variables.$border-radius;
@@ -167,21 +167,16 @@
     white-space: nowrap;
   }
 
-  /* Remove border from last row */
   tr:last-child td {
     border-bottom: none;
   }
 
-  /* THE FIX: Clean up code blocks inside tables */
   td code {
-    white-space: pre-wrap; /* Allows wrapping but preserves spacing */
-    word-break: break-word; /* Breaks long CSS selectors */
-    background-color: transparent; /* Removes the "box" background */
-    border: none; /* Removes the "box" border */
+    white-space: pre-wrap;
+    word-break: break-word;
+    background-color: transparent;
+    border: none;
     padding: 0;
-    color: var(
-      --mastodon-brand-primary
-    ); /* Optional: Makes the rules stand out with color instead of a box */
     font-size: 0.85rem;
     font-family: variables.$font-family-monospace;
   }
