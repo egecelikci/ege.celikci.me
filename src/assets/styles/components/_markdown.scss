@@ -137,6 +137,55 @@
     background-color: var(--color-border);
   }
 
+  /* Tables */
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Adds a scrollbar on mobile if table is too wide */
+    margin: 2rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: variables.$border-radius;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    min-width: 600px;
+  }
+
+  th,
+  td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    background-color: var(--color-bg-offset);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* Remove border from last row */
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* THE FIX: Clean up code blocks inside tables */
+  td code {
+    white-space: pre-wrap; /* Allows wrapping but preserves spacing */
+    word-break: break-word; /* Breaks long CSS selectors */
+    background-color: transparent; /* Removes the "box" background */
+    border: none; /* Removes the "box" border */
+    padding: 0;
+    color: var(
+      --mastodon-brand-primary
+    ); /* Optional: Makes the rules stand out with color instead of a box */
+    font-size: 0.85rem;
+    font-family: variables.$font-family-monospace;
+  }
+
   /* Code blocks */
   pre[class*="language-"] {
     display: block;
