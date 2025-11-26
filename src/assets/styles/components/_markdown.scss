@@ -96,9 +96,10 @@
     display: none;
     position: absolute;
     top: 0;
-    left: -1em;
+    left: -1.25em;
     width: 1em;
     opacity: 0;
+    transition: opacity 0.2s ease-in-out;
 
     @include mixins.hover-focus {
       opacity: 1 !important;
@@ -174,48 +175,6 @@
     overflow-wrap: break-word;
   }
 
-  /* Embedded Tweets */
-  .twitter-tweet-rendered {
-    margin: 0 auto 2rem !important;
-  }
-
-  /* Basic Styles Before the JS is loaded */
-  blockquote.twitter-tweet {
-    display: block;
-    margin: 0 auto 2rem;
-    padding: 1rem;
-    max-width: 550px;
-
-    border-color: #eee #ddd #bbb;
-    border-radius: 5px;
-    border-style: solid;
-    border-width: 1px;
-
-    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-
-    p {
-      margin-bottom: 1rem;
-      font-size: 1.125rem;
-      font-weight: normal;
-      line-height: 1.35;
-    }
-
-    a {
-      color: variables.$twitter-brand-primary;
-      box-shadow: none;
-      border: none;
-
-      @include mixins.hover-focus {
-        color: variables.$twitter-brand-primary;
-        text-decoration: underline;
-        box-shadow: none;
-      }
-    }
-  }
-
   /* iframe container */
   .embed {
     height: 0;
@@ -236,11 +195,6 @@
       height: 100%;
       z-index: 2;
     }
-  }
-
-  /* Signup Form */
-  .signup {
-    box-shadow: 14px 14px 30px -10px rgba(0, 0, 0, 0.1);
   }
 
   /* Extends */
