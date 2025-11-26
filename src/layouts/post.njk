@@ -77,15 +77,15 @@ layout: base
           >
         </p>
 
-        <a
-          href="{{ author.social.mastodon.url }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Follow {{ author.name }} on Mastodon"
-          class="btn btn--mastodon"
-        >
-          follow me on Mastodon
-        </a>
+            <a
+                href="{{ author.social.mastodon.url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Follow {{ author.name }} on Mastodon"
+                class="btn btn--mastodon"
+            >
+                {% icon "mastodon" %} {{ author.social.mastodon.name }}
+            </a>
       {% endif %}
     </div>
   {% endif %}
