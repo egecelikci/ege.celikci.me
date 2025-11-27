@@ -11,6 +11,7 @@ class NotesView {
     this.toggles = document.querySelectorAll(".notes-view-toggle__btn");
     this.STORAGE_KEY = "notes-view-preference";
     this.currentView = null;
+    this.viewDebounce = null; // for debouncing fast switches
 
     if (!this.container || !this.toggles.length) return;
 
@@ -28,10 +29,19 @@ class NotesView {
         e.preventDefault();
         const view = btn.dataset.view;
         if (view) {
-          this.setView(view, true);
+          this.debounceSetView(view, true);
         }
       });
     });
+
+    window.addEventListener("load", () => ScrollTrigger.refresh());
+  }
+
+  debounceSetView(view, animate) {
+    clearTimeout(this.viewDebounce);
+    this.viewDebounce = setTimeout(() => {
+      this.setView(view, animate);
+    }, 50); // short delay prevents freezing on fast toggles
   }
 
   populateGridItems() {
@@ -43,29 +53,22 @@ class NotesView {
 
       const gridItem = item.querySelector(".note-grid-item");
       const noteContent = item.querySelector(".note__content");
-
       if (!gridItem || !noteContent) return;
 
-      // Look for images - could be inside picture elements or standalone
       const pictures = noteContent.querySelectorAll("picture");
       const standaloneImages = noteContent.querySelectorAll(
         "img:not(picture img)",
       );
 
       let images = [];
-
-      // Get images from picture elements first
       if (pictures.length > 0) {
         images = Array.from(pictures)
           .map((pic) => pic.querySelector("img"))
           .filter(Boolean);
       }
-
-      // Add standalone images
       if (standaloneImages.length > 0) {
         images = [...images, ...Array.from(standaloneImages)];
       }
-
       if (images.length === 0) return;
 
       item.classList.add("has-image", "has-processed-grid");
@@ -75,64 +78,47 @@ class NotesView {
         item.querySelector(".note__link");
       const noteUrl = noteLink ? noteLink.getAttribute("href") : "#";
 
-      // Extract text caption
       let captionText = "";
       try {
-        const contentClone = noteContent.cloneNode(true);
-        const mediaToRemove = contentClone.querySelectorAll(
-          "img, picture, video, svg, .note-gallery__link",
-        );
-        mediaToRemove.forEach((el) => el.remove());
-        captionText = contentClone.textContent.trim();
-      } catch (e) {
-        console.warn("Error extracting note text", e);
-      }
+        const clone = noteContent.cloneNode(true);
+        clone
+          .querySelectorAll("img, picture, video, svg, .note-gallery__link")
+          .forEach((el) => el.remove());
+        captionText = clone.textContent.trim();
+      } catch (e) {}
 
-      // Get first image data
       const firstImage = images[0];
       const imageSrc = firstImage.currentSrc || firstImage.getAttribute("src");
       const imageSrcset = firstImage.getAttribute("srcset");
       const imageSizes = firstImage.getAttribute("sizes");
 
       gridItem.innerHTML = `
-          <a href="${noteUrl}" class="note-grid-item__link">
-              <div class="note-grid-item__image">
-                  <img 
-                    src="${imageSrc}" 
-                    ${imageSrcset ? `srcset="${imageSrcset}"` : ""} 
-                    ${imageSizes ? `sizes="${imageSizes}"` : ""} 
-                    alt="" 
-                    loading="lazy">
-              </div>
-              
-              ${
-                captionText
-                  ? `
-                  <div class="note-grid-item__overlay">
-                      <p class="note-grid-item__caption">${captionText}</p>
-                  </div>
-              `
-                  : ""
-              }
-
-              ${
-                images.length > 1
-                  ? `
-                  <div class="note-grid-item__badge" title="Multiple images">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="3" width="7" height="7"/>
-                          <rect x="14" y="3" width="7" height="7"/>
-                          <rect x="14" y="14" width="7" height="7"/>
-                          <rect x="3" y="14" width="7" height="7"/>
-                      </svg>
-                  </div>
-              `
-                  : ""
-              }
-          </a>
+        <a href="${noteUrl}" class="note-grid-item__link">
+          <div class="note-grid-item__image">
+            <img src="${imageSrc}" ${
+              imageSrcset ? `srcset="${imageSrcset}"` : ""
+            } ${imageSizes ? `sizes="${imageSizes}"` : ""} alt="" loading="lazy">
+          </div>
+          ${
+            captionText
+              ? `<div class="note-grid-item__overlay"><p class="note-grid-item__caption">${captionText}</p></div>`
+              : ""
+          }
+          ${
+            images.length > 1
+              ? `<div class="note-grid-item__badge" title="Multiple images">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                 </div>`
+              : ""
+          }
+        </a>
       `;
 
-      // Touch interaction for mobile
       if (isTouch) {
         ScrollTrigger.create({
           trigger: gridItem,
@@ -144,42 +130,56 @@ class NotesView {
     });
   }
 
+  killContainerTriggers() {
+    ScrollTrigger.getAll().forEach((st) => {
+      try {
+        if (!st || !st.trigger) return;
+        if (this.container.contains(st.trigger)) st.kill();
+      } catch (e) {}
+    });
+  }
+
   setView(viewType, animate = true) {
-    if (this.currentView === viewType) {
-      return;
-    }
+    if (this.currentView === viewType) return;
     this.currentView = viewType;
 
     const isGrid = viewType === "grid";
-
     localStorage.setItem(this.STORAGE_KEY, viewType);
 
     this.toggles.forEach((btn) => {
-      const isActive = btn.dataset.view === viewType;
-      btn.classList.toggle("is-active", isActive);
-      btn.setAttribute("aria-pressed", isActive);
+      const active = btn.dataset.view === viewType;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active);
     });
 
     if (isGrid) {
       this.container.classList.add("is-grid");
-      setTimeout(() => ScrollTrigger.refresh(), 200);
     } else {
       this.container.classList.remove("is-grid");
     }
 
+    // Kill previous triggers
+    this.killContainerTriggers();
+
+    // Ensure items are visible per view
+    this.container.querySelectorAll(".note-social-grid").forEach((el) => {
+      el.style.display = isGrid ? "none" : "";
+    });
+    this.container.querySelectorAll(".note-grid-item").forEach((el) => {
+      el.style.display = isGrid ? "block" : "none";
+    });
+
+    // Refresh ScrollTrigger
+    setTimeout(() => ScrollTrigger.refresh(), 60);
+
+    // Animate
     if (animate) {
-      if (isGrid) {
-        this.animateToGrid();
-      } else {
-        this.animateToList();
-      }
-    } else {
       if (isGrid) this.animateToGrid();
+      else this.animateToList();
     }
 
-    setTimeout(() => {
-      initPhotoSwipe();
-    }, 100);
+    // Re-init PhotoSwipe
+    setTimeout(() => initPhotoSwipe(), 120);
   }
 
   animateToGrid() {
@@ -187,7 +187,10 @@ class NotesView {
       ".notelist__item.has-image .note-grid-item",
     );
     if (!gridItems.length) return;
-    animateGridItems(gridItems);
+
+    gridItems.forEach((el) => (el.style.display = "block"));
+
+    requestAnimationFrame(() => animateGridItems(gridItems));
   }
 
   animateToList() {
@@ -196,7 +199,8 @@ class NotesView {
     );
     if (!listItems.length) return;
 
-    gsap.set(listItems, { clearProps: "all" });
+    listItems.forEach((el) => (el.style.display = ""));
+    gsap.set(listItems, { opacity: 0, y: 20 });
 
     gsap.fromTo(
       listItems,
@@ -218,11 +222,10 @@ class NotesView {
 
   refresh() {
     this.populateGridItems();
-
     setTimeout(() => ScrollTrigger.refresh(), 100);
 
-    const currentView = localStorage.getItem(this.STORAGE_KEY) || "list";
-    if (currentView === "grid") {
+    if (this.currentView === "grid") {
+      this.killContainerTriggers();
       const allGridItems = this.container.querySelectorAll(
         ".notelist__item.has-image .note-grid-item",
       );

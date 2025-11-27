@@ -31,6 +31,7 @@
     font-weight: 700;
     text-wrap: balance;
   }
+
   &__meta {
     display: flex;
     flex-wrap: wrap;
@@ -42,13 +43,16 @@
       padding: 0 0.5rem;
     }
   }
+
   &__date {
     color: var(--color-text-offset);
     font-size: 0.875rem;
   }
+
   &__tags {
     margin-left: auto;
   }
+
   &__tag {
     display: inline-block;
     font-size: 0.75rem;
@@ -64,6 +68,7 @@
       color: #fff;
     }
   }
+
   &__content {
     padding: 0.5rem 1rem 1rem;
 
@@ -76,7 +81,6 @@
       }
     }
 
-    // Standard text styles
     a,
     pre[class*="language-"] {
       position: relative;
@@ -87,32 +91,27 @@
       margin-bottom: 1rem;
     }
 
-    // --- SMART GALLERY FIX ---
-    p:has(> a.note-gallery__link) {
+    // Smart gallery grid
+    p:has(> picture) {
       display: grid;
-      // MOBILE: Tight gap, 3 columns
       gap: 0.25rem;
       grid-template-columns: repeat(3, 1fr);
 
-      // DESKTOP: Wider gap, 4 columns
       @include mixins.mq(md) {
         gap: 0.5rem;
         grid-template-columns: repeat(4, 1fr);
       }
 
-      // Hide Markdown line breaks
       br {
         display: none;
       }
 
-      // 1. The Grid Item (Picture tag)
       picture {
         display: block;
         width: 100%;
         height: 100%;
       }
 
-      // 2. The Link Wrapper (PhotoSwipe link)
       a.note-gallery__link {
         display: block;
         width: 100%;
@@ -123,22 +122,20 @@
         text-decoration: none !important;
       }
 
-      // 3. The Image
       img {
         display: block;
         width: 100%;
         height: 100%;
-        aspect-ratio: 1/1; // Square crop
+        aspect-ratio: 1/1;
         object-fit: cover;
-        border-radius: 4px; // Smaller radius for small images
+        border-radius: 4px;
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
     }
 
-    // --- SPECIAL CASE: Single Image ---
-    // This targets paragraphs that contain EXACTLY one picture
+    // Single image special case
     p:has(> a.note-gallery__link:only-of-type) {
-      display: block; // No grid
+      display: block;
       margin-bottom: 1.5rem;
 
       br {
@@ -147,9 +144,9 @@
 
       a.note-gallery__link {
         display: block;
-        width: 100%; // Full width of container
-        max-width: 600px; // Limit maximum size
-        margin: 0 auto; // Center it
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
         border: none !important;
         box-shadow: none !important;
         background-image: none !important;
@@ -162,11 +159,9 @@
 
       img {
         display: block;
-        width: 100%; // Fill the container
-        height: auto; // Maintain aspect ratio
-        aspect-ratio: auto; // Keep natural shape
-
-        // Visual Polish
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -184,6 +179,7 @@
     border-top: 1px solid var(--color-border);
     border-radius: 0 0 0.25rem 0.25rem;
   }
+
   &__stats {
     display: flex;
     align-items: center;
@@ -198,6 +194,7 @@
       }
     }
   }
+
   &__link__overlay {
     @include mixins.coverall;
     display: block;
@@ -205,6 +202,7 @@
     box-shadow: none;
     z-index: 2;
   }
+
   &__webmentions {
     padding: 1rem;
     border-top: 1px solid var(--color-border);
@@ -212,9 +210,11 @@
     .webmentions__header {
       display: none;
     }
+
     .webmentions__item {
       margin-bottom: 0 !important;
     }
+
     .webmentions__empty {
       @include mixins.mq(md) {
         padding-left: 4rem;
@@ -223,7 +223,7 @@
   }
 }
 
-// Gallery Link Styling
+// Gallery Link
 .note-gallery__link {
   display: block;
   cursor: zoom-in;
@@ -236,8 +236,6 @@
 
   &:hover {
     opacity: 0.9;
-    border: none !important;
-    box-shadow: none !important;
   }
 
   &:focus {
@@ -245,26 +243,11 @@
     outline-offset: 2px;
   }
 
-  // Ensure responsive images work properly
-  img {
+  img,
+  picture img {
     display: block;
-    max-width: 100%;
+    width: 100%;
     height: auto;
-
-    // Prevent layout shift while loading
-    &[width][height] {
-      height: auto;
-    }
-  }
-
-  // Support for picture element (from Eleventy Image Transform)
-  picture {
-    display: block;
-
-    img {
-      width: 100%;
-      height: auto;
-    }
   }
 }
 
@@ -279,27 +262,28 @@
       margin-bottom: 3rem;
     }
 
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0.5rem;
-      left: -1.4rem;
-      width: 0.8rem;
-      height: 0.8rem;
-      border: 2px solid var(--color-border);
-      border-radius: 50%;
-      background-color: var(--color-bg);
-      z-index: 1;
-    }
-
+    &::before,
     &::after {
       content: "";
       position: absolute;
+      left: -1.4rem;
+      background-color: var(--color-bg);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    &::before {
+      top: 0.5rem;
+      width: 0.8rem;
+      height: 0.8rem;
+      border: 2px solid var(--color-border);
+    }
+
+    &::after {
       top: 0;
       bottom: 0;
-      left: -1.05rem;
       width: 2px;
-      background-color: var(--color-border);
+      border: 2px solid var(--color-border);
     }
 
     &:first-child::after {
@@ -316,7 +300,7 @@
   }
 }
 
-// View Toggle Buttons
+// View toggle buttons
 .notes-view-toggle {
   display: flex;
   gap: 0.5rem;
@@ -357,6 +341,7 @@
   }
 }
 
+// Page header content
 .page__header-content {
   display: flex;
   justify-content: space-between;
@@ -365,21 +350,19 @@
   gap: 1rem;
 }
 
-// Grid View Styles
+// Grid view
 #notes-container.is-grid {
   display: grid;
-  // MOBILE: 3 Columns, Tiny Gap (Instagram Style)
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 
-  // DESKTOP: Adaptive sizing
   @include mixins.mq(md) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
   }
 
   .notelist__item {
-    margin-bottom: 0 !important;
+    margin: 0 !important;
     margin-left: 0 !important;
     padding-left: 0 !important;
     width: 100%;
@@ -392,6 +375,7 @@
     .note-social-grid {
       display: none;
     }
+
     .note-grid-item {
       display: block !important;
     }
@@ -402,7 +386,7 @@
   }
 }
 
-// Grid Item (Instagram-like Tile)
+// Grid item tiles
 .note-grid-item {
   position: relative;
   aspect-ratio: 1;
@@ -412,24 +396,19 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transform: translateZ(0);
 
-  // 1. THE LINK WRAPPER
   &__link {
     display: block;
     width: 100%;
     height: 100%;
-    position: relative;
     text-decoration: none;
     color: inherit;
   }
 
-  // 2. THE IMAGE CONTAINER
   &__image {
     width: 100%;
     height: 100%;
-    position: relative;
     overflow: hidden;
 
-    // Support for picture element (responsive images)
     picture {
       display: block;
       width: 100%;
@@ -443,15 +422,9 @@
       object-position: center;
       transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: transform;
-
-      // Ensure proper loading behavior
-      &[loading="lazy"] {
-        background: var(--color-bg-offset);
-      }
     }
   }
 
-  // 3. THE HOVER OVERLAY
   &__overlay {
     position: absolute;
     inset: 0;
@@ -461,32 +434,27 @@
       rgba(0, 0, 0, 0.4) 50%,
       transparent 100%
     );
-
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 1rem;
-
     opacity: 0;
     transition: opacity 0.3s ease-out;
     z-index: 2;
     pointer-events: none;
   }
 
-  // 4. CAPTION TEXT
   &__caption {
     color: white;
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.4;
     margin: 0;
-
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-
     transform: translateY(10px);
     opacity: 0;
     transition:
@@ -495,19 +463,6 @@
     transition-delay: 0.05s;
   }
 
-  // 5. ARROW ICON
-  &__icon {
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 0.5rem;
-    width: 20px;
-    height: 20px;
-    transform: translateX(-10px);
-    opacity: 0;
-    transition: all 0.3s ease-out;
-    transition-delay: 0.1s;
-  }
-
-  // 6. BADGE (Multiple images indicator)
   &__badge {
     position: absolute;
     top: 0.5rem;
@@ -526,10 +481,6 @@
     transition: opacity 0.2s;
   }
 
-  // =========================================
-  // HOVER & TOUCH ACTIONS
-  // =========================================
-  // Combined selector for Mouse Hover AND Touch Focus
   &:hover,
   &:focus-within,
   &:active,
@@ -549,18 +500,13 @@
       opacity: 1;
     }
 
-    .note-grid-item__icon {
-      transform: translateX(0);
-      opacity: 1;
-    }
-
     .note-grid-item__badge {
       opacity: 0;
     }
   }
 }
 
-// PhotoSwipe Customization
+// PhotoSwipe
 .pswp {
   --pswp-bg: rgba(0, 0, 0, 0.2);
 
@@ -568,24 +514,20 @@
     object-fit: contain;
   }
 
-  // Loading indicator
-  &--loading {
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      margin: -20px 0 0 -20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: pswp-spinner 0.8s linear infinite;
-    }
+  &--loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: pswp-spinner 0.8s linear infinite;
   }
 
-  // Ensure responsive images work in PhotoSwipe
   picture {
     display: flex;
     align-items: center;
