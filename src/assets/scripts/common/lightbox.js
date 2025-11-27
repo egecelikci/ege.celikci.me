@@ -32,37 +32,57 @@ export function initPhotoSwipe() {
     arrowKeys: true,
   });
 
+  /**
+   * Handle item data to ensure proper source URLs and dimensions
+   */
   lightbox.on("itemData", (e) => {
-    const { itemData, index } = e;
+    const { itemData } = e;
     const { element } = itemData;
 
-    if (element) {
-      const thumb = element.querySelector("img");
-      if (thumb) {
-        itemData.thumbEl = thumb;
+    if (!element) return;
 
-        // If dimensions are not set, try to get them from the thumbnail
-        if (!itemData.width || !itemData.height) {
-          if (thumb.naturalWidth) {
-            itemData.width = thumb.naturalWidth;
-            itemData.height = thumb.naturalHeight;
-          } else {
-            const img = new Image();
-            img.onload = function () {
-              itemData.width = this.naturalWidth;
-              itemData.height = this.naturalHeight;
-              lightbox.pswp?.refreshSlideContent(index);
-            };
-            img.src = itemData.src;
-          }
-        }
+    // Get the thumbnail image
+    const thumb = element.querySelector("img");
+    if (thumb) {
+      itemData.thumbEl = thumb;
+
+      // The link's href should point to the full-size image
+      // (set by our transform to the largest image in srcset)
+      const fullSizeUrl = element.getAttribute("href");
+      itemData.src = fullSizeUrl;
+
+      // Get dimensions from data attributes (set by transform)
+      const width = element.getAttribute("data-pswp-width");
+      const height = element.getAttribute("data-pswp-height");
+
+      if (width !== "auto" && height !== "auto") {
+        itemData.width = parseInt(width);
+        itemData.height = parseInt(height);
       } else {
-        // Fallback if no thumbnail found
-        lightbox.options.showHideAnimationType = "fade";
+        // Fallback: try to get from thumbnail's naturalWidth
+        if (thumb.complete && thumb.naturalWidth > 0) {
+          // This will be the thumbnail size, not the full size
+          // But PhotoSwipe will adjust once the full image loads
+          itemData.width = thumb.naturalWidth;
+          itemData.height = thumb.naturalHeight;
+        }
       }
+
+      // Optional: Use srcset for responsive loading even in PhotoSwipe
+      // PhotoSwipe will choose the best size based on viewport
+      const srcset = thumb.getAttribute("srcset");
+      if (srcset) {
+        itemData.srcset = srcset;
+      }
+    } else {
+      // Fallback if no thumbnail found
+      lightbox.options.showHideAnimationType = "fade";
     }
   });
 
+  /**
+   * Optional: Add loading states
+   */
   lightbox.on("loading", (e) => {
     const { slide } = e;
     if (slide.state === "loading") {
@@ -73,7 +93,19 @@ export function initPhotoSwipe() {
     });
   });
 
+  /**
+   * Optional: Handle content errors
+   */
+  lightbox.on("contentError", (e) => {
+    console.error("PhotoSwipe content error:", e);
+  });
+
   lightbox.init();
 }
 
-initPhotoSwipe();
+// Initialize on load
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initPhotoSwipe);
+} else {
+  initPhotoSwipe();
+}
