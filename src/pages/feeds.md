@@ -11,6 +11,12 @@ permalink: /feeds/
 {{ site.url }}/feed.atom
 ```
 
+## [notes](/changelog)
+
+```
+{{ site.url }}/notes/feed.atom
+```
+
 ## [changelog entries](/changelog)
 
 ```
