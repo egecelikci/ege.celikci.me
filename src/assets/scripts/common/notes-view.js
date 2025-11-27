@@ -36,6 +36,9 @@ class NotesView {
   populateGridItems() {
     const items = this.container.querySelectorAll(".notelist__item");
 
+    // Detect Touch Devices (1 = touch, 0 = mouse)
+    const isTouch = ScrollTrigger.isTouch === 1;
+
     items.forEach((item) => {
       if (item.classList.contains("has-processed-grid")) return;
 
@@ -68,12 +71,13 @@ class NotesView {
 
       const firstImage = images[0];
       const imageSrc = firstImage.currentSrc || firstImage.getAttribute("src");
+      const imageSrcset = firstImage.getAttribute("srcset");
+      const imageSizes = firstImage.getAttribute("sizes");
 
-      // UPDATED HTML STRUCTURE: Added SVG Icon
       gridItem.innerHTML = `
           <a href="${noteUrl}" class="note-grid-item__link">
               <div class="note-grid-item__image">
-                  <img src="${imageSrc}" alt="" loading="lazy">
+                  <img src="${imageSrc}" ${imageSrcset ? `srcset="${imageSrcset}"` : ""} ${imageSizes ? `sizes="${imageSizes}"` : ""} alt="" loading="lazy">
               </div>
               
               ${
@@ -106,11 +110,21 @@ class NotesView {
               }
           </a>
       `;
+
+      // --- MOBILE INTERACTION LOGIC (New) ---
+      if (isTouch) {
+        ScrollTrigger.create({
+          trigger: gridItem,
+          start: "top 60%", // Activate when top of image hits 60% of viewport
+          end: "bottom 40%", // Deactivate when bottom hits 40%
+          toggleClass: "is-active",
+          // toggleActions: "play reverse play reverse", // Un-comment to animate out when scrolling away
+        });
+      }
     });
   }
 
   setView(viewType, animate = true) {
-    // Fixed: Ensure `animate` default is handled
     const isGrid = viewType === "grid";
 
     localStorage.setItem(this.STORAGE_KEY, viewType);
@@ -123,11 +137,20 @@ class NotesView {
 
     if (isGrid) {
       this.container.classList.add("is-grid");
+      // Force refresh of ScrollTriggers when switching to grid view
+      // because element positions have changed completely
+      setTimeout(() => ScrollTrigger.refresh(), 200);
     } else {
       this.container.classList.remove("is-grid");
     }
 
-    ScrollTrigger.getAll().forEach((t) => t.kill());
+    // Kill ONLY the entrance animations, keep the touch interactions
+    // We filter by ID or assume animateToList/Grid manages their own tweens
+    // But ScrollTrigger.getAll() kills everything including our new mobile triggers.
+    // Instead of killing all, we just handle the layout animation separately.
+
+    // Simplification: We kill previous view animations, but we need to ensure
+    // populateGridItems is run safely.
 
     if (animate) {
       if (isGrid) {
@@ -136,11 +159,7 @@ class NotesView {
         this.animateToList();
       }
     } else {
-      // Handle "No Animate" (Initial Page Load)
-      if (isGrid) {
-        // We can just set opacity 1 immediately or call animate with 0 duration
-        this.animateToGrid();
-      }
+      if (isGrid) this.animateToGrid();
     }
 
     setTimeout(() => {
@@ -184,10 +203,11 @@ class NotesView {
 
   refresh() {
     this.populateGridItems();
+
+    setTimeout(() => ScrollTrigger.refresh(), 100);
+
     const currentView = localStorage.getItem(this.STORAGE_KEY) || "list";
     if (currentView === "grid") {
-      // OPTIMIZATION: In the future, you might want to only animate NEW items
-      // For now, animating all is safe but cleaner to target newly added ones
       const allGridItems = this.container.querySelectorAll(
         ".notelist__item.has-image .note-grid-item",
       );
