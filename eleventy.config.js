@@ -1,5 +1,4 @@
-// import dotenv from 'dotenv'
-// dotenv.config()
+import path from "path";
 
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
@@ -39,15 +38,34 @@ export default function (config) {
     path: "./src/assets/icons",
     outputFilepath: "./dist/assets/icons/icons.sprite.svg",
   });
+
+  // IMPORTANT: Image Transform Plugin Configuration
   config.addPlugin(pluginImageTransform, {
     extensions: "html",
     formats: ["avif", "auto"],
     outputDir: "./dist/assets/images/processed/",
     urlPath: "/assets/images/processed/",
-    widths: ["auto"],
+
+    // Optimized widths: smaller for grid, medium for list, full for lightbox
+    widths: [320, 640, 960, 1280, "auto"],
+
+    dryRun: false,
+
     defaultAttributes: {
       loading: "lazy",
       decoding: "async",
+      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 600px",
+    },
+
+    filenameFormat: function (id, src, width, format, options) {
+      const extension = src.split(".").pop();
+      const name = src.split("/").pop().replace(`.${extension}`, "");
+      const hash = id.substring(0, 8);
+
+      if (width === "auto") {
+        return `${name}-${hash}.${format}`;
+      }
+      return `${name}-${hash}-${width}w.${format}`;
     },
   });
 
@@ -57,9 +75,8 @@ export default function (config) {
   });
 
   // Transforms
-  Object.keys(transforms).forEach((transformName) => {
-    config.addTransform(transformName, transforms[transformName]);
-  });
+  config.addTransform("galleryTransform", transforms.galleryTransform);
+  config.addTransform("htmlMinTransform", transforms.htmlMinTransform);
 
   // Shortcodes
   Object.keys(shortcodes).forEach((shortcodeName) => {
@@ -75,13 +92,15 @@ export default function (config) {
     config.addNunjucksAsyncShortcode(shortcodeName, viteHelpers[shortcodeName]);
   });
 
-  // Your new Image helpers
-  Object.keys(imageHelpers).forEach((shortcodeName) => {
-    config.addNunjucksAsyncShortcode(
-      shortcodeName,
-      imageHelpers[shortcodeName],
-    );
-  });
+  // Image helpers
+  if (imageHelpers) {
+    Object.keys(imageHelpers).forEach((shortcodeName) => {
+      config.addNunjucksAsyncShortcode(
+        shortcodeName,
+        imageHelpers[shortcodeName],
+      );
+    });
+  }
 
   // Asset Watch Targets
   config.addWatchTarget("./src/assets");
