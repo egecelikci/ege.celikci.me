@@ -49,8 +49,6 @@ export function animateGridItems(items, options = {}) {
         ...options,
       }),
   });
-
-  ScrollTrigger.refresh();
 }
 
 // Auto-initialize album grid if elements exist
