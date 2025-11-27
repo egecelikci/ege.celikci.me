@@ -4,16 +4,13 @@ import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 
-// This is still needed for the JSDOM/image-size logic
-// and is a good practice for asynchronous operations in Node.
 process.setMaxListeners(Infinity);
 
 /**
  * Transform images in notes to PhotoSwipe-compatible gallery links.
- * Only processes pages with 'notes' in the URL and that are HTML files.
+ * Must run AFTER eleventyImageTransform so we can access processed images.
  */
 async function galleryTransform(content, outputPath) {
-  // Only process HTML files in /notes/ paths
   if (
     !outputPath ||
     !outputPath.endsWith(".html") ||
@@ -25,47 +22,87 @@ async function galleryTransform(content, outputPath) {
   const dom = new JSDOM(content);
   const document = dom.window.document;
 
-  // Find all note content areas
-  // Assuming '.note__content .markdown' is the correct selector for your content
   const noteContents = document.querySelectorAll(".note__content .markdown");
 
   for (const noteContent of noteContents) {
-    // Find all images that aren't already wrapped in links
-    const images = noteContent.querySelectorAll("img:not(a img)");
+    // Find PICTURE elements that aren't already wrapped in links
+    const pictures = noteContent.querySelectorAll("picture:not(a picture)");
 
-    for (const img of images) {
-      const src = img.getAttribute("src");
-      if (!src) continue;
+    for (const picture of pictures) {
+      // Get the main <img> inside the picture
+      const img = picture.querySelector("img");
+      if (!img) continue;
 
-      // Create wrapper link
-      const link = document.createElement("a");
-      link.href = src;
-      link.className = "note-gallery__link";
-      link.setAttribute("data-pswp-width", "auto");
-      link.setAttribute("data-pswp-height", "auto");
-      link.setAttribute("target", "_blank");
-      link.setAttribute("rel", "noopener");
+      const imgSrc = img.getAttribute("src");
+      if (!imgSrc) continue;
 
-      // Try to get actual image dimensions if it's a local file
-      // NOTE: The path resolution here is based on your second snippet's logic: path.join('./dist', src)
-      if (src.startsWith("/") || src.startsWith("./")) {
-        try {
-          // Adjust './dist' if your build output directory is different
-          const imagePath = path.join("./dist", src);
-          if (fs.existsSync(imagePath)) {
-            const metadata = await sharp(imagePath).metadata();
-            link.setAttribute("data-pswp-width", metadata.width.toString());
-            link.setAttribute("data-pswp-height", metadata.height.toString());
-          }
-        } catch (err) {
-          // If we can't get dimensions, PhotoSwipe will figure it out
-          console.log(`Could not get dimensions for ${src}: ${err.message}`);
+      // Parse srcset to find the largest image for PhotoSwipe
+      const srcset = img.getAttribute("srcset");
+      let fullSizeUrl = imgSrc;
+      let fullWidth = 0;
+      let fullHeight = 0;
+
+      if (srcset) {
+        const sources = srcset.split(",").map((s) => s.trim());
+        const parsed = sources.map((source) => {
+          const parts = source.split(" ");
+          const url = parts[0];
+          const descriptor = parts[1];
+          const width = descriptor ? parseInt(descriptor) : 0;
+          return { url, width };
+        });
+
+        // Sort by width descending to get the largest
+        parsed.sort((a, b) => b.width - a.width);
+        if (parsed.length > 0) {
+          fullSizeUrl = parsed[0].url;
         }
       }
 
-      // Wrap the image: insert link before image, then move image into link
-      img.parentNode.insertBefore(link, img);
-      link.appendChild(img);
+      // Get dimensions from the img attributes (set by Eleventy Image Transform)
+      const widthAttr = img.getAttribute("width");
+      const heightAttr = img.getAttribute("height");
+
+      if (widthAttr && heightAttr) {
+        fullWidth = parseInt(widthAttr);
+        fullHeight = parseInt(heightAttr);
+      } else {
+        // Fallback: try to get dimensions from the file
+        if (fullSizeUrl.startsWith("/")) {
+          try {
+            const imagePath = path.join("./dist", fullSizeUrl);
+            if (fs.existsSync(imagePath)) {
+              const metadata = await sharp(imagePath).metadata();
+              fullWidth = metadata.width;
+              fullHeight = metadata.height;
+            }
+          } catch (err) {
+            console.log(`Could not get dimensions for ${fullSizeUrl}`);
+          }
+        }
+      }
+
+      // Create wrapper link
+      const link = document.createElement("a");
+      link.href = fullSizeUrl;
+      link.className = "note-gallery__link";
+      link.setAttribute(
+        "data-pswp-width",
+        fullWidth > 0 ? fullWidth.toString() : "auto",
+      );
+      link.setAttribute(
+        "data-pswp-height",
+        fullHeight > 0 ? fullHeight.toString() : "auto",
+      );
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener");
+
+      // Store thumbnail src for reference
+      link.setAttribute("data-thumb-src", imgSrc);
+
+      // Wrap the entire picture element
+      picture.parentNode.insertBefore(link, picture);
+      link.appendChild(picture);
     }
   }
 
@@ -73,7 +110,7 @@ async function galleryTransform(content, outputPath) {
 }
 
 /**
- * Minify HTML in production. Uses the options from your original snippet.
+ * Minify HTML in production
  */
 function htmlMinTransform(rawContent, outputPath) {
   if (

@@ -36,8 +36,6 @@ class NotesView {
 
   populateGridItems() {
     const items = this.container.querySelectorAll(".notelist__item");
-
-    // Detect Touch Devices (1 = touch, 0 = mouse)
     const isTouch = ScrollTrigger.isTouch === 1;
 
     items.forEach((item) => {
@@ -48,15 +46,36 @@ class NotesView {
 
       if (!gridItem || !noteContent) return;
 
-      const images = noteContent.querySelectorAll("img");
+      // Look for images - could be inside picture elements or standalone
+      const pictures = noteContent.querySelectorAll("picture");
+      const standaloneImages = noteContent.querySelectorAll(
+        "img:not(picture img)",
+      );
+
+      let images = [];
+
+      // Get images from picture elements first
+      if (pictures.length > 0) {
+        images = Array.from(pictures)
+          .map((pic) => pic.querySelector("img"))
+          .filter(Boolean);
+      }
+
+      // Add standalone images
+      if (standaloneImages.length > 0) {
+        images = [...images, ...Array.from(standaloneImages)];
+      }
+
       if (images.length === 0) return;
 
       item.classList.add("has-image", "has-processed-grid");
 
-      const noteLink = item.querySelector(".note__link");
+      const noteLink =
+        item.querySelector(".note__link__overlay") ||
+        item.querySelector(".note__link");
       const noteUrl = noteLink ? noteLink.getAttribute("href") : "#";
 
-      // --- Extract Text ---
+      // Extract text caption
       let captionText = "";
       try {
         const contentClone = noteContent.cloneNode(true);
@@ -68,8 +87,8 @@ class NotesView {
       } catch (e) {
         console.warn("Error extracting note text", e);
       }
-      // --------------------
 
+      // Get first image data
       const firstImage = images[0];
       const imageSrc = firstImage.currentSrc || firstImage.getAttribute("src");
       const imageSrcset = firstImage.getAttribute("srcset");
@@ -78,7 +97,12 @@ class NotesView {
       gridItem.innerHTML = `
           <a href="${noteUrl}" class="note-grid-item__link">
               <div class="note-grid-item__image">
-                  <img src="${imageSrc}" ${imageSrcset ? `srcset="${imageSrcset}"` : ""} ${imageSizes ? `sizes="${imageSizes}"` : ""} alt="" loading="lazy">
+                  <img 
+                    src="${imageSrc}" 
+                    ${imageSrcset ? `srcset="${imageSrcset}"` : ""} 
+                    ${imageSizes ? `sizes="${imageSizes}"` : ""} 
+                    alt="" 
+                    loading="lazy">
               </div>
               
               ${
@@ -108,14 +132,13 @@ class NotesView {
           </a>
       `;
 
-      // --- MOBILE INTERACTION LOGIC (New) ---
+      // Touch interaction for mobile
       if (isTouch) {
         ScrollTrigger.create({
           trigger: gridItem,
-          start: "top 60%", // Activate when top of image hits 60% of viewport
-          end: "bottom 40%", // Deactivate when bottom hits 40%
+          start: "top 60%",
+          end: "bottom 40%",
           toggleClass: "is-active",
-          // toggleActions: "play reverse play reverse", // Un-comment to animate out when scrolling away
         });
       }
     });
@@ -139,20 +162,10 @@ class NotesView {
 
     if (isGrid) {
       this.container.classList.add("is-grid");
-      // Force refresh of ScrollTriggers when switching to grid view
-      // because element positions have changed completely
       setTimeout(() => ScrollTrigger.refresh(), 200);
     } else {
       this.container.classList.remove("is-grid");
     }
-
-    // Kill ONLY the entrance animations, keep the touch interactions
-    // We filter by ID or assume animateToList/Grid manages their own tweens
-    // But ScrollTrigger.getAll() kills everything including our new mobile triggers.
-    // Instead of killing all, we just handle the layout animation separately.
-
-    // Simplification: We kill previous view animations, but we need to ensure
-    // populateGridItems is run safely.
 
     if (animate) {
       if (isGrid) {
@@ -215,6 +228,8 @@ class NotesView {
       );
       animateGridItems(allGridItems);
     }
+
+    initPhotoSwipe();
   }
 }
 

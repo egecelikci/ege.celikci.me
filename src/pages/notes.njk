@@ -55,10 +55,14 @@ pagination:
             data-note-id="{{ loop.index }}"
           >
             {# Grid View Item - Will be populated by JS #}
-            <div class="note-grid-item" style="display: none;"></div>
+            <div class="note-grid-item"></div>
 
             {# List View Item - Will be wrapped with gallery class by transform #}
-            <div class="note-social-grid" id="gallery-{{ loop.index }}">
+            <div
+              class="note-social-grid"
+              style="display: none;"
+              id="gallery-{{ loop.index }}"
+            >
               {% include 'note.njk' %}
             </div>
           </li>
