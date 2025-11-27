@@ -87,9 +87,6 @@
       margin-bottom: 1rem;
     }
 
-    // ... inside .note__content { ...
-
-    // --- SMART GALLERY FIX ---
     // --- SMART GALLERY FIX ---
     p:has(> picture) {
       display: grid;
@@ -135,10 +132,6 @@
       }
     }
 
-    // ... inside .note__content { ...
-
-    // [Previous Grid Styles for p:has(> picture) remain here...]
-
     // --- SPECIAL CASE: Single Image ---
     // This targets paragraphs that contain EXACTLY one picture
     p:has(> picture:only-of-type) {
@@ -172,21 +165,8 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); // Nice shadow for depth
       }
     }
-
-    // ... } close .note__content
-
-    // ... rest of file
-    h1,
-    h2 {
-      margin-top: 0;
-      margin-bottom: 0.75em;
-      font-size: 1.375rem;
-    }
-
-    h3 {
-      font-size: 1.125rem;
-    }
   }
+
   &__footer {
     display: flex;
     color: var(--color-text-offset);
@@ -241,19 +221,16 @@
 
 // Gallery Link Styling
 .note-gallery__link {
-  display: block; // Changed from inline-block to prevent weird text-decoration gaps
+  display: block;
   cursor: zoom-in;
   transition: opacity 0.2s;
-
-  // FIX 2: Remove the "Red Line" (Global Link Styles)
   border: none !important;
   text-decoration: none !important;
   box-shadow: none !important;
-  background-image: none !important; // Some themes use bg-image for underlines
+  background-image: none !important;
 
   &:hover {
     opacity: 0.9;
-    // Ensure no hover line appears
     border: none !important;
   }
 
@@ -306,7 +283,6 @@
       height: 0.5rem;
     }
 
-    // Hide grid items by default (shown only in grid view)
     .note-grid-item {
       display: none;
     }
@@ -377,8 +353,6 @@
 
   .notelist__item {
     margin-bottom: 0 !important;
-
-    // CRITICAL FIX: Reset the timeline margin so grid is centered
     margin-left: 0 !important;
     padding-left: 0 !important;
     width: 100%;
@@ -405,21 +379,11 @@
 .note-grid-item {
   position: relative;
   aspect-ratio: 1;
-
-  // CRITICAL: This clips the image when it zooms out
   overflow: hidden;
-
   background: var(--color-bg-offset);
   border-radius: variables.$border-radius;
-
-  // Base shadow
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-  // Fix for Safari rounded corners clipping during animation
   transform: translateZ(0);
-
-  // We removed the transition on the container itself
-  // so it doesn't jump up/down.
 
   // 1. THE IMAGE CONTAINER
   &__image {
@@ -430,7 +394,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      // Smooth, slow cinematic zoom
       transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: transform;
     }
@@ -440,7 +403,6 @@
   &__overlay {
     position: absolute;
     inset: 0;
-    // Gradient: Dark at bottom, transparent top
     background: linear-gradient(
       to top,
       rgba(0, 0, 0, 0.8) 0%,
@@ -472,7 +434,6 @@
     overflow: hidden;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
-    // Initial state: pushed down slightly
     transform: translateY(10px);
     opacity: 0;
     transition:
@@ -513,36 +474,34 @@
   }
 
   // =========================================
-  // HOVER ACTIONS
+  // HOVER & TOUCH ACTIONS
   // =========================================
-  @media (hover: hover) {
-    &:hover {
-      // Optional: Just deepen the shadow slightly, no movement
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  // Combined selector for Mouse Hover AND Touch Focus
+  &:hover,
+  &:focus-within,
+  &:active {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-      // 1. Zoom the Image (The container stays fixed)
-      .note-grid-item__image img {
-        transform: scale(1.1);
-      }
+    .note-grid-item__image img {
+      transform: scale(1.1);
+    }
 
-      // 2. Reveal UI Elements
-      .note-grid-item__overlay {
-        opacity: 1;
-      }
+    .note-grid-item__overlay {
+      opacity: 1;
+    }
 
-      .note-grid-item__caption {
-        transform: translateY(0);
-        opacity: 1;
-      }
+    .note-grid-item__caption {
+      transform: translateY(0);
+      opacity: 1;
+    }
 
-      .note-grid-item__icon {
-        transform: translateX(0);
-        opacity: 1;
-      }
+    .note-grid-item__icon {
+      transform: translateX(0);
+      opacity: 1;
+    }
 
-      .note-grid-item__badge {
-        opacity: 0;
-      }
+    .note-grid-item__badge {
+      opacity: 0;
     }
   }
 }
