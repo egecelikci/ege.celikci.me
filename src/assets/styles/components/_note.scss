@@ -1,0 +1,548 @@
+@use "../utils/mixins";
+@use "../utils/variables";
+
+.note {
+  @include mixins.container-narrow;
+  position: relative;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  border-radius: variables.$border-radius;
+  transition: all 0.3s variables.$animation-curve-default;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: variables.$box-shadow-elevated;
+  }
+
+  &--detail {
+    margin: 2rem auto 4rem;
+    box-shadow: variables.$box-shadow-elevated;
+    border-radius: 8px;
+
+    &:hover {
+      transform: none;
+      box-shadow: variables.$box-shadow-elevated;
+    }
+  }
+
+  &__title {
+    font-size: 2.125rem;
+    font-family: var(--font-family-base);
+    font-weight: 700;
+    text-wrap: balance;
+  }
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1rem 1rem 0;
+
+    &__divider {
+      display: inline-block;
+      padding: 0 0.5rem;
+    }
+  }
+  &__date {
+    color: var(--color-text-offset);
+    font-size: 0.875rem;
+  }
+  &__tags {
+    margin-left: auto;
+  }
+  &__tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3em 0.8em;
+    border-radius: 99px;
+    background-color: var(--color-bg-offset);
+    color: var(--color-text-offset);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--color-primary);
+      color: #fff;
+    }
+  }
+  &__content {
+    padding: 0.5rem 1rem 1rem;
+
+    .note__link {
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+
+    // Standard text styles
+    a,
+    pre[class*="language-"] {
+      position: relative;
+      z-index: 1;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    // ... inside .note__content { ...
+
+    // --- SMART GALLERY FIX ---
+    // --- SMART GALLERY FIX ---
+    p:has(> picture) {
+      display: grid;
+      // MOBILE: Tight gap, 3 columns
+      gap: 0.25rem;
+      grid-template-columns: repeat(3, 1fr);
+
+      // DESKTOP: Wider gap, 4 columns
+      @include mixins.mq(md) {
+        gap: 0.5rem;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      // Hide Markdown line breaks
+      br {
+        display: none;
+      }
+
+      // 1. The Grid Item (Picture tag)
+      picture {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      // 2. The Link Wrapper
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: none !important;
+      }
+
+      // 3. The Image
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1/1; // Square crop
+        object-fit: cover;
+        border-radius: 4px; // Smaller radius for small images
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    // ... inside .note__content { ...
+
+    // [Previous Grid Styles for p:has(> picture) remain here...]
+
+    // --- SPECIAL CASE: Single Image ---
+    // This targets paragraphs that contain EXACTLY one picture
+    p:has(> picture:only-of-type) {
+      display: block; // No grid
+      margin-bottom: 1.5rem;
+
+      br {
+        display: none;
+      }
+
+      picture,
+      a {
+        display: block;
+        width: fit-content; // Allow the wrapper to shrink to image size
+        max-width: 100%; // But never overflow the note width
+        height: auto;
+      }
+
+      img {
+        display: block;
+        aspect-ratio: auto; // Keep natural shape (no cropping)
+
+        // 1. Sizing Constraints
+        width: auto; // Allow width to shrink if height is hit
+        max-width: 100%; // Never wider than container
+        max-height: 500px; // Cap height so it doesn't dominate the screen
+
+        // 2. Visual Polish
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1); // Subtle border
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); // Nice shadow for depth
+      }
+    }
+
+    // ... } close .note__content
+
+    // ... rest of file
+    h1,
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.75em;
+      font-size: 1.375rem;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+    }
+  }
+  &__footer {
+    display: flex;
+    color: var(--color-text-offset);
+    font-size: 0.875rem;
+    padding: 1rem;
+    background-color: var(--color-bg-offset);
+    border-top: 1px solid var(--color-border);
+    border-radius: 0 0 0.25rem 0.25rem;
+  }
+  &__stats {
+    display: flex;
+    align-items: center;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      margin-right: 2rem;
+
+      .icon {
+        margin-right: 0.25rem;
+      }
+    }
+  }
+  &__syndication {
+    color: var(--text-color);
+    margin-left: auto;
+  }
+  &__link__overlay {
+    @include mixins.coverall;
+    display: block;
+    border-radius: 6px;
+    box-shadow: none;
+    z-index: 2;
+  }
+  &__webmentions {
+    padding: 1rem;
+    border-top: 1px solid var(--color-border);
+
+    .webmentions__header {
+      display: none;
+    }
+    .webmentions__item {
+      margin-bottom: 0 !important;
+    }
+    .webmentions__empty {
+      @include mixins.mq(md) {
+        padding-left: 4rem;
+      }
+    }
+  }
+}
+
+// Gallery Link Styling
+.note-gallery__link {
+  display: block; // Changed from inline-block to prevent weird text-decoration gaps
+  cursor: zoom-in;
+  transition: opacity 0.2s;
+
+  // FIX 2: Remove the "Red Line" (Global Link Styles)
+  border: none !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  background-image: none !important; // Some themes use bg-image for underlines
+
+  &:hover {
+    opacity: 0.9;
+    // Ensure no hover line appears
+    border: none !important;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.notelist {
+  position: relative;
+
+  &__item {
+    position: relative;
+    margin-left: 2rem;
+
+    &:not(:last-child) {
+      margin-bottom: 3rem;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.5rem;
+      left: -1.4rem;
+      width: 0.8rem;
+      height: 0.8rem;
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      background-color: var(--color-bg);
+      z-index: 1;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -1.05rem;
+      width: 2px;
+      background-color: var(--color-border);
+    }
+
+    &:first-child::after {
+      top: 0.5rem;
+    }
+
+    &:last-child::after {
+      height: 0.5rem;
+    }
+
+    // Hide grid items by default (shown only in grid view)
+    .note-grid-item {
+      display: none;
+    }
+  }
+}
+
+// View Toggle Buttons
+.notes-view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--color-bg-offset);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-offset);
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    &.is-active {
+      background: var(--color-bg);
+      color: var(--color-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.page__header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+// Grid View Styles
+#notes-container.is-grid {
+  display: grid;
+  // MOBILE: 3 Columns, Tiny Gap (Instagram Style)
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+
+  // DESKTOP: Adaptive sizing
+  @include mixins.mq(md) {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .notelist__item {
+    margin-bottom: 0 !important;
+
+    // CRITICAL FIX: Reset the timeline margin so grid is centered
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100%;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    .note-social-grid {
+      display: none;
+    }
+    .note-grid-item {
+      display: block !important;
+    }
+  }
+
+  .notelist__item:not(.has-image) {
+    display: none;
+  }
+}
+
+// Grid Item (Instagram-like Tile)
+.note-grid-item {
+  position: relative;
+  aspect-ratio: 1;
+
+  // CRITICAL: This clips the image when it zooms out
+  overflow: hidden;
+
+  background: var(--color-bg-offset);
+  border-radius: variables.$border-radius;
+
+  // Base shadow
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  // Fix for Safari rounded corners clipping during animation
+  transform: translateZ(0);
+
+  // We removed the transition on the container itself
+  // so it doesn't jump up/down.
+
+  // 1. THE IMAGE CONTAINER
+  &__image {
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      // Smooth, slow cinematic zoom
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+  }
+
+  // 2. THE HOVER OVERLAY
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    // Gradient: Dark at bottom, transparent top
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      transparent 100%
+    );
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    z-index: 2;
+  }
+
+  // 3. CAPTION TEXT
+  &__caption {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+    // Initial state: pushed down slightly
+    transform: translateY(10px);
+    opacity: 0;
+    transition:
+      transform 0.3s ease-out,
+      opacity 0.3s ease-out;
+    transition-delay: 0.05s;
+  }
+
+  // 4. ARROW ICON
+  &__icon {
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 0.5rem;
+    width: 20px;
+    height: 20px;
+    transform: translateX(-10px);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    transition-delay: 0.1s;
+  }
+
+  // 5. BADGE
+  &__badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 24px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 3;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  // =========================================
+  // HOVER ACTIONS
+  // =========================================
+  @media (hover: hover) {
+    &:hover {
+      // Optional: Just deepen the shadow slightly, no movement
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      // 1. Zoom the Image (The container stays fixed)
+      .note-grid-item__image img {
+        transform: scale(1.1);
+      }
+
+      // 2. Reveal UI Elements
+      .note-grid-item__overlay {
+        opacity: 1;
+      }
+
+      .note-grid-item__caption {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .note-grid-item__icon {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      .note-grid-item__badge {
+        opacity: 0;
+      }
+    }
+  }
+}

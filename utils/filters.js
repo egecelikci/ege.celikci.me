@@ -12,18 +12,20 @@ export default {
   },
 
   dateToFormat: function (date, format) {
-    return DateTime.fromJSDate(date, { zone: "utc" }).toFormat(String(format));
+    return DateTime.fromJSDate(date, { zone: "Europe/Istanbul" }).toFormat(
+      String(format),
+    );
   },
 
   dateToISO: function (date) {
-    return DateTime.fromJSDate(date, { zone: "utc" }).toISO({
+    return DateTime.fromJSDate(date, { zone: "Europe/Istanbul" }).toISO({
       includeOffset: false,
       suppressMilliseconds: true,
     });
   },
 
   dateFromISO: function (timestamp) {
-    return DateTime.fromISO(timestamp, { zone: "utc" }).toJSDate();
+    return DateTime.fromISO(timestamp, { zone: "Europe/Istanbul" }).toJSDate();
   },
 
   humanizeNumber: function (num) {

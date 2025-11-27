@@ -11,7 +11,9 @@ permalink: /miniflux/
 
 | Title | Feed | Scraper Rules | Rewrite Rules |
 | :---- | :--- | :------------ | :------------ |
+
 {%- for item in miniflux %}
 | [{{ item.title }}]({{ item.url }}) | `{{ item.feed }}` | {% if item.scraper_rules %}`{{ item.scraper_rules | safe }}`{% else %}{% endif %} | {% if item.content_rewrite_rules %}`{{ item.content_rewrite_rules | safe }}`{% else %}{% endif %} |
 {%- endfor %}
+
 </div>
