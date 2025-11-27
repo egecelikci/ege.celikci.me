@@ -10,6 +10,7 @@ class NotesView {
     this.container = document.getElementById("notes-container");
     this.toggles = document.querySelectorAll(".notes-view-toggle__btn");
     this.STORAGE_KEY = "notes-view-preference";
+    this.currentView = null;
 
     if (!this.container || !this.toggles.length) return;
 
@@ -85,10 +86,6 @@ class NotesView {
                   ? `
                   <div class="note-grid-item__overlay">
                       <p class="note-grid-item__caption">${captionText}</p>
-                      <svg class="note-grid-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
                   </div>
               `
                   : ""
@@ -125,6 +122,11 @@ class NotesView {
   }
 
   setView(viewType, animate = true) {
+    if (this.currentView === viewType) {
+      return;
+    }
+    this.currentView = viewType;
+
     const isGrid = viewType === "grid";
 
     localStorage.setItem(this.STORAGE_KEY, viewType);
