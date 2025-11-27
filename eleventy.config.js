@@ -14,11 +14,13 @@ import transforms from "./utils/transforms.js";
 import shortcodes from "./utils/shortcodes.js";
 import markdown from "./utils/markdown.js";
 import viteHelpers from "./utils/vite.js";
+import imageHelpers from "./utils/imageHelpers.js";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CONTENT_GLOBS = {
   posts: "src/posts/**/*.md",
   drafts: "src/drafts/**/*.md",
+  notes: "src/notes/*.md",
   media: "*.jpg|*.png|*.gif|*.mp4|*.webp|*.webm",
 };
 
@@ -73,6 +75,14 @@ export default function (config) {
     config.addNunjucksAsyncShortcode(shortcodeName, viteHelpers[shortcodeName]);
   });
 
+  // Your new Image helpers
+  Object.keys(imageHelpers).forEach((shortcodeName) => {
+    config.addNunjucksAsyncShortcode(
+      shortcodeName,
+      imageHelpers[shortcodeName],
+    );
+  });
+
   // Asset Watch Targets
   config.addWatchTarget("./src/assets");
 
@@ -106,6 +116,11 @@ export default function (config) {
     return collection
       .getFilteredByGlob(CONTENT_GLOBS.drafts)
       .filter((item) => item.data.permalink !== false);
+  });
+
+  // Collections: Notes
+  config.addCollection("notes", function (collection) {
+    return collection.getFilteredByGlob(CONTENT_GLOBS.notes).reverse();
   });
 
   // Base Config
