@@ -190,10 +190,6 @@
       }
     }
   }
-  &__syndication {
-    color: var(--text-color);
-    margin-left: auto;
-  }
   &__link__overlay {
     @include mixins.coverall;
     display: block;
