@@ -31,7 +31,6 @@
     font-weight: 700;
     text-wrap: balance;
   }
-
   &__meta {
     display: flex;
     flex-wrap: wrap;
@@ -43,16 +42,13 @@
       padding: 0 0.5rem;
     }
   }
-
   &__date {
     color: var(--color-text-offset);
     font-size: 0.875rem;
   }
-
   &__tags {
     margin-left: auto;
   }
-
   &__tag {
     display: inline-block;
     font-size: 0.75rem;
@@ -68,7 +64,6 @@
       color: #fff;
     }
   }
-
   &__content {
     padding: 0.5rem 1rem 1rem;
 
@@ -81,6 +76,7 @@
       }
     }
 
+    // Standard text styles
     a,
     pre[class*="language-"] {
       position: relative;
@@ -91,95 +87,85 @@
       margin-bottom: 1rem;
     }
 
-    // Smart gallery grid
-    p:has(> picture) {
+    // --- SMART GALLERY FIX ---
+    p:has(> a.note-gallery__link) {
       display: grid;
+      // MOBILE: Tight gap, 3 columns
       gap: 0.25rem;
       grid-template-columns: repeat(3, 1fr);
 
+      // DESKTOP: Wider gap, 4 columns
       @include mixins.mq(md) {
         gap: 0.5rem;
         grid-template-columns: repeat(4, 1fr);
       }
 
+      // Hide Markdown line breaks
       br {
         display: none;
       }
 
+      // 1. The Grid Item (Picture tag)
       picture {
         display: block;
         width: 100%;
         height: 100%;
       }
 
-      a.note-gallery__link {
+      // 2. The Link Wrapper
+      a {
         display: block;
         width: 100%;
         height: 100%;
         border: none !important;
-        box-shadow: none !important;
-        background-image: none !important;
-        text-decoration: none !important;
       }
 
+      // 3. The Image
       img {
         display: block;
         width: 100%;
         height: 100%;
-        aspect-ratio: 1/1;
+        aspect-ratio: 1/1; // Square crop
         object-fit: cover;
-        border-radius: 4px;
+        border-radius: 4px; // Smaller radius for small images
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
     }
 
-    // Single image special case
+    // --- SPECIAL CASE: Single Image ---
+    // This targets paragraphs that contain EXACTLY one picture
     p:has(> a.note-gallery__link:only-of-type) {
-      display: block;
+      display: block; // No grid
       margin-bottom: 1.5rem;
 
       br {
         display: none;
       }
 
-      a.note-gallery__link {
+      picture,
+      a {
         display: block;
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        border: none !important;
-        box-shadow: none !important;
-        background-image: none !important;
-      }
-
-      picture {
-        display: block;
-        width: 100%;
+        width: fit-content; // Allow the wrapper to shrink to image size
+        max-width: 100%; // But never overflow the note width
+        height: auto;
       }
 
       img {
         display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: auto;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        object-fit: contain;
+        aspect-ratio: auto; // Keep natural shape (no cropping)
+
+        // 1. Sizing Constraints
+        width: auto; // Allow width to shrink if height is hit
+        max-width: 100%; // Never wider than container
+        max-height: 500px; // Cap height so it doesn't dominate the screen
+
+        // 2. Visual Polish
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1); // Subtle border
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); // Nice shadow for depth
       }
     }
   }
-
-  &__footer {
-    display: flex;
-    color: var(--color-text-offset);
-    font-size: 0.875rem;
-    padding: 1rem;
-    background-color: var(--color-bg-offset);
-    border-top: 1px solid var(--color-border);
-    border-radius: 0 0 0.25rem 0.25rem;
-  }
-
   &__stats {
     display: flex;
     align-items: center;
@@ -194,7 +180,6 @@
       }
     }
   }
-
   &__link__overlay {
     @include mixins.coverall;
     display: block;
@@ -202,28 +187,9 @@
     box-shadow: none;
     z-index: 2;
   }
-
-  &__webmentions {
-    padding: 1rem;
-    border-top: 1px solid var(--color-border);
-
-    .webmentions__header {
-      display: none;
-    }
-
-    .webmentions__item {
-      margin-bottom: 0 !important;
-    }
-
-    .webmentions__empty {
-      @include mixins.mq(md) {
-        padding-left: 4rem;
-      }
-    }
-  }
 }
 
-// Gallery Link
+// Gallery Link Styling
 .note-gallery__link {
   display: block;
   cursor: zoom-in;
@@ -232,21 +198,15 @@
   text-decoration: none !important;
   box-shadow: none !important;
   background-image: none !important;
-  outline: none !important;
 
   &:hover {
     opacity: 0.9;
+    border: none !important;
   }
 
-  &:focus {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-  }
-
-  img,
-  picture img {
+  img {
     display: block;
-    width: 100%;
+    max-width: 100%;
     height: auto;
   }
 }
@@ -262,28 +222,27 @@
       margin-bottom: 3rem;
     }
 
-    &::before,
-    &::after {
+    &::before {
       content: "";
       position: absolute;
-      left: -1.4rem;
-      background-color: var(--color-bg);
-      border-radius: 50%;
-      z-index: 1;
-    }
-
-    &::before {
       top: 0.5rem;
+      left: -1.4rem;
       width: 0.8rem;
       height: 0.8rem;
       border: 2px solid var(--color-border);
+      border-radius: 50%;
+      background-color: var(--color-bg);
+      z-index: 1;
     }
 
     &::after {
+      content: "";
+      position: absolute;
       top: 0;
       bottom: 0;
+      left: -1.05rem;
       width: 2px;
-      border: 2px solid var(--color-border);
+      background-color: var(--color-border);
     }
 
     &:first-child::after {
@@ -300,7 +259,7 @@
   }
 }
 
-// View toggle buttons
+// View Toggle Buttons
 .notes-view-toggle {
   display: flex;
   gap: 0.5rem;
@@ -341,7 +300,6 @@
   }
 }
 
-// Page header content
 .page__header-content {
   display: flex;
   justify-content: space-between;
@@ -350,19 +308,21 @@
   gap: 1rem;
 }
 
-// Grid view
+// Grid View Styles
 #notes-container.is-grid {
   display: grid;
+  // MOBILE: 3 Columns, Tiny Gap (Instagram Style)
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 
+  // DESKTOP: Adaptive sizing
   @include mixins.mq(md) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
   }
 
   .notelist__item {
-    margin: 0 !important;
+    margin-bottom: 0 !important;
     margin-left: 0 !important;
     padding-left: 0 !important;
     width: 100%;
@@ -375,7 +335,6 @@
     .note-social-grid {
       display: none;
     }
-
     .note-grid-item {
       display: block !important;
     }
@@ -386,7 +345,7 @@
   }
 }
 
-// Grid item tiles
+// Grid Item (Instagram-like Tile)
 .note-grid-item {
   position: relative;
   aspect-ratio: 1;
@@ -396,35 +355,21 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transform: translateZ(0);
 
-  &__link {
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-decoration: none;
-    color: inherit;
-  }
-
+  // 1. THE IMAGE CONTAINER
   &__image {
     width: 100%;
     height: 100%;
-    overflow: hidden;
-
-    picture {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
       transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       will-change: transform;
     }
   }
 
+  // 2. THE HOVER OVERLAY
   &__overlay {
     position: absolute;
     inset: 0;
@@ -434,27 +379,31 @@
       rgba(0, 0, 0, 0.4) 50%,
       transparent 100%
     );
+
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 1rem;
+
     opacity: 0;
     transition: opacity 0.3s ease-out;
     z-index: 2;
-    pointer-events: none;
   }
 
+  // 3. CAPTION TEXT
   &__caption {
     color: white;
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.4;
     margin: 0;
+
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
     transform: translateY(10px);
     opacity: 0;
     transition:
@@ -463,6 +412,7 @@
     transition-delay: 0.05s;
   }
 
+  // 5. BADGE
   &__badge {
     position: absolute;
     top: 0.5rem;
@@ -481,10 +431,13 @@
     transition: opacity 0.2s;
   }
 
+  // =========================================
+  // HOVER & TOUCH ACTIONS
+  // =========================================
+  // Combined selector for Mouse Hover AND Touch Focus
   &:hover,
   &:focus-within,
-  &:active,
-  &.is-active {
+  &:active {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
     .note-grid-item__image img {
@@ -500,45 +453,13 @@
       opacity: 1;
     }
 
+    .note-grid-item__icon {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
     .note-grid-item__badge {
       opacity: 0;
     }
-  }
-}
-
-// PhotoSwipe
-.pswp {
-  --pswp-bg: rgba(0, 0, 0, 0.2);
-
-  &__img {
-    object-fit: contain;
-  }
-
-  &--loading::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: pswp-spinner 0.8s linear infinite;
-  }
-
-  picture {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-@keyframes pswp-spinner {
-  to {
-    transform: rotate(360deg);
   }
 }
