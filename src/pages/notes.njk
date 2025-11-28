@@ -2,7 +2,7 @@
 layout: base
 tags: nav
 title: notes
-description: "short form of content"
+description: "Short form content and visual logs."
 eleventyNavigation:
   key: notes
   order: 3
@@ -18,56 +18,60 @@ pagination:
     <div class="page__header-content">
       <h1 class="page__title">{{ title }}</h1>
 
-      {# View Toggle Buttons #}
-      <div class="notes-view-toggle" role="group" aria-label="View options">
-        <button
-          class="notes-view-toggle__btn is-active"
-          data-view="list"
-          aria-pressed="true"
-          aria-label="List view"
-        >
-          {% icon "list" %}
-          <span>List</span>
-        </button>
-        <button
-          class="notes-view-toggle__btn"
-          data-view="grid"
-          aria-pressed="false"
-          aria-label="Grid view"
-        >
-          {% icon "grid" %}
-          <span>Grid</span>
-        </button>
+      {# Modern Segmented Control Toggle #}
+      <div class="notes-view-toggle">
+        <div class="view-toggle" role="group" aria-label="View mode">
+          {# The sliding background pill #}
+          <div class="view-toggle__bg"></div>
+
+          <button
+            type="button"
+            class="view-toggle__btn"
+            data-view="list"
+            aria-pressed="true"
+          >
+            {% icon "list" %}
+          </button>
+
+          <button
+            type="button"
+            class="view-toggle__btn"
+            data-view="grid"
+            aria-pressed="false"
+          >
+            {% icon "grid" %}
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
   <div class="page__content">
     {% if notes | length %}
-      <ol
-        reversed
-        class="notelist js-infinitescroll-container"
+      {# Container has explicit ID for JS and Infinite Scroll class #}
+      <div
+        class="notelist js-infinitescroll-container is-list-view"
         id="notes-container"
       >
         {% for note in notes %}
-          <li
+          {# 
+             We wrap everything in one LI. 
+             JS toggles visibility of inner children based on view state 
+          #}
+          <div
             class="notelist__item js-infinitescroll-item"
             data-note-id="{{ loop.index }}"
           >
-            {# Grid View Item - Will be populated by JS #}
+            {# 1. Grid View Component (Populated by JS) #}
             <div class="note-grid-item"></div>
 
-            {# List View Item - Will be wrapped with gallery class by transform #}
-            <div
-              class="note-social-grid"
-              style="display: none;"
-              id="gallery-{{ loop.index }}"
-            >
+            {# 2. List View Component (Standard Render) #}
+            <div class="note-social-grid" id="gallery-{{ loop.index }}">
               {% include 'note.njk' %}
             </div>
-          </li>
+          </div>
         {% endfor %}
-      </ol>
+      </div>
 
       <nav class="js-infinitescroll-pagination">
         {% if pagination.nextPageHref %}
@@ -75,12 +79,14 @@ pagination:
             href="{{ pagination.nextPageHref }}"
             class="js-infinitescroll-next"
           >
-            next page
+            Load more notes
           </a>
         {% endif %}
       </nav>
     {% else %}
-      <p class="lead">No Notes yet.</p>
+      <div class="empty-state">
+        <p class="lead">No notes found.</p>
+      </div>
     {% endif %}
   </div>
 </div>
