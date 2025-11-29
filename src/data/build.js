@@ -2,6 +2,9 @@ import { execSync } from "child_process";
 const timestamp = new Date();
 const env = process.env.NODE_ENV;
 
+const umamiScriptUrl = process.env.UMAMI_SCRIPT_URL;
+const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID;
+
 function isCSSNakedDay() {
   const now = Date.now();
   const currentYear = new Date().getFullYear();
@@ -21,4 +24,6 @@ export default {
   id: timestamp.valueOf(),
   naked: isCSSNakedDay(),
   git: gitHash(),
+  umamiScript: umamiScriptUrl,
+  umamiId: umamiWebsiteId,
 };

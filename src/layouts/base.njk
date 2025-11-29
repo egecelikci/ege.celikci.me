@@ -51,6 +51,14 @@
     {% endif %}
     {% include "meta.njk" %}
     <script>{% include "initialtheme.njk" %}</script>
+    {# Analytics #}
+    {% if not build.dev and build.umamiScript and build.umamiId %}
+    <script
+      defer
+      src="{{ build.umamiScript }}" 
+      data-website-id="{{ build.umamiId }}"
+    ></script>
+    {% endif %}
   </head>
   <body>
     <a href="#main" class="sr-skip-link">skip to main content</a>
