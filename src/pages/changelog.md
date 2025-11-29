@@ -8,6 +8,11 @@ permalink: /changelog/
 a [slash page](https://slashpages.net/#changelog) for website development changelogs.
 this changelog is also available as an [Atom feed](/feeds#changelog-entries) via [![HTML Journal](/assets/images/88x31/banner-htmlj.png)](https://journal.miso.town)
 
+## 2025-11-29
+
+- improved [status](/#status) section
+- integrated [Umami](https://umami.balcova.online/share/n9fsFGeLa625WsGX) for self-hosted, open-source analytics.
+
 ## 2025-11-27
 
 added [notes](/notes) section
