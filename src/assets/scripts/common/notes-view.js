@@ -103,14 +103,30 @@ class NotesView {
 
       item.classList.add("has-image");
 
-      // Robust Caption Extraction
+      // --- Richer Content Extraction ---
+      const titleEl = content.querySelector(".note__title");
+      const title = titleEl ? titleEl.textContent.trim() : "";
+
       let caption = "";
       try {
         const clone = content.cloneNode(true);
-        const trash = clone.querySelectorAll(
-          "img, video, svg, .note-gallery__link, script, style",
+
+        // Remove title link wrapper to prevent it from being in caption
+        const titleLinkInClone = clone.querySelector(".note__link");
+        if (titleLinkInClone) {
+          titleLinkInClone.remove();
+        }
+
+        // Remove gallery links to prevent images from being in caption
+        const galleryLinksInClone = clone.querySelectorAll(
+          ".note-gallery__link",
         );
-        trash.forEach((el) => el.remove());
+        galleryLinksInClone.forEach((el) => el.remove());
+
+        // Remove other media elements
+        const media = clone.querySelectorAll("img, video, svg, script, style");
+        media.forEach((el) => el.remove());
+
         caption = clone.textContent.replace(/\s+/g, " ").trim();
       } catch (e) {
         console.warn("Caption extraction failed", e);
@@ -119,17 +135,29 @@ class NotesView {
       const link =
         item.querySelector("a.note__link")?.getAttribute("href") || "#";
       const img = images[0];
-      // Use getAttribute to get raw values, fallbacks for safety
       const src = img.getAttribute("src") || "";
       const srcset = img.getAttribute("srcset") || "";
       const sizes = "(max-width: 600px) 480px, 800px";
 
+      const hasOverlayContent = title || caption;
+      const ariaLabel = `View note: ${title}${title && caption ? " - " : ""}${caption}`;
+      const altText = `${title}${title && caption ? " - " : ""}${caption}`;
+
       gridContainer.innerHTML = `
-        <a href="${link}" class="note-grid-item__link" aria-label="View note">
+        <a href="${link}" class="note-grid-item__link" aria-label="${ariaLabel}">
           <div class="note-grid-item__media">
-            <img src="${src}" srcset="${srcset}" sizes="${sizes}" alt="" loading="lazy" />
+            <img src="${src}" srcset="${srcset}" sizes="${sizes}" alt="${altText}" loading="lazy" />
           </div>
-          ${caption ? `<div class="note-grid-item__overlay"><span>${caption}</span></div>` : ""}
+          ${
+            hasOverlayContent
+              ? `<div class="note-grid-item__overlay">
+                <div class="note-grid-item__overlay-content">
+                  ${title ? `<h3 class="note-grid-item__title">${title}</h3>` : ""}
+                  ${caption ? `<p class="note-grid-item__caption">${caption}</p>` : ""}
+                </div>
+              </div>`
+              : ""
+          }
           ${images.length > 1 ? this.getMultiIcon() : ""}
         </a>
       `;

@@ -15,10 +15,27 @@ export function initPhotoSwipe() {
     document.querySelector(".note");
   if (!galleryRoot) return;
 
+  let childrenSelector = "a.note-gallery__link";
+
+  // If we are on the notes list, we only want the first image of each note
+  if (galleryRoot.id === "notes-container") {
+    childrenSelector = ".js-lightbox-item";
+    const items = galleryRoot.querySelectorAll(".notelist__item");
+    items.forEach((item) => {
+      const links = item.querySelectorAll("a.note-gallery__link");
+      links.forEach((link, index) => {
+        if (index === 0) {
+          link.classList.add("js-lightbox-item");
+        } else {
+          link.classList.remove("js-lightbox-item");
+        }
+      });
+    });
+  }
+
   lightbox = new PhotoSwipeLightbox({
     gallery: galleryRoot,
-    children: "a.note-gallery__link",
-
+    children: childrenSelector,
     pswpModule: PhotoSwipe,
     showHideAnimationType: "zoom",
     bgOpacity: 0.95,
@@ -33,7 +50,7 @@ export function initPhotoSwipe() {
   });
 
   /**
-   * Handle item data to ensure proper source URLs and dimensions
+   * 1. Handle item data (Dimensions & Alt Text Extraction)
    */
   lightbox.on("itemData", (e) => {
     const { itemData } = e;
@@ -41,17 +58,16 @@ export function initPhotoSwipe() {
 
     if (!element) return;
 
-    // Get the thumbnail image
     const thumb = element.querySelector("img");
     if (thumb) {
       itemData.thumbEl = thumb;
-
-      // The link's href should point to the full-size image
-      // (set by our transform to the largest image in srcset)
       const fullSizeUrl = element.getAttribute("href");
       itemData.src = fullSizeUrl;
 
-      // Get dimensions from data attributes (set by transform)
+      // --- NEW: Extract Alt Text ---
+      // We store it in itemData so the UI element can access it later
+      itemData.alt = thumb.getAttribute("alt") || "";
+
       const width = element.getAttribute("data-pswp-width");
       const height = element.getAttribute("data-pswp-height");
 
@@ -59,25 +75,45 @@ export function initPhotoSwipe() {
         itemData.width = parseInt(width);
         itemData.height = parseInt(height);
       } else {
-        // Fallback: try to get from thumbnail's naturalWidth
         if (thumb.complete && thumb.naturalWidth > 0) {
-          // This will be the thumbnail size, not the full size
-          // But PhotoSwipe will adjust once the full image loads
           itemData.width = thumb.naturalWidth;
           itemData.height = thumb.naturalHeight;
         }
       }
 
-      // Optional: Use srcset for responsive loading even in PhotoSwipe
-      // PhotoSwipe will choose the best size based on viewport
       const srcset = thumb.getAttribute("srcset");
       if (srcset) {
         itemData.srcset = srcset;
       }
     } else {
-      // Fallback if no thumbnail found
       lightbox.options.showHideAnimationType = "fade";
     }
+  });
+
+  /**
+   * 2. Register the Custom Caption Element
+   * This creates a place in the UI to display the text we extracted above.
+   */
+  lightbox.on("uiRegister", () => {
+    lightbox.pswp.ui.registerElement({
+      name: "custom-caption",
+      order: 9, // Ensure it sits above other background elements
+      isButton: false,
+      appendTo: "root", // 'root' puts it in the main container, overlaying the image
+      html: "Caption text",
+      onInit: (el, pswp) => {
+        lightbox.pswp.on("change", () => {
+          const currSlide = lightbox.pswp.currSlide;
+          if (currSlide && currSlide.data && currSlide.data.alt) {
+            el.innerHTML = currSlide.data.alt;
+            el.classList.remove("pswp__custom-caption--empty");
+          } else {
+            el.innerHTML = "";
+            el.classList.add("pswp__custom-caption--empty");
+          }
+        });
+      },
+    });
   });
 
   /**
@@ -93,9 +129,6 @@ export function initPhotoSwipe() {
     });
   });
 
-  /**
-   * Optional: Handle content errors
-   */
   lightbox.on("contentError", (e) => {
     console.error("PhotoSwipe content error:", e);
   });
@@ -103,7 +136,6 @@ export function initPhotoSwipe() {
   lightbox.init();
 }
 
-// Initialize on load
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initPhotoSwipe);
 } else {

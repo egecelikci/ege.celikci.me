@@ -7391,7 +7391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ev-emitter@npm:^2.1.0":
+"ev-emitter@npm:^2.1.0, ev-emitter@npm:^2.1.2":
   version: 2.1.2
   resolution: "ev-emitter@npm:2.1.2"
   checksum: 10c0/3c7a7983d1b964ca58e4ed025aeb1f4201b1a76ffd1c1f59677518f4d4a3bd82cd4d94fa1f1646b29949744c30725e4607505c75a1fb81832846537d65ac026f
@@ -8882,6 +8882,15 @@ __metadata:
   bin:
     image-size: bin/image-size.js
   checksum: 10c0/f09dd0f7cf8511cd20e4f756bdb5a7cb6d2240de3323f41bde266bed8373392a293892bf12e907e2995f52833fd88dd27cf6b1a52ab93968afc716cb78cd7b79
+  languageName: node
+  linkType: hard
+
+"imagesloaded@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "imagesloaded@npm:5.0.0"
+  dependencies:
+    ev-emitter: "npm:^2.1.2"
+  checksum: 10c0/7eae70f19d298f411e2359e8f4be532f7e6842481147ac9234ff42d49f02be0f3b2c3c562466feaae699eb9b126d7ef2bec5f58878ab3efe486275997b87512b
   languageName: node
   linkType: hard
 
@@ -15417,6 +15426,7 @@ __metadata:
     gsap: "npm:^3.13.0"
     html-minifier: "npm:^4.0.0"
     husky: "npm:^9.1.7"
+    imagesloaded: "npm:^5.0.0"
     infinite-scroll: "npm:^5.0.0"
     jsdom: "npm:^27.2.0"
     lint-staged: "npm:^16.2.6"
