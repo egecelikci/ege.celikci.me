@@ -162,6 +162,8 @@ class NotesView {
         </a>
       `;
     });
+
+    return items;
   }
 
   getMultiIcon() {
@@ -230,12 +232,19 @@ class NotesView {
   }
 
   refresh() {
-    this.populateGridItems();
+    const newItems = this.populateGridItems();
     if (this.currentView === "grid") {
-      const newItems = this.container.querySelectorAll(
-        ".notelist__item.has-image:not([style*='opacity: 1']) .note-grid-item",
-      );
-      animateGridItems(newItems);
+      const targets = [];
+      newItems.forEach((item) => {
+        if (item.classList.contains("has-image")) {
+          const gridItem = item.querySelector(".note-grid-item");
+          if (gridItem) targets.push(gridItem);
+        }
+      });
+
+      if (targets.length) {
+        animateGridItems(targets);
+      }
     }
     initPhotoSwipe();
     ScrollTrigger.refresh();
