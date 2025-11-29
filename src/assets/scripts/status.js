@@ -29,15 +29,15 @@ function createMarqueeAnimation(element) {
   if (!wrapper || element.scrollWidth <= wrapper.clientWidth) return;
 
   const spacer = "&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;";
-  
+
   // Prepare content for looping
-  // Using generic content since originalHTML is closure-scoped in previous versions but 
+  // Using generic content since originalHTML is closure-scoped in previous versions but
   // needs to be accessible here. Ideally passed as arg or stored on element.
-  // For this implementation, we assume element.innerHTML is the source of truth 
+  // For this implementation, we assume element.innerHTML is the source of truth
   // or simple cloning. A safer pattern for this specific function:
   const originalContent = element.innerHTML;
   element.innerHTML = `<span>${originalContent}${spacer}</span>${originalContent}`;
-  
+
   const distance = element.firstElementChild.offsetWidth;
   element.innerHTML = originalContent + spacer + originalContent;
 
@@ -59,7 +59,10 @@ function createMarqueeAnimation(element) {
 
   wrapper.onmouseenter = pause;
   wrapper.onmouseleave = play;
-  wrapper.ontouchstart = (e) => { e.passive = true; pause(); };
+  wrapper.ontouchstart = (e) => {
+    e.passive = true;
+    pause();
+  };
   wrapper.ontouchend = play;
   wrapper.ontouchcancel = play;
 }
@@ -93,13 +96,15 @@ async function loadStatus() {
         if (part.trim()) processChunk(part);
       }
     }
-    
-    if (buffer.trim()) processChunk(buffer);
 
+    if (buffer.trim()) processChunk(buffer);
   } catch (err) {
     if (err.name === "AbortError") return;
     console.warn("Status fetch failed, backing off:", err);
-    currentInterval = Math.min(currentInterval * CONFIG.backoffFactor, CONFIG.maxInterval);
+    currentInterval = Math.min(
+      currentInterval * CONFIG.backoffFactor,
+      CONFIG.maxInterval,
+    );
   } finally {
     if (document.visibilityState === "visible") {
       pollTimeout = setTimeout(loadStatus, currentInterval);
@@ -110,14 +115,14 @@ async function loadStatus() {
 function processChunk(htmlString) {
   const temp = document.createElement("div");
   temp.innerHTML = htmlString;
-  const newElement = temp.firstElementChild; 
+  const newElement = temp.firstElementChild;
   if (!newElement) return;
 
   const id = newElement.id;
   const mapping = {
     "music-status": "#music-status-container",
     "game-status": "#game-status-container",
-    "manga-status": "#manga-status-container"
+    "manga-status": "#manga-status-container",
   };
 
   const containerSelector = mapping[id];
@@ -134,7 +139,7 @@ function updateSingleUI(container, newData) {
   if (li) li.hidden = false;
 
   const currentInner = container.querySelector(`[id="${newData.id}"]`);
-  
+
   const getTxt = (el) => {
     const s = el?.querySelector("span");
     return s?.dataset.status || s?.textContent || "";
@@ -156,14 +161,14 @@ function updateSingleUI(container, newData) {
   const richHTML = newSpan.innerHTML;
   const scrambleChar = newSpan.dataset.chars || "█";
   const placeholderChar = newSpan.dataset.chars || "█";
-  
+
   // UPDATED: Use only the provided char (e.g. "×") for noise, removing random characters.
   const scrambleNoise = placeholderChar;
 
   // Dynamic calculations
   const index = STATUS_ORDER.indexOf(newData.id);
   const dynamicDelay = index !== -1 ? index * 0.125 : 0;
-  const scrambleDuration = 1 + (newTxt.length * 0.03);
+  const scrambleDuration = 1 + newTxt.length * 0.03;
 
   // State initialization
   if (curTxt) {
@@ -174,19 +179,19 @@ function updateSingleUI(container, newData) {
 
   // Accessibility: Set aria-label on container so screen readers read the clean text
   container.setAttribute("aria-label", newTxt);
-  container.innerHTML = ""; 
+  container.innerHTML = "";
   container.appendChild(newData);
 
   // Create new GSAP Context
   const ctx = gsap.context(() => {
-    gsap.set(newSpan, { 
-      opacity: curTxt ? 1 : 0, 
+    gsap.set(newSpan, {
+      opacity: curTxt ? 1 : 0,
       y: 0,
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
-      display: "block", 
-      maxWidth: "100%" 
+      display: "block",
+      maxWidth: "100%",
     });
 
     const tl = gsap.timeline({
@@ -195,15 +200,15 @@ function updateSingleUI(container, newData) {
         // Wrap marquee creation in ctx.add() so it is ALSO tracked/killed by revert()
         ctx.add(() => {
           newSpan.dataset.unscrambled = "true";
-          gsap.set(newSpan, { 
-            overflow: "visible", 
-            textOverflow: "clip", 
-            maxWidth: "none" 
+          gsap.set(newSpan, {
+            overflow: "visible",
+            textOverflow: "clip",
+            maxWidth: "none",
           });
           newSpan.innerHTML = richHTML;
           createMarqueeAnimation(newSpan);
         });
-      }
+      },
     });
 
     if (curTxt) {
@@ -217,23 +222,22 @@ function updateSingleUI(container, newData) {
           chars: scrambleNoise,
           speed: 0.2,
           tweenLength: true,
-          revealDelay: 0
-        }
+          revealDelay: 0,
+        },
       });
-
     } else {
       // INITIAL SEQUENCE: Fade In -> New
       tl.to(newSpan, {
-        opacity: 1, 
-        duration: scrambleDuration, 
+        opacity: 1,
+        duration: scrambleDuration,
         ease: "power2.out",
         scrambleText: {
           text: newTxt,
           chars: scrambleNoise,
-          speed: 0.2,         
-          tweenLength: true, 
-          revealDelay: 0.1, 
-        }
+          speed: 0.2,
+          tweenLength: true,
+          revealDelay: 0.1,
+        },
       });
     }
   }, container);
