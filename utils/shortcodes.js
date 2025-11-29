@@ -1,6 +1,8 @@
 import { Icon, renderTags } from "./components.js";
 
-export default {
+export const syncShortcodes = {
   icon: Icon,
   renderTags: renderTags,
 };
+
+export const asyncShortcodes = {};
