@@ -18,6 +18,13 @@
       type="font/woff2"
       crossorigin
     />
+    <link
+      rel="preload"
+      href="{{ '/assets/fonts/Inconsolata.woff2' | url }}"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     {# Preload status island for faster replacement #}
     {% if page.url == "/" %}
       {% if build.dev %}
