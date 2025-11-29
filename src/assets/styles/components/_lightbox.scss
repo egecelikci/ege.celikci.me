@@ -1,0 +1,60 @@
+@use "../utils/variables";
+@use "../utils/mixins";
+
+/* =========================================
+   PHOTOSWIPE: CUSTOM LIGHTBOX STYLES
+   ========================================= */
+
+.pswp {
+  // Use CSS variables for theming if they are available, otherwise fall back to SCSS
+  --pswp-bg: var(--color-bg, variables.$gray-darkest);
+  --pswp-placeholder-bg: var(--color-bg-offset, variables.$gray-dark);
+
+  // Action bar (top)
+  --pswp-top-bar-bg: rgba(0, 0, 0, 0.4);
+
+  // Icons
+  --pswp-icon-color: #ffffff;
+  --pswp-icon-color-secondary: variables.$gray;
+  --pswp-icon-stroke-color: #ffffff;
+  --pswp-icon-stroke-width: 1.5px;
+}
+
+// Custom caption styles
+.pswp__custom-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  color: #ffffff;
+  font-size: variables.$font-size-base * 0.9;
+  line-height: variables.$line-height;
+  text-align: center;
+  padding: 2rem 2rem 2.5rem;
+
+  pointer-events: none;
+  box-sizing: border-box;
+  transition: opacity 0.25s variables.$animation-curve-default;
+
+  &--empty {
+    opacity: 0;
+    padding: 0;
+  }
+
+  a {
+    color: variables.$gray-light;
+    text-decoration: underline;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+
+  // Nicer on smaller screens
+  @include mixins.mq(md) {
+    font-size: variables.$font-size-base;
+    padding: 2rem 4rem 3rem;
+  }
+}
