@@ -67,7 +67,7 @@ export default {
 
   excerpt: function (content) {
     const excerptMinimumLength = 80;
-    const excerptSeparator = "<!--more-->";
+    const excerptSeparator = "";
     const findExcerptEnd = (content) => {
       if (content === "") {
         return 0;
@@ -137,18 +137,17 @@ export default {
     return (array || []).sort((b, a) => b.localeCompare(a));
   },
 
-  shuffle: function (arr) {
-    let m = arr.length,
-      t,
-      i;
-
-    while (m) {
-      i = Math.floor(Math.random() * m--);
-      t = arr[m];
-      arr[m] = arr[i];
-      arr[i] = t;
+  /**
+   * Checks if a string starts with a given prefix.
+   * Usage in Nunjucks: `{{ some_string | startsWith('http') }}`
+   * @param {string} str The string to check.
+   * @param {string} prefix The expected prefix.
+   * @returns {boolean} True if the string starts with the prefix.
+   */
+  startsWith: function (str, prefix) {
+    if (typeof str !== "string" || typeof prefix !== "string") {
+      return false;
     }
-
-    return arr;
+    return str.startsWith(prefix);
   },
 };
