@@ -11,7 +11,7 @@ this changelog is also available as an [Atom feed](/feeds#changelog-entries) via
 ## 2025-11-29
 
 - improved [status](/#status) section
-- integrated [Umami](https://umami.balcova.online/share/n9fsFGeLa625WsGX) for self-hosted, open-source analytics.
+- integrated [Umami](https://umami.balcova.online/share/n9fsFGeLa625WsGX) for self-hosted, open-source analytics
 
 ## 2025-11-27
 
