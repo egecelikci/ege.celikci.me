@@ -127,7 +127,7 @@ class NotesView {
         const media = clone.querySelectorAll("img, video, svg, script, style");
         media.forEach((el) => el.remove());
 
-        caption = clone.textContent.replace(/\s+/g, " ").trim();
+        caption = clone.innerText.replace(/\s+/g, " ").trim();
       } catch (e) {
         console.warn("Caption extraction failed", e);
       }
