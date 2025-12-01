@@ -23,6 +23,12 @@
     status = 301
     force = true
 
+[[redirects]]
+    from = "https://ege.celikci.me/notes/20251201173255"
+    to = "https://ege.celikci.me/notes/20251201143255"
+    status = 302
+    force = true
+
 # Bots
 [[redirects]]
     from = "/wp-login.php"
