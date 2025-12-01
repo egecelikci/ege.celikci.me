@@ -13,7 +13,7 @@
   font-size: 0.875rem;
   padding: 0.5rem 1rem;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  border-radius: variables.$border-radius;
+  border-radius: var(--border-radius-sm);
   font-weight: 600;
   letter-spacing: 0.025em;
 
@@ -51,8 +51,8 @@
   }
 }
 .btn--mastodon {
-  background-color: variables.$mastodon-brand-primary;
-  border-color: variables.$mastodon-brand-primary;
+  background-color: var(--mastodon-brand-primary);
+  border-color: var(--mastodon-brand-primary);
   color: #fff;
 
   .icon {
