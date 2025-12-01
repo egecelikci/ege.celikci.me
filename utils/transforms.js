@@ -43,12 +43,18 @@ async function galleryTransform(content, outputPath) {
       let fullHeight = 0;
 
       if (srcset) {
-        const sources = srcset.split(",").map((s) => s.trim());
+        // ROBUSTNESS: Use regex to split srcset to handle potential commas in URLs safely
+        // Matches comma followed by whitespace, assuming typical srcset format
+        const sources = srcset.split(/,\s+/);
+
         const parsed = sources.map((source) => {
-          const parts = source.split(" ");
+          const parts = source.trim().split(/\s+/);
           const url = parts[0];
-          const descriptor = parts[1];
-          const width = descriptor ? parseInt(descriptor) : 0;
+          // The last part is usually the descriptor (e.g. "1200w")
+          const descriptor = parts[parts.length - 1];
+          const width = descriptor.endsWith("w")
+            ? parseInt(descriptor.slice(0, -1))
+            : 0;
           return { url, width };
         });
 
@@ -68,6 +74,7 @@ async function galleryTransform(content, outputPath) {
         fullHeight = parseInt(heightAttr);
       } else {
         // Fallback: try to get dimensions from the file
+        // Only works if the file exists locally in dist (depends on build order)
         if (fullSizeUrl.startsWith("/")) {
           try {
             const imagePath = path.join("./dist", fullSizeUrl);
@@ -77,7 +84,10 @@ async function galleryTransform(content, outputPath) {
               fullHeight = metadata.height;
             }
           } catch (err) {
-            console.log(`Could not get dimensions for ${fullSizeUrl}`);
+            // Log but don't crash the build
+            console.warn(
+              `[GalleryTransform] Could not get dimensions for ${fullSizeUrl}: ${err.message}`,
+            );
           }
         }
       }

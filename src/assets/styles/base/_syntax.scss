@@ -2,7 +2,7 @@
 
 code[class*="language-"],
 pre[class*="language-"] {
-  font-family: variables.$font-family-monospace;
+  font-family: var(--font-family-monospace);
   font-size: 1em;
   line-height: 1.85;
   direction: ltr;

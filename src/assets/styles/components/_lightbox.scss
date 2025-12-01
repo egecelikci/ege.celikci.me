@@ -7,15 +7,15 @@
 
 .pswp {
   // Use CSS variables for theming if they are available, otherwise fall back to SCSS
-  --pswp-bg: var(--color-bg, variables.$gray-darkest);
-  --pswp-placeholder-bg: var(--color-bg-offset, variables.$gray-dark);
+  --pswp-bg: var(--color-bg, var(--color-gray-900));
+  --pswp-placeholder-bg: var(--color-bg-offset, var(--color-gray-800));
 
   // Action bar (top)
   --pswp-top-bar-bg: rgba(0, 0, 0, 0.4);
 
   // Icons
   --pswp-icon-color: #ffffff;
-  --pswp-icon-color-secondary: variables.$gray;
+  --pswp-icon-color-secondary: var(--color-gray-500);
   --pswp-icon-stroke-color: #ffffff;
   --pswp-icon-stroke-width: 1.5px;
 }
@@ -29,14 +29,14 @@
 
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
   color: #ffffff;
-  font-size: variables.$font-size-base * 0.9;
-  line-height: variables.$line-height;
+  font-size: calc(var(--font-size-base) * 0.9);
+  line-height: var(--line-height-body);
   text-align: center;
   padding: 2rem 2rem 2.5rem;
 
   pointer-events: none;
   box-sizing: border-box;
-  transition: opacity 0.25s variables.$animation-curve-default;
+  transition: opacity 0.25s var(--animation-curve-default);
 
   &--empty {
     opacity: 0;
@@ -44,7 +44,7 @@
   }
 
   a {
-    color: variables.$gray-light;
+    color: var(--color-gray-300);
     text-decoration: underline;
 
     &:hover {
@@ -54,7 +54,7 @@
 
   // Nicer on smaller screens
   @include mixins.mq(md) {
-    font-size: variables.$font-size-base;
+    font-size: var(--font-size-base);
     padding: 2rem 4rem 3rem;
   }
 }

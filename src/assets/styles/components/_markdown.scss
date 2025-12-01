@@ -33,10 +33,7 @@
   /* Images */
   img,
   video {
-    // display: block;
-    // max-width: 100%;
     height: auto;
-    // margin: 0 auto 2rem;
     color: var(--color-text-offset);
     font-style: italic;
     text-align: center;
@@ -143,7 +140,7 @@
     overflow-x: auto;
     margin: 2rem 0;
     border: 1px solid var(--color-border);
-    border-radius: variables.$border-radius;
+    border-radius: var(--border-radius-sm);
   }
 
   table {
@@ -157,32 +154,51 @@
     padding: 0.75rem 1rem;
     text-align: left;
     vertical-align: top;
+
+    /* Yatay Çizgi */
     border-bottom: 1px solid var(--color-border);
-  }
 
-  th {
-    background-color: var(--color-bg-offset);
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  th:not(:last-child),
-  td:not(:last-child) {
+    /* Dikey Çizgi (Hücrenin sağına) */
     border-right: 1px solid var(--color-border);
+
+    position: relative;
+    padding-right: 3rem; /* Buton için yer */
   }
 
+  /* YENİ: Başlık Sütunu (İlk sütun) Özel Ayarı */
+  td:first-child {
+    white-space: nowrap; /* Metni tek satıra zorla (Evrim Ağacı yan yana) */
+    padding-right: 1rem; /* Buton olmadığı için sağ boşluğu normale döndür */
+  }
+
+  /* Son sütundaki dikey çizgiyi kaldır */
+  th:last-child,
+  td:last-child {
+    border-right: none;
+  }
+
+  /* Son satırın alt çizgisini kaldır */
   tr:last-child td {
     border-bottom: none;
   }
 
   td code {
-    white-space: pre-wrap;
-    word-break: break-word;
+    white-space: pre-wrap; // Default: content wraps, respects newlines
+    word-break: break-word; // Break long words if they cannot fit
+    overflow-wrap: break-word;
     background-color: transparent;
     border: none;
     padding: 0;
     font-size: 0.85rem;
-    font-family: variables.$font-family-monospace;
+    font-family: var(--font-family-monospace);
+
+    @include mixins.mq-down(md) {
+      white-space: pre; // Respect newlines, force long lines to scroll
+      word-break: break-all; // Break any long words
+      overflow-x: auto; // Allow internal scrolling for code blocks
+      display: block; // Ensures overflow works correctly
+      max-width: 100%; // Ensure it doesn't push parent td too wide
+    }
   }
 
   /* Code blocks */
@@ -205,7 +221,7 @@
     }
     @media screen and (min-width: 1040px) {
       .post & {
-        border-radius: variables.$border-radius * 2;
+        border-radius: var(--border-radius-md);
       }
     }
   }
@@ -213,10 +229,10 @@
   /* Inline code */
   :not(pre) > code {
     display: inline-block;
-    font-family: variables.$font-family-monospace;
+    font-family: var(--font-family-monospace);
     background-color: var(--color-bg-offset);
     border: 1px solid var(--color-border);
-    border-radius: variables.$border-radius;
+    border-radius: var(--border-radius-sm);
     padding: 2px 4px;
     font-size: 75%;
     word-break: break-word;

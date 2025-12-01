@@ -9,22 +9,22 @@
   position: relative;
   border: 1px solid var(--color-border);
   background-color: var(--color-bg);
-  border-radius: variables.$border-radius;
-  transition: all 0.3s variables.$animation-curve-default;
+  border-radius: var(--border-radius-sm);
+  transition: all 0.3s var(--animation-curve-default);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: variables.$box-shadow-elevated;
+    box-shadow: var(--shadow-elevated);
   }
 
   &--detail {
     margin: 2rem auto 4rem;
-    box-shadow: variables.$box-shadow-elevated;
+    box-shadow: var(--shadow-elevated);
     border-radius: 8px;
 
     &:hover {
       transform: none;
-      box-shadow: variables.$box-shadow-elevated;
+      box-shadow: var(--shadow-elevated);
     }
   }
 
@@ -203,95 +203,111 @@
 .notes-view-toggle {
   display: flex;
   justify-content: flex-end;
-  /* ALIGNMENT FIX: Removed margin-bottom here to align with H1 */
   margin-bottom: 0;
 }
 
+/* note.scss */
+
+/* note.scss */
+
 .view-toggle {
-  position: relative;
-  display: inline-flex;
-
-  /* STYLE FIX: Use offset background for the "track" */
-  background: var(--color-bg-offset);
-  padding: 4px;
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-
-  isolation: isolate;
+  @include mixins.pill-group;
 
   &__bg {
-    position: absolute;
-    top: 4px;
-    bottom: 4px;
+    @include mixins.pill-slide;
+    transition: none;
     left: 0;
     width: 0;
-    /* The sliding pill is the "card" color */
-    background: var(--color-bg);
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    pointer-events: none;
-    z-index: 1;
   }
 
   &__btn {
+    @include mixins.pill-control;
     position: relative;
-    z-index: 2;
-    background: transparent;
-    border: none;
-    padding: 6px 14px; /* Balanced padding */
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--color-text-offset);
-    cursor: pointer;
-    transition: color 0.2s ease;
+    /* Remove CSS transitions for color, GSAP handles it */
+    transition: none;
 
-    /* Flex alignment for Icon + Text */
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    line-height: 1; /* Prevents line-height from throwing off vertical center */
-
-    /* Icons */
     svg {
       width: 16px;
       height: 16px;
+      /* Set base styles, but let GSAP handle changes */
       opacity: 0.6;
-      transition: opacity 0.2s ease;
-    }
-
-    &:hover {
-      color: var(--color-text);
-      svg {
-        opacity: 0.9;
-      }
+      stroke: currentColor;
     }
 
     /* Active State */
     &[aria-pressed="true"] {
-      color: var(--color-text);
-      font-weight: 600;
+      /* REMOVE THESE. GSAP WILL HANDLE THEM. */
+      /* color: var(--color-text); */
+      /* font-weight: 600; */
 
-      svg {
+      /* svg {
         opacity: 1;
         stroke: var(--color-primary);
-      }
+      } */
     }
   }
 }
 
-.page__header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center; /* ALIGNMENT FIX: Vertically center H1 and Toggle */
-  flex-wrap: wrap;
-  gap: 1rem;
-  /* Add margin here instead of on the toggle */
-  margin-bottom: 2rem;
+.tag-filter {
+  // ... existing ...
+  @include mixins.pill-group;
+
+  &__bg {
+    @include mixins.pill-slide;
+    transition: none;
+    left: 0;
+    width: 0;
+  }
+
+  &__btn {
+    @include mixins.pill-control;
+    transition: none; /* Let GSAP handle color */
+  }
 }
 
 /* Ensure H1 doesn't have default margins throwing off alignment */
 .page__header-content .page__title {
   margin: 0;
+}
+
+/* =========================================
+   TAG FILTER (Refactored)
+   ========================================= */
+.tag-filter {
+  font-family: var(--font-family-monospace);
+  @include mixins.pill-group;
+
+  // Alignment: Self-align to the right & shrink to fit content
+  display: flex;
+  width: fit-content;
+  margin-left: auto;
+
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 2.5rem;
+
+  &__bg {
+    @include mixins.pill-slide;
+    /* FIX: Disable CSS transition */
+    transition: none;
+    left: 0;
+    width: 0;
+  }
+  &__btn {
+    @include mixins.pill-control;
+
+    // Active State
+    &.is-active {
+      color: var(--color-text);
+      font-weight: 600;
+
+      /* FIX 2: Remove these static backgrounds. 
+         Let the sliding pill be the ONLY background. 
+         This prevents the "flash" of double backgrounds. */
+      background: transparent;
+      box-shadow: none;
+    }
+  }
 }
 
 /* =========================================
@@ -309,7 +325,11 @@
   .notelist__item {
     position: relative;
     margin-left: 2rem;
-    display: block; /* Show item */
+    display: block;
+
+    /* PERFORMANCE: Skip rendering off-screen content */
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px; /* Rough estimate of note height */
 
     &:not(:last-child) {
       margin-bottom: 3rem;
@@ -533,4 +553,19 @@
       }
     }
   }
+}
+
+@keyframes fadeInView {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#notes-container.is-list-view {
+  animation: fadeInView 0.4s ease-out forwards;
 }

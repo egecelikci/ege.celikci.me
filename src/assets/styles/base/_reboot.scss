@@ -71,20 +71,16 @@ html {
 
 html {
   // Sets a specific default `font-size` for user with `rem` type scales.
-  font-size: variables.$font-size-root;
-  font-size: var(--font-size-root, #{variables.$font-size-root});
+  font-size: var(--font-size-root);
   // Changes the default tap highlight to be completely transparent in iOS.
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-
-  --font-family-base: #{variables.$font-family-base};
-  --font-family-display: #{variables.$font-family-base};
 }
 
 body {
   // Make the `body` use the `font-size-root`
   font-family: var(--font-family-base);
-  font-size: variables.$font-size-base;
-  line-height: variables.$line-height;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-body);
 
   color: var(--color-text);
   background-color: var(--color-bg);
