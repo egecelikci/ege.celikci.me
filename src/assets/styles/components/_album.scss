@@ -4,12 +4,12 @@
 .album {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: variables.$spacing-x;
+  gap: var(--space-lg);
   padding: 1rem 0;
 
   @include mixins.mq(md) {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: variables.$spacing-x;
+    gap: var(--space-lg);
   }
 
   &__item {
@@ -55,7 +55,7 @@
     position: relative;
     z-index: 10;
 
-    border: 2px solid variables.$gray;
+    border: 2px solid var(--color-border);
     background-color: transparent;
 
     transition:
@@ -70,7 +70,7 @@
     -webkit-font-smoothing: subpixel-antialiased;
 
     @media (prefers-color-scheme: dark) {
-      border-color: variables.$gray-dark;
+      border-color: var(--color-gray-900);
     }
 
     img {
@@ -91,7 +91,7 @@
       z-index: 2;
 
       clip-path: inset(0 100% 0 0);
-      transition: clip-path 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition: clip-path 0.5s var(--animation-curve-default);
       will-change: clip-path;
 
       transform: translateZ(0);
@@ -114,7 +114,7 @@
   }
 
   &__meta {
-    font-family: variables.$font-family-monospace;
+    font-family: var(--font-family-monospace);
     font-size: 0.8rem;
     line-height: 1.4;
     position: relative;
