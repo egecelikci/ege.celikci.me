@@ -85,17 +85,74 @@
 
 @mixin container-narrow() {
   width: 100%;
-  max-width: variables.$container-narrow-max-width;
   max-width: var(--content-max-width, #{variables.$container-narrow-max-width});
   margin-left: auto;
   margin-right: auto;
 }
 
 @mixin body-text() {
-  font-size: 1.125rem;
-  line-height: 1.65;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-body);
 
   @include mq(md) {
-    font-size: 1.375rem;
+    font-size: var(--font-size-md);
   }
+}
+
+// New mixin for segmented/pill style buttons
+@mixin pill-control {
+  // Reset
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  // Layout
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; // Space between text and optional icons
+
+  // Dimensions & Typography
+  padding: 6px 14px;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+
+  // Color & Interaction
+  color: var(--color-text-offset);
+  transition: all 0.2s ease;
+  z-index: 2; // Ensure text sits above the sliding background
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+// Container for the pill group
+@mixin pill-group {
+  display: inline-flex;
+  background: var(--color-bg-offset);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  isolation: isolate;
+  position: relative;
+}
+
+// The sliding background element
+@mixin pill-slide {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  background: var(--color-bg);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 1;
+  // Note: width and transform/left are typically handled by JS for the slide effect
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }

@@ -1,9 +1,7 @@
 // Register Service Worker
 
 if ("serviceWorker" in navigator) {
-  if (import.meta.env.DEV) {
-    console.info("skipping service worker registration in development.");
-  } else {
+  if (process.env.NODE_ENV === "production") {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch((registrationError) => {
         console.error("SW registration failed: ", registrationError);

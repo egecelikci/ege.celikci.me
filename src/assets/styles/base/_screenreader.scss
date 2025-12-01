@@ -16,7 +16,7 @@
 .sr-skip-link {
   @include mixins.sr-only();
   @include mixins.sr-only-focusable();
-  font-family: variables.$font-family-sans-serif;
+  font-family: var(--font-family-sans-serif);
 
   &:focus {
     position: absolute;

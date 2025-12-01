@@ -1,10 +1,18 @@
 import { DateTime } from "luxon";
 import random from "lodash/random.js";
+import memoize from "lodash/memoize.js";
+import { extractNoteGridData } from "./noteGridDataExtractor.js";
+
+const TIMEZONE = "Europe/Istanbul";
+
+const getNoteGridData = memoize(extractNoteGridData);
 
 export default {
+  getNoteGridData,
+
   readableDate: function (date, format) {
     // default to Europe/Vienna Timezone
-    const dt = DateTime.fromJSDate(date, { zone: "Europe/Istanbul" });
+    const dt = DateTime.fromJSDate(date, { zone: TIMEZONE });
     if (!format) {
       format = dt.hour + dt.minute > 0 ? "dd LLL yyyy - HH:mm" : "dd LLL yyyy";
     }
@@ -12,20 +20,20 @@ export default {
   },
 
   dateToFormat: function (date, format) {
-    return DateTime.fromJSDate(date, { zone: "Europe/Istanbul" }).toFormat(
+    return DateTime.fromJSDate(date, { zone: TIMEZONE }).toFormat(
       String(format),
     );
   },
 
   dateToISO: function (date) {
-    return DateTime.fromJSDate(date, { zone: "Europe/Istanbul" }).toISO({
+    return DateTime.fromJSDate(date, { zone: TIMEZONE }).toISO({
       includeOffset: false,
       suppressMilliseconds: true,
     });
   },
 
   dateFromISO: function (timestamp) {
-    return DateTime.fromISO(timestamp, { zone: "Europe/Istanbul" }).toJSDate();
+    return DateTime.fromISO(timestamp, { zone: TIMEZONE }).toJSDate();
   },
 
   humanizeNumber: function (num) {
@@ -66,36 +74,30 @@ export default {
   },
 
   excerpt: function (content) {
-    const excerptMinimumLength = 80;
-    const excerptSeparator = "";
-    const findExcerptEnd = (content) => {
-      if (content === "") {
-        return 0;
-      }
-
-      const paragraphEnd = content.indexOf("</p>", 0) + 4;
-      if (paragraphEnd < excerptMinimumLength) {
-        return (
-          paragraphEnd +
-          findExcerptEnd(content.substring(paragraphEnd), paragraphEnd)
-        );
-      }
-
-      return paragraphEnd;
-    };
-
     if (!content) {
       return;
     }
 
-    if (content.includes(excerptSeparator)) {
-      return content.substring(0, content.indexOf(excerptSeparator));
+    const excerptMinimumLength = 80;
+    const firstParagraphEnd = content.indexOf("</p>");
+
+    if (
+      firstParagraphEnd !== -1 &&
+      firstParagraphEnd + 4 >= excerptMinimumLength
+    ) {
+      return content.substring(0, firstParagraphEnd + 4);
     } else if (content.length <= excerptMinimumLength) {
       return content;
+    } else {
+      // If no paragraph found or it's too short, try to find a reasonable cutoff
+      let excerpt = content.substring(0, excerptMinimumLength);
+      // Try to end on a word boundary
+      const lastSpace = excerpt.lastIndexOf(" ");
+      if (lastSpace !== -1) {
+        excerpt = excerpt.substring(0, lastSpace);
+      }
+      return excerpt + "…"; // Add ellipsis for truncated content
     }
-
-    const excerptEnd = findExcerptEnd(content);
-    return content.substring(0, excerptEnd);
   },
 
   randomItem: function (arr) {
@@ -135,19 +137,5 @@ export default {
 
   sortAlphabetically: function (array) {
     return (array || []).sort((b, a) => b.localeCompare(a));
-  },
-
-  /**
-   * Checks if a string starts with a given prefix.
-   * Usage in Nunjucks: `{{ some_string | startsWith('http') }}`
-   * @param {string} str The string to check.
-   * @param {string} prefix The expected prefix.
-   * @returns {boolean} True if the string starts with the prefix.
-   */
-  startsWith: function (str, prefix) {
-    if (typeof str !== "string" || typeof prefix !== "string") {
-      return false;
-    }
-    return str.startsWith(prefix);
   },
 };
