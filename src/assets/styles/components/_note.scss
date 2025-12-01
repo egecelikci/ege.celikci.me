@@ -12,6 +12,7 @@
   border-radius: var(--border-radius-sm);
   transition: all 0.3s var(--animation-curve-default);
 
+  /* FIX: Changed "&amp;:hover" to "&:hover" */
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-elevated);
@@ -34,6 +35,7 @@
     font-weight: 700;
     text-wrap: balance;
   }
+
   &__meta {
     display: flex;
     flex-wrap: wrap;
@@ -45,13 +47,16 @@
       padding: 0 0.5rem;
     }
   }
+
   &__date {
     color: var(--color-text-offset);
     font-size: 0.875rem;
   }
+
   &__tags {
     margin-left: auto;
   }
+
   &__tag {
     display: inline-block;
     font-size: 0.75rem;
@@ -67,6 +72,7 @@
       color: #fff;
     }
   }
+
   &__content {
     padding: 0.5rem 1rem 1rem;
 
@@ -79,7 +85,7 @@
       }
     }
 
-    // Standard text styles
+    /* Standard text styles */
     a,
     pre[class*="language-"] {
       position: relative;
@@ -90,14 +96,14 @@
       margin-bottom: 1rem;
     }
 
-    // --- SMART GALLERY FIX ---
+    /* --- SMART GALLERY FIX --- */
     p:has(> a.note-gallery__link) {
       display: grid;
-      // MOBILE: Tight gap, 3 columns
+      /* MOBILE: Tight gap, 3 columns */
       gap: 0.25rem;
       grid-template-columns: repeat(3, 1fr);
 
-      // DESKTOP: Wider gap, 4 columns
+      /* DESKTOP: Wider gap, 4 columns */
       @include mixins.mq(md) {
         gap: 0.5rem;
         grid-template-columns: repeat(4, 1fr);
@@ -113,6 +119,14 @@
         width: 100%;
         height: 100%;
         border: none !important;
+        border-radius: 4px;
+
+        /* Fix focus for grid images */
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 4px var(--color-primary);
+          z-index: 10;
+        }
       }
 
       img {
@@ -126,7 +140,7 @@
       }
     }
 
-    // --- SPECIAL CASE: Single Image ---
+    /* --- SPECIAL CASE: Single Image --- */
     p:has(> a.note-gallery__link:only-of-type) {
       display: block;
       margin-bottom: 1.5rem;
@@ -141,6 +155,13 @@
         width: fit-content;
         max-width: 100%;
         height: auto;
+
+        border-radius: 12px;
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 4px var(--color-primary);
+        }
       }
 
       img {
@@ -155,6 +176,7 @@
       }
     }
   }
+
   &__stats {
     display: flex;
     align-items: center;
@@ -167,12 +189,18 @@
       }
     }
   }
+
   &__link__overlay {
     @include mixins.coverall;
     display: block;
     border-radius: 6px;
     box-shadow: none;
     z-index: 2;
+
+    &:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
   }
 }
 
@@ -188,6 +216,10 @@
   &:hover {
     opacity: 0.9;
     border: none !important;
+  }
+
+  &:focus {
+    outline: none;
   }
 
   img {
@@ -206,10 +238,6 @@
   margin-bottom: 0;
 }
 
-/* note.scss */
-
-/* note.scss */
-
 .view-toggle {
   @include mixins.pill-group;
 
@@ -223,89 +251,13 @@
   &__btn {
     @include mixins.pill-control;
     position: relative;
-    /* Remove CSS transitions for color, GSAP handles it */
     transition: none;
 
     svg {
       width: 16px;
       height: 16px;
-      /* Set base styles, but let GSAP handle changes */
       opacity: 0.6;
       stroke: currentColor;
-    }
-
-    /* Active State */
-    &[aria-pressed="true"] {
-      /* REMOVE THESE. GSAP WILL HANDLE THEM. */
-      /* color: var(--color-text); */
-      /* font-weight: 600; */
-
-      /* svg {
-        opacity: 1;
-        stroke: var(--color-primary);
-      } */
-    }
-  }
-}
-
-.tag-filter {
-  // ... existing ...
-  @include mixins.pill-group;
-
-  &__bg {
-    @include mixins.pill-slide;
-    transition: none;
-    left: 0;
-    width: 0;
-  }
-
-  &__btn {
-    @include mixins.pill-control;
-    transition: none; /* Let GSAP handle color */
-  }
-}
-
-/* Ensure H1 doesn't have default margins throwing off alignment */
-.page__header-content .page__title {
-  margin: 0;
-}
-
-/* =========================================
-   TAG FILTER (Refactored)
-   ========================================= */
-.tag-filter {
-  font-family: var(--font-family-monospace);
-  @include mixins.pill-group;
-
-  // Alignment: Self-align to the right & shrink to fit content
-  display: flex;
-  width: fit-content;
-  margin-left: auto;
-
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 2.5rem;
-
-  &__bg {
-    @include mixins.pill-slide;
-    /* FIX: Disable CSS transition */
-    transition: none;
-    left: 0;
-    width: 0;
-  }
-  &__btn {
-    @include mixins.pill-control;
-
-    // Active State
-    &.is-active {
-      color: var(--color-text);
-      font-weight: 600;
-
-      /* FIX 2: Remove these static backgrounds. 
-         Let the sliding pill be the ONLY background. 
-         This prevents the "flash" of double backgrounds. */
-      background: transparent;
-      box-shadow: none;
     }
   }
 }
@@ -327,9 +279,9 @@
     margin-left: 2rem;
     display: block;
 
-    /* PERFORMANCE: Skip rendering off-screen content */
+    /* PERFORMANCE: content-visibility */
     content-visibility: auto;
-    contain-intrinsic-size: 0 500px; /* Rough estimate of note height */
+    contain-intrinsic-size: 0 500px;
 
     &:not(:last-child) {
       margin-bottom: 3rem;
@@ -378,11 +330,9 @@
 /* --- STATE B: GRID VIEW --- */
 #notes-container.is-grid-view {
   display: grid;
-  // MOBILE: 3 Columns, Tiny Gap (Like first SCSS)
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
 
-  // DESKTOP: Adaptive sizing
   @include mixins.mq(md) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
@@ -393,6 +343,8 @@
     padding: 0;
     width: 100%;
     border: none;
+    content-visibility: visible;
+    contain-intrinsic-size: none;
 
     &::before,
     &::after {
@@ -400,7 +352,6 @@
     }
   }
 
-  /* Hide text-only notes in grid view */
   .notelist__item:not(.has-image) {
     display: none;
   }
@@ -414,29 +365,23 @@
 }
 
 /* =========================================
-   4. MODERN GRID CARD (Minimal & Rounded)
+   4. MODERN GRID CARD
    ========================================= */
 .note-grid-item {
   position: relative;
   aspect-ratio: 1;
   background: var(--color-bg-offset);
-
-  // MOBILE: Small Radius
   border-radius: 4px;
 
-  // DESKTOP: Larger Radius
   @include mixins.mq(md) {
     border-radius: 12px;
   }
 
-  // Minimal: Subtle border instead of shadow
   border: 1px solid rgba(0, 0, 0, 0.05);
-
   overflow: hidden;
   cursor: pointer;
   transform: translateZ(0);
 
-  // No default shadow for minimal look
   transition:
     transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.3s ease;
@@ -445,6 +390,10 @@
     display: block;
     width: 100%;
     height: 100%;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__media {
@@ -460,7 +409,6 @@
     }
   }
 
-  /* Overlay with Rich Text */
   &__overlay {
     position: absolute;
     inset: 0;
@@ -495,8 +443,6 @@
     line-height: 1.3;
     margin: 0 0 0.25rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-
-    // Truncate to 2 lines
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -510,8 +456,6 @@
     margin: 0;
     opacity: 0.8;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-
-    // Truncate to 2 lines
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -534,7 +478,6 @@
     pointer-events: none;
   }
 
-  /* Hover Effects */
   @include mixins.hover-focus {
     &:hover,
     &:focus-within {
@@ -543,15 +486,18 @@
       .note-grid-item__media img {
         transform: scale(1.05);
       }
-
       .note-grid-item__overlay {
         opacity: 1;
       }
-
       .note-grid-item__overlay-content {
         transform: translateY(0);
       }
     }
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
   }
 }
 

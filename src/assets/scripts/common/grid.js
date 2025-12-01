@@ -38,7 +38,7 @@ export function animateGridItems(items, options = {}) {
 
   ScrollTrigger.batch(targets, {
     id: batchId,
-    interval: 0.1,
+    interval: 0.2,
     batchMax: 6,
     start: "top 95%",
     once: true,
