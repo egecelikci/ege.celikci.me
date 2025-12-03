@@ -29,7 +29,7 @@ for the HTML page, you can [clone the site source](https://github.com/{{ author.
 ## Matrix
 
 - [@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})
-  - Element Desktop: `oNQd1nTCFb`
+  - Element Desktop: `7jA7yS1uVD`
   - Element X Android: `9ovMRDnfeY`
 
 - [@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})
