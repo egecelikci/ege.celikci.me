@@ -21,9 +21,7 @@
         <div class="webmentions__content">
           <ol class="webmentions__list">
             {% for webmention in mentions | slice(5) %}
-              <li class="webmentions__item">
-                {% include 'webmention.njk' %}
-              </li>
+              <li class="webmentions__item">{% include 'webmention.njk' %}</li>
             {% endfor %}
           </ol>
         </div>

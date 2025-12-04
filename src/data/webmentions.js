@@ -8,7 +8,7 @@ import settings from "./site.js";
 const CACHE_DIR = ".cache";
 const CACHE_FILE = path.join(CACHE_DIR, "webmentions.json");
 const API = "https://webmention.io/api";
-const WEBMENTION_IO_TOKEN = process.env.WEBMENTION_IO_TOKEN || "mDKdaXPPvBvCIGcXWlQCrA";
+const WEBMENTION_IO_TOKEN = process.env.WEBMENTION_IO_TOKEN;
 const { host } = settings;
 
 async function fetchWebmentions(since, perPage = 10000) {
