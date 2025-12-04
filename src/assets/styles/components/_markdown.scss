@@ -1,5 +1,4 @@
 @use "../utils/mixins";
-@use "../utils/variables";
 
 .markdown {
   @include mixins.body-text();
