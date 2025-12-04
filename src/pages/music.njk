@@ -54,4 +54,6 @@ automatically fetched from my public
       </div>
     </a>
   {% endfor %}
+    {%- set webmentionUrl -%}{{ page.url | url | absoluteUrl(site.url) }}{%- endset -%}
+    {% include 'webmentions.njk' %}
 </div>
