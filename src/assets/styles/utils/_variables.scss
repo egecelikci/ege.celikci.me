@@ -83,6 +83,9 @@ $z-layers: (
   --space-2xl: clamp(3rem, 1.5vw + 2.5rem, 4rem); // ~48-64px
   --space-3xl: clamp(4rem, 2vw + 3rem, 5rem); // ~64-80px
 
+  // Avatar Sizes
+  --size-avatar-lg: 48px;
+
   // Border Radius
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
