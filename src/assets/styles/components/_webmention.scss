@@ -1,0 +1,208 @@
+@use "../utils/mixins";
+
+// -----------------------------------------------------------------------------
+// SINGLE WEBMENTION ITEM
+// -----------------------------------------------------------------------------
+.webmention {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: var(--space-md) 0 var(--space-md) calc(var(--size-avatar-lg) + var(--space-xs));
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--animation-speed-fast) var(--animation-curve-default);
+
+  // Last item needs no border
+  &:last-child {
+    border-bottom: none;
+  }
+
+  // Highlight "Own" mentions (e.g. from the site owner)
+  &--own {
+    background-color: var(--color-bg-offset);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--space-sm);
+    border-bottom: none;
+    padding-right: var(--space-md);
+  }
+
+  // Meta Data (Author, Date)
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    order: -1;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-xs);
+    line-height: 1.4;
+
+    &__divider {
+      display: inline-block;
+      padding: 0 var(--space-2xs);
+      color: var(--color-text-offset);
+    }
+  }
+
+  // Content (The actual text)
+  &__content {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-body);
+    color: var(--color-text);
+    word-wrap: break-word;
+
+    a {
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
+      
+      @include mixins.hover-focus {
+        color: var(--color-primary);
+        text-decoration-thickness: 2px;
+      }
+    }
+  }
+
+  // Author Information
+  &__author {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+
+    @include mixins.hover-focus {
+      color: var(--color-primary);
+      text-decoration: underline;
+    }
+
+    // Avatar
+    &__photo {
+      position: absolute;
+      top: var(--space-md);
+      left: 0;
+      height: var(--size-avatar-lg);
+      width: var(--size-avatar-lg);
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: var(--color-bg-offset);
+      box-shadow: 0 0 0 1px var(--color-border);
+    }
+  }
+
+  // Publish Date
+  &__pubdate {
+    color: var(--color-text-offset);
+    font-size: var(--font-size-xs);
+  }
+
+  // Hide internal Microformats2 elements if needed
+  a.u-mention,
+  a:empty {
+    display: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// WEBMENTIONS CONTAINER & LIST
+// -----------------------------------------------------------------------------
+.webmentions {
+  margin-top: var(--space-2xs);
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    margin-bottom: 0; // Spacing handled by padding/border of .webmention
+  }
+
+  &__preview {
+    position: relative;
+  }
+
+  // "Show All" Button/Link
+  &__showall {
+    display: inline-flex;
+    align-items: center;
+    margin-top: var(--space-md);
+    padding: var(--space-xs) var(--space-md);
+    
+    font-family: var(--font-family-sans-serif);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-primary);
+    background-color: var(--color-bg-offset);
+    border-radius: var(--border-radius-full);
+    text-decoration: none;
+    transition: all var(--animation-speed-fast) var(--animation-curve-default);
+
+    .icon {
+      margin-right: var(--space-xs);
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    @include mixins.hover-focus {
+      background-color: var(--color-primary);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+  
+  &__empty {
+    color: var(--color-text-offset);
+    font-style: italic;
+    padding: var(--space-md) 0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// TRUNCATION & EXPANSION LOGIC (CSS-Only)
+// -----------------------------------------------------------------------------
+.webmentions--truncated {
+  .webmentions__preview::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6rem;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0) 0%,
+      var(--color-bg) 90%
+    );
+    pointer-events: none;
+  }
+
+  .webmentions__content {
+    display: none;
+  }
+}
+
+// Expand when targeted (User clicks "Show All")
+#webmentions:target,
+.webmentions--expanded {
+  scroll-margin-top: var(--space-xl);
+
+  .webmentions__showall {
+    display: none;
+  }
+  
+  .webmentions__content {
+    display: block;
+    animation: fadeIn var(--animation-speed-normal) var(--animation-curve-default);
+  }
+  
+  .webmentions__preview::after {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
