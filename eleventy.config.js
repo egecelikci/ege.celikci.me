@@ -10,7 +10,11 @@ import pluginSVGSprite from "eleventy-plugin-svg-sprite";
 
 import filters from "./utils/filters.js";
 import transforms from "./utils/transforms.js";
-import { syncShortcodes, asyncShortcodes } from "./utils/shortcodes.js";
+import {
+  syncShortcodes,
+  asyncShortcodes,
+  pairedShortcodes,
+} from "./utils/shortcodes.js";
 import markdown from "./utils/markdown.js";
 import viteHelpers from "./utils/vite.js";
 import imageHelpers from "./utils/imageHelpers.js";
@@ -82,6 +86,11 @@ export default function (config) {
   if (syncShortcodes) {
     Object.keys(syncShortcodes).forEach((shortcodeName) => {
       config.addShortcode(shortcodeName, syncShortcodes[shortcodeName]);
+    });
+  }
+  if (pairedShortcodes) {
+    Object.keys(pairedShortcodes).forEach((shortcodeName) => {
+      config.addPairedShortcode(shortcodeName, pairedShortcodes[shortcodeName]);
     });
   }
   if (asyncShortcodes) {

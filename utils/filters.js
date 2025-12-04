@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import sanitizeHTML from 'sanitize-html'
+import sanitizeHTML from "sanitize-html";
 import random from "lodash/random.js";
 import memoize from "lodash/memoize.js";
 import { extractNoteGridData } from "./noteGridDataExtractor.js";

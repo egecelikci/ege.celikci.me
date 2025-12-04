@@ -1,5 +1,8 @@
 import htmlmin from "html-minifier";
+import markdownIt from "markdown-it";
 import slugify from "@sindresorhus/slugify";
+
+const markdown = markdownIt();
 
 const minify = (content) =>
   htmlmin.minify(content, {
@@ -51,7 +54,46 @@ export const renderTags = (tags) => {
   return minify(output);
 };
 
+export const Callout = (content, type = "info") => {
+  let icon;
+
+  switch (type) {
+    case "action":
+      icon = "check";
+      break;
+
+    case "warning":
+      icon = "alert";
+      break;
+
+    case "plus":
+      icon = "plus";
+      break;
+
+    case "minus":
+      icon = "minus";
+      break;
+
+    case "percent":
+      icon = "percent";
+      break;
+
+    case "info":
+    default:
+      icon = "info";
+      break;
+  }
+
+  const output = `<div class="callout callout--${type}">
+        <span class="callout__icon">${Icon(icon)}</span>
+        <div class="callout__content">${markdown.render(content)}</div>
+    </div>`;
+
+  return minify(output);
+};
+
 export default {
   Icon,
   renderTags,
+  Callout,
 };
