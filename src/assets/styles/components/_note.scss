@@ -630,7 +630,6 @@
   // Add specific keyboard focus style using :focus-within
   &:focus-within {
     outline: 2px solid var(--color-primary); // A clear outline for keyboard focus
-    outline-offset: 2px;
   }
 }
 
