@@ -1,0 +1,39 @@
+---
+layout: page
+title: "88x31"
+description: "88x31 badges"
+permalink: /88x31/
+---
+
+<div class="badges-grid">
+  {% for item in 88x31 | shuffle %}
+    {% if item.url %}
+      <a
+        href="{{ item.url }}"
+        class="badge-item"
+        title="{{ item.title }}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="{{ item.img | url }}"
+          alt="{{ item.title }}"
+          width="88"
+          height="31"
+          eleventy:ignore
+        />
+      </a>
+    {% else %}
+      <!-- Changed <div> to <span> to prevent layout breaking -->
+      <span class="badge-item" title="{{ item.title }}">
+        <img
+          src="{{ item.img | url }}"
+          alt="{{ item.title }}"
+          width="88"
+          height="31"
+          eleventy:ignore
+        />
+      </span>
+    {% endif %}
+  {% endfor %}
+</div>
