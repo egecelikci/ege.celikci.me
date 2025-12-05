@@ -18,6 +18,7 @@ import {
 import markdown from "./utils/markdown.js";
 import viteHelpers from "./utils/vite.js";
 import imageHelpers from "./utils/imageHelpers.js";
+import registerAlistral from "./utils/prism-alistral.js";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const CONTENT_GLOBS = {
@@ -31,7 +32,11 @@ export default function (config) {
   // Plugins
   config.addPlugin(pluginRss);
   config.addPlugin(pluginNavigation);
-  config.addPlugin(pluginSyntaxHighlight);
+  config.addPlugin(pluginSyntaxHighlight, {
+    init: function ({ Prism }) {
+      registerAlistral(Prism);
+    },
+  });
   config.addPlugin(pluginPageAssets, {
     mode: "directory",
     postsMatching: "src/posts/*/*.md",
