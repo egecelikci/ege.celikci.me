@@ -9069,6 +9069,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"instant.page@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "instant.page@npm:5.2.0"
+  checksum: 10c0/05df27711839ad40f20460d5478d082d0cc1ee0a310f639d5cd9d3dc3a08c1fb1deeccca1e86f82c8d82de381bdcec4f4914d8fb320198a1eb40bcc4e0b4b26a
+  languageName: node
+  linkType: hard
+
 "internal-slot@npm:^1.1.0":
   version: 1.1.0
   resolution: "internal-slot@npm:1.1.0"
@@ -15468,6 +15475,7 @@ __metadata:
     husky: "npm:^9.1.7"
     imagesloaded: "npm:^5.0.0"
     infinite-scroll: "npm:^5.0.0"
+    instant.page: "npm:^5.2.0"
     jsdom: "npm:^27.2.0"
     lint-staged: "npm:^16.2.6"
     lodash: "npm:^4.17.21"
