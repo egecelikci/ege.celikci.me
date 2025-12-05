@@ -15,6 +15,7 @@ import "./common/notes-view";
 import "./common/preload";
 import "./common/register-serviceworker";
 import "./common/speedlify";
+import "./common/status";
 
 // --- Page Specific Logic ---
 
@@ -22,11 +23,9 @@ import "./common/speedlify";
 // We check if the elements exist before running the animation logic
 const albumItems = document.querySelectorAll(".album__item");
 if (albumItems.length) {
-  // Use requestAnimationFrame to ensure DOM is painted before animating
   requestAnimationFrame(() => animateGridItems(albumItems));
 }
 
-// 2. Status Links
-if (document.querySelector(".link-list--status")) {
-  import("./status");
+if (document.querySelector("#webmentions")) {
+  import("./webmentions");
 }
