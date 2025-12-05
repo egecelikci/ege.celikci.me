@@ -8,14 +8,18 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const CACHE_DIR = ".cache";
 const DATA_DIR = path.join(CACHE_DIR, "albums", "data");
 const COVER_DIR = path.join(CACHE_DIR, "albums", "covers");
-const PUBLIC_COVER_DIR = "src/assets/images/covers";
+const PUBLIC_COVER_DIR_BASE = "src/assets/images/covers";
+const PUBLIC_COVER_DIR_MONO = path.join(PUBLIC_COVER_DIR_BASE, "monochrome");
+const PUBLIC_COVER_DIR_COLOR = path.join(PUBLIC_COVER_DIR_BASE, "colored");
+
 const CRITIQUEBRAINZ_ID = process.env.CRITIQUEBRAINZ_ID;
 const LIMIT = 50;
 const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
 await fs.mkdir(DATA_DIR, { recursive: true });
 await fs.mkdir(COVER_DIR, { recursive: true });
-await fs.mkdir(PUBLIC_COVER_DIR, { recursive: true });
+await fs.mkdir(PUBLIC_COVER_DIR_MONO, { recursive: true });
+await fs.mkdir(PUBLIC_COVER_DIR_COLOR, { recursive: true });
 
 async function fileExists(filePath) {
   try {
@@ -203,45 +207,67 @@ async function fetchAlbumCover(rgid) {
 async function getMusicData() {
   const favAlbumIds = await getFavoriteAlbumIds();
 
+  // 1. Fetch new data if ID is present
   for (const rgid of favAlbumIds) {
     const jsonPath = path.join(DATA_DIR, `${rgid}.json`);
-    const cacheCoverPath = path.join(COVER_DIR, `${rgid}.buffer`);
-    const publicMonoPath = path.join(PUBLIC_COVER_DIR, `${rgid}.png`);
-    const publicColorPath = path.join(PUBLIC_COVER_DIR, `${rgid}_color.png`);
-
     if (!(await fileExists(jsonPath))) {
       await fetchAlbumData(rgid);
       await sleep(1000);
     }
+  }
 
+  // 2. Iterate over ALL cached data (whether newly fetched or existing)
+  // and ensure images exist for them.
+  let albums = [];
+  const cachedFiles = await fs.readdir(DATA_DIR);
+
+  for (const file of cachedFiles) {
+    if (!file.endsWith(".json")) continue;
+    const rgid = path.basename(file, ".json");
+
+    const cacheCoverPath = path.join(COVER_DIR, `${rgid}.buffer`);
+    const publicMonoPath = path.join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`);
+    const publicColorPath = path.join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`);
+
+    // If cover buffer is missing, try to fetch it (even if not in current fav list, but in cache)
     if (!(await fileExists(cacheCoverPath))) {
       await fetchAlbumCover(rgid);
       await sleep(1000);
     }
 
-    if (await fileExists(cacheCoverPath)) {
+    const monoExists = await fileExists(publicMonoPath);
+    const colorExists = await fileExists(publicColorPath);
+
+    if ((await fileExists(cacheCoverPath)) && (!monoExists || !colorExists)) {
       try {
-        await ditherWithSharp(cacheCoverPath, publicMonoPath);
-        await saveColorVersion(cacheCoverPath, publicColorPath);
+        if (!monoExists) {
+          await ditherWithSharp(cacheCoverPath, publicMonoPath);
+        }
+        if (!colorExists) {
+          await saveColorVersion(cacheCoverPath, publicColorPath);
+        }
       } catch (e) {
         console.error(
           `[music.js] Failed to process images for ${rgid}: ${e.message}`,
         );
       }
     }
-  }
 
-  let albums = [];
-  for (const file of await fs.readdir(DATA_DIR)) {
-    if (!file.endsWith(".json")) continue;
-    const rgid = path.basename(file, ".json");
-    const publicMonoPath = path.join(PUBLIC_COVER_DIR, `${rgid}.png`);
-
-    if (await fileExists(publicMonoPath)) {
-      const content = JSON.parse(
-        await fs.readFile(path.join(DATA_DIR, file), "utf-8"),
-      );
-      albums.push(content);
+    // Final check: If images exist, add to list
+    if (
+      (await fileExists(publicMonoPath)) &&
+      (await fileExists(publicColorPath))
+    ) {
+      try {
+        const content = JSON.parse(
+          await fs.readFile(path.join(DATA_DIR, file), "utf-8"),
+        );
+        albums.push(content);
+      } catch (e) {
+        console.error(
+          `[music.js] Error reading JSON for ${rgid}: ${e.message}`,
+        );
+      }
     }
   }
 
