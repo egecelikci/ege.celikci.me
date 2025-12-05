@@ -44,7 +44,8 @@
               <h2 class="note__title">{{ note.data.title }}</h2>
             {% endif %}
           </a>
-          {{ note.templateContent | safe }}
+
+          {{ note.templateContent | excerpt(note.data.previewLength) | safe }}
         {% endif %}
       </div>
     </div>

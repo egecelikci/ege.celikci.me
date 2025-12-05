@@ -9,7 +9,15 @@ eleventyExcludeFromCollections: true
   --color-text-offset: {{ colors.textOffset }}; --color-border:
   {{ colors.border }}; --color-primary: {{ colors.primary }};
   --color-primary-offset: {{ colors.primaryOffset }}; --color-secondary:
-  {{ colors.secondary }};
+  {{ colors.secondary }}; --color-syntax-bg: {{ colors.syntaxBg }};
+  --color-syntax-text: {{ colors.syntaxText }}; --color-syntax-comment:
+  {{ colors.syntaxComment }}; --color-syntax-punctuation:
+  {{ colors.syntaxPunctuation }}; --color-syntax-property:
+  {{ colors.syntaxProperty }}; --color-syntax-number: {{ colors.syntaxNumber }};
+  --color-syntax-string: {{ colors.syntaxString }}; --color-syntax-operator:
+  {{ colors.syntaxOperator }}; --color-syntax-function:
+  {{ colors.syntaxFunction }}; --color-syntax-keyword:
+  {{ colors.syntaxKeyword }}; --color-syntax-regex: {{ colors.syntaxRegex }};
 {%- endmacro -%}
 
 {%- set default = themes|findById('default') -%}
