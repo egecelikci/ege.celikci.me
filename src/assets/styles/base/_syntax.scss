@@ -2,7 +2,7 @@ code[class*="language-"],
 pre[class*="language-"] {
   font-family: var(--font-family-monospace);
   font-size: 1em;
-  line-height: 1.85;
+  line-height: 1;
   direction: ltr;
   text-align: left;
   word-spacing: normal;
@@ -81,6 +81,32 @@ pre[class*="language-"] {
 
 .token.entity {
   cursor: help;
+}
+
+/* Alistral CLI Colors */
+.token.alistral-green {
+  color: #12c679;
+}
+.token.alistral-title {
+  color: #00d672;
+}
+.token.alistral-blue {
+  color: #14a3f9;
+}
+.token.alistral-orange {
+  color: #fead4b;
+}
+.token.alistral-purple {
+  color: #d600d6;
+}
+.token.alistral-dim {
+  color: #646464;
+}
+.token.alistral-arrow-up {
+  color: green;
+}
+.token.alistral-arrow-down {
+  color: red;
 }
 
 @media screen and (-ms-high-contrast: active) {
