@@ -3,6 +3,7 @@ import sanitizeHTML from "sanitize-html";
 import random from "lodash/random.js";
 import memoize from "lodash/memoize.js";
 import { extractNoteGridData } from "./noteGridDataExtractor.js";
+import { JSDOM } from "jsdom"; // Import JSDOM for HTML-aware truncation
 
 const TIMEZONE = "Europe/Istanbul";
 
@@ -74,31 +75,68 @@ export default {
     return null;
   },
 
-  excerpt: function (content) {
+  excerpt: function (content, customLength) {
     if (!content) {
-      return;
+      return "";
     }
 
-    const excerptMinimumLength = 80;
-    const firstParagraphEnd = content.indexOf("</p>");
+    const maxLength = customLength || 500; // Use custom length if provided, otherwise default to 400
 
-    if (
-      firstParagraphEnd !== -1 &&
-      firstParagraphEnd + 4 >= excerptMinimumLength
-    ) {
-      return content.substring(0, firstParagraphEnd + 4);
-    } else if (content.length <= excerptMinimumLength) {
-      return content;
-    } else {
-      // If no paragraph found or it's too short, try to find a reasonable cutoff
-      let excerpt = content.substring(0, excerptMinimumLength);
-      // Try to end on a word boundary
-      const lastSpace = excerpt.lastIndexOf(" ");
-      if (lastSpace !== -1) {
-        excerpt = excerpt.substring(0, lastSpace);
+    // Create a virtual DOM from the content
+    const dom = new JSDOM(content);
+    const document = dom.window.document;
+    const body = document.body;
+
+    let charsCount = 0;
+    let truncated = false;
+    const resultFragment = document.createDocumentFragment();
+
+    function processNode(node, targetParent) {
+      if (truncated) return;
+
+      if (node.nodeType === document.TEXT_NODE) {
+        const text = node.textContent;
+        const remainingLength = maxLength - charsCount;
+
+        if (text.length <= remainingLength) {
+          targetParent.appendChild(node.cloneNode(true));
+          charsCount += text.length;
+        } else {
+          // Truncate text node and mark as truncated
+          const truncatedText = text.substring(0, remainingLength);
+          targetParent.appendChild(
+            document.createTextNode(truncatedText + "…"),
+          );
+          truncated = true;
+        }
+      } else if (node.nodeType === document.ELEMENT_NODE) {
+        // Clone element (without children initially)
+        const clonedElement = node.cloneNode(false);
+        targetParent.appendChild(clonedElement);
+
+        // Recursively process children
+        for (const child of node.childNodes) {
+          processNode(child, clonedElement);
+          if (truncated) break; // Stop if truncation occurred within children
+        }
       }
-      return excerpt + "…"; // Add ellipsis for truncated content
     }
+
+    // Process top-level nodes of the body
+    for (const node of body.childNodes) {
+      if (truncated) break;
+      processNode(node, resultFragment);
+    }
+
+    // If the original content's text content is already <= maxLength, return original.
+    if (body.textContent.length <= maxLength) {
+      return content;
+    }
+
+    // Serialize the fragment back to HTML using a temporary container
+    const tempContainer = document.createElement("div");
+    tempContainer.appendChild(resultFragment);
+    return tempContainer.innerHTML;
   },
 
   randomItem: function (arr) {
