@@ -8,6 +8,7 @@ import "../styles/main.scss";
 // CHANGE: Named import so we can use the function explicitly
 import { animateGridItems } from "./common/grid";
 
+import "./common/lazycolor";
 import "./common/infinitescroll";
 import "./common/lazyload";
 import "./common/lightbox";
