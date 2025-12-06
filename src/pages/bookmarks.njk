@@ -1,0 +1,66 @@
+---
+layout: page
+title: "bookmarks"
+description: "A collection of 88x31 badges and my blogroll."
+permalink: /bookmarks/
+---
+
+<p>gotta list everything</p>
+
+<h2>people</h2>
+<p>
+  <a href="{{ "/blogroll.xml" | url }}">follow them via your feed reader</a>
+</p>
+<ul>
+  {% for item in bookmarks | shuffle %}
+    {% if item.category == "person" and item.url %}
+      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<h2>tools & projects</h2>
+
+<ul>
+  {% for item in bookmarks | shuffle %}
+    {% if item.category == "tool" and item.url %}
+      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<h2>88x31</h2>
+
+<div class="badges-grid">
+  {% for item in bookmarks | shuffle %}
+    {% if item.img %}
+      {% if item.url %}
+        <a
+          href="{{ item.url }}"
+          class="badge-item"
+          title="{{ item.title }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="{{ item.img | url }}"
+            alt="{{ item.title }}"
+            width="88"
+            height="31"
+            eleventy:ignore
+          />
+        </a>
+      {% else %}
+        <span class="badge-item" title="{{ item.title }}">
+          <img
+            src="{{ item.img | url }}"
+            alt="{{ item.title }}"
+            width="88"
+            height="31"
+            eleventy:ignore
+          />
+        </span>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
