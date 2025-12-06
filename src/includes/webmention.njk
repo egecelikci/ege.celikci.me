@@ -15,33 +15,27 @@
             class="webmention__author__photo u-photo"
             src="{{ webmention.author.photo }}"
             alt=""
-            width="48"
-            height="48"
+            width="96"
+            height="96"
             loading="lazy"
             eleventy:ignore
           />
         {% else %}
-          <img
+          <svg
             class="webmention__author__photo"
-            src="{{ '/assets/images/avatar-default.jpg' | url }}"
-            alt=""
+            role="img"
+            aria-hidden="true"
             width="48"
             height="48"
-            eleventy:ignore
-          />
+          >
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xlink:href="/assets/icons/icons.sprite.svg#svg-avatar"
+            ></use>
+          </svg>
         {% endif %}
         <strong class="p-name">{{ webmention.author.name }}</strong>
       </a>
-    {% else %}
-      <span class="webmention__author">
-        <img
-          class="webmention__author__photo"
-          src="{{ '/assets/images/avatar-default.svg' | url }}"
-          alt=""
-          eleventy:ignore
-        />
-        <strong>Anonymous</strong>
-      </span>
     {% endif %}
 
     {% if webmention.published %}
