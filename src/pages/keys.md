@@ -16,22 +16,46 @@ I don’t use PGP, but you might want to check [age-encryption](https://age-encr
 
 ### authentication
 
-- public key: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPaYomkrkg+WhBBuHrrPqCxqB2GRhqmLt5DJzQkjwalD`
+#### public authentication key of bilgisayar
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPaYomkrkg+WhBBuHrrPqCxqB2GRhqmLt5DJzQkjwalD
+SHA256:TWsRn9tVypISAdtSi1OgpmEuGIEEGVZHpOpp8oW7W+g
+```
+
+#### public authentication key of telefon
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLDNi3uml+sIXth4B9rQslnqW3gc+yi6HesuveBisVs
+SHA256:ib7FCqCTFCAbsqZMh2f/HO0oAEVuhUN14AnkYSwbkz0
+```
 
 ### signing
 
-this info is also available at [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitLab](https://gitlab.com/{{ author.username }}/{{ author.username }}) & [GitHub](https://github.com/{{ author.username }}/{{ author.username }}). all three repositories should be identical and show commits signed with the key below
+This info is also available at [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitLab](https://gitlab.com/{{ author.username }}/{{ author.username }}), [GitHub](https://github.com/{{ author.username }}/{{ author.username }}) & [sourcehut](https://git.sr.ht/~{{ author.username }}/{{ author.username }}). All four repositories should be identical and show commits signed with one of the keys below.
 
-- public key: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFThAK4bQKmz31+wv5lAK5BF1QLf0CT/qhr30iPtmiGT`
+#### public signing key of bilgisayar
 
-for the HTML page, you can [clone the site source](https://github.com/{{ author.username }}/{{ site.host }}) and verify the commit history for [` {{ page.inputPath }} `](https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}) file
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFThAK4bQKmz31+wv5lAK5BF1QLf0CT/qhr30iPtmiGT
+SHA256:vTcqXW1b3WaQYtLRhr5MBH1MoCWfivG/pcRKOhvHdOg
+```
+
+#### public signing key of telefon
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF2XufuZr7u5/Yj4/qbkOBr7pbM3kCYQ6rlIKCPST5q3
+SHA256:jxjLBvJOoot2eFpcwjjD8uyolNQjWwWEJhKzrmN95ew
+```
+
+For the HTML page, you can [clone the site source](https://github.com/{{ author.username }}/{{ site.host }}) and verify the commit history for the [`{{ page.inputPath }}`](https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}) file.
 
 ## Matrix
 
-- [@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})
-  - Element Desktop: `7jA7yS1uVD`
-  - Element X Android: `9ovMRDnfeY`
+- **[@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})**
+  - `7jA7yS1uVD` (Element Desktop)
+  - `9ovMRDnfeY` (Element X Android)
 
-- [@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})
-  - Element Web: `BELUFVYWSL`
-  - Element X Android: `XLSNVDORMQ`
+- **[@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})**
+  - `BELUFVYWSL` (Element Web)
+  - `XLSNVDORMQ` (Element X Android)
