@@ -13,14 +13,18 @@
     &:last-child {
       border-bottom: none;
     }
+
+    // Nesting modifier
+    &--draft {
+      .postlist__link {
+        color: var(--color-secondary);
+      }
+    }
   }
 
   &__link {
     text-decoration: none;
-
-    .postlist__item--draft & {
-      color: var(--color-secondary);
-    }
+    // Color handled by parent or default
   }
 
   &__title {
@@ -33,14 +37,17 @@
     color: var(--color-text-offset);
     font-size: 0.875rem;
   }
+
   &__tags {
     align-self: center;
     font-style: italic;
   }
+
   &__status {
     font-weight: 700;
     color: var(--color-secondary);
   }
+
   &__excerpt {
     @include mixins.body-text();
   }
