@@ -17,7 +17,6 @@ import {
 } from "./utils/shortcodes.js";
 import markdown from "./utils/markdown.js";
 import viteHelpers from "./utils/vite.js";
-import imageHelpers from "./utils/imageHelpers.js";
 import registerAlistral from "./utils/prism-alistral.js";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -63,9 +62,11 @@ export default function (config) {
     },
     sharpWebpOptions: {
       quality: 80,
+      effort: 3,
     },
     sharpAvifOptions: {
       quality: 80,
+      effort: 3,
     },
     sharpJpegOptions: {
       quality: 85,
@@ -129,16 +130,6 @@ export default function (config) {
   Object.keys(viteHelpers).forEach((shortcodeName) => {
     config.addNunjucksAsyncShortcode(shortcodeName, viteHelpers[shortcodeName]);
   });
-
-  // Image helpers
-  if (imageHelpers) {
-    Object.keys(imageHelpers).forEach((shortcodeName) => {
-      config.addNunjucksAsyncShortcode(
-        shortcodeName,
-        imageHelpers[shortcodeName],
-      );
-    });
-  }
 
   // Asset Watch Targets
   config.addWatchTarget("./src/assets");
