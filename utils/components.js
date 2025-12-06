@@ -10,12 +10,25 @@ const minify = (content) =>
     collapseWhitespace: true,
   });
 
-export const Icon = (iconName, useInline = false) => {
+export const Icon = (
+  iconName,
+  width = null,
+  height = null,
+  useInline = false,
+) => {
   const spriteUrl = "/assets/icons/icons.sprite.svg";
   const iconId = `#svg-${iconName}`;
   const href = useInline ? iconId : spriteUrl + iconId;
 
-  const output = `<svg class="icon icon--${iconName}" role="img" aria-hidden="true">
+  let sizeAttributes = "";
+  if (width !== null) {
+    sizeAttributes += ` width="${width}"`;
+  }
+  if (height !== null) {
+    sizeAttributes += ` height="${height}"`;
+  }
+
+  const output = `<svg class="icon icon--${iconName}" role="img" aria-hidden="true"${sizeAttributes}>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="${href}"></use>
     </svg>`;
 
