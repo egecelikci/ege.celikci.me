@@ -5,31 +5,29 @@ description: "A collection of 88x31 badges and my blogroll."
 permalink: /bookmarks/
 ---
 
-<p>gotta list everything</p>
+gotta list everything
 
-<h2>people</h2>
-<p>
-  <a href="{{ "/blogroll.xml" | url }}">follow them via your feed reader</a>
-</p>
-<ul>
-  {% for item in bookmarks | shuffle %}
-    {% if item.category == "person" and item.url %}
-      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-    {% endif %}
+## people
+
+[follow them via your feed reader](/blogroll.xml)
+
+{% for item in bookmarks | shuffle %}
+{% if item.category == "person" and item.url %}
+
+- [{{ item.title }}]({{ item.url }})
+  {% endif %}
   {% endfor %}
-</ul>
 
-<h2>tools & projects</h2>
+## tools & projects
 
-<ul>
-  {% for item in bookmarks | shuffle %}
-    {% if item.category == "tool" and item.url %}
-      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-    {% endif %}
+{% for item in bookmarks | shuffle %}
+{% if item.category == "tool" and item.url %}
+
+- [{{ item.title }}]({{ item.url }})
+  {% endif %}
   {% endfor %}
-</ul>
 
-<h2>88x31</h2>
+## 88x31
 
 <div class="badges-grid">
   {% for item in bookmarks | shuffle %}
