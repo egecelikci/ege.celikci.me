@@ -1,5 +1,6 @@
 {%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(site.url) }}{%- endset -%}
 {%- set isPost = layout == 'post' -%}
+{%- set isNote = layout == 'note' -%}
 
 {%- if isPost -%}
   {%- set currentPage = collections.all | currentPage(page) -%}
@@ -12,7 +13,20 @@
   content="{{ description or autoDescription or site.description }}"
 />
 {%- if image -%}
-  <meta name="image" content="{{ absolutePageUrl }}{{ image }}" />
+  {%- if '://' in image -%}
+    {# Rule 0: External URLs are used as-is #}
+    {%- set pageImage = image -%}
+  {%- elif isNote -%}
+    {# Rule 1: Notes always look in the Gallery #}
+    {%- set pageImage = ('/assets/images/gallery/' + image) | url | absoluteUrl(site.url) -%}
+  {%- elif isPost -%}
+    {# Rule 2: Posts always use co-located images (Leaf Bundle) #}
+    {%- set pageImage = absolutePageUrl + image -%}
+  {%- else -%}
+    {# Rule 3: Regular Pages always look in the global Assets folder #}
+    {%- set pageImage = ('/assets/images/' + image) | url | absoluteUrl(site.url) -%}
+  {%- endif -%}
+  <meta name="image" content="{{ pageImage }}" />
 {%- endif -%}
 
 <meta property="og:title" content="{{ title or site.title }}" />
@@ -23,7 +37,7 @@
 <meta property="og:url" content="{{ absolutePageUrl }}" />
 <meta
   property="og:image"
-  content="{%- if image -%}{{ absolutePageUrl }}{{ image }}{%- else -%}{{ author.avatar | url | absoluteUrl(site.url) }}{%- endif -%}"
+  content="{%- if image -%}{{ pageImage }}{%- else -%}{{ author.avatar | url | absoluteUrl(site.url) }}{%- endif -%}"
 />
 
 {%- if isPost -%}
