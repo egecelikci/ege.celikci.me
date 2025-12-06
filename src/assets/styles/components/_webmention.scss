@@ -18,7 +18,7 @@
     border-bottom: none;
   }
 
-  // Highlight "Own" mentions (e.g. from the site owner)
+  // Highlight "Own" mentions
   &--own {
     background-color: var(--color-bg-offset);
     border-radius: var(--border-radius-md);
@@ -27,7 +27,7 @@
     padding-right: var(--space-md);
   }
 
-  // Meta Data (Author, Date)
+  // Meta Data
   &__meta {
     display: flex;
     flex-wrap: wrap;
@@ -44,7 +44,7 @@
     }
   }
 
-  // Content (The actual text)
+  // Content
   &__content {
     font-size: var(--font-size-base);
     line-height: var(--line-height-body);
@@ -63,7 +63,7 @@
     }
   }
 
-  // Author Information
+  // Author
   &__author {
     display: flex;
     align-items: center;
@@ -90,13 +90,12 @@
     }
   }
 
-  // Publish Date
+  // Date
   &__pubdate {
     color: var(--color-text-offset);
     font-size: var(--font-size-xs);
   }
 
-  // Hide internal Microformats2 elements if needed
   a.u-mention,
   a:empty {
     display: none;
@@ -104,7 +103,7 @@
 }
 
 // -----------------------------------------------------------------------------
-// WEBMENTIONS CONTAINER & LIST
+// WEBMENTIONS CONTAINER
 // -----------------------------------------------------------------------------
 .webmentions {
   margin-top: var(--space-2xs);
@@ -116,14 +115,14 @@
   }
 
   &__item {
-    margin-bottom: 0; // Spacing handled by padding/border of .webmention
+    margin-bottom: 0;
   }
 
   &__preview {
     position: relative;
   }
 
-  // "Show All" Button/Link
+  // "Show All" Button
   &__showall {
     display: inline-flex;
     align-items: center;
@@ -161,7 +160,127 @@
 }
 
 // -----------------------------------------------------------------------------
-// TRUNCATION & EXPANSION LOGIC (CSS-Only)
+// INTERACTIONS (FACEPILE)
+// -----------------------------------------------------------------------------
+.webmentions__interactions {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.webmentions__facepile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: var(--space-sm);
+  padding-left: var(--space-2xs);
+}
+
+// Individual Face Item
+.webmentions__face-item {
+  position: relative;
+  width: var(--size-avatar-sm);
+  height: var(--size-avatar-sm);
+  border-radius: 50%;
+
+  // Negative margin for overlap (stacking effect)
+  margin-left: calc(var(--size-avatar-sm) / -4);
+
+  // Base styles
+  background-color: var(--color-bg-offset);
+  box-shadow: 0 0 0 2px var(--color-bg);
+
+  // IMPORTANT: Allow icons to sit outside the circle
+  overflow: visible !important;
+
+  transition:
+    transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    z-index 0s,
+    box-shadow 0.2s ease;
+
+  z-index: 1;
+
+  // Force stacking order (Left on Top)
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      z-index: #{30 - $i};
+    }
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  // Inner Image/SVG/Picture
+  img,
+  svg,
+  picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  // INTERACTION: Hover / Focus
+  &:hover,
+  &:focus-visible {
+    z-index: 1000 !important; // Force top
+    transform: scale(1.35) translateY(-4px); // Pop out more significantly
+    box-shadow:
+      0 6px 16px rgba(0, 0, 0, 0.2),
+      0 0 0 2px var(--color-accent);
+    outline: none;
+  }
+
+  // Push adjacent siblings aside for a smoother effect
+  // Use the general sibling selector ~ to move all subsequent items to the right
+  &:hover ~ .webmentions__face-item,
+  &:focus-visible ~ .webmentions__face-item {
+    transform: translateX(12px); // Slide neighbors to the right
+  }
+}
+
+// Discord-style Status Indicator
+.webmentions__face-action-icon {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 14px;
+  height: 14px;
+
+  background-color: var(--color-bg);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--color-bg);
+
+  color: var(--color-primary, #595aff); // Fallback color
+  z-index: 20; // High z-index to sit above avatar
+  transition: transform 0.2s ease-in-out;
+
+  svg {
+    width: 10px;
+    height: 10px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  // Scale with avatar
+  .webmentions__face-item:hover &,
+  .webmentions__face-item:focus-visible & {
+    transform: scale(1.1);
+    z-index: 1001;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// TRUNCATION & EXPANSION
 // -----------------------------------------------------------------------------
 .webmentions--truncated {
   .webmentions__preview::after {
@@ -185,7 +304,6 @@
   }
 }
 
-// Expand when targeted (User clicks "Show All")
 #webmentions:target,
 .webmentions--expanded {
   scroll-margin-top: var(--space-xl);

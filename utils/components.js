@@ -15,7 +15,7 @@ export const Icon = (iconName, useInline = false) => {
   const iconId = `#svg-${iconName}`;
   const href = useInline ? iconId : spriteUrl + iconId;
 
-  const output = `<svg class="icon icon--${iconName}" role="img" aria-hidden="true" width="24" height="24">
+  const output = `<svg class="icon icon--${iconName}" role="img" aria-hidden="true">
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="${href}"></use>
     </svg>`;
 
