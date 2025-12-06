@@ -15,7 +15,6 @@ import "./common/notes-view";
 import "./common/preload";
 import "./common/register-serviceworker";
 import "./common/speedlify";
-import "./common/status";
 
 // --- Page Specific Logic ---
 
@@ -24,6 +23,9 @@ import "./common/status";
 const albumItems = document.querySelectorAll(".album__item");
 if (albumItems.length) {
   requestAnimationFrame(() => animateGridItems(albumItems));
+}
+if (document.querySelector("#status")) {
+  import("./status");
 }
 
 if (document.querySelector("#webmentions")) {
