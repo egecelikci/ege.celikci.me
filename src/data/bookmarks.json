@@ -1,0 +1,45 @@
+[
+  {
+    "title": "monocyte",
+    "url": "https://monocyte.blog",
+    "feed": "https://monocyte.bearblog.dev/feed",
+    "img": "/assets/images/88x31/monocytosis.png",
+    "category": "person"
+  },
+  {
+    "title": "HTML Journal",
+    "url": "https://journal.miso.town",
+    "img": "/assets/images/88x31/banner-htmlj.png",
+    "category": "tool"
+  },
+  {
+    "title": "neko-scape ’98 nyan",
+    "img": "/assets/images/88x31/neko.gif",
+    "category": "tool"
+  },
+  {
+    "title": "lucida",
+    "url": "https://lucida.to",
+    "img": "/assets/images/88x31/lucida.gif",
+    "category": "tool"
+  },
+  {
+    "title": "Seirdy",
+    "url": "https://seirdy.one/meta",
+    "feed": "https://seirdy.one/atom.xml",
+    "img": "/assets/images/88x31/seirdy.png",
+    "category": "person"
+  },
+  {
+    "title": "crescentrose",
+    "url": "https://crescentro.se",
+    "feed": "https://crescentro.se/posts/atom.xml",
+    "category": "person"
+  },
+  {
+    "title": "マリウス",
+    "url": "https://xn--gckvb8fzb.com/",
+    "feed": "https://xn--gckvb8fzb.com/index.xml",
+    "category": "person"
+  }
+]
