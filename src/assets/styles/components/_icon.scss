@@ -8,6 +8,12 @@
   pointer-events: none;
 }
 
+.icon[width],
+.icon[height] {
+  width: auto;
+  height: auto;
+}
+
 // ==========================
 // Animated Pure CSS Menu Burger Icon
 // ==========================

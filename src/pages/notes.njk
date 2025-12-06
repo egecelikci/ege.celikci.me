@@ -17,13 +17,13 @@ pagination:
   <header class="page__header">
     <div class="page__header-content">
       <h1 class="page__title">{{ title }}</h1>
-      
+
       {# Modern Segmented Control Toggle #}
       <div class="notes-view-toggle">
         <div class="view-toggle" role="group" aria-label="View mode">
           {# The sliding background pill #}
           <div class="view-toggle__bg"></div>
-          
+
           <button
             type="button"
             class="view-toggle__btn"
@@ -32,7 +32,7 @@ pagination:
           >
             {% icon "list" %}
           </button>
-          
+
           <button
             type="button"
             class="view-toggle__btn"
@@ -56,25 +56,53 @@ pagination:
         {% for note in notes %}
           {# Get image data for this note #}
           {% set gridData = note.templateContent | getNoteGridData(note.data.title) %}
-          
+
           <div
             class="notelist__item js-infinitescroll-item {% if gridData.hasImage %}has-image{% endif %}"
             data-note-id="{{ loop.index }}"
           >
-            {# 1. Grid View Component - Now with data attributes #}
-            <div 
-              class="note-grid-item"
+            {# 1. Grid View Component - Server Side Rendered #}
+            <div class="note-grid-item">
               {% if gridData.hasImage %}
-              data-href="{{ note.url }}"
-              data-src="{{ gridData.src }}"
-              data-srcset="{{ gridData.srcset }}"
-              data-alt="{{ gridData.alt }}"
-              data-title="{{ gridData.title }}"
-              data-caption="{{ gridData.caption }}"
-              data-has-multiple="{{ gridData.hasMultipleImages }}"
+                <a
+                  href="{{ note.url }}"
+                  class="note-grid-item__link"
+                  aria-label="View note: {{ gridData.title }}{% if gridData.title and gridData.caption %}-{% endif %}{{ gridData.caption }}"
+                >
+                  <div class="note-grid-item__media">
+                    <img
+                      src="{{ gridData.src }}"
+                      srcset="{{ gridData.srcset }}"
+                      sizes="(max-width: 600px) 480px, 800px"
+                      alt="{{ gridData.title }} {{ gridData.caption }}"
+                      loading="lazy"
+                    />
+                  </div>
+                  {% if gridData.title or gridData.caption %}
+                    <div class="note-grid-item__overlay">
+                      <div class="note-grid-item__overlay-content">
+                        {% if gridData.title %}
+                          <h3 class="note-grid-item__title">
+                            {{ gridData.title }}
+                          </h3>
+                        {% endif %}
+                        {% if gridData.caption %}
+                          <p class="note-grid-item__caption">
+                            {{ gridData.caption }}
+                          </p>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if gridData.hasMultipleImages %}
+                    <div class="note-grid-item__badge">
+                      {% icon "images", 12, 12 %}
+                    </div>
+                  {% endif %}
+                </a>
               {% endif %}
-            ></div>
-            
+            </div>
+
             {# 2. List View Component (Standard Render) #}
             <div class="note-social-grid" id="gallery-{{ loop.index }}">
               {% include 'note.njk' %}
@@ -85,7 +113,7 @@ pagination:
 
       <nav class="js-infinitescroll-pagination">
         {% if pagination.nextPageHref %}
-          
+          <a
             href="{{ pagination.nextPageHref }}"
             class="js-infinitescroll-next"
           >
