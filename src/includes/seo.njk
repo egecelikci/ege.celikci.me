@@ -19,21 +19,35 @@
 {%- if image -%}
   {%- if '://' in image -%}
     {# Rule 0: External URLs are used as-is #}
-    {%- set pageImage = image -%}
+    {%- set ogImagePath = image -%}
   {%- elif isNote -%}
     {# Rule 1: Notes always look in the Gallery #}
-    {%-
-      set pageImage = ('/assets/images/gallery/' + image) | url | absoluteUrl(site.url)
-    -%}
+    {%- set ogImagePath = "src/assets/images/gallery/" + image -%}
   {%- elif isPost -%}
     {# Rule 2: Posts always use co-located images (Leaf Bundle) #}
-    {%- set pageImage = absolutePageUrl + image -%}
+    {# page.inputPath is relative to project root, e.g. ./src/posts/... #}
+    {%- set ogImagePath = (page.inputPath | dirname) + "/" + image -%}
   {%- else -%}
     {# Rule 3: Regular Pages always look in the global Assets folder #}
-    {%-
-      set pageImage = ('/assets/images/' + image) | url | absoluteUrl(site.url)
-    -%}
+    {%- set ogImagePath = "src/assets/images/" + image -%}
   {%- endif -%}
+
+  {# Generate Optimized OG Image #}
+  {% set generatedOgImage %}{% ogImage ogImagePath %}{% endset %}
+  
+  {% if generatedOgImage %}
+    {% set pageImage = generatedOgImage | url | absoluteUrl(site.url) %}
+  {% else %}
+    {# Fallback if generation failed or file missing #}
+    {%- if isNote -%}
+       {%- set pageImage = ('/assets/images/gallery/' + image) | url | absoluteUrl(site.url) -%}
+    {%- elif isPost -%}
+       {%- set pageImage = absolutePageUrl + image -%}
+    {%- else -%}
+       {%- set pageImage = ('/assets/images/' + image) | url | absoluteUrl(site.url) -%}
+    {%- endif -%}
+  {% endif %}
+
   <meta name="image" content="{{ pageImage }}" />
 {%- endif -%}
 
