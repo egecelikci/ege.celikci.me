@@ -1,0 +1,49 @@
+{
+  "tasks": {
+    "dev": "deno run -A --watch scripts/start.ts",
+    "start": "deno run -A scripts/start.ts",
+    "build": "deno run -A scripts/build.ts",
+    "fmt": "deno task dprint fmt",
+    "fmt:check": "deno task dprint check",
+    "dprint": "deno run -A npm:dprint"
+  },
+  "imports": {
+    "@11ty/eleventy": "npm:@11ty/eleventy@^3.1.2",
+    "@11ty/eleventy-fetch": "npm:@11ty/eleventy-fetch@^5.1.0",
+    "@11ty/eleventy-img": "npm:@11ty/eleventy-img@^6.0.4",
+    "@11ty/eleventy-navigation": "npm:@11ty/eleventy-navigation@^1.0.4",
+    "@11ty/eleventy-plugin-rss": "npm:@11ty/eleventy-plugin-rss@^2.0.4",
+    "@11ty/eleventy-plugin-syntaxhighlight": "npm:@11ty/eleventy-plugin-syntaxhighlight@^5.0.2",
+    "@sindresorhus/slugify": "npm:@sindresorhus/slugify@^3.0.0",
+    "del-cli": "npm:del-cli@^7.0.0",
+    "dompurify": "npm:dompurify@^3.3.0",
+    "eleventy-plugin-svg-sprite": "npm:eleventy-plugin-svg-sprite@^2.4.5",
+    "focus-trap": "npm:focus-trap@^7.6.6",
+    "gsap": "npm:gsap@^3.13.0",
+    "html-minifier": "npm:html-minifier@^4.0.0",
+    "imagesloaded": "npm:imagesloaded@^5.0.0",
+    "infinite-scroll": "npm:infinite-scroll@^5.0.0",
+    "instant.page": "npm:instant.page@^5.2.0",
+    "jsdom": "npm:jsdom@^27.2.0",
+    "lodash-es": "npm:lodash-es@^4.17.21",
+    "luxon": "npm:luxon@^3.7.2",
+    "markdown-it": "npm:markdown-it@^14.1.0",
+    "markdown-it-anchor": "npm:markdown-it-anchor@^9.2.0",
+    "photoswipe": "npm:photoswipe@^5.4.4",
+    "picomatch": "npm:picomatch@^2.2.2",
+    "preact": "npm:preact@^10.28.0",
+    "sanitize-html": "npm:sanitize-html@^2.17.0",
+    "sass": "npm:sass@^1.93.2",
+    "sharp": "npm:sharp@^0.34.5",
+    "vite": "npm:vite@^7.1.12",
+    "workbox-cli": "npm:workbox-cli@^7.3.0",
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/fs": "jsr:@std/fs@1",
+    "@std/path": "jsr:@std/path@1"
+  },
+  "nodeModulesDir": "auto",
+  "unstable": ["unsafe-proto"],
+  "compilerOptions": {
+    "lib": ["dom", "es2020", "deno.ns"]
+  }
+}

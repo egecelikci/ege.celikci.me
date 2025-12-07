@@ -11,14 +11,17 @@ subtitle: >-
 ---
 
 automatically fetched from my public
-<a href="https://critiquebrainz.org/user/{{ author.username }}">album ratings</a
->.<br /><a href="{{ "/blog/music-page" | url }}">learn more about this page</a>
+<a href="https://critiquebrainz.org/user/{{ author.username }}"
+>album ratings</a>.<br /><a href="{{ "/blog/music-page" | url }}"
+>learn more about this page</a>
 
 <div class="album">
   {% for album in music.albums | shuffle %}
     {% set artistNames = "" %}
     {% for ac in album["artist-credit"] %}
-      {% if not loop.first %}{% set artistNames = artistNames + " · " %}{% endif %}
+      {% if not loop.first %}{% set artistNames = artistNames + " · " %}{%
+        endif
+      %}
       {% set artistNames = artistNames + ac.name %}
     {% endfor %}
 
@@ -62,7 +65,9 @@ automatically fetched from my public
         <span class="album__title">{{ album.title }}</span>
         <span class="album__artist">{{ artistNames }}</span>
         <span class="album__year" style="opacity: 0.5">
-          ({{ album["first-release-date"] | dateFromISO | readableDate("yyyy") }})
+          ({{
+            album["first-release-date"] | dateFromISO | readableDate("yyyy")
+          }})
         </span>
       </div>
     </a>

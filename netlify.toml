@@ -1,11 +1,20 @@
 [build]
-    command = "yarn build"
+    command = "deno task build"
     publish = "dist"
-    functions = "functions"
 
 [dev]
+    command = "deno task start"
     targetPort = 8080
     port = 8888
+    framework = "#custom"
+
+[[edge_functions]]
+    path = "/api/status"
+    function = "status"
+
+[[edge_functions]]
+    path = "/api/webmentions"
+    function = "webmentions"
 
 [[plugins]]
     package = "./plugins/cache"
@@ -16,6 +25,7 @@
     to = "https://ege.celikci.me/:splat"
     status = 301
     force = true
+
 
 [[redirects]]
     from = "https://celikci.me/*"
