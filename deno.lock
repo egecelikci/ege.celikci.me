@@ -33,6 +33,7 @@
     "npm:sharp@~0.34.5": "0.34.5",
     "npm:vite@*": "7.2.6_sass@1.94.2_picomatch@4.0.3",
     "npm:vite@^7.1.12": "7.2.6_sass@1.94.2_picomatch@4.0.3",
+    "npm:workbox-cli@*": "7.4.0",
     "npm:workbox-cli@^7.3.0": "7.4.0"
   },
   "jsr": {

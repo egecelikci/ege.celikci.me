@@ -63,7 +63,7 @@ export default function(config: UserConfig,) {
   config.addPlugin(pluginImageTransform, {
     extensions: "html",
     formats: ["avif", "webp", "auto",],
-    outputDir: "./.cache/eleventy-img/",
+    outputDir: "./dist/assets/images/processed/",
     urlPath: "/assets/images/processed/",
 
     // Optimized widths: smaller for grid, medium for list, full for lightbox
@@ -109,10 +109,6 @@ export default function(config: UserConfig,) {
       }
       return `${name}-${hash}-${width}w.${format}`;
     },
-  },);
-
-  config.addPassthroughCopy({
-    "./.cache/eleventy-img/": "assets/images/processed/",
   },);
 
   // Filters
