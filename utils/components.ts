@@ -106,8 +106,16 @@ export const Callout = (content: string, type = "info",): string => {
   return minify(output,);
 };
 
-export default {
+export const syncShortcodes = {
   Icon,
   renderTags,
   Callout,
+};
+
+export const asyncShortcodes = {};
+
+// Default export if you need to import everything at once
+export default {
+  ...syncShortcodes,
+  ...asyncShortcodes,
 };
