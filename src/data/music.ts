@@ -253,47 +253,59 @@ async function getMusicData() {
     if (!file.endsWith(".json",)) continue;
     const rgid = path.basename(file, ".json",);
 
+    const jsonPath = path.join(DATA_DIR, `${rgid}.json`,);
     const cacheCoverPath = path.join(COVER_DIR, `${rgid}.buffer`,);
     const publicMonoPath = path.join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,);
     const publicColorPath = path.join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,);
 
-    // If cover buffer is missing, try to fetch it (even if not in current fav list, but in cache)
-    if (!(await fileExists(cacheCoverPath,))) {
-      await fetchAlbumCover(rgid,);
+    // 1. Ensure album metadata is present (fetch if missing)
+    if (!(await fileExists(jsonPath,))) {
+      await fetchAlbumData(rgid,);
       await sleep(1000,);
     }
 
-    const monoExists = await fileExists(publicMonoPath,);
-    const colorExists = await fileExists(publicColorPath,);
+    // 2. Check existence of processed public covers
+    const publicMonoExists = await fileExists(publicMonoPath,);
+    const publicColorExists = await fileExists(publicColorPath,);
 
-    if ((await fileExists(cacheCoverPath,)) && (!monoExists || !colorExists)) {
-      try {
-        if (!monoExists) {
-          await ditherWithSharp(cacheCoverPath, publicMonoPath,);
+    // 3. If processed covers are NOT fully present, ensure raw cover exists and process.
+    if (!publicMonoExists || !publicColorExists) {
+      if (!(await fileExists(cacheCoverPath,))) {
+        await fetchAlbumCover(rgid,);
+        await sleep(1000,);
+      }
+
+      // Then process if raw cover exists
+      if (await fileExists(cacheCoverPath,)) {
+        try {
+          if (!publicMonoExists) {
+            await ditherWithSharp(cacheCoverPath, publicMonoPath,);
+          }
+          if (!publicColorExists) {
+            await saveColorVersion(cacheCoverPath, publicColorPath,);
+          }
+        } catch (e: unknown) {
+          console.error(
+            `[music.ts] Failed to process images for ${rgid}: ${
+              (e as Error).message
+            }`,
+          );
         }
-        if (!colorExists) {
-          await saveColorVersion(cacheCoverPath, publicColorPath,);
-        }
-      } catch (e: unknown) { // Changed from any
-        console.error(
-          `[music.ts] Failed to process images for ${rgid}: ${
-            (e as Error).message
-          }`,
-        );
       }
     }
 
-    // Final check: If images exist, add to list
+    // 4. Finally, if metadata AND processed images exist, add to list
     if (
-      (await fileExists(publicMonoPath,))
-      && (await fileExists(publicColorPath,))
+      await fileExists(jsonPath,)
+      && await fileExists(publicMonoPath,)
+      && await fileExists(publicColorPath,)
     ) {
       try {
         const content: Album = JSON.parse(
-          await fs.readFile(path.join(DATA_DIR, file,), "utf-8",),
+          await fs.readFile(jsonPath, "utf-8",),
         );
         albums.push(content,);
-      } catch (e: unknown) { // Changed from any
+      } catch (e: unknown) {
         console.error(
           `[music.ts] Error reading JSON for ${rgid}: ${(e as Error).message}`,
         );
