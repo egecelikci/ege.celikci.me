@@ -17,25 +17,29 @@ excludeFromSitemap: true
     <name>{{ author.name }}</name>
   </author>
   {% if collections.notes %}
-    <updated
-      >{{ collections.notes | getNewestCollectionItemDate | dateToRfc3339 }}</updated
-    >
+    <updated>{{
+      collections.notes | getNewestCollectionItemDate | dateToRfc3339
+    }}</updated>
   {% endif %}
   <id>{{ site.url }}/</id>
   {%- for note in collections.notes -%}
-    {% set absoluteNoteUrl %}{{ note.url | url | absoluteUrl(site.url) }}{% endset %}
+    {% set absoluteNoteUrl %}{{ note.url | url | absoluteUrl(site.url) }}{%
+      endset
+    %}
     <entry>
       <title>
-        {% if note.data.title %}{{ note.data.title }}{% else %}{{ note.date | readableDate('dd LLL yyyy') }}{% endif %}
+        {% if note.data.title %}{{ note.data.title }}{% else %}{{
+            note.date | readableDate('dd LLL yyyy')
+          }}{% endif %}
       </title>
       <link href="{{ absoluteNoteUrl }}" />
       <updated>{{ note.date | dateToRfc3339 }}</updated>
       <id>{{ absoluteNoteUrl }}</id>
-      <content type="html"
-        ><![CDATA[
+      <content
+        type="html"
+      ><![CDATA[
         {{ note.templateContent | htmlToAbsoluteUrls(absoluteNoteUrl) | safe }}
-        ]]></content
-      >
+        ]]></content>
     </entry>
   {%- endfor -%}
 </feed>

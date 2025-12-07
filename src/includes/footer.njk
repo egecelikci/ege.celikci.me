@@ -2,15 +2,14 @@
   <div class="footer__inner container">
     <p class="footer__item">
       <strong>&copy; {{ build.timestamp | dateToFormat('yyyy') }}</strong><br />
-      <a class="p-name u-url" rel="me" href="{{ site.url }}"
-        >{{ author.name }}</a
-      >
+      <a class="p-name u-url" rel="me" href="{{ site.url }}">{{
+        author.name
+      }}</a>
       ·
       {% if build.git %}
         <a
           href="https://github.com/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-          >{{ build.git | slice(0, 7) }}</a
-        >
+        >{{ build.git | slice(0, 7) }}</a>
       {% endif %}
     </p>
     <p class="footer__item footer__item--right u-desktop-only">

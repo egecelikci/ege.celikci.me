@@ -6,11 +6,18 @@
   {%- set tags = note.data.tags -%}
 {% endif %}
 
-
-{%- set webmentionUrl -%}{{ note.url | url | absoluteUrl(site.url) }}{%- endset -%}
-{%- set mentionCount = webmentions.children | webmentionCountByType(webmentionUrl, "in-reply-to", "mention-of") -%}
-{%- set likeCount = webmentions.children | webmentionCountByType(webmentionUrl, "like-of") -%}
-{%- set repostCount = webmentions.children | webmentionCountByType(webmentionUrl, "repost-of") -%}
+{%- set webmentionUrl -%}{{ note.url | url | absoluteUrl(site.url) }}{%-
+  endset
+-%}
+{%-
+  set mentionCount = webmentions.children | webmentionCountByType(webmentionUrl, "in-reply-to", "mention-of")
+-%}
+{%-
+  set likeCount = webmentions.children | webmentionCountByType(webmentionUrl, "like-of")
+-%}
+{%-
+  set repostCount = webmentions.children | webmentionCountByType(webmentionUrl, "repost-of")
+-%}
 
 <div class="note {% if isDetailView %}note--detail{% endif %} h-entry">
   <div class="note__main">
