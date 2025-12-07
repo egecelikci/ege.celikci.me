@@ -2,7 +2,8 @@
   "tasks": {
     "dev": "deno run -A --watch scripts/start.ts",
     "start": "deno run -A scripts/start.ts",
-    "build": "deno run -A scripts/build.ts",
+    "build": "deno run -A --env scripts/build.ts",
+    "clean": "deno run -A scripts/clean.ts",
     "fmt": "deno task dprint fmt",
     "fmt:check": "deno task dprint check",
     "dprint": "deno run -A npm:dprint"
