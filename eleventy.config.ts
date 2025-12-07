@@ -62,23 +62,19 @@ export default function(config: UserConfig,) {
   // IMPORTANT: Image Transform Plugin Configuration
   config.addPlugin(pluginImageTransform, {
     extensions: "html",
-    formats: ["avif", "webp", "auto",],
+    formats: ["webp", "auto",],
     outputDir: "./dist/assets/images/processed/",
     urlPath: "/assets/images/processed/",
 
     // Optimized widths: smaller for grid, medium for list, full for lightbox
-    widths: [320, 640, 960, 1280, 1920, "auto",],
+    widths: [640, 1280, 1920, "auto",],
 
     sharpOptions: {
       animated: true,
     },
     sharpWebpOptions: {
       quality: 80,
-      effort: 3,
-    },
-    sharpAvifOptions: {
-      quality: 80,
-      effort: 3,
+      effort: 0,
     },
     sharpJpegOptions: {
       quality: 85,
