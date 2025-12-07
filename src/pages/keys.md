@@ -12,7 +12,7 @@ I don’t use PGP, but you might want to check [age-encryption](https://age-encr
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
 - [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
-- [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
+- [meta.sr.ht/~~{{ author.username }}.keys](https://meta.sr.ht/~~{{ author.username }}.keys)
 
 ### authentication
 
