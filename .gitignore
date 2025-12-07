@@ -7,8 +7,7 @@
 .DS_Store
 .env
 .netlify
-.pnp.*
-.yarn/*
+.vite
 dist
 node_modules
 src/posts/.obsidian
