@@ -438,10 +438,6 @@
 #notes-container.is-list-view {
   display: block;
 
-  .notelist__item {
-    // Rules inherited from base .notelist__item above
-  }
-
   .note-grid-item {
     display: none;
   }
@@ -579,11 +575,9 @@
     font-weight: 700;
     line-height: 1.3;
     margin: 0 0 0.25rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-
-    // Truncate to 2 lines
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2; // Standard property for compatibility
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -620,28 +614,27 @@
   }
 
   /* Hover Effects */
-  @include mixins.hover-focus {
-    &:hover,
-    &:focus-within {
-      box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+  &:hover,
+  &:focus-within {
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
 
-      .note-grid-item__media img {
-        transform: scale(1.05);
-      }
+    .note-grid-item__media img {
+      transform: scale(1.05);
+    }
 
-      .note-grid-item__overlay {
-        opacity: 1;
-      }
+    .note-grid-item__overlay {
+      opacity: 1;
+    }
 
-      .note-grid-item__overlay-content {
-        transform: translateY(0);
-      }
+    .note-grid-item__overlay-content {
+      transform: translateY(0);
     }
   }
 
   // Add specific keyboard focus style using :focus-within
   &:focus-within {
-    outline: 2px solid var(--color-primary); // A clear outline for keyboard focus
+    outline: 2px solid
+      var(--color-primary); // A clear outline for keyboard focus
   }
 }
 

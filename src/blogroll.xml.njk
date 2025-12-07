@@ -11,13 +11,13 @@ excludeFromSitemap: true
     {% for item in bookmarks %}
       {% if item.category == 'person' %}
         {% if item.feed %}
-        <outline
-          type="rss"
-          title="{{ item.title }}"
-          xmlUrl="{{ item.feed }}"
-          htmlUrl="{{ item.url }}"
-        />
-      {% endif %}
+          <outline
+            type="rss"
+            title="{{ item.title }}"
+            xmlUrl="{{ item.feed }}"
+            htmlUrl="{{ item.url }}"
+          />
+        {% endif %}
       {% endif %}
     {% endfor %}
   </body>

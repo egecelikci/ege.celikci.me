@@ -224,9 +224,7 @@
     &:focus-visible {
       z-index: 1000 !important; // Force top
       transform: scale(1.35) translateY(-4px); // Pop out more significantly
-      box-shadow:
-        0 6px 16px rgba(0, 0, 0, 0.2),
-        0 0 0 2px var(--color-accent);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 0 2px var(--color-accent);
       outline: none;
     }
 
