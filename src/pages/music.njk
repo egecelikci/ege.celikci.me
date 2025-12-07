@@ -31,16 +31,6 @@ automatically fetched from my public
       title="{{ album.title }} by {{ artistNames }}"
     >
       <div class="album__cover">
-        <img
-          class="album__cover__color js-lazy-color"
-          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-          data-hover-src="/assets/images/covers/colored/{{ album.id }}.png"
-          alt=""
-          width="290"
-          height="290"
-          eleventy:ignore
-        />
-        <noscript>
           <img
             class="album__cover__color"
             src="/assets/images/covers/colored/{{ album.id }}.png"
@@ -49,7 +39,6 @@ automatically fetched from my public
             height="290"
             eleventy:ignore
           />
-        </noscript>
         <img
           class="album__cover__mono"
           src="/assets/images/covers/monochrome/{{ album.id }}.png"
