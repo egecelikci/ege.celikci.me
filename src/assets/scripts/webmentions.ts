@@ -35,7 +35,7 @@ class WebmentionManager {
 
   constructor(container: HTMLElement,) {
     this.container = container;
-    this.apiOrigin = "https://webmention.io/api/mentions.jf2";
+    this.apiOrigin = "/api/webmention";
     this.ownDomains = ["https://ege.celikci.me", "https://ieji.de/@eg",];
 
     // State
@@ -151,7 +151,7 @@ class WebmentionManager {
 
   async fetchData() {
     const path = window.location.pathname;
-    const url = `/api/webmentions?path=${
+    const url = `${this.apiOrigin}?path=${
       encodeURIComponent(
         path,
       )

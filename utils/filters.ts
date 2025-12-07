@@ -1,6 +1,7 @@
 import { JSDOM, } from "jsdom";
 import { memoize, random, } from "lodash-es";
 import { DateTime, } from "luxon";
+import path from "node:path";
 import sanitizeHTML from "sanitize-html";
 import { extractNoteGridData, } from "./noteGridDataExtractor.ts";
 
@@ -34,6 +35,10 @@ interface Webmention {
 }
 
 export default {
+  dirname: function(filePath: string,): string {
+    return path.dirname(filePath,);
+  },
+
   getNoteGridData,
 
   readableDate: function(date: Date, format?: string,): string {
