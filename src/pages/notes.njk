@@ -55,7 +55,9 @@ pagination:
       >
         {% for note in notes %}
           {# Get image data for this note #}
-          {% set gridData = note.templateContent | getNoteGridData(note.data.title) %}
+          {%
+            set gridData = note.templateContent | getNoteGridData(note.data.title)
+          %}
 
           <div
             class="notelist__item js-infinitescroll-item {% if gridData.hasImage %}has-image{% endif %}"

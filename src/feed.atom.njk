@@ -17,23 +17,25 @@ eleventyExcludeFromCollections: true
     <name>{{ author.name }}</name>
   </author>
   {% if collections.posts %}
-    <updated
-      >{{ collections.posts | getNewestCollectionItemDate | dateToRfc3339 }}</updated
-    >
+    <updated>{{
+      collections.posts | getNewestCollectionItemDate | dateToRfc3339
+    }}</updated>
   {% endif %}
   <id>{{ site.url }}/</id>
   {%- for post in collections.posts | reverse -%}
-    {% set absolutePostUrl %}{{ post.url | url | absoluteUrl(site.url) }}{% endset %}
+    {% set absolutePostUrl %}{{ post.url | url | absoluteUrl(site.url) }}{%
+      endset
+    %}
     <entry>
       <title>{{ post.data.title }}</title>
       <link href="{{ absolutePostUrl }}" />
       <updated>{{ post.date | dateToRfc3339 }}</updated>
       <id>{{ absolutePostUrl }}</id>
-      <content type="html"
-        ><![CDATA[
+      <content
+        type="html"
+      ><![CDATA[
         {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | safe }}
-        ]]></content
-      >
+        ]]></content>
     </entry>
   {%- endfor -%}
 </feed>

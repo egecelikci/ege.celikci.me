@@ -10,7 +10,7 @@ $breakpoints: (
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  xxl: 1400px,
+  xxl: 1400px
 );
 
 // Containers (kept as Sass variables for mixins, can be used as fallbacks)
@@ -21,7 +21,7 @@ $container-narrow-max-width: 100rem; // Using 'rem' for consistency
 $z-layers: (
   "modal": 999,
   "nav": 100,
-  "content-overlay": 30,
+  "content-overlay": 30
 );
 
 // ===========================================================================
@@ -46,13 +46,29 @@ $z-layers: (
 
   // Typography
   --font-family-sans-serif:
-    "Josefin Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Josefin Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
     "Segoe UI Symbol";
   --font-family-serif: "Times New Roman", Georgia, Times, serif;
   --font-family-monospace:
-    Inconsolata, Menlo, Monaco, Consolas, "Andale Mono", "Courier New",
+    Inconsolata,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Andale Mono",
+    "Courier New",
     monospace;
   --font-family-base: var(--font-family-sans-serif);
   --font-family-display: var(

@@ -9,7 +9,9 @@
     {# --- INTERACTIONS (FACEPILE) --- #}
     {% set hasInteractions = false %}
     {% for webmention in mentions %}
-      {% if webmention['wm-property'] == 'like-of' or webmention['wm-property'] == 'repost-of' %}
+      {%
+        if webmention['wm-property'] == 'like-of' or webmention['wm-property'] == 'repost-of'
+      %}
         {% set hasInteractions = true %}
       {% endif %}
     {% endfor %}
@@ -19,7 +21,9 @@
         <div class="webmentions__facepile">
           {% set zIndex = mentions|length %}
           {% for webmention in mentions %}
-            {% if webmention['wm-property'] == 'like-of' or webmention['wm-property'] == 'repost-of' %}
+            {%
+              if webmention['wm-property'] == 'like-of' or webmention['wm-property'] == 'repost-of'
+            %}
               {# Inline z-index for correct left-on-top stacking #}
               <a
                 class="webmentions__face-item"
@@ -50,7 +54,8 @@
                     <use
                       xmlns:xlink="http://www.w3.org/1999/xlink"
                       xlink:href="/assets/icons/icons.sprite.svg#svg-avatar"
-                    ></use>
+                    >
+                    </use>
                   </svg>
                 {% endif %}
 
@@ -58,7 +63,7 @@
                   <span class="webmentions__face-action-icon">
                     {% icon "heart" %}
                   </span>
-                  {% elseif webmention['wm-property'] == 'repost-of' %}
+                {% elseif webmention['wm-property'] == 'repost-of' %}
                   <span class="webmentions__face-action-icon">
                     {% icon "repeat" %}
                   </span>
@@ -75,7 +80,9 @@
     {# Count comments first #}
     {% set commentCount = 0 %}
     {% for webmention in mentions %}
-      {% if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of' %}
+      {%
+        if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of'
+      %}
         {% set commentCount = commentCount + 1 %}
       {% endif %}
     {% endfor %}
@@ -85,7 +92,9 @@
         <ol class="webmentions__list">
           {% set currentCount = 0 %}
           {% for webmention in mentions %}
-            {% if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of' %}
+            {%
+              if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of'
+            %}
               {% if currentCount < 5 %}
                 <li class="webmentions__item">
                   {% include 'webmention.njk' %}
@@ -107,7 +116,9 @@
             <ol class="webmentions__list">
               {% set currentCount = 0 %}
               {% for webmention in mentions %}
-                {% if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of' %}
+                {%
+                  if webmention['wm-property'] != 'like-of' and webmention['wm-property'] != 'repost-of'
+                %}
                   {% if currentCount >= 5 %}
                     <li class="webmentions__item">
                       {% include 'webmention.njk' %}
@@ -120,7 +131,7 @@
           </div>
         </div>
       {% endif %}
-      {% elseif not hasInteractions %}
+    {% elseif not hasInteractions %}
       <p class="webmentions__empty">No webmentions yet.</p>
     {% endif %}
   </div>

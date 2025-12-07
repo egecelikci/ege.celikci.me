@@ -1,10 +1,14 @@
-{%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(site.url) }}{%- endset -%}
+{%- set absolutePageUrl -%}{{ page.url | url | absoluteUrl(site.url) }}{%-
+  endset
+-%}
 {%- set isPost = layout == 'post' -%}
 {%- set isNote = layout == 'note' -%}
 
 {%- if isPost -%}
   {%- set currentPage = collections.all | currentPage(page) -%}
-  {%- set autoDescription = currentPage.templateContent | excerpt | safe | striptags -%}
+  {%-
+    set autoDescription = currentPage.templateContent | excerpt | safe | striptags
+  -%}
 {% endif %}
 
 {# Page-Specific #}
@@ -18,13 +22,17 @@
     {%- set pageImage = image -%}
   {%- elif isNote -%}
     {# Rule 1: Notes always look in the Gallery #}
-    {%- set pageImage = ('/assets/images/gallery/' + image) | url | absoluteUrl(site.url) -%}
+    {%-
+      set pageImage = ('/assets/images/gallery/' + image) | url | absoluteUrl(site.url)
+    -%}
   {%- elif isPost -%}
     {# Rule 2: Posts always use co-located images (Leaf Bundle) #}
     {%- set pageImage = absolutePageUrl + image -%}
   {%- else -%}
     {# Rule 3: Regular Pages always look in the global Assets folder #}
-    {%- set pageImage = ('/assets/images/' + image) | url | absoluteUrl(site.url) -%}
+    {%-
+      set pageImage = ('/assets/images/' + image) | url | absoluteUrl(site.url)
+    -%}
   {%- endif -%}
   <meta name="image" content="{{ pageImage }}" />
 {%- endif -%}
@@ -58,17 +66,17 @@
 
 {# JSON LD #}
 <script type="application/ld+json">
-  {
-    "name": "{{ author.name }}",
-    "description": "{{ site.description }}",
-    "author": {
-      "@type": "Person",
-      "name": "{{ author.name }}"
-    },
-    "@type": "WebSite",
-    "url": "{{ site.url }}",
-    "headline": "{{ site.title }}",
-    "sameAs": ["https://github.com/{{ author.username }}"],
-    "@context": "http://schema.org"
-  }
+{
+  "name": "{{ author.name }}",
+  "description": "{{ site.description }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ author.name }}"
+  },
+  "@type": "WebSite",
+  "url": "{{ site.url }}",
+  "headline": "{{ site.title }}",
+  "sameAs": ["https://github.com/{{ author.username }}"],
+  "@context": "http://schema.org"
+}
 </script>
