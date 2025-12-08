@@ -1,6 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
+import { ListenBrainzClient } from "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2";
 
 const LISTENBRAINZ_USERNAME = Deno.env.get("LISTENBRAINZ_USERNAME",);
+const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN",);
 const STEAM_API_KEY = Deno.env.get("STEAM_API_KEY",);
 const STEAM_ID = Deno.env.get("STEAM_ID",);
 const ANILIST_ID = Deno.env.get("ANILIST_ID",);
@@ -24,37 +26,37 @@ async function getMusicStatus(): Promise<string | null> {
   if (!LISTENBRAINZ_USERNAME) return null;
 
   try {
-    const playingUrl =
-      `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/playing-now`;
-    const recentUrl =
-      `https://api.listenbrainz.org/1/user/${LISTENBRAINZ_USERNAME}/listens?count=1`;
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000,);
-
-    const playingRes = await fetch(playingUrl, {
-      headers: { "User-Agent": USER_AGENT, },
-      signal: controller.signal,
-    },).finally(() => clearTimeout(timeoutId,));
+    const client = new ListenBrainzClient({
+      userToken: LISTENBRAINZ_TOKEN || "00000000-0000-4000-8000-000000000000",
+    },);
 
     let listen: any = null;
-    if (playingRes.ok) {
-      const playingData = await playingRes.json();
+
+    try {
+      const playingData = await client.getPlayingNow(LISTENBRAINZ_USERNAME,);
       if (
-        playingData?.payload?.playing_now
-        && playingData.payload.listens.length > 0
+        playingData.count > 0
+        && playingData.playing_now
+        && playingData.listens.length > 0
       ) {
-        listen = playingData.payload.listens[0];
+        listen = playingData.listens[0];
       }
+    } catch {
+      // Ignore errors here to fall back to recent listens
     }
 
     if (!listen) {
-      const recentRes = await fetch(recentUrl, {
-        headers: { "User-Agent": USER_AGENT, },
-      },).catch(() => null);
-      if (recentRes?.ok) {
-        const recentData = await recentRes.json();
-        listen = recentData?.payload?.listens?.[0];
+      try {
+        const recentData = await client.getListens(LISTENBRAINZ_USERNAME, {
+          count: 1,
+        },);
+        if (
+          recentData.count > 0 && recentData.listens.length > 0
+        ) {
+          listen = recentData.listens[0];
+        }
+      } catch {
+        // Ignore errors, will return null below
       }
     }
 
@@ -62,10 +64,10 @@ async function getMusicStatus(): Promise<string | null> {
 
     const track = listen.track_metadata;
     const trackName = track.track_name || "Unknown Track";
-    const recordingMbid = track.additional_info?.recording_mbid
-      || track.recording_msid;
-    const artistNames = track.additional_info?.artist_names || [];
-    const artistMbids = track.additional_info?.artist_mbids || [];
+    const additionalInfo = track.additional_info || {};
+    const recordingMbid = additionalInfo.recording_mbid || track.recording_msid;
+    const artistNames = additionalInfo.artist_names || [track.artist_name,];
+    const artistMbids = additionalInfo.artist_mbids || [];
 
     const trackLink = recordingMbid
       ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
@@ -199,33 +201,26 @@ async function getMangaStatus(): Promise<string | null> {
  * Uses a Race Pool to yield fastest results first.
  */
 async function* generateStatuses(): AsyncGenerator<string | null> {
-  // 1. Start all requests in parallel
   const tasks = [
     withTimeout(getMusicStatus(), 4500,).catch(() => null),
     withTimeout(getGameStatus(), 4500,).catch(() => null),
     withTimeout(getMangaStatus(), 4500,).catch(() => null),
   ];
 
-  // 2. Wrap them so we can identify which one finished
   const pending = new Map<
     number,
     Promise<{ index: number; res: string | null; }>
   >();
   tasks.forEach((task, index,) => {
-    // We transform the promise to return its own index + result
     const wrapped = task.then((res,) => ({ index, res, }));
     pending.set(index, wrapped,);
   },);
 
-  // 3. Race until no promises are left
   while (pending.size > 0) {
-    // Wait for the *next* fastest promise to finish
     const { index, res, } = await Promise.race(pending.values(),);
 
-    // Remove the winner from the pool so we don't race it again
     pending.delete(index,);
 
-    // Yield immediately
     if (res) yield res;
   }
 }
@@ -234,12 +229,10 @@ export default (_req: Request, _context: any,) => {
   const cacheHeader = "public, s-maxage=15, stale-while-revalidate=60";
   const encoder = new TextEncoder();
 
-  // Create a readable stream that pulls from the generator
   const stream = new ReadableStream({
     async start(controller,) {
       try {
         for await (const chunk of generateStatuses()) {
-          // If we have a chunk, send it immediately followed by a newline
           if (chunk) {
             controller.enqueue(encoder.encode(chunk + "\n",),);
           }
