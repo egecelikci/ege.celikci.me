@@ -4,30 +4,41 @@ import ScrambleTextPlugin from "gsap/ScrambleTextPlugin.js";
 gsap.registerPlugin(ScrambleTextPlugin,);
 
 const CONFIG = {
-  baseInterval: 5000,
+  baseInterval: 3000,
   maxInterval: 120000,
   backoffFactor: 1.5,
 };
 
 const STATUS_ORDER = ["music-status", "game-status", "manga-status",];
-
-// ROBUSTNESS: Store active GSAP contexts per DOM element.
 const activeContexts = new WeakMap<Element, gsap.Context>();
+const pendingTransitions = new WeakMap<Element, number>();
 
 let currentInterval = CONFIG.baseInterval;
 let pollTimeout: number | null = null;
 let abortController: AbortController | null = null;
 
-/**
- * Creates the scrolling marquee effect.
- * MUST be called within a GSAP Context to ensure cleanup.
- */
+function setStatusState(
+  type: "loading" | "error" | "active" | "inactive" | "clear",
+  container?: HTMLElement,
+) {
+  const targetItems = container
+    ? [container.closest("li",),]
+    : document.querySelectorAll(".link-list--status > li",);
+
+  targetItems.forEach((li,) => {
+    if (!li) return;
+    li.classList.remove("is-loading", "is-error", "is-active", "is-inactive",);
+    if (type !== "clear") {
+      li.classList.add(`is-${type}`,);
+    }
+  },);
+}
+
 function createMarqueeAnimation(element: HTMLElement,) {
   const wrapper = element.parentElement;
   if (!wrapper || element.scrollWidth <= wrapper.clientWidth) return;
 
   const spacer = "&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;";
-
   const originalContent = element.innerHTML;
   element.innerHTML =
     `<span>${originalContent}${spacer}</span>${originalContent}`;
@@ -36,12 +47,9 @@ function createMarqueeAnimation(element: HTMLElement,) {
   const distance = firstChild ? firstChild.offsetWidth : 0;
   element.innerHTML = originalContent + spacer + originalContent;
 
-  const speed = 50;
-  const duration = distance / speed;
-
   const marqueeTween = gsap.to(element, {
     x: -distance,
-    duration: duration,
+    duration: distance / 50,
     ease: "none",
     repeat: -1,
   },);
@@ -51,10 +59,7 @@ function createMarqueeAnimation(element: HTMLElement,) {
 
   wrapper.onmouseenter = pause;
   wrapper.onmouseleave = play;
-  wrapper.ontouchstart = (e: TouchEvent,) => {
-    // e.passive = true;
-    pause();
-  };
+  wrapper.ontouchstart = () => pause();
   wrapper.ontouchend = play;
   wrapper.ontouchcancel = play;
 }
@@ -63,15 +68,18 @@ async function loadStatus() {
   if (abortController) abortController.abort();
   abortController = new AbortController();
 
+  const hasData = document.querySelector(
+    ".link-list--status li.is-active, .link-list--status li.is-inactive",
+  );
+  if (!hasData) setStatusState("loading",);
+
   try {
     const res = await fetch("/api/status", {
       signal: abortController.signal,
     },);
-
     if (!res.ok) throw new Error(`Server responded with ${res.status}`,);
 
     currentInterval = CONFIG.baseInterval;
-
     const reader = res.body?.getReader();
     if (!reader) return;
 
@@ -81,20 +89,15 @@ async function loadStatus() {
     while (true) {
       const { done, value, } = await reader.read();
       if (done) break;
-
       buffer += decoder.decode(value, { stream: true, },);
       const parts = buffer.split("\n",);
       buffer = parts.pop() || "";
-
-      for (const part of parts) {
-        if (part.trim()) processChunk(part,);
-      }
+      for (const part of parts) if (part.trim()) processChunk(part,);
     }
-
     if (buffer.trim()) processChunk(buffer,);
   } catch (err: any) {
     if (err.name === "AbortError") return;
-    console.warn("Status fetch failed, backing off:", err,);
+    setStatusState("error",);
     currentInterval = Math.min(
       currentInterval * CONFIG.backoffFactor,
       CONFIG.maxInterval,
@@ -121,16 +124,14 @@ function processChunk(htmlString: string,) {
 
   const containerSelector = mapping[id];
   if (!containerSelector) return;
-
   const placeholder = document.querySelector(containerSelector,);
-  if (!placeholder) return;
-
-  updateSingleUI(placeholder as HTMLElement, newElement,);
+  if (placeholder) updateSingleUI(placeholder as HTMLElement, newElement,);
 }
 
 function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
   const li = container.closest("li",);
-  if (li) li.hidden = false;
+  if (!li) return;
+  li.hidden = false;
 
   const currentInner = container.querySelector(`[id="${newData.id}"]`,);
 
@@ -142,37 +143,59 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
   const newTxt = getTxt(newData,);
   const curTxt = getTxt(currentInner,);
 
-  // Skip update if content is identical
   if (newTxt === curTxt && curTxt !== "") return;
+
+  if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
+    li.classList.add("is-changing",);
+
+    const timeoutId = setTimeout(() => {
+      li.classList.remove("is-changing",);
+      pendingTransitions.delete(container,);
+      performUpdate(container, newData, newTxt, curTxt,);
+    }, 1000,);
+
+    pendingTransitions.set(container, timeoutId,);
+    return;
+  }
+
+  if (pendingTransitions.has(container,)) return;
+
+  performUpdate(container, newData, newTxt, curTxt,);
+}
+
+function performUpdate(
+  container: HTMLElement,
+  newData: HTMLElement,
+  newTxt: string,
+  curTxt: string,
+) {
+  const newSpan = newData.querySelector("span",);
+
+  if (newSpan) {
+    const isActive = newSpan.dataset.active === "true";
+    setStatusState(isActive ? "active" : "inactive", container,);
+  }
 
   if (activeContexts.has(container,)) {
     activeContexts.get(container,)?.revert();
   }
 
-  const newSpan = newData.querySelector("span",);
-  if (!newSpan) return;
-
-  const richHTML = newSpan.innerHTML;
-  const placeholderChar = newSpan.dataset.chars || "█";
-
+  const richHTML = newSpan?.innerHTML || "";
+  const placeholderChar = newSpan?.dataset.chars || "█";
   const scrambleNoise = placeholderChar;
 
-  const index = STATUS_ORDER.indexOf(newData.id,);
-  const dynamicDelay = index !== -1 ? index * 0.125 : 0;
+  const dynamicDelay = 0;
   const scrambleDuration = 1 + newTxt.length * 0.03;
-
-  if (curTxt) {
-    newSpan.textContent = curTxt;
-  } else {
-    newSpan.style.opacity = "0";
-  }
 
   container.setAttribute("aria-label", newTxt,);
   container.innerHTML = "";
   container.appendChild(newData,);
 
   const ctx = gsap.context(() => {
-    gsap.set(newSpan, {
+    const targetSpan = container.querySelector("span",);
+    if (!targetSpan) return;
+
+    gsap.set(targetSpan, {
       opacity: curTxt ? 1 : 0,
       y: 0,
       whiteSpace: "nowrap",
@@ -186,20 +209,20 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
       delay: dynamicDelay,
       onComplete: () => {
         ctx.add(() => {
-          newSpan.dataset.unscrambled = "true";
-          gsap.set(newSpan, {
+          targetSpan.dataset.unscrambled = "true";
+          gsap.set(targetSpan, {
             overflow: "visible",
             textOverflow: "clip",
             maxWidth: "none",
           },);
-          newSpan.innerHTML = richHTML;
-          createMarqueeAnimation(newSpan,);
+          targetSpan.innerHTML = richHTML;
+          createMarqueeAnimation(targetSpan,);
         },);
       },
     },);
 
     if (curTxt) {
-      tl.to(newSpan, {
+      tl.to(targetSpan, {
         duration: scrambleDuration,
         ease: "power2.out",
         scrambleText: {
@@ -211,7 +234,7 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
         },
       },);
     } else {
-      tl.to(newSpan, {
+      tl.to(targetSpan, {
         opacity: 1,
         duration: scrambleDuration,
         ease: "power2.out",

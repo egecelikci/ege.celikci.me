@@ -1,20 +1,14 @@
 module.exports = {
-  globDirectory: "./dist",
-  globPatterns: ["**/*.woff2"],
-  swDest: "./dist/sw.js",
-  sourcemap: false,
-  cleanupOutdatedCaches: true,
-  clientsClaim: true,
-  skipWaiting: true,
+  globDirectory: "dist/",
+  globPatterns: ["**/*.{html,css,js,mjs,json,xml,ico,svg,woff2}"],
+  swDest: "dist/sw.js",
   runtimeCaching: [
     {
-      urlPattern: /\.(?:png|jpg|jpeg|gif|webp|avif)$/,
-      handler: "CacheFirst",
+      urlPattern: ({ request }) => request.mode === "navigate",
+      handler: "NetworkOnly",
       options: {
-        cacheName: "images",
-        expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 60 * 60 * 24 * 365,
+        precacheFallback: {
+          fallbackURL: "/offline/index.html",
         },
       },
     },

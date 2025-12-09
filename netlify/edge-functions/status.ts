@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { ListenBrainzClient } from "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2";
+import { ListenBrainzClient, } from "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2";
 
 const LISTENBRAINZ_USERNAME = Deno.env.get("LISTENBRAINZ_USERNAME",);
 const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN",);
@@ -8,9 +8,15 @@ const STEAM_ID = Deno.env.get("STEAM_ID",);
 const ANILIST_ID = Deno.env.get("ANILIST_ID",);
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
-function createStatusHtml(id: string, plainText: string, richContent: string,) {
+function createStatusHtml(
+  id: string,
+  plainText: string,
+  richContent: string,
+  isActive: boolean,
+) {
+  const timestamp = Date.now();
   const span =
-    `<span data-chars="×" data-status="${plainText}">${richContent}</span>`;
+    `<span data-chars="×" data-status="${plainText}" data-timestamp="${timestamp}" data-active="${isActive}">${richContent}</span>`;
   return `<div id="${id}">${span}</div>`;
 }
 
@@ -31,6 +37,7 @@ async function getMusicStatus(): Promise<string | null> {
     },);
 
     let listen: any = null;
+    let isActive = false;
 
     try {
       const playingData = await client.getPlayingNow(LISTENBRAINZ_USERNAME,);
@@ -40,23 +47,24 @@ async function getMusicStatus(): Promise<string | null> {
         && playingData.listens.length > 0
       ) {
         listen = playingData.listens[0];
+        isActive = true;
       }
     } catch {
-      // Ignore errors here to fall back to recent listens
+      // Ignore errors
     }
 
+    // 2. Fallback to Recent
     if (!listen) {
       try {
         const recentData = await client.getListens(LISTENBRAINZ_USERNAME, {
           count: 1,
         },);
-        if (
-          recentData.count > 0 && recentData.listens.length > 0
-        ) {
+        if (recentData.count > 0 && recentData.listens.length > 0) {
           listen = recentData.listens[0];
+          isActive = false;
         }
       } catch {
-        // Ignore errors, will return null below
+        // Ignore errors
       }
     }
 
@@ -68,6 +76,8 @@ async function getMusicStatus(): Promise<string | null> {
     const recordingMbid = additionalInfo.recording_mbid || track.recording_msid;
     const artistNames = additionalInfo.artist_names || [track.artist_name,];
     const artistMbids = additionalInfo.artist_mbids || [];
+
+    // REMOVED: Duration extraction logic
 
     const trackLink = recordingMbid
       ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
@@ -83,10 +93,12 @@ async function getMusicStatus(): Promise<string | null> {
       .join(" · ",);
 
     const plainText = `${trackName} by ${artistNames.join(" · ",)}`;
+
     return createStatusHtml(
       "music-status",
       plainText,
       `${trackLink} by ${artistLinks}`,
+      isActive,
     );
   } catch (err) {
     console.error("Error fetching music:", err,);
@@ -108,10 +120,7 @@ async function getGameStatus(): Promise<string | null> {
       fetch(recentGamesUrl, { headers: { "User-Agent": USER_AGENT, }, },),
     ],);
 
-    if (!summaryRes.ok || !recentRes.ok) {
-      console.error("Steam API request failed",);
-      return null;
-    }
+    if (!summaryRes.ok || !recentRes.ok) return null;
 
     const [summaryData, recentData,] = await Promise.all([
       summaryRes.json(),
@@ -124,7 +133,7 @@ async function getGameStatus(): Promise<string | null> {
       const gameLink = player.gameid
         ? `<a href="https://store.steampowered.com/app/${player.gameid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`
         : `<cite>${gameName}</cite>`;
-      return createStatusHtml("game-status", gameName, gameLink,);
+      return createStatusHtml("game-status", gameName, gameLink, true,);
     }
 
     const recentGame = recentData.response?.games?.[0];
@@ -132,7 +141,7 @@ async function getGameStatus(): Promise<string | null> {
       const gameName = recentGame.name;
       const gameLink =
         `<a href="https://store.steampowered.com/app/${recentGame.appid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`;
-      return createStatusHtml("game-status", gameName, gameLink,);
+      return createStatusHtml("game-status", gameName, gameLink, false,);
     }
 
     return null;
@@ -189,17 +198,13 @@ async function getMangaStatus(): Promise<string | null> {
     const richLink =
       `<a href="${url}" target="_blank" rel="noopener noreferrer"><cite>${title}</cite></a>`;
 
-    return createStatusHtml("manga-status", plainText, richLink,);
+    return createStatusHtml("manga-status", plainText, richLink, false,);
   } catch (err) {
     console.error("Error fetching AniList:", err,);
     return null;
   }
 }
 
-/**
- * Generator that yields HTML strings as promises resolve.
- * Uses a Race Pool to yield fastest results first.
- */
 async function* generateStatuses(): AsyncGenerator<string | null> {
   const tasks = [
     withTimeout(getMusicStatus(), 4500,).catch(() => null),
@@ -218,9 +223,7 @@ async function* generateStatuses(): AsyncGenerator<string | null> {
 
   while (pending.size > 0) {
     const { index, res, } = await Promise.race(pending.values(),);
-
     pending.delete(index,);
-
     if (res) yield res;
   }
 }
