@@ -10,18 +10,7 @@
       "background": "#fef6e4",
       "primaryOffset": "#ff3d6a",
       "textOffset": "#006e8a",
-      "backgroundOffset": "#f3e1d8",
-      "syntaxBg": "#F2F4F8",
-      "syntaxText": "#545464",
-      "syntaxComment": "#8A99A8",
-      "syntaxPunctuation": "#545464",
-      "syntaxProperty": "#B35B79",
-      "syntaxNumber": "#D27E99",
-      "syntaxString": "#4D693D",
-      "syntaxOperator": "#43436C",
-      "syntaxFunction": "#2D4F67",
-      "syntaxKeyword": "#5D57A3",
-      "syntaxRegex": "#E98A00"
+      "backgroundOffset": "#f3e1d8"
     }
   },
   {
@@ -35,18 +24,7 @@
       "background": "#463366",
       "primaryOffset": "#72a194",
       "textOffset": "#b8c1ec",
-      "backgroundOffset": "#5c3c4c",
-      "syntaxBg": "#1F1F28",
-      "syntaxText": "#DCD7BA",
-      "syntaxComment": "#727169",
-      "syntaxPunctuation": "#938AA9",
-      "syntaxProperty": "#E46876",
-      "syntaxNumber": "#D27E99",
-      "syntaxString": "#98BB6C",
-      "syntaxOperator": "#C8C093",
-      "syntaxFunction": "#7E9CD8",
-      "syntaxKeyword": "#957FB8",
-      "syntaxRegex": "#FFA066"
+      "backgroundOffset": "#5c3c4c"
     }
   }
 ]

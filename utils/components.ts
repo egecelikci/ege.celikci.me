@@ -1,6 +1,7 @@
 import slugify from "@sindresorhus/slugify";
 import htmlmin from "html-minifier";
 import markdownIt from "markdown-it";
+import themes from "../src/data/themes.json" with { type: "json", };
 
 const markdown = markdownIt();
 
@@ -106,10 +107,65 @@ export const Callout = (content: string, type = "info",): string => {
   return minify(output,);
 };
 
+export const themeCSS = (): string => {
+  const defaultTheme = themes.find((t: any,) => t.id === "default")?.colors;
+  const darkTheme = themes.find((t: any,) => t.id === "dark")?.colors;
+
+  if (!defaultTheme || !darkTheme) {
+    throw new Error("Themes 'default' and 'dark' are required in themes.json",);
+  }
+
+  // 1. Generate the :root block with light-dark()
+  const properties = Object.keys(defaultTheme,).map((key,) => {
+    const varName = `--color-${key.replace(/([A-Z])/g, "-$1",).toLowerCase()}`;
+    // @ts-ignore: JSON import typing
+    const lightVal = defaultTheme[key];
+    // @ts-ignore: JSON import typing
+    const darkVal = darkTheme[key];
+    return `${varName}: light-dark(${lightVal}, ${darkVal});`;
+  },);
+
+  // 2. Build the CSS string
+  const css = `
+    :root {
+      color-scheme: light dark;
+      ${properties.join("\n      ",)}
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+    }
+
+    ${
+    themes
+      .filter((t: any,) => t.id !== "default" && t.id !== "dark")
+      .map((theme: any,) => {
+        const vars = Object.keys(theme.colors,).map((key,) => {
+          const varName = `--color-${
+            key.replace(/([A-Z])/g, "-$1",).toLowerCase()
+          }`;
+          return `${varName}: ${theme.colors[key]};`;
+        },);
+        return `[data-theme="${theme.id}"] {\n      ${
+          vars.join("\n      ",)
+        }\n    }`;
+      },)
+      .join("\n",)
+  }
+  `;
+
+  return minify(`<style>${css}</style>`,);
+};
+
 export const syncShortcodes = {
   Icon,
   renderTags,
   Callout,
+  themeCSS,
 };
 
 export const asyncShortcodes = {};
