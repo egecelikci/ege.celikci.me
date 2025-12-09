@@ -36,7 +36,7 @@
     display: inline-block;
 
     & + & {
-      margin-left: 1rem;
+      margin-inline-start: 1rem;
     }
   }
   &__speedlify {

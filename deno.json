@@ -15,6 +15,7 @@
     "@11ty/eleventy-navigation": "npm:@11ty/eleventy-navigation@^1.0.4",
     "@11ty/eleventy-plugin-rss": "npm:@11ty/eleventy-plugin-rss@^2.0.4",
     "@11ty/eleventy-plugin-syntaxhighlight": "npm:@11ty/eleventy-plugin-syntaxhighlight@^5.0.2",
+    "@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.2",
     "@sindresorhus/slugify": "npm:@sindresorhus/slugify@^3.0.0",
     "eleventy-plugin-svg-sprite": "npm:eleventy-plugin-svg-sprite@^2.4.5",
     "gsap": "npm:gsap@^3.13.0",

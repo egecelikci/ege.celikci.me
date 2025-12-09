@@ -36,3 +36,33 @@ body {
   margin-right: auto;
   max-width: var(--container-max-width);
 }
+
+@media print {
+  // Hide interactive or navigation elements
+  .header,
+  .footer,
+  .view-toggle,
+  .notes-view-toggle,
+  .sr-skip-link {
+    display: none !important;
+  }
+
+  // Ensure high contrast for text
+  body, .main, .post, .note {
+    background: white !important;
+    color: black !important;
+  }
+
+  // Remove box shadows and borders that look weird in print
+  .note, .album__cover {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+
+  // Expand links so they are useful on paper
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+}
