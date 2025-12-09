@@ -1,10 +1,12 @@
 import Fetch from "@11ty/eleventy-fetch";
-import { Buffer, } from "node:buffer";
+import { MusicBrainzClient, } from "@kellnerd/musicbrainz";
 import fs from "node:fs/promises";
 import path from "node:path";
-import sharp from "sharp";
+import {
+  ditherWithSharp,
+  saveColorVersion,
+} from "../../utils/images.ts";
 
-// Interfaces for our data
 interface Review {
   entity_id: string;
   rating: number;
@@ -17,7 +19,7 @@ interface ReviewBatch {
 
 interface Album {
   "first-release-date"?: string;
-  [key: string]: unknown; // Changed from any
+  [key: string]: unknown;
 }
 
 const sleep = (ms: number,) =>
@@ -34,6 +36,8 @@ const CRITIQUEBRAINZ_ID = Deno.env.get("CRITIQUEBRAINZ_ID",);
 const LIMIT = 50;
 const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
+const client = new MusicBrainzClient();
+
 async function fileExists(filePath: string,): Promise<boolean> {
   try {
     await fs.access(filePath,);
@@ -41,92 +45,6 @@ async function fileExists(filePath: string,): Promise<boolean> {
   } catch {
     return false;
   }
-}
-
-/**
- * Saves a resized, color DITHERED version of the cover.
- * OPTIMIZATION: High compression, low color count.
- */
-async function saveColorVersion(inputPath: string, outputPath: string,) {
-  try {
-    await sharp(inputPath,)
-      .resize(290, 290, { fit: "cover", },)
-      .png({
-        palette: true,
-        colors: 16,
-        dither: 1.0,
-        effort: 10,
-        compressionLevel: 9,
-      },)
-      .toFile(outputPath,);
-  } catch (e: unknown) { // Changed from any
-    console.error(
-      `[music.ts] Failed to save color cover: ${(e as Error).message}`,
-    );
-  }
-}
-
-/**
- * Process image with Floyd-Steinberg dithering (Transparent Mono)
- * OUTPUT: Transparent PNG (Black Ink + Transparent Background)
- */
-async function ditherWithSharp(inputPath: string, outputPath: string,) {
-  const { data, info, } = await sharp(inputPath,)
-    .resize(290, 290, { fit: "cover", },)
-    .greyscale()
-    .raw()
-    .toBuffer({ resolveWithObject: true, },);
-
-  const width = info.width;
-  const height = info.height;
-  const inputPixels = new Uint8Array(data,);
-
-  const outputPixels = new Uint8Array(width * height * 4,);
-
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const idx = y * width + x;
-      const oldPixel = inputPixels[idx];
-      const newPixel = oldPixel < 128 ? 0 : 255;
-
-      const error = oldPixel - newPixel;
-      inputPixels[idx] = newPixel;
-
-      if (x + 1 < width) inputPixels[idx + 1] += (error * 7) / 16;
-      if (y + 1 < height) {
-        if (x > 0) inputPixels[idx + width - 1] += (error * 3) / 16;
-        inputPixels[idx + width] += (error * 5) / 16;
-        if (x + 1 < width) inputPixels[idx + width + 1] += (error * 1) / 16;
-      }
-
-      const outIdx = idx * 4;
-      if (newPixel === 0) {
-        outputPixels[outIdx] = 0;
-        outputPixels[outIdx + 1] = 0;
-        outputPixels[outIdx + 2] = 0;
-        outputPixels[outIdx + 3] = 255;
-      } else {
-        outputPixels[outIdx] = 0;
-        outputPixels[outIdx + 1] = 0;
-        outputPixels[outIdx + 2] = 0;
-        outputPixels[outIdx + 3] = 0;
-      }
-    }
-  }
-
-  await sharp(Buffer.from(outputPixels,), {
-    raw: {
-      width: width,
-      height: height,
-      channels: 4,
-    },
-  },)
-    .png({
-      palette: true,
-      colors: 2,
-      effort: 10,
-    },)
-    .toFile(outputPath,);
 }
 
 /**
@@ -159,7 +77,7 @@ async function getFavoriteAlbumIds(): Promise<Set<string>> {
       allReviews.push(...batch.reviews,);
       offset += LIMIT;
       await sleep(1000,);
-    } catch (e: unknown) { // Changed from any
+    } catch (e: unknown) {
       console.error(
         `[music.ts] Failed to fetch reviews from CritiqueBrainz: ${
           (e as Error).message
@@ -175,25 +93,16 @@ async function getFavoriteAlbumIds(): Promise<Set<string>> {
 }
 
 /**
- * Fetches album metadata from MusicBrainz.
+ * Fetches album metadata from MusicBrainz using the client library.
  */
 async function fetchAlbumData(rgid: string,) {
-  const url =
-    `https://musicbrainz.org/ws/2/release-group/${rgid}?inc=releases+artists&fmt=json`;
   try {
-    await Fetch(url, {
-      duration: "30d",
-      type: "json",
-      directory: DATA_DIR,
-      filenameFormat: () => rgid,
-      fetchOptions: {
-        headers: {
-          "User-Agent": USER_AGENT,
-          Accept: "application/json",
-        },
-      },
+    const data = await client.lookup("release-group", rgid, {
+      inc: ["releases", "artists",],
     },);
-  } catch (e: unknown) { // Changed from any
+    const filePath = path.join(DATA_DIR, `${rgid}.json`,);
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2,),);
+  } catch (e: unknown) {
     console.error(
       `[music.ts] Failed to fetch album data for ${rgid}: ${
         (e as Error).message
@@ -215,7 +124,7 @@ async function fetchAlbumCover(rgid: string,) {
       filenameFormat: () => rgid,
       fetchOptions: { headers: { "User-Agent": USER_AGENT, }, },
     },);
-  } catch (e: unknown) { // Changed from any
+  } catch (e: unknown) {
     console.error(
       `[music.ts] Failed to fetch album cover for ${rgid}: ${
         (e as Error).message
@@ -235,17 +144,15 @@ async function getMusicData() {
 
   const favAlbumIds = await getFavoriteAlbumIds();
 
-  // 1. Fetch new data if ID is present
   for (const rgid of favAlbumIds) {
     const jsonPath = path.join(DATA_DIR, `${rgid}.json`,);
     if (!(await fileExists(jsonPath,))) {
+      console.log(`[music.ts] Fetching new album: ${rgid}`,);
       await fetchAlbumData(rgid,);
       await sleep(1000,);
     }
   }
 
-  // 2. Iterate over ALL cached data (whether newly fetched or existing)
-  // and ensure images exist for them.
   const albums: Album[] = [];
   const cachedFiles = await fs.readdir(DATA_DIR,);
 
@@ -258,24 +165,18 @@ async function getMusicData() {
     const publicMonoPath = path.join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,);
     const publicColorPath = path.join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,);
 
-    // 1. Ensure album metadata is present (fetch if missing)
-    if (!(await fileExists(jsonPath,))) {
-      await fetchAlbumData(rgid,);
-      await sleep(1000,);
-    }
+    if (!(await fileExists(jsonPath,))) continue;
 
-    // 2. Check existence of processed public covers
     const publicMonoExists = await fileExists(publicMonoPath,);
     const publicColorExists = await fileExists(publicColorPath,);
 
-    // 3. If processed covers are NOT fully present, ensure raw cover exists and process.
     if (!publicMonoExists || !publicColorExists) {
       if (!(await fileExists(cacheCoverPath,))) {
+        console.log(`[music.ts] Fetching cover for: ${rgid}`,);
         await fetchAlbumCover(rgid,);
         await sleep(1000,);
       }
 
-      // Then process if raw cover exists
       if (await fileExists(cacheCoverPath,)) {
         try {
           if (!publicMonoExists) {
@@ -286,7 +187,7 @@ async function getMusicData() {
           }
         } catch (e: unknown) {
           console.error(
-            `[music.ts] Failed to process images for ${rgid}: ${
+            `[music.ts] Image processing failed for ${rgid}: ${
               (e as Error).message
             }`,
           );
@@ -294,12 +195,7 @@ async function getMusicData() {
       }
     }
 
-    // 4. Finally, if metadata AND processed images exist, add to list
-    if (
-      await fileExists(jsonPath,)
-      && await fileExists(publicMonoPath,)
-      && await fileExists(publicColorPath,)
-    ) {
+    if (await fileExists(publicColorPath,)) {
       try {
         const content: Album = JSON.parse(
           await fs.readFile(jsonPath, "utf-8",),
