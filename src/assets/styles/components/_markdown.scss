@@ -153,37 +153,29 @@
     padding: 0.75rem 1rem;
     text-align: left;
     vertical-align: top;
-
-    /* Yatay Çizgi */
     border-bottom: 1px solid var(--color-border);
-
-    /* Dikey Çizgi (Hücrenin sağına) */
     border-inline-end: 1px solid var(--color-border);
-
     position: relative;
-    padding-right: 3rem; /* Buton için yer */
+    padding-right: 3rem;
   }
 
-  /* YENİ: Başlık Sütunu (İlk sütun) Özel Ayarı */
   td:first-child {
-    white-space: nowrap; /* Metni tek satıra zorla (Evrim Ağacı yan yana) */
-    padding-right: 1rem; /* Buton olmadığı için sağ boşluğu normale döndür */
+    white-space: nowrap;
+    padding-right: 1rem;
   }
 
-  /* Son sütundaki dikey çizgiyi kaldır */
   th:last-child,
   td:last-child {
     border-inline-end: none;
   }
 
-  /* Son satırın alt çizgisini kaldır */
   tr:last-child td {
     border-bottom: none;
   }
 
   td code {
-    white-space: pre-wrap; // Default: content wraps, respects newlines
-    word-break: break-word; // Break long words if they cannot fit
+    white-space: pre-wrap;
+    word-break: break-word;
     overflow-wrap: break-word;
     background-color: transparent;
     border: none;
@@ -192,50 +184,153 @@
     font-family: var(--font-family-monospace);
 
     @include mixins.mq-down(md) {
-      white-space: pre; // Respect newlines, force long lines to scroll
-      word-break: break-all; // Break any long words
-      overflow-x: auto; // Allow internal scrolling for code blocks
-      display: block; // Ensures overflow works correctly
-      max-width: 100%; // Ensure it doesn't push parent td too wide
+      white-space: pre;
+      word-break: break-all;
+      overflow-x: auto;
+      display: block;
+      max-width: 100%;
     }
   }
 
-  /* Code blocks */
+  /* =========================================
+     CODE BLOCKS & SHIKI
+     ========================================= */
+
+  /* 1. Code Block Container (Window/Filename Style) */
+  figure.code-block {
+    // Basic Layout
+    margin: 2rem 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-bg-offset);
+    overflow: hidden;
+    text-align: left;
+
+    /* Mobile Bleed (Full width on mobile) */
+    .post & {
+      margin: 2rem calc(50% - 50vw);
+      width: 100vw;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+
+    // Desktop Reset
+    @media screen and (min-width: 1040px) {
+      .post & {
+        margin-left: 0;
+        margin-right: 0;
+        width: auto;
+        border-radius: var(--border-radius-md);
+        border: 1px solid var(--color-border);
+      }
+    }
+
+    /* The Header (Filename) */
+    figcaption.code-header {
+      padding: 0.5rem 1rem;
+      font-family: var(--font-family-monospace);
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: var(--color-text-offset);
+      background-color: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-style: normal;
+    }
+
+    /* The Code Block inside the figure */
+    pre.shiki {
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+
+      // Override mobile bleed logic for inner pre since figure handles it
+      .post & {
+        margin: 0 !important;
+        width: auto !important;
+      }
+    }
+  }
+
+  /* 2. Standard Code Block */
+  pre.shiki,
   pre[class*="language-"] {
     display: block;
-    font-size: 1rem;
-    padding: 2rem 1.5rem;
+    font-family: var(--font-family-monospace);
+    font-size: var(--font-size-xs);
+    line-height: 1;
+    padding: var(--space-sm);
     overflow-x: auto;
+    border-radius: var(--border-radius-md);
+    margin: 2rem 0;
+
+    /* --- Mobile Bleed Logic --- */
+    .post & {
+      margin: 2rem calc(50% - 50vw);
+      width: 100vw; // Ensure full viewport width
+      border-radius: 0; // Square edges on mobile
+      border-left: none;
+      border-right: none;
+    }
 
     .note & {
       border-radius: 0.5rem;
     }
 
-    > code {
-      display: block;
-    }
-
+    /* --- Desktop Overrides --- */
     @include mixins.mq(lg) {
       padding: 2rem 3rem;
     }
+
+    /* Break out of container on large screens if desired, or reset to contained */
     @media screen and (min-width: 1040px) {
       .post & {
+        // Option A: Contained
+        margin-left: 0;
+        margin-right: 0;
+        width: auto;
+        border: 1px solid var(--color-border);
         border-radius: var(--border-radius-md);
+
+        // Option B: Extended (as per your snippet)
+        // margin-left: -180px;
+        // margin-right: -180px;
       }
+    }
+
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: 4px;
+    }
+
+    > code {
+      display: block;
+      // Optional: limit width inside the full-bleed container if text gets too long
+      // @include mixins.container-narrow;
     }
   }
 
-  /* Inline code */
+  /* 3. Inline Code */
   :not(pre) > code {
     display: inline-block;
     font-family: var(--font-family-monospace);
+    font-size: 0.85em; // 75% was too small in your snippet, adjusted to 0.85em to match blocks
+    padding: 0.2em 0.4em; // 2px 4px
+    margin: 0 2px;
+    border-radius: var(--border-radius-sm);
     background-color: var(--color-bg-offset);
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    padding: 2px 4px;
-    font-size: 75%;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    color: var(--color-text);
+    white-space: nowrap;
   }
 
   /* iframe container */

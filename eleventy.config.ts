@@ -2,7 +2,6 @@
 import { eleventyImageTransformPlugin as pluginImageTransform, } from "@11ty/eleventy-img";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import pluginRss from "@11ty/eleventy-plugin-rss";
-import pluginSyntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import path from "node:path";
 
 import pluginSVGSprite from "eleventy-plugin-svg-sprite";
@@ -11,7 +10,6 @@ import pluginPageAssets from "./plugins/page-assets/index.ts";
 import type { UserConfig, } from "@11ty/eleventy";
 import filters from "./utils/filters.ts";
 import markdown from "./utils/markdown.ts";
-import registerAlistral from "./utils/prism-alistral.ts";
 import {
   asyncShortcodes,
   pairedShortcodes,
@@ -32,11 +30,6 @@ export default function(config: UserConfig,) {
   // Plugins
   config.addPlugin(pluginRss,);
   config.addPlugin(pluginNavigation,);
-  config.addPlugin(pluginSyntaxHighlight, {
-    init: function({ Prism, }: { Prism: any; },) {
-      registerAlistral(Prism,);
-    },
-  },);
 
   // Add support for .ts data files
   config.addDataExtension("ts", {
