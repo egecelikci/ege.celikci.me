@@ -17,11 +17,10 @@ automatically fetched from my public
 
 <div class="album">
   {% for album in music.albums | shuffle %}
+    {# --- Build Artist Name String --- #}
     {% set artistNames = "" %}
     {% for ac in album["artist-credit"] %}
-      {% if not loop.first %}{% set artistNames = artistNames + " · " %}{%
-        endif
-      %}
+      {% if not loop.first %}{% set artistNames = artistNames + " · " %}{% endif %}
       {% set artistNames = artistNames + ac.name %}
     {% endfor %}
 
@@ -31,18 +30,22 @@ automatically fetched from my public
       title="{{ album.title }} by {{ artistNames }}"
     >
       <div class="album__cover">
-          <img
-            class="album__cover__color"
-            src="/assets/images/covers/colored/{{ album.id }}.png"
-            alt=""
-            width="290"
-            height="290"
-            eleventy:ignore
-          />
+        <img
+          class="album__cover__color"
+          src="/assets/images/covers/colored/{{ album.id }}.png"
+          alt="{{ album.title }} by {{ artistNames }}"
+          aria-hidden="true"
+          decoding="async"
+          loading="lazy"
+          width="290"
+          height="290"
+          eleventy:ignore
+        />
         <img
           class="album__cover__mono"
           src="/assets/images/covers/monochrome/{{ album.id }}.png"
           alt="{{ album.title }} by {{ artistNames }}"
+          decoding="async"
           loading="lazy"
           width="290"
           height="290"
@@ -54,11 +57,34 @@ automatically fetched from my public
         <span class="album__title">{{ album.title }}</span>
         <span class="album__artist">{{ artistNames }}</span>
         <span class="album__year" style="opacity: 0.5">
-          ({{
-            album["first-release-date"] | dateFromISO | readableDate("yyyy")
-          }})
+          ({{ album["first-release-date"] | dateFromISO | readableDate("yyyy") }})
         </span>
       </div>
     </a>
   {% endfor %}
 </div>
+
+{# Optional: Keep your JSON-LD script here #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": [
+    {% for album in music.albums %}
+    {
+      "@type": "ListItem",
+      "position": {{ loop.index }},
+      "item": {
+        "@type": "MusicAlbum",
+        "name": "{{ album.title | replace('"', '\\"') }}",
+        "byArtist": {
+          "@type": "MusicGroup",
+          "name": "{{ album['artist-credit'][0].name | replace('"', '\\"') }}"
+        },
+        "image": "{{ site.url }}/assets/images/covers/colored/{{ album.id }}.png"
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>

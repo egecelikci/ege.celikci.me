@@ -1,11 +1,15 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@kellnerd/musicbrainz@~0.4.2": "0.4.2",
     "jsr:@std/assert@1": "1.0.16",
+    "jsr:@std/async@1": "1.0.14",
     "jsr:@std/fs@1": "1.0.20",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@1": "1.1.3",
     "jsr:@std/path@^1.1.3": "1.1.3",
+    "jsr:@std/uuid@1": "1.0.9",
+    "npm:@11ty/eleventy-fetch@*": "5.1.1",
     "npm:@11ty/eleventy-fetch@^5.1.0": "5.1.1",
     "npm:@11ty/eleventy-img@^6.0.4": "6.0.4",
     "npm:@11ty/eleventy-navigation@^1.0.4": "1.0.5",
@@ -37,11 +41,22 @@
     "npm:workbox-cli@^7.3.0": "7.4.0"
   },
   "jsr": {
+    "@kellnerd/musicbrainz@0.4.2": {
+      "integrity": "fcec822cfe6e4871ca1915fd31facb96dd1e767802c14fab1d81fc5913bc4576",
+      "dependencies": [
+        "jsr:@std/assert",
+        "jsr:@std/async",
+        "jsr:@std/uuid"
+      ]
+    },
     "@std/assert@1.0.16": {
       "integrity": "6a7272ed1eaa77defe76e5ff63ca705d9c495077e2d5fd0126d2b53fc5bd6532",
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/async@1.0.14": {
+      "integrity": "62e954a418652c704d37563a3e54a37d4cf0268a9dcaeac1660cc652880b5326"
     },
     "@std/fs@1.0.20": {
       "integrity": "e953206aae48d46ee65e8783ded459f23bec7dd1f3879512911c35e5484ea187",
@@ -58,6 +73,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/uuid@1.0.9": {
+      "integrity": "44b627bf2d372fe1bd099e2ad41b2be41a777fc94e62a3151006895a037f1642"
     }
   },
   "npm": {
@@ -5670,8 +5688,26 @@
       ]
     }
   },
+  "redirects": {
+    "https://esm.sh/@jsr/std__assert@^1.0.0-rc.3/assert?target=denonext": "https://esm.sh/jsr/@std/assert@1.0.16/assert?target=denonext",
+    "https://esm.sh/@jsr/std__async@^1.0.0-rc.3/delay?target=denonext": "https://esm.sh/jsr/@std/async@1.0.15/delay?target=denonext",
+    "https://esm.sh/@jsr/std__uuid@^1.0.0/v4?target=denonext": "https://esm.sh/jsr/@std/uuid@1.0.9/v4?target=denonext",
+    "https://esm.sh/jsr/@kellnerd/listenbrainz": "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2"
+  },
+  "remote": {
+    "https://esm.sh/@jsr/kellnerd__listenbrainz@0.9.2/denonext/kellnerd__listenbrainz.mjs": "81de4dbda4b0e69e9f8d8ecfe70b04c6c87d5fb1effe8565b7c2a60441a30b8d",
+    "https://esm.sh/@jsr/std__assert@1.0.16/denonext/assert.mjs": "cfdb5ceda82c3ab39fbb4b3e588dc1afe174f43683d09d1bfd7df487e714ab72",
+    "https://esm.sh/@jsr/std__assert@1.0.16/denonext/assertion-error.mjs": "2afd90361061577d92fa7c4217048b1a9411d6ce3c658358cca58da16c79d54c",
+    "https://esm.sh/@jsr/std__async@1.0.15/denonext/delay.mjs": "b45cc540d056d05c48cce05ef8daddcaa3bd6af56844ba9fd05507913d592118",
+    "https://esm.sh/@jsr/std__uuid@1.0.9/denonext/v4.mjs": "d2ae72f6388dd69d39709e3b8985c6154b2da429af16595b4cc1d6c4af2eb1d7",
+    "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2": "b88b1c1a3c07f15fc5c1ab188f5988e42d687240498d7c3d508a205b659ed465",
+    "https://esm.sh/jsr/@std/assert@1.0.16/assert?target=denonext": "dddc2bb4b0d2436df2ffd415fa32454b90b54e74c23be9ecbb6abe58597720a5",
+    "https://esm.sh/jsr/@std/async@1.0.15/delay?target=denonext": "16190ac2c424f1d3da8cbe499b25356dbb883a936c5ff2d2614302926e7f7b6a",
+    "https://esm.sh/jsr/@std/uuid@1.0.9/v4?target=denonext": "73efa6e6a96eea26ce350cc231c02c7002b63a649052feed05c0d0c89665e464"
+  },
   "workspace": {
     "dependencies": [
+      "jsr:@kellnerd/musicbrainz@~0.4.2",
       "jsr:@std/assert@1",
       "jsr:@std/fs@1",
       "jsr:@std/path@1",
