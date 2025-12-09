@@ -2,10 +2,7 @@ import Fetch from "@11ty/eleventy-fetch";
 import { MusicBrainzClient, } from "@kellnerd/musicbrainz";
 import fs from "node:fs/promises";
 import path from "node:path";
-import {
-  ditherWithSharp,
-  saveColorVersion,
-} from "../../utils/images.ts";
+import { ditherWithSharp, saveColorVersion, } from "../../utils/images.ts";
 
 interface Review {
   entity_id: string;

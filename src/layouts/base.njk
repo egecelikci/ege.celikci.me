@@ -50,7 +50,7 @@
       {% viteLinkStylesheetTags %}
     {% endif %}
     {% include "meta.njk" %}
-    <script>{% include "initialtheme.njk" %}</script>
+    {% themeCSS %}
     {# Analytics #}
     {% if not build.dev and build.umamiScript and build.umamiId %}
     <script
