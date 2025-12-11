@@ -15,15 +15,16 @@
 // partials with global scope
 //--------------------
 
+@use "base/animation";
+@use "base/focus";
 @use "base/fonts";
+@use "base/layout";
 @use "base/normalize";
 @use "base/reboot";
-@use "base/layout";
-@use "base/typography";
-@use "base/focus";
-@use "base/utilities";
 @use "base/screenreader";
-@use "base/animation";
+@use "base/theme";
+@use "base/typography";
+@use "base/utilities";
 
 //--------------------
 // COMPONENTS
