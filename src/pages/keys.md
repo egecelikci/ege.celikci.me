@@ -59,5 +59,5 @@ https://codeberg.org/egecelikci/ege.celikci.me/src/branch/main/src/pages/keys.md
   - `9ovMRDnfeY` (Element X Android)
 
 - **[@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})**
-  - `BELUFVYWSL` (Element Web)
+  - `KKLUWQTZWA` (Element Web)
   - `XLSNVDORMQ` (Element X Android)
