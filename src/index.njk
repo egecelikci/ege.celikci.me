@@ -43,6 +43,17 @@ permalink: /
     </a>
   </li>
   <li hidden>
+    {% icon "codeberg" %}<a
+      href="https://codeberg.org/{{ author.username }}"
+      rel="me"
+    >Codeberg</a>
+  <li hidden>
+    {% icon "gitlab" %}<a
+      href="https://gitlab.com/{{ author.username }}"
+      rel="me"
+    >GitLab</a>
+  </li>
+  <li hidden>
     {% icon "github" %}<a
       href="https://github.com/{{ author.username }}"
       rel="me"
