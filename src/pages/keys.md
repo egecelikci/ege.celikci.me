@@ -12,7 +12,7 @@ I don’t use PGP, but you might want to check [age-encryption](https://age-encr
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
 - [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
-- [meta.sr.ht/~~{{ author.username }}.keys](https://meta.sr.ht/~~{{ author.username }}.keys)
+- [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
 
 ### authentication
 
@@ -48,7 +48,9 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF2XufuZr7u5/Yj4/qbkOBr7pbM3kCYQ6rlIKCPST5q3
 SHA256:jxjLBvJOoot2eFpcwjjD8uyolNQjWwWEJhKzrmN95ew
 ```
 
-For the HTML page, you can [clone the site source](https://github.com/{{ author.username }}/{{ site.host }}) and verify the commit history for the [`{{ page.inputPath }}`](https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}) file.
+For the HTML page, you can [clone the site source](https://codeberg.org/{{ author.username }}/{{ site.host }}) and verify the commit history for the [`{{ page.inputPath }}`](https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/{{ page.inputPath }}) file.
+
+https://codeberg.org/egecelikci/ege.celikci.me/src/branch/main/src/pages/keys.md
 
 ## Matrix
 

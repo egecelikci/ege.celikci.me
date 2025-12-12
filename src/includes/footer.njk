@@ -8,7 +8,7 @@
       ·
       {% if build.git %}
         <a
-          href="https://github.com/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+          href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
         >{{ build.git | slice(0, 7) }}</a>
       {% endif %}
     </p>
@@ -27,12 +27,12 @@
     </p>
     <p class="footer__item footer__item--right">
       <a
-        href="https://github.com/{{ author.username }}/{{ site.host }}/tree/main/{{ page.inputPath }}"
+        href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/{{ page.inputPath }}"
         class="footer__icon"
-        title="Edit this page on GitHub"
+        title="Edit this page on Codeberg"
       >
-        <span class="sr-only">Edit this page on GitHub</span>
-        {% icon "github" %}
+        <span class="sr-only">Edit this page on Codeberg</span>
+        {% icon "codeberg" %}
       </a>
       <a href="{{ "/feed.atom" | url }}" class="footer__icon" title="RSS Feed">
         <span class="sr-only">RSS Feed</span>
