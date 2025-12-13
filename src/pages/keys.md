@@ -12,7 +12,7 @@ I don’t use PGP, but you might want to check [age-encryption](https://age-encr
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
 - [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
-- [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
+- [meta.sr.ht/~~{{ author.username }}.keys](https://meta.sr.ht/~~{{ author.username }}.keys)
 
 ### authentication
 
@@ -50,8 +50,6 @@ SHA256:jxjLBvJOoot2eFpcwjjD8uyolNQjWwWEJhKzrmN95ew
 
 For the HTML page, you can [clone the site source](https://codeberg.org/{{ author.username }}/{{ site.host }}) and verify the commit history for the [`{{ page.inputPath }}`](https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/{{ page.inputPath }}) file.
 
-https://codeberg.org/egecelikci/ege.celikci.me/src/branch/main/src/pages/keys.md
-
 ## Matrix
 
 - **[@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})**
@@ -59,5 +57,5 @@ https://codeberg.org/egecelikci/ege.celikci.me/src/branch/main/src/pages/keys.md
   - `9ovMRDnfeY` (Element X Android)
 
 - **[@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})**
-  - `KKLUWQTZWA` (Element Web)
+  - `WCFDQFTKJM` (Element Web)
   - `XLSNVDORMQ` (Element X Android)
