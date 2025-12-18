@@ -1,0 +1,19 @@
+---
+layout: layouts/minimal.vto
+title: blog
+description: "blog posts."
+url: /blog/
+menu:
+  visible: true
+  order: 4
+---
+
+<ol class="w-full list-none p-0">
+  {{ for post of search.pages("type=post", "date=desc") }}
+    <li
+      class="border-b border-border py-6 transition-colors duration-200 ease-in-out last:border-b-0 h-entry"
+    >
+      {{ comp.post({ post: post }) }}
+    </li>
+  {{ /for }}
+</ol>

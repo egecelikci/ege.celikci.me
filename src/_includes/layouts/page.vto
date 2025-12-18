@@ -1,0 +1,20 @@
+---
+layout: layouts/base.vto
+---
+
+<article>
+  <header class="container pt-8 pb-2">
+    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
+      {{ title }}
+    </h1>
+    {{ if subtitle }}
+      <p class="text-xl text-text-muted">
+        {{ subtitle |> safe }}
+      </p>
+    {{ /if }}
+  </header>
+
+  <div class="markdown container pb-8">
+    {{ content |> safe }}
+  </div>
+</article>

@@ -1,0 +1,43 @@
+<nav class="relative max-w-full" role="navigation">
+  <ul
+    class="
+      /* Mobile: Horizontal Scroll */
+      flex flex-row overflow-x-auto items-center gap-5
+      scrollbar-hide
+      
+      /* Desktop: Standard Row */
+      lg:gap-6 lg:overflow-visible
+    "
+  >
+    {{ for entry of search.pages("menu.visible=true", "menu.order") }}
+      {{ set isCurrent = entry.url == url }}
+      {{ set isParent = entry.url != "/" && url.includes(entry.url) }}
+      {{ set isActive = isCurrent || isParent }}
+
+      <li class="flex-shrink-0">
+        <a
+          class="
+            relative inline-block uppercase font-semibold tracking-wider no-underline transition-colors duration-200
+            text-xs py-2
+            whitespace-nowrap
+            
+            {{ isActive ? 'text-primary' : 'text-text' }}
+            hover:text-text-muted focus-visible:text-text-muted
+            
+            /* Desktop Underline Animation */
+            lg:text-sm lg:py-1
+            lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-0
+            lg:after:w-full lg:after:h-[2px] lg:after:bg-current
+            lg:after:transition-transform lg:after:duration-300 lg:after:ease-out
+            {{ isActive ? 'lg:after:scale-x-100 lg:after:bg-primary' : 'lg:after:scale-x-0 lg:after:origin-right' }}
+            lg:hover:after:scale-x-100 lg:hover:after:origin-left
+          "
+          href="{{ isCurrent ? '#main' : entry.url }}"
+          {{ if isCurrent }}aria-current="page"{{ /if }}
+        >
+          {{ entry.menu.title || entry.title }}
+        </a>
+      </li>
+    {{ /for }}
+  </ul>
+</nav>

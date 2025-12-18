@@ -3,8 +3,8 @@
     publish = "dist"
 
 [dev]
-    command = "deno task start"
-    targetPort = 8080
+    command = "deno task serve"
+    targetPort = 3000
     port = 8888
     framework = "#custom"
 

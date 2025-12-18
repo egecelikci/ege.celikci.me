@@ -1,21 +1,31 @@
 ---
-layout: page
+layout: layouts/page.vto
 title: "feeds"
 description: "a list of all Atom feeds available on this website."
-permalink: /feeds/
+url: /feeds/
+templateEngine: [vto, md]
 ---
+
+## combined feed
+
+<ul>
+<li>{{ comp.icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/feed.xml"><code>{{ site.url }}/feed.xml</code></a></li>
+<li>{{ comp.icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/feed.json"><code>{{ site.url }}/feed.json</code></a></li>
+</ul>
 
 ## [blog entries](/blog)
 
-```
-{{ site.url }}/feed.atom
-```
+<ul>
+<li>{{ comp.icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/blog.xml"><code>{{ site.url }}/blog.xml</code></a></li>
+<li>{{ comp.icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/blog.json"><code>{{ site.url }}/blog.json</code></a></li>
+</ul>
 
-## [notes](/changelog)
+## [notes](/notes)
 
-```
-{{ site.url }}/notes/feed.atom
-```
+<ul>
+<li>{{ comp.icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/notes.xml"><code>{{ site.url }}/notes.xml</code></a></li>
+<li>{{ comp.icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/notes.json"><code>{{ site.url }}/blog.json</code></a></li>
+</ul>
 
 ## [changelog entries](/changelog)
 

@@ -1,18 +1,35 @@
-import { JSDOM, } from "jsdom";
-import { memoize, random, } from "lodash-es";
-import { DateTime, } from "luxon";
-import path from "node:path";
-import sanitizeHTML from "sanitize-html";
-import { extractNoteGridData, } from "./noteGridDataExtractor.ts";
+import {
+  DOMParser,
+  Element,
+  Node,
+} from "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts";
+import * as path from "jsr:@std/path";
+import { random, } from "npm:lodash-es@4.17.21";
+import { DateTime, } from "npm:luxon@3.4.4";
+import sanitizeHTML from "npm:sanitize-html@2.12.1";
+
+export interface NoteGridData {
+  hasImage: boolean;
+  src?: string | null;
+  srcset?: string | null;
+  alt?: string | null;
+  caption?: string;
+  title?: string;
+  hasMultipleImages?: boolean;
+}
 
 const TIMEZONE = "Europe/Istanbul";
 
-const getNoteGridData = memoize(extractNoteGridData,);
-
 // Helper interfaces
 interface Post {
-  inputPath: string;
-  [key: string]: unknown; // Changed from any
+  data: {
+    url?: string;
+    [key: string]: unknown;
+  };
+  src: {
+    path: string;
+  };
+  [key: string]: unknown;
 }
 
 interface Webmention {
@@ -31,23 +48,12 @@ interface Webmention {
   "wm-target"?: string;
   "wm-property"?: string;
   "wm-source"?: string;
-  [key: string]: unknown; // Changed from any
+  [key: string]: unknown;
 }
 
-export default {
+export const filters = {
   dirname: function(filePath: string,): string {
     return path.dirname(filePath,);
-  },
-
-  getNoteGridData,
-
-  readableDate: function(date: Date, format?: string,): string {
-    // default to Europe/Vienna Timezone
-    const dt = DateTime.fromJSDate(date, { zone: TIMEZONE, },);
-    if (!format) {
-      format = dt.hour + dt.minute > 0 ? "dd LLL yyyy - HH:mm" : "dd LLL yyyy";
-    }
-    return dt.toFormat(format,);
   },
 
   dateToFormat: function(date: Date, format: string,): string {
@@ -73,6 +79,38 @@ export default {
     }
     return num;
   },
+  extractImages: (content: string,) => {
+    if (!content) return [];
+
+    const imgRegex = /<img[^>]+src="([^">]+)"[^>]*(?:alt="([^">]*)")?[^>]*>/gi;
+    const images = [];
+    let match;
+
+    while ((match = imgRegex.exec(content,)) !== null) {
+      images.push({
+        src: match[1],
+        alt: match[2] || "",
+      },);
+    }
+
+    return images;
+  },
+
+  // Get first image from content (for cover)
+  getCoverImage: (content: string,) => {
+    const images = filters.extractImages(content,);
+    return images.length > 0 ? images[0] : null;
+  },
+
+  // Check if content has images
+  hasImages: (content: string,) => {
+    return filters.extractImages(content,).length > 0;
+  },
+
+  // Count images in content
+  imageCount: (content: string,) => {
+    return filters.extractImages(content,).length;
+  },
 
   obfuscate: function(str: string,): string {
     const chars: string[] = [];
@@ -86,17 +124,17 @@ export default {
     return end ? array.slice(start, end,) : array.slice(start,);
   },
 
-  stringify: function(json: unknown,): string { // Changed from any
+  stringify: function(json: unknown,): string {
     return JSON.stringify(json,);
   },
 
   excludePost: function(allPosts: Post[], currentPost: Post,): Post[] {
-    return allPosts.filter((post,) => post.inputPath !== currentPost.inputPath);
+    return allPosts.filter((post,) => post.src.path !== currentPost.src.path);
   },
 
   currentPage: function(allPages: Post[], currentPage: Post,): Post | null {
     const matches = allPages.filter(
-      (page,) => page.inputPath === currentPage.inputPath,
+      (page,) => page.src.path === currentPage.src.path,
     );
     if (matches && matches.length) {
       return matches[0];
@@ -111,61 +149,85 @@ export default {
 
     const maxLength = customLength || 500;
 
-    // Create a virtual DOM from the content
-    const dom = new JSDOM(content,);
-    const document = dom.window.document;
-    const body = document.body;
+    // Use deno-dom instead of JSDOM
+    const doc = new DOMParser().parseFromString(content, "text/html",);
+    if (!doc) return "";
+
+    // 1. Try to find the specific content container first
+    // This avoids indexing site navigation, headers, footers, etc.
+    let root: Node = doc.body;
+    const contentContainer = doc.querySelector(".e-content",)
+      || doc.querySelector(".note__content",);
+    if (contentContainer) {
+      root = contentContainer;
+    }
 
     let charsCount = 0;
     let truncated = false;
-    const resultFragment = document.createDocumentFragment();
+
+    // We create a temporary body to hold our result
+    const resultWrapper = doc.createElement("div",);
+
+    // List of tags to strictly ignore (content and all)
+    const ignoredTags = new Set([
+      "SCRIPT",
+      "STYLE",
+      "SVG",
+      "NAV",
+      "HEADER",
+      "FOOTER",
+      "METADATA",
+    ],);
 
     function processNode(node: Node, targetParent: Node,) {
       if (truncated) return;
 
-      if (node.nodeType === document.TEXT_NODE) {
+      // SKIP ignored tags
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const tagName = (node as Element).tagName?.toUpperCase();
+        if (tagName && ignoredTags.has(tagName,)) return;
+      }
+
+      if (node.nodeType === Node.TEXT_NODE) {
         const text = node.textContent || "";
+        // Collapse whitespace to single space to avoid layout weirdness
+        const cleanText = text.replace(/\s+/g, " ",);
+        if (!cleanText.trim()) return; // Skip empty whitespace nodes
+
         const remainingLength = maxLength - charsCount;
 
-        if (text.length <= remainingLength) {
-          targetParent.appendChild(node.cloneNode(true,),);
-          charsCount += text.length;
+        if (cleanText.length <= remainingLength) {
+          // We clone the node but with clean text?
+          // Deno DOM might not support setting textContent easily on cloned node in this context,
+          // so we create a new text node.
+          targetParent.appendChild(doc!.createTextNode(cleanText,),);
+          charsCount += cleanText.length;
         } else {
           // Truncate text node and mark as truncated
-          const truncatedText = text.substring(0, remainingLength,);
-          targetParent.appendChild(
-            document.createTextNode(truncatedText + "…",),
-          );
+          const truncatedText = cleanText.substring(0, remainingLength,);
+          targetParent.appendChild(doc!.createTextNode(truncatedText + "…",),);
           truncated = true;
         }
-      } else if (node.nodeType === document.ELEMENT_NODE) {
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
         // Clone element (without children initially)
-        const clonedElement = node.cloneNode(false,);
+        const clonedElement = (node as Element).cloneNode(false,);
         targetParent.appendChild(clonedElement,);
 
         // Recursively process children
-        for (const child of Array.from(node.childNodes,)) { // Added Array.from
-          processNode(child as Node, clonedElement,);
-          if (truncated) break; // Stop if truncation occurred within children
+        for (const child of Array.from(node.childNodes,)) {
+          processNode(child, clonedElement,);
+          if (truncated) break;
         }
       }
     }
 
-    // Process top-level nodes of the body
-    for (const node of Array.from(body.childNodes,)) { // Added Array.from
+    // Process top-level nodes of the chosen root
+    for (const node of Array.from(root.childNodes,)) {
       if (truncated) break;
-      processNode(node as Node, resultFragment,);
+      processNode(node, resultWrapper,);
     }
 
-    // If the original content's text content is already <= maxLength, return original.
-    if ((body.textContent || "").length <= maxLength) {
-      return content;
-    }
-
-    // Serialize the fragment back to HTML using a temporary container
-    const tempContainer = document.createElement("div",);
-    tempContainer.appendChild(resultFragment,);
-    return tempContainer.innerHTML;
+    return resultWrapper.innerHTML;
   },
 
   randomItem: function<T,>(arr: T[],): T {
@@ -174,7 +236,7 @@ export default {
 
   shuffle: function<T,>(arr: T[] | null | undefined,): T[] {
     if (!arr) return [];
-    const newArr = [...arr,]; // Clone to avoid mutating original
+    const newArr = [...arr,];
     let m = newArr.length,
       t,
       i;
@@ -189,9 +251,9 @@ export default {
     return newArr;
   },
 
-  findById: function<T extends { id: unknown; },>( // Changed any
+  findById: function<T extends { id: unknown; },>(
     array: T[],
-    id: unknown, // Changed any
+    id: unknown,
   ): T | undefined {
     return array.find((i,) => i.id === id);
   },
@@ -219,7 +281,6 @@ export default {
     const authorUrl = webmention && webmention.author
       ? webmention.author.url
       : undefined;
-    // check if a given URL is part of this site.
     return !!(authorUrl && urls.includes(authorUrl,));
   },
 
@@ -228,6 +289,10 @@ export default {
     url: string,
   ): Webmention[] {
     if (!webmentions) return [];
+    const siteUrl = "https://ege.celikci.me";
+    const absoluteUrl = url.startsWith("http",) ? url : siteUrl + url;
+    const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
+    const targetUrl = cleanUrl(absoluteUrl,);
     const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of",];
     const allowedHTML = {
       allowedTags: ["b", "i", "em", "strong", "a",],
@@ -250,7 +315,6 @@ export default {
         const { html, text, } = entry.content;
 
         if (html) {
-          // really long html mentions, usually newsletters or compilations
           if (html.length > 2000) {
             entry.content.value = `mentioned this in <a href="${
               entry["wm-source"]
@@ -269,12 +333,15 @@ export default {
     };
 
     return webmentions
-      .filter((entry,) => entry["wm-target"] === url)
+      .filter((entry,) => cleanUrl(entry["wm-target"] || "",) === targetUrl)
       .filter((entry,) => allowedTypes.includes(entry["wm-property"] || "",))
       .filter(checkRequiredFields,)
-      .sort(orderByDate,)
-      .map(clean,);
+      // .sort(orderByDate) // TypeScript hatası alırsanız bunu map'ten sonraya alabilirsiniz veya tip tanımlarını düzeltin
+      .map(clean,)
+      .sort(orderByDate,);
   },
+
+  // src/utils/filters.ts
 
   webmentionCountByType: function(
     webmentions: Webmention[] | undefined,
@@ -282,7 +349,17 @@ export default {
     ...types: string[]
   ): string {
     if (!webmentions) return "0";
-    const isUrlMatch = (entry: Webmention,) => entry["wm-target"] === url;
+
+    // --- URL Normalizasyonu (Burası eklendi) ---
+    const siteUrl = "https://ege.celikci.me";
+    const absoluteUrl = url.startsWith("http",) ? url : siteUrl + url;
+    const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
+    const targetUrl = cleanUrl(absoluteUrl,);
+    // -------------------------------------------
+
+    // Eşleşme kontrolü artık normalize edilmiş URL ile yapılıyor
+    const isUrlMatch = (entry: Webmention,) =>
+      cleanUrl(entry["wm-target"] || "",) === targetUrl;
 
     return String(
       webmentions

@@ -20,11 +20,7 @@
     "**/dist",
     "**/.git",
     "**/_site",
-    "**/src/_headers.njk",
-    "**/src/blogroll.xml.njk",
-    "**/src/robots.njk",
-    "**/src/site.webmanifest.njk",
-    "**/src/sitemap.njk"
+    "**/src/_headers.njk"
   ],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.93.0.wasm",

@@ -20,450 +20,255 @@ interface Webmention {
   };
 }
 
-/**
- * WebmentionManager
- * Handles fetching, processing, rendering, and animating webmentions.
- */
-class WebmentionManager {
+export default class WebmentionManager {
   container: HTMLElement;
-  apiOrigin: string;
-  ownDomains: string[];
-  processedIds: Set<number>;
-  isExpanded: boolean;
-  statsLikes: HTMLElement | null;
-  statsReposts: HTMLElement | null;
+  url: string;
+  lastFetched: string;
+  feedUrl: string;
 
   constructor(container: HTMLElement,) {
     this.container = container;
-    this.apiOrigin = "/api/webmention";
-    this.ownDomains = ["https://ege.celikci.me", "https://ieji.de/@eg",];
-
-    // State
-    this.processedIds = new Set();
-    this.isExpanded = false;
-
-    // Cache selectors
-    this.statsLikes = document.querySelector(".note__stats__item--likes",);
-    this.statsReposts = document.querySelector(".note__stats__item--reposts",);
-
-    this.init();
+    this.url = container.dataset.url || window.location.href;
+    this.lastFetched = container.dataset.lastFetched || "";
+    // Adjust this to your actual production feed URL or proxy
+    this.feedUrl =
+      `https://webmention.io/api/mentions.jf2?target=${this.url}&per-page=100`;
   }
 
   init() {
-    this.harvestExistingIds();
-
-    this.container.addEventListener(
-      "error",
-      (e,) => this.handleImageError(e,),
-      true,
-    );
-
-    this.container.addEventListener(
-      "load",
-      (e,) => this.handleImageLoad(e,),
-      true,
-    );
-
-    this.setupInteractions();
     this.fetchData();
   }
 
-  harvestExistingIds() {
-    this.container.querySelectorAll("[id^=\"webmention-\"]",).forEach((el,) => {
-      const id = el.id.replace("webmention-", "",);
-      if (id) this.processedIds.add(Number(id,),);
-    },);
-  }
-
-  handleImageError(e: Event,) {
-    const target = e.target as HTMLImageElement;
-    if (
-      target.tagName === "IMG"
-      && (target.classList.contains("webmention__author__photo",)
-        || target.closest(".webmentions__face-item",))
-    ) {
-      const size = target.getAttribute("width",) || "32";
-      const svgHtml = this.createDefaultSvgAvatar(size,);
-
-      const tempDiv = document.createElement("div",);
-      tempDiv.innerHTML = svgHtml;
-      const svgElement = tempDiv.firstElementChild;
-
-      if (svgElement) {
-        svgElement.classList.add("avatar-initial-hide",);
-        target.replaceWith(svgElement,);
-        gsap.to(svgElement, {
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        },);
-      }
-    }
-  }
-
-  handleImageLoad(e: Event,) {
-    const target = e.target as HTMLElement;
-    if (
-      target.tagName === "IMG"
-      && target.classList.contains("avatar-initial-hide",)
-    ) {
-      target.classList.remove("avatar-initial-hide",);
-      gsap.to(target, { opacity: 1, duration: 0.3, ease: "power2.out", },);
-    }
-  }
-
-  setupInteractions() {
-    this.bindShowAllButton(this.container,);
-  }
-
-  bindShowAllButton(scope: Element,) {
-    const showAllBtn = scope.querySelector(
-      ".webmentions__showall",
-    ) as HTMLElement;
-    const contentDiv = scope.querySelector(
-      ".webmentions__content",
-    ) as HTMLElement;
-
-    if (showAllBtn && contentDiv) {
-      showAllBtn.addEventListener("click", (e,) => {
-        e.preventDefault();
-        this.container.classList.remove("webmentions--truncated",);
-        this.container.classList.add("webmentions--expanded",);
-        this.isExpanded = true;
-
-        contentDiv.style.display = "block";
-        showAllBtn.style.display = "none";
-
-        gsap.fromTo(
-          contentDiv.querySelectorAll(".webmentions__item",),
-          { opacity: 0, y: 20, },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.05,
-            clearProps: "all",
-          },
-        );
-      },);
-    }
-  }
-
   async fetchData() {
-    const path = window.location.pathname;
-    const url = `${this.apiOrigin}?path=${
-      encodeURIComponent(
-        path,
-      )
-    }`;
-
     try {
-      const res = await fetch(url,);
-      if (!res.ok) throw new Error(`Server responded with ${res.status}`,);
+      const res = await fetch(this.feedUrl,);
+      if (!res.ok) throw new Error("Failed to fetch webmentions",);
       const data = await res.json();
-      this.processUpdates(data,);
-    } catch (err) {
-      console.warn("Webmentions fetch failed:", err,);
+
+      if (data && data.children && data.children.length > 0) {
+        this.processUpdates(data.children,);
+      }
+    } catch (e) {
+      console.error("Webmention error:", e,);
     }
   }
 
   processUpdates(webmentions: Webmention[],) {
-    if (!webmentions || !webmentions.length) return;
+    // Filter out existing mentions to avoid duplicates
+    const existingIds = new Set(
+      Array.from(this.container.querySelectorAll("[id^='webmention-']",),)
+        .map(el => Number(el.id.replace("webmention-", "",),)),
+    );
 
-    const comments: Webmention[] = [];
-    const interactions: Webmention[] = [];
-    let likeCount = 0;
-    let repostCount = 0;
+    const newMentions = webmentions.filter(wm =>
+      !existingIds.has(wm["wm-id"],)
+    );
+    if (newMentions.length === 0) return;
 
-    webmentions.forEach((item,) => {
-      const type = item["wm-property"];
-      if (type === "like-of") {
-        likeCount++;
-        interactions.push(item,);
-      } else if (type === "repost-of") {
-        repostCount++;
-        interactions.push(item,);
-      } else {
-        comments.push(item,);
-      }
-    },);
+    // Separate interactions (likes/reposts) from comments
+    const interactions = newMentions.filter(
+      wm =>
+        wm["wm-property"] === "like-of" || wm["wm-property"] === "repost-of",
+    );
+    const comments = newMentions.filter(
+      wm =>
+        wm["wm-property"] !== "like-of" && wm["wm-property"] !== "repost-of",
+    );
 
-    if (this.statsLikes) this.updateStatCounter(this.statsLikes, likeCount,);
-    if (this.statsReposts) {
-      this.updateStatCounter(this.statsReposts, repostCount,);
+    if (interactions.length > 0) {
+      this.renderFacepile(interactions,);
     }
 
-    this.renderFacepile(interactions,);
-    this.renderComments(comments,);
+    if (comments.length > 0) {
+      this.renderComments(comments,);
+    }
   }
 
-  updateStatCounter(el: HTMLElement, newCount: number,) {
-    const textNode = Array.from(el.childNodes,).find(
-      (n,) =>
-        n.nodeType === Node.TEXT_NODE
-        && (n.textContent?.trim().length || 0) > 0,
-    );
-    if (!textNode) return;
-
-    const currentCount = parseInt(textNode.textContent?.trim() || "0", 10,)
-      || 0;
-    if (newCount <= currentCount) return;
-
-    const counter = { val: currentCount, };
-    gsap.to(counter, {
-      val: newCount,
-      duration: 1.5,
-      ease: "power4.out",
-      roundProps: "val",
-      onUpdate: () => {
-        textNode.textContent = String(counter.val,);
-      },
-    },);
-
-    gsap.fromTo(
-      el,
-      { scale: 1, },
-      {
-        scale: 1.2,
-        duration: 0.2,
-        yoyo: true,
-        repeat: 1,
-        ease: "power1.inOut",
-      },
-    );
-  }
-
+  /**
+   * Renders Likes and Reposts as overlapping avatars (Facepile)
+   * Matches logic in src/_components/webmentions.vto
+   */
   renderFacepile(interactions: Webmention[],) {
-    if (!interactions.length) return;
+    // Check if we already have a facepile container
+    let facepileContainer = this.container.querySelector(".js-facepile",);
 
-    const facepileContainer = this.container.querySelector(
-      ".webmentions__facepile",
-    );
+    if (!facepileContainer) {
+      const wrapper = document.createElement("div",);
+      wrapper.className =
+        "mb-8 pb-4 border-b border-border js-facepile-wrapper";
+      wrapper.innerHTML =
+        `<div class="flex flex-wrap items-center mt-4 pl-1 js-facepile"></div>`;
+
+      // Insert before comments list or at top
+      const root = this.container.querySelector("[data-render-root]",);
+      if (root) {
+        root.prepend(wrapper,);
+        facepileContainer = wrapper.querySelector(".js-facepile",);
+      }
+    }
+
     if (!facepileContainer) return;
 
-    const avatarSizeSm = "32";
-    const html = interactions
-      .map((item, index,) => {
-        const { author, url, "wm-property": type, } = item;
-        const label = `${author.name} ${
-          type === "like-of" ? "liked" : "reposted"
-        }`;
+    // Append new faces
+    interactions.forEach((mention, index,) => {
+      // Basic z-index handling (simple decrement strategy or stacking)
+      const zIndex = 50 - index;
 
-        let avatarInner;
-        if (author.photo) {
-          avatarInner =
-            `<img src="${author.photo}" alt="${author.name}" width="64" height="64" loading="lazy" class="avatar-initial-hide">`;
-        } else {
-          avatarInner = `<span class="avatar-initial-hide">${
-            this.createDefaultSvgAvatar(
-              avatarSizeSm,
-            )
-          }</span>`;
-        }
-
-        let actionIconSvg = "";
-        if (type === "like-of") actionIconSvg = this.createIcon("heart",);
-        else if (type === "repost-of") {
-          actionIconSvg = this.createIcon("repeat",);
-        }
-
-        const zIndex = interactions.length - index;
-
-        return `
-            <a class="webmentions__face-item" href="${
-          url || author.url
-        }" target="_blank" rel="noopener noreferrer" title="${label}" style="z-index: ${zIndex}">
-                ${avatarInner}
-                ${
-          actionIconSvg
-            ? `<span class="webmentions__face-action-icon">${actionIconSvg}</span>`
-            : ""
-        }
-            </a>
-        `;
-      },)
-      .join("",);
-
-    if (facepileContainer.innerHTML !== html) {
-      facepileContainer.innerHTML = html;
-
-      const items = facepileContainer.querySelectorAll(
-        ".webmentions__face-item",
-      );
-      gsap.fromTo(
-        items,
-        { scale: 0, opacity: 0, },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          stagger: 0.05,
-          ease: "back.out(1.7)",
-          clearProps: "scale,opacity,transform",
-        },
-      );
-    }
-  }
-
-  renderComments(comments: any[],) {
-    if (!comments.length) return;
-
-    const existingCommentIds = new Set(
-      Array.from(this.container.querySelectorAll("[id^=\"webmention-\"]",),)
-        .map(
-          (el,) => Number(el.id.replace("webmention-", "",),),
-        ),
-    );
-
-    const newItems = comments.filter(
-      (c,) => !existingCommentIds.has(c["wm-id"],),
-    );
-
-    const listHtml = (items: Webmention[],) =>
-      `<ol class="webmentions__list">${
-        items
-          .map((i,) => this.createWebmentionHTML(i,))
-          .join("",)
-      }</ol>`;
-    const previewItems = comments.slice(0, 5,);
-    const restItems = comments.slice(5,);
-    const isTruncated = restItems.length > 0;
-
-    const commentsHtml = `
-      <div class="webmentions__preview">
-        ${listHtml(previewItems,)}
-      </div>
-      ${
-      isTruncated
-        ? `
-        <div>
-          <a class="webmentions__showall" href="#webmentions" style="${
-          this.isExpanded ? "display: none;" : ""
-        }">
-            ${this.createIcon("message",)}
-            Show All Webmentions (${comments.length})
-          </a>
-          <div class="webmentions__content" style="${
-          this.isExpanded ? "display: block;" : "display: none;"
-        }">
-            ${listHtml(restItems,)}
-          </div>
-        </div>
-      `
-        : ""
-    }
-    `;
-
-    const root = this.container.querySelector("[data-render-root]",);
-    if (!root) return;
-
-    const existingCommentsWrapper = root.querySelector(
-      ".webmentions__preview, .webmentions__content-wrapper, .webmentions__empty",
-    );
-    if (existingCommentsWrapper) {
-      existingCommentsWrapper.remove();
-    }
-
-    root.insertAdjacentHTML("beforeend", commentsHtml,);
-
-    this.bindShowAllButton(root,);
-
-    newItems.forEach((item,) => {
-      const el = document.getElementById(`webmention-${item["wm-id"]}`,);
-      if (el) {
-        el.classList.add("avatar-initial-hide",);
-        gsap.to(el, { opacity: 1, y: 0, duration: 0.5, clearProps: "all", },);
-        this.processedIds.add(item["wm-id"],);
-      }
-    },);
-
-    this.processedIds.clear();
-    comments.forEach((c,) => this.processedIds.add(c["wm-id"],));
-  }
-
-  createWebmentionHTML(item: Webmention,) {
-    const {
-      "wm-id": id,
-      url,
-      author,
-      published,
-      "wm-received": received,
-      content,
-      "wm-property": type,
-    } = item;
-    const isOwn = this.ownDomains.includes(author?.url,);
-    const displayDate = this.readableDate(published || received || "",);
-    const contentHtml = content?.value || "";
-
-    const avatarSizeLg = "48";
-
-    let avatarHtml;
-    if (author?.photo) {
-      avatarHtml =
-        `<img src="${author.photo}" alt="${author.name}" width="64" height="64" loading="lazy" class="avatar-initial-hide webmention__author__photo u-photo">`;
-    } else {
-      avatarHtml = `
-        <span class="avatar-initial-hide">
-          <svg class="webmention__author__photo" role="img" aria-hidden="true" width="${avatarSizeLg}" height="${avatarSizeLg}">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/icons.sprite.svg#svg-avatar"></use>
-          </svg>
-        </span>
+      const link = document.createElement("a",);
+      link.className = `
+        group/face peer relative block w-8 h-8 rounded-full -ml-2 first:ml-0
+        bg-surface shadow-[0_0_0_2px_var(--color-bg)] 
+        overflow-visible transition-all duration-200 ease-default
+        hover:z-50 hover:scale-135 hover:-translate-y-1 hover:shadow-lg
+        focus-visible:z-50 focus-visible:scale-135 focus-visible:-translate-y-1
+        peer-hover:translate-x-3 peer-focus-visible:translate-x-3
+        opacity-0 scale-90
       `;
+      link.href = mention.author.url || "#";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.title = mention.author.name;
+      link.style.zIndex = zIndex.toString();
+      link.id = `webmention-${mention["wm-id"]}`;
+
+      // Avatar
+      const imgHtml = mention.author.photo
+        ? `<img src="${mention.author.photo}" alt="${mention.author.name}" width="64" height="64" loading="lazy" class="block w-full h-full rounded-full object-cover" />`
+        : `<span class="flex w-full h-full items-center justify-center text-xs">${
+          this.createIcon("user", "lucide",)
+        }</span>`;
+
+      // Icon Badge (Heart/Repost)
+      let iconName = "";
+      if (mention["wm-property"] === "like-of") iconName = "heart";
+      if (mention["wm-property"] === "repost-of") iconName = "repeat-2";
+
+      const badgeHtml = iconName
+        ? `<span class="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-3.5 h-3.5 bg-bg rounded-full shadow-[0_0_0_2px_var(--color-bg)] text-primary z-20 transition-transform duration-200 group-hover/face:scale-110">
+            ${this.createIcon(iconName, "lucide", "w-2.5 h-2.5",)}
+           </span>`
+        : "";
+
+      link.innerHTML = imgHtml + badgeHtml;
+      facepileContainer!.appendChild(link,);
+
+      // Animation
+      gsap.to(link, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.3,
+        delay: index * 0.05,
+      },);
+    },);
+  }
+
+  /**
+   * Renders replies/mentions as a list
+   * Matches logic in src/_components/webmention.vto
+   */
+  renderComments(comments: Webmention[],) {
+    let list = this.container.querySelector("ol.list-none",);
+
+    // Create list if it doesn't exist
+    if (!list) {
+      const wrapper = document.createElement("div",);
+      wrapper.className = "relative";
+      wrapper.innerHTML = `<ol class="list-none p-0 m-0"></ol>`;
+
+      const root = this.container.querySelector("[data-render-root]",);
+      if (root) root.appendChild(wrapper,);
+      list = wrapper.querySelector("ol",);
     }
 
-    const authorHtml = author
-      ? `<a class="webmentions__author h-card u-url" href="${url}" target="_blank" rel="ugc nofollow">
-          ${avatarHtml}
-          <strong class="p-name">${author.name}</strong>
-        </a>`
-      : `<span class="webmentions__author">
-          ${avatarHtml}
-          <strong>Anonymous</strong>
-        </span>`;
+    if (!list) return;
+
+    comments.forEach((mention,) => {
+      const li = document.createElement("li",);
+      li.className = "mb-0 opacity-0 translate-y-2";
+      li.innerHTML = this.createWebmentionHTML(mention,);
+      list!.appendChild(li,);
+
+      // Animate in
+      gsap.to(li, { opacity: 1, y: 0, duration: 0.4, },);
+    },);
+  }
+
+  createWebmentionHTML(mention: Webmention,): string {
+    const isOwn = false;
+    const dateStr = mention.published
+      ? DateTime.fromISO(mention.published,).toFormat("dd LLL yyyy",)
+      : "";
+
+    const content = mention.content?.html || mention.content?.text || "";
 
     return `
-      <li class="webmentions__item" id="webmention-${id}">
-        <div class="webmention ${
-      isOwn ? "webmention--own" : ""
-    } webmention--${type}">
-          <div class="webmention__meta">
-            ${authorHtml}
-            <span class="webmention__meta__divider" aria-hidden="true">&sdot;</span>
-            <time class="webmention__pubdate dt-published" datetime="${displayDate}">
-              ${displayDate}
-            </time>
-          </div>
-          <div class="webmention__content p-content">
-            ${contentHtml}
-          </div>
+      <div
+        class="
+          relative flex flex-col py-4 pr-0 
+          pl-[calc(3rem+0.75rem)] 
+          border-b border-border 
+          transition-colors duration-150 ease-default 
+          last:border-b-0
+          ${isOwn ? "bg-surface rounded-md mb-4 border-b-0 pr-4" : ""}
+        "
+        id="webmention-${mention["wm-id"]}"
+      >
+        <div class="order-[-1] mb-2 flex flex-wrap items-center text-sm leading-[1.4]">
+          <a
+            class="group flex items-center font-semibold text-text no-underline hover:text-primary hover:underline h-card u-url"
+            href="${mention.author.url}"
+            target="_blank"
+            rel="ugc nofollow"
+          >
+            <span class="absolute top-4 left-0 h-12 w-12 rounded-full overflow-hidden bg-surface shadow-[0_0_0_1px_var(--color-border)] flex items-center justify-center u-photo">
+              ${
+      mention.author.photo
+        ? `<img class="h-full w-full object-cover" src="${mention.author.photo}" alt="${mention.author.name}" width="48" height="48" loading="lazy" />`
+        : this.createIcon("user", "lucide",)
+    }
+            </span>
+            <strong class="p-name">${mention.author.name}</strong>
+          </a>
+
+          <span class="inline-block px-1 text-text-muted" aria-hidden="true">&sdot;</span>
+          <time class="text-text-muted text-xs dt-published" datetime="${mention.published}">
+            ${dateStr}
+          </time>
         </div>
-      </li>
+
+        <div class="markdown text-base leading-relaxed p-content break-words overflow-hidden w-full">
+          ${content}
+        </div>
+      </div>
     `;
   }
 
-  createIcon(name: string,) {
-    return `
-      <svg class="icon icon--${name}" role="img" aria-hidden="true">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/icons.sprite.svg#svg-${name}"></use>
-      </svg>
-    `;
-  }
+  createIcon(
+    name: string,
+    type: "lucide" | "simpleicons" = "lucide",
+    classes = "",
+  ): string {
+    // Basic inline SVG map or fetching logic.
+    // Since we are client-side, we might not have access to the full 'comp.icon' helper.
+    // For now, providing minimal SVG paths for critical icons used above.
 
-  createDefaultSvgAvatar(size: string,) {
-    return `
-      <svg class="webmention__avatar-fallback" role="img" aria-hidden="true" width="${size}" height="${size}" style="width:100%; height:100%; display:block; color: #888; background: #eee;">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/icons.sprite.svg#svg-avatar"></use>
-      </svg>
-    `;
-  }
+    if (name === "heart") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart ${classes}"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+    }
+    if (name === "repeat-2") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-repeat-2 ${classes}"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/></svg>`;
+    }
+    if (name === "user") {
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user ${classes}"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+    }
 
-  readableDate(iso: string,) {
-    if (!iso) return "";
-    return DateTime.fromISO(iso,).toFormat("dd LLL yyyy",);
+    return "";
   }
 }
 
-const webmentionsElement = document.getElementById("webmentions",);
-if (webmentionsElement) {
-  new WebmentionManager(webmentionsElement,);
+// Auto-init logic
+const container = document.querySelector("#webmentions",);
+if (container) {
+  const manager = new WebmentionManager(container as HTMLElement,);
+  manager.init();
 }
