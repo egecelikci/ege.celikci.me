@@ -1,4 +1,3 @@
-{{# src/_components/webmentions.vto #}}
 {{ set allMentions = webmentions ? webmentions.children : [] }}
 {{ set mentions = allMentions |> webmentionsByUrl(url) }}
 
@@ -8,9 +7,7 @@
   data-url="{{ url }}"
   data-last-fetched="{{ webmentions ? webmentions.lastFetched : '' }}"
 >
-  <div data-render-root>
-    
-    {{# --- INTERACTIONS (FACEPILE) --- #}}
+  <div>
     {{ set hasInteractions = false }}
     {{ for mention of mentions }}
       {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
@@ -19,8 +16,8 @@
     {{ /for }}
 
     {{ if hasInteractions }}
-      <div class="mb-8 pb-4 border-b border-border">
-        <div class="flex flex-wrap items-center mt-4 pl-1">
+      <div class="mb-8 pb-4 border-b border-border js-facepile-wrapper">
+        <div class="flex flex-wrap items-center mt-4 pl-1 js-facepile">
           {{ set zIndex = mentions.length }}
           
           {{ for mention of mentions }}
@@ -38,6 +35,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 title="{{ mention.author.name }}"
+                id="webmention-{{ mention['wm-id'] }}"
                 style="z-index: {{ zIndex }}"
               >
                 {{ if mention.author.photo }}
