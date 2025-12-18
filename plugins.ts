@@ -40,9 +40,8 @@ import {
   transformerFilename,
 } from "./src/_includes/alistral-shiki.ts";
 import lightboxWrapper from "./src/_plugins/lightbox_wrapper.ts";
-// Note: If you need the Nunjucks grammar from the previous step, import it here too.
 
-// --- Configuration Interfaces ---
+import siteData from "./src/_data/site.ts";
 
 export interface Options {
   feed?: Partial<FeedOptions>;
@@ -171,7 +170,7 @@ export default function(userOptions?: Options,) {
         output: ["blog.xml", "blog.json",],
         query: "type=post",
         info: {
-          title: "blog | =metas.site",
+          title: `blog | ${siteData.host}`,
           description: "=metas.description",
         },
         items: {
@@ -183,7 +182,7 @@ export default function(userOptions?: Options,) {
         output: ["notes.xml", "notes.json",],
         query: "type=note",
         info: {
-          title: "notes | =metas.site",
+          title: `notes | ${siteData.host}`,
           description: "notes | =metas.site",
         },
         items: {
@@ -192,7 +191,7 @@ export default function(userOptions?: Options,) {
       },),)
       .use(feed({
         output: ["feed.xml", "feed.json",],
-        query: "type=post|note  ",
+        query: "type=post|note",
         info: {
           title: "=metas.site",
           description: "=metas.description",
