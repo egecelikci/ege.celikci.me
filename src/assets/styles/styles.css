@@ -1,0 +1,326 @@
+@import url("./vendor/photoswipe.css");
+@import "tailwindcss";
+
+@layer base {
+  @font-face {
+    font-family: "Josefin Sans";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src:
+      url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
+      url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
+  }
+
+  :root {
+    color-scheme: light;
+    --color-bg: #fef6e4;
+    --color-bg-offset: #f3e1d8;
+    --color-text: #172c66;
+    --color-text-offset: #006e8a;
+    --color-border: #f3d2c1;
+    --color-primary: #a60c49;
+    --color-primary-offset: #ff3d6a;
+    --color-secondary: #65cafe;
+    --color-mastodon: #595aff;
+
+    --status-loading: #ffa500;
+    --status-error: #ff0000;
+    --status-active: #22c55e;
+    --status-inactive: #ffa500;
+
+    --container-max: 1440px;
+    --container-narrow: 65ch;
+  }
+
+  :root.theme-dark {
+    color-scheme: dark;
+    --color-bg: #463366;
+    --color-bg-offset: #5c3c4c;
+    --color-text: #c9bae2;
+    --color-text-offset: #b8c1ec;
+    --color-border: #cabae2;
+    --color-primary: #ff6e6c;
+    --color-primary-offset: #72a194;
+    --color-secondary: #abd1c6;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.theme-light) {
+      color-scheme: dark;
+      --color-bg: #463366;
+      --color-bg-offset: #5c3c4c;
+      --color-text: #c9bae2;
+      --color-text-offset: #b8c1ec;
+      --color-border: #cabae2;
+      --color-primary: #ff6e6c;
+      --color-primary-offset: #72a194;
+      --color-secondary: #abd1c6;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@theme {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-bg-offset);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-offset);
+  --color-border: var(--color-border);
+  --color-primary: var(--color-primary);
+  --color-primary-offset: var(--color-primary-offset);
+  --color-secondary: var(--color-secondary);
+  --color-mastodon: var(--color-mastodon);
+
+  --color-status-loading: var(--status-loading);
+  --color-status-error: var(--status-error);
+  --color-status-active: var(--status-active);
+  --color-status-inactive: var(--status-inactive);
+
+  --spacing-container-max: var(--container-max);
+  --spacing-container-narrow: var(--container-narrow);
+
+  --font-sans: "Josefin Sans", system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-display: var(--font-sans);
+
+  --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
+  --shadow-elevated:
+    0 10px 15px hsl(0 0% 0% / 0.1),
+    0 4px 6px hsl(0 0% 0% / 0.05);
+}
+
+@layer components {
+  .markdown {
+    @apply max-w-none text-base leading-relaxed text-text;
+
+    & > * {
+      @apply mb-8;
+    }
+    & > :first-child {
+      margin-top: 0;
+    } /* Keep your top margin fix */
+
+    :where(h1, h2, h3, h4) {
+      @apply relative font-display font-bold leading-[1.2] text-text;
+    }
+    h1 {
+      @apply text-4xl lg:text-5xl mb-6;
+    }
+    h2 {
+      @apply text-3xl lg:text-4xl mt-12 mb-4;
+    }
+    h3 {
+      @apply text-2xl lg:text-3xl mt-10 mb-3;
+    }
+    h4 {
+      @apply text-xl lg:text-2xl mt-8 mb-2;
+    }
+
+    .heading-anchor {
+      @apply hidden absolute top-0 -left-[1.25em] w-[1em] opacity-0
+        transition-opacity duration-200;
+      @media (min-width: 768px) {
+        display: block;
+      }
+    }
+    :where(h1, h2, h3, h4):hover .heading-anchor,
+    :where(h1, h2, h3, h4):focus-visible .heading-anchor {
+      @apply opacity-100;
+    }
+
+    ul {
+      @apply list-disc pl-4 list-outside;
+    }
+    ol {
+      @apply list-decimal pl-4 list-outside;
+    }
+    li:not(:last-child) {
+      @apply mb-1;
+    }
+    blockquote {
+      @apply italic text-xl md:text-2xl font-serif my-8 pl-8 border-l-[3px];
+    }
+    hr {
+      @apply w-60 h-px mx-auto my-16 border-0 bg-border;
+    }
+    mark {
+      @apply text-text bg-border;
+    }
+
+    :where(p, ul, ol, li, blockquote, figcaption, .table-wrapper) a:not(.btn) {
+      @apply relative z-20 transition-all duration-200 border-b border-current
+        no-underline break-words hyphens-auto text-text;
+      box-shadow: inset 0 -2px 0 0 currentColor;
+      &:hover {
+        @apply text-white border-primary outline-none;
+        box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
+        code {
+          @apply bg-primary border-primary text-white;
+        }
+      }
+    }
+
+    img, video {
+      @apply block h-auto mx-auto italic text-center text-text-muted;
+    }
+    figure {
+      @apply max-w-none mx-auto my-8 text-center;
+      img {
+        @apply mb-0;
+      }
+    }
+    figcaption {
+      @apply pt-3 italic text-base;
+    }
+    :not(pre) > code {
+      @apply inline-block font-mono text-sm px-[0.4em] py-[0.2em] rounded-sm
+        bg-surface border border-border text-text whitespace-pre-wrap
+        break-words;
+    }
+    .table-wrapper {
+      @apply w-full overflow-x-auto my-8 border border-border rounded-sm;
+    }
+    table {
+      @apply w-full border-collapse text-sm;
+    }
+    th, td {
+      @apply p-3 text-left align-top border-b border-r border-border
+        last:border-r-0 relative;
+    }
+    td:first-child {
+      @apply whitespace-nowrap;
+    }
+    tr:last-child td {
+      @apply border-b-0;
+    }
+    td code {
+      @apply whitespace-pre-wrap break-words bg-transparent border-none p-0
+        text-xs font-mono;
+      @media (max-width: 768px) {
+        @apply whitespace-pre block max-w-full overflow-x-auto;
+      }
+    }
+
+    /* CODE BLOCKS REVISED */
+    figure.code-block {
+      @apply my-8 block w-full max-w-full rounded-md border border-border
+        bg-surface text-left;
+      overflow: hidden;
+      figcaption.code-header {
+        @apply flex items-center justify-start border-b border-border bg-bg px-4
+          py-2 font-mono text-xs font-bold text-text-muted not-italic;
+      }
+      pre.shiki {
+        @apply m-0 border-0 rounded-none w-full max-w-full;
+      }
+    }
+
+    pre.shiki, pre[class*="language-"] {
+      /* Removed 'bg-surface' so it uses Shiki's own background color */
+      @apply block font-mono text-xs leading-relaxed p-4 my-8;
+
+      overflow-x: auto;
+      max-width: 100%;
+      white-space: pre;
+
+      @apply rounded-md border border-border;
+
+      @media (min-width: 992px) {
+        @apply p-6 text-sm;
+      }
+      &::-webkit-scrollbar {
+        height: 8px;
+      }
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--color-border);
+        border-radius: 4px;
+      }
+    }
+
+    .embed {
+      @apply h-0 relative;
+      &--16-9 {
+        padding-bottom: 56.25% !important;
+      }
+      &--4-3 {
+        padding-bottom: 75% !important;
+      }
+      video, iframe {
+        @apply absolute top-0 left-0 w-full h-full z-10;
+      }
+    }
+  }
+
+  /* ... (PhotoSwipe classes) ... */
+  .pswp {
+    --pswp-bg: var(--color-bg);
+    --pswp-placeholder-bg: var(--color-bg-offset);
+    --pswp-top-bar-bg: rgba(0, 0, 0, 0.4);
+    --pswp-icon-color: #ffffff;
+    --pswp-icon-color-secondary: var(--color-text-offset);
+    --pswp-icon-stroke-color: #ffffff;
+    --pswp-icon-stroke-width: 1.5px;
+  }
+  .pswp__custom-caption {
+    @apply absolute bottom-0 left-0 w-full text-center box-border
+      pointer-events-none;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      transparent 100%
+    );
+    color: #ffffff;
+    font-size: calc(var(--text-base) * 0.9);
+    line-height: 1.5;
+    padding: 2rem 2rem 2.5rem;
+    transition: opacity 0.25s var(--ease-default);
+    &--empty {
+      @apply opacity-0 p-0;
+    }
+    a {
+      color: #d1d5db;
+      text-decoration: underline;
+      &:hover {
+        color: #ffffff;
+      }
+    }
+    @media (min-width: 768px) {
+      font-size: var(--text-base);
+      padding: 2rem 4rem 3rem;
+    }
+  }
+}
+
+@keyframes status-breathe {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes status-panic {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}

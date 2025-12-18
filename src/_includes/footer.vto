@@ -1,0 +1,51 @@
+<footer class="text-sm py-16 border-t border-border" role="contentinfo">
+  <div class="container flex flex-wrap items-center md:flex-nowrap">
+    <p
+      class="basis-1/2 mb-2 md:basis-auto md:flex-none md:m-0 md:pr-10 lg:pr-16"
+    >
+      <strong>&copy; {{ build.timestamp |> date("yyyy") }}</strong><br />
+      <a
+        class="p-name u-url text-text underline hover:no-underline transition-colors"
+        rel="me"
+        href="{{ site.url }}"
+      >
+        {{ author.name }}
+      </a>
+      ·
+      {{ if build.git }}
+        <a
+          href="https://github.com/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+          class="text-text underline hover:no-underline transition-colors"
+        >
+          {{ build.git.substring(0, 7) }}
+        </a>
+      {{ /if }}
+    </p>
+
+    <p
+      class="basis-full mb-0 flex items-center gap-4 md:basis-auto md:ml-auto md:pr-0 md:justify-end"
+    >
+      <a
+        href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
+        class="inline-block text-text hover:text-primary transition-colors"
+        title="Edit this page on Codeberg"
+      >
+        <span class="sr-only">Edit this page on Codeberg</span>
+        {{
+          comp.icon({
+            name: "codeberg",
+            type: "simpleicons",
+            classes: "fill-current",
+          })
+        }}
+      </a>
+      <a
+        href="{{ '/feeds' |> url }}"
+        class="inline-block text-text hover:text-primary transition-colors"
+        title="RSS Feed"
+      >
+        {{ comp.icon({ name: "rss", type: "lucide" }) }}
+      </a>
+    </p>
+  </div>
+</footer>

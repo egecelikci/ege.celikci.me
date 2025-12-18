@@ -1,0 +1,183 @@
+---
+layout: layouts/page.vto
+title: home
+menu:
+  visible: true
+  order: 1
+url: /
+templateEngine: [vto, md]
+---
+
+## links
+
+<ul class="list-none pl-0">
+  <li class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "music",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="https://listenbrainz.org/user/{{ author.username }}"
+    >ListenBrainz</a>
+  </li>
+  <li class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "gamepad",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="https://steamcommunity.com/id/{{ author.username }}"
+    >Steam</a>
+  </li>
+  <li class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "message-circle-dashed",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="{{ author.social.signal.url |> decodeBase64 }}"
+    >Signal</a>
+  </li>
+  <li class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "mail",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="mailto:{{ author.email |> obfuscate |> safe }}"
+    >Email</a>
+  </li>
+  <li class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "messages-square",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}"
+      rel="me"
+    >Matrix</a>
+    <a
+      href="keys#matrix"
+      title="view Matrix encryption keys"
+      aria-label="view Matrix encryption keys"
+      class="flex items-center ml-1 text-text-muted transition-colors duration-200 border-0 shadow-none hover:bg-transparent hover:text-primary"
+    >
+      <span class="sr-only">view Matrix encryption keys</span>
+      {{
+        comp.icon({
+          name: "key",
+          type: "lucide",
+          classes: "text-lg",
+        })
+      }}</a>
+  </li>
+  <li hidden class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "github",
+        type: "lucide",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="https://github.com/{{ author.username }}"
+      rel="me"
+    >GitHub</a>
+  </li>
+  <li hidden class="flex items-center mb-1">
+    {{
+      comp.icon({
+        name: "mastodon",
+        type: "simpleicons",
+        classes:
+          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
+      })
+    }}<a
+      href="{{ author.social.mastodon.url }}"
+      rel="me"
+    >Mastodon</a>
+  </li>
+</ul>
+
+## status
+
+<ul class="link-list--status font-mono list-none pl-0">
+  <li
+    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
+  >
+    {{
+      comp.icon({
+        name: "headphones",
+        type: "lucide",
+        classes:
+          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-[var(--color-status-loading,#ffa500)] group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-[var(--color-status-error,#ff0000)] group-[.is-active]:text-[var(--color-status-active,#22c55e)] group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-[var(--color-status-inactive,#ffa500)] group-[.is-inactive]:opacity-80 group-[.is-changing]:text-[var(--color-status-loading,#ffa500)] group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
+      })
+    }}<div
+      class="overflow-hidden grow"
+      id="music-status-container"
+    >
+      <span
+        class="inline-block will-change-transform"
+        data-chars="×"
+        data-status=""
+      >××××××××××××××××××××××××××××××</span>
+    </div>
+  </li>
+  <li
+    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
+  >
+    {{
+      comp.icon({
+        name: "gamepad-2",
+        type: "lucide",
+        classes:
+          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-[var(--color-status-loading,#ffa500)] group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-[var(--color-status-error,#ff0000)] group-[.is-active]:text-[var(--color-status-active,#22c55e)] group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-[var(--color-status-inactive,#ffa500)] group-[.is-inactive]:opacity-80 group-[.is-changing]:text-[var(--color-status-loading,#ffa500)] group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
+      })
+    }}<div
+      class="overflow-hidden grow"
+      id="game-status-container"
+    >
+      <span
+        class="inline-block will-change-transform"
+        data-chars="×"
+        data-status=""
+      >××××××××××××××××××××××××××××××</span>
+    </div>
+  </li>
+  <li
+    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
+  >
+    {{
+      comp.icon({
+        name: "book",
+        type: "lucide",
+        classes:
+          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-[var(--color-status-loading,#ffa500)] group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-[var(--color-status-error,#ff0000)] group-[.is-active]:text-[var(--color-status-active,#22c55e)] group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-[var(--color-status-inactive,#ffa500)] group-[.is-inactive]:opacity-80 group-[.is-changing]:text-[var(--color-status-loading,#ffa500)] group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
+      })
+    }}<div
+      class="overflow-hidden grow"
+      id="manga-status-container"
+    >
+      <span
+        class="inline-block will-change-transform"
+        data-chars="×"
+        data-status=""
+      >××××××××××××××××××××××××××××××</span>
+    </div>
+  </li>
+</ul>

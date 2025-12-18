@@ -1,0 +1,40 @@
+{{
+  set iconMap = {
+    action: "badge-check",
+    warning: "badge-alert",
+    plus: "badge-plus",
+    minus: "badge-minus",
+    percent: "badge-percent",
+    info: "badge-info",
+  }
+}}
+
+{{ set iconName = iconMap[type] || "info" }}
+{{ set calloutType = type || "info" }}
+
+{{ set borderColor = "border-text" }}
+{{ set iconColor = "text-text" }}
+
+{{ set leftBorderColor = "border-l-text" }}
+{{ set iconColor = "text-text" }}
+
+{{ if type == "warning" || type == "action" }}
+  {{ set leftBorderColor = "border-l-primary" }}
+  {{ set iconColor = "text-primary" }}
+{{ else if type == "info" }}
+  {{ set leftBorderColor = "border-l-secondary" }}
+  {{ set iconColor = "text-secondary" }}
+{{ /if }}
+
+<div
+  class="flex flex-row items-start gap-md p-md my-lg bg-bg-offset border border-border border-l-4 {{ leftBorderColor }} rounded-md text-left"
+>
+  <span
+    class="shrink-0 inline-flex items-center justify-center mt-[0.15em] {{ iconColor }}"
+  >
+    {{ comp.icon({ name: iconName, type: "lucide", class: "w-6 h-6 block" }) }}
+  </span>
+  <div class="flex-1 min-w-0 space-y-sm">
+    {{ content }}
+  </div>
+</div>

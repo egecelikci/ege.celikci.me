@@ -1,0 +1,62 @@
+---
+layout: layouts/base.vto
+url: /404.html
+---
+
+<div
+  class="container flex flex-col items-center justify-center min-h-[60vh] py-20 text-center"
+>
+  <div
+    class="mb-4 text-[var(--color-text-offset)] opacity-20 animate-[status-breathe_3s_ease-in-out_infinite]"
+  >
+    {{ comp.icon({ name: "ghost", type: "lucide", classes: "w-32 h-32" }) }}
+  </div>
+
+  <h1
+    class="
+      text-[8rem] md:text-[12rem]
+      font-bold leading-none
+      font-display
+      text-[var(--color-primary)]
+      select-none
+      drop-shadow-sm
+    "
+  >
+    404
+  </h1>
+
+  <h2 class="text-2xl md:text-3xl font-bold mt-2 mb-6 text-[var(--color-text)]">
+    page not found
+  </h2>
+
+  <p
+    class="text-[var(--color-text-offset)] max-w-md mx-auto mb-10 text-lg leading-relaxed"
+  >
+    the page you are looking for might have been removed, had its name changed,
+    or is temporarily unavailable.
+  </p>
+
+  <a
+    href="/"
+    class="
+      inline-flex items-center gap-2
+      px-8 py-3
+      rounded-full
+      bg-[var(--color-primary)]
+      text-white
+      font-bold tracking-wide
+      transition-all duration-200
+      hover:scale-105 hover:bg-[var(--color-primary-offset)] hover:shadow-lg
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]
+    "
+  >
+    {{
+      comp.icon({
+        name: "arrow-left",
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+    return home
+  </a>
+</div>
