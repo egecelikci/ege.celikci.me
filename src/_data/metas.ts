@@ -1,5 +1,5 @@
 // src/_data/metas.ts
-import author from "./author.json" with { type: "json" };
+import author from "./author.json" with { type: "json", };
 import site from "./site.ts";
 
 export default {
