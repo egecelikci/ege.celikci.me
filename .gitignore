@@ -1,13 +1,7 @@
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.cache
+_cache
 .DS_Store
 .env
 .netlify
-.vite
 dist
 node_modules
-src/posts/.obsidian
+src/_data/favorite.json

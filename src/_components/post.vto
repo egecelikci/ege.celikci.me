@@ -1,0 +1,29 @@
+<h2 class="text-2xl font-bold mb-2 p-name">
+  <a
+    href="{{ post.url |> url }}"
+    class="no-underline u-url hover:text-primary transition-colors {{ if post.draft }}text-secondary{{ /if }}"
+    rel="bookmark"
+  >
+    {{ post.title }}
+  </a>
+</h2>
+
+<div class="text-text-muted text-sm">
+  <time class="dt-published" datetime="{{ post.date |> date('ATOM') }}">
+    {{ post.date |> date("dd LLL yyyy") }}
+  </time>
+
+  {{ if post.tags?.length }}
+    <span aria-hidden="true">&sdot;</span>
+    <span class="italic p-category">
+      {{ for tag of post.tags }}
+        {{ tag }}
+      {{ /for }}
+    </span>
+  {{ /if }}
+
+  {{ if post.draft }}
+    <span aria-hidden="true">&sdot;</span>
+    <span class="font-bold text-secondary">(draft)</span>
+  {{ /if }}
+</div>

@@ -1,0 +1,150 @@
+---
+layout: layouts/page.vto
+title: "music"
+description: "a collection of favorite music albums."
+url: /music/
+menu:
+  visible: true
+  order: 2
+subtitle: >-
+  favorite music albums, in random order.
+---
+
+automatically fetched from my public
+<a href="https://critiquebrainz.org/user/{{ author.username }}"
+>album ratings</a>.<br /><a href='{{ "/blog/music-page" |> url }}'
+>learn more about this page</a>
+
+<div
+  class="
+    grid
+    grid-cols-2
+    md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]
+    gap-4 md:gap-10
+    py-4
+  "
+>
+  {{ for album of favorite.albums |> shuffle }}
+    {{
+      set artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ")
+    }}
+
+    <a
+      href="https://listenbrainz.org/album/{{ album.id }}"
+      class="
+        album-item
+        group
+        flex flex-col gap-2
+        relative z-1
+        no-underline text-inherit
+        outline-none
+        [-webkit-tap-highlight-color:transparent]
+        
+        transition-colors duration-300
+        
+        /* Added 'focus' and 'group-focus' variants for persistent mobile state */
+        hover:z-50 group-hover:text-[var(--color-primary-offset)]
+        focus:z-50 group-focus:text-[var(--color-primary-offset)]
+        focus-visible:z-50 group-focus-visible:text-[var(--color-primary-offset)]
+        active:z-50 group-active:text-[var(--color-primary-offset)]
+      "
+      title="{{ album.title }} by {{ artistNames }}"
+    >
+      <div
+        class="
+          w-full aspect-square
+          block relative z-10
+          border-[1px] md:border-2 border-[var(--color-border)]
+          bg-transparent
+          
+          transition-all duration-[400ms]
+          ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
+          transform-gpu
+          [backface-visibility:hidden]
+          
+          dark:border-[var(--color-gray-900)]
+          
+          /* Scales and Shadows on Hover/Focus/Active */
+          group-hover:scale-105
+          group-hover:shadow-[4px_4px_0px_var(--color-primary-offset)]
+          md:group-hover:shadow-[8px_8px_0px_var(--color-primary-offset)]
+          
+          group-focus:scale-105
+          group-focus:shadow-[4px_4px_0px_var(--color-primary-offset)]
+          md:group-focus:shadow-[8px_8px_0px_var(--color-primary-offset)]
+          
+          group-focus-visible:scale-105
+          group-focus-visible:shadow-[4px_4px_0px_var(--color-primary-offset)]
+          md:group-focus-visible:shadow-[8px_8px_0px_var(--color-primary-offset)]
+          group-active:scale-105
+          group-active:shadow-[4px_4px_0px_var(--color-primary-offset)]
+          md:group-active:shadow-[8px_8px_0px_var(--color-primary-offset)]
+        "
+      >
+        <img
+          class="
+            absolute top-0 left-0 z-20 w-full h-full object-cover block
+            [backface-visibility:hidden]
+            
+            [clip-path:inset(0_100%_0_0)]
+            
+            /* UPDATED: Increased duration to 700ms for a smoother, less rushed feel */
+            transition-[clip-path] duration-700 ease-[var(--ease-default)]
+            
+            /* Reveal on Hover, Focus (Mobile Tap), or Active */
+            group-hover:[clip-path:inset(0_0%_0_0)]
+            group-focus:[clip-path:inset(0_0%_0_0)]
+            group-focus-visible:[clip-path:inset(0_0%_0_0)]
+            group-active:[clip-path:inset(0_0%_0_0)]
+          "
+          src="/assets/images/covers/colored/{{ album.id }}.png"
+          alt="{{ album.title }} by {{ artistNames }}"
+          aria-hidden="true"
+          decoding="async"
+          loading="lazy"
+          width="290"
+          height="290"
+        />
+
+        <img
+          class="
+            relative z-1 w-full h-full object-cover block
+            [backface-visibility:hidden]
+            dark:invert dark:opacity-90
+          "
+          src="/assets/images/covers/monochrome/{{ album.id }}.png"
+          alt="{{ album.title }} by {{ artistNames }}"
+          decoding="async"
+          loading="lazy"
+          width="290"
+          height="290"
+        />
+      </div>
+
+      <div
+        class="font-mono text-xs md:text-[0.9rem] leading-[1.3] relative z-5"
+      >
+        <span
+          class="
+            block font-bold mb-0.5 md:mb-1
+            decoration-1
+            group-hover:underline
+            group-focus:underline
+            group-focus-visible:underline
+            group-active:underline
+          "
+        >
+          {{ album.title }}
+        </span>
+        <span
+          class="block opacity-80 text-[0.75rem] md:text-[0.85rem] truncate"
+        >
+          {{ artistNames }}
+        </span>
+        <span class="opacity-50 text-[0.75rem] md:text-[0.85rem]">
+          ({{ album["first-release-date"] |> date("yyyy") }})
+        </span>
+      </div>
+    </a>
+  {{ /for }}
+</div>

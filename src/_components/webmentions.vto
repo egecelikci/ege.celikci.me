@@ -1,0 +1,110 @@
+{{# src/_components/webmentions.vto #}}
+{{ set allMentions = webmentions ? webmentions.children : [] }}
+{{ set mentions = allMentions |> webmentionsByUrl(url) }}
+
+<div
+  class="mt-1"
+  id="webmentions"
+  data-url="{{ url }}"
+  data-last-fetched="{{ webmentions ? webmentions.lastFetched : '' }}"
+>
+  <div data-render-root>
+    
+    {{# --- INTERACTIONS (FACEPILE) --- #}}
+    {{ set hasInteractions = false }}
+    {{ for mention of mentions }}
+      {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
+        {{ set hasInteractions = true }}
+      {{ /if }}
+    {{ /for }}
+
+    {{ if hasInteractions }}
+      <div class="mb-8 pb-4 border-b border-border">
+        <div class="flex flex-wrap items-center mt-4 pl-1">
+          {{ set zIndex = mentions.length }}
+          
+          {{ for mention of mentions }}
+            {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
+              <a
+                class="
+                  group/face peer relative block w-8 h-8 rounded-full -ml-2 first:ml-0
+                  bg-surface shadow-[0_0_0_2px_var(--color-bg)] 
+                  overflow-visible transition-all duration-200 ease-default
+                  hover:z-50 hover:scale-135 hover:-translate-y-1 hover:shadow-lg
+                  focus-visible:z-50 focus-visible:scale-135 focus-visible:-translate-y-1
+                  peer-hover:translate-x-3 peer-focus-visible:translate-x-3
+                "
+                href="{{ mention.author.url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="{{ mention.author.name }}"
+                style="z-index: {{ zIndex }}"
+              >
+                {{ if mention.author.photo }}
+                  <img
+                    src="{{ mention.author.photo }}"
+                    alt="{{ mention.author.name }}"
+                    width="64" height="64"
+                    loading="lazy" decoding="async"
+                    class="block w-full h-full rounded-full object-cover"
+                  />
+                {{ else }}
+                  <span class="flex w-full h-full items-center justify-center text-xs">
+                    {{ comp.icon({ name: "user", type: "lucide" }) }}
+                  </span>
+                {{ /if }}
+
+                <span class="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-3.5 h-3.5 bg-bg rounded-full shadow-[0_0_0_2px_var(--color-bg)] text-primary z-20 transition-transform duration-200 group-hover/face:scale-110">
+                  {{ if mention['wm-property'] == 'like-of' }}
+                    {{ comp.icon({ name: "heart", type: "lucide", class: "w-2.5 h-2.5" }) }}
+                  {{ else if mention['wm-property'] == 'repost-of' }}
+                    {{ comp.icon({ name: "repeat-2", type: "lucide", class: "w-2.5 h-2.5" }) }}
+                  {{ /if }}
+                </span>
+              </a>
+            {{ /if }}
+            {{ set zIndex = zIndex - 1 }}
+          {{ /for }}
+        </div>
+      </div>
+    {{ /if }}
+
+    {{# --- COMMENTS LIST --- #}}
+    {{ set comments = mentions.filter(m => m['wm-property'] !== 'like-of' && m['wm-property'] !== 'repost-of') }}
+    {{ set commentCount = comments.length }}
+
+    {{ if commentCount > 0 }}
+      <div class="relative">
+        <ol class="list-none p-0 m-0">
+          {{ for mention of comments.slice(0, 5) }}
+            <li class="mb-0">
+              {{ comp.webmention({ webmention: mention }) }}
+            </li>
+          {{ /for }}
+        </ol>
+      </div>
+
+      {{ if commentCount > 5 }}
+        <details>
+          <summary class="inline-flex items-center mt-4 px-4 py-1.5 font-sans text-sm font-semibold text-primary bg-surface rounded-full transition-all duration-150 ease-default hover:bg-primary hover:text-white hover:-translate-y-px hover:shadow-sm cursor-pointer list-none select-none">
+            {{ "message-circle" |> icon("lucide") }} 
+            <span class="ml-2">Show All Webmentions ({{ commentCount }})</span>
+          </summary>
+
+          <div class="block mt-4">
+            <ol class="list-none p-0 m-0">
+              {{ for mention of comments.slice(5) }}
+                <li class="mb-0">
+                  {{ comp.webmention({ webmention: mention }) }}
+                </li>
+              {{ /for }}
+            </ol>
+          </div>
+        </details>
+      {{ /if }}
+
+    {{ else if !hasInteractions }}
+      <p class="text-text-muted italic py-4">No webmentions yet.</p>
+    {{ /if }}
+  </div>
+</div>

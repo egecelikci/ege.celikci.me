@@ -1,0 +1,43 @@
+{{# Calculate Absolute Page URL #}}
+{{ set absolutePageUrl = url |> url(true) }}
+
+{{# Determine Layout Type #}}
+{{# set isPost = layout === "layouts/post.vto" #}}
+{{# set isNote = layout === "layouts/note.vto" #}}
+
+{{# Auto Description Logic #}}
+{{ set autoDescription = "" }}
+{{ if isPost }}
+  {{# Simple excerpt: Strip HTML tags and take first 200 chars #}}
+  {{ set cleanContent = content |> replace(/<[^>]+>/g, '') }}
+  {{ set autoDescription = cleanContent.substring(0, 200) + "..." }}
+{{ /if }}
+
+{{ if isPost }}
+  <meta property="og:type" content="article" />
+  <meta
+    property="article:published_time"
+    content="{{ date |> date('ATOM') }}"
+  />
+{{ /if }}
+
+{{# General Metadata #}}
+
+<link rel="canonical" href="{{ canonicalUrl || absolutePageUrl }}" />
+
+{{# JSON-LD Schema #}}
+<script type="application/ld+json">
+  {
+    "name": "{{ author.name }}",
+    "description": "{{ site.description }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ author.name }}"
+    },
+    "@type": "WebSite",
+    "url": "{{ site.url }}",
+    "headline": "{{ site.title }}",
+    "sameAs": ["https://github.com/{{ author.username }}"],
+    "@context": "http://schema.org"
+  }
+</script>
