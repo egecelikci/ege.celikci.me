@@ -8,6 +8,8 @@ import { random, } from "npm:lodash-es@4.17.21";
 import { DateTime, } from "npm:luxon@3.4.4";
 import sanitizeHTML from "npm:sanitize-html@2.12.1";
 
+import siteData from "../src/_data/site.ts"
+
 export interface NoteGridData {
   hasImage: boolean;
   src?: string | null;
@@ -277,7 +279,7 @@ export const filters = {
   },
 
   isOwnWebmention: function(webmention: Webmention,): boolean {
-    const urls = ["https://ege.celikci.me",];
+    const urls = [siteData.url,];
     const authorUrl = webmention && webmention.author
       ? webmention.author.url
       : undefined;
@@ -289,8 +291,7 @@ export const filters = {
     url: string,
   ): Webmention[] {
     if (!webmentions) return [];
-    const siteUrl = "https://ege.celikci.me";
-    const absoluteUrl = url.startsWith("http",) ? url : siteUrl + url;
+    const absoluteUrl = url.startsWith("http",) ? url : siteData.url + url;
     const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
     const targetUrl = cleanUrl(absoluteUrl,);
     const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of",];
@@ -350,14 +351,10 @@ export const filters = {
   ): string {
     if (!webmentions) return "0";
 
-    // --- URL Normalizasyonu (Burası eklendi) ---
-    const siteUrl = "https://ege.celikci.me";
-    const absoluteUrl = url.startsWith("http",) ? url : siteUrl + url;
+    const absoluteUrl = url.startsWith("http",) ? url : siteData.url + url;
     const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
     const targetUrl = cleanUrl(absoluteUrl,);
-    // -------------------------------------------
 
-    // Eşleşme kontrolü artık normalize edilmiş URL ile yapılıyor
     const isUrlMatch = (entry: Webmention,) =>
       cleanUrl(entry["wm-target"] || "",) === targetUrl;
 
