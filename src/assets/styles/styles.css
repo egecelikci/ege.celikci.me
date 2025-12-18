@@ -12,6 +12,14 @@
       url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
   }
 
+  @font-face {
+    font-family: "Inconsolata";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 200 900;
+    src: url("/assets/fonts/Inconsolata.woff2") format("woff2");
+  }
+
   :root {
     color-scheme: light;
     --color-bg: #fef6e4;
@@ -92,6 +100,7 @@
 
   --font-sans: "Josefin Sans", system-ui, sans-serif;
   --font-serif: Georgia, serif;
+  --font-mono: "Inconsolata", monospace;
   --font-display: var(--font-sans);
 
   --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
@@ -187,29 +196,6 @@
       @apply inline-block font-mono text-sm px-[0.4em] py-[0.2em] rounded-sm
         bg-surface border border-border text-text whitespace-pre-wrap
         break-words;
-    }
-    .table-wrapper {
-      @apply w-full overflow-x-auto my-8 border border-border rounded-sm;
-    }
-    table {
-      @apply w-full border-collapse text-sm;
-    }
-    th, td {
-      @apply p-3 text-left align-top border-b border-r border-border
-        last:border-r-0 relative;
-    }
-    td:first-child {
-      @apply whitespace-nowrap;
-    }
-    tr:last-child td {
-      @apply border-b-0;
-    }
-    td code {
-      @apply whitespace-pre-wrap break-words bg-transparent border-none p-0
-        text-xs font-mono;
-      @media (max-width: 768px) {
-        @apply whitespace-pre block max-w-full overflow-x-auto;
-      }
     }
 
     /* CODE BLOCKS REVISED */

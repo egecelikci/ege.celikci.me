@@ -27,7 +27,7 @@ layout: layouts/base.vto
   aria-labelledby="{{ title |> slugify }}-title"
 >
   <header
-    class="container-narrow pt-8 pb-10 mb-10 border-b border-[var(--color-border)] text-center"
+    class="container-narrow pt-8 pb-10 mb-10 border-b border-border text-center"
   >
     {{ if tags && tags.length }}
       <div class="flex flex-wrap justify-center gap-2 mb-6">
@@ -83,7 +83,7 @@ layout: layouts/base.vto
   </div>
 
   <footer
-    class="container-narrow mt-16 pt-8 border-t border-[var(--color-border)]"
+    class="container-narrow mt-16 pt-8 border-t border-border"
   >
     <div class="flex flex-col md:flex-row justify-between items-center gap-6">
       <div class="flex items-center gap-3">
@@ -141,7 +141,7 @@ layout: layouts/base.vto
 
 {{ if !draft }}
   <div
-    class="container-narrow mt-12 pt-8 border-t border-[var(--color-border)]"
+    class="container-narrow mt-12 pt-8 border-t border-border"
   >
     <div class="flex items-center justify-between mb-6">
       <h3 class="text-2xl font-bold font-display m-0">Webmentions</h3>
@@ -149,7 +149,7 @@ layout: layouts/base.vto
         href="https://indieweb.org/Webmention"
         class="
           flex items-center gap-1.5
-          text-sm text-[var(--color-text-offset)]
+          text-sm text-text-muted
           hover:text-[var(--color-primary)]
           transition-colors duration-200
         "
