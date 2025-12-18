@@ -13,7 +13,3 @@ if (albumItems.length) {
 if (document.querySelector(".link-list--status",)) {
   import("./status.ts");
 }
-
-if (document.querySelector("#webmentions",)) {
-  import("./webmentions.ts");
-}
