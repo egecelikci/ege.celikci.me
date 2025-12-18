@@ -1,13 +1,17 @@
-import author from "./author.json" with { type: "json", };
+// src/_data/metas.ts
+import author from "./author.json" with { type: "json" };
 import site from "./site.ts";
 
 export default {
-  site: "=site.title",
-  fediverse: author.social.mastodon.name,
-  icon: "assets/images/favicon/favicon.ico",
+  // Use data from site.ts directly
+  site: site.title,
+  description: site.description,
   lang: site.lang,
+  url: site.url,
   author: author.name,
+  fediverse: author.social.mastodon.url,
   title: "=title",
-  description: "=description",
   image: "=image",
+  icon: "/assets/images/favicon/favicon.svg",
+  generator: true,
 };
