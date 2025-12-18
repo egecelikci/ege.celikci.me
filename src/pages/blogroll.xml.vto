@@ -1,0 +1,24 @@
+---
+url: /blogroll.xml
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+  <head>
+    <title>blogroll feeds</title>
+  </head>
+  <body>
+    {{ for item of bookmarks }}
+      {{ if item.category == 'person' }}
+        {{ if item.feed }}
+          <outline
+            type="rss"
+            title="{{ item.title }}"
+            xmlUrl="{{ item.feed }}"
+            htmlUrl="{{ item.url }}"
+          />
+        {{ /if }}
+      {{ /if }}
+    {{ /for }}
+  </body>
+</opml>

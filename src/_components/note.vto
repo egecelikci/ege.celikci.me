@@ -1,0 +1,77 @@
+<article class="h-entry relative">
+  {{ set cardContent }}
+    <a
+      href="{{ note.url |> url }}"
+      class="absolute inset-0 z-0"
+      aria-label="View note: {{ note.title }}"
+    ></a>
+
+    <div
+      class="flex flex-wrap items-center px-4 pt-4 border-b border-border/50 bg-bg/50 rounded-t-lg"
+    >
+      <time
+        class="dt-published text-sm text-text-muted font-mono"
+        datetime="{{ note.date |> date('ISOdate') }}"
+      >
+        {{ note.date |> date("dd LLL yyyy HH:mm") }}
+      </time>
+
+      {{ if note.tags }}
+        <div class="ml-auto flex flex-wrap gap-2 relative z-10">
+          {{ for tag of note.tags }}
+            {{ comp.badge({ content: tag }) }}
+          {{ /for }}
+        </div>
+      {{ /if }}
+    </div>
+
+    <div
+      class="p-6 pb-6 relative max-h-[500px] overflow-hidden group-hover:mask-none transition-all duration-300"
+    >
+      {{ if note.title && !note.isAutoTitle }}
+        <h2 class="p-name text-2xl font-bold text-balance mb-4">
+          {{ note.title }}
+        </h2>
+      {{ /if }}
+
+      <div>
+        {{ comp.notes.gallery({ images: note.images, static: true }) }}
+      </div>
+
+      <div class="e-content markdown text-lg">
+        {{ note.content |> md |> safe }}
+      </div>
+
+      <div
+        class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-bg to-transparent pointer-events-none"
+      >
+      </div>
+    </div>
+
+    <div
+      class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between relative z-10 rounded-b-lg"
+    >
+      {{ comp.notes.stats({ stats: note.stats }) }}
+
+      <a
+        href="{{ note.url |> url }}"
+        class="
+          text-primary font-bold text-sm flex items-center gap-1
+          hover:underline transition-all
+        "
+      >
+        view note
+        {{ comp.icon({ name: "arrow-right", classes: "w-4 h-4" }) }}
+      </a>
+    </div>
+  {{ /set }}
+
+  {{
+    comp.card({
+      classes: "p-0 shadow-sm hover:shadow-md transition-shadow",
+      padding: "p-0",
+      background: "bg-bg",
+      content: cardContent,
+    })
+  }}
+</article>

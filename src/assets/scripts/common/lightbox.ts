@@ -1,6 +1,6 @@
+// src/assets/scripts/lightbox.ts
 import PhotoSwipe from "photoswipe";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import "photoswipe/style.css";
 
 let lightbox: PhotoSwipeLightbox | null = null;
 
@@ -10,8 +10,10 @@ export function initPhotoSwipe() {
     lightbox = null;
   }
 
+  // UPDATED: Use .h-entry as fallback for single notes/posts
   const galleryRoot = document.querySelector("#notes-container",)
-    || document.querySelector(".note",);
+    || document.querySelector(".h-entry",);
+
   if (!galleryRoot) return;
 
   let childrenSelector = "a.note-gallery__link";
@@ -19,10 +21,14 @@ export function initPhotoSwipe() {
   // If we are on the notes list, we only want the first image of each note
   if (galleryRoot.id === "notes-container") {
     childrenSelector = ".js-lightbox-item";
-    const items = galleryRoot.querySelectorAll(".notelist__item",);
+
+    // UPDATED: Look for .timeline-item instead of .notelist__item
+    const items = galleryRoot.querySelectorAll(".timeline-item",);
+
     items.forEach((item,) => {
       const links = item.querySelectorAll("a.note-gallery__link",);
       links.forEach((link, index,) => {
+        // Only the first image in a note becomes part of the lightbox gallery
         if (index === 0) {
           link.classList.add("js-lightbox-item",);
         } else {
@@ -63,43 +69,42 @@ export function initPhotoSwipe() {
       const fullSizeUrl = element.getAttribute("href",);
       itemData.src = fullSizeUrl;
 
-      // --- NEW: Extract Alt Text ---
-      // We store it in itemData so the UI element can access it later
+      // Extract Alt Text
       itemData.alt = thumb.getAttribute("alt",) || "";
 
-      const width = element.getAttribute("data-pswp-width",);
-      const height = element.getAttribute("data-pswp-height",);
+      const widthAttr = element.getAttribute("data-pswp-width",);
+      const heightAttr = element.getAttribute("data-pswp-height",);
 
-      if (width !== "auto" && height !== "auto") {
-        itemData.width = parseInt(width, 10,);
-        itemData.height = parseInt(height, 10,);
+      if (
+        widthAttr && heightAttr && widthAttr !== "auto" && heightAttr !== "auto"
+      ) {
+        itemData.width = parseInt(widthAttr, 10,);
+        itemData.height = parseInt(heightAttr, 10,);
+      } else if (thumb.complete && thumb.naturalWidth > 0) {
+        itemData.width = thumb.naturalWidth;
+        itemData.height = thumb.naturalHeight;
       } else {
-        if (thumb.complete && thumb.naturalWidth > 0) {
-          itemData.width = thumb.naturalWidth;
-          itemData.height = thumb.naturalHeight;
-        }
+        itemData.width = 0;
+        itemData.height = 0;
       }
 
       const srcset = thumb.getAttribute("srcset",);
       if (srcset) {
         itemData.srcset = srcset;
       }
-    } else {
-      // lightbox.options.showHideAnimationType = "fade"; // Protected property in TS?
     }
   },);
 
   /**
    * 2. Register the Custom Caption Element
-   * This creates a place in the UI to display the text we extracted above.
    */
   lightbox.on("uiRegister", () => {
     if (!lightbox) return;
     lightbox.pswp!.ui!.registerElement({
       name: "custom-caption",
-      order: 9, // Ensure it sits above other background elements
+      order: 9,
       isButton: false,
-      appendTo: "root", // 'root' puts it in the main container, overlaying the image
+      appendTo: "root",
       html: "Caption text",
       onInit: (el: HTMLElement, pswp: any,) => {
         lightbox!.pswp!.on("change", () => {
@@ -116,9 +121,6 @@ export function initPhotoSwipe() {
     },);
   },);
 
-  /**
-   * Optional: Add loading states
-   */
   lightbox.on("loading", (e: any,) => {
     const { slide, } = e;
     if (slide.state === "loading") {
@@ -127,10 +129,6 @@ export function initPhotoSwipe() {
     slide.on("loaded", () => {
       slide.container.classList.remove("pswp--loading",);
     },);
-  },);
-
-  lightbox.on("contentError", (e: any,) => {
-    console.error("PhotoSwipe content error:", e,);
   },);
 
   lightbox.init();

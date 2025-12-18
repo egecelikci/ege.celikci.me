@@ -1,7 +1,8 @@
 // Register Service Worker
+declare const process: { env: { MODE: string; }; };
 
 if ("serviceWorker" in navigator) {
-  if (import.meta.env.MODE === "production") {
+  if (process.env.MODE === "production") {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js",).catch(
         (registrationError,) => {

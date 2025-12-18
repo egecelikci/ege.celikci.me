@@ -1,64 +1,90 @@
 ---
-layout: page
-title: "bookmarks"
+layout: layouts/page.vto
+title: bookmarks
 description: "A collection of 88x31 badges and my blogroll."
-permalink: /bookmarks/
+url: /bookmarks/
+templateEngine: [vto, md]
 ---
 
 gotta list everything
+
+{{# Create a randomized copy of the bookmarks data #}}
+{{ set shuffled = bookmarks.slice().sort(() => 0.5 - Math.random()) }}
 
 ## people
 
 [follow them via your feed reader](/blogroll.xml)
 
-{% for item in bookmarks | shuffle %}
-{% if item.category == "person" and item.url %}
+{{ for item of shuffled }}
+{{ if item.category == "person" && item.url }}
 
 - [{{ item.title }}]({{ item.url }})
-  {% endif %}
-  {% endfor %}
+  {{ /if }}
+  {{ /for }}
 
 ## tools & projects
 
-{% for item in bookmarks | shuffle %}
-{% if item.category == "tool" and item.url %}
+{{ for item of shuffled }}
+{{ if item.category == "tool" && item.url }}
 
 - [{{ item.title }}]({{ item.url }})
-  {% endif %}
-  {% endfor %}
+  {{ /if }}
+  {{ /for }}
 
 ## 88x31
 
-<div class="badges-grid">
-  {% for item in bookmarks | shuffle %}
-    {% if item.img %}
-      {% if item.url %}
+<div class="
+  flex flex-wrap
+  gap-[var(--space-sm)]
+  justify-start items-start
+  my-[var(--space-xl)]">
+  {{ for item of shuffled }}
+    {{ if item.img }}
+      {{ if item.url }}
         <a
           href="{{ item.url }}"
-          class="badge-item"
+          class="block flex-none
+        transition-all
+        duration-[var(--animation-speed-fast)]
+        ease-[var(--animation-curve-default)]
+        rounded-none
+        leading-none
+        m-0 p-0
+        hover:scale-105
+        hover:brightness-110
+        hover:z-[var(--z-content-overlay)]
+        hover:relative"
           title="{{ item.title }}"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            src="{{ item.img | url }}"
+            src="{{ item.img |> url }}"
             alt="{{ item.title }}"
             width="88"
             height="31"
-            eleventy:ignore
+            loading="lazy"
+            class="block w-[88px] h-[31px] [image-rendering:pixelated] max-w-none border-none shadow-none"
           />
         </a>
-      {% else %}
-        <span class="badge-item" title="{{ item.title }}">
+      {{ else }}
+        <span class="block flex-none transition-[transform,filter] duration-150 ease-[var(--animation-curve-default)] rounded-none leading-none m-0 p-0 hover:scale-105 hover:brightness-110 hover:z-[var(--z-index-content-overlay)] hover:relative" title="{{ item.title }}">
           <img
-            src="{{ item.img | url }}"
+            src="{{ item.img |> url }}"
             alt="{{ item.title }}"
             width="88"
             height="31"
-            eleventy:ignore
+            loading="lazy"
+            class="
+            block
+            w-[88px] h-[31px]
+            [image-rendering:pixelated]
+            max-w-none
+            border-none
+            shadow-none"
           />
         </span>
-      {% endif %}
-    {% endif %}
-  {% endfor %}
+      {{ /if }}
+    {{ /if }}
+  {{ /for }}
 </div>
