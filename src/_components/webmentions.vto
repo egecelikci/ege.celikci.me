@@ -1,13 +1,8 @@
 {{ set allMentions = webmentions ? webmentions.children : [] }}
 {{ set mentions = allMentions |> webmentionsByUrl(url) }}
 
-<div
-  class="mt-1"
-  id="webmentions"
-  data-url="{{ url }}"
-  data-last-fetched="{{ webmentions ? webmentions.lastFetched : '' }}"
->
-  <div>
+<div class="border-t border-border p-4 bg-surface/30 rounded-b-lg" id="webmentions">
+  <div class="mt-1">
     {{ set hasInteractions = false }}
     {{ for mention of mentions }}
       {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
@@ -16,8 +11,8 @@
     {{ /for }}
 
     {{ if hasInteractions }}
-      <div class="mb-8 pb-4 border-b border-border js-facepile-wrapper">
-        <div class="flex flex-wrap items-center mt-4 pl-1 js-facepile">
+      <div class="mb-8 pb-4 border-b border-border">
+        <div class="flex flex-wrap items-center mt-4 pl-1">
           {{ set zIndex = mentions.length }}
           
           {{ for mention of mentions }}
@@ -35,7 +30,6 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 title="{{ mention.author.name }}"
-                id="webmention-{{ mention['wm-id'] }}"
                 style="z-index: {{ zIndex }}"
               >
                 {{ if mention.author.photo }}
@@ -74,32 +68,13 @@
     {{ if commentCount > 0 }}
       <div class="relative">
         <ol class="list-none p-0 m-0">
-          {{ for mention of comments.slice(0, 5) }}
+          {{ for mention of comments }}
             <li class="mb-0">
               {{ comp.webmention({ webmention: mention }) }}
             </li>
           {{ /for }}
         </ol>
       </div>
-
-      {{ if commentCount > 5 }}
-        <details>
-          <summary class="inline-flex items-center mt-4 px-4 py-1.5 font-sans text-sm font-semibold text-primary bg-surface rounded-full transition-all duration-150 ease-default hover:bg-primary hover:text-white hover:-translate-y-px hover:shadow-sm cursor-pointer list-none select-none">
-            {{ "message-circle" |> icon("lucide") }} 
-            <span class="ml-2">Show All Webmentions ({{ commentCount }})</span>
-          </summary>
-
-          <div class="block mt-4">
-            <ol class="list-none p-0 m-0">
-              {{ for mention of comments.slice(5) }}
-                <li class="mb-0">
-                  {{ comp.webmention({ webmention: mention }) }}
-                </li>
-              {{ /for }}
-            </ol>
-          </div>
-        </details>
-      {{ /if }}
 
     {{ else if !hasInteractions }}
       <p class="text-text-muted italic py-4">No webmentions yet.</p>
