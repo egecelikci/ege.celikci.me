@@ -187,7 +187,7 @@ export default function(userOptions?: Options,) {
         },
         items: {
           title: "=title",
-          content: "=children",
+          content: "=content",
         },
       },),)
       .use(feed({
@@ -200,7 +200,7 @@ export default function(userOptions?: Options,) {
         items: {
           title: "=title",
           description: "=excerpt",
-          content: "=children",
+          content: "=content",
         },
       },),)
       .use(minifyHTML(),)
