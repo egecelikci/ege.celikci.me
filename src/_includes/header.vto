@@ -1,0 +1,21 @@
+<header
+  class="fixed top-0 w-full z-[100] border-b border-[var(--color-text-offset)]/10 py-6 lg:py-8 backdrop-blur-md transition-all duration-300"
+  style="background-color: color-mix(in srgb, var(--color-background), transparent 20%)"
+  role="banner"
+>
+  <div
+    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-[var(--container-max-width)] flex flex-row items-center gap-6"
+  >
+    <a
+      class="flex-shrink-0 font-bold text-[var(--color-text)] hover:text-[var(--color-text-offset)] focus-visible:text-[var(--color-text-offset)]"
+      href="/"
+      rel="home"
+    >
+      <span>{{ site.host }}</span>
+    </a>
+
+    <div class="flex-1 min-w-0 flex justify-end">
+      {{ include "navigation.vto" }}
+    </div>
+  </div>
+</header>

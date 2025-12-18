@@ -1,0 +1,55 @@
+{{ if images && images.length > 0 }}
+  {{ set isSingle = images.length == 1 }}
+
+  <div
+    class="{{ if isSingle }}block{{ else }}grid grid-cols-2 gap-2{{ /if }} mb-4"
+    {{ if !static }}data-pswp-gallery{{ /if }}
+  >
+    {{ for image of images }}
+      {{ if static }}
+        <div
+          class="
+            block relative overflow-hidden border border-border/50
+            aspect-square rounded-xl group
+          "
+        >
+          <img
+            src="{{ image.src |> url }}"
+            alt="{{ image.alt }}"
+            transform-images="webp jpg 640 1280 1920"
+            class="block w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div
+            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+          >
+            <div class="bg-bg/80 rounded-full p-2 text-primary">
+              {{ comp.icon({ name: "maximize", classes: "w-6 h-6" }) }}
+            </div>
+          </div>
+        </div>
+      {{ else }}
+        <a
+          href="{{ image.src |> url }}"
+          class="
+            note-gallery__link block relative z-10
+            cursor-zoom-in transition-all duration-200 hover:brightness-95
+            overflow-hidden border border-border/50
+            aspect-square rounded-xl
+          "
+          data-pswp-width="{{ image.width }}"
+          data-pswp-height="{{ image.height }}"
+          target="_blank"
+        >
+          <img
+            src="{{ image.src |> url }}"
+            alt="{{ image.alt }}"
+            transform-images="webp jpg 640 1280 1920"
+            class="block w-full h-full object-cover"
+            loading="lazy"
+          />
+        </a>
+      {{ /if }}
+    {{ /for }}
+  </div>
+{{ /if }}

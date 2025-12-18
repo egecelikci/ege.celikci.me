@@ -1,0 +1,59 @@
+{{# SEO Stuff #}}
+{{ include "seo.vto" }}
+
+{{# Favicon #}}
+<link
+  rel="apple-touch-icon"
+  sizes="180x180"
+  href="{{ '/assets/images/favicon/apple-touch-icon.png' |> url }}"
+/>
+<link
+  rel="icon"
+  type="image/png"
+  href="{{ '/assets/images/favicon/favicon-32x32.png' |> url }}"
+  sizes="32x32"
+/>
+<link
+  rel="icon"
+  type="image/png"
+  href="{{ '/assets/images/favicon/favicon-16x16.png' |> url }}"
+  sizes="16x16"
+/>
+<link
+  rel="shortcut icon"
+  href="{{ '/assets/images/favicon/favicon.ico' |> url }}"
+/>
+<link rel="manifest" href="{{ '/site.webmanifest' |> url }}" />
+
+{{# RSS Feed #}}
+<link
+  type="application/atom+xml"
+  rel="alternate"
+  href="{{ site.url }}/feed.xml"
+  title="{{ site.title }}"
+/>
+
+{{ set defaultTheme = themes.find((t) => t.id === "default") }}
+{{ set darkTheme = themes.find((t) => t.id === "dark") }}
+
+<meta name="theme-color" content="{{ defaultTheme.colors.background }}" />
+
+<meta
+  name="theme-color"
+  content="{{ darkTheme.colors.background }}"
+  media="(prefers-color-scheme: dark)"
+/>
+
+{{# https://github.com/darkreader/darkreader/blob/main/CONTRIBUTING.md#disabling-dark-reader-on-your-site #}}
+<meta name="darkreader-lock" />
+
+{{# Indie Auth #}}
+<link rel="authorization_endpoint" href="https://indieauth.com/auth" />
+<link rel="token_endpoint" href="https://tokens.indieauth.com/token" />
+
+{{# Webmentions #}}
+<link rel="pingback" href="https://webmention.io/{{ site.host }}/xmlrpc" />
+<link
+  rel="webmention"
+  href="https://webmention.io/{{ site.host }}/webmention"
+/>

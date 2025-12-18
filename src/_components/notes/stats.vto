@@ -1,0 +1,41 @@
+<ul class="flex items-center gap-6 p-0 m-0 list-none text-text-muted text-sm">
+  <li
+    class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+    title="{{ stats.replies }} mentions"
+  >
+    {{
+      comp.icon({
+        name: "message-circle",
+        type: "lucide",
+        classes: "mr-2 w-4 h-4",
+      })
+    }}
+    <span>{{ stats.replies |> humanizeNumber }}</span>
+  </li>
+  <li
+    class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+    title="{{ stats.reposts }} reposts"
+  >
+    {{
+      comp.icon({
+        name: "repeat-2",
+        type: "lucide",
+        classes: "mr-2 w-4 h-4",
+      })
+    }}
+    <span>{{ stats.reposts |> humanizeNumber }}</span>
+  </li>
+  <li
+    class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+    title="{{ stats.likes }} likes"
+  >
+    {{
+      comp.icon({
+        name: "heart",
+        type: "lucide",
+        classes: "mr-2 w-4 h-4",
+      })
+    }}
+    <span>{{ stats.likes |> humanizeNumber }}</span>
+  </li>
+</ul>

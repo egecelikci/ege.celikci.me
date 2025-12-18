@@ -1,0 +1,11 @@
+{{ set paddingClass = padding ?? "p-5" }}
+{{ set bgClass = background ?? "bg-surface" }}
+{{
+  set shadowClass = elevated ? "shadow-elevated" : "shadow-sm hover:shadow-md"
+}}
+
+<div
+  class="border border-border rounded-lg transition-all duration-300 {{ paddingClass }} {{ bgClass }} {{ shadowClass }} {{ classes }}"
+>
+  {{ content }}
+</div>

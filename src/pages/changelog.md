@@ -1,8 +1,9 @@
 ---
-layout: journal
+layout: layouts/journal.vto
 title: "changelog"
 description: "website development changelog."
-permalink: /changelog/
+url: /changelog/
+templateEngine: [vto, md]
 ---
 
 a [slash page](https://slashpages.net/#changelog) for website development changelogs.
