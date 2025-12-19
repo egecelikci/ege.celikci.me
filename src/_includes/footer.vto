@@ -1,51 +1,79 @@
-<footer class="text-sm py-16 border-t border-border" role="contentinfo">
-  <div class="container flex flex-wrap items-center md:flex-nowrap">
-    <p
-      class="basis-1/2 mb-2 md:basis-auto md:flex-none md:m-0 md:pr-10 lg:pr-16"
-    >
-      <strong>&copy; {{ build.timestamp |> date("yyyy") }}</strong><br />
-      <a
-        class="p-name u-url text-text underline hover:no-underline transition-colors"
-        rel="me"
-        href="{{ site.url }}"
-      >
-        {{ author.name }}
-      </a>
-      ·
-      {{ if build.git }}
+<footer
+  class="text-sm py-12 mt-20 border-t border-[var(--color-border)] print:hidden"
+  role="contentinfo"
+>
+  <div
+    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-[var(--container-max-width)] flex flex-col gap-8 md:flex-row md:items-center md:justify-between"
+  >
+    <div class="space-y-1">
+      <div class="font-bold text-[var(--color-text)]">
+        &copy; {{ build.timestamp |> date("yyyy") }}
         <a
-          href="https://github.com/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-          class="text-text underline hover:no-underline transition-colors"
+          href="{{ site.url }}"
+          class="p-name u-url hover:text-[var(--color-primary)] transition-colors underline decoration-[var(--color-border)] underline-offset-4 hover:no-underline"
         >
-          {{ build.git.substring(0, 7) }}
+          {{ author.name }}
         </a>
-      {{ /if }}
-    </p>
+      </div>
 
-    <p
-      class="basis-full mb-0 flex items-center gap-4 md:basis-auto md:ml-auto md:pr-0 md:justify-end"
-    >
+      <div
+        class="text-[var(--color-text-offset)] opacity-70 flex items-center gap-2"
+      >
+        {{ if build.git }}
+          <a
+            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+            class="font-mono text-xs hover:text-[var(--color-primary)] transition-colors"
+          >
+            {{ build.git.substring(0, 7) }}
+          </a>
+        {{ /if }}
+      </div>
+    </div>
+
+    <div class="flex items-center gap-6 md:gap-8">
       <a
         href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-        class="inline-block text-text hover:text-primary transition-colors"
-        title="Edit this page on Codeberg"
+        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all"
+        title="Edit this page"
       >
-        <span class="sr-only">Edit this page on Codeberg</span>
         {{
           comp.icon({
-            name: "codeberg",
-            type: "simpleicons",
-            classes: "fill-current",
+            name: "edit-3",
+            type: "lucide",
+            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
           })
         }}
+        <span class="hidden sm:inline">edit</span>
       </a>
+
       <a
         href="{{ '/feeds' |> url }}"
-        class="inline-block text-text hover:text-primary transition-colors"
-        title="RSS Feed"
+        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all"
+        title="RSS Feeds"
       >
-        {{ comp.icon({ name: "rss", type: "lucide" }) }}
+        {{
+          comp.icon({
+            name: "rss",
+            type: "lucide",
+            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
+          })
+        }}
+        <span class="hidden sm:inline">feeds</span>
       </a>
-    </p>
+
+      <button
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all cursor-pointer"
+      >
+        {{
+          comp.icon({
+            name: "arrow-up",
+            type: "lucide",
+            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
+          })
+        }}
+        <span class="hidden sm:inline">top</span>
+      </button>
+    </div>
   </div>
 </footer>

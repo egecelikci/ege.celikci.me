@@ -189,6 +189,7 @@ export default function(userOptions?: Options,) {
           title: "=title",
           content: "=content",
         },
+        limit: 0,
       },),)
       .use(feed({
         output: ["feed.xml", "feed.json",],

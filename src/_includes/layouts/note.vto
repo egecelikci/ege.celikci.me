@@ -57,12 +57,7 @@ layout: layouts/base.vto
       {{ comp.notes.stats({ stats: stats }) }}
     </div>
 
-    <div
-      id="webmentions"
-      class="border-t border-border p-4 bg-surface/30 rounded-b-lg"
-    >
-      {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
-    </div>
+    {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
   {{ /set }}
 
   {{
