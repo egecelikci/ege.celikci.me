@@ -101,6 +101,19 @@ const esbuildConfig = {
 export default function(userOptions?: Options,) {
   const options = merge(defaults, userOptions,);
 
+  const feedOptions: Partial<FeedOptions> = {
+    info: {
+      title: siteData.host, // Resolves the literal "=metas.site" issue
+      description: siteData.description,
+    },
+    items: {
+      title: "=title",
+      description: "=excerpt",
+      content: "=rssContent || =content",
+    },
+    limit: 0,
+  };
+
   return async (site: Lume.Site,) => {
     const lotusTheme = await loadAlistralTheme("kanagawa-lotus",);
     const waveTheme = await loadAlistralTheme("kanagawa-wave",);
@@ -167,41 +180,26 @@ export default function(userOptions?: Options,) {
         },],
       },),)
       .use(feed({
-        output: ["blog.xml", "blog.json",],
-        query: "type=post",
-        info: {
-          title: `blog | ${siteData.host}`,
-          description: "=metas.description",
-        },
-        items: {
-          title: "=title",
-          description: "=excerpt",
-        },
+        ...feedOptions,
+        output: ["feed.xml", "feed.json",],
+        query: "type=post|note",
       },),)
       .use(feed({
+        ...feedOptions,
         output: ["notes.xml", "notes.json",],
         query: "type=note",
         info: {
+          ...feedOptions.info,
           title: `notes | ${siteData.host}`,
-          description: "notes | =metas.site",
         },
-        items: {
-          title: "=title",
-          content: "=content",
-        },
-        limit: 0,
       },),)
       .use(feed({
-        output: ["feed.xml", "feed.json",],
-        query: "type=post|note",
+        ...feedOptions,
+        output: ["blog.xml", "blog.json",],
+        query: "type=post",
         info: {
-          title: "=metas.site",
-          description: "=metas.description",
-        },
-        items: {
-          title: "=title",
-          description: "=excerpt",
-          content: "=content",
+          ...feedOptions.info,
+          title: `blog | ${siteData.host}`,
         },
       },),)
       .use(minifyHTML(),)

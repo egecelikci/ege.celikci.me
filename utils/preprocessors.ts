@@ -34,22 +34,28 @@ export default function(site: any,) {
       }
     }
   },);
-
   site.preprocess([".md",], (pages: any[],) => {
     for (const page of pages) {
-      // Only process pages that are 'notes' and have an images array
-      if (page.data.type === "note" && page.data.images) {
-        const imagesHtml = page.data.images.map((img: any,) => {
-          const src = typeof img === "string" ? img : img.src;
-          // Generate absolute URL for RSS compatibility
-          const absoluteSrc = site.url(src, true,);
-          return `<figure><img src="${absoluteSrc}" alt="${
-            img.alt || ""
-          }"></figure>`;
+      if (page.data.type === "note") {
+        const rawContent = page.data.content as string;
+        const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
+        const foundImages = [];
+        let match;
+
+        while ((match = imgRegex.exec(rawContent,)) !== null) {
+          foundImages.push({ alt: match[1], src: match[2], },);
+        }
+        page.data.images = foundImages;
+
+        const rssImagesHtml = foundImages.map(img => {
+          const absoluteSrc = site.url(img.src, true,);
+          return `<figure><img src="${absoluteSrc}" alt="${img.alt}"></figure>`;
         },).join("",);
 
-        // Prepend the images to the actual content
-        page.data.content = imagesHtml + page.data.content;
+        page.data.rssContent = rssImagesHtml
+          + rawContent.replace(imgRegex, "",);
+
+        page.data.content = rawContent.replace(imgRegex, "",);
       }
     }
   },);
