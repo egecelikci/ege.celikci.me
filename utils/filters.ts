@@ -8,7 +8,7 @@ import { random, } from "npm:lodash-es@4.17.21";
 import { DateTime, } from "npm:luxon@3.4.4";
 import sanitizeHTML from "npm:sanitize-html@2.12.1";
 
-import siteData from "../src/_data/site.ts"
+import siteData from "../src/_data/site.ts";
 
 export interface NoteGridData {
   hasImage: boolean;
