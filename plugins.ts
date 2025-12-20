@@ -27,11 +27,11 @@ import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 
 // 3. External (NPM) Plugins
-import rehypeShiki from "@shikijs/rehype";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
-import remarkSmartypants from "remark-smartypants";
+import rehypeShiki from "npm:@shikijs/rehype@^3.19.0";
+import rehypeAutolinkHeadings from "npm:rehype-autolink-headings@^7.1.0";
+import rehypeSlug from "npm:rehype-slug@^6.0.0";
+import remarkGfm from "npm:remark-gfm@^4.0.1";
+import remarkSmartypants from "npm:remark-smartypants@^3.0.2";
 
 // 4. Local Imports & Plugins
 import {

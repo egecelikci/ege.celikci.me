@@ -1,6 +1,6 @@
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 
-import { MusicBrainzClient, } from "@kellnerd/musicbrainz";
+import { MusicBrainzClient, } from "jsr:@kellnerd/musicbrainz@^0.4.2";
 import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
 import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { cachedFetch, } from "./cache.ts";

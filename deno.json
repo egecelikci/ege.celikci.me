@@ -1,22 +1,6 @@
 {
-  "nodeModulesDir": "auto",
   "imports": {
-    "@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.2",
-    "@shikijs/rehype": "npm:@shikijs/rehype@^3.19.0",
-    "gsap": "npm:gsap@^3.14.1",
-    "imagesloaded": "npm:imagesloaded@^5.0.0",
-    "infinite-scroll": "npm:infinite-scroll@^5.0.0",
-    "instant.page": "npm:instant.page@^5.2.0",
-    "lodash-es": "npm:lodash-es@^4.17.21",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.13/jsx-runtime.ts",
-    "luxon": "npm:luxon@^3.7.2",
-    "photoswipe": "npm:photoswipe@^5.4.4",
-    "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
-    "rehype-slug": "npm:rehype-slug@^6.0.0",
-    "remark-gfm": "npm:remark-gfm@^4.0.1",
-    "remark-smartypants": "npm:remark-smartypants@^3.0.2",
-    "sharp": "npm:sharp@^0.34.5"
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.1.2/"
   },
   "tasks": {
     "lume": {

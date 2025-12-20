@@ -1,16 +1,14 @@
 import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
 import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { unionBy, } from "lodash-es";
+import { unionBy, } from "npm:lodash-es@4.17.22";
 import { cachedFetch, } from "../../utils/cache.ts";
 import settings from "./site.ts";
 
-// Önbellek dizini ve dosya yolu
 const CACHE_DIR = "_cache";
 const CACHE_FILE = join(CACHE_DIR, "webmentions.json",);
 const API = "https://webmention.io/api";
 const WEBMENTION_IO_TOKEN = Deno.env.get("WEBMENTION_IO_TOKEN",);
 
-// Host ayarını güvenli bir şekilde al
 const host = settings?.host;
 
 interface Webmention {
@@ -39,7 +37,6 @@ interface WebmentionFeed {
   lastFetched?: string | null;
 }
 
-// Dosya varlık kontrolü için yardımcı fonksiyon
 async function fileExists(path: string,): Promise<boolean> {
   try {
     await Deno.stat(path,);
