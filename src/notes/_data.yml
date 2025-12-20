@@ -3,4 +3,4 @@ layout: layouts/note.vto
 templateEngine: [vto, md]
 metas:
   title: "=title || $ .dt-published"
-  image: "$ .e-content img attr(src)"
+  image: "$ .h-entry img attr(src)"
