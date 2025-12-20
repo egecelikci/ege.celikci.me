@@ -1,6 +1,6 @@
 // src/assets/scripts/lightbox.ts
-import PhotoSwipe from "photoswipe";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
+import PhotoSwipe from "npm:photoswipe@^5.4.4";
+import PhotoSwipeLightbox from "npm:photoswipe@^5.4.4/lightbox";
 
 let lightbox: PhotoSwipeLightbox | null = null;
 

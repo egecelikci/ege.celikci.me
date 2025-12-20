@@ -4,8 +4,8 @@ import {
   Node,
 } from "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts";
 import * as path from "jsr:@std/path";
-import { random, } from "npm:lodash-es@4.17.21";
-import { DateTime, } from "npm:luxon@3.4.4";
+import { random, } from "npm:lodash-es@4.17.22";
+import { DateTime, } from "npm:luxon@^3.7.2";
 import sanitizeHTML from "npm:sanitize-html@2.12.1";
 
 import siteData from "../src/_data/site.ts";
