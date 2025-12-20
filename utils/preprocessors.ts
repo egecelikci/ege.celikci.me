@@ -1,15 +1,50 @@
+import type { Page, Site, } from "lume/core.ts";
 import settings from "../src/_data/site.ts";
 
-export default function(site: any,) {
-  site.preprocess([".md",], (pages: any[],) => {
+function extractImagesFromNote(content: string,) {
+  const images: Array<{
+    src: string;
+    alt: string;
+    width?: number;
+    height?: number;
+  }> = [];
+
+  const imgRegex = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g;
+  let match;
+
+  while ((match = imgRegex.exec(content,)) !== null) {
+    images.push({
+      alt: match[1] || "",
+      src: match[2],
+    },);
+  }
+
+  return images;
+}
+
+export default function registerPreprocessors(site: Site,) {
+  site.preprocess([".md",], (pages: Page[],) => {
     for (const page of pages) {
-      if (page.src.path.startsWith("/notes/",)) {
+      if (page.src.path.startsWith("/notes/",) || page.data.type === "note") {
+        if (typeof page.data.content === "string") {
+          const rawContent = page.data.content;
+          const images = extractImagesFromNote(rawContent,);
+
+          if (images.length > 0) {
+            page.data.images = images;
+            page.data.content = rawContent.replace(
+              /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
+              "",
+            ).trim();
+          }
+        }
         const stats = { likes: 0, reposts: 0, replies: 0, };
-        const webmentions = page.data.webmentions;
+        const webmentions = page.data.webmentions as any;
 
         if (webmentions && Array.isArray(webmentions.children,)) {
           const siteUrl = settings.url;
           const pageUrl = (siteUrl + page.data.url).replace(/\/+$/, "",);
+
           const relevantMentions = webmentions.children.filter(
             (entry: any,) => {
               const target = (entry["wm-target"] || "").replace(/\/+$/, "",);
@@ -31,31 +66,6 @@ export default function(site: any,) {
         }
 
         page.data.stats = stats;
-      }
-    }
-  },);
-  site.preprocess([".md",], (pages: any[],) => {
-    for (const page of pages) {
-      if (page.data.type === "note") {
-        const rawContent = page.data.content as string;
-        const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
-        const foundImages = [];
-        let match;
-
-        while ((match = imgRegex.exec(rawContent,)) !== null) {
-          foundImages.push({ alt: match[1], src: match[2], },);
-        }
-        page.data.images = foundImages;
-
-        const rssImagesHtml = foundImages.map(img => {
-          const absoluteSrc = site.url(img.src, true,);
-          return `<figure><img src="${absoluteSrc}" alt="${img.alt}"></figure>`;
-        },).join("",);
-
-        page.data.rssContent = rssImagesHtml
-          + rawContent.replace(imgRegex, "",);
-
-        page.data.content = rawContent.replace(imgRegex, "",);
       }
     }
   },);

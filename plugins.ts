@@ -103,13 +103,12 @@ export default function(userOptions?: Options,) {
 
   const feedOptions: Partial<FeedOptions> = {
     info: {
-      title: siteData.host, // Resolves the literal "=metas.site" issue
+      title: siteData.host,
       description: siteData.description,
     },
     items: {
       title: "=title",
       description: "=excerpt",
-      content: "=rssContent || =content",
     },
     limit: 0,
   };
