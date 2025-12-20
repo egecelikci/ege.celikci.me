@@ -1,28 +1,57 @@
 <footer
-  class="text-sm py-12 mt-20 border-t border-[var(--color-border)] print:hidden"
+  class="
+    mt-24 py-12 border-t border-[var(--color-border)]
+    text-sm text-[var(--color-text-offset)]
+    print:hidden
+  "
   role="contentinfo"
 >
   <div
-    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-[var(--container-max-width)] flex flex-col gap-8 md:flex-row md:items-center md:justify-between"
+    class="
+      mx-auto w-full max-w-[var(--container-max-width)] px-4 md:px-0 md:w-[90%]
+      flex flex-col md:flex-row md:items-center justify-between gap-8
+    "
   >
-    <div class="space-y-1">
-      <div class="font-bold text-[var(--color-text)]">
-        &copy; {{ build.timestamp |> date("yyyy") }}
+    <div class="flex flex-col gap-2 text-center md:text-left">
+      <div class="font-medium text-[var(--color-text)]">
+        <span aria-label="Copyright">&copy;</span> {{
+          build.timestamp
+          |> date("yyyy")
+        }}
         <a
           href="{{ site.url }}"
-          class="p-name u-url hover:text-[var(--color-primary)] transition-colors underline decoration-[var(--color-border)] underline-offset-4 hover:no-underline"
+          class="
+            hover:text-[var(--color-primary)] transition-colors
+            underline decoration-[var(--color-border)] underline-offset-4
+            hover:decoration-[var(--color-primary)]
+          "
+          rel="author"
         >
           {{ author.name }}
         </a>
       </div>
 
       <div
-        class="text-[var(--color-text-offset)] opacity-70 flex items-center gap-2"
+        class="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs opacity-80"
       >
+        <a
+          href="https://creativecommons.org/licenses/by/4.0/deed.en"
+          class="hover:text-[var(--color-primary)] transition-colors"
+          rel="license"
+        >
+          CC BY 4.0
+        </a>
+
         {{ if build.git }}
+          <span
+            class="text-[var(--color-border)] select-none"
+            aria-hidden="true"
+          >|</span>
           <a
             href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-            class="font-mono text-xs hover:text-[var(--color-primary)] transition-colors"
+            class="font-mono hover:text-[var(--color-primary)] transition-colors"
+            title="View commit {{ build.git }}"
+            aria-label="View git commit {{ build.git.substring(0, 7) }}"
           >
             {{ build.git.substring(0, 7) }}
           </a>
@@ -30,50 +59,60 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-6 md:gap-8">
-      <a
-        href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all"
-        title="Edit this page"
-      >
-        {{
-          comp.icon({
-            name: "edit-3",
-            type: "lucide",
-            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
-          })
-        }}
-        <span class="hidden sm:inline">edit</span>
-      </a>
+    <nav aria-label="Footer tools">
+      <ul class="flex items-center justify-center gap-6 font-medium">
+        <li>
+          <a
+            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
+            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)]"
+            aria-label="edit this page on Codeberg"
+          >
+            {{
+              comp.icon({
+                name: "edit-3",
+                classes:
+                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:scale-110",
+              })
+            }}
+            <span class="hidden sm:inline">edit</span>
+          </a>
+        </li>
 
-      <a
-        href="{{ '/feeds' |> url }}"
-        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all"
-        title="RSS Feeds"
-      >
-        {{
-          comp.icon({
-            name: "rss",
-            type: "lucide",
-            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
-          })
-        }}
-        <span class="hidden sm:inline">feeds</span>
-      </a>
+        <li>
+          <a
+            href="{{ '/feeds' |> url }}"
+            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)]"
+            aria-label="feeds"
+          >
+            {{
+              comp.icon({
+                name: "rss",
+                classes:
+                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:scale-110",
+              })
+            }}
+            <span class="hidden sm:inline">feeds</span>
+          </a>
+        </li>
 
-      <button
-        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-        class="group flex items-center gap-2 text-[var(--color-text-offset)] hover:text-[var(--color-primary)] transition-all cursor-pointer"
-      >
-        {{
-          comp.icon({
-            name: "arrow-up",
-            type: "lucide",
-            classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
-          })
-        }}
-        <span class="hidden sm:inline">top</span>
-      </button>
-    </div>
+        <li>
+          <button
+            onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)] cursor-pointer"
+            type="button"
+            aria-label="scroll to top"
+          >
+            {{
+              comp.icon({
+                name: "arrow-up",
+                classes:
+                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:-translate-y-1",
+              })
+            }}
+            <span class="hidden sm:inline">top</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </footer>
