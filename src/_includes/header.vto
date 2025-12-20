@@ -1,21 +1,23 @@
 <header
-  class="sticky top-0 w-full z-[100] border-b border-[var(--color-text-offset)]/10 py-6 lg:py-8 backdrop-blur-md transition-all duration-300"
+  class="sticky top-0 w-full z-[100] border-b border-[var(--color-text-offset)]/10 backdrop-blur-md transition-all duration-300"
   style="background-color: color-mix(in srgb, var(--color-bg), transparent 20%)"
   role="banner"
 >
-  <div
-    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-[var(--container-max-width)] flex flex-row items-center gap-6"
+  <nav
+    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-[var(--container-max-width)] flex flex-row items-center gap-6 py-4 md:py-6 lg:py-8"
+    aria-label="Main navigation"
   >
     <a
-      class="flex-shrink-0 font-bold text-text hover:text-text-muted focus-visible:text-text-muted"
+      class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted focus-visible:text-text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text-offset)] transition-colors duration-200 rounded-sm"
       href="/"
       rel="home"
+      aria-label="Home"
     >
       <span>{{ site.host }}</span>
     </a>
 
-    <div class="flex-1 min-w-0 flex justify-end">
+    <div class="flex-1 min-w-0 flex justify-end items-center">
       {{ include "navigation.vto" }}
     </div>
-  </div>
+  </nav>
 </header>
