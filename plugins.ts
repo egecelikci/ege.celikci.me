@@ -88,11 +88,19 @@ const faviconConfig = {
 };
 
 const esbuildConfig = {
-  extensions: [".ts",],
+  extensions: [".ts"],
   options: {
+    plugins: [],
+    bundle: true,
+    format: "esm",
+    splitting: true,
+    minify: true,
+    target: "esnext",
+    logLevel: "info",
+    chunkNames: "assets/scripts/chunks/[name]-[hash]",
     define: {
       "process.env.MODE": JSON.stringify(
-        Deno.env.get("MODE",) || "development",
+        Deno.env.get("MODE") || "development",
       ),
     },
   },
