@@ -48,34 +48,35 @@ function setStatusState(
   },);
 }
 
-function createMarqueeAnimation(element: HTMLElement,) {
-  const wrapper = element.parentElement;
-  if (!wrapper || element.scrollWidth <= wrapper.clientWidth) return;
+function createMarqueeAnimation(element: HTMLElement) {
+  const container = element.parentElement;
+  if (!container) return;
 
-  const spacer = "&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;";
-  const originalContent = element.innerHTML;
-  element.innerHTML =
-    `<span>${originalContent}${spacer}</span>${originalContent}`;
+  requestAnimationFrame(() => {
+    const scrollWidth = element.scrollWidth;
+    const clientWidth = container.clientWidth;
 
-  const firstChild = element.firstElementChild as HTMLElement;
-  const distance = firstChild ? firstChild.offsetWidth : 0;
-  element.innerHTML = originalContent + spacer + originalContent;
+    if (scrollWidth <= clientWidth) return;
 
-  const marqueeTween = gsap.to(element, {
-    x: -distance,
-    duration: distance / 50,
-    ease: "none",
-    repeat: -1,
-  },);
+    const gap = "    •    ";
+    const originalHTML = element.innerHTML;
+    
+    element.innerHTML = `<span>${originalHTML}${gap}</span>${originalHTML}`;
+    const span = element.firstElementChild as HTMLElement;
+    const offset = span ? span.offsetWidth : 0;
+    element.innerHTML = originalHTML + gap + originalHTML;
 
-  const pause = () => marqueeTween.pause();
-  const play = () => marqueeTween.play();
+    const tl = gsap.to(element, {
+      x: -offset,
+      duration: offset / 50,
+      ease: "none",
+      repeat: -1,
+      paused: false
+    });
 
-  wrapper.onmouseenter = pause;
-  wrapper.onmouseleave = play;
-  wrapper.ontouchstart = () => pause();
-  wrapper.ontouchend = play;
-  wrapper.ontouchcancel = play;
+    container.onmouseenter = () => tl.pause();
+    container.onmouseleave = () => tl.play();
+  });
 }
 
 async function loadStatus() {
@@ -123,23 +124,25 @@ async function loadStatus() {
   }
 }
 
-function processChunk(htmlString: string,) {
-  const temp = document.createElement("div",);
+function processChunk(htmlString: string) {
+  const temp = document.createElement("div");
   temp.innerHTML = htmlString;
-  const newElement = temp.firstElementChild as HTMLElement;
-  if (!newElement) return;
+  const newData = temp.firstElementChild as HTMLElement;
 
-  const id = newElement.id;
-  const mapping: Record<string, string> = {
+  if (!newData) return;
+
+  const targetId = {
     "music-status": "#music-status-container",
     "game-status": "#game-status-container",
     "manga-status": "#manga-status-container",
-  };
+  }[newData.id];
 
-  const containerSelector = mapping[id];
-  if (!containerSelector) return;
-  const placeholder = document.querySelector(containerSelector,);
-  if (placeholder) updateSingleUI(placeholder as HTMLElement, newElement,);
+  if (!targetId) return;
+
+  const container = document.querySelector(targetId) as HTMLElement;
+  if (container) {
+    updateSingleUI(container, newData);
+  }
 }
 
 function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
@@ -220,6 +223,11 @@ function performUpdate(
     textWrapper.appendChild(newSpan,);
   }
 
+  if (activeContexts.has(container)) {
+    const oldCtx = activeContexts.get(container);
+    oldCtx?.revert();
+  }
+
   // 4. Run Animation
   const ctx = gsap.context(() => {
     // We target the newSpan we just appended
@@ -293,3 +301,5 @@ document.addEventListener("visibilitychange", () => {
     if (abortController) abortController.abort();
   }
 },);
+
+export { loadStatus };
