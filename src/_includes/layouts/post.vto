@@ -2,170 +2,92 @@
 layout: layouts/base.vto
 ---
 
-<nav class="container-narrow py-6">
-  <a
-    href="/blog"
-    class="inline-flex items-center gap-1 text-sm font-bold text-text-muted hover:text-primary transition-colors no-underline"
-  >
-    {{
-      comp.icon({
-        name: "arrow-left",
-        type: "lucide",
-        classes: "w-4 h-4",
-      })
-    }}
-    back to blog
-  </a>
-</nav>
-
-<article
-  id="{{ title |> slugify }}"
-  class="h-entry"
-  role="article"
-  itemscope
-  itemtype="http://schema.org/BlogPosting"
-  aria-labelledby="{{ title |> slugify }}-title"
->
-  <header
-    class="container-narrow pt-8 pb-10 mb-10 border-b border-border text-center"
-  >
-    {{ if tags && tags.length }}
-      <div class="flex flex-wrap justify-center gap-2 mb-6">
-        {{ for tag of tags }}
-          <a
-            href="/tags/{{ tag }}/"
-            class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded-md bg-surface border border-border text-text-muted hover:text-primary hover:border-primary transition-colors no-underline"
-          >
-            {{ tag }}
-          </a>
-        {{ /for }}
-      </div>
-    {{ /if }}
-
-    <h1
-      id="{{ title |> slugify }}-title"
-      class="font-display font-bold text-4xl md:text-5xl leading-tight p-name title mb-4"
-      itemprop="headline"
+<div class="w-full max-w-[var(--container-narrow)] mx-auto min-h-screen py-10">
+  {{# Back Link #}}
+  <div class="mb-8">
+    <a
+      href="/blog"
+      class="inline-flex items-center gap-1 text-sm font-bold text-text-muted hover:text-primary transition-colors no-underline"
     >
-      {{ title }}
-    </h1>
-
-    <div
-      class="flex items-center justify-center gap-3 text-sm font-mono text-text-muted"
-    >
-      <time
-        class="dt-published"
-        itemprop="datePublished"
-        datetime="{{ date |> date('ATOM') }}"
-      >
-        {{ date |> date("dd LLL yyyy") }}
-      </time>
-    </div>
-  </header>
-
-  <div class="markdown max-w-2xl mx-auto px-4" itemprop="articleBody">
-    {{ if draft }}
-      <div
-        class="mb-8 p-4 rounded-md bg-yellow-100/10 border border-yellow-500/50 text-yellow-500 flex items-center gap-3"
-      >
-        {{
-          comp.icon({
-            name: "triangle-alert",
-            type: "lucide",
-            classes: "w-5 h-5 shrink-0",
-          })
-        }}
-        <span class="font-bold">This post is a draft.</span>
-      </div>
-    {{ /if }}
-
-    {{ content |> safe }}
+      {{
+        comp.icon({
+          name: "arrow-left",
+          type: "lucide",
+          classes: "w-4 h-4",
+        })
+      }}
+      back to blog
+    </a>
   </div>
 
-  <footer
-    class="container-narrow mt-16 pt-8 border-t border-border"
+  <article
+    id="{{ title |> slugify }}"
+    class="h-entry"
+    role="article"
+    itemscope
+    itemtype="http://schema.org/BlogPosting"
+    aria-labelledby="{{ title |> slugify }}-title"
   >
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-3">
-        <div hidden>
-          <a class="u-url" href="{{ url |> url(true) }}">{{ title }}</a>
-        </div>
+    {{# 1. FIX: Use function syntax for Header to prevent content leak #}}
+    {{
+      comp.ui.postHeader({
+        title: title,
+        date: date,
+        tags: tags,
+      })
+    }}
 
-        <div class="text-sm">
-          <p class="mb-0 h-card p-author">
-            Written by <a
-              class="p-name u-url font-bold hover:underline"
-              rel="author"
-              href="{{ site.url }}"
-            >{{ author.name }}</a>
-          </p>
-          <a
-            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-            class="text-text-muted hover:text-primary text-xs transition-colors"
-            title="suggest a change to this post by submitting a PR"
-          >
-            Edit this post on Codeberg
-          </a>
-        </div>
-      </div>
+    <div
+      class="markdown e-content text-lg leading-relaxed"
+      itemprop="articleBody"
+    >
+      {{ if draft }}
+        {{# 2. FIX: Use function syntax for Callout #}}
+        {{
+          comp.ui.callout({
+            type: "warning",
+            text: '<span class="font-bold">This post is a draft.</span>',
+          })
+        }}
+      {{ /if }}
 
-      {{ if author.social.mastodon.url }}
+      {{ content |> safe }}
+    </div>
+
+    {{# 3. FIX: Use function syntax for Footer (Critical fix for your duplication) #}}
+    {{
+      comp.ui.postFooter({
+        title: title,
+        url: url,
+        author: author,
+        site: site,
+        src: page.src,
+      })
+    }}
+  </article>
+
+  {{ if !draft }}
+    <div class="mt-12 pt-8 border-t border-border">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-bold font-display m-0">Webmentions</h3>
         <a
-          href="{{ author.social.mastodon.url }}"
+          href="https://indieweb.org/Webmention"
+          class="flex items-center gap-1.5 text-sm text-text-muted hover:text-primary transition-colors"
           target="_blank"
           rel="noopener noreferrer"
-          class="
-            inline-flex items-center justify-center gap-2
-            px-4 py-2
-            border-2 rounded-md
-            font-bold text-sm
-            transition-all duration-200 ease-in-out
-            bg-mastodon border-mastodon text-white
-            hover:bg-transparent hover:text-mastodon
-            focus-visible:bg-transparent focus-visible:text-mastodon
-          "
         >
           {{
             comp.icon({
-              name: "mastodon",
-              type: "simpleicons",
-              classes: "fill-current w-4 h-4",
+              name: "badge-question-mark",
+              type: "lucide",
+              classes: "w-4 h-4",
             })
           }}
-          {{ author.social.mastodon.name }}
+          What’s this?
         </a>
-      {{ /if }}
-    </div>
-  </footer>
-</article>
+      </div>
 
-{{ if !draft }}
-  <div
-    class="container-narrow mt-12 pt-8 border-t border-border"
-  >
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="text-2xl font-bold font-display m-0">Webmentions</h3>
-      <a
-        href="https://indieweb.org/Webmention"
-        class="
-          flex items-center gap-1.5
-          text-sm text-text-muted
-          hover:text-[var(--color-primary)]
-          transition-colors duration-200
-        "
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {{
-          comp.icon({
-            name: "badge-question-mark",
-            type: "lucide",
-            classes: "w-4 h-4",
-          })
-        }}
-        What’s this?
-      </a>
+      {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
     </div>
-    {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
-  </div>
-{{ /if }}
+  {{ /if }}
+</div>

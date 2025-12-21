@@ -1,0 +1,37 @@
+- date: 2025-11-06
+  content: |
+    - updated [keys](keys) page
+    - merged blogroll & 88x31 into [bookmarks](/bookmarks)
+
+- date: 2025-11-05
+  content: added 88x31 badges page
+
+- date: 2025-11-04
+  content: added [Webmention](https://indieweb.org/Webmention)
+
+- date: 2025-11-29
+  content: |
+    - improved [status](/#status) section
+    - integrated [Umami](https://umami.balcova.online/share/n9fsFGeLa625WsGX) for analytics
+
+- date: 2025-11-27
+  content: added [notes](/notes) section
+
+- date: 2025-11-26
+  content: added [Miniflux Rules](/miniflux) page
+
+- date: 2025-11-25
+  content: improved the appearence of the [post list](/blog)
+
+- date: 2025-11-23
+  content: |
+   - [status](/#status) updates are now updated without refreshing the page
+   - [music](/music) page albums are now sorted in randomized order instead of by release date
+   - created a [changelog](/changelog)
+   - added [feeds](/feeds) page
+
+- date: 2025-11-22
+  content: improved the appearance of the [music](/music) page, which is powered by [CritiqueBrainz](https://critiquebrainz.org/), [MusicBrainz](https://musicbrainz.org/), [Cover Art Archive](https://coverartarchive.org/) and [ListenBrainz](https://listenbrainz.org/)
+
+- date: 2025-11-21
+  content: add manga to the [status](/#status) section

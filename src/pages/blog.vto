@@ -1,5 +1,5 @@
 ---
-layout: layouts/minimal.vto
+layout: layouts/base.vto
 title: blog
 description: "blog posts."
 url: /blog/
@@ -8,12 +8,21 @@ menu:
   order: 4
 ---
 
-<ol class="w-full list-none p-0">
-  {{ for post of search.pages("type=post", "date=desc") }}
-    <li
-      class="border-b border-border py-6 transition-colors duration-200 ease-in-out last:border-b-0 h-entry"
-    >
+{{ comp ui.container { width: "max-w-[var(--container-narrow)]", classes: "min-h-screen pb-20" } }}
+
+  {{ comp ui.pageHeader {
+    title: title,
+    centered: true,
+    width: "w-full",
+    classes: "mb-12"
+  } }}
+  {{ /comp }}
+
+  {{# Post List #}}
+  <div class="flex flex-col border-t border-border">
+    {{ for post of search.pages("type=post", "date=desc") }}
       {{ comp.post({ post: post }) }}
-    </li>
-  {{ /for }}
-</ol>
+    {{ /for }}
+  </div>
+
+{{ /comp }}

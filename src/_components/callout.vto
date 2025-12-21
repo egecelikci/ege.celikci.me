@@ -1,40 +1,55 @@
+{{ set type = type || "info" }}
+
+{{# 1. Icon Logic: Updated danger to use badge-alert #}}
 {{
   set iconMap = {
     action: "badge-check",
     warning: "badge-alert",
+    danger: "badge-alert",
     plus: "badge-plus",
     minus: "badge-minus",
     percent: "badge-percent",
     info: "badge-info",
+    success: "badge-check",
   }
 }}
 
-{{ set iconName = iconMap[type] || "info" }}
-{{ set calloutType = type || "info" }}
+{{# Select icon: User override -> Map lookup -> Fallback #}}
+{{ set iconName = icon || iconMap[type] || "info" }}
 
-{{ set borderColor = "border-text" }}
-{{ set iconColor = "text-text" }}
+{{# 2. Color Logic #}}
+{{
+  set colors = {
+    info:
+      "bg-blue-50/50 text-blue-900 border-blue-200 dark:bg-blue-950/30 dark:text-blue-200 dark:border-blue-800",
+    warning:
+      "bg-yellow-50/50 text-yellow-900 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-200 dark:border-yellow-800",
+    danger:
+      "bg-red-50/50 text-red-900 border-red-200 dark:bg-red-950/30 dark:text-red-200 dark:border-red-800",
+    success:
+      "bg-green-50/50 text-green-900 border-green-200 dark:bg-green-950/30 dark:text-green-200 dark:border-green-800",
+    action:
+      "bg-purple-50/50 text-purple-900 border-purple-200 dark:bg-purple-950/30 dark:text-purple-200 dark:border-purple-800",
+  }
+}}
 
-{{ set leftBorderColor = "border-l-text" }}
-{{ set iconColor = "text-text" }}
-
-{{ if type == "warning" || type == "action" }}
-  {{ set leftBorderColor = "border-l-primary" }}
-  {{ set iconColor = "text-primary" }}
-{{ else if type == "info" }}
-  {{ set leftBorderColor = "border-l-secondary" }}
-  {{ set iconColor = "text-secondary" }}
-{{ /if }}
+{{ set themeClass = colors[type] || colors.info }}
 
 <div
-  class="flex flex-row items-start gap-md p-md my-lg bg-bg-offset border border-border border-l-4 {{ leftBorderColor }} rounded-md text-left"
+  class="
+    flex gap-3 px-3 py-2 rounded-md border text-sm my-4
+    {{ themeClass }} {{ classes }}
+  "
 >
-  <span
-    class="shrink-0 inline-flex items-center justify-center mt-[0.15em] {{ iconColor }}"
-  >
-    {{ comp.icon({ name: iconName, type: "lucide", class: "w-6 h-6 block" }) }}
-  </span>
-  <div class="flex-1 min-w-0 space-y-sm">
-    {{ content }}
+  <div class="shrink-0 mt-0.5">
+    {{ comp.icon({ name: iconName, type: "lucide", classes: "w-5 h-5" }) }}
+  </div>
+
+  <div class="markdown max-w-none leading-normal [&>:last-child]:mb-0">
+    {{ if text }}
+      {{ text |> safe }}
+    {{ else }}
+      {{ content }}
+    {{ /if }}
   </div>
 </div>

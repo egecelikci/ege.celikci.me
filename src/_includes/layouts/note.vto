@@ -8,21 +8,13 @@ layout: layouts/base.vto
       href="/notes/"
       class="inline-flex items-center text-sm font-semibold text-text-muted hover:text-primary transition-colors"
     >
-      {{
-        comp.icon({
-          name: "arrow-left",
-          type: "lucide",
-          classes: "mr-1 w-3 h-3",
-        })
-      }}
+      {{ comp.icon({ name: "arrow-left", type: "lucide", classes: "mr-1 w-3 h-3" }) }}
       back to notes
     </a>
   </div>
 
   {{ set cardContent }}
-    <div
-      class="flex flex-wrap items-center px-4 pt-4 border-b border-border/50 bg-bg/50 rounded-t-lg"
-    >
+    <div class="flex flex-wrap items-center px-4 pt-4 border-b border-border/50 bg-bg/50 rounded-t-lg">
       <time
         class="dt-published text-sm text-text-muted font-mono"
         datetime="{{ date |> date('ISOdate') }}"
@@ -48,7 +40,7 @@ layout: layouts/base.vto
 
       {{ comp.notes.gallery({ images: images }) }}
 
-      <div class="markdown text-lg">
+      <div class="e-content markdown text-lg">
         {{ content |> safe }}
       </div>
     </div>
@@ -56,17 +48,13 @@ layout: layouts/base.vto
     <div class="bg-surface border-t border-border px-4 py-3">
       {{ comp.notes.stats({ stats: stats }) }}
     </div>
-
     {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
   {{ /set }}
 
-  {{
-    comp.card({
+  {{ comp.card({
       elevated: true,
       padding: "p-0",
       background: "bg-bg",
-      classes: "h-entry",
-      content: cardContent,
-    })
-  }}
-</article>
+      classes: "h-entry overflow-hidden",
+      content: cardContent
+  }) }}

@@ -1,5 +1,5 @@
 ---
-layout: layouts/page.vto
+layout: layouts/base.vto
 title: home
 menu:
   visible: true
@@ -8,176 +8,72 @@ url: /
 templateEngine: [vto, md]
 ---
 
-## links
+{{ set statusIconClass = "shrink-0 mr-3 transition-colors duration-300 " +
+  "group-[.is-loading]:text-primary/60 group-[.is-loading]:animate-pulse " + 
+  "group-[.is-active]:text-primary group-[.is-active]:animate-pulse " + 
+  "group-[.is-inactive]:text-text-muted group-[.is-inactive]:opacity-50 " + 
+  "group-[.is-changing]:text-primary-offset/60 group-[.is-changing]:animate-[panic_0.2s_ease-in-out_infinite_alternate] " +
+  "group-[.is-error]:text-status-error"
+}}
+{{ set linkIconClass = "text-3xl mr-3 group-hover:text-primary transition-colors duration-300" }}
 
-<ul class="list-none pl-0">
-  <li class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "music",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="https://listenbrainz.org/user/{{ author.username }}"
-    >ListenBrainz</a>
-  </li>
-  <li class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "gamepad",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="https://steamcommunity.com/id/{{ author.username }}"
-    >Steam</a>
-  </li>
-  <li class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "message-circle-dashed",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="{{ author.social.signal.url |> decodeBase64 }}"
-    >Signal</a>
-  </li>
-  <li class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "mail",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="mailto:{{ author.email |> obfuscate |> safe }}"
-    >Email</a>
-  </li>
-  <li class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "messages-square",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}"
-      rel="me"
-    >Matrix</a>
-    <a
-      href="keys#matrix"
-      title="view Matrix encryption keys"
-      aria-label="view Matrix encryption keys"
-      class="flex items-center ml-1 text-text-muted transition-colors duration-200 border-0 shadow-none hover:bg-transparent hover:text-primary"
-    >
-      <span class="sr-only">view Matrix encryption keys</span>
-      {{
-        comp.icon({
-          name: "key",
-          type: "lucide",
-          classes: "text-lg",
-        })
-      }}</a>
-  </li>
-  <li hidden class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "github",
-        type: "lucide",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="https://github.com/{{ author.username }}"
-      rel="me"
-    >GitHub</a>
-  </li>
-  <li hidden class="flex items-center mb-1">
-    {{
-      comp.icon({
-        name: "mastodon",
-        type: "simpleicons",
-        classes:
-          "text-2xl mr-1 transition-[color,opacity] duration-300 ease-out",
-      })
-    }}<a
-      href="{{ author.social.mastodon.url }}"
-      rel="me"
-    >Mastodon</a>
-  </li>
-</ul>
+{{ comp ui.container { width: "max-w-[80ch]", classes: "pb-20" } }}
 
-## status
+  {{ comp ui.pageHeader { 
+    title: title, 
+    width: "w-full" 
+  } }}
+  {{ /comp }}
 
-<ul class="link-list--status font-mono list-none pl-0">
-  <li
-    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
-  >
-    {{
-      comp.icon({
-        name: "headphones",
-        type: "lucide",
-        classes:
-          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-status-loading group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-status-error group-[.is-active]:text-status-active group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-status-inactive group-[.is-inactive]:opacity-80 group-[.is-changing]:text-status-loading group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
-      })
-    }}<div
-      class="overflow-hidden grow"
-      id="music-status-container"
-    >
-      <span
-        class="inline-block will-change-transform"
-        data-chars="×"
-        data-status=""
-      >××××××××××××××××××××××××××××××</span>
-    </div>
-  </li>
-  <li
-    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
-  >
-    {{
-      comp.icon({
-        name: "gamepad-2",
-        type: "lucide",
-        classes:
-          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-status-loading group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-status-error group-[.is-active]:text-status-active group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-status-inactive group-[.is-inactive]:opacity-80 group-[.is-changing]:text-status-loading group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
-      })
-    }}<div
-      class="overflow-hidden grow"
-      id="game-status-container"
-    >
-      <span
-        class="inline-block will-change-transform"
-        data-chars="×"
-        data-status=""
-      >××××××××××××××××××××××××××××××</span>
-    </div>
-  </li>
-  <li
-    class="flex items-center whitespace-nowrap max-w-full group hyphens-auto [&_a]:text-inherit [&_a]:underline [&_a]:decoration-dotted [&_a]:transition-opacity [&_a]:duration-200 [&_a]:hover:opacity-70 [&_cite]:not-italic"
-  >
-    {{
-      comp.icon({
-        name: "book",
-        type: "lucide",
-        classes:
-          "shrink-0 mr-1 transition-colors duration-300 ease-out group-[.is-loading]:text-status-loading group-[.is-loading]:animate-[status-breathe_1.5s_ease-in-out_infinite] group-[.is-error]:text-status-error group-[.is-active]:text-status-active group-[.is-active]:animate-[status-breathe_2s_ease-in-out_infinite] group-[.is-inactive]:text-status-inactive group-[.is-inactive]:opacity-80 group-[.is-changing]:text-status-loading group-[.is-changing]:animate-[status-panic_0.2s_ease-in-out_infinite_alternate]",
-      })
-    }}<div
-      class="overflow-hidden grow"
-      id="manga-status-container"
-    >
-      <span
-        class="inline-block will-change-transform"
-        data-chars="×"
-        data-status=""
-      >××××××××××××××××××××××××××××××</span>
-    </div>
-  </li>
-</ul>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <section>
+      <div class="flex items-center gap-2 mb-6 text-text-muted">
+        {{ comp.icon({ name: "share-2", type: "lucide", classes: "w-5 h-5" }) }}<h2 class="text-sm uppercase tracking-[0.2em] font-bold m-0">Connect</h2>
+      </div>
+      {{ set signalUrl = author.social.signal.url |> decodeBase64 }}
+      {{ set emailUrl = "mailto:" + author.email |> obfuscate }}
+      {{ set matrixUrl = "https://matrix.to/#/@" + author.social.matrix.username + ":" + author.social.matrix.metropolis.host }}
+      {{ set links = [
+        { name: "ListenBrainz", url: "https://listenbrainz.org/user/" + author.username, icon: "music" },
+        { name: "Steam", url: "https://steamcommunity.com/id/" + author.username, icon: "gamepad" },
+        { name: "Signal", url: signalUrl, icon: "message-circle-dashed" },
+        { name: "Email", url: emailUrl, icon: "mail" },
+        { name: "Matrix", url: matrixUrl, icon: "messages-square", keyUrl: "keys#matrix" }
+      ] }}<ul class="list-none p-0 space-y-4">
+        {{ for link of links }}<li class="group flex items-center justify-between">
+            <div class="flex items-center">
+              <a href="{{ link.url }}" class="flex items-center text-xl font-semibold no-underline hover:text-primary transition-all" {{ link.name === 'Matrix' ? 'rel="me"' : '' }}>{{ comp.icon({ name: link.icon, type: "lucide", classes: linkIconClass }) }}<span class="border-b-2 border-transparent group-hover:border-primary transition-all ml-1">{{ link.name }}</span></a>{{ if link.keyUrl }}<a href="{{ link.keyUrl }}" title="view encryption keys" class="flex items-center ml-3 text-text-muted transition-colors hover:text-primary">{{ comp.icon({ name: "key", type: "lucide", classes: "text-lg" }) }}</a>{{ /if }}
+            </div>
+          </li>
+        {{ /for }}
+      </ul>
+    </section>
+    <section>
+      <div class="flex items-center gap-2 mb-6 text-text-muted">
+        {{ comp.icon({ name: "activity", type: "lucide", classes: "w-5 h-5" }) }}<h2 class="text-sm uppercase tracking-[0.2em] font-bold m-0">Live Status</h2>
+      </div>
+      <div class="status-dashboard bg-surface border border-border rounded-2xl p-6 font-mono text-sm space-y-6 shadow-sm [&_cite]:not-italic">
+        <div class="flex items-start group" id="music-status-container">
+          {{ comp.icon({ name: "headphones", type: "lucide", classes: statusIconClass + " w-5 h-5 mt-0.5" }) }}<div class="overflow-hidden grow">
+            <div class="text-[10px] uppercase opacity-40 mb-1 tracking-widest font-sans">Listening to</div>
+            <span class="inline-block whitespace-nowrap text-text" data-chars="×" data-status="">××××××××××××××××××</span>
+          </div>
+        </div>
+        <div class="flex items-start group" id="game-status-container">
+          {{ comp.icon({ name: "gamepad-2", type: "lucide", classes: statusIconClass + " w-5 h-5 mt-0.5" }) }}<div class="overflow-hidden grow">
+            <div class="text-[10px] uppercase opacity-40 mb-1 tracking-widest font-sans">Playing</div>
+            <span class="inline-block whitespace-nowrap text-text" data-chars="×" data-status="">××××××××××××××××××</span>
+          </div>
+        </div>
+        <div class="flex items-start group" id="manga-status-container">
+          {{ comp.icon({ name: "book", type: "lucide", classes: statusIconClass + " w-5 h-5 mt-0.5" }) }}<div class="overflow-hidden grow">
+            <div class="text-[10px] uppercase opacity-40 mb-1 tracking-widest font-sans">Reading</div>
+            <span class="inline-block whitespace-nowrap text-text" data-chars="×" data-status="">××××××××××××××××××</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+{{ /comp }}

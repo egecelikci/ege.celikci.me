@@ -1,0 +1,30 @@
+---
+layout: layouts/base.vto
+title: changelog
+subtitle: "website development changelog."
+templateEngine: [vto]
+url: /changelog/
+---
+
+{{ set intro }}
+a [slash page](https://slashpages.net/#changelog) for website development changelogs.
+this changelog is also available as an [Atom feed](/feeds#changelog-entries) via 
+[![HTML Journal](/assets/images/88x31/banner-htmlj.png)](https://journal.miso.town)
+{{ /set }}
+
+{{ comp ui.pageHeader {
+  title: title,
+  subtitle: subtitle
+} }}
+  {{ intro |> md }}
+{{ /comp }}
+
+{{ comp ui.container }}
+  {{ for entry of changelog }}
+    
+    {{ comp journal { date: entry.date } }}
+      {{ entry.content |> md }}
+    {{ /comp }}
+
+  {{ /for }}
+{{ /comp }}

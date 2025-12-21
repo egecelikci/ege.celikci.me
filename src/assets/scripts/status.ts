@@ -1,7 +1,11 @@
 import gsap from "npm:gsap@^3.14.1";
 import ScrambleTextPlugin from "npm:gsap@^3.14.1/ScrambleTextPlugin";
 
-gsap.registerPlugin(ScrambleTextPlugin,);
+try {
+  gsap.registerPlugin(ScrambleTextPlugin,);
+} catch (e) {
+  console.warn("GSAP ScrambleTextPlugin failed to register:", e,);
+}
 
 const CONFIG = {
   baseInterval: 3000,
@@ -9,7 +13,6 @@ const CONFIG = {
   backoffFactor: 1.5,
 };
 
-const STATUS_ORDER = ["music-status", "game-status", "manga-status",];
 const activeContexts = new WeakMap<Element, gsap.Context>();
 const pendingTransitions = new WeakMap<Element, number>();
 
@@ -17,19 +20,30 @@ let currentInterval = CONFIG.baseInterval;
 let pollTimeout: number | null = null;
 let abortController: AbortController | null = null;
 
+/**
+ * Updates the visual state classes.
+ * FIX: Now explicitly removes 'is-changing' to prevent stuck states.
+ */
 function setStatusState(
   type: "loading" | "error" | "active" | "inactive" | "clear",
   container?: HTMLElement,
 ) {
   const targetItems = container
-    ? [container.closest("li",),]
-    : document.querySelectorAll(".link-list--status > li",);
+    ? [container,]
+    : document.querySelectorAll(".status-dashboard > div",);
 
-  targetItems.forEach((li,) => {
-    if (!li) return;
-    li.classList.remove("is-loading", "is-error", "is-active", "is-inactive",);
+  targetItems.forEach((item,) => {
+    if (!item) return;
+    // CRITICAL FIX: Ensure 'is-changing' is removed when setting a new stable state
+    item.classList.remove(
+      "is-loading",
+      "is-error",
+      "is-active",
+      "is-inactive",
+      "is-changing",
+    );
     if (type !== "clear") {
-      li.classList.add(`is-${type}`,);
+      item.classList.add(`is-${type}`,);
     }
   },);
 }
@@ -69,7 +83,7 @@ async function loadStatus() {
   abortController = new AbortController();
 
   const hasData = document.querySelector(
-    ".link-list--status li.is-active, .link-list--status li.is-inactive",
+    ".status-dashboard div.is-active, .status-dashboard div.is-inactive",
   );
   if (!hasData) setStatusState("loading",);
 
@@ -129,27 +143,34 @@ function processChunk(htmlString: string,) {
 }
 
 function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
-  const li = container.closest("li",);
-  if (!li) return;
-  li.hidden = false;
-
-  const currentInner = container.querySelector(`[id="${newData.id}"]`,);
+  container.hidden = false;
 
   const getTxt = (el: Element | null,) => {
-    const s = el?.querySelector("span",);
-    return s?.dataset.status || s?.textContent || "";
+    if (!el) return "";
+    const s = el.querySelector("span[data-status]",)
+      || el.querySelector(".text-text",);
+    return s?.getAttribute("data-status",) || s?.textContent?.trim() || "";
+  };
+
+  const getActiveState = (el: Element | null,) => {
+    const s = el?.querySelector("span[data-status]",)
+      || el?.querySelector(".text-text",);
+    return s?.getAttribute("data-active",) === "true";
   };
 
   const newTxt = getTxt(newData,);
-  const curTxt = getTxt(currentInner,);
+  const curTxt = getTxt(container,);
 
-  if (newTxt === curTxt && curTxt !== "") return;
+  const newState = getActiveState(newData,);
+  const curState = container.classList.contains("is-active",);
+
+  if (newTxt === curTxt && newState === curState && curTxt !== "") return;
 
   if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
-    li.classList.add("is-changing",);
+    container.classList.add("is-changing",);
 
-    const timeoutId = setTimeout(() => {
-      li.classList.remove("is-changing",);
+    const timeoutId = window.setTimeout(() => {
+      container.classList.remove("is-changing",);
       pendingTransitions.delete(container,);
       performUpdate(container, newData, newTxt, curTxt,);
     }, 1000,);
@@ -169,12 +190,13 @@ function performUpdate(
   newTxt: string,
   curTxt: string,
 ) {
+  // 1. Determine State
+  // We check for the span, but default to 'inactive' if missing to avoid crashes
   const newSpan = newData.querySelector("span",);
+  const isActive = newSpan?.getAttribute("data-active",) === "true";
 
-  if (newSpan) {
-    const isActive = newSpan.dataset.active === "true";
-    setStatusState(isActive ? "active" : "inactive", container,);
-  }
+  // 2. Apply State (This removes is-changing and applies is-active/inactive)
+  setStatusState(isActive ? "active" : "inactive", container,);
 
   if (activeContexts.has(container,)) {
     activeContexts.get(container,)?.revert();
@@ -183,16 +205,25 @@ function performUpdate(
   const richHTML = newSpan?.innerHTML || "";
   const placeholderChar = newSpan?.dataset.chars || "█";
   const scrambleNoise = placeholderChar;
-
-  const dynamicDelay = 0;
   const scrambleDuration = 1 + newTxt.length * 0.03;
 
+  // 3. Update DOM Content
   container.setAttribute("aria-label", newTxt,);
-  container.innerHTML = "";
-  container.appendChild(newData,);
 
+  const textWrapper = container.querySelector(".overflow-hidden.grow",);
+
+  if (textWrapper && newSpan) {
+    const oldSpan = textWrapper.querySelector(".text-text",);
+    if (oldSpan) oldSpan.remove();
+
+    newSpan.classList.add("inline-block", "whitespace-nowrap", "text-text",);
+    textWrapper.appendChild(newSpan,);
+  }
+
+  // 4. Run Animation
   const ctx = gsap.context(() => {
-    const targetSpan = container.querySelector("span",);
+    // We target the newSpan we just appended
+    const targetSpan = newSpan;
     if (!targetSpan) return;
 
     gsap.set(targetSpan, {
@@ -206,7 +237,7 @@ function performUpdate(
     },);
 
     const tl = gsap.timeline({
-      delay: dynamicDelay,
+      delay: 0,
       onComplete: () => {
         ctx.add(() => {
           targetSpan.dataset.unscrambled = "true";
@@ -221,7 +252,9 @@ function performUpdate(
       },
     },);
 
-    if (curTxt) {
+    const hasPlugin = gsap.plugins?.scrambleText;
+
+    if (curTxt && hasPlugin) {
       tl.to(targetSpan, {
         duration: scrambleDuration,
         ease: "power2.out",
@@ -238,12 +271,8 @@ function performUpdate(
         opacity: 1,
         duration: scrambleDuration,
         ease: "power2.out",
-        scrambleText: {
-          text: newTxt,
-          chars: scrambleNoise,
-          speed: 0.2,
-          tweenLength: true,
-          revealDelay: 0.1,
+        onStart: () => {
+          targetSpan.textContent = newTxt;
         },
       },);
     }

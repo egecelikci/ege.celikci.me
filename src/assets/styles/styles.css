@@ -32,11 +32,6 @@
     --color-secondary: #65cafe;
     --color-mastodon: #595aff;
 
-    --status-loading: #ffa500;
-    --status-error: #ff0000;
-    --status-active: #22c55e;
-    --status-inactive: #ffa500;
-
     --container-max: 1440px;
     --container-narrow: 65ch;
   }
@@ -291,22 +286,13 @@
   }
 }
 
-@keyframes status-breathe {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes status-panic {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.2;
+@layer utilities {
+  @keyframes panic {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
   }
 }
