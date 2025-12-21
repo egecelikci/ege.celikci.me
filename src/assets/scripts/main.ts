@@ -1,8 +1,12 @@
-// Always load critical/small logic immediately
-import { animateGridItems } from "./common/grid.ts";
+import { initLazyLoad } from "./common/lazyload.ts";
 
 async function init() {
-  animateGridItems(".album-item");
+  initLazyLoad();
+  
+  if (document.querySelector(".album-item")) {
+    const { animateGridItems } = await import("./common/grid.ts");
+    animateGridItems(".album-item");
+  }
 
   if (document.querySelector("[data-pswp-gallery]")) {
     const { initPhotoSwipe } = await import("./common/lightbox.ts");
@@ -13,11 +17,9 @@ async function init() {
     const { loadStatus } = await import("./status.ts");
     loadStatus();
   }
-
-  const { initLazyLoad } = await import("./common/lazyload.ts");
-  initLazyLoad();
 }
 
+// Global execution check
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
