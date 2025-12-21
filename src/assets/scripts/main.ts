@@ -1,15 +1,25 @@
-import { animateGridItems, } from "./common/grid.ts";
+// Always load critical/small logic immediately
+import { animateGridItems } from "./common/grid.ts";
 
-import "./common/lazyload.ts";
-import "./common/lightbox.ts";
-import "./common/preload.ts";
-import "./common/register-serviceworker.ts";
+async function init() {
+  animateGridItems(".album-item");
 
-const albumItems = document.querySelectorAll(".album-item",);
-if (albumItems.length) {
-  requestAnimationFrame(() => animateGridItems(albumItems,));
+  if (document.querySelector("[data-pswp-gallery]")) {
+    const { initPhotoSwipe } = await import("./common/lightbox.ts");
+    initPhotoSwipe();
+  }
+
+  if (document.querySelector(".status-dashboard")) {
+    const { loadStatus } = await import("./status.ts");
+    loadStatus();
+  }
+
+  const { initLazyLoad } = await import("./common/lazyload.ts");
+  initLazyLoad();
 }
 
-if (document.querySelector(".status-dashboard",)) {
-  import("./status.ts");
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
 }
