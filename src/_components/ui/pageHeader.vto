@@ -1,7 +1,7 @@
 {{ set headerClasses = "py-12 md:py-20 " + (classes || "") }}
 {{ set tag = as || "header" }}
 {{ set alignClass = (centered == false) ? "text-left" : "text-center" }}
-{{ set maxWidth = width || "max-w-[var(--container-narrow)]" }}
+{{ set maxWidth = width || "max-w-narrow" }}
 
 <{{ tag }} class="w-full mx-auto {{ maxWidth }} {{ alignClass }} {{
   headerClasses
@@ -19,7 +19,7 @@
 
 {{# FIX: Added '!ignoreContent' check to prevent global content leaks #}}
 {{ if content && !ignoreContent }}
-  <div class="markdown mt-8 text-lg leading-relaxed text-left">
+  <div class="markdown mt-8 text-lg leading-relaxed text-center">
     {{ content }}
   </div>
 {{ /if }}

@@ -1,19 +1,16 @@
 <footer
   class="
-    mt-24 py-12 border-t border-[var(--color-border)]
-    text-sm text-[var(--color-text-offset)]
+    mt-24 py-12 border-t border-border
+    text-sm text-text-muted
     print:hidden
   "
   role="contentinfo"
 >
   <div
-    class="
-      mx-auto w-full max-w-[var(--container-max)] px-4 md:px-0 md:w-[90%]
-      flex flex-col md:flex-row md:items-center justify-between gap-8
-    "
+    class="mx-auto w-full max-w-narrow px-4 md:max-w-max md:px-0 md:w-[90%] flex flex-col md:flex-row md:items-center justify-between gap-8"
   >
     <div class="flex flex-col gap-2 text-center md:text-left">
-      <div class="font-medium text-[var(--color-text)]">
+      <div class="font-medium text-text">
         <span aria-label="Copyright">&copy;</span> {{
           build.timestamp
           |> date("yyyy")
@@ -21,9 +18,9 @@
         <a
           href="{{ site.url }}"
           class="
-            hover:text-[var(--color-primary)] transition-colors
-            underline decoration-[var(--color-border)] underline-offset-4
-            hover:decoration-[var(--color-primary)]
+            hover:text-primary transition-colors
+            underline decoration-border underline-offset-4
+            hover:decoration-primary
           "
           rel="author"
         >
@@ -36,7 +33,7 @@
       >
         <a
           href="https://creativecommons.org/licenses/by/4.0/deed.en"
-          class="hover:text-[var(--color-primary)] transition-colors"
+          class="hover:text-primary transition-colors"
           rel="license"
         >
           CC BY 4.0
@@ -49,7 +46,7 @@
           >|</span>
           <a
             href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-            class="font-mono hover:text-[var(--color-primary)] transition-colors"
+            class="font-mono hover:text-primary transition-colors"
             title="View commit {{ build.git }}"
             aria-label="View git commit {{ build.git.substring(0, 7) }}"
           >
@@ -64,7 +61,7 @@
         <li>
           <a
             href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)]"
+            class="group flex items-center gap-2 transition-colors hover:text-primary"
             aria-label="edit this page on Codeberg"
           >
             {{
@@ -81,7 +78,7 @@
         <li>
           <a
             href="{{ '/feeds' |> url }}"
-            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)]"
+            class="group flex items-center gap-2 transition-colors hover:text-primary"
             aria-label="feeds"
           >
             {{
@@ -98,7 +95,7 @@
         <li>
           <button
             onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            class="group flex items-center gap-2 transition-colors hover:text-[var(--color-primary)] cursor-pointer"
+            class="group flex items-center gap-2 transition-colors hover:text-primary cursor-pointer"
             type="button"
             aria-label="scroll to top"
           >

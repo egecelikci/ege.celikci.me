@@ -19,13 +19,12 @@ automatically fetched from my public [album ratings](https://critiquebrainz.org/
   title: title,
   subtitle: subtitle
 } }}
-    {{ intro |> md }}
+  {{ intro |> md }}
 {{ /comp }}
-{{ comp ui.container { classes: "pb-20" } }}
+{{ comp ui.container { width: "max-w-max", classes: "pb-20" } }}
   
   <div class="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 md:gap-8 lg:gap-10 py-8">
     
-    {{# Shuffle creates a fresh experience on every build #}}
     {{ for album of favorite.albums |> shuffle }}
       {{ comp.ui.album({ album: album }) }}
     {{ /for }}
