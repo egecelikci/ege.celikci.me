@@ -3,18 +3,19 @@ layout: layouts/base.vto
 ---
 
 <article>
-  <header class="container pt-8 pb-2">
-    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
-      {{ title }}
-    </h1>
-    {{ if subtitle }}
-      <p class="text-xl text-text-muted">
-        {{ subtitle |> safe }}
-      </p>
-    {{ /if }}
-  </header>
+  {{ if title }}
+    {{ comp.ui.pageHeader({
+      title: title,
+      subtitle: subtitle,
+      centered: true,
+      width: "w-full"
+    }) }}
+  {{ /if }}
 
-  <div class="markdown container pb-8">
-    {{ content |> safe }}
-  </div>
+  {{ comp ui.container { 
+      width: "max-w-[var(--container-narrow)]", 
+      classes: "pb-20 markdown text-lg leading-relaxed" 
+  } }}
+      {{ content |> safe }}
+  {{ /comp }}
 </article>

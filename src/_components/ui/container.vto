@@ -1,0 +1,8 @@
+{{ set tag = as || "div" }}
+{{ set maxWidth = width || "max-w-[var(--container-max)]" }}
+
+<{{ tag }} class="w-full px-4 md:w-[90%] md:px-0 mx-auto {{ maxWidth }} {{
+  classes || ""
+}}">
+{{ content }}
+</{{ tag }}>
