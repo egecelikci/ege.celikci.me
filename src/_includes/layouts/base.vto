@@ -27,6 +27,13 @@
     <link rel="stylesheet" href="/assets/styles/styles.css" />
 
     {{ include "meta.vto" }}
+    {{ if !build.dev && build.umamiScript && build.umamiId }}
+      <script
+        defer
+        src="{{ build.umamiScript }}"
+        data-website-id="{{ build.umamiId }}"
+      ></script>
+    {{ /if }}
   </head>
   <body class="overflow-x-hidden print:bg-white print:text-black">
     <a
