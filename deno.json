@@ -9,11 +9,11 @@
     },
     "build": {
       "description": "Build the site for production",
-      "command": "MODE=production deno task lume"
+      "command": "deno task lume"
     },
     "serve": {
       "description": "Run and serve the site for development",
-      "command": "MODE=development deno task lume -s"
+      "command": "deno task lume -s"
     },
     "fmt": "deno task dprint fmt",
     "fmt:check": "deno task dprint check",
