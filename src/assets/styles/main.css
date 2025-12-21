@@ -1,0 +1,264 @@
+@import url("./vendor/photoswipe.css");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  @font-face {
+    font-family: "Josefin Sans";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src:
+      url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
+      url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
+  }
+
+  @font-face {
+    font-family: "Inconsolata";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 200 900;
+    src: url("/assets/fonts/Inconsolata.woff2") format("woff2");
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@theme {
+  --color-bg: #fef6e4;
+  --color-surface: #f3e1d8;
+  --color-text: #172c66;
+  --color-text-muted: #006e8a;
+  --color-border: #f3d2c1;
+  --color-primary: #a60c49;
+  --color-primary-offset: #ff3d6a;
+  --color-secondary: #65cafe;
+  --color-mastodon: #595aff;
+
+  --color-status-error: #dc2626;
+  --color-status-active: var(--color-primary);
+  --color-status-inactive: var(--color-text-muted);
+
+  --font-sans: "Josefin Sans", system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "Inconsolata", monospace;
+  --font-display: var(--font-sans);
+
+  --width-narrow: 65ch;
+  --max-width-narrow: 65ch;
+  --width-max: 1440px;
+  --max-width-max: 1440px;
+
+  --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
+  --shadow-elevated:
+    0 10px 15px hsl(0 0% 0% / 0.1),
+    0 4px 6px hsl(0 0% 0% / 0.05);
+
+  --color-prose-body: var(--color-text);
+  --color-prose-headings: var(--color-text);
+  --color-prose-links: var(--color-text);
+  --color-prose-bold: var(--color-text);
+  --color-prose-counters: var(--color-text-muted);
+  --color-prose-bullets: var(--color-text-muted);
+  --color-prose-quotes: var(--color-text);
+  --color-prose-quote-borders: var(--color-primary);
+
+  --color-prose-code: var(--color-text);
+  --color-prose-code-bg: var(--color-surface);
+
+  --color-prose-pre-code: var(--color-text);
+  --color-prose-pre-bg: var(--color-surface);
+}
+
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    color-scheme: dark;
+    --color-bg: #463366;
+    --color-surface: #5c3c4c;
+    --color-text: #c9bae2;
+    --color-text-muted: #b8c1ec;
+    --color-border: #cabae2;
+    --color-primary: #ff6e6c;
+    --color-primary-offset: #72a194;
+    --color-secondary: #abd1c6;
+  }
+}
+
+:root.theme-dark {
+  color-scheme: dark;
+  --color-bg: #463366;
+  --color-surface: #5c3c4c;
+  --color-text: #c9bae2;
+  --color-text-muted: #b8c1ec;
+  --color-border: #cabae2;
+  --color-primary: #ff6e6c;
+  --color-primary-offset: #72a194;
+  --color-secondary: #abd1c6;
+}
+
+@layer components {
+  .markdown {
+    @apply prose prose-lg max-w-none;
+
+    --tw-prose-body: var(--color-prose-body);
+    --tw-prose-headings: var(--color-prose-headings);
+    --tw-prose-links: var(--color-prose-links);
+    --tw-prose-bold: var(--color-prose-bold);
+    --tw-prose-counters: var(--color-prose-counters);
+    --tw-prose-bullets: var(--color-prose-bullets);
+    --tw-prose-hr: var(--color-border);
+    --tw-prose-quotes: var(--color-prose-quotes);
+    --tw-prose-quote-borders: var(--color-prose-quote-borders);
+    --tw-prose-caption: var(--color-text-muted);
+
+    --tw-prose-pre-code: inherit;
+    --tw-prose-pre-bg: transparent;
+
+    --tw-prose-th-borders: var(--color-border);
+    --tw-prose-td-borders: var(--color-border);
+    --tw-prose-code: var(--color-prose-code);
+
+    :not(pre) > code {
+      @apply inline-block font-mono text-sm px-[0.4em] py-[0.1em] rounded-sm
+        bg-surface border border-border text-text whitespace-pre-wrap
+        break-words align-middle;
+
+      &::before {
+        content: none !important;
+      }
+      &::after {
+        content: none !important;
+      }
+    }
+
+    h1, h2, h3, h4 {
+      @apply font-display font-bold relative;
+    }
+
+    .heading-anchor {
+      @apply hidden absolute top-0 -left-[1.25em] w-[1em] opacity-0
+        transition-opacity duration-200;
+      @media (min-width: 768px) {
+        display: block;
+      }
+    }
+    :where(h1, h2, h3, h4):hover .heading-anchor,
+    :where(h1, h2, h3, h4):focus-visible .heading-anchor {
+      @apply opacity-100;
+    }
+
+    a:not(.btn) {
+      @apply no-underline border-b border-current transition-all duration-200
+        font-normal text-[length:inherit] text-[color:var(--tw-prose-links)];
+      box-shadow: inset 0 -2px 0 0 currentColor;
+
+      &:hover {
+        @apply text-white border-primary outline-none;
+        box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
+
+        code {
+          @apply bg-primary border-primary text-white;
+        }
+      }
+    }
+
+    figure.code-block {
+      @apply my-8 block w-full max-w-full rounded-md border border-border
+        bg-surface text-left overflow-hidden;
+
+      figcaption.code-header {
+        @apply flex items-center justify-start border-b border-border bg-bg px-4
+          py-2 font-mono text-xs font-bold text-text-muted not-italic;
+      }
+
+      pre.shiki {
+        @apply m-0 border-0 rounded-none w-full max-w-full p-4 text-xs
+          lg:text-sm;
+        overflow-x: auto;
+
+        /* Reset for Shiki blocks */
+        code {
+          @apply bg-transparent p-0 text-inherit border-0;
+        }
+
+        &::-webkit-scrollbar {
+          height: 8px;
+        }
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--color-border);
+          border-radius: 4px;
+        }
+      }
+    }
+
+    .embed {
+      @apply h-0 relative;
+      &--16-9 {
+        padding-bottom: 56.25% !important;
+      }
+      &--4-3 {
+        padding-bottom: 75% !important;
+      }
+      video, iframe {
+        @apply absolute top-0 left-0 w-full h-full z-10 my-0;
+      }
+    }
+  }
+
+  .pswp {
+    --pswp-bg: var(--color-bg);
+    --pswp-placeholder-bg: var(--color-surface);
+    --pswp-top-bar-bg: color-mix(in srgb, var(--color-bg), transparent 60%);
+    --pswp-icon-color: var(--color-text);
+    --pswp-icon-color-secondary: var(--color-text-muted);
+    --pswp-icon-stroke-color: var(--color-bg);
+    --pswp-icon-stroke-width: 1.5px;
+  }
+
+  .pswp__custom-caption {
+    @apply absolute bottom-0 left-0 w-full text-center box-border
+      pointer-events-none p-8 md:p-16;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-bg), transparent 20%) 0%,
+      transparent 100%
+    );
+    color: var(--color-text);
+    font-size: var(--text-base);
+    line-height: 1.5;
+    transition: opacity 0.25s ease;
+    &--empty {
+      @apply opacity-0 p-0;
+    }
+    a {
+      @apply text-text underline hover:text-primary;
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes panic {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+}
