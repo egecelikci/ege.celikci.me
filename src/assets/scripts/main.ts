@@ -10,6 +10,6 @@ if (albumItems.length) {
   requestAnimationFrame(() => animateGridItems(albumItems,));
 }
 
-if (document.querySelector(".link-list--status",)) {
+if (document.querySelector(".status-dashboard",)) {
   import("./status.ts");
 }

@@ -1,11 +1,23 @@
-{{ set paddingClass = padding ?? "p-5" }}
-{{ set bgClass = background ?? "bg-surface" }}
+{{ set paddingClass = padding || "p-5" }}
+{{ set bgClass = background || "bg-surface" }}
 {{
   set shadowClass = elevated ? "shadow-elevated" : "shadow-sm hover:shadow-md"
 }}
 
-<div
-  class="border border-border rounded-lg transition-all duration-300 {{ paddingClass }} {{ bgClass }} {{ shadowClass }} {{ classes }}"
->
+{{ if href }}
+  href="{{ href }}" class="block w-full border border-border rounded-lg
+  transition-all duration-300 hover:border-primary/50 {{ paddingClass }} {{
+    bgClass
+  }} {{ shadowClass }} {{ classes }}"
+  {{ attributes |> attr |> safe }}
+  >
   {{ content }}
-</div>
+  </a>
+{{ else }}
+  <div
+    class="w-full border border-border rounded-lg {{ paddingClass }} {{ bgClass }} {{ shadowClass }} {{ classes }}"
+    {{ attributes |> attr |> safe }}
+  >
+    {{ content }}
+  </div>
+{{ /if }}
