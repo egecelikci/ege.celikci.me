@@ -9,7 +9,7 @@
     },
     "build": {
       "description": "Build the site for production",
-      "command": "MODE=production deno task lume && deno run -A npm:workbox-cli@7.4.0 generateSW workbox.config.cjs"
+      "command": "MODE=production deno task lume"
     },
     "serve": {
       "description": "Run and serve the site for development",
