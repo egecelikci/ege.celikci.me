@@ -9,11 +9,11 @@
     },
     "build": {
       "description": "Build the site for production",
-      "command": "deno task lume"
+      "command": "MODE=production deno task lume && deno run -A npm:workbox-cli@7.4.0 generateSW workbox.config.cjs"
     },
     "serve": {
       "description": "Run and serve the site for development",
-      "command": "deno task lume -s"
+      "command": "MODE=development deno task lume -s"
     },
     "fmt": "deno task dprint fmt",
     "fmt:check": "deno task dprint check",
