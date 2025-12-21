@@ -24,7 +24,7 @@
       crossorigin
     />
     <link rel="preconnect" href="https://webmention.io" />
-    <link rel="stylesheet" href="/assets/styles/styles.css" />
+    <link rel="stylesheet" href="/assets/styles/main.css" />
 
     {{ include "meta.vto" }}
     {{ if !build.dev && build.umamiScript && build.umamiId }}
@@ -38,7 +38,7 @@
   <body class="overflow-x-hidden print:bg-white print:text-black">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:left-1/2 focus:top-0 focus:text-base focus:-translate-x-1/2 focus:bg-[var(--color-bg-offset)] focus:text-white focus:rounded-b-lg focus:px-6 focus:py-4 focus:outline-none focus:whitespace-nowrap print:hidden"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:left-1/2 focus:top-0 focus:text-base focus:-translate-x-1/2 bg-surface focus:text-white focus:rounded-b-lg focus:px-6 focus:py-4 focus:outline-none focus:whitespace-nowrap print:hidden"
     >skip to main content</a>
 
     <div class="hfeed flex flex-col min-h-screen relative" role="document">

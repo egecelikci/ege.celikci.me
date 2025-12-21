@@ -11,9 +11,9 @@ templateEngine: [vto]
 
 {{ set results = search.pages("type=note", "date=desc") }}
 
-{{ comp ui.container { width: "max-w-[var(--container-narrow)]", classes: "min-h-screen" } }}
+{{# Removed width param since it defaults to narrow now #}}
+{{ comp ui.container { classes: "min-h-screen" } }}
 
-  {{# Unified Header: This will now match the big 'Home' header perfectly #}}
   {{ comp ui.pageHeader { 
     title: title, 
     width: "w-full",

@@ -6,10 +6,10 @@
 function getGitHash(): string {
   try {
     const command = new Deno.Command("git", {
-      args: ["rev-parse", "HEAD"],
-    });
-    const { stdout } = command.outputSync();
-    return new TextDecoder().decode(stdout).trim();
+      args: ["rev-parse", "HEAD",],
+    },);
+    const { stdout, } = command.outputSync();
+    return new TextDecoder().decode(stdout,).trim();
   } catch {
     return "unknown";
   }
@@ -22,18 +22,18 @@ function isCSSNakedDay(): boolean {
   const now = Date.now();
   const currentYear = new Date().getFullYear();
   // CSS Naked Day is April 9th
-  const startEpoch = new Date(`${currentYear}-04-09T00:00:00+1400`).getTime();
-  const endEpoch = new Date(`${currentYear}-04-09T23:59:59-1200`).getTime();
+  const startEpoch = new Date(`${currentYear}-04-09T00:00:00+1400`,).getTime();
+  const endEpoch = new Date(`${currentYear}-04-09T23:59:59-1200`,).getTime();
   return startEpoch <= now && now <= endEpoch;
 }
 
-const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
-const systemEnv = Deno.env.get("LUME_ENV") || Deno.env.get("DENO_ENV");
+const isServe = Deno.args.includes("-s",) || Deno.args.includes("--serve",);
+const systemEnv = Deno.env.get("LUME_ENV",) || Deno.env.get("DENO_ENV",);
 const env = systemEnv || (isServe ? "development" : "production");
 const isDev = env === "development";
 
-const umamiScriptUrl = Deno.env.get("UMAMI_SCRIPT_URL");
-const umamiWebsiteId = Deno.env.get("UMAMI_WEBSITE_ID");
+const umamiScriptUrl = Deno.env.get("UMAMI_SCRIPT_URL",);
+const umamiWebsiteId = Deno.env.get("UMAMI_WEBSITE_ID",);
 const timestamp = new Date();
 
 export default {

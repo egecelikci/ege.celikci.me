@@ -203,8 +203,7 @@ export default function(userOptions?: Options,) {
       },),)
       .use(minifyHTML(),)
       .add("assets/scripts/main.ts",)
-      .add("assets/styles/main.scss",)
-      .add("assets/styles/styles.css",)
+      .add("assets/styles/main.css",)
       .copy("assets/images",)
       .copy("assets/fonts",)
       .remote(

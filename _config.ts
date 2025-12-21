@@ -24,17 +24,17 @@ site.addEventListener("beforeBuild", async () => {
 },);
 
 site.addEventListener("afterBuild", async () => {
-  console.log("Generating Service Worker…");
+  console.log("Generating Service Worker…",);
 
   const command = new Deno.Command("deno", {
-    args: ["run", "-A", "npm:workbox-cli", "generateSW", "workbox.config.cjs"], 
-    env: { NODE_ENV: "production" },
+    args: ["run", "-A", "npm:workbox-cli", "generateSW", "workbox.config.cjs",],
+    env: { NODE_ENV: "production", },
     stdout: "inherit",
     stderr: "inherit",
-  });
+  },);
   const process = command.spawn();
   await process.status;
-});
+},);
 registerPreprocessors(site,);
 
 export default site;

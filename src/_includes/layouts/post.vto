@@ -2,8 +2,7 @@
 layout: layouts/base.vto
 ---
 
-<div class="w-full max-w-[var(--container-narrow)] mx-auto min-h-screen py-10">
-  {{# Back Link #}}
+<div class="w-full w-narrow mx-auto min-h-screen py-10">
   <div class="mb-8">
     <a
       href="/blog"
@@ -28,21 +27,13 @@ layout: layouts/base.vto
     itemtype="http://schema.org/BlogPosting"
     aria-labelledby="{{ title |> slugify }}-title"
   >
-    {{# 1. FIX: Use function syntax for Header to prevent content leak #}}
-    {{
-      comp.ui.postHeader({
-        title: title,
-        date: date,
-        tags: tags,
-      })
-    }}
+    {{ comp.ui.postHeader({ title: title, date: date, tags: tags }) }}
 
     <div
       class="markdown e-content text-lg leading-relaxed"
       itemprop="articleBody"
     >
       {{ if draft }}
-        {{# 2. FIX: Use function syntax for Callout #}}
         {{
           comp.ui.callout({
             type: "warning",
@@ -50,11 +41,9 @@ layout: layouts/base.vto
           })
         }}
       {{ /if }}
-
       {{ content |> safe }}
     </div>
 
-    {{# 3. FIX: Use function syntax for Footer (Critical fix for your duplication) #}}
     {{
       comp.ui.postFooter({
         title: title,
@@ -86,7 +75,6 @@ layout: layouts/base.vto
           What’s this?
         </a>
       </div>
-
       {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
     </div>
   {{ /if }}
