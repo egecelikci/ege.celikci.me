@@ -25,8 +25,8 @@ automatically fetched from my public [album ratings](https://critiquebrainz.org/
   
   <div class="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 md:gap-8 lg:gap-10 py-8">
     
-    {{ for album of favorite.albums |> shuffle }}
-      {{ comp.ui.album({ album: album }) }}
+    {{ for i, album of favorite.albums |> shuffle }}
+      {{ comp.ui.album({ album: album, priority: i < 6 }) }}
     {{ /for }}
 
   </div>

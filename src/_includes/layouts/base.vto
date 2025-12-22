@@ -3,7 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {{ set defaultTheme = themes.find((t) => t.id === "default") }}
+    {{ set darkTheme = themes.find((t) => t.id === "dark") }}
 
+    <meta name="theme-color" content="{{ defaultTheme.colors.background }}" />
+
+    <meta
+      name="theme-color"
+      content="{{ darkTheme.colors.background }}"
+      media="(prefers-color-scheme: dark)"
+    />
     <title>
       {{ if title }}{{ title }} | {{ site.title }}{{ else }}{{ site.title }}{{
         /if

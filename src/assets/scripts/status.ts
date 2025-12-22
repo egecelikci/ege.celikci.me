@@ -48,7 +48,7 @@ function setStatusState(
   },);
 }
 
-function createMarqueeAnimation(element: HTMLElement) {
+function createMarqueeAnimation(element: HTMLElement,) {
   const container = element.parentElement;
   if (!container) return;
 
@@ -60,7 +60,7 @@ function createMarqueeAnimation(element: HTMLElement) {
 
     const gap = "    •    ";
     const originalHTML = element.innerHTML;
-    
+
     element.innerHTML = `<span>${originalHTML}${gap}</span>${originalHTML}`;
     const span = element.firstElementChild as HTMLElement;
     const offset = span ? span.offsetWidth : 0;
@@ -71,12 +71,12 @@ function createMarqueeAnimation(element: HTMLElement) {
       duration: offset / 50,
       ease: "none",
       repeat: -1,
-      paused: false
-    });
+      paused: false,
+    },);
 
     container.onmouseenter = () => tl.pause();
     container.onmouseleave = () => tl.play();
-  });
+  },);
 }
 
 async function loadStatus() {
@@ -124,8 +124,8 @@ async function loadStatus() {
   }
 }
 
-function processChunk(htmlString: string) {
-  const temp = document.createElement("div");
+function processChunk(htmlString: string,) {
+  const temp = document.createElement("div",);
   temp.innerHTML = htmlString;
   const newData = temp.firstElementChild as HTMLElement;
 
@@ -139,9 +139,9 @@ function processChunk(htmlString: string) {
 
   if (!targetId) return;
 
-  const container = document.querySelector(targetId) as HTMLElement;
+  const container = document.querySelector(targetId,) as HTMLElement;
   if (container) {
-    updateSingleUI(container, newData);
+    updateSingleUI(container, newData,);
   }
 }
 
@@ -223,8 +223,8 @@ function performUpdate(
     textWrapper.appendChild(newSpan,);
   }
 
-  if (activeContexts.has(container)) {
-    const oldCtx = activeContexts.get(container);
+  if (activeContexts.has(container,)) {
+    const oldCtx = activeContexts.get(container,);
     oldCtx?.revert();
   }
 
@@ -302,4 +302,4 @@ document.addEventListener("visibilitychange", () => {
   }
 },);
 
-export { loadStatus };
+export { loadStatus, };
