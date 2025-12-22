@@ -4,3 +4,4 @@ templateEngine: [vto, md]
 metas:
   title: "=title || $ .dt-published"
   image: "$ .h-entry img attr(src)"
+  description: "$ .e-content p"
