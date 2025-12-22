@@ -20,24 +20,12 @@ layout: layouts/base.vto
   </div>
 
   {{ set cardContent }}
-    <div
-      class="flex flex-wrap items-center px-4 pt-4 border-b border-border/50 bg-bg/50 rounded-t-lg"
-    >
-      <time
-        class="dt-published text-sm text-text-muted font-mono"
-        datetime="{{ date |> date('ISOdate') }}"
-      >
-        {{ date |> date("dd LLL yyyy HH:mm") }}
-      </time>
-
-      {{ if tags }}
-        <div class="ml-auto flex flex-wrap gap-2">
-          {{ for tag of tags }}
-            {{ comp.badge({ content: tag }) }}
-          {{ /for }}
-        </div>
-      {{ /if }}
-    </div>
+    {{
+      comp.notes.header({
+        date: date,
+        tags: tags,
+      })
+    }}
 
     <div class="p-6">
       {{ if title && !isAutoTitle }}

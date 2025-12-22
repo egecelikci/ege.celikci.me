@@ -1,0 +1,42 @@
+{{# src/_components/wiki/status.vto #}}
+
+{{
+  set statusConfig = {
+    seedling: {
+      color:
+        "text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/30 dark:border-emerald-800/50",
+      icon: "sprout",
+      label: "seedling",
+    },
+    budding: {
+      color:
+        "text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-950/30 dark:border-amber-800/50",
+      icon: "leaf",
+      label: "budding",
+    },
+    evergreen: {
+      color:
+        "text-primary bg-primary/5 border-primary/20 dark:text-primary-offset dark:bg-primary-offset/10 dark:border-primary-offset/30",
+      icon: "tree-pine",
+      label: "evergreen",
+    },
+  }
+}}
+
+{{ set config = statusConfig[status] || statusConfig.seedling }}
+
+<div
+  class="
+    inline-flex items-center gap-1.5 px-2.5 py-0.5
+    rounded-full border shadow-sm
+    text-[10px] font-bold uppercase tracking-widest
+    transition-all duration-200 ease-in-out
+    hover:scale-105 select-none
+    {{ config.color }}
+    {{ classes || '' }}
+  "
+  title="Status: {{ config.label }}"
+>
+  {{ comp.icon({ name: config.icon, type: "lucide", classes: "w-3 h-3" }) }}
+  <span>{{ config.label }}</span>
+</div>
