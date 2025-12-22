@@ -43,6 +43,7 @@
   --color-primary-offset: #ff3d6a;
   --color-secondary: #65cafe;
   --color-mastodon: #595aff;
+  --color-bluesky: #3471f6;
 
   --color-status-error: #dc2626;
   --color-status-active: var(--color-primary);
