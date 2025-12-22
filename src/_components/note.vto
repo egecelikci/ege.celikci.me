@@ -1,33 +1,19 @@
 <article class="h-entry relative">
   {{ set cardContent }}
-    {{# --- Full Card Link (Background) --- #}}
     <a
       href="{{ note.url |> url }}"
       class="absolute inset-0 z-0"
-      aria-label="View note: {{ note.title }}"
+      aria-label="View note"
     ></a>
 
-    {{# --- Header --- #}}
-    <div
-      class="flex flex-wrap items-center px-4 pt-4 border-b border-border/50 bg-bg/50 rounded-t-lg"
-    >
-      <time
-        class="dt-published text-sm text-text-muted font-mono"
-        datetime="{{ note.date |> date('ISOdate') }}"
-      >
-        {{ note.date |> date("dd LLL yyyy HH:mm") }}
-      </time>
-
-      {{ if note.tags }}
-        <div class="ml-auto flex flex-wrap gap-2 relative z-10">
-          {{ for tag of note.tags }}
-            {{ comp.badge({ content: tag }) }}
-          {{ /for }}
-        </div>
-      {{ /if }}
-    </div>
-
-    {{# --- Body --- #}}
+    {{
+      comp.notes.header({
+        date: note.date,
+        tags: note.tags,
+        url: note.url,
+        showViewNote: true,
+      })
+    }}
     <div
       class="p-6 pb-6 relative max-h-[500px] overflow-hidden group-hover:mask-none transition-all duration-300"
     >
@@ -55,27 +41,7 @@
       class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between relative z-10 rounded-b-lg"
     >
       {{ comp.notes.stats({ stats: note.stats }) }}
-
-      <div class="flex items-center gap-4">
-        {{ comp.notes.syndication({ syndication: note.syndication }) }}
-
-        {{
-          if note.syndication && (note.syndication.bluesky || note.syndication.mastodon)
-        }}
-          <div class="w-px h-4 bg-border opacity-50" aria-hidden="true"></div>
-        {{ /if }}
-
-        <a
-          href="{{ note.url |> url }}"
-          class="
-            text-primary font-bold text-sm flex items-center gap-1
-            hover:underline transition-all
-          "
-        >
-          view note
-          {{ comp.icon({ name: "arrow-right", classes: "w-4 h-4" }) }}
-        </a>
-      </div>
+      {{ comp.notes.syndication({ syndication: note.syndication }) }}
     </div>
   {{ /set }}
 

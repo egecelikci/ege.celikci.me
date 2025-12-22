@@ -8,7 +8,6 @@
 {{# Auto Description Logic #}}
 {{ set autoDescription = "" }}
 {{ if isPost }}
-  {{# Simple excerpt: Strip HTML tags and take first 200 chars #}}
   {{ set cleanContent = content |> replace(/<[^>]+>/g, '') }}
   {{ set autoDescription = cleanContent.substring(0, 200) + "..." }}
 {{ /if }}

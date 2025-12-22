@@ -29,6 +29,9 @@ import rehypeAutolinkHeadings from "npm:rehype-autolink-headings@^7.1.0";
 import rehypeSlug from "npm:rehype-slug@^6.0.0";
 import remarkGfm from "npm:remark-gfm@^4.0.1";
 import remarkSmartypants from "npm:remark-smartypants@^3.0.2";
+import remarkToc from "npm:remark-toc@^9.0.0";
+import remarkWikiLink from "npm:remark-wiki-link@^2.0.1";
+
 import siteData from "./src/_data/site.ts";
 import {
   alistralLangs,
@@ -142,8 +145,18 @@ export default function(userOptions?: Options,) {
       .use(remark({
         ...options.remark,
         remarkPlugins: [
+          [remarkToc, {
+            tight: true,
+          },],
           remarkGfm,
           remarkSmartypants,
+          [remarkWikiLink, {
+            aliasDivider: "|",
+            pageResolver: (
+              name: string,
+            ) => [name.replace(/ /g, "-",).toLowerCase(),],
+            hrefTemplate: (permalink: string,) => `/wiki/${permalink}/`,
+          },],
           ...(options.remark?.remarkPlugins || []),
         ],
         rehypePlugins: [

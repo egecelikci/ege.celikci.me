@@ -1,0 +1,28 @@
+---
+title: "Miniflux Rules"
+date: 2025-11-26
+updated: 2025-12-23
+description: "Rules for Miniflux feed reader."
+status: budding
+tags: ["feeds", "software", "setup"]
+url: /miniflux/
+templateEngine: [vto]
+---
+
+{{ set intro }}
+  technical specifications for [filtering and
+  scraping](https://miniflux.app/docs/rules.html)</a>.
+{{ /set }}
+
+<div
+  class="columns-1 md:columns-2 gap-12 [column-rule:1px_solid_var(--color-border)]"
+>
+  {{ for index, item of miniflux }}
+    {{
+      comp.ui.minifluxItem({
+        index: index,
+        item: item,
+      })
+    }}
+  {{ /for }}
+</div>
