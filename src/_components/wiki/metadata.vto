@@ -1,0 +1,54 @@
+<div class="flex flex-wrap items-center gap-4 text-sm text-text-muted mb-6">
+  {{ if date }}
+    <div class="flex items-center gap-1">
+      {{
+        comp.icon({
+          name: "calendar-plus",
+          type: "lucide",
+          classes: "w-4 h-4",
+        })
+      }}
+      <time datetime="{{ date |> date('ISOdate') }}">
+        created {{ date |> date("dd MMM yyyy") }}
+      </time>
+    </div>
+  {{ /if }}
+
+  {{ if updated }}
+    <span class="text-border select-none">•</span>
+    <div class="flex items-center gap-1">
+      {{
+        comp.icon({
+          name: "calendar-clock",
+          type: "lucide",
+          classes: "w-4 h-4",
+        })
+      }}
+      <time datetime="{{ updated |> date('ISOdate') }}">
+        edited {{ updated |> date("dd MMM yyyy") }}
+      </time>
+    </div>
+  {{ /if }}
+
+  {{ if wordCount }}
+    <span class="text-border select-none">•</span>
+    <div class="flex items-center gap-1">
+      {{
+        comp.icon({
+          name: "file-text",
+          type: "lucide",
+          classes: "w-4 h-4",
+        })
+      }}
+      {{ wordCount }} words
+    </div>
+  {{ /if }}
+
+  {{ if readingTime }}
+    <span class="text-border select-none">•</span>
+    <div class="flex items-center gap-1">
+      {{ comp.icon({ name: "clock", type: "lucide", classes: "w-4 h-4" }) }}
+      {{ readingTime }} min read
+    </div>
+  {{ /if }}
+</div>

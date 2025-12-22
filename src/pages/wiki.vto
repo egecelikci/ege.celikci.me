@@ -1,0 +1,91 @@
+---
+layout: layouts/base.vto
+title: wiki
+url: /wiki/
+menu:
+  visible: true
+  order: 4
+---
+
+{{ comp ui.container { classes: "min-h-screen pb-20" } }}
+
+  {{ comp ui.pageHeader {
+    title: title,
+    subtitle: "a digital garden of evolving notes, ideas, and knowledge."
+  } }}
+  {{ /comp }}
+
+  {{# Search Bar 
+  <div class="mb-12 relative group">
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
+      {{ comp.icon({ name: "search", type: "lucide", classes: "w-5 h-5" }) }}
+    </div>
+    <input 
+      type="text" 
+      id="wiki-search"
+      placeholder="Search wiki entries... (coming soon)" 
+      class="w-full bg-surface/50 border border-border rounded-xl pl-10 pr-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-text-muted/50" 
+      disabled
+    />
+  </div>
+  #}}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+    
+    {{# Recently Tended using component #}}
+    {{ comp.wiki.recentChanges({
+      entries: search.pages("type=entry", "updated=desc", 6)
+    }) }}
+
+    <section>
+      <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
+        {{ comp.icon({ name: "layers", type: "lucide", classes: "w-5 h-5" }) }}
+        <h2 class="text-sm uppercase tracking-widest font-bold m-0">Root Topics</h2>
+      </div>
+      
+      <div class="flex flex-wrap gap-3">
+        {{ set allTags = search.values("tags", "type=entry") }}
+        {{ for topic of allTags }}
+          {{ set taggedEntries = search.pages("type=entry") }}
+          {{ set count = 0 }}
+          {{ for entry of taggedEntries }}
+            {{ if entry.tags && entry.tags.includes(topic) }}
+              {{ set count = count + 1 }}
+            {{ /if }}
+          {{ /for }}
+
+          <a 
+            href="/tags/{{ topic |> slugify }}/" 
+            class="px-4 py-2 rounded-lg border border-border bg-surface/50 text-sm font-bold text-text-muted hover:border-primary hover:text-primary hover:bg-surface transition-all duration-200 no-underline flex items-center gap-2"
+          >
+            #{{ topic }}
+            <span class="text-xs bg-bg px-1.5 py-0.5 rounded-md">{{ count }}</span>
+          </a>
+        {{ /for }}
+      </div>
+
+      <div class="mt-6">
+        <a 
+          href="/tags/" 
+          class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+        >
+          view all topics
+          {{ comp.icon({ name: "arrow-right", type: "lucide", classes: "w-4 h-4" }) }}
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <section class="mt-16">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold font-display">all entries</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {{ for item of search.pages("type=entry", "updated=desc") }}
+        {{ comp.wiki.entryCard({ entry: item }) }}
+      {{ /for }}
+    </div>
+  </section>
+
+{{ /comp }}

@@ -1,0 +1,21 @@
+{{ if pages && pages.length > 0 }}
+  <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
+    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+      {{ comp.icon({ name: "link-2", type: "lucide", classes: "w-5 h-5" }) }}
+      Related Pages
+    </h3>
+    <div class="grid gap-2">
+      {{ for item of pages }}
+        <a
+          href="{{ item.page.url }}"
+          class="flex items-center justify-between p-3 rounded-lg hover:bg-surface transition-all duration-200 no-underline"
+        >
+          <span class="font-medium text-text">{{ item.page.title }}</span>
+          <span class="text-xs text-text-muted">
+            {{ item.score }} {{ item.score === 1 ? "tag" : "tags" }} in common
+          </span>
+        </a>
+      {{ /for }}
+    </div>
+  </aside>
+{{ /if }}

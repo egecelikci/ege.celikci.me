@@ -1,0 +1,94 @@
+---
+url: /tags/
+layout: layouts/base.vto
+title: topics
+---
+
+<div class="w-full max-w-narrow mx-auto min-h-screen py-12 md:py-20">
+  {{# Header Section #}}
+  <header class="mb-16 border-b border-border/50 pb-8">
+    <a
+      href="/wiki/"
+      class="
+        inline-flex items-center gap-2
+        text-xs font-bold uppercase tracking-widest
+        text-text-muted hover:text-primary
+        no-underline mb-6 transition-colors
+      "
+    >
+      {{
+        comp.icon({
+          name: "arrow-left",
+          type: "lucide",
+          classes: "w-4 h-4",
+        })
+      }}
+      Back to Wiki
+    </a>
+
+    <div class="flex flex-col gap-2">
+      <h1 class="text-4xl md:text-5xl font-display font-bold text-text">
+        topics<span class="text-primary">.</span>
+      </h1>
+      <p class="text-lg text-text-muted leading-relaxed max-w-2xl">
+        An index of all tags cultivating the digital garden.
+      </p>
+    </div>
+  </header>
+
+  {{# Get all unique tags from wiki entries #}}
+  {{ set allTags = search.values("tags", "type=entry") }}
+
+  {{ if allTags && allTags.length > 0 }}
+    {{# Tag Cloud Grid #}}
+    <div class="flex flex-wrap gap-3">
+      {{ for tag of allTags }}
+        {{# Optimized Count: Direct search query instead of manual loop #}}
+        {{ set count = search.pages("type=entry tags='" + tag + "'").length }}
+
+        <a
+          href="/tags/{{ tag |> slugify }}/"
+          class="
+            group flex items-center gap-3
+            pl-4 pr-3 py-2.5
+            rounded-lg border border-border/60 bg-surface/40
+            hover:bg-surface hover:border-primary/40 hover:shadow-sm hover:-translate-y-0.5
+            transition-all duration-300 ease-out no-underline
+          "
+        >
+          <span
+            class="font-bold text-sm text-text-muted group-hover:text-primary transition-colors"
+          >
+            <span class="opacity-40 font-normal mr-0.5">#</span>{{ tag }}
+          </span>
+
+          <span
+            class="
+              flex items-center justify-center h-5 min-w-[1.25rem] px-1.5
+              text-[10px] font-mono font-bold
+              rounded-md bg-bg border border-border/50 text-text-muted
+              group-hover:text-primary group-hover:border-primary/20
+              transition-colors
+            "
+          >
+            {{ count }}
+          </span>
+        </a>
+      {{ /for }}
+    </div>
+  {{ else }}
+    {{# Empty State #}}
+    <div
+      class="flex flex-col items-center justify-center py-24 px-4 text-center border border-dashed border-border rounded-2xl bg-surface/20"
+    >
+      <div class="p-4 rounded-full bg-surface mb-4 text-text-muted/50">
+        {{ comp.icon({ name: "tag", type: "lucide", classes: "w-8 h-8" }) }}
+      </div>
+      <h3 class="text-lg font-bold text-text mb-2">No topics found</h3>
+      <p class="text-text-muted max-w-sm mx-auto">
+        There are no tags used in any wiki entries yet. Start tagging your notes
+        to see them appear here.
+      </p>
+    </div>
+  {{ /if }}
+</div>
