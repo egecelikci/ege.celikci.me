@@ -32,17 +32,6 @@
   title="{{ site.title }}"
 />
 
-{{ set defaultTheme = themes.find((t) => t.id === "default") }}
-{{ set darkTheme = themes.find((t) => t.id === "dark") }}
-
-<meta name="theme-color" content="{{ defaultTheme.colors.background }}" />
-
-<meta
-  name="theme-color"
-  content="{{ darkTheme.colors.background }}"
-  media="(prefers-color-scheme: dark)"
-/>
-
 {{# https://github.com/darkreader/darkreader/blob/main/CONTRIBUTING.md#disabling-dark-reader-on-your-site #}}
 <meta name="darkreader-lock" />
 

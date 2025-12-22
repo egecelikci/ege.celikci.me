@@ -43,7 +43,10 @@
       "
       src="/assets/images/covers/colored/{{ album.id }}.png"
       alt="{{ album.title }}"
-      loading="lazy"
+      loading="{{ priority ? 'eager' : 'lazy' }}"
+      {{ if priority }}
+        fetchpriority="high"
+      {{ /if }}
       width="290"
       height="290"
     />
@@ -52,7 +55,10 @@
       class="relative z-1 w-full h-full object-cover block dark:invert dark:opacity-90"
       src="/assets/images/covers/monochrome/{{ album.id }}.png"
       alt="{{ album.title }}"
-      loading="lazy"
+      loading="{{ priority ? 'eager' : 'lazy' }}"
+      {{ if priority }}
+        fetchpriority="high"
+      {{ /if }}
       width="290"
       height="290"
     />

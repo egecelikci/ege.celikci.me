@@ -19,7 +19,7 @@ for (const [name, fn,] of Object.entries(filters,)) {
 }
 
 site.addEventListener("beforeBuild", async () => {
-  console.log("Pre-building music data...",);
+  console.log("Pre-building music data…",);
   await updateMusicData();
 },);
 
