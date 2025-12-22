@@ -38,9 +38,15 @@ templateEngine: [vto, md]
         { name: "Steam", url: "https://steamcommunity.com/id/" + author.username, icon: "gamepad" },
         { name: "Signal", url: signalUrl, icon: "message-circle-dashed" },
         { name: "Email", url: emailUrl, icon: "mail" },
-        { name: "Matrix", url: matrixUrl, icon: "messages-square", keyUrl: "keys#matrix" }
-      ] }}<ul class="list-none p-0 space-y-4">
-        {{ for link of links }}<li class="group flex items-center justify-between">
+        { name: "Matrix", url: matrixUrl, icon: "messages-square", keyUrl: "keys#matrix" },
+        { name: "Codeberg", url: "https://codeberg.org/" + author.username, hidden: true },
+        { name: "GitLab", url: "https://gitlab.com/" + author.username, hidden: true },
+        { name: "GitHub", url: "https://github.com/" + author.username, hidden: true }
+      ] }}
+      <ul class="list-none p-0 space-y-4">
+        {{ for link of links }}
+        {{ if !link.hidden }}
+          <li class="group flex items-center justify-between">
             <div class="flex items-center">
               <a href="{{ link.url }}" class="flex items-center text-xl font-semibold no-underline hover:text-primary transition-all" {{ link.name === 'Matrix' ? 'rel="me"' : '' }}>{{ comp.icon({ name: link.icon, type: "lucide", classes: linkIconClass }) }}<span class="border-b-2 border-transparent group-hover:border-primary transition-all ml-1">{{ link.name }}</span></a>
             </div>
@@ -50,8 +56,16 @@ templateEngine: [vto, md]
                  class="flex items-center justify-center ml-2 w-9 h-9 rounded-xl text-text-muted/60 bg-transparent hover:text-primary hover:bg-primary/5 transition-all">{{ comp.icon({ name: "key", type: "lucide", classes: "w-5 h-5" }) }}</a>
             {{ /if }}
           </li>
+        {{ /if }}
         {{ /for }}
       </ul>
+      <div hidden aria-hidden="true">
+        {{ for link of links }}
+          {{ if link.hidden }}
+            <a href="{{ link.url }}" rel="me">{{ link.name }}</a>
+          {{ /if }}
+        {{ /for }}
+      </div>
     </section>
     <section>
       <div class="flex items-center gap-2 mb-6 text-text-muted">
