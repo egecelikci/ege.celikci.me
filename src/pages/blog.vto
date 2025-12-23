@@ -3,56 +3,25 @@ layout: layouts/base.vto
 title: blog
 description: "blog posts."
 url: /blog/
+menu:
+  visible: true
+  order: 4
 ---
 
 {{ comp ui.container { classes: "min-h-screen pb-20" } }}
 
-  {{ comp ui.pageHeader {
-    title: title,
-    centered: true,
-    width: "max-w-max",
-    classes: "mb-16"
-  } }}
-  {{ /comp }}
+{{ comp ui.pageHeader {
+  title: title,
+  centered: true,
+  width: "max-w-max",
+  classes: "mb-12"
+} }}
+{{ /comp }}
 
-  {{# --- Stylish Editorial Layout --- #}}
-  <div class="flex flex-col border-t-2 border-border">
+  {{# Post List #}}
+  <div class="flex flex-col border-t border-border">
     {{ for post of search.pages("type=post", "date=desc") }}
-      
-      <article class="group relative grid grid-cols-1 md:grid-cols-[140px_1fr] gap-x-8 gap-y-4 py-12 border-b border-border/50 transition-colors duration-300 hover:bg-surface/30">
-        {{# --- 1. Full Clickable Area --- #}}
-        <a href="{{ post.url }}" class="absolute inset-0 z-0" aria-label="Read {{ post.title }}"></a>
-
-        {{# --- 2. Left Column: Sticky Date --- #}}
-        <div class="md:text-right pt-1.5">
-          <time 
-            class="font-mono text-sm text-text-muted/70 block sticky top-24 group-hover:text-primary transition-colors" 
-            datetime="{{ post.date |> date('ISOdate') }}"
-          >
-            {{ post.date |> date("dd LLL yyyy") }}
-          </time>
-        </div>
-
-        {{# --- 3. Right Column: Content --- #}}
-        <div class="relative z-10 max-w-2xl">
-          <h2 class="text-3xl font-display font-bold mb-4 text-text leading-tight group-hover:text-primary transition-colors">
-            {{ post.title }}
-          </h2>
-
-          {{ if post.excerpt }}
-            <div class="text-lg text-text-muted/90 leading-relaxed font-serif mb-6 line-clamp-3">
-              {{ post.excerpt }}
-            </div>
-          {{ /if }}
-
-          {{# "Read Article" appears on hover --- #}}
-          <div class="flex items-center text-xs font-bold uppercase tracking-widest text-primary opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-            read article
-            {{ comp.icon({ name: "arrow-right", classes: "ml-2 w-4 h-4" }) }}
-          </div>
-        </div>
-      </article>
-
+      {{ comp.post({ post: post }) }}
     {{ /for }}
   </div>
 
