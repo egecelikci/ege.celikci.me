@@ -1,0 +1,74 @@
+---
+layout: layouts/base.vto
+---
+
+{{ set body }}
+  {{# --- HEADER SECTION (Matches Wiki Layout) --- #}}
+  <header class="mb-10 border-b border-border pb-6">
+    <div class="flex items-center justify-between mb-6 h-8">
+      {{ comp.ui.breadcrumbs({ url: url }) }}
+    </div>
+
+    <h1
+      class="text-4xl md:text-5xl font-display font-bold mb-4 text-balance"
+    >
+      {{ title }}
+    </h1>
+
+    {{ if description }}
+      <p class="text-lg text-text-muted leading-relaxed max-w-2xl">
+        {{ description }}
+      </p>
+    {{ /if }}
+  </header>
+
+  {{# --- CONTENT GRID --- #}}
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {{# Search for pages where the URL starts with the current folder's URL #}}
+    {{ for page of search.pages(`url^=${url} url!=${url}`, "date=desc") }}
+      <a
+        href="{{ page.url }}"
+        class="group flex flex-col p-5 rounded-xl border border-border bg-surface/20 hover:bg-surface hover:border-primary/50 transition-all duration-200 hover:-translate-y-0.5 no-underline"
+      >
+        <div class="flex items-start justify-between gap-4 mb-3">
+          <span
+            class="font-bold text-lg text-text group-hover:text-primary transition-colors leading-tight"
+          >
+            {{ page.title }}
+          </span>
+
+          {{ if page.date }}
+            <span
+              class="shrink-0 text-xs font-mono text-text-muted border border-border px-1.5 py-0.5 rounded bg-bg/50"
+            >
+              {{ page.date |> date("dd MMM") }}
+            </span>
+          {{ /if }}
+        </div>
+
+        {{ if page.tags }}
+          <div class="mt-auto pt-2 flex flex-wrap gap-2">
+            {{ for tag of page.tags }}
+              <span
+                class="text-[10px] uppercase tracking-wider font-bold text-text-muted/70 group-hover:text-text-muted transition-colors"
+              >
+                #{{ tag }}
+              </span>
+            {{ /for }}
+          </div>
+        {{ /if }}
+      </a>
+    {{ /for }}
+  </div>
+
+  {{# Empty State (Optional) #}}
+  {{ if search.pages(`url^=${url} url!=${url}`).length == 0 }}
+    <div
+      class="py-12 text-center border border-dashed border-border rounded-xl"
+    >
+      <p class="text-text-muted italic">This folder is currently empty.</p>
+    </div>
+  {{ /if }}
+{{ /set }}
+
+{{ comp.ui.container({ content: body, classes: "min-h-screen py-10" }) }}
