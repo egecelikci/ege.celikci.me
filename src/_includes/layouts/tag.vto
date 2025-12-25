@@ -2,9 +2,10 @@
 layout: layouts/base.vto
 ---
 
-<div class="w-full max-w-narrow mx-auto min-h-screen py-10">
+{{ comp ui.container }}
+
   <header class="mb-12 border-b border-border pb-8">
-    {{ comp.ui.backLink({ href: "/wiki/", text: "back to wiki" }) }}
+    {{ comp.ui.backlink({ href: "/index/", text: "back to index" }) }}
 
     <div class="flex items-center gap-3 mb-4">
       <h1 class="text-4xl font-display font-bold text-primary m-0">
@@ -27,9 +28,9 @@ layout: layouts/base.vto
     {{ /for }}
 
     <p class="text-text-muted">
-      {{ matchingEntries.length }} {{
-        matchingEntries.length === 1 ? "entry" : "entries"
-      }} tagged with #{{ tag }}
+      {{ matchingEntries.length }}
+      {{ matchingEntries.length === 1 ? "entry" : "entries" }}
+      tagged with #{{ tag }}
     </p>
   </header>
 
@@ -114,4 +115,5 @@ layout: layouts/base.vto
       </div>
     </aside>
   {{ /if }}
-</div>
+
+{{ /comp }}

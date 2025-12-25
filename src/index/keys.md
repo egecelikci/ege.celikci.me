@@ -1,8 +1,11 @@
 ---
-layout: layouts/page.vto
 title: "keys"
-description: "Public keys for SSH and Matrix."
+icon: key
+date: 2024-05-20
+updated: 2025-12-25
+description: "Public keys for verifying my digital identity."
 url: /keys/
+tags: ["meta"]
 templateEngine: [vto, md]
 ---
 

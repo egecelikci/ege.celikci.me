@@ -2,10 +2,10 @@
 layout: layouts/base.vto
 ---
 
-<div class="w-full max-w-narrow mx-auto min-h-screen py-10">
+{{ set body }}
   <header class="mb-10 border-b border-border pb-6">
     <div class="flex items-center justify-between mb-6">
-      {{ comp.ui.backlink({ href: "/wiki/", text: "back to wiki" }) }}
+      {{ comp.ui.backLink({ href: "/index/", text: "back to index" }) }}
 
       {{ if status }}
         {{ comp.wiki.status({ status: status }) }}
@@ -16,17 +16,15 @@ layout: layouts/base.vto
       {{ title }}
     </h1>
 
-    {{# Metadata using component #}}
     {{
       comp.wiki.metadata({
         date: date,
         updated: updated,
         wordCount: wordCount,
-        readingTime: readingTime,
+        page: page,
       })
     }}
 
-    {{# Tags #}}
     {{ if tags && tags.length > 0 }}
       <div class="flex flex-wrap gap-2 mt-4">
         {{ for tag of tags }}
@@ -41,17 +39,16 @@ layout: layouts/base.vto
     {{ /if }}
   </header>
 
-  {{# Main Content #}}
-  <article class="markdown e-content text-lg leading-relaxed min-h-[20vh]">
+  <article
+    class="markdown e-content text-lg leading-relaxed min-h-[20vh]"
+    data-pagefind-body
+  >
     {{ content |> safe }}
   </article>
 
+  {{ comp.wiki.contentGraph({ tags: tags }) }}
   {{ comp.wiki.relatedPages({ pages: relatedPages }) }}
+  {{ comp.wiki.backlinks({ title: title, url: url }) }}
+{{ /set }}
 
-  {{
-    comp.wiki.backlinks({
-      title: title,
-      url: url,
-    })
-  }}
-</div>
+{{ comp.ui.container({ content: body, classes: "min-h-screen py-10" }) }}

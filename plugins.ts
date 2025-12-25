@@ -12,7 +12,9 @@ import metas from "lume/plugins/metas.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import nav from "lume/plugins/nav.ts";
 import ogImages from "lume/plugins/og_images.ts";
-import pagefind, { Options as PagefindOptions, }  from "lume/plugins/pagefind.ts";
+import pagefind, {
+  Options as PagefindOptions,
+} from "lume/plugins/pagefind.ts";
 import paginate from "lume/plugins/paginate.ts";
 import picture from "lume/plugins/picture.ts";
 import postcss from "lume/plugins/postcss.ts";
@@ -121,12 +123,11 @@ export const defaults: Options = {
     limit: 0,
   },
   pagefind: {
-    outputPath: "/assets/pagefind",
+    outputPath: "/pagefind",
     ui: {
       containerId: "#wiki-search",
       showImages: false,
       showEmptyFilters: true,
-      resetStyles: true,
     },
   },
 };
@@ -150,6 +151,7 @@ export default function(userOptions?: Options,) {
       .use(metas(),)
       .use(date(options.date,),)
       .use(nav(),)
+      .use(pagefind(options.pagefind,),)
       .use(paginate(),)
       .use(icons(),)
       .use(inline(),)
@@ -166,7 +168,7 @@ export default function(userOptions?: Options,) {
             pageResolver: (
               name: string,
             ) => [name.replace(/ /g, "-",).toLowerCase(),],
-            hrefTemplate: (permalink: string,) => `/wiki/${permalink}/`,
+            hrefTemplate: (permalink: string,) => `/${permalink}/`,
           },],
           ...(options.remark?.remarkPlugins || []),
         ],

@@ -1,7 +1,10 @@
 ---
-layout: layouts/page.vto
 title: "feeds"
+date: 2025-11-23
+updated: 2025-12-18
+icon: rss
 description: "a list of all Atom feeds available on this website."
+tags: ["meta", "feeds"]
 url: /feeds/
 templateEngine: [vto, md]
 ---
@@ -26,9 +29,3 @@ templateEngine: [vto, md]
 <li>{{ comp.icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/notes.xml"><code>{{ site.url }}/notes.xml</code></a></li>
 <li>{{ comp.icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/notes.json"><code>{{ site.url }}/notes.json</code></a></li>
 </ul>
-
-## [changelog entries](/changelog)
-
-```
-https://journal.miso.town/atom?url={{ site.url }}/changelog
-```
