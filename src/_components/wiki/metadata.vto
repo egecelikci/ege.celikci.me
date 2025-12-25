@@ -44,11 +44,15 @@
     </div>
   {{ /if }}
 
-  {{ if readingTime }}
-    <span class="text-border select-none">•</span>
-    <div class="flex items-center gap-1">
-      {{ comp.icon({ name: "clock", type: "lucide", classes: "w-4 h-4" }) }}
-      {{ readingTime }} min read
-    </div>
-  {{ /if }}
+  {{# --- NEW: Changelog Link --- #}}
+  <span class="text-border select-none">•</span>
+  <a
+    href="https://codeberg.org/egecelikci/ege.celikci.me/commits/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
+    target="_blank"
+    class="flex items-center gap-1 hover:text-primary transition-colors no-underline"
+    title="View commit history on Codeberg"
+  >
+    {{ comp.icon({ name: "history", type: "lucide", classes: "w-4 h-4" }) }}
+    changes
+  </a>
 </div>

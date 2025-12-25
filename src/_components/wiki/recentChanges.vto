@@ -12,16 +12,24 @@
     {{ for item of entries }}
       <a
         href="{{ item.url }}"
-        class="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary hover:bg-surface transition-all no-underline"
+        class="group flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary hover:bg-surface transition-all no-underline"
       >
         <div class="flex items-center gap-3">
-          {{ comp.wiki.status({ status: item.status || "seedling" }) }}
-          <span class="font-medium text-text">{{ item.title }}</span>
+          {{# USE THE NEW COMPONENT HERE #}}
+          {{
+            comp.wiki.statusIcon({
+              status: item.status || "seedling",
+            })
+          }}
+
+          <span
+            class="font-medium text-text group-hover:text-primary transition-colors"
+          >
+            {{ item.title }}
+          </span>
         </div>
-        <time
-          class="text-xs text-text-muted"
-          datetime="{{ item.updated |> date('ISOdate') }}"
-        >
+
+        <time class="text-xs text-text-muted font-mono">
           {{ item.updated |> date("dd MMM") }}
         </time>
       </a>

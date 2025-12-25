@@ -1,0 +1,162 @@
+{{# Enhanced Content Graph #}}
+
+{{# 1. Initialize empty arrays #}}
+{{ set matchingPosts = [] }}
+{{ set matchingPages = [] }}
+
+{{# 2. Only run if the CURRENT page has tags #}}
+{{ if tags && tags.length > 0 }}
+  {{# --- FIND MATCHING POSTS --- #}}
+  {{ for post of search.pages("type=post", "date=desc") }}
+    {{ if post.url !== url && post.tags }}
+      {{# Check overlap manually to be safe #}}
+      {{ set isMatch = false }}
+      {{ for tag of post.tags }}
+        {{ if tags.includes(tag) }}
+          {{ set isMatch = true }}
+        {{ /if }}
+      {{ /for }}
+
+      {{ if isMatch }}
+        {{ set matchingPosts = matchingPosts.concat(post) }}
+      {{ /if }}
+    {{ /if }}
+  {{ /for }}
+
+  {{# --- FIND MATCHING PAGES --- #}}
+  {{ for page of search.pages("type=page", "date=desc") }}
+    {{ if page.url !== url && page.tags }}
+      {{ set isMatch = false }}
+      {{ for tag of page.tags }}
+        {{ if tags.includes(tag) }}
+          {{ set isMatch = true }}
+        {{ /if }}
+      {{ /for }}
+
+      {{ if isMatch }}
+        {{ set matchingPages = matchingPages.concat(page) }}
+      {{ /if }}
+    {{ /if }}
+  {{ /for }}
+{{ /if }}
+
+{{# 3. Render The Results (UI) #}}
+{{ if matchingPosts.length > 0 || matchingPages.length > 0 }}
+  <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
+    <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+      {{
+        comp.icon({
+          name: "book-open",
+          type: "lucide",
+          classes: "w-5 h-5",
+        })
+      }}
+      Related Content Across Site
+    </h3>
+
+    <div class="space-y-6">
+      {{# --- BLOG POSTS LIST --- #}}
+      {{ if matchingPosts.length > 0 }}
+        <div>
+          <h4
+            class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
+          >
+            {{
+              comp.icon({
+                name: "file-text",
+                type: "lucide",
+                classes: "w-4 h-4",
+              })
+            }}
+            Blog Posts ({{ matchingPosts.length }})
+          </h4>
+          <div class="space-y-2">
+            {{ for post of matchingPosts.slice(0, 5) }}
+              <a
+                href="{{ post.url }}"
+                class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
+              >
+                <div class="flex-1 min-w-0">
+                  <div
+                    class="font-medium text-sm text-text group-hover:text-primary transition-colors mb-1"
+                  >
+                    {{ post.title }}
+                  </div>
+                  <div class="flex items-center gap-2 text-xs text-text-muted">
+                    <time datetime="{{ post.date |> date('ISOdate') }}">
+                      {{ post.date |> date("dd MMM yyyy") }}
+                    </time>
+                    <div class="flex gap-1 ml-auto">
+                      {{ for tag of post.tags }}
+                        {{ if tags.includes(tag) }}
+                          <span class="text-primary opacity-80">#{{
+                              tag
+                            }}</span>
+                        {{ /if }}
+                      {{ /for }}
+                    </div>
+                  </div>
+                </div>
+                {{
+                  comp.icon({
+                    name: "arrow-right",
+                    type: "lucide",
+                    classes:
+                      "w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0 mt-1",
+                  })
+                }}
+              </a>
+            {{ /for }}
+          </div>
+        </div>
+      {{ /if }}
+
+      {{# --- PAGES LIST --- #}}
+      {{ if matchingPages.length > 0 }}
+        <div>
+          <h4
+            class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
+          >
+            {{
+              comp.icon({
+                name: "file",
+                type: "lucide",
+                classes: "w-4 h-4",
+              })
+            }}
+            Pages ({{ matchingPages.length }})
+          </h4>
+          <div class="space-y-2">
+            {{ for page of matchingPages.slice(0, 5) }}
+              <a
+                href="{{ page.url }}"
+                class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
+              >
+                <div class="flex-1 min-w-0">
+                  <div
+                    class="font-medium text-sm text-text group-hover:text-primary transition-colors"
+                  >
+                    {{ page.title }}
+                  </div>
+                  {{ if page.description }}
+                    <div class="text-xs text-text-muted mt-1 line-clamp-1">
+                      {{ page.description }}
+                    </div>
+                  {{ /if }}
+                </div>
+                {{
+                  comp.icon({
+                    name: "arrow-right",
+                    type: "lucide",
+                    classes:
+                      "w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0 mt-1",
+                  })
+                }}
+              </a>
+            {{ /for }}
+          </div>
+        </div>
+      {{ /if }}
+    </div>
+  </aside>
+{{ /if }}
