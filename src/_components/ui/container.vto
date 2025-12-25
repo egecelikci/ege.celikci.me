@@ -1,9 +1,18 @@
 {{ set tag = as || "div" }}
-{{# Use max-w-narrow: fluid on mobile, capped at 65ch on desktop #}}
 {{ set maxWidth = width || "max-w-narrow" }}
 
-<{{ tag }} class="w-full px-4 md:w-[90%] md:px-0 mx-auto {{ maxWidth }} {{
-  classes || ""
-}}">
-{{ content }}
+{{
+  set classList = [
+    "w-full",
+    "px-4",
+    "md:w-[90%]",
+    "md:px-0",
+    "mx-auto",
+    maxWidth,
+    classes,
+  ].filter(Boolean).join(" ")
+}}
+
+<{{ tag }} class="{{ classList }}">
+{{ content |> safe }}
 </{{ tag }}>

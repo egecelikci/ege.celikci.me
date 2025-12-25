@@ -1,11 +1,17 @@
 ---
-title: Iced Filter Coffee
+title: iced filter coffee
 status: evergreen
-tags: ["coffee", "recipe", "brew"]
+updated: 2025-12-23
+tags: ["coffee", "recipe"]
 templateEngine: [vto, md]
 ---
 
-this is the recipe of James Hoffmann: https://www.youtube.com/watch?v=PApBycDrPo0
+this is the recipe from James Hoffmann
+
+{{ comp.youtube({
+id: "PApBycDrPo0",
+title: "How to Make Iced Filter Coffee by James Hoffmann"
+}) }}
 
 ## ingredients
 

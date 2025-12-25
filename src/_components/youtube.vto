@@ -1,0 +1,16 @@
+{{ set safeTitle = title || "YouTube video" |> replace("'", "\\'") }}
+<div
+  class="aspect-video w-full rounded-xl overflow-hidden shadow-lg border border-border bg-surface/50 my-6 relative group cursor-pointer flex flex-col items-center justify-center text-center p-6 gap-4 hover:bg-surface transition-colors"
+  onclick="this.removeAttribute('onclick'); this.classList.remove('flex', 'flex-col', 'items-center', 'justify-center', 'text-center', 'p-6', 'gap-4'); this.innerHTML='<iframe class=\'w-full h-full\' src=\'https://www.youtube-nocookie.com/embed/{{ id }}?autoplay=1\' title=\'{{ safeTitle }}\' frameborder=\'0\' allow=\'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\' allowfullscreen></iframe>'"
+>
+  <div class="font-bold text-lg text-text">
+    {{ title }}
+  </div>
+  <div
+    class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-text-muted group-hover:text-primary group-hover:border-primary/50 transition-colors"
+  >
+    {{ comp.icon({ name: "play", type: "lucide", classes: "w-4 h-4" }) }}<span
+      class="text-sm font-medium"
+    >Click to load video from YouTube</span>
+  </div>
+</div>

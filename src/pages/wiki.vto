@@ -1,21 +1,21 @@
 ---
 layout: layouts/base.vto
-title: wiki
-url: /wiki/
+title: index
+url: /index/
 menu:
   visible: true
   order: 5
 ---
 
-{{ comp ui.container { classes: "min-h-screen pb-20" } }}
+{{ comp ui.container }}
 
   {{ comp ui.pageHeader {
     title: title,
-    subtitle: "a digital garden of evolving notes, ideas, and knowledge."
+    subtitle: "a personal wiki"
   } }}
   {{ /comp }}
 
-  {{# Search Section #}}
+  {{# --- SEARCH --- #}}
   <div class="mb-12 relative group">
     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted group-focus-within:text-primary transition-colors">
       {{ comp.icon({ name: "search", type: "lucide", classes: "w-5 h-5" }) }}
@@ -30,60 +30,115 @@ menu:
 
   <div id="search-results" class="mb-12 space-y-3"></div>
 
+  {{# --- MAIN DASHBOARD GRID --- #}}
   <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
     
-    {{# Recently Tended using component #}}
-    {{ comp.wiki.recentChanges({
-      entries: search.pages("type=entry", "updated=desc", 6)
-    }) }}
-
-    <section>
-      <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
-        {{ comp.icon({ name: "layers", type: "lucide", classes: "w-5 h-5" }) }}
-        <h2 class="text-sm uppercase tracking-widest font-bold m-0">Root Topics</h2>
-      </div>
+    {{# === LEFT COLUMN: The Garden === #}}
+    <div class="space-y-12">
       
-      <div class="flex flex-wrap gap-3">
-        {{ set allTags = search.values("tags", "type=entry") }}
-        {{ for topic of allTags }}
-          {{ set taggedEntries = search.pages("type=entry") }}
-          {{ set count = 0 }}
-          {{ for entry of taggedEntries }}
-            {{ if entry.tags && entry.tags.includes(topic) }}
-              {{ set count = count + 1 }}
-            {{ /if }}
+      {{# 1. Recently Tended #}}
+      {{ comp.wiki.recentChanges({
+        entries: search.pages("type=entry !meta", "updated=desc", 6)
+      }) }}
+
+    </div>
+
+    {{# === RIGHT COLUMN: The Stream & System === #}}
+    <div class="space-y-12">
+      
+      {{# 1. Latest Blog Posts #}}
+      <section>
+        <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
+          {{ comp.icon({ name: "pen-tool", type: "lucide", classes: "w-5 h-5" }) }}
+          <h2 class="text-sm uppercase tracking-widest font-bold m-0">Latest Posts</h2>
+        </div>
+
+        <div class="space-y-3">
+          {{ for post of search.pages("type=post", "date=desc", 3) }}
+            <a 
+              href="{{ post.url }}" 
+              class="block group p-3 rounded-lg border border-border/50 bg-surface/20 hover:bg-surface hover:border-primary transition-all no-underline"
+            >
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-bold text-text group-hover:text-primary transition-colors text-sm">
+                  {{ post.title }}
+                </span>
+                <time class="text-xs text-text-muted font-mono shrink-0">
+                  {{ post.date |> date("dd MMM") }}
+                </time>
+              </div>
+            </a>
           {{ /for }}
 
-          <a 
-            href="/tags/{{ topic |> slugify }}/" 
-            class="px-4 py-2 rounded-lg border border-border bg-surface/50 text-sm font-bold text-text-muted hover:border-primary hover:text-primary hover:bg-surface transition-all duration-200 no-underline flex items-center gap-2"
-          >
-            #{{ topic }}
-            <span class="text-xs bg-bg px-1.5 py-0.5 rounded-md">{{ count }}</span>
-          </a>
-        {{ /for }}
-      </div>
+          <div class="pt-2">
+            <a href="/blog/" class="text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+              All Posts 
+              {{ comp.icon({ name: "arrow-right", type: "lucide", classes: "w-3 h-3" }) }}
+            </a>
+          </div>
+        </div>
+      </section>
 
-      <div class="mt-6">
-        <a 
-          href="/tags/" 
-          class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-        >
-          view all topics
-          {{ comp.icon({ name: "arrow-right", type: "lucide", classes: "w-4 h-4" }) }}
+      {{# 2. System / Meta #}}
+      <section>
+        <div class="flex items-center gap-2 mb-4 border-b border-border pb-2 text-text-muted">
+          {{ comp.icon({ name: "globe", type: "lucide", classes: "w-5 h-5" }) }}
+          <h2 class="text-sm uppercase tracking-widest font-bold m-0">Meta</h2>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          {{ for item of search.pages("type=entry meta", "title=asc") }}
+            <a href="{{ item.url }}" class="flex items-center gap-2 p-2 rounded-md hover:bg-surface text-xs font-bold text-text-muted hover:text-primary transition-colors no-underline border border-transparent hover:border-border">
+              {{ comp.icon({ 
+                name: item.icon || "hash", 
+                type: "lucide", 
+                classes: "w-3 h-3 opacity-50" 
+              }) }}
+              {{ item.title.toLowerCase() }}
+            </a>
+          {{ /for }}
+        </div>
+      </section>
+
+      {{# 3. Topics Link (Replaces the redundant cloud) #}}
+      <section>
+        <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
+          {{ comp.icon({ name: "layers", type: "lucide", classes: "w-5 h-5" }) }}
+          <h2 class="text-sm uppercase tracking-widest font-bold m-0">Topics</h2>
+        </div>
+        
+        {{# This card now gives a reason to visit the /tags/ page #}}
+        <a href="/tags/" class="group flex items-center justify-between p-4 rounded-xl border border-border bg-surface/30 hover:bg-surface hover:border-primary transition-all no-underline">
+          <div class="flex items-center gap-4">
+            <div class="p-2 rounded-lg bg-surface border border-border group-hover:border-primary/50 transition-colors text-text-muted group-hover:text-primary">
+              {{ comp.icon({ name: "hash", type: "lucide", classes: "w-5 h-5" }) }}
+            </div>
+            <div>
+              <div class="font-bold text-text group-hover:text-primary transition-colors">
+                explore index
+              </div>
+              <div class="text-xs text-text-muted">
+                {{# Calculate total tags dynamically #}}
+                browse all {{ search.values("tags", "type=entry").length }} topics
+              </div>
+            </div>
+          </div>
+          
+          {{ comp.icon({ name: "arrow-right", type: "lucide", classes: "w-4 h-4 text-text-muted group-hover:text-primary -translate-x-1 group-hover:translate-x-0 transition-all" }) }}
         </a>
-      </div>
-    </section>
+      </section>
 
+    </div>
   </div>
 
+  {{# --- ALL ENTRIES --- #}}
   <section class="mt-16">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold font-display">all entries</h2>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {{ for item of search.pages("type=entry", "updated=desc") }}
+      {{ for item of search.pages("type=entry !meta", "updated=desc") }}
         {{ comp.wiki.entryCard({ entry: item }) }}
       {{ /for }}
     </div>
@@ -91,9 +146,10 @@ menu:
 
 {{ /comp }}
 
-{{# Pagefind Search Script #}}
-<script src="/assets/pagefind/pagefind.js"></script>
+{{# ... (Keep your Pagefind script here) ... #}}
+<script src="/pagefind/pagefind.js"></script>
 <script>
+  // ... Keep existing script ...
   window.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('wiki-search');
     const searchResults = document.getElementById('search-results');
@@ -101,8 +157,7 @@ menu:
     if (!searchInput || !searchResults) return;
 
     try {
-      // Initialize Pagefind
-      const pagefind = await import('/assets/pagefind/pagefind.js');
+      const pagefind = await import('/pagefind/pagefind.js');
       
       let debounceTimer;
       searchInput.addEventListener('input', async (e) => {

@@ -4,34 +4,18 @@ layout: layouts/base.vto
 title: topics
 ---
 
-<div class="w-full max-w-narrow mx-auto min-h-screen py-12 md:py-20">
+{{ comp ui.container { classes: "min-h-screen py-12 md:py-20" } }}
+
   {{# Header Section #}}
   <header class="mb-16 border-b border-border/50 pb-8">
-    <a
-      href="/wiki/"
-      class="
-        inline-flex items-center gap-2
-        text-xs font-bold uppercase tracking-widest
-        text-text-muted hover:text-primary
-        no-underline mb-6 transition-colors
-      "
-    >
-      {{
-        comp.icon({
-          name: "arrow-left",
-          type: "lucide",
-          classes: "w-4 h-4",
-        })
-      }}
-      back to wiki
-    </a>
+    {{ comp.ui.backlink({ href: "/wiki/", text: "back to wiki" }) }}
 
     <div class="flex flex-col gap-2">
       <h1 class="text-4xl md:text-5xl font-display font-bold text-text">
         topics<span class="text-primary">.</span>
       </h1>
       <p class="text-lg text-text-muted leading-relaxed max-w-2xl">
-        An index of all tags cultivating the digital garden.
+        an index of all tags
       </p>
     </div>
   </header>
@@ -43,37 +27,43 @@ title: topics
     {{# Tag Cloud Grid #}}
     <div class="flex flex-wrap gap-3">
       {{ for tag of allTags }}
-        {{# Optimized Count: Direct search query instead of manual loop #}}
-        {{ set count = search.pages("type=entry tags='" + tag + "'").length }}
+        
+        {{# --- HIDE META TAG --- #}}
+        {{ if tag !== "meta" }}
 
-        <a
-          href="/tags/{{ tag |> slugify }}/"
-          class="
-            group flex items-center gap-3
-            pl-4 pr-3 py-2.5
-            rounded-lg border border-border/60 bg-surface/40
-            hover:bg-surface hover:border-primary/40 hover:shadow-sm hover:-translate-y-0.5
-            transition-all duration-300 ease-out no-underline
-          "
-        >
-          <span
-            class="font-bold text-sm text-text-muted group-hover:text-primary transition-colors"
-          >
-            <span class="opacity-40 font-normal mr-0.5">#</span>{{ tag }}
-          </span>
+          {{# Correct Search Syntax: Quote the tag name directly #}}
+          {{ set count = search.pages("type=entry '" + tag + "'").length }}
 
-          <span
+          <a
+            href="/tags/{{ tag |> slugify }}/"
             class="
-              flex items-center justify-center h-5 min-w-[1.25rem] px-1.5
-              text-[10px] font-mono font-bold
-              rounded-md bg-bg border border-border/50 text-text-muted
-              group-hover:text-primary group-hover:border-primary/20
-              transition-colors
+              group flex items-center gap-3
+              pl-4 pr-3 py-2.5
+              rounded-lg border border-border/60 bg-surface/40
+              hover:bg-surface hover:border-primary/40 hover:shadow-sm hover:-translate-y-0.5
+              transition-all duration-300 ease-out no-underline
             "
           >
-            {{ count }}
-          </span>
-        </a>
+            <span
+              class="font-bold text-sm text-text-muted group-hover:text-primary transition-colors"
+            >
+              <span class="opacity-40 font-normal mr-0.5">#</span>{{ tag }}
+            </span>
+
+            <span
+              class="
+                flex items-center justify-center h-5 min-w-[1.25rem] px-1.5
+                text-[10px] font-mono font-bold
+                rounded-md bg-bg border border-border/50 text-text-muted
+                group-hover:text-primary group-hover:border-primary/20
+                transition-colors
+              "
+            >
+              {{ count }}
+            </span>
+          </a>
+        
+        {{ /if }}
       {{ /for }}
     </div>
   {{ else }}
@@ -91,4 +81,5 @@ title: topics
       </p>
     </div>
   {{ /if }}
-</div>
+
+{{ /comp }}
