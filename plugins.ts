@@ -12,6 +12,7 @@ import metas from "lume/plugins/metas.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import nav from "lume/plugins/nav.ts";
 import ogImages from "lume/plugins/og_images.ts";
+import pagefind, { Options as PagefindOptions, }  from "lume/plugins/pagefind.ts";
 import paginate from "lume/plugins/paginate.ts";
 import picture from "lume/plugins/picture.ts";
 import postcss from "lume/plugins/postcss.ts";
@@ -47,6 +48,7 @@ export interface Options {
   feed?: Partial<FeedOptions>;
   remark?: Partial<RemarkOptions>;
   slugify?: Partial<SlugifyOptions>;
+  pagefind?: Partial<PagefindOptions>;
 }
 
 // 4. Move all configurations to defaults
@@ -117,6 +119,15 @@ export const defaults: Options = {
       description: "=excerpt",
     },
     limit: 0,
+  },
+  pagefind: {
+    outputPath: "/assets/pagefind",
+    ui: {
+      containerId: "#wiki-search",
+      showImages: false,
+      showEmptyFilters: true,
+      resetStyles: true,
+    },
   },
 };
 
