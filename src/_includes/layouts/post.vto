@@ -4,19 +4,7 @@ layout: layouts/base.vto
 
 <div class="w-full max-w-narrow mx-auto min-h-screen py-10">
   <div class="mb-8">
-    <a
-      href="/blog"
-      class="inline-flex items-center gap-1 text-sm font-bold text-text-muted hover:text-primary transition-colors no-underline"
-    >
-      {{
-        comp.icon({
-          name: "arrow-left",
-          type: "lucide",
-          classes: "w-4 h-4",
-        })
-      }}
-      back to blog
-    </a>
+    {{ comp.ui.backLink({ href: "/blog/", text: "back to blog" }) }}
   </div>
 
   <article
