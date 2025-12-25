@@ -1,7 +1,8 @@
 ---
 title: iced filter coffee
 status: evergreen
-updated: 2025-12-23
+date: 2025-12-23
+updated: 2025-12-25
 tags: ["coffee", "recipe"]
 templateEngine: [vto, md]
 ---

@@ -46,18 +46,19 @@ menu:
     {{# === RIGHT COLUMN: The Stream & System === #}}
     <div class="space-y-12">
       
-      {{# 1. Latest Blog Posts #}}
+      {{# 1. Latest Blog Posts (Aligned to Left Column) #}}
       <section>
+        {{# Header: Exact match to Left Column #}}
         <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
           {{ comp.icon({ name: "pen-tool", type: "lucide", classes: "w-5 h-5" }) }}
           <h2 class="text-sm uppercase tracking-widest font-bold m-0">Latest Posts</h2>
         </div>
 
-        <div class="space-y-3">
+        <div class="space-y-2">
           {{ for post of search.pages("type=post", "date=desc", 3) }}
             <a 
               href="{{ post.url }}" 
-              class="block group p-3 rounded-lg border border-border/50 bg-surface/20 hover:bg-surface hover:border-primary transition-all no-underline"
+              class="block group p-3 rounded-lg border border-border hover:border-primary hover:bg-surface transition-all no-underline"
             >
               <div class="flex items-center justify-between mb-1">
                 <span class="font-bold text-text group-hover:text-primary transition-colors text-sm">
@@ -100,14 +101,13 @@ menu:
         </div>
       </section>
 
-      {{# 3. Topics Link (Replaces the redundant cloud) #}}
+      {{# 3. Topics Link #}}
       <section>
         <div class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted">
           {{ comp.icon({ name: "layers", type: "lucide", classes: "w-5 h-5" }) }}
           <h2 class="text-sm uppercase tracking-widest font-bold m-0">Topics</h2>
         </div>
         
-        {{# This card now gives a reason to visit the /tags/ page #}}
         <a href="/tags/" class="group flex items-center justify-between p-4 rounded-xl border border-border bg-surface/30 hover:bg-surface hover:border-primary transition-all no-underline">
           <div class="flex items-center gap-4">
             <div class="p-2 rounded-lg bg-surface border border-border group-hover:border-primary/50 transition-colors text-text-muted group-hover:text-primary">
@@ -118,7 +118,6 @@ menu:
                 explore wiki
               </div>
               <div class="text-xs text-text-muted">
-                {{# Calculate total tags dynamically #}}
                 browse all {{ search.values("tags", "type=entry").length }} topics
               </div>
             </div>
@@ -149,7 +148,6 @@ menu:
 {{# ... (Keep your Pagefind script here) ... #}}
 <script src="/pagefind/pagefind.js"></script>
 <script>
-  // ... Keep existing script ...
   window.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('wiki-search');
     const searchResults = document.getElementById('search-results');
