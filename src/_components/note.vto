@@ -3,7 +3,7 @@
     <a
       href="{{ note.url |> url }}"
       class="absolute inset-0 z-0"
-      aria-label="View note"
+      aria-label="Read note from {{ note.date |> date('dd LLL yyyy') }}{{ if note.title }}: {{ note.title }}{{ /if }}"
     ></a>
 
     {{
