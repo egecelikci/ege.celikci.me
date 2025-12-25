@@ -4,9 +4,7 @@ date: 2025-11-23
 updated: 2025-12-18
 icon: rss
 description: "a list of all Atom feeds available on this website."
-tags: ["meta", "feeds"]
-url: /feeds/
-templateEngine: [vto, md]
+tags: ["feeds"]
 ---
 
 ## combined feed

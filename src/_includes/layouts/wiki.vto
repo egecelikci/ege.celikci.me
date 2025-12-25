@@ -4,8 +4,8 @@ layout: layouts/base.vto
 
 {{ set body }}
   <header class="mb-10 border-b border-border pb-6">
-    <div class="flex items-center justify-between mb-6">
-      {{ comp.ui.backLink({ href: "/wiki/", text: "back to wiki" }) }}
+    <div class="flex items-center justify-between mb-6 h-8">
+      {{ comp.ui.breadcrumbs({ url: url }) }}
 
       {{ if status }}
         {{ comp.wiki.status({ status: status }) }}
