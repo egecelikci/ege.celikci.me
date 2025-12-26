@@ -1,0 +1,74 @@
+<div
+  class="p-6 bg-surface border border-border rounded-xl my-8 not-prose shadow-sm"
+>
+  <div class="flex items-center gap-2 mb-4 text-primary">
+    {{
+      comp.ui.Icon({
+        name: "calculator",
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}<h3 class="font-bold text-lg m-0 text-text">Brew Calculator</h3>
+  </div>
+  <div class="flex flex-col gap-6">
+    <label class="flex flex-col gap-2">
+      <span class="{{ theme.typography.label }} text-text-muted"
+      >Target Volume (ml)</span>
+      <input
+        type="number"
+        id="coffee-input"
+        value="500"
+        step="50"
+        class="{{ theme.components.input.base }} {{ theme.components.input.focus }} font-mono text-lg"
+      >
+    </label>
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      {{
+        set blockClass = "p-4 bg-bg/50 rounded-lg border border-border/50 flex flex-col justify-between gap-1"
+      }}
+      {{
+        set labelClass = theme.typography.label + " text-text-muted opacity-70"
+      }}
+      {{ set valueClass = "font-mono font-bold text-xl" }}
+      <div class="{{ blockClass }}">
+        <span class="{{ labelClass }}">Coffee</span>
+        <span class="{{ valueClass }}"><span id="out-coffee">32.5</span>g</span>
+      </div>
+      <div class="{{ blockClass }}">
+        <span class="{{ labelClass }}">Ice (40%)</span>
+        <span class="{{ valueClass }}"><span id="out-ice">200</span>g</span>
+      </div>
+      <div class="{{ blockClass }}">
+        <span class="{{ labelClass }}">Hot Water (60%)</span>
+        <span class="{{ valueClass }}"><span id="out-hot">300</span>g</span>
+      </div>
+      <div class="{{ blockClass }}">
+        <span class="{{ labelClass }}">Bloom Water</span>
+        <span class="{{ valueClass }} text-primary"><span id="out-bloom"
+          >97</span>g</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+    const input = document.getElementById("coffee-input");
+    const outCoffee = document.getElementById("out-coffee");
+    const outIce = document.getElementById("out-ice");
+    const outHot = document.getElementById("out-hot");
+    const outBloom = document.getElementById("out-bloom");
+
+    function calculate() {
+      const vol = parseFloat(input.value) || 0;
+      const coffee = vol * (65 / 1000);
+
+      outCoffee.textContent = coffee.toFixed(1);
+      outIce.textContent = Math.round(vol * 0.4);
+      outHot.textContent = Math.round(vol * 0.6);
+      outBloom.textContent = Math.round(coffee * 3);
+    }
+
+    input.addEventListener("input", calculate);
+  })();
+  </script>
+</div>

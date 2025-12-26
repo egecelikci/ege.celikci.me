@@ -1,23 +1,30 @@
+{{ set headerContent }}
+  <a
+    class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted transition-colors duration-200"
+    href="/"
+    rel="home"
+    aria-label="Home"
+  >
+    <span>{{ site.host }}</span><span class="text-primary">.</span>
+  </a>
+
+  <div class="flex-1 min-w-0 flex justify-end items-center">
+    {{ include "navigation.vto" }}
+  </div>
+{{ /set }}
 <header
   class="sticky top-0 w-full z-[100] border-b border-text-muted/10 backdrop-blur-md transition-all duration-300"
   style="background-color: color-mix(in srgb, var(--color-bg), transparent 20%)"
   role="banner"
 >
-  <nav
-    class="w-full px-4 md:w-[90%] md:px-0 mx-auto max-w-max flex flex-row items-center justify-between py-4 md:py-6 lg:py-8"
-    aria-label="Main navigation"
-  >
-    <a
-      class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted transition-colors duration-200"
-      href="/"
-      rel="home"
-      aria-label="Home"
-    >
-      <span>{{ site.host }}</span><span class="text-primary">.</span>
-    </a>
-
-    <div class="flex-1 min-w-0 flex justify-end items-center">
-      {{ include "navigation.vto" }}
-    </div>
-  </nav>
+  {{
+    comp.ui.Container({
+      as: "nav",
+      width: "default",
+      classes:
+        "flex flex-row items-center justify-between py-4 md:py-6 lg:py-8",
+      attributes: { "aria-label": "Main navigation" },
+      content: headerContent,
+    })
+  }}
 </header>

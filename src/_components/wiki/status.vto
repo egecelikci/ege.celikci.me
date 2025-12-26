@@ -1,9 +1,12 @@
+{{# 
+  Uses the new Universal Badge + Clean Data 
+#}}
 {{ set config = wiki_status[status] || wiki_status.seedling }}
 
-<div
-  class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border shadow-sm text-[10px] font-bold uppercase tracking-widest transition-all duration-200 ease-in-out hover:scale-105 select-none {{ config.color }} {{ config.bg }} {{ config.border }}"
-  title="Status: {{ status }}"
->
-  {{ comp.icon({ name: config.icon, type: "lucide", classes: "w-3 h-3" }) }}
-  <span>{{ config.text }}</span>
-</div>
+{{
+  comp.ui.Badge({
+    text: config.text,
+    icon: config.icon,
+    variant: config.variant,
+  })
+}}

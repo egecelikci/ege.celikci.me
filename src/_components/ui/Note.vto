@@ -7,7 +7,7 @@
     ></a>
 
     {{
-      comp.notes.header({
+      comp.ui.NoteHeader({
         date: note.date,
         tags: note.tags,
         url: note.url,
@@ -24,7 +24,7 @@
       {{ /if }}
 
       <div>
-        {{ comp.notes.gallery({ images: note.images, static: true }) }}
+        {{ comp.ui.Gallery({ images: note.images, static: true }) }}
       </div>
 
       <div class="e-content markdown text-lg">
@@ -40,13 +40,13 @@
     <div
       class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between relative z-10 rounded-b-lg"
     >
-      {{ comp.notes.stats({ stats: note.stats }) }}
-      {{ comp.notes.syndication({ syndication: note.syndication }) }}
+      {{ comp.ui.NoteStats({ stats: note.stats }) }}
+      {{ comp.ui.Syndication({ syndication: note.syndication }) }}
     </div>
   {{ /set }}
 
   {{
-    comp.card({
+    comp.ui.Card({
       classes: "p-0 shadow-sm hover:shadow-md transition-shadow",
       padding: "p-0",
       background: "bg-bg",

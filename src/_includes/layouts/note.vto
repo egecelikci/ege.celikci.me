@@ -2,19 +2,24 @@
 layout: layouts/base.vto
 ---
 
-<article class="w-full max-w-[65ch] mx-auto my-8 mb-16">
+{{# Capture the entire note content first #}}
+{{ set noteBody }}
+  {{# Backlink #}}
   <div class="mb-6">
-    {{ comp.ui.backLink({ href: "/notes/", text: "back to notes" }) }}
+    {{ comp.ui.Backlink({ href: "/notes/", text: "back to notes" }) }}
   </div>
 
+  {{# Capture the Card Inner Content #}}
   {{ set cardContent }}
+    {{# Note Header #}}
     {{
-      comp.notes.header({
+      comp.ui.NoteHeader({
         date: date,
         tags: tags,
       })
     }}
 
+    {{# Main Content Area #}}
     <div class="p-6">
       {{ if title && !isAutoTitle }}
         <h1 class="p-name text-2xl font-bold text-balance mb-4">
@@ -22,25 +27,28 @@ layout: layouts/base.vto
         </h1>
       {{ /if }}
 
-      {{ comp.notes.gallery({ images: images }) }}
+      {{ comp.ui.Gallery({ images: images }) }}
 
-      <div class="e-content markdown text-lg">
+      <div class="e-content markdown text-lg" data-pagefind-body>
         {{ content |> safe }}
       </div>
     </div>
+
+    {{# Footer Actions #}}
     <div
       class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between"
     >
-      {{ comp.notes.stats({ stats: stats }) }}
-
-      {{ comp.notes.syndication({ syndication: syndication }) }}
+      {{ comp.ui.NoteStats({ stats: stats }) }}
+      {{ comp.ui.Syndication({ syndication: syndication }) }}
     </div>
 
-    {{ comp.webmentions({ url: url, webmentions: webmentions }) }}
+    {{# Webmentions (Inside Card) #}}
+    {{ comp.ui.Webmentions({ url: url, webmentions: webmentions }) }}
   {{ /set }}
 
+  {{# Render the Card #}}
   {{
-    comp.card({
+    comp.ui.Card({
       elevated: true,
       padding: "p-0",
       background: "bg-bg",
@@ -48,4 +56,13 @@ layout: layouts/base.vto
       content: cardContent,
     })
   }}
-</article>
+{{ /set }}
+
+{{# Wrap everything in the Container (narrow width matches your original 65ch) #}}
+{{
+  comp.ui.Container({
+    width: "narrow",
+    classes: "my-8 mb-16",
+    content: noteBody,
+  })
+}}

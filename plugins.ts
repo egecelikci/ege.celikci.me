@@ -36,6 +36,7 @@ import remarkToc from "npm:remark-toc@^9.0.0";
 import remarkWikiLink from "npm:remark-wiki-link@^2.0.1";
 
 import siteData from "./src/_data/site.ts";
+
 import {
   alistralLangs,
   loadAlistralTheme,
@@ -168,7 +169,7 @@ export default function(userOptions?: Options,) {
             pageResolver: (
               name: string,
             ) => [name.replace(/ /g, "-",).toLowerCase(),],
-            hrefTemplate: (permalink: string,) => `/${permalink}/`,
+            hrefTemplate: (permalink: string,) => `/wiki/${permalink}/`,
           },],
           ...(options.remark?.remarkPlugins || []),
         ],
@@ -223,6 +224,18 @@ export default function(userOptions?: Options,) {
         query: "type=post",
         info: { ...options.feed?.info, title: `blog | ${siteData.host}`, },
       },),)
+      // ... existing blog feed ...
+      .use(feed({
+        ...options.feed,
+        output: ["wiki.xml", "wiki.json"],
+        query: "type=entry",
+        sort: "updated=desc",
+        info: { 
+          ...options.feed?.info, 
+          title: `wiki recent changes | ${siteData.host}`,
+          description: "Track the latest updates and edits to the wiki."
+        },
+      }))
       .use(minifyHTML(),)
       .add("assets/scripts/main.ts",)
       .add("assets/styles/main.css",)

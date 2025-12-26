@@ -1,4 +1,4 @@
-layout: layouts/wiki.vto
+layout: layouts/content.vto
 tags:
   - recipe
 type: entry

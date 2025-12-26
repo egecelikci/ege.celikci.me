@@ -1,0 +1,58 @@
+---
+layout: layouts/base.vto
+---
+
+{{# Capture content to a variable to prevent parser errors #}}
+{{ set body }}
+  {{# Page Header #}}
+  {{
+    comp.ui.PageHeader({
+      title: title,
+      subtitle: subtitle,
+      breadcrumbs: breadcrumbs === true,
+      status: status,
+      url: url,
+      metadata: show_metadata !== false
+        ? {
+          date: date,
+          updated: updated,
+          wordCount: wordCount,
+          tags: tags,
+        }
+        : null,
+      centered: centered || false,
+    })
+  }}
+
+  {{# Main Content #}}
+  <article
+    class="markdown {{ article_classes || 'e-content text-lg leading-relaxed' }}"
+    data-pagefind-body
+  >
+    {{ content |> safe }}
+  </article>
+
+  {{# Optional Sections #}}
+  {{ if show_related && tags }}
+    {{ comp.ui.RelatedContent() }}
+  {{ /if }}
+
+  {{ comp.ui.IncomingLinks({ url: url, title: title }) }}
+
+  {{ if show_webmentions }}
+    <div class="mt-12 pt-8 border-t border-border">
+      {{# Note: using theme.typography.heading.h3 per your theme.ts #}}
+      <h3 class="{{ theme.typography.heading.h3 }} mb-6">Webmentions</h3>
+      {{ comp.ui.Webmentions({ url: url }) }}
+    </div>
+  {{ /if }}
+{{ /set }}
+
+{{# Pass body variable to Container #}}
+{{
+  comp.ui.Container({
+    width: container_width || "narrow",
+    classes: "min-h-screen py-10",
+    content: body,
+  })
+}}

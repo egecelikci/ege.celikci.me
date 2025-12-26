@@ -1,0 +1,48 @@
+{{# 
+  Universal Card Component
+  Props:
+    - variant: "default" | "elevated" | "flat"
+    - href: optional link
+    - hover: boolean (default: true)
+    - padding: custom padding override
+    - classes: additional classes
+    - attributes: object
+    - content: body string
+#}}
+
+{{
+  set cardClasses = [
+    theme.components.card.base,
+    hover !== false ? theme.components.card.hover : "",
+    padding || theme.components.card.padding,
+    variant === "elevated" ? "shadow-lg" : "",
+    variant === "flat" ? "border-0 shadow-none" : "",
+    classes,
+  ]
+  |> join(" ")
+}}
+
+{{ if href }}
+  <a
+    href="{{ href }}"
+    class="block group {{ cardClasses }}"
+    {{ if attributes }}
+      {{ for key, val of attributes }}
+        {{ key }}="{{ val }}"
+      {{ /for }}
+    {{ /if }}
+  >
+    {{ content |> safe }}
+  </a>
+{{ else }}
+  <div
+    class="{{ cardClasses }}"
+    {{ if attributes }}
+      {{ for key, val of attributes }}
+        {{ key }}="{{ val }}"
+      {{ /for }}
+    {{ /if }}
+  >
+    {{ content |> safe }}
+  </div>
+{{ /if }}

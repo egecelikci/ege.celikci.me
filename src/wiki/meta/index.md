@@ -1,5 +1,6 @@
 ---
 title: meta
-layout: layouts/folder.vto
+layout: layouts/index.vto
 type: index
+query: "meta type=entry"
 ---

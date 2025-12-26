@@ -1,21 +1,14 @@
-# src/_data/wiki_status.yml
 seedling:
-  icon: sprout
-  color: text-green-500
-  bg: bg-green-500/10
-  border: border-green-500/20
   text: seedling
+  icon: sprout
+  variant: success
 
 budding:
-  icon: leaf
-  color: text-amber-500
-  bg: bg-amber-500/10
-  border: border-amber-500/20
   text: budding
+  icon: leaf
+  variant: warning
 
 evergreen:
-  icon: tree-pine
-  color: text-emerald-600
-  bg: bg-emerald-600/10
-  border: border-emerald-600/20
   text: evergreen
+  icon: tree-pine
+  variant: primary

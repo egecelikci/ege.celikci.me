@@ -8,6 +8,12 @@
     {{ classes }}
   "
 >
-  {{ comp.icon({ name: "arrow-left", type: "lucide", classes: "w-4 h-4" }) }}
+  {{
+    comp.ui.Icon({
+      name: "arrow-left",
+      type: "lucide",
+      classes: "w-4 h-4",
+    })
+  }}
   {{ text }}
 </a>

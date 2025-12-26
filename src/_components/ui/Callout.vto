@@ -1,0 +1,52 @@
+{{#
+  Component: Callout
+  Props:
+    - type: "info" | "warning" | "danger" | "success" | "action" (default: info)
+    - icon: string (optional override)
+    - text: string | html
+    - classes: additional classes
+#}}
+
+{{ set type = type || "info" }}
+
+{{# Icon Logic #}}
+{{
+  set iconMap = {
+    action: "badge-check",
+    warning: "badge-alert",
+    danger: "badge-alert",
+    plus: "badge-plus",
+    minus: "badge-minus",
+    percent: "badge-percent",
+    info: "badge-info",
+    success: "badge-check",
+  }
+}}
+
+{{ set iconName = icon || iconMap[type] || "info" }}
+{{
+  set variantClass = theme.components.callout.variants[type] ||
+    theme.components.callout.variants.info
+}}
+
+<div
+  class="{{ theme.components.callout.base }} {{ variantClass }} {{ classes }}"
+>
+  <div class="shrink-0 mt-0.5">
+    {{
+      comp.ui.Icon({
+        name: iconName,
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+  </div>
+
+  <div class="markdown max-w-none leading-normal [&>:last-child]:mb-0">
+    {{ if text }}
+      {{ text |> safe }}
+    {{ else }}
+      {{ content }}
+    {{ /if }}
+  </div>
+</div>

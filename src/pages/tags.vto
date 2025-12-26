@@ -4,35 +4,27 @@ layout: layouts/base.vto
 title: topics
 ---
 
-{{ comp ui.container { classes: "min-h-screen py-12 md:py-20" } }}
+{{# --- 1. HEADER --- #}}
+{{
+  comp.ui.PageHeader({
+    title: title,
+    subtitle: "an index of all tags",
+    backlink: { href: "/wiki/", text: "back to wiki" },
+    width: "narrow",
+  })
+}}
 
-  {{# Header Section #}}
-  <header class="mb-16 border-b border-border/50 pb-8">
-    {{ comp.ui.backlink({ href: "/wiki/", text: "back to wiki" }) }}
-
-    <div class="flex flex-col gap-2">
-      <h1 class="text-4xl md:text-5xl font-display font-bold text-text">
-        topics<span class="text-primary">.</span>
-      </h1>
-      <p class="text-lg text-text-muted leading-relaxed max-w-2xl">
-        an index of all tags
-      </p>
-    </div>
-  </header>
-
-  {{# Get all unique tags from wiki entries #}}
-  {{ set allTags = search.values("tags", "type=entry") }}
+{{# --- 2. TAG CLOUD CONTENT --- #}}
+{{ set tagsContent }}
+  {{# CHANGE: Removed "type=entry" filter to get tags from posts/notes too #}}
+  {{ set allTags = search.values("tags") }}
 
   {{ if allTags && allTags.length > 0 }}
-    {{# Tag Cloud Grid #}}
     <div class="flex flex-wrap gap-3">
       {{ for tag of allTags }}
-        
-        {{# --- HIDE META TAG --- #}}
         {{ if tag !== "meta" }}
-
-          {{# Correct Search Syntax: Quote the tag name directly #}}
-          {{ set count = search.pages("type=entry '" + tag + "'").length }}
+          {{# CHANGE: Count ALL pages with this tag, not just entries #}}
+          {{ set count = search.pages("'" + tag + "'").length }}
 
           <a
             href="/tags/{{ tag |> slugify }}/"
@@ -49,37 +41,32 @@ title: topics
             >
               <span class="opacity-40 font-normal mr-0.5">#</span>{{ tag }}
             </span>
-
             <span
-              class="
-                flex items-center justify-center h-5 min-w-[1.25rem] px-1.5
-                text-[10px] font-mono font-bold
-                rounded-md bg-bg border border-border/50 text-text-muted
-                group-hover:text-primary group-hover:border-primary/20
-                transition-colors
-              "
+              class="flex items-center justify-center h-5 min-w-[1.25rem] px-1.5 text-[10px] font-mono font-bold rounded-md bg-bg border border-border/50 text-text-muted group-hover:text-primary group-hover:border-primary/20 transition-colors"
             >
               {{ count }}
             </span>
           </a>
-        
         {{ /if }}
       {{ /for }}
     </div>
   {{ else }}
-    {{# Empty State #}}
-    <div
-      class="flex flex-col items-center justify-center py-24 px-4 text-center border border-dashed border-border rounded-2xl bg-surface/20"
-    >
-      <div class="p-4 rounded-full bg-surface mb-4 text-text-muted/50">
-        {{ comp.icon({ name: "tag", type: "lucide", classes: "w-8 h-8" }) }}
-      </div>
-      <h3 class="text-lg font-bold text-text mb-2">No topics found</h3>
-      <p class="text-text-muted max-w-sm mx-auto">
-        There are no tags used in any wiki entries yet. Start tagging your notes
-        to see them appear here.
-      </p>
-    </div>
+    {{# Empty State #}}{{
+      comp.ui.EmptyState({
+        icon: "tag",
+        title: "No topics found",
+        description:
+          "Start tagging your posts, notes, and wiki entries to see them appear here.",
+      })
+    }}
   {{ /if }}
+{{ /set }}
 
-{{ /comp }}
+{{# --- 3. CONTAINER --- #}}
+{{
+  comp.ui.Container({
+    width: "narrow",
+    classes: "min-h-screen pb-20",
+    content: tagsContent,
+  })
+}}

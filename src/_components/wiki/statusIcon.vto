@@ -1,8 +1,16 @@
 {{ set config = wiki_status[status] || wiki_status.seedling }}
+{{ set variantClass = theme.components.badge.variants[config.variant] }}
 
+{{# We extract the color classes from the variant string, or simpler: just use the text color #}}
 <div
-  class="flex items-center justify-center w-8 h-8 rounded-full border {{ config.border }} {{ config.bg }} {{ config.color }}"
+  class="flex items-center justify-center w-8 h-8 rounded-full border {{ variantClass }}"
   title="Status: {{ status }}"
 >
-  {{ comp.icon({ name: config.icon, type: "lucide", classes: "w-4 h-4" }) }}
+  {{
+    comp.ui.Icon({
+      name: config.icon,
+      type: "lucide",
+      classes: "w-4 h-4",
+    })
+  }}
 </div>

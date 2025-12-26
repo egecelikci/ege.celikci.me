@@ -2,42 +2,24 @@
   <ul
     class="flex flex-row overflow-x-auto lg:overflow-visible items-center gap-5 lg:gap-6 scrollbar-hide"
   >
-    {{ for entry of search.pages("menu.visible=true", "menu.order") }}
-      {{ set isCurrent = entry.url == url }}
-      {{ set isParent = entry.url != "/" && url.includes(entry.url) }}
-      {{ set isActive = isCurrent || isParent }}
+    {{ for item of navigation.navigation }}
+      {{ if item.visible }}
+        {{ set isCurrent = item.href == url }}
+        {{
+          set isActive = isCurrent || (item.href != "/" && url.includes(item.href))
+        }}
 
-      <li class="flex-shrink-0">
-        <a
-          href="{{ isCurrent ? '#main' : entry.url }}"
-          data-active="{{ isActive }}"
-          class="
-            relative inline-block py-2 text-xs uppercase font-semibold tracking-wider whitespace-nowrap
-            text-text transition-colors duration-200
-            
-            /* Hover State */
-            hover:text-text-muted focus-visible:text-text-muted
-            
-            /* Active State Logic via Data Attribute */
-            data-[active=true]:text-primary
-            
-            /* Desktop Styles */
-            lg:text-sm lg:py-1
-            
-            /* Underline Animation */
-            lg:after:absolute lg:after:bottom-0 lg:after:left-0 lg:after:content-['']
-            lg:after:h-[2px] lg:after:w-full lg:after:transition-transform lg:after:duration-300
-            
-            /* Inactive Underline (Hidden) */
-            lg:after:scale-x-0 lg:after:origin-right lg:after:bg-current
-            lg:hover:after:scale-x-100 lg:hover:after:origin-left
-            data-[active=true]:lg:after:scale-x-100 data-[active=true]:lg:after:bg-primary
-          "
-          {{ if isCurrent }}aria-current="page"{{ /if }}
-        >
-          {{ entry.menu.title || entry.title }}
-        </a>
-      </li>
+        <li class="flex-shrink-0">
+          <a
+            href="{{ isCurrent ? '#main' : item.href }}"
+            data-active="{{ isActive }}"
+            class="{{ theme.utilities.navLink }} {{ theme.utilities.navUnderline }}"
+            {{ if isCurrent }}aria-current="page"{{ /if }}
+          >
+            {{ item.title }}
+          </a>
+        </li>
+      {{ /if }}
     {{ /for }}
   </ul>
 </nav>

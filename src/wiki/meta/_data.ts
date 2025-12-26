@@ -1,4 +1,4 @@
-export const layout = "layouts/wiki.vto";
+export const layout = "layouts/content.vto";
 export const type = "entry";
 export const tags = ["meta",];
 

@@ -1,0 +1,19 @@
+{{#
+  Component: Timeline Wrapper
+  Props:
+    - content: The items to render inside the timeline
+#}}
+<div class="relative">
+  {{# The Sticky Dot Line #}}
+  <div class="absolute left-4 top-0 bottom-0 w-px bg-border">
+    <div
+      class="sticky top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-4 border-primary bg-bg z-20 transition-all duration-300"
+    >
+    </div>
+  </div>
+
+  {{# The Content (Pushed right to clear the line) #}}
+  <div class="pb-32 pl-12">
+    {{ content |> safe }}
+  </div>
+</div>

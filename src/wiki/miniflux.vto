@@ -14,10 +14,17 @@ templateEngine: [vto]
   scraping](https://miniflux.app/docs/rules.html)</a>.
 {{ /set }}
 
-<div
-  class="columns-1 md:columns-2 gap-12 [column-rule:1px_solid_var(--color-border)]"
->
+{{ set body }}
   {{ for index, item of miniflux }}
-    {{ comp.ui.minifluxItem({ index, item }) }}
+    {{ comp.ui.MinifluxItem({ index, item }) }}
   {{ /for }}
-</div>
+{{ /set }}
+
+{{
+  comp.ui.Container({
+    width: "default",
+    classes:
+      "columns-1 md:columns-2 gap-12 [column-rule:1px_solid_var(--color-border)]",
+    content: body,
+  })
+}}

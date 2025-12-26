@@ -1,7 +1,7 @@
 ---
 title: "keys"
 icon: key
-date: 2024-05-20
+date: 2025-10-03
 updated: 2025-12-25
 description: "Public keys for verifying my digital identity."
 url: /keys/

@@ -1,7 +1,6 @@
 ---
 layout: layouts/base.vto
 title: music
-subtitle: "favorite music albums, in random order."
 description: "a collection of favorite music albums."
 url: /music/
 menu:
@@ -11,24 +10,47 @@ templateEngine: [vto]
 ---
 
 {{ set intro }}
-automatically fetched from my public [album ratings](https://critiquebrainz.org/user/{{ author.username }}).  
-[learn more about this page]({{ "/blog/music-page" |> url }})
+  automatically fetched from my public [album
+  ratings](https://critiquebrainz.org/user/{{ author.username }}).
 {{ /set }}
 
-{{ comp ui.pageHeader {
-  title: title,
-  subtitle: subtitle
-} }}
-  {{ intro |> md }}
-{{ /comp }}
-{{ comp ui.container { width: "max-w-max", classes: "pb-20" } }}
-  
-  <div class="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 md:gap-8 lg:gap-10 py-8">
-    
-    {{ for i, album of favorite.albums |> shuffle }}
-      {{ comp.ui.album({ album: album, priority: i < 6 }) }}
-    {{ /for }}
-
+{{# Capture markdown output AND wrap it in the styling class #}}
+{{ set introHtml }}
+  <div class="markdown text-base">
+    {{ intro |> md }}
   </div>
+{{ /set }}
 
-{{ /comp }}
+{{# --- HEADER --- #}}
+{{
+  comp.ui.PageHeader({
+    title: title,
+    subtitle: introHtml,
+    centered: true,
+  })
+}}
+
+{{# --- ALBUM GRID --- #}}
+{{ set gridContent }}
+  <div
+    class="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 md:gap-8 lg:gap-10 py-8"
+  >
+    {{ for i, album of favorite.albums |> shuffle }}
+      {{
+        comp.ui.Album({
+          album: album,
+          priority: i < 6,
+        })
+      }}
+    {{ /for }}
+  </div>
+{{ /set }}
+
+{{# --- CONTAINER --- #}}
+{{
+  comp.ui.Container({
+    width: "default",
+    classes: "pb-20",
+    content: gridContent,
+  })
+}}

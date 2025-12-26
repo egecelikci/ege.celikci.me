@@ -1,0 +1,130 @@
+{{#
+  Universal Entry Card
+  Props:
+    - entry: page object (required)
+    - variant: "note" | "post" | "wiki" | "minimal"
+    - showImage: boolean
+    - showExcerpt: boolean
+    - showMeta: boolean
+    - classes: additional classes
+#}}
+
+{{ set cardContent }}
+  {{# 1. THE OVERLAY LINK (This makes the card clickable) #}}
+  <a
+    href="{{ entry.url }}"
+    class="absolute inset-0 z-0"
+    aria-label="{{ entry.title }}"
+  ></a>
+
+  {{# 2. HEADER (Relative z-10 ensures text sits above the link layer) #}}
+  <div
+    class="flex items-start justify-between gap-4 mb-3 relative z-10 pointer-events-none"
+  >
+    <div class="flex-1 min-w-0">
+      <h3
+        class="font-bold text-lg text-text group-hover:text-primary transition-colors m-0 {{ theme.utilities.truncate }} flex items-center gap-2"
+      >
+        {{ entry.title }}
+
+        {{# NEW: External Link Icon #}}
+        {{ if entry.link }}
+          {{
+            comp.ui.Icon({
+              name: "external-link",
+              classes: "w-4 h-4 opacity-50",
+            })
+          }}
+        {{ /if }}
+      </h3>
+
+      {{# NEW: Show the domain URL for link posts #}}
+      {{ if entry.link }}
+        <div class="text-xs text-text-muted/70 font-mono mt-0.5 truncate">
+          {{
+            entry.link
+            |> url
+            |> replace(/^https?:\/\//, "")
+            |> replace(/\/$/, "")
+          }}
+        </div>
+      {{ /if }}
+    </div>
+
+    {{# Right Side: Date/Status #}}
+    <div class="flex items-center gap-2 shrink-0">
+      {{ if entry.status }}
+        {{ comp.wiki.status({ status: entry.status }) }}
+      {{ else if entry.date }}
+        <time
+          class="text-xs font-mono text-text-muted border border-border px-1.5 py-0.5 rounded bg-bg/50"
+        >
+          {{ entry.date |> date("dd MMM") }}
+        </time>
+      {{ /if }}
+    </div>
+  </div>
+
+  {{# 3. IMAGE #}}
+  {{ if showImage && entry.images && entry.images.length > 0 }}
+    <div class="mb-3 -mx-1 relative z-0">
+      <img
+        src="{{ entry.images[0].src }}"
+        alt="{{ entry.images[0].alt }}"
+        class="w-full aspect-video object-cover rounded-lg border border-border/50"
+        loading="lazy"
+      >
+    </div>
+  {{ /if }}
+
+  {{# 4. EXCERPT #}}
+  {{ if showExcerpt !== false && entry.description }}
+    <p
+      class="text-sm text-text-muted line-clamp-2 m-0 relative z-10 pointer-events-none"
+    >
+      {{ entry.description }}
+    </p>
+  {{ /if }}
+
+  {{# 5. METADATA #}}
+  {{ if showMeta !== false }}
+    <div
+      class="flex items-center gap-3 text-xs text-text-muted mt-3 pt-3 border-t border-border/30 relative z-10 pointer-events-none"
+    >
+      {{ if entry.updated }}
+        <span>
+          {{ comp.ui.Icon({ name: "clock", classes: "w-3 h-3 inline mr-1" }) }}
+          {{ entry.updated |> date("dd MMM yyyy") }}
+        </span>
+      {{ /if }}
+
+      {{ if entry.wordCount }}
+        <span>•</span>
+        <span>{{ entry.wordCount }} words</span>
+      {{ /if }}
+    </div>
+  {{ /if }}
+
+  {{# 6. TAGS (z-20 lifts them ABOVE the card link so they are clickable) #}}
+  {{ if entry.tags && entry.tags.length > 0 && variant !== "minimal" }}
+    <div class="flex flex-wrap gap-1.5 mt-3 relative z-20">
+      {{ for tag of entry.tags.slice(0, 4) }}
+        {{ comp.ui.Tag({ tag: tag }) }}
+      {{ /for }}
+      {{ if entry.tags.length > 4 }}
+        <span class="text-[10px] text-text-muted self-center ml-1">
+          +{{ entry.tags.length - 4 }}
+        </span>
+      {{ /if }}
+    </div>
+  {{ /if }}
+{{ /set }}
+
+{{# 7. RENDER AS DIV (Important: No 'href' passed here to avoid nested links) #}}
+{{
+  comp.ui.Card({
+    variant: variant === "note" ? "elevated" : "default",
+    classes: "relative " + (classes || ""),
+    content: cardContent,
+  })
+}}
