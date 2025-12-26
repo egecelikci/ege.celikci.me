@@ -8,7 +8,7 @@ url: /404.html
   <div class="flex flex-col items-center justify-center min-h-[60vh] py-20 text-center">
     
     <div class="mb-4 text-text-muted opacity-20 animate-pulse">
-      {{ comp.icon({ name: "ghost", type: "lucide", classes: "w-32 h-32" }) }}
+      {{ comp.ui.Icon({ name: "ghost", type: "lucide", classes: "w-32 h-32" }) }}
     </div>
 
     <h1 class="text-[8rem] md:text-[12rem] font-bold leading-none font-display text-primary select-none drop-shadow-sm">
@@ -28,7 +28,7 @@ url: /404.html
       href="/"
       class="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-white font-bold tracking-wide transition-all duration-200 hover:scale-105 hover:bg-primary-offset hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
-      {{ comp.icon({ name: "arrow-left", type: "lucide", classes: "w-5 h-5" }) }}
+      {{ comp.ui.Icon({ name: "arrow-left", type: "lucide", classes: "w-5 h-5" }) }}
       return home
     </a>
 

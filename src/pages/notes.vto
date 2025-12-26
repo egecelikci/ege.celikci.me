@@ -3,43 +3,43 @@ layout: layouts/base.vto
 title: notes
 description: "short notes and thoughts."
 url: /notes/
-menu:
-  visible: true
-  order: 3
-templateEngine: [vto]
 ---
 
 {{ set results = search.pages("type=note", "date=desc") }}
 
-{{# Removed width param since it defaults to narrow now #}}
-{{ comp ui.container { classes: "min-h-screen" } }}
+{{ comp.ui.PageHeader({ title: title, centered: true }) }}
 
-  {{ comp ui.pageHeader { 
-    title: title, 
-    width: "w-full",
-    classes: "mb-8"
-  } }}
-  {{ /comp }}
-  
-  <div class="relative">
-    <div class="absolute left-4 top-0 bottom-0 w-px bg-border">
-      <div
-        class="sticky top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-4 border-primary bg-bg z-20 transition-all duration-300"
-      ></div>
+{{ set notesTimeline }}
+  {{ if results.length }}
+    {{# Use the new Timeline Component #}}
+    {{ set timelineContent }}
+      {{ for note of results }}
+        <div class="mb-12">
+          {{ comp.ui.Note({ note: note }) }}
+        </div>
+      {{ /for }}
+    {{ /set }}
+
+    {{ comp.ui.Timeline({ content: timelineContent }) }}
+  {{ else }}
+    {{# Empty State #}}
+    <div class="pl-8 md:pl-12">
+      {{
+        comp.ui.EmptyState({
+          icon: "sticky-note",
+          title: "Quiet in here",
+          description:
+            "No notes found. Once you publish a note, it will appear on this timeline.",
+        })
+      }}
     </div>
+  {{ /if }}
+{{ /set }}
 
-    {{ if results.length }}
-      <div class="pb-32 pl-12">
-        {{ for note of results }}
-          <div class="mb-12">
-             {{ comp.note({ note: note }) }}
-          </div>
-        {{ /for }}
-      </div>
-    {{ else }}
-      <p class="text-text-muted italic py-12 pl-16">No notes found.</p>
-    {{ /if }}
-    
-  </div>
-
-{{ /comp }}
+{{
+  comp.ui.Container({
+    width: "narrow",
+    classes: "min-h-screen",
+    content: notesTimeline,
+  })
+}}

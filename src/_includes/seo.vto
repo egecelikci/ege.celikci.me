@@ -2,8 +2,8 @@
 {{ set absolutePageUrl = url |> url(true) }}
 
 {{# Determine Layout Type #}}
-{{# set isPost = layout === "layouts/post.vto" #}}
-{{# set isNote = layout === "layouts/note.vto" #}}
+{{ set isPost = type === "post" }}
+{{ set isNote = type === "note" }}
 
 {{# Auto Description Logic #}}
 {{ set autoDescription = "" }}

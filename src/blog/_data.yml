@@ -1,3 +1,8 @@
 type: post
-layout: layouts/post.vto
+layout: layouts/content.vto
 templateEngine: [vto, md]
+backlink:
+  href: /blog/
+  text: back to blog
+show_webmentions: true
+show_metadata: true

@@ -2,118 +2,98 @@
 layout: layouts/base.vto
 ---
 
-{{ comp ui.container }}
+{{# --- 1. DATA PREP --- #}}
+{{# Get all pages with this tag, sorted by newest first #}}
+{{
+  set matchingEntries = search.pages("'" + tag + "' type!=index", "date=desc")
+}}
 
-  <header class="mb-12 border-b border-border pb-8">
-    {{ comp.ui.backlink({ href: "/wiki/", text: "back to index" }) }}
+{{ set count = matchingEntries.length }}
+{{ set countLabel = count === 1 ? "item" : "items" }}
 
-    <div class="flex items-center gap-3 mb-4">
-      <h1 class="text-4xl font-display font-bold text-primary m-0">
-        <span class="opacity-50 text-2xl">#</span>{{ tag }}
-      </h1>
-      <span
-        class="px-3 py-1 text-xs font-bold rounded-full bg-surface border border-border text-text-muted"
-      >
-        topic
-      </span>
-    </div>
+{{# --- 2. HEADER --- #}}
+{{
+  comp.ui.PageHeader({
+    title: "#" + tag,
+    subtitle: count + " " + countLabel,
+    backlink: { href: "/tags/", text: "all topics" },
+    width: "narrow",
+  })
+}}
 
-    {{# Count entries with this tag #}}
-    {{ set taggedEntries = search.pages("type=entry") }}
-    {{ set matchingEntries = [] }}
-    {{ for entry of taggedEntries }}
-      {{ if entry.tags && entry.tags.includes(tag) }}
-        {{ set matchingEntries = matchingEntries.concat(entry) }}
-      {{ /if }}
-    {{ /for }}
-
-    <p class="text-text-muted">
-      {{ matchingEntries.length }}
-      {{ matchingEntries.length === 1 ? "entry" : "entries" }}
-      tagged with #{{ tag }}
-    </p>
-  </header>
-
+{{# --- 3. BODY CONTENT --- #}}
+{{ set bodyContent }}
   {{ if matchingEntries.length > 0 }}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {{# Using a Masonry-like column layout which handles mixed heights (Notes vs Wiki) better than a Grid #}}
+    <div class="columns-1 md:columns-2 gap-6 space-y-6">
       {{ for item of matchingEntries }}
-        <a
-          href="{{ item.url }}"
-          class="group block p-5 rounded-xl border border-border bg-surface/30 hover:bg-surface hover:border-primary/50 transition-all no-underline"
-        >
-          <div class="flex justify-between items-start mb-2">
-            <h2
-              class="font-bold text-lg group-hover:text-primary transition-colors m-0"
-            >
-              {{ item.title }}
-            </h2>
-            {{ if item.status }}
-              {{ comp.wiki.status({ status: item.status }) }}
-            {{ /if }}
-          </div>
+        <div class="break-inside-avoid">
+          {{# CASE A: It is a NOTE -> Use the Note component to show full content #}}
+          {{ if item.type === "note" }}
+            {{ comp.ui.Note({ note: item }) }}
 
-          {{# Metadata #}}
-          <div class="flex items-center gap-3 text-xs text-text-muted mb-2">
-            <span>Updated {{ item.updated |> date("dd MMM yyyy") }}</span>
-            {{ if item.wordCount }}
-              <span>•</span>
-              <span>{{ item.wordCount }} words</span>
-            {{ /if }}
-          </div>
+            {{# CASE B: It is a POST -> Use EntryCard with 'post' variant #}}
+          {{ else if item.type === "post" }}
+            {{
+              comp.ui.EntryCard({
+                entry: item,
+                variant: "post",
+                showExcerpt: true,
+              })
+            }}
 
-          {{ if item.description }}
-            <p class="text-sm text-text-muted line-clamp-2 m-0">
-              {{ item.description }}
-            </p>
+            {{# CASE C: It is a WIKI ENTRY -> Use EntryCard with 'wiki' variant #}}
+          {{ else }}
+            {{
+              comp.ui.EntryCard({
+                entry: item,
+                variant: "wiki",
+              })
+            }}
           {{ /if }}
-        </a>
+        </div>
       {{ /for }}
     </div>
-  {{ else }}
-    <div class="wiki-empty-state">
-      {{
-        comp.icon({
-          name: "inbox",
-          type: "lucide",
-          classes: "wiki-empty-state__icon",
-        })
-      }}
-      <p class="wiki-empty-state__title">No entries found</p>
-      <p class="wiki-empty-state__description">
-        No wiki entries found for <strong>#{{ tag }}</strong>.
-      </p>
-    </div>
+  {{ else }}{{
+      comp.ui.EmptyState({
+        icon: "inbox",
+        description: "No entries found for <strong>#" + tag + "</strong>.",
+      })
+    }}
   {{ /if }}
 
-  {{# Related tags section #}}
+  {{# Related Tags Section #}}
   {{ set relatedTags = [] }}
   {{ for entry of matchingEntries }}
     {{ if entry.tags }}
-      {{ for entryTag of entry.tags }}
-        {{ if entryTag !== tag && !relatedTags.includes(entryTag) }}
-          {{ set relatedTags = relatedTags.concat(entryTag) }}
+      {{ for t of entry.tags }}
+        {{ if t !== tag && !relatedTags.includes(t) }}
+          {{ set relatedTags = relatedTags.concat(t) }}
         {{ /if }}
       {{ /for }}
     {{ /if }}
   {{ /for }}
 
   {{ if relatedTags.length > 0 }}
-    <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
-      <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-        {{ comp.icon({ name: "tag", type: "lucide", classes: "w-5 h-5" }) }}
+    <div class="mt-16 pt-8 border-t border-border">
+      <h3 class="{{ theme.typography.h4 }} mb-6 flex items-center gap-2">
+        {{ comp.ui.Icon({ name: "tag", classes: "w-5 h-5" }) }}
         Related Topics
       </h3>
-      <div class="flex flex-wrap gap-2">
-        {{ for relatedTag of relatedTags }}
-          <a
-            href="/tags/{{ relatedTag }}/"
-            class="text-xs font-bold px-3 py-1 rounded-full bg-surface border border-border text-text-muted hover:text-primary hover:border-primary transition-all no-underline"
-          >
-            #{{ relatedTag }}
-          </a>
+      <div class="flex flex-wrap gap-1.5">
+        {{ for t of relatedTags }}
+          {{ comp.ui.Tag({ tag: t }) }}
         {{ /for }}
       </div>
-    </aside>
+    </div>
   {{ /if }}
+{{ /set }}
 
-{{ /comp }}
+{{# --- 4. CONTAINER --- #}}
+{{
+  comp.ui.Container({
+    width: "narrow",
+    classes: "min-h-screen pb-20",
+    content: bodyContent,
+  })
+}}

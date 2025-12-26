@@ -1,0 +1,22 @@
+{{#
+  Component: Universal Badge
+  Props:
+    - text: string (content)
+    - variant: "default" | "primary" | "success" | "warning" | "error" | "info"
+    - icon: string (optional icon name)
+    - classes: additional classes
+#}}
+
+{{
+  set variantClass = theme.components.badge.variants[variant] ||
+    theme.components.badge.variants.default
+}}
+
+<span
+  class="{{ theme.components.badge.base }} {{ variantClass }} {{ classes }}"
+>
+  {{ if icon }}
+    {{ comp.ui.Icon({ name: icon, type: "lucide", classes: "w-3 h-3" }) }}
+  {{ /if }}
+  <span>{{ text }}</span>
+</span>
