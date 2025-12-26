@@ -1,0 +1,33 @@
+{{ set safeTitle = title || "YouTube video" }}
+{{
+  set embedUrl = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1"
+}}
+
+{{ set cardContent }}
+  <div
+    class="relative w-full aspect-video flex flex-col items-center justify-center text-center gap-4 cursor-pointer group"
+    onclick="this.innerHTML='<iframe class=\'w-full h-full rounded-xl\' src=\'{{ embedUrl }}\' title=\'{{ safeTitle }}\' frameborder=\'0\' allow=\'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\' allowfullscreen></iframe>'"
+  >
+    <div
+      class="font-bold text-lg text-text group-hover:text-primary transition-colors"
+    >
+      {{ title }}
+    </div>
+    <div
+      class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-text-muted group-hover:text-primary group-hover:border-primary/50 transition-colors"
+    >
+      {{
+        comp.ui.Icon({ name: "play", type: "lucide", classes: "w-4 h-4" })
+      }}<span
+        class="text-sm font-medium"
+      >Click to load video from YouTube</span>
+    </div>
+  </div>
+{{ /set }}
+
+{{
+  comp.ui.Card({
+    classes: "my-6 p-0 overflow-hidden",
+    content: cardContent,
+  })
+}}

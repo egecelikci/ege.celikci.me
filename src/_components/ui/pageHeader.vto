@@ -1,27 +1,108 @@
-{{ set headerClasses = "py-12 md:py-20 " + (classes || "") }}
-{{ set tag = as || "header" }}
-{{ set alignClass = (centered == false) ? "text-left" : "text-center" }}
-{{ set maxWidth = width || "max-w-narrow" }}
+{{#
+  Universal Page Header
+  Props:
+    - title: string (required)
+    - subtitle: string | html
+    - centered: boolean (default: false)
+    - breadcrumbs: boolean (default: false)
+    - backlink: { href, text } | false
+    - status: wiki status string
+    - metadata: { date, updated, wordCount, tags }
+    - width: container width override
+#}}
 
-<{{ tag }} class="w-full mx-auto {{ maxWidth }} {{ alignClass }} {{
-  headerClasses
-}}">
+{{
+  set headerClasses = [
+    theme.spacing.section,
+    centered ? "text-center" : "text-left",
+    "border-b border-border pb-6 mb-10",
+  ]
+  |> join(" ")
+}}
 
-<h1 class="text-5xl md:text-7xl font-bold leading-tight tracking-tight mb-4">
-  {{ title }}<span class="text-primary">.</span>
-</h1>
+{{
+  set containerWidth = width ||
+    (centered
+      ? theme.layout.container.narrow
+      : theme.layout.container.default)
+}}
 
-{{ if subtitle }}
-  <div class="text-xl text-text-muted mt-4">
-    {{ subtitle |> safe }}
-  </div>
-{{ /if }}
+<header class="{{ headerClasses }}">
+  {{# Capture the content to a variable to avoid Vento parser errors #}}
+  {{ set innerContent }}
+    {{# Top Row: Breadcrumbs OR Backlink #}}
+    {{ if breadcrumbs || backlink }}
+      <div class="flex items-center justify-between mb-6 h-8">
+        {{ if breadcrumbs }}
+          {{ comp.ui.Breadcrumbs({ url: url }) }}
+        {{ /if }}
 
-{{# FIX: Added '!ignoreContent' check to prevent global content leaks #}}
-{{ if content && !ignoreContent }}
-  <div class="markdown mt-8 text-lg leading-relaxed text-center">
-    {{ content }}
-  </div>
-{{ /if }}
+        {{ if backlink }}
+          {{ comp.ui.Backlink({ href: backlink.href, text: backlink.text }) }}
+        {{ /if }}
 
-</{{ tag }}>
+        {{ if status }}
+          {{ comp.wiki.Status({ status: status }) }}
+        {{ /if }}
+      </div>
+    {{ /if }}
+    {{# Title #}}
+    <h1 class="{{ theme.typography.heading.h1 }} mb-4 text-balance">
+      {{ title }}<span class="text-primary">.</span>
+    </h1>
+
+    {{# Subtitle #}}
+    {{ if subtitle }}
+      <div class="{{ theme.typography.body.large }} text-text-muted mt-4">
+        {{ subtitle |> safe }}
+      </div>
+    {{ /if }}
+
+    {{# Metadata (for Wiki/Blog) #}}
+    {{ if metadata }}
+      <div
+        class="flex flex-wrap items-center gap-4 text-sm text-text-muted mt-6"
+      >
+        {{ if metadata.date }}
+          <div class="flex items-center gap-1">
+            {{ comp.ui.Icon({ name: "calendar-plus", classes: "w-4 h-4" }) }}
+            <time datetime="{{ metadata.date |> date('ISOdate') }}">
+              {{ metadata.date |> date("dd MMM yyyy") }}
+            </time>
+          </div>
+        {{ /if }}
+
+        {{ if metadata.updated }}
+          <span class="text-border">•</span>
+          <div class="flex items-center gap-1">
+            {{ comp.ui.Icon({ name: "calendar-clock", classes: "w-4 h-4" }) }}
+            <time datetime="{{ metadata.updated |> date('ISOdate') }}">
+              edited {{ metadata.updated |> date("dd MMM yyyy") }}
+            </time>
+          </div>
+        {{ /if }}
+
+        {{ if metadata.wordCount }}
+          <span class="text-border">•</span>
+          <span>{{ metadata.wordCount }} words</span>
+        {{ /if }}
+
+        {{ if metadata.tags && metadata.tags.length > 0 }}
+          <div class="flex flex-wrap gap-1.5 w-full mt-2">
+            {{ for tag of metadata.tags }}
+              {{ comp.ui.Tag({ tag: tag }) }}
+            {{ /for }}
+          </div>
+        {{ /if }}
+      </div>
+    {{ /if }}
+  {{ /set }}
+
+  {{# Pass the captured content to the Container #}}
+  {{
+    comp.ui.Container({
+      width: containerWidth,
+      content: innerContent,
+    })
+  }}
+</header>

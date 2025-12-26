@@ -52,23 +52,14 @@
       class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:left-1/2 focus:top-0 focus:text-base focus:-translate-x-1/2 bg-surface focus:text-white focus:rounded-b-lg focus:px-6 focus:py-4 focus:outline-none focus:whitespace-nowrap print:hidden"
     >skip to main content</a>
 
-    <div class="hfeed flex flex-col min-h-screen relative" role="document">
-      <div class="flex-none print:hidden">
-        {{ include "header.vto" }}
-      </div>
+    {{ include "header.vto" }}
 
-      <main
-        class="flex flex-col grow shrink-0 w-full md:px-0 mx-auto pt-12 md:pt-16"
-        role="main"
-        id="main"
-        tabindex="-1"
-      >
-        {{ content |> safe }}
-      </main>
-      <div class="flex-none print:hidden">
-        {{ include "footer.vto" }}
-      </div>
-    </div>
+    <main id="main" role="main" tabindex="-1" class="flex-grow">
+      {{ content |> safe }}
+    </main>
+
+    {{ include "footer.vto" }}
+
     <script type="module" src="/assets/scripts/main.js"></script>
   </body>
 </html>

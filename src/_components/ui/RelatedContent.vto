@@ -1,51 +1,12 @@
-{{# Enhanced Content Graph #}}
+{{# 1. Fetch Data using the helper #}}
+{{ set related = utils.getRelatedContent(search, url, tags) }}
 
-{{# 1. Initialize empty arrays #}}
-{{ set matchingPosts = [] }}
-{{ set matchingPages = [] }}
-
-{{# 2. Only run if the CURRENT page has tags #}}
-{{ if tags && tags.length > 0 }}
-  {{# --- FIND MATCHING POSTS --- #}}
-  {{ for post of search.pages("type=post", "date=desc") }}
-    {{ if post.url !== url && post.tags }}
-      {{# Check overlap manually to be safe #}}
-      {{ set isMatch = false }}
-      {{ for tag of post.tags }}
-        {{ if tags.includes(tag) }}
-          {{ set isMatch = true }}
-        {{ /if }}
-      {{ /for }}
-
-      {{ if isMatch }}
-        {{ set matchingPosts = matchingPosts.concat(post) }}
-      {{ /if }}
-    {{ /if }}
-  {{ /for }}
-
-  {{# --- FIND MATCHING PAGES --- #}}
-  {{ for page of search.pages("type=page", "date=desc") }}
-    {{ if page.url !== url && page.tags }}
-      {{ set isMatch = false }}
-      {{ for tag of page.tags }}
-        {{ if tags.includes(tag) }}
-          {{ set isMatch = true }}
-        {{ /if }}
-      {{ /for }}
-
-      {{ if isMatch }}
-        {{ set matchingPages = matchingPages.concat(page) }}
-      {{ /if }}
-    {{ /if }}
-  {{ /for }}
-{{ /if }}
-
-{{# 3. Render The Results (UI) #}}
-{{ if matchingPosts.length > 0 || matchingPages.length > 0 }}
+{{# 2. Render UI only if we have results #}}
+{{ if related.posts.length > 0 || related.pages.length > 0 }}
   <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
     <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
       {{
-        comp.icon({
+        comp.ui.Icon({
           name: "book-open",
           type: "lucide",
           classes: "w-5 h-5",
@@ -56,22 +17,22 @@
 
     <div class="space-y-6">
       {{# --- BLOG POSTS LIST --- #}}
-      {{ if matchingPosts.length > 0 }}
+      {{ if related.posts.length > 0 }}
         <div>
           <h4
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
           >
             {{
-              comp.icon({
+              comp.ui.Icon({
                 name: "file-text",
                 type: "lucide",
                 classes: "w-4 h-4",
               })
             }}
-            Blog Posts ({{ matchingPosts.length }})
+            Blog Posts ({{ related.posts.length }})
           </h4>
           <div class="space-y-2">
-            {{ for post of matchingPosts.slice(0, 5) }}
+            {{ for post of related.posts.slice(0, 5) }}
               <a
                 href="{{ post.url }}"
                 class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
@@ -98,7 +59,7 @@
                   </div>
                 </div>
                 {{
-                  comp.icon({
+                  comp.ui.Icon({
                     name: "arrow-right",
                     type: "lucide",
                     classes:
@@ -112,22 +73,22 @@
       {{ /if }}
 
       {{# --- PAGES LIST --- #}}
-      {{ if matchingPages.length > 0 }}
+      {{ if related.pages.length > 0 }}
         <div>
           <h4
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
           >
             {{
-              comp.icon({
+              comp.ui.Icon({
                 name: "file",
                 type: "lucide",
                 classes: "w-4 h-4",
               })
             }}
-            Pages ({{ matchingPages.length }})
+            Pages ({{ related.pages.length }})
           </h4>
           <div class="space-y-2">
-            {{ for page of matchingPages.slice(0, 5) }}
+            {{ for page of related.pages.slice(0, 5) }}
               <a
                 href="{{ page.url }}"
                 class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
@@ -145,7 +106,7 @@
                   {{ /if }}
                 </div>
                 {{
-                  comp.icon({
+                  comp.ui.Icon({
                     name: "arrow-right",
                     type: "lucide",
                     classes:

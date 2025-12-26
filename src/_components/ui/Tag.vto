@@ -1,0 +1,29 @@
+{{#
+  Component: Tag
+  Props:
+    - tag: string (the tag name)
+    - count: number (optional number to show)
+    - active: boolean (optional, for tag pages)
+    - classes: string (optional override)
+#}}
+
+{{ set slug = tag |> slugify }}
+{{ set url = "/tags/" + slug + "/" }}
+
+<a
+  href="{{ url }}"
+  class="
+    {{ theme.components.tag.base }}
+    {{ active ? theme.components.tag.active : theme.components.tag.default }}
+    {{ classes }}
+    no-underline
+  "
+>
+  <span class="opacity-70 mr-0.5 text-[9px] font-normal">#</span>{{ tag }}
+
+  {{ if count !== undefined }}
+    <span class="ml-1.5 opacity-60 font-normal border-l border-current pl-1.5">
+      {{ count }}
+    </span>
+  {{ /if }}
+</a>

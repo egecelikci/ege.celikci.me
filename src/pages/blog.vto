@@ -5,21 +5,38 @@ description: "blog posts."
 url: /blog/
 ---
 
-{{ comp ui.container { classes: "min-h-screen pb-20" } }}
+{{# --- 1. HEADER (Outside main container) --- #}}
+{{
+  comp.ui.PageHeader({
+    title: title,
+    centered: true,
+    width: "narrow",
+    classes: "mb-12",
+    backlink: { href: "/wiki/", text: "back to wiki" },
+  })
+}}
 
-{{ comp ui.pageHeader {
-  title: title,
-  centered: true,
-  width: "max-w-max",
-  classes: "mb-12"
-} }}
-{{ /comp }}
-
-  {{# Post List #}}
-  <div class="flex flex-col border-t border-border">
+{{# --- 2. POST LIST --- #}}
+{{ set postsContent }}
+  <div class="flex flex-col gap-6">
     {{ for post of search.pages("type=post", "date=desc") }}
-      {{ comp.post({ post: post }) }}
+      {{
+        comp.ui.EntryCard({
+          entry: post,
+          variant: "post",
+          showExcerpt: true,
+          showMeta: true,
+        })
+      }}
     {{ /for }}
   </div>
+{{ /set }}
 
-{{ /comp }}
+{{# --- 3. MAIN CONTAINER --- #}}
+{{
+  comp.ui.Container({
+    width: "narrow",
+    classes: "min-h-screen pb-20",
+    content: postsContent,
+  })
+}}

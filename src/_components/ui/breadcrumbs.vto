@@ -3,37 +3,46 @@
   class="flex items-center text-sm text-text-muted font-mono h-8"
 >
   <ol class="flex items-center flex-wrap gap-2">
+    {{# --- 1. DETERMINE ROOT --- #}}
+    {{ set isWiki = url.startsWith("/wiki/") }}
+    {{ set rootUrl = isWiki ? "/wiki/" : "/" }}
+    {{ set rootLabel = isWiki ? "wiki" : "home" }}
+    {{ set rootIcon = isWiki ? "library" : "home" }}
+
     <li>
       <a
-        href="/wiki/"
+        href="{{ rootUrl }}"
         class="hover:text-primary transition-colors flex items-center gap-1 font-bold"
       >
         {{
-          comp.icon({
-            name: "library",
+          comp.ui.Icon({
+            name: rootIcon,
             type: "lucide",
             classes: "w-3 h-3",
           })
         }}
-        <span class="text-xs">wiki</span>
+        <span class="{{ isWiki ? 'text-xs' : 'sr-only' }}">{{
+          rootLabel
+        }}</span>
       </a>
     </li>
 
+    {{# --- 2. PROCESS PARTS --- #}}
     {{ set parts = url.split("/").filter((p) => p) }}
-    {{ set basePath = "" }}
 
-    {{ if parts[0] === "wiki" }}
-      {{ set parts = parts.slice(1) }}
-      {{ set basePath = "/wiki" }}
-    {{ /if }}
+    {{# If in Wiki, remove the first 'wiki' segment to avoid duplication #}}
+    {{ if isWiki }}{{ set parts = parts.slice(1) }}{{ /if }}
 
     {{ if parts.length > 0 }}
       <li class="select-none opacity-50">/</li>
     {{ /if }}
 
+    {{# --- 3. LOOP --- #}}
+    {{ set currentBase = rootUrl }}
+
     {{ for index, part of parts }}
-      {{ set currentPath = basePath + "/" + part }}
-      {{ set basePath = currentPath }}
+      {{ set currentPath = currentBase + part + "/" }}
+      {{ set currentBase = currentPath }}
       {{ set isLast = index === parts.length - 1 }}
 
       <li>
@@ -45,7 +54,7 @@
           </span>
         {{ else }}
           <a
-            href="{{ currentPath }}/"
+            href="{{ currentPath }}"
             class="hover:text-primary transition-colors hover:underline decoration-border underline-offset-4"
           >
             {{ part |> replace("-", " ") }}
@@ -53,7 +62,6 @@
         {{ /if }}
       </li>
 
-      {{# Add separator between items, but not after the last one #}}
       {{ if !isLast }}
         <li class="select-none opacity-50">/</li>
       {{ /if }}

@@ -1,115 +1,94 @@
-<footer
-  class="
-    mt-24 py-12 border-t border-border
-    text-sm text-text-muted
-    print:hidden
-  "
-  role="contentinfo"
->
-  <div
-    class="mx-auto w-full max-w-narrow px-4 md:max-w-max md:px-0 md:w-[90%] flex flex-col md:flex-row md:items-center justify-between gap-8"
-  >
-    <div class="flex flex-col gap-2 text-center md:text-left">
-      <div class="font-medium text-text">
-        <span aria-label="Copyright">&copy;</span> {{
-          build.timestamp
-          |> date("yyyy")
-        }}
-        <a
-          href="{{ site.url }}"
-          class="
-            hover:text-primary transition-colors
-            underline decoration-border underline-offset-4
-            hover:decoration-primary
-          "
-          rel="author"
-        >
-          {{ author.name }}
-        </a>
-      </div>
-
-      <div
-        class="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs opacity-80"
-      >
-        <a
-          href="https://creativecommons.org/licenses/by/4.0/deed.en"
-          class="hover:text-primary transition-colors"
-          rel="license"
-        >
-          CC BY 4.0
-        </a>
-
-        {{ if build.git }}
-          <span
-            class="text-[var(--color-border)] select-none"
-            aria-hidden="true"
-          >|</span>
-          <a
-            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-            class="font-mono hover:text-primary transition-colors"
-            title="View commit {{ build.git }}"
-            aria-label="View git commit {{ build.git.substring(0, 7) }}"
-          >
-            {{ build.git.substring(0, 7) }}
-          </a>
-        {{ /if }}
-      </div>
+{{ set footerContent }}
+  <div class="flex flex-col gap-2 text-center md:text-left">
+    <div class="font-medium text-text">
+      <span aria-label="Copyright">&copy;</span>
+      {{ build.timestamp |> date("yyyy") }}
+      <a href="{{ site.url }}" class="{{ theme.utilities.link }}" rel="author">
+        {{ author.name }}
+      </a>
     </div>
 
-    <nav aria-label="Footer tools">
-      <ul class="flex items-center justify-center gap-6 font-medium">
-        <li>
-          <a
-            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-            class="group flex items-center gap-2 transition-colors hover:text-primary"
-            aria-label="edit this page on Codeberg"
-          >
-            {{
-              comp.icon({
-                name: "edit-3",
-                classes:
-                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:scale-110",
-              })
-            }}
-            <span class="hidden sm:inline">edit</span>
-          </a>
-        </li>
-
-        <li>
-          <a
-            href="{{ '/meta/feeds' |> url }}"
-            class="group flex items-center gap-2 transition-colors hover:text-primary"
-            aria-label="feeds"
-          >
-            {{
-              comp.icon({
-                name: "rss",
-                classes:
-                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:scale-110",
-              })
-            }}
-            <span class="hidden sm:inline">feeds</span>
-          </a>
-        </li>
-
-        <li>
-          <button
-            onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            class="group flex items-center gap-2 transition-colors hover:text-primary cursor-pointer"
-            type="button"
-            aria-label="scroll to top"
-          >
-            {{
-              comp.icon({
-                name: "arrow-up",
-                classes:
-                  "w-4 h-4 opacity-70 group-hover:opacity-100 transition-all group-hover:-translate-y-1",
-              })
-            }}
-            <span class="hidden sm:inline">top</span>
-          </button>
-        </li>
-      </ul>
-    </nav>
+    <div
+      class="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs opacity-80"
+    >
+      <a
+        href="https://creativecommons.org/licenses/by/4.0/deed.en"
+        class="hover:text-primary transition-colors"
+        rel="license"
+      >
+        CC BY 4.0
+      </a>
+      {{ if build.git }}
+        <span class="text-border select-none">|</span>
+        <a
+          href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+          class="font-mono hover:text-primary transition-colors"
+        >
+          {{ build.git.substring(0, 7) }}
+        </a>
+      {{ /if }}
+    </div>
   </div>
+
+  {{# Right Side: Tools #}}
+  <nav aria-label="Footer tools">
+    <ul class="flex items-center justify-center gap-6 font-medium">
+      <li>
+        <a
+          href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
+          class="group flex items-center gap-2 transition-colors hover:text-primary"
+        >
+          {{
+            comp.ui.Icon({
+              name: "edit-3",
+              classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
+            })
+          }}
+          <span class="hidden sm:inline">edit</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href="{{ '/meta/feeds' |> url }}"
+          class="group flex items-center gap-2 transition-colors hover:text-primary"
+        >
+          {{
+            comp.ui.Icon({
+              name: "rss",
+              classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
+            })
+          }}
+          <span class="hidden sm:inline">feeds</span>
+        </a>
+      </li>
+      <li>
+        <button
+          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          class="group flex items-center gap-2 transition-colors hover:text-primary cursor-pointer"
+        >
+          {{
+            comp.ui.Icon({
+              name: "arrow-up",
+              classes: "w-4 h-4 opacity-70 group-hover:opacity-100",
+            })
+          }}
+          <span class="hidden sm:inline">top</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+{{ /set }}
+
+<footer
+  class="mt-24 py-12 border-t border-border text-sm text-text-muted print:hidden"
+  role="contentinfo"
+>
+  {{
+    comp.ui.Container({
+      width: "default",
+      classes:
+        "flex flex-col md:flex-row md:items-center justify-between gap-8",
+      content: footerContent,
+    })
+  }}
 </footer>

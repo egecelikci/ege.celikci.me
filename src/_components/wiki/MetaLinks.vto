@@ -1,0 +1,37 @@
+{{# 
+  Component: Meta Links List
+  Props:
+    - entries: Array of pages
+#}}
+<section>
+  <div
+    class="flex items-center gap-2 mb-4 border-b border-border pb-2 text-text-muted"
+  >
+    {{
+      comp.ui.Icon({
+        name: "globe",
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+    <h2 class="text-sm uppercase tracking-widest font-bold m-0">Meta</h2>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2">
+    {{ for item of entries }}
+      <a
+        href="{{ item.url }}"
+        class="flex items-center gap-2 p-2 rounded-md hover:bg-surface text-xs font-bold text-text-muted hover:text-primary transition-colors no-underline border border-transparent hover:border-border"
+      >
+        {{
+          comp.ui.Icon({
+            name: item.icon || "hash",
+            type: "lucide",
+            classes: "w-3 h-3 opacity-50",
+          })
+        }}
+        {{ item.title.toLowerCase() }}
+      </a>
+    {{ /for }}
+  </div>
+</section>

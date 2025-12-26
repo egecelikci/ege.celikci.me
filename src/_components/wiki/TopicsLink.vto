@@ -1,0 +1,59 @@
+<section>
+  <div
+    class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted"
+  >
+    {{
+      comp.ui.Icon({
+        name: "layers",
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+    <h2 class="text-sm uppercase tracking-widest font-bold m-0">Topics</h2>
+  </div>
+
+  {{ set content }}
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div
+          class="p-2 rounded-lg bg-surface border border-border group-hover:border-primary/50 transition-colors text-text-muted group-hover:text-primary"
+        >
+          {{
+            comp.ui.Icon({
+              name: "hash",
+              type: "lucide",
+              classes: "w-5 h-5",
+            })
+          }}
+        </div>
+        <div>
+          <div
+            class="font-bold text-text group-hover:text-primary transition-colors"
+          >
+            explore wiki
+          </div>
+          <div class="text-xs text-text-muted">
+            browse all {{ search.values("tags").length }} topics
+          </div>
+        </div>
+      </div>
+
+      {{
+        comp.ui.Icon({
+          name: "arrow-right",
+          type: "lucide",
+          classes:
+            "w-4 h-4 text-text-muted group-hover:text-primary -translate-x-1 group-hover:translate-x-0 transition-all",
+        })
+      }}
+    </div>
+  {{ /set }}
+
+  {{
+    comp.ui.Card({
+      href: "/tags/",
+      classes: "p-4",
+      content: content,
+    })
+  }}
+</section>

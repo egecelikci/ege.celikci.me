@@ -1,0 +1,71 @@
+---
+layout: layouts/base.vto
+---
+
+{{ set body }}
+  {{# Header #}}
+  {{
+    comp.ui.PageHeader({
+      title: title,
+      subtitle: description || subtitle,
+      centered: centered !== false,
+      backlink: backlink,
+      width: header_width || "max-w-max",
+      breadcrumbs: breadcrumbs,
+      url: url,
+    })
+  }}
+
+  {{# Search Bar (optional) #}}
+  {{ if search_enabled }}
+    <div class="mb-12">
+      {{
+        comp.features.Search({
+          collection: collection,
+          placeholder: search_placeholder,
+        })
+      }}
+    </div>
+  {{ /if }}
+
+  {{# Intro Content (Rendered above the grid) #}}
+  {{ if content }}
+    <div class="markdown mb-12">
+      {{ content |> safe }}
+    </div>
+  {{ /if }}
+
+  {{# Main Grid #}}
+  <div
+    class="{{ grid_classes || theme.layout.grid.auto }} {{ theme.spacing.gap.md }}"
+  >
+    {{# OPTION 1: Automatic Listing (Best Practice) #}}
+    {{ if query }}
+      {{ for item of search.pages(query, sort_order || "date=desc") }}
+        {{
+          comp.ui.EntryCard({
+            entry: item,
+            variant: card_variant || "default",
+          })
+        }}
+      {{ /for }}
+    {{ /if }}
+  </div>
+
+  {{# Empty State #}}
+  {{ if show_empty && !query }}{{
+      comp.ui.EmptyState({
+        icon: "inbox",
+        description: empty_message || "No items found.",
+      })
+    }}
+  {{ /if }}
+{{ /set }}
+
+{{
+  comp.ui.Container({
+    width: container_width || "default",
+    classes: "min-h-screen pb-20",
+    content: body,
+  })
+}}

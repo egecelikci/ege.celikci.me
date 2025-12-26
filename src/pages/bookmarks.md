@@ -1,5 +1,5 @@
 ---
-layout: layouts/page.vto
+layout: layouts/content.vto
 title: bookmarks
 description: "A collection of 88x31 badges and my blogroll."
 url: /bookmarks/

@@ -1,0 +1,59 @@
+{{#
+  Component: Latest Posts Sidebar Item
+  Props:
+    - posts: Array of page objects (required)
+#}}
+
+<section>
+  <div
+    class="flex items-center gap-2 mb-6 border-b border-border pb-2 text-text-muted"
+  >
+    {{
+      comp.ui.Icon({
+        name: "pen-tool",
+        type: "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+    <h2 class="text-sm uppercase tracking-widest font-bold m-0">
+      Latest Posts
+    </h2>
+  </div>
+
+  <div class="space-y-2">
+    {{# Iterate over the passed 'posts' prop instead of searching #}}
+    {{ for post of posts }}
+      <a
+        href="{{ post.url }}"
+        class="block group p-3 rounded-lg border border-border hover:border-primary hover:bg-surface transition-all no-underline"
+      >
+        <div class="flex items-center justify-between mb-1">
+          <span
+            class="font-bold text-text group-hover:text-primary transition-colors text-sm"
+          >
+            {{ post.title }}
+          </span>
+          <time class="text-xs text-text-muted font-mono shrink-0">
+            {{ post.date |> date("dd MMM") }}
+          </time>
+        </div>
+      </a>
+    {{ /for }}
+
+    <div class="pt-2">
+      <a
+        href="/blog/"
+        class="text-xs font-bold uppercase tracking-widest text-text-muted hover:text-primary transition-colors flex items-center gap-1"
+      >
+        All Posts
+        {{
+          comp.ui.Icon({
+            name: "arrow-right",
+            type: "lucide",
+            classes: "w-3 h-3",
+          })
+        }}
+      </a>
+    </div>
+  </div>
+</section>
