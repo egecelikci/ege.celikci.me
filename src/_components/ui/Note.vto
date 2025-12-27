@@ -1,11 +1,36 @@
+{{#
+  Note Component - Displays a single note with metadata, content, and interactions
+  
+  Props:
+  - note: {
+      url: string
+      date: Date
+      title?: string
+      isAutoTitle?: boolean
+      tags?: string[]
+      images?: Array<{ src: string, alt: string }>
+      content: string
+      stats: { replies: number, reposts: number, likes: number }
+      syndication?: { bluesky?: string, mastodon?: string }
+    }
+  
+  Usage:
+    {{ comp.ui.Note({ note: noteData }) }}
+#}}
+
 <article class="h-entry relative">
   {{ set cardContent }}
+    {{# Invisible overlay link for card-wide clickability #}}
     <a
       href="{{ note.url |> url }}"
       class="absolute inset-0 z-0"
-      aria-label="Read note from {{ note.date |> date('dd LLL yyyy') }}{{ if note.title }}: {{ note.title }}{{ /if }}"
+      aria-label='Read
+    note from {{ note.date |> date("dd LLL yyyy") }}{{
+      if note.title && !note.isAutoTitle
+    }}: {{ note.title }}{{ /if }}'
     ></a>
 
+    {{# Header: Date, Tags, View Button #}}
     {{
       comp.ui.NoteHeader({
         date: note.date,
@@ -14,29 +39,32 @@
         showViewNote: true,
       })
     }}
-    <div
-      class="p-6 pb-6 relative max-h-[500px] overflow-hidden group-hover:mask-none transition-all duration-300"
-    >
+
+    {{# Main Content Area #}}
+    <div class="p-6 relative">
+      {{# Optional Title (only if not auto-generated) #}}
       {{ if note.title && !note.isAutoTitle }}
-        <h2 class="p-name text-2xl font-bold text-balance mb-4">
+        <h2 class="p-name text-2xl font-bold text-balance mb-4 relative z-10">
           {{ note.title }}
         </h2>
       {{ /if }}
 
-      <div>
-        {{ comp.ui.Gallery({ images: note.images, static: true }) }}
-      </div>
+      {{# Image Gallery (if present) #}}
+      {{ if note.images && note.images.length > 0 }}
+        <div class="mb-4 relative z-10">
+          {{ comp.ui.Gallery({ images: note.images, static: true }) }}
+        </div>
+      {{ /if }}
 
-      <div class="e-content markdown text-lg">
-        {{ note.content |> md |> safe }}
-      </div>
-
+      {{# Content Body #}}
       <div
-        class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-bg to-transparent pointer-events-none"
+        class="e-content markdown text-lg relative z-10 max-h-[400px] overflow-hidden [mask-image:linear-gradient(to_bottom,black_75%,transparent)]"
       >
+        {{ note.content |> md |> safe }}
       </div>
     </div>
 
+    {{# Footer: Stats and Syndication Links #}}
     <div
       class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between relative z-10 rounded-b-lg"
     >
@@ -45,11 +73,12 @@
     </div>
   {{ /set }}
 
+  {{# Wrap in Card Component #}}
   {{
     comp.ui.Card({
-      classes: "p-0 shadow-sm hover:shadow-md transition-shadow",
+      classes:
+        "p-0 shadow-sm hover:shadow-md transition-shadow overflow-hidden",
       padding: "p-0",
-      background: "bg-bg",
       content: cardContent,
     })
   }}
