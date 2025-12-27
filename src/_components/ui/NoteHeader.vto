@@ -1,5 +1,25 @@
+{{#
+  Note Header Component - Displays note metadata (date, tags, view button)
+  
+  Props:
+  - date: Date (required)
+  - tags?: string[]
+  - url?: string
+  - showViewNote?: boolean (default: false)
+  
+  Usage:
+    {{ comp.ui.NoteHeader({ 
+      date: note.date, 
+      tags: note.tags,
+      url: note.url,
+      showViewNote: true 
+    }) }}
+#}}
+
 <div class="flex flex-col border-b border-border/50 bg-bg/50 rounded-t-lg">
+  {{# Top Row: Timestamp and Action Button #}}
   <div class="flex items-center justify-between px-4 pt-4 pb-1">
+    {{# Timestamp (ISO 8601 for machines, human-readable for display) #}}
     <time
       class="dt-published text-sm text-text-muted font-mono"
       datetime="{{ date |> date('ISOdate') }}"
@@ -7,13 +27,14 @@
       {{ date |> date("dd LLL yyyy HH:mm") }}
     </time>
 
-    <div class="flex items-center gap-3 relative z-10">
-      {{ if showViewNote }}
+    {{# Optional "View Note" Button #}}
+    {{ if showViewNote && url }}
+      <div class="flex items-center gap-3 relative z-10">
         <a
           href="{{ url |> url }}"
           tabindex="-1"
           aria-hidden="true"
-          class="group inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold tracking-wide border border-primary/20 transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md hover:-translate-y-0.5 active:scale-95 active:bg-primary/30"
+          class="group inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-bold tracking-wide border border-primary/20 transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-md hover:-translate-y-0.5 active:scale-95"
         >
           <span>view note</span>
           {{
@@ -24,10 +45,11 @@
             })
           }}
         </a>
-      {{ /if }}
-    </div>
+      </div>
+    {{ /if }}
   </div>
 
+  {{# Tags Row (if present) #}}
   {{ if tags && tags.length > 0 }}
     <div class="px-4 pb-3 flex flex-wrap gap-1.5 relative z-10">
       {{ for tag of tags }}
