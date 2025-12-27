@@ -5,14 +5,22 @@ updated: 2025-12-23
 description: "Rules for Miniflux feed reader."
 status: budding
 tags: ["feeds", "software", "setup"]
-url: /miniflux/
 templateEngine: [vto]
 ---
 
-{{ set intro }}
-  technical specifications for [filtering and
-  scraping](https://miniflux.app/docs/rules.html)</a>.
+{{ set content }}
+  custom [Miniflux rules](https://miniflux.app/docs/rules.html) I made and use
+  everyday for filtering, rewriting and scraping the content of the websites.
+  these include [Scraper
+  Rules](https://miniflux.app/docs/rules.html#scraper-rules) to fetch full text
+  content from partial feeds, effectively bypassing truncated articles. I use
+  [Content Rewrite Rules](https://miniflux.app/docs/rules.html#rewrite-rules) to
+  strip away intrusive elements like ads, social media buttons, breadcrumbs etc.
+  creating a distraction free "content only reader mode" for every site I
+  follow.
 {{ /set }}
+
+{{ content |> md }}
 
 {{ set body }}
   {{ for index, item of miniflux }}
