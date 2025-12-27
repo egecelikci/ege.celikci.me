@@ -1,0 +1,20 @@
+{{#
+  Sidebar Section Component
+  Props:
+    - title: string
+    - icon: string
+    - content: HTML content
+    - classes: additional classes
+#}}
+
+<section class="{{ classes }}">
+  {{
+    comp.ui.SectionHeader({
+      title: title,
+      icon: icon,
+      classes: "border-b border-border pb-2",
+    })
+  }}
+
+  {{ content |> safe }}
+</section>

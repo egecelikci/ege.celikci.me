@@ -1,0 +1,85 @@
+{{#
+  Status Dashboard Component
+  Displays live activity status (music, gaming, reading)
+#}}
+
+{{
+  set statusIconClass = "shrink-0 mr-3 transition-colors duration-300 " +
+    "group-[.is-loading]:text-primary-offset/60 group-[.is-loading]:animate-pulse " +
+    "group-[.is-active]:text-primary group-[.is-active]:animate-pulse " +
+    "group-[.is-inactive]:text-text-muted group-[.is-inactive]:opacity-50 " +
+    "group-[.is-changing]:text-primary-offset/60 group-[.is-changing]:animate-[panic_0.2s_ease-in-out_infinite_alternate] " +
+    "group-[.is-error]:text-status-error"
+}}
+
+<div
+  class="status-dashboard bg-surface border border-border rounded-2xl p-6 font-mono text-sm space-y-6 shadow-sm [&_cite]:not-italic"
+>
+  <div class="flex items-start group" id="music-status-container">
+    {{
+      comp.ui.Icon({
+        name: "headphones",
+        type: "lucide",
+        classes: statusIconClass + " w-5 h-5 mt-0.5",
+      })
+    }}<div class="overflow-hidden grow">
+      <div
+        class="text-[10px] uppercase opacity-75 mb-1 tracking-widest font-sans font-semibold"
+      >
+        Listening to
+      </div>
+      <span
+        class="inline-block whitespace-nowrap text-text"
+        data-chars="×"
+        data-status=""
+        aria-hidden="true"
+      >
+        ××××××××××××××××××
+      </span>
+    </div>
+  </div>
+  <div class="flex items-start group" id="game-status-container">
+    {{
+      comp.ui.Icon({
+        name: "gamepad-2",
+        type: "lucide",
+        classes: statusIconClass + " w-5 h-5 mt-0.5",
+      })
+    }}<div class="overflow-hidden grow">
+      <div
+        class="text-[10px] uppercase opacity-75 mb-1 tracking-widest font-sans font-semibold"
+      >
+        Playing
+      </div>
+      <span
+        class="inline-block whitespace-nowrap text-text"
+        data-chars="×"
+        data-status=""
+        aria-hidden="true"
+      >
+        ××××××××××××××××××
+      </span>
+    </div>
+  </div>
+  <div class="flex items-start group" id="manga-status-container">
+    {{
+      comp.ui.Icon({
+        name: "book",
+        type: "lucide",
+        classes: statusIconClass + " w-5 h-5 mt-0.5",
+      })
+    }}<div class="overflow-hidden grow">
+      <div
+        class="text-[10px] uppercase opacity-75 mb-1 tracking-widest font-sans font-semibold"
+      >
+        Reading
+      </div>
+      <span
+        class="inline-block whitespace-nowrap text-text"
+        data-chars="×"
+        data-status=""
+        aria-hidden="true"
+      >××××××××××××××××××</span>
+    </div>
+  </div>
+</div>
