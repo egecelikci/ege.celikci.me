@@ -227,15 +227,15 @@ export default function(userOptions?: Options,) {
       // ... existing blog feed ...
       .use(feed({
         ...options.feed,
-        output: ["wiki.xml", "wiki.json"],
+        output: ["wiki.xml", "wiki.json",],
         query: "type=entry",
         sort: "updated=desc",
-        info: { 
-          ...options.feed?.info, 
+        info: {
+          ...options.feed?.info,
           title: `wiki recent changes | ${siteData.host}`,
-          description: "Track the latest updates and edits to the wiki."
+          description: "Track the latest updates and edits to the wiki.",
         },
-      }))
+      },),)
       .use(minifyHTML(),)
       .add("assets/scripts/main.ts",)
       .add("assets/styles/main.css",)

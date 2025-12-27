@@ -10,22 +10,17 @@ templateEngine: [vto]
 ---
 
 {{ set intro }}
-  automatically fetched from my public [album
-  ratings](https://critiquebrainz.org/user/{{ author.username }}).
-{{ /set }}
-
-{{# Capture markdown output AND wrap it in the styling class #}}
-{{ set introHtml }}
-  <div class="markdown text-base">
-    {{ intro |> md }}
-  </div>
+  automatically fetched from my public <a
+    href="https://critiquebrainz.org/user/{{ author.username }}"
+  >
+    album ratings</a>.
 {{ /set }}
 
 {{# --- HEADER --- #}}
 {{
   comp.ui.PageHeader({
     title: title,
-    subtitle: introHtml,
+    subtitle: intro,
     centered: true,
   })
 }}

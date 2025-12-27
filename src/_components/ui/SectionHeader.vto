@@ -1,0 +1,24 @@
+{{#
+  Section Header Component
+  Props:
+    - title: string (required)
+    - icon: string (icon name)
+    - iconType: "lucide" | "simpleicons" (default: lucide)
+    - classes: additional classes
+#}}
+
+<div class="flex items-center gap-2 mb-6 text-text-muted {{ classes }}">
+  {{ if icon }}
+    {{
+      comp.ui.Icon({
+        name: icon,
+        type: iconType || "lucide",
+        classes: "w-5 h-5",
+      })
+    }}
+  {{ /if }}
+
+  <h2 class="text-sm uppercase tracking-[0.2em] font-bold m-0">
+    {{ title }}
+  </h2>
+</div>

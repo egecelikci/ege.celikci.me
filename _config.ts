@@ -2,10 +2,10 @@ import * as path from "jsr:@std/path";
 import lume from "lume/mod.ts";
 import plugins from "./plugins.ts";
 import settings from "./src/_data/site.ts";
+import theme from "./src/_data/theme.ts";
 import { filters, } from "./utils/filters.ts";
 import { updateMusicData, } from "./utils/music.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
-import theme from "./src/_data/theme.ts";
 
 const site = lume({
   src: "./src",
@@ -17,7 +17,7 @@ site.use(plugins(),);
 
 for (const [name, fn,] of Object.entries(filters,)) {
   site.filter(name, fn as (value: unknown, ...args: unknown[]) => unknown,)
-  .filter("cx", theme.cx);
+    .filter("cx", theme.cx,);
 }
 
 site.addEventListener("beforeBuild", async () => {

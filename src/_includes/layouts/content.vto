@@ -37,7 +37,7 @@ layout: layouts/base.vto
     {{ comp.ui.RelatedContent() }}
   {{ /if }}
 
-  {{ comp.ui.IncomingLinks({ url: url, title: title }) }}
+  {{ comp.ui.IncomingLinks({ backlinks: backlinks }) }}
 
   {{ if show_webmentions }}
     <div class="mt-12 pt-8 border-t border-border">
