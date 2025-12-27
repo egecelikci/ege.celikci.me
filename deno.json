@@ -15,6 +15,10 @@
       "description": "Run and serve the site for development",
       "command": "MODE=development deno task lume -s"
     },
+    "deploy": {
+      "description": "Build locally and publish to Netlify",
+      "command": "deno task build && netlify deploy --prod"
+    },
     "fmt": "deno task dprint fmt",
     "fmt:check": "deno task dprint check",
     "dprint": "deno run -A npm:dprint"
