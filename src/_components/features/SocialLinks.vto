@@ -1,0 +1,103 @@
+{{#
+  Social Links Component
+  Displays social media and contact links
+#}}
+
+{{
+  set linkIconClass = "text-3xl mr-3 group-hover:text-primary transition-colors duration-300"
+}}
+{{ set signalUrl = author.social.signal.url |> decodeBase64 }}
+{{ set emailUrl = "mailto:" + author.email |> obfuscate }}
+{{
+  set matrixUrl = "https://matrix.to/#/@" + author.social.matrix.username + ":" +
+    author.social.matrix.metropolis.host
+}}
+
+{{
+  set links = [
+    {
+      name: "ListenBrainz",
+      url: "https://listenbrainz.org/user/" + author.username,
+      icon: "music",
+    },
+    {
+      name: "Steam",
+      url: "https://steamcommunity.com/id/" + author.username,
+      icon: "gamepad",
+    },
+    { name: "Signal", url: signalUrl, icon: "message-circle-dashed" },
+    { name: "Email", url: emailUrl, icon: "mail" },
+    {
+      name: "Matrix",
+      url: matrixUrl,
+      icon: "messages-square",
+      keyUrl: "keys#matrix",
+    },
+    {
+      name: "Codeberg",
+      url: "https://codeberg.org/" + author.username,
+      hidden: true,
+    },
+    {
+      name: "GitLab",
+      url: "https://gitlab.com/" + author.username,
+      hidden: true,
+    },
+    {
+      name: "GitHub",
+      url: "https://github.com/" + author.username,
+      hidden: true,
+    },
+  ]
+}}
+
+<ul class="list-none p-0 space-y-4">
+  {{ for link of links }}
+    {{ if !link.hidden }}
+      <li class="group flex items-center justify-between">
+        <div class="flex items-center">
+          <a
+            href="{{ link.url }}"
+            class="flex items-center text-xl font-semibold no-underline hover:text-primary transition-all"
+            {{ if link.name === "Matrix" }}
+              rel="me"{{ /if }}
+          >{{
+              comp.ui.Icon({
+                name: link.icon,
+                type: "lucide",
+                classes: linkIconClass,
+              })
+            }}<span
+              class="border-b-2 border-transparent group-hover:border-primary transition-all ml-1"
+            >
+              {{ link.name }}
+            </span>
+          </a>
+        </div>
+        {{ if link.keyUrl }}
+          <a
+            href="{{ link.keyUrl }}"
+            title="View {{ link.name }} encryption keys"
+            aria-label="View {{ link.name }} encryption keys"
+            class="flex items-center justify-center ml-2 w-9 h-9 rounded-xl text-text-muted/60 bg-transparent hover:text-primary hover:bg-primary/5 transition-all"
+          >{{
+            comp.ui.Icon({
+              name: "key",
+              type: "lucide",
+              classes: "w-5 h-5",
+            })
+          }}</a>
+        {{ /if }}
+      </li>
+    {{ /if }}
+  {{ /for }}
+</ul>
+
+{{# Hidden rel=me links for verification #}}
+<div hidden aria-hidden="true">
+  {{ for link of links }}
+    {{ if link.hidden }}
+      <a href="{{ link.url }}" rel="me">{{ link.name }}</a>
+    {{ /if }}
+  {{ /for }}
+</div>

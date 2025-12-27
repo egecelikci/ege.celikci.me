@@ -17,8 +17,8 @@ tags: ["feeds"]
 ## [recent changes in wiki](/wiki)
 
 <ul>
-<li>{{ comp.ui.Icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/blog.xml"><code>{{ site.url }}/blog.xml</code></a></li>
-<li>{{ comp.ui.Icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/blog.json"><code>{{ site.url }}/blog.json</code></a></li>
+<li>{{ comp.ui.Icon({ name: "file-code-2" }) }}<a href="{{ site.url }}/wiki.xml"><code>{{ site.url }}/wiki.xml</code></a></li>
+<li>{{ comp.ui.Icon({ name: "file-json-2" }) }}<a href="{{ site.url }}/wiki.json"><code>{{ site.url }}/wiki.json</code></a></li>
 </ul>
 
 ## [notes](/notes)

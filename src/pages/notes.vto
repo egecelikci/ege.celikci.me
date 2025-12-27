@@ -1,13 +1,19 @@
 ---
 layout: layouts/base.vto
 title: notes
-description: "short notes and thoughts."
+description: "short form of content and thoughts"
 url: /notes/
 ---
 
 {{ set results = search.pages("type=note", "date=desc") }}
 
-{{ comp.ui.PageHeader({ title: title, centered: true }) }}
+{{
+  comp.ui.PageHeader({
+    title: title,
+    subtitle: description,
+    centered: true,
+  })
+}}
 
 {{ set notesTimeline }}
   {{ if results.length }}

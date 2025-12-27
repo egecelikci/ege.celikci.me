@@ -58,7 +58,7 @@
       {{ content |> safe }}
     </main>
 
-    {{ include "footer.vto" }}
+    {{ comp.ui.Footer({ page: page }) }}
 
     <script type="module" src="/assets/scripts/main.js"></script>
   </body>

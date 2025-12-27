@@ -3,11 +3,9 @@
 {{
   set containerClasses = [
     "album-item group flex flex-col gap-2 relative z-1",
-    "no-underline text-inherit outline-none",
-    "transition-colors duration-300",
+    theme.utilities.link,
+    theme.utilities.transition,
     "hover:z-50 hover:text-primary-offset",
-    "focus:z-50 focus:text-primary-offset",
-    "active:text-primary-offset",
   ]
   |> join(" ")
 }}

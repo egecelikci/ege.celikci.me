@@ -5,12 +5,18 @@ url: /offline/index.html
 templateEngine: [vto]
 ---
 
-{{ comp ui.container }}
-
-  <div class="flex flex-col items-center justify-center min-h-[50vh] text-center py-12">
-    
+{{ set body }}
+  <div
+    class="flex flex-col items-center justify-center min-h-[50vh] text-center py-12"
+  >
     <div class="mb-6 text-text-muted opacity-20">
-      {{ comp.ui.Icon({ name: "wifi-off", type: "lucide", classes: "w-24 h-24" }) }}
+      {{
+        comp.ui.Icon({
+          name: "wifi-off",
+          type: "lucide",
+          classes: "w-24 h-24",
+        })
+      }}
     </div>
 
     <h1 class="text-xl md:text-2xl font-bold text-text mb-6">
@@ -18,18 +24,24 @@ templateEngine: [vto]
     </h1>
 
     <p class="text-text-muted max-w-md mx-auto mb-10 leading-relaxed">
-      Don't worry, you can still browse previously visited notes and posts if they
-      were cached by your browser.
+      Don't worry, you can still browse previously visited notes and posts if
+      they were cached by your browser.
     </p>
 
     <a
       href="/"
       class="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-white font-bold tracking-wide transition-all duration-200 hover:scale-105 hover:bg-primary-offset hover:shadow-lg"
     >
-      {{ comp.ui.Icon({ name: "arrow-left", type: "lucide", classes: "w-5 h-5" }) }}
+      {{
+        comp.ui.Icon({
+          name: "arrow-left",
+          type: "lucide",
+          classes: "w-5 h-5",
+        })
+      }}
       return home
     </a>
-
   </div>
+{{ /set }}
 
-{{ /comp }}
+{{ comp.ui.Container({ width: "narrow", content: body }) }}
