@@ -50,7 +50,6 @@ export interface Release {
   };
 }
 
-
 export interface CritiqueBrainzReview {
   entity_id: string;
   entity_type: "release_group" | "recording";
