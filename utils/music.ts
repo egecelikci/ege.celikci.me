@@ -1,242 +1,348 @@
+/**
+ * Music Data Service
+ * Fetches and processes album data from CritiqueBrainz and MusicBrainz APIs
+ */
+
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 
-import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
-import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { MusicBrainzClient, } from "jsr:@kellnerd/musicbrainz@^0.4.2";
-import { cachedFetch, } from "./cache.ts";
-import { ditherWithSharp, saveColorVersion, } from "./images.ts";
+import { ensureDir } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
+import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { DataService } from "../src/services/DataService.ts";
+import { ditherWithSharp, saveColorVersion } from "./images.ts";
+import type {
+  Album,
+  CritiqueBrainzResponse,
+  MusicDataOutput,
+} from "../src/types/index.ts";
 
-async function fileExists(path: string,): Promise<boolean> {
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
+const CACHE_DIR = "_cache";
+const DATA_DIR = join(CACHE_DIR, "albums", "data");
+const COVER_DIR = join(CACHE_DIR, "albums", "covers");
+const PUBLIC_COVER_DIR_BASE = "src/assets/images/covers";
+const PUBLIC_COVER_DIR_MONO = join(PUBLIC_COVER_DIR_BASE, "monochrome");
+const PUBLIC_COVER_DIR_COLOR = join(PUBLIC_COVER_DIR_BASE, "colored");
+
+const CRITIQUEBRAINZ_ID = Deno.env.get("CRITIQUEBRAINZ_ID");
+const CRITIQUEBRAINZ_API = "https://critiquebrainz.org/ws/1";
+const MUSICBRAINZ_API = "https://musicbrainz.org/ws/2";
+const COVERART_API = "https://coverartarchive.org";
+
+const FETCH_LIMIT = 50;
+const RATE_LIMIT_DELAY = 1000;
+const MAX_CONCURRENT_IMAGES = 4;
+
+const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
+
+// Initialize DataService
+const dataService = new DataService(CACHE_DIR);
+
+// ============================================================================
+// UTILITIES
+// ============================================================================
+
+async function fileExists(path: string): Promise<boolean> {
   try {
-    await Deno.stat(path,);
+    await Deno.stat(path);
     return true;
   } catch {
     return false;
   }
 }
 
-const sleep = (ms: number,) =>
-  new Promise((resolve,) => setTimeout(resolve, ms,));
-
-interface Review {
-  entity_id: string;
-  rating: number;
-  entity_type: string;
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-interface ReviewBatch {
-  reviews: Review[];
+async function parallelProcess<T>(
+  items: T[],
+  processor: (item: T) => Promise<void>,
+  concurrency = MAX_CONCURRENT_IMAGES,
+): Promise<void> {
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += concurrency) {
+    chunks.push(items.slice(i, i + concurrency));
+  }
+
+  for (const chunk of chunks) {
+    await Promise.all(chunk.map(processor));
+  }
 }
 
-interface Album {
-  "first-release-date"?: string;
-  [key: string]: unknown;
-}
-
-const CACHE_DIR = "_cache";
-const DATA_DIR = join(CACHE_DIR, "albums", "data",);
-const COVER_DIR = join(CACHE_DIR, "albums", "covers",);
-const PUBLIC_COVER_DIR_BASE = "src/assets/images/covers";
-const PUBLIC_COVER_DIR_MONO = join(PUBLIC_COVER_DIR_BASE, "monochrome",);
-const PUBLIC_COVER_DIR_COLOR = join(PUBLIC_COVER_DIR_BASE, "colored",);
-
-const CRITIQUEBRAINZ_ID = Deno.env.get("CRITIQUEBRAINZ_ID",);
-const LIMIT = 50;
-const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
-
-const client = new MusicBrainzClient();
+// ============================================================================
+// DATA FETCHING
+// ============================================================================
 
 /**
- * Fetches all 5-star album reviews from CritiqueBrainz using cachedFetch.
+ * Fetches all 5-star album reviews from CritiqueBrainz
  */
 async function getFavoriteAlbumIds(): Promise<Set<string>> {
   if (!CRITIQUEBRAINZ_ID) {
-    console.warn(
-      "[music.ts] CRITIQUEBRAINZ_ID environment variable not set. Skipping favorite album fetch.",
-    );
+    console.warn("[music.ts] CRITIQUEBRAINZ_ID not set");
     return new Set();
   }
 
+  console.log("[music.ts] Fetching favorite albums...");
+
+  const allReviews: CritiqueBrainzResponse["reviews"] = [];
   let offset = 0;
-  const allReviews: Review[] = [];
 
   while (true) {
     const url =
-      `https://critiquebrainz.org/ws/1/review?user_id=${CRITIQUEBRAINZ_ID}&limit=${LIMIT}&offset=${offset}`;
+      `${CRITIQUEBRAINZ_API}/review?user_id=${CRITIQUEBRAINZ_ID}&limit=${FETCH_LIMIT}&offset=${offset}`;
 
     try {
-      const batch = await cachedFetch(url, {
-        duration: "0s",
-        type: "json",
+      const result = await dataService.fetch<CritiqueBrainzResponse>(url, {
+        duration: "0s", // Always fetch fresh reviews
+        gracefulFallback: true,
         headers: {
           "User-Agent": USER_AGENT,
-          Accept: "application/json",
+          "Accept": "application/json",
         },
-      },) as ReviewBatch;
+      });
 
-      if (!batch.reviews?.length) break;
+      if (!result.data.reviews?.length) break;
 
-      allReviews.push(...batch.reviews,);
-      offset += LIMIT;
-      await sleep(1000,); // Respect rate limits
-    } catch (e: unknown) {
-      console.error(
-        `[music.ts] Failed to fetch reviews from CritiqueBrainz: ${
-          (e as Error).message
-        }`,
-      );
+      allReviews.push(...result.data.reviews);
+      offset += FETCH_LIMIT;
+
+      await sleep(RATE_LIMIT_DELAY);
+    } catch (error) {
+      console.error(`[music.ts] Review fetch failed: ${error.message}`);
       break;
     }
   }
 
-  // Filter for 5-star albums (release_group)
-  const favReviews = allReviews.filter(
-    (r,) => r.rating === 5 && r.entity_type === "release_group",
-  );
-  return new Set(favReviews.map((r,) => r.entity_id),);
+  const favoriteIds = allReviews
+    .filter((r) => r.rating === 5 && r.entity_type === "release_group")
+    .map((r) => r.entity_id);
+
+  console.log(`[music.ts] Found ${favoriteIds.length} favorite albums`);
+  return new Set(favoriteIds);
 }
 
 /**
- * Fetches album metadata from MusicBrainz.
+ * Fetches album metadata from MusicBrainz
  */
-async function fetchAlbumData(rgid: string,) {
+async function fetchAlbumMetadata(rgid: string): Promise<void> {
+  const filePath = join(DATA_DIR, `${rgid}.json`);
+
+  if (await fileExists(filePath)) {
+    return;
+  }
+
+  const url =
+    `${MUSICBRAINZ_API}/release-group/${rgid}?inc=releases+artists&fmt=json`;
+
   try {
-    const data = await client.lookup("release-group", rgid, {
-      inc: ["releases", "artists",],
-    },);
-    const filePath = join(DATA_DIR, `${rgid}.json`,);
-    await Deno.writeTextFile(filePath, JSON.stringify(data, null, 2,),);
-  } catch (e: unknown) {
-    console.error(
-      `[music.ts] Failed to fetch album data for ${rgid}: ${
-        (e as Error).message
-      }`,
-    );
+    const result = await dataService.fetch<Album>(url, {
+      duration: "30d", // Metadata is stable
+      gracefulFallback: true,
+      headers: {
+        "User-Agent": USER_AGENT,
+        "Accept": "application/json",
+      },
+    });
+
+    await Deno.writeTextFile(filePath, JSON.stringify(result.data, null, 2));
+    console.log(`[music.ts] ✓ Fetched metadata: ${rgid}`);
+  } catch (error) {
+    console.error(`[music.ts] ✗ Metadata fetch failed for ${rgid}: ${error.message}`);
   }
 }
 
 /**
- * Fetches album cover from Cover Art Archive using cachedFetch.
+ * Fetches album cover from Cover Art Archive
  */
-async function fetchAlbumCover(rgid: string,) {
-  const url = `https://coverartarchive.org/release-group/${rgid}/front-500`;
+async function fetchAlbumCover(rgid: string): Promise<void> {
+  const cachePath = join(COVER_DIR, `${rgid}.buffer`);
+
+  if (await fileExists(cachePath)) {
+    return;
+  }
+
+  const url = `${COVERART_API}/release-group/${rgid}/front-500`;
+
   try {
-    await cachedFetch(url, {
-      duration: "30d", // Cache covers for 30 days
-      type: "buffer",
-      directory: COVER_DIR,
-      filenameFormat: () => rgid, // Saves as COVER_DIR/rgid.buffer
-      headers: { "User-Agent": USER_AGENT, },
-    },);
-  } catch (e: unknown) {
-    console.error(
-      `[music.ts] Failed to fetch album cover for ${rgid}: ${
-        (e as Error).message
-      }`,
-    );
+    const result = await dataService.fetchBuffer(url, {
+      duration: "30d",
+      gracefulFallback: true,
+      headers: { "User-Agent": USER_AGENT },
+    });
+
+    await ensureDir(COVER_DIR);
+    await Deno.writeFile(cachePath, result.data);
+    console.log(`[music.ts] ✓ Downloaded cover: ${rgid}`);
+  } catch (error) {
+    console.error(`[music.ts] ✗ Cover fetch failed for ${rgid}: ${error.message}`);
   }
 }
 
-/**
- * Main function: coordinates fetching, caching, and processing.
- */
-export async function updateMusicData() {
-  // Ensure directories exist
-  await ensureDir(DATA_DIR,);
-  await ensureDir(COVER_DIR,);
-  await ensureDir(PUBLIC_COVER_DIR_MONO,);
-  await ensureDir(PUBLIC_COVER_DIR_COLOR,);
+// ============================================================================
+// IMAGE PROCESSING
+// ============================================================================
 
-  const favAlbumIds = await getFavoriteAlbumIds();
+async function processAlbumImages(rgid: string): Promise<void> {
+  const cacheCoverPath = join(COVER_DIR, `${rgid}.buffer`);
+  const publicMonoPath = join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`);
+  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`);
 
-  // 1. Fetch Metadata
-  for (const rgid of favAlbumIds) {
-    const jsonPath = join(DATA_DIR, `${rgid}.json`,);
-    if (!(await fileExists(jsonPath,))) {
-      console.log(`[music.ts] Fetching new album: ${rgid}`,);
-      await fetchAlbumData(rgid,);
-      await sleep(1000,);
-    }
+  if (!(await fileExists(cacheCoverPath))) {
+    return;
   }
 
-  const albums: Album[] = [];
-  const cachedFiles = [];
-
-  // Read directory
-  for await (const dirEntry of Deno.readDir(DATA_DIR,)) {
-    cachedFiles.push(dirEntry.name,);
-  }
-
-  // 2. Process Images & Build List
-  for (const file of cachedFiles) {
-    if (!file.endsWith(".json",)) continue;
-    const rgid = file.replace(".json", "",);
-
-    const jsonPath = join(DATA_DIR, `${rgid}.json`,);
-    const cacheCoverPath = join(COVER_DIR, `${rgid}.buffer`,);
-    const publicMonoPath = join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,);
-    const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,);
-
-    if (!(await fileExists(jsonPath,))) continue;
-
-    const publicMonoExists = await fileExists(publicMonoPath,);
-    const publicColorExists = await fileExists(publicColorPath,);
-
-    // Fetch cover if we don't have processed images
-    if (!publicMonoExists || !publicColorExists) {
-      if (!(await fileExists(cacheCoverPath,))) {
-        console.log(`[music.ts] Fetching cover for: ${rgid}`,);
-        await fetchAlbumCover(rgid,);
-        await sleep(1000,);
-      }
-
-      // Process images if source buffer exists
-      if (await fileExists(cacheCoverPath,)) {
-        try {
-          if (!publicMonoExists) {
-            await ditherWithSharp(cacheCoverPath, publicMonoPath,);
-          }
-          if (!publicColorExists) {
-            await saveColorVersion(cacheCoverPath, publicColorPath,);
-          }
-        } catch (e: unknown) {
-          console.error(
-            `[music.ts] Image processing failed for ${rgid}: ${
-              (e as Error).message
-            }`,
-          );
-        }
-      }
+  try {
+    if (!(await fileExists(publicMonoPath))) {
+      await ditherWithSharp(cacheCoverPath, publicMonoPath);
+      console.log(`[music.ts] ✓ Generated monochrome: ${rgid}`);
     }
 
-    // Add to albums list if we have a valid color cover
-    if (await fileExists(publicColorPath,)) {
-      try {
-        const content: Album = JSON.parse(await Deno.readTextFile(jsonPath,),);
-        albums.push(content,);
-      } catch (e: unknown) {
-        console.error(
-          `[music.ts] Error reading JSON for ${rgid}: ${(e as Error).message}`,
-        );
-      }
+    if (!(await fileExists(publicColorPath))) {
+      await saveColorVersion(cacheCoverPath, publicColorPath);
+      console.log(`[music.ts] ✓ Generated color: ${rgid}`);
     }
+  } catch (error) {
+    console.error(`[music.ts] ✗ Image processing failed for ${rgid}: ${error.message}`);
+  }
+}
+
+// ============================================================================
+// ALBUM DATA ASSEMBLY
+// ============================================================================
+
+async function readAlbumData(rgid: string): Promise<Album | null> {
+  const jsonPath = join(DATA_DIR, `${rgid}.json`);
+  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`);
+
+  if (!(await fileExists(jsonPath)) || !(await fileExists(publicColorPath))) {
+    return null;
   }
 
-  // 3. Sort by Release Date (Newest first)
-  albums.sort((a, b,) => {
+  try {
+    const content = await Deno.readTextFile(jsonPath);
+    return JSON.parse(content) as Album;
+  } catch (error) {
+    console.error(`[music.ts] ✗ Failed to read ${rgid}: ${error.message}`);
+    return null;
+  }
+}
+
+function sortAlbumsByDate(albums: Album[]): Album[] {
+  return albums.sort((a, b) => {
     const dateA = a["first-release-date"]
-      ? new Date(a["first-release-date"],).getTime()
+      ? new Date(a["first-release-date"]).getTime()
       : 0;
     const dateB = b["first-release-date"]
-      ? new Date(b["first-release-date"],).getTime()
+      ? new Date(b["first-release-date"]).getTime()
       : 0;
     return dateB - dateA;
-  },);
+  });
+}
 
-  const outputData = { albums, };
+// ============================================================================
+// MAIN EXPORT
+// ============================================================================
 
-  await Deno.writeTextFile(
-    "src/_data/favorite.json",
-    JSON.stringify(outputData, null, 2,),
-  );
+export async function updateMusicData(): Promise<void> {
+  console.log("[music.ts] Starting music data update...");
+
+  try {
+    await Promise.all([
+      ensureDir(DATA_DIR),
+      ensureDir(COVER_DIR),
+      ensureDir(PUBLIC_COVER_DIR_MONO),
+      ensureDir(PUBLIC_COVER_DIR_COLOR),
+    ]);
+
+    const favoriteIds = await getFavoriteAlbumIds();
+    const albumIds = Array.from(favoriteIds);
+
+    if (albumIds.length === 0) {
+      console.warn("[music.ts] No favorite albums found");
+      return;
+    }
+
+    console.log(`[music.ts] Processing ${albumIds.length} albums...`);
+
+    // -----------------------------------------------------------------------
+    // 1. METADATA: Filter first, then fetch
+    // -----------------------------------------------------------------------
+    const missingMetadata = [];
+    
+    // Check existence in parallel (fast)
+    await Promise.all(albumIds.map(async (rgid) => {
+      const exists = await fileExists(join(DATA_DIR, `${rgid}.json`));
+      if (!exists) missingMetadata.push(rgid);
+    }));
+
+    if (missingMetadata.length > 0) {
+      console.log(`[music.ts] Fetching metadata for ${missingMetadata.length} new albums...`);
+      for (const rgid of missingMetadata) {
+        await fetchAlbumMetadata(rgid);
+        await sleep(RATE_LIMIT_DELAY); // Only wait for actual fetches
+      }
+    } else {
+      console.log("[music.ts] ✓ All metadata cached.");
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. COVERS: Filter first, then fetch
+    // -----------------------------------------------------------------------
+    const missingCovers = [];
+
+    // Check existence in parallel
+    await Promise.all(albumIds.map(async (rgid) => {
+      const exists = await fileExists(join(COVER_DIR, `${rgid}.buffer`));
+      if (!exists) missingCovers.push(rgid);
+    }));
+
+    if (missingCovers.length > 0) {
+      console.log(`[music.ts] Fetching covers for ${missingCovers.length} new albums...`);
+      for (const rgid of missingCovers) {
+        await fetchAlbumCover(rgid);
+        await sleep(RATE_LIMIT_DELAY); // Only wait for actual fetches
+      }
+    } else {
+      console.log("[music.ts] ✓ All raw covers cached.");
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. PROCESSING: Parallel generation
+    // -----------------------------------------------------------------------
+    // We also want to skip processing if the OUTPUT files (color/mono) already exist
+    const needingProcessing = [];
+    
+    await Promise.all(albumIds.map(async (rgid) => {
+      const monoExists = await fileExists(join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`));
+      const colorExists = await fileExists(join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`));
+      if (!monoExists || !colorExists) needingProcessing.push(rgid);
+    }));
+
+    if (needingProcessing.length > 0) {
+      console.log(`[music.ts] Processing images for ${needingProcessing.length} albums...`);
+      await parallelProcess(needingProcessing, processAlbumImages);
+    } else {
+      console.log("[music.ts] ✓ All images processed.");
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. ASSEMBLY
+    // -----------------------------------------------------------------------
+    const albumsRaw = await Promise.all(albumIds.map(readAlbumData));
+    const albums = albumsRaw.filter((a): a is Album => a !== null);
+    const sortedAlbums = sortAlbumsByDate(albums);
+
+    await Deno.writeTextFile(
+      "src/_data/favorite.json",
+      JSON.stringify({ albums: sortedAlbums }, null, 2),
+    );
+
+    console.log(`[music.ts] ✓ Successfully updated ${sortedAlbums.length} albums`);
+  } catch (error) {
+    console.error(`[music.ts] ✗ Fatal error: ${error.message}`);
+    throw error;
+  }
 }

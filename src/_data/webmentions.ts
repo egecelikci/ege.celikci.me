@@ -1,109 +1,99 @@
-import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
-import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { unionBy, } from "npm:lodash-es@4.17.22";
-import { cachedFetch, } from "../../utils/cache.ts";
+import { ensureDir } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
+import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
+import { unionBy } from "npm:lodash-es@4.17.22";
+import { DataService } from "../services/DataService.ts";
+import type { Webmention, WebmentionFeed } from "../types/index.ts";
 import settings from "./site.ts";
 
-const CACHE_DIR = "_cache";
-const CACHE_FILE = join(CACHE_DIR, "webmentions.json",);
-const API = "https://webmention.io/api";
-const WEBMENTION_IO_TOKEN = Deno.env.get("WEBMENTION_IO_TOKEN",);
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
 
-const host = settings?.host;
+const CACHE_DIR = "./_cache";
+const CACHE_FILE = join(CACHE_DIR, "webmentions.json");
+const API_BASE = "https://webmention.io/api";
+const TOKEN = Deno.env.get("WEBMENTION_IO_TOKEN");
+const HOST = settings?.host;
+const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
-interface Webmention {
-  "wm-id": number;
-  "wm-property": string;
-  "wm-source": string;
-  "wm-target": string;
-  "wm-received": string;
-  author: {
-    name: string;
-    url: string;
-    photo: string;
-  };
-  url?: string;
-  published?: string;
-  content?: {
-    html?: string;
-    text?: string;
-    value?: string;
-  };
-  [key: string]: unknown;
-}
+// Initialize DataService
+const dataService = new DataService(CACHE_DIR);
 
-interface WebmentionFeed {
-  children: Webmention[];
-  lastFetched?: string | null;
-}
+// ============================================================================
+// HELPERS
+// ============================================================================
 
-async function fileExists(path: string,): Promise<boolean> {
+async function fileExists(path: string): Promise<boolean> {
   try {
-    await Deno.stat(path,);
+    await Deno.stat(path);
     return true;
   } catch {
     return false;
   }
 }
 
+// ============================================================================
+// FETCHING
+// ============================================================================
+
 async function fetchWebmentions(
   since?: string | null,
   perPage = 10000,
 ): Promise<WebmentionFeed | null> {
-  if (!host || !WEBMENTION_IO_TOKEN) {
+  if (!HOST || !TOKEN) {
     console.warn(
-      ">>> unable to fetch webmentions: missing host or WEBMENTION_IO_TOKEN",
+      "[webmentions.ts] ⚠ Missing config: host or WEBMENTION_IO_TOKEN",
     );
     return null;
   }
 
-  let url =
-    `${API}/mentions.jf2?domain=${host}&token=${WEBMENTION_IO_TOKEN}&per-page=${perPage}`;
+  let url = `${API_BASE}/mentions.jf2?domain=${HOST}&token=${TOKEN}&per-page=${perPage}`;
   if (since) url += `&since=${since}`;
 
   try {
-    // cachedFetch kullanıyoruz ancak duration: "0s" vererek her zaman taze veri çekmeyi zorluyoruz.
-    // Kalıcı önbellekleme (merging) işlemini bu dosya kendisi yönetiyor.
-    const feed = await cachedFetch(url, {
+    // We use duration: "0s" to force checking for new data.
+    // However, DataService will still cache this specific request (URL + since param)
+    // which helps if you rebuild strictly within the same timeframe without new data.
+    const result = await dataService.fetch<WebmentionFeed>(url, {
       duration: "0s",
-      type: "json",
+      gracefulFallback: false, // If the API fails, we want to know so we don't update the timestamp
       headers: {
-        "User-Agent": `${host} (via Lume)`,
+        "User-Agent": USER_AGENT,
       },
-    },);
+    });
 
-    console.log(
-      `>>> ${
-        feed.children ? feed.children.length : 0
-      } new webmentions fetched from ${API}`,
-    );
-    return feed as WebmentionFeed;
+    const count = result.data.children ? result.data.children.length : 0;
+    console.log(`[webmentions.ts] ✓ Fetched ${count} new entries`);
+    
+    return result.data;
   } catch (e) {
-    console.error(">>> Error fetching webmentions:", e,);
+    console.error(`[webmentions.ts] ✗ Fetch failed: ${(e as Error).message}`);
     return null;
   }
 }
 
-// Yeni ve eski webmention'ları wm-id'ye göre birleştir
-function mergeWebmentions(a: WebmentionFeed, b: WebmentionFeed,): Webmention[] {
-  return unionBy(b.children, a.children, "wm-id",); // b (yeni) öncelikli olsun
+// ============================================================================
+// CACHE MANAGEMENT (AGGREGATION)
+// ============================================================================
+
+function mergeWebmentions(a: WebmentionFeed, b: WebmentionFeed): Webmention[] {
+  // Union by wm-id, preferring 'b' (new data)
+  return unionBy(b.children, a.children, "wm-id");
 }
 
-// Birleştirilmiş veriyi dosyaya yaz
-async function writeToCache(data: WebmentionFeed,) {
-  await ensureDir(CACHE_DIR,);
-  await Deno.writeTextFile(CACHE_FILE, JSON.stringify(data, null, 2,),);
-  console.log(`>>> webmentions saved to ${CACHE_FILE}`,);
+async function writeToCache(data: WebmentionFeed) {
+  await ensureDir(CACHE_DIR);
+  await Deno.writeTextFile(CACHE_FILE, JSON.stringify(data, null, 2));
+  console.log(`[webmentions.ts] Saved merged data to ${CACHE_FILE}`);
 }
 
-// Önbellekten veriyi oku
 async function readFromCache(): Promise<WebmentionFeed> {
-  if (await fileExists(CACHE_FILE,)) {
+  if (await fileExists(CACHE_FILE)) {
     try {
-      const cacheFile = await Deno.readTextFile(CACHE_FILE,);
-      return JSON.parse(cacheFile,);
+      const cacheFile = await Deno.readTextFile(CACHE_FILE);
+      return JSON.parse(cacheFile);
     } catch (e) {
-      console.error(">>> Error reading webmentions cache:", e,);
+      console.error("[webmentions.ts] ✗ Error reading cache:", e);
     }
   }
 
@@ -113,25 +103,33 @@ async function readFromCache(): Promise<WebmentionFeed> {
   };
 }
 
+// ============================================================================
+// MAIN EXPORT
+// ============================================================================
+
 async function getWebmentionsData(): Promise<WebmentionFeed> {
   const cache = await readFromCache();
 
   if (cache.children.length) {
-    console.log(`>>> ${cache.children.length} webmentions loaded from cache`,);
+    console.log(`[webmentions.ts] Loaded ${cache.children.length} entries from local cache`);
   }
 
-  // Token varsa yeni verileri kontrol et
-  if (WEBMENTION_IO_TOKEN) {
-    const feed = await fetchWebmentions(cache.lastFetched,);
+  // Only fetch if we have a token
+  if (TOKEN) {
+    const feed = await fetchWebmentions(cache.lastFetched);
 
     if (feed && feed.children && feed.children.length) {
-      const webmentions = {
+      console.log(`[webmentions.ts] Merging ${feed.children.length} new entries...`);
+      
+      const webmentions: WebmentionFeed = {
         lastFetched: new Date().toISOString(),
-        children: mergeWebmentions(cache, feed,),
+        children: mergeWebmentions(cache, feed),
       };
 
-      await writeToCache(webmentions,);
+      await writeToCache(webmentions);
       return webmentions;
+    } else {
+      console.log("[webmentions.ts] No new webmentions found.");
     }
   }
 
