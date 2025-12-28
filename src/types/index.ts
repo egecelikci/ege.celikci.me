@@ -20,6 +20,8 @@ export interface Album {
   "first-release-date": string;
   "artist-credit": ArtistCredit[];
   releases?: Release[];
+  imagePath?: string;
+  imagePathMono?: string;
 }
 
 export interface ArtistCredit {

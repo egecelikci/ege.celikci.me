@@ -96,7 +96,7 @@ async function getFavoriteAlbumIds(): Promise<Set<string>> {
 
     try {
       const result = await dataService.fetch<CritiqueBrainzResponse>(url, {
-        duration: "0s", // Always fetch fresh reviews
+        duration: "1d",
         gracefulFallback: true,
         headers: {
           "User-Agent": USER_AGENT,
@@ -245,13 +245,19 @@ async function readAlbumData(rgid: string,): Promise<Album | null> {
   const jsonPath = join(DATA_DIR, `${rgid}.json`,);
   const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,);
 
+  // Verify we have both the data and the processed image
   if (!(await fileExists(jsonPath,)) || !(await fileExists(publicColorPath,))) {
     return null;
   }
 
   try {
     const content = await Deno.readTextFile(jsonPath,);
-    return JSON.parse(content,) as Album;
+    const album = JSON.parse(content,) as Album;
+
+    album.imagePath = `/assets/images/covers/colored/${rgid}.webp`;
+    album.imagePathMono = `/assets/images/covers/monochrome/${rgid}.png`;
+
+    return album;
   } catch (error) {
     console.error(`[music.ts] ✗ Failed to read ${rgid}: ${error.message}`,);
     return null;
