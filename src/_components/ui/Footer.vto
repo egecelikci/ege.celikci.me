@@ -29,6 +29,7 @@
         <a
           href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
           class="font-mono hover:text-primary transition-colors"
+          aria-label="view latest commit"
         >
           {{ build.git.substring(0, 7) }}
         </a>
@@ -43,6 +44,7 @@
         <a
           href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
           class="group flex items-center gap-2 transition-colors hover:text-primary"
+          aria-label="edit this page"
         >
           {{
             comp.ui.Icon({
@@ -57,6 +59,7 @@
         <a
           href="{{ '/meta/feeds' |> url }}"
           class="group flex items-center gap-2 transition-colors hover:text-primary"
+          aria-label="view feeds"
         >
           {{
             comp.ui.Icon({
@@ -71,7 +74,7 @@
         <a
           href="#"
           class="group flex items-center gap-2 transition-colors hover:text-primary"
-          aria-label="scroll to top"
+          aria-label="Scroll to top"
         >
           {{
             comp.ui.Icon({
