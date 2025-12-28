@@ -30,6 +30,10 @@
   title="{{ album.title }} by {{ artistNames }}"
 >
   <div class="{{ coverClasses }}">
+    {{# 
+      COLORED IMAGE (WebP) 
+      Uses the path injected by music.ts
+    #}}
     <img
       class="
         absolute top-0 left-0 z-20 w-full h-full object-cover block
@@ -39,8 +43,9 @@
         group-focus:delay-0 group-focus:[clip-path:inset(0_0%_0_0)]
         group-active:delay-0 group-active:[clip-path:inset(0_0%_0_0)]
       "
-      src="/assets/images/covers/colored/{{ album.id }}.webp"
-      alt="{{ album.title }}"
+      src="{{ album.imagePath }}"
+      alt=""
+      aria-hidden="true"
       loading="{{ priority ? 'eager' : 'lazy' }}"
       {{ if priority }}
         fetchpriority="high"
@@ -49,10 +54,15 @@
       height="290"
     />
 
+    {{# 
+      MONOCHROME IMAGE (PNG)
+      Uses the path injected by music.ts 
+    #}}
     <img
       class="relative z-1 w-full h-full object-cover block dark:invert dark:opacity-90"
-      src="/assets/images/covers/monochrome/{{ album.id }}.png"
-      alt="{{ album.title }}"
+      src="{{ album.imagePathMono }}"
+      alt=""
+      aria-hidden="true"
       loading="{{ priority ? 'eager' : 'lazy' }}"
       {{ if priority }}
         fetchpriority="high"
