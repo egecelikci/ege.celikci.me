@@ -68,9 +68,10 @@
         </a>
       </li>
       <li>
-        <button
-          onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-          class="group flex items-center gap-2 transition-colors hover:text-primary cursor-pointer"
+        <a
+          href="#"
+          class="group flex items-center gap-2 transition-colors hover:text-primary"
+          aria-label="scroll to top"
         >
           {{
             comp.ui.Icon({
@@ -79,7 +80,7 @@
             })
           }}
           <span class="hidden sm:inline">top</span>
-        </button>
+        </a>
       </li>
     </ul>
   </nav>
