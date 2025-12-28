@@ -33,7 +33,7 @@ const COVERART_API = "https://coverartarchive.org";
 
 const FETCH_LIMIT = 50;
 const RATE_LIMIT_DELAY = 1000;
-const MAX_CONCURRENT_IMAGES = 4;
+const MAX_CONCURRENT_IMAGES = 10;
 
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
@@ -109,7 +109,10 @@ async function getFavoriteAlbumIds(): Promise<Set<string>> {
       allReviews.push(...result.data.reviews,);
       offset += FETCH_LIMIT;
 
-      await sleep(RATE_LIMIT_DELAY,);
+      // Only sleep if we actually hit the network
+      if (!result.cached) {
+        await sleep(RATE_LIMIT_DELAY,);
+      }
     } catch (error) {
       console.error(`[music.ts] Review fetch failed: ${error.message}`,);
       break;
@@ -126,20 +129,23 @@ async function getFavoriteAlbumIds(): Promise<Set<string>> {
 
 /**
  * Fetches album metadata from MusicBrainz
+ * Returns TRUE if a network request was made, FALSE if cached
  */
-async function fetchAlbumMetadata(rgid: string,): Promise<void> {
+async function fetchAlbumMetadata(rgid: string,): Promise<boolean> {
   const filePath = join(DATA_DIR, `${rgid}.json`,);
 
+  // 1. Check Local File (Level 1 Cache)
   if (await fileExists(filePath,)) {
-    return;
+    return false;
   }
 
   const url =
     `${MUSICBRAINZ_API}/release-group/${rgid}?inc=releases+artists&fmt=json`;
 
   try {
+    // 2. Check DataService Cache (Level 2 Cache)
     const result = await dataService.fetch<Album>(url, {
-      duration: "30d", // Metadata is stable
+      duration: "30d",
       gracefulFallback: true,
       headers: {
         "User-Agent": USER_AGENT,
@@ -148,27 +154,37 @@ async function fetchAlbumMetadata(rgid: string,): Promise<void> {
     },);
 
     await Deno.writeTextFile(filePath, JSON.stringify(result.data, null, 2,),);
-    console.log(`[music.ts] ✓ Fetched metadata: ${rgid}`,);
+
+    // Log only if we actually did work
+    if (!result.cached) {
+      console.log(`[music.ts] ⬇ Fetched metadata: ${rgid}`,);
+    }
+
+    return !result.cached; // Return true only if we hit the network
   } catch (error) {
     console.error(
       `[music.ts] ✗ Metadata fetch failed for ${rgid}: ${error.message}`,
     );
+    return false;
   }
 }
 
 /**
  * Fetches album cover from Cover Art Archive
+ * Returns TRUE if a network request was made, FALSE if cached
  */
-async function fetchAlbumCover(rgid: string,): Promise<void> {
+async function fetchAlbumCover(rgid: string,): Promise<boolean> {
   const cachePath = join(COVER_DIR, `${rgid}.buffer`,);
 
+  // 1. Check Local File (Level 1 Cache)
   if (await fileExists(cachePath,)) {
-    return;
+    return false;
   }
 
   const url = `${COVERART_API}/release-group/${rgid}/front-500`;
 
   try {
+    // 2. Check DataService Cache (Level 2 Cache)
     const result = await dataService.fetchBuffer(url, {
       duration: "30d",
       gracefulFallback: true,
@@ -177,11 +193,17 @@ async function fetchAlbumCover(rgid: string,): Promise<void> {
 
     await ensureDir(COVER_DIR,);
     await Deno.writeFile(cachePath, result.data,);
-    console.log(`[music.ts] ✓ Downloaded cover: ${rgid}`,);
+
+    if (!result.cached) {
+      console.log(`[music.ts] ⬇︎ Downloaded cover: ${rgid}`,);
+    }
+
+    return !result.cached; // Return true only if we hit the network
   } catch (error) {
     console.error(
       `[music.ts] ✗ Cover fetch failed for ${rgid}: ${error.message}`,
     );
+    return false;
   }
 }
 
@@ -192,7 +214,7 @@ async function fetchAlbumCover(rgid: string,): Promise<void> {
 async function processAlbumImages(rgid: string,): Promise<void> {
   const cacheCoverPath = join(COVER_DIR, `${rgid}.buffer`,);
   const publicMonoPath = join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,);
-  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,);
+  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,);
 
   if (!(await fileExists(cacheCoverPath,))) {
     return;
@@ -201,12 +223,12 @@ async function processAlbumImages(rgid: string,): Promise<void> {
   try {
     if (!(await fileExists(publicMonoPath,))) {
       await ditherWithSharp(cacheCoverPath, publicMonoPath,);
-      console.log(`[music.ts] ✓ Generated monochrome: ${rgid}`,);
+      // console.log(`[music.ts] ⚙ Generated monochrome: ${rgid}`);
     }
 
     if (!(await fileExists(publicColorPath,))) {
       await saveColorVersion(cacheCoverPath, publicColorPath,);
-      console.log(`[music.ts] ✓ Generated color: ${rgid}`,);
+      // console.log(`[music.ts] ⚙ Generated color: ${rgid}`);
     }
   } catch (error) {
     console.error(
@@ -221,7 +243,7 @@ async function processAlbumImages(rgid: string,): Promise<void> {
 
 async function readAlbumData(rgid: string,): Promise<Album | null> {
   const jsonPath = join(DATA_DIR, `${rgid}.json`,);
-  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,);
+  const publicColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,);
 
   if (!(await fileExists(jsonPath,)) || !(await fileExists(publicColorPath,))) {
     return null;
@@ -278,7 +300,6 @@ export async function updateMusicData(): Promise<void> {
     // -----------------------------------------------------------------------
     const missingMetadata = [];
 
-    // Check existence in parallel (fast)
     await Promise.all(albumIds.map(async (rgid,) => {
       const exists = await fileExists(join(DATA_DIR, `${rgid}.json`,),);
       if (!exists) missingMetadata.push(rgid,);
@@ -286,11 +307,11 @@ export async function updateMusicData(): Promise<void> {
 
     if (missingMetadata.length > 0) {
       console.log(
-        `[music.ts] Fetching metadata for ${missingMetadata.length} new albums...`,
+        `[music.ts] Checking metadata for ${missingMetadata.length} albums...`,
       );
       for (const rgid of missingMetadata) {
-        await fetchAlbumMetadata(rgid,);
-        await sleep(RATE_LIMIT_DELAY,); // Only wait for actual fetches
+        const hitNetwork = await fetchAlbumMetadata(rgid,);
+        if (hitNetwork) await sleep(RATE_LIMIT_DELAY,); // Smart sleep
       }
     } else {
       console.log("[music.ts] ✓ All metadata cached.",);
@@ -301,7 +322,6 @@ export async function updateMusicData(): Promise<void> {
     // -----------------------------------------------------------------------
     const missingCovers = [];
 
-    // Check existence in parallel
     await Promise.all(albumIds.map(async (rgid,) => {
       const exists = await fileExists(join(COVER_DIR, `${rgid}.buffer`,),);
       if (!exists) missingCovers.push(rgid,);
@@ -309,11 +329,11 @@ export async function updateMusicData(): Promise<void> {
 
     if (missingCovers.length > 0) {
       console.log(
-        `[music.ts] Fetching covers for ${missingCovers.length} new albums...`,
+        `[music.ts] Checking covers for ${missingCovers.length} albums...`,
       );
       for (const rgid of missingCovers) {
-        await fetchAlbumCover(rgid,);
-        await sleep(RATE_LIMIT_DELAY,); // Only wait for actual fetches
+        const hitNetwork = await fetchAlbumCover(rgid,);
+        if (hitNetwork) await sleep(RATE_LIMIT_DELAY,); // Smart sleep
       }
     } else {
       console.log("[music.ts] ✓ All raw covers cached.",);
@@ -322,7 +342,6 @@ export async function updateMusicData(): Promise<void> {
     // -----------------------------------------------------------------------
     // 3. PROCESSING: Parallel generation
     // -----------------------------------------------------------------------
-    // We also want to skip processing if the OUTPUT files (color/mono) already exist
     const needingProcessing = [];
 
     await Promise.all(albumIds.map(async (rgid,) => {
@@ -330,7 +349,7 @@ export async function updateMusicData(): Promise<void> {
         join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,),
       );
       const colorExists = await fileExists(
-        join(PUBLIC_COVER_DIR_COLOR, `${rgid}.png`,),
+        join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,),
       );
       if (!monoExists || !colorExists) needingProcessing.push(rgid,);
     },),);
