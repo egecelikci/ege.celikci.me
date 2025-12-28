@@ -9,14 +9,20 @@ export async function saveColorVersion(
   outputPath: string,
 ) {
   try {
-    await sharp(inputPath,)
+    const ditheredBuffer = await sharp(inputPath,)
       .resize(290, 290, { fit: "cover", },)
       .png({
         palette: true,
         colors: 16,
         dither: 1.0,
-        effort: 10,
-        compressionLevel: 9,
+      },)
+      .toBuffer();
+
+    await sharp(ditheredBuffer,)
+      .webp({
+        lossless: true,
+        effort: 6,
+        quality: 100,
       },)
       .toFile(outputPath,);
   } catch (e: unknown) {
