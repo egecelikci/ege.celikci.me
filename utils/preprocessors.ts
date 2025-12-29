@@ -29,7 +29,7 @@ function extractImagesFromNote(content: string,) {
   return images;
 }
 
-function normalizeUrl(url: string,): string {
+function normalizeUrl(url: string,) {
   if (!url) return "";
   return url.endsWith("/",) ? url.slice(0, -1,) : url;
 }
@@ -45,7 +45,7 @@ export default function registerPreprocessors(site: Site,) {
       const pageUrl = page.data.url as string;
       if (!pageUrl) continue;
 
-      // A. NOTE LOGIC
+      // A. Extract images for gallery
       if (page.src.path.startsWith("/notes/",) || page.data.type === "note") {
         if (typeof page.data.content === "string") {
           const rawContent = page.data.content;
@@ -53,53 +53,52 @@ export default function registerPreprocessors(site: Site,) {
 
           if (images.length > 0) {
             page.data.images = images;
-            page.data.content = rawContent
-              .replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "",)
-              .trim();
+
+            // Optional: remove Markdown image syntax from content
+            page.data.content = rawContent.replace(
+              /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
+              "",
+            ).trim();
           }
         }
 
+        // B. Webmention stats
         const stats = { likes: 0, reposts: 0, replies: 0, };
         const webmentions = page.data.webmentions as any;
 
-        if (webmentions && Array.isArray(webmentions.children,)) {
+        if (webmentions?.children?.length) {
           const siteUrl = settings.url;
           const absPageUrl = normalizeUrl(siteUrl + pageUrl,);
 
           const relevantMentions = webmentions.children.filter(
-            (entry: any,) => {
-              const target = normalizeUrl(entry["wm-target"] || "",);
-              return target === absPageUrl;
-            },
+            (entry: any,) =>
+              normalizeUrl(entry["wm-target"] || "",) === absPageUrl,
           );
 
-          stats.likes = relevantMentions.filter(
-            (m: any,) => m["wm-property"] === "like-of",
+          stats.likes = relevantMentions.filter(m =>
+            m["wm-property"] === "like-of"
           ).length;
-
-          stats.reposts = relevantMentions.filter(
-            (m: any,) => m["wm-property"] === "repost-of",
+          stats.reposts = relevantMentions.filter(m =>
+            m["wm-property"] === "repost-of"
           ).length;
-
-          stats.replies = relevantMentions.filter((m: any,) =>
+          stats.replies = relevantMentions.filter(m =>
             ["mention-of", "in-reply-to",].includes(m["wm-property"],)
           ).length;
         }
+
         page.data.stats = stats;
       }
 
-      // B. BUILD LOOKUP MAPS
+      // C. Build lookup maps for backlinks
       if (page.data.title) {
         titleToUrl.set(page.data.title.toLowerCase(), pageUrl,);
       }
       urlToPage.set(normalizeUrl(pageUrl,), page,);
 
-      if (!page.data.backlinks) {
-        page.data.backlinks = [];
-      }
+      if (!page.data.backlinks) page.data.backlinks = [];
     }
 
-    // --- PASS 2: Scan Content for Links ---
+    // --- PASS 2: Scan content for links and build backlinks ---
     const wikilinkRegex = /\[\[(.*?)(?:\|.*?)?\]\]/g;
     const standardLinkRegex = /\[([^\]]+)\]\(([^)"]+)(?: "[^"]+")?\)/g;
 
@@ -109,45 +108,44 @@ export default function registerPreprocessors(site: Site,) {
 
       const foundUrls = new Set<string>();
 
-      // 1. Find Wikilinks
+      // Wikilinks
       for (const match of content.matchAll(wikilinkRegex,)) {
         const targetTitle = match[1].toLowerCase();
         const targetUrl = titleToUrl.get(targetTitle,);
         if (targetUrl) foundUrls.add(targetUrl,);
       }
 
-      // 2. Find Standard Links
+      // Standard links
       for (const match of content.matchAll(standardLinkRegex,)) {
         const rawUrl = match[2];
-        if (rawUrl.startsWith("http",) || rawUrl.startsWith("#",)) continue;
-        foundUrls.add(rawUrl,);
+        if (!rawUrl.startsWith("http",) && !rawUrl.startsWith("#",)) {
+          foundUrls.add(rawUrl,);
+        }
       }
 
-      // 3. Process Links
+      // Build backlinks
       for (const rawTargetUrl of foundUrls) {
         const targetUrl = normalizeUrl(rawTargetUrl,);
-
         if (normalizeUrl(sourcePage.data.url as string,) === targetUrl) {
           continue;
         }
 
         const targetPage = urlToPage.get(targetUrl,);
+        if (!targetPage) continue;
 
-        if (targetPage) {
-          const backlinks = targetPage.data.backlinks as Backlink[];
-          const isDuplicate = backlinks.some(
-            (link,) => link.url === sourcePage.data.url,
-          );
+        const backlinks = targetPage.data.backlinks as Backlink[];
+        const isDuplicate = backlinks.some(link =>
+          link.url === sourcePage.data.url
+        );
 
-          if (!isDuplicate) {
-            backlinks.push({
-              title: sourcePage.data.title || "Untitled",
-              url: sourcePage.data.url as string,
-              date: sourcePage.data.date as Date,
-              excerpt: sourcePage.data.description || "No description",
-            },);
-            backlinks.sort((a, b,) => b.date.getTime() - a.date.getTime());
-          }
+        if (!isDuplicate) {
+          backlinks.push({
+            title: sourcePage.data.title || "Untitled",
+            url: sourcePage.data.url as string,
+            date: sourcePage.data.date as Date,
+            excerpt: sourcePage.data.description || "No description",
+          },);
+          backlinks.sort((a, b,) => b.date.getTime() - a.date.getTime());
         }
       }
     }
