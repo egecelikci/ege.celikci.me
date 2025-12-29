@@ -1,20 +1,32 @@
+{{#
+  Site Header Component
+  Sticky navigation with backdrop blur effect
+#}}
+
+{{# Define header content structure #}}
 {{ set headerContent }}
+  {{# Site logo/home link #}}
   <a
-    class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted transition-colors duration-200"
     href="/"
     rel="home"
-    aria-label="Home"
+    aria-label="Navigate to homepage"
+    class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted transition-colors duration-200 focus-ring rounded-sm"
   >
-    <span>{{ site.host }}</span><span class="text-primary">.</span>
+    <span>{{ site.host }}</span><span class="text-primary" aria-hidden="true"
+    >.</span>
   </a>
 
+  {{# Navigation container #}}
   <div class="flex-1 min-w-0 flex justify-end items-center">
     {{ comp.ui.Navigation({ url: url }) }}
   </div>
 {{ /set }}
+
+{{# Main header #}}
 <header
-  class="sticky top-0 w-full z-[100] border-b border-text-muted/10 backdrop-blur-md transition-all duration-300"
-  style="background-color: color-mix(in srgb, var(--color-bg), transparent 20%)"
+  id="site-header"
+  class="sticky top-0 w-full z-40 border-b border-text-muted/10 backdrop-blur-md transition-all duration-300"
+  style="background-color: color-mix(in srgb, var(--color-bg) 80%, transparent)"
   role="banner"
 >
   {{
@@ -22,8 +34,11 @@
       as: "nav",
       width: "default",
       classes:
-        "flex flex-row items-center justify-between py-4 md:py-6 lg:py-8",
-      attributes: { "aria-label": "Main navigation" },
+        "flex flex-row items-center justify-between gap-4 py-4 md:py-6 lg:py-8",
+      attributes: {
+        "aria-label": "Main navigation",
+        "role": "navigation",
+      },
       content: headerContent,
     })
   }}
