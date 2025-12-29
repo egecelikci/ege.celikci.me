@@ -24,6 +24,13 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: var(--header-height);
+  }
+
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: calc(var(--header-height) + 1rem);
+    }
   }
 
   body {
@@ -58,6 +65,9 @@
   --max-width-narrow: 65ch;
   --width-max: 1440px;
   --max-width-max: 1440px;
+
+  /* Header height for scroll offset */
+  --header-height: 5rem;
 
   --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
   --shadow-elevated:
@@ -124,102 +134,119 @@
     --tw-prose-quotes: var(--color-prose-quotes);
     --tw-prose-quote-borders: var(--color-prose-quote-borders);
     --tw-prose-caption: var(--color-text-muted);
-
     --tw-prose-pre-code: inherit;
     --tw-prose-pre-bg: transparent;
-
     --tw-prose-th-borders: var(--color-border);
     --tw-prose-td-borders: var(--color-border);
     --tw-prose-code: var(--color-prose-code);
+  }
 
-    :not(pre) > code {
-      @apply inline-block font-mono text-sm px-[0.4em] py-[0.1em] rounded-sm
-        bg-surface border border-border text-text whitespace-pre-wrap
-        break-words align-middle;
+  /* Inline code styling */
+  .markdown :not(pre) > code {
+    @apply inline-block font-mono text-sm px-[0.4em] py-[0.1em] rounded-sm
+      bg-surface border border-border text-text whitespace-pre-wrap break-words
+      align-middle;
+  }
 
-      &::before {
-        content: none !important;
-      }
-      &::after {
-        content: none !important;
-      }
+  /* Remove Typography plugin's pseudo-elements on inline code */
+  .markdown :not(pre) > code::before,
+  .markdown :not(pre) > code::after {
+    content: none !important;
+  }
+
+  /* Heading styles */
+  .markdown :is(h1, h2, h3, h4, h5, h6) {
+    @apply font-display font-bold relative;
+  }
+
+  /* Heading anchor links */
+  .markdown .heading-anchor {
+    @apply hidden absolute top-0 -left-[1.25em] w-[1em] opacity-0
+      transition-opacity duration-200 no-underline;
+    box-shadow: none !important;
+  }
+
+  @media (min-width: 768px) {
+    .markdown .heading-anchor {
+      @apply block;
     }
+  }
 
-    h1, h2, h3, h4 {
-      @apply font-display font-bold relative;
-    }
-
+  .markdown
+    :is(h1, h2, h3, h4, h5, h6):is(:hover, :focus-within)
     .heading-anchor {
-      @apply hidden absolute top-0 -left-[1.25em] w-[1em] opacity-0
-        transition-opacity duration-200;
-      @media (min-width: 768px) {
-        display: block;
-      }
-    }
-    :where(h1, h2, h3, h4):hover .heading-anchor,
-    :where(h1, h2, h3, h4):focus-visible .heading-anchor {
-      @apply opacity-100;
-    }
+    @apply opacity-100;
+  }
 
-    a:not(.btn) {
-      @apply no-underline border-b border-current transition-all duration-200
-        font-normal text-[length:inherit] text-[color:var(--tw-prose-links)];
-      box-shadow: inset 0 -2px 0 0 currentColor;
+  /* Link styles with fancy underline effect */
+  .markdown a:not(.btn, .heading-anchor) {
+    @apply no-underline border-b border-current transition-all duration-200
+      font-normal text-[length:inherit] text-[color:var(--tw-prose-links)];
+    box-shadow: inset 0 -2px 0 0 currentColor;
+  }
 
-      &:hover {
-        @apply text-white border-primary outline-none;
-        box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
+  .markdown a:not(.btn, .heading-anchor):hover {
+    @apply text-white border-primary outline-none;
+    box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
+  }
 
-        code {
-          @apply bg-primary border-primary text-white;
-        }
-      }
-    }
+  /* Hover effect on code inside links */
+  .markdown a:not(.btn, .heading-anchor):hover code {
+    @apply bg-primary border-primary text-white;
+  }
 
-    figure.code-block {
-      @apply my-8 block w-full max-w-full rounded-md border border-border
-        bg-surface text-left overflow-hidden;
+  /* Code block container */
+  .markdown figure.code-block {
+    @apply my-8 block w-full max-w-full rounded-md border border-border
+      bg-surface text-left overflow-hidden;
+  }
 
-      figcaption.code-header {
-        @apply flex items-center justify-start border-b border-border bg-bg px-4
-          py-2 font-mono text-xs font-bold text-text-muted not-italic;
-      }
+  /* Code block header */
+  .markdown figure.code-block figcaption.code-header {
+    @apply flex items-center justify-start border-b border-border bg-bg px-4
+      py-2 font-mono text-xs font-bold text-text-muted not-italic;
+  }
 
-      pre.shiki {
-        @apply m-0 border-0 rounded-none w-full max-w-full p-4 text-xs
-          lg:text-sm;
-        overflow-x: auto;
+  /* Shiki syntax highlighting blocks */
+  .markdown figure.code-block pre.shiki {
+    @apply m-0 border-0 rounded-none w-full max-w-full p-4 text-xs lg:text-sm
+      overflow-x-auto;
+  }
 
-        /* Reset for Shiki blocks */
-        code {
-          @apply bg-transparent p-0 text-inherit border-0;
-        }
+  /* Reset styles for code inside Shiki blocks */
+  .markdown figure.code-block pre.shiki code {
+    @apply bg-transparent p-0 text-inherit border-0;
+  }
 
-        &::-webkit-scrollbar {
-          height: 8px;
-        }
-        &::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        &::-webkit-scrollbar-thumb {
-          background-color: var(--color-border);
-          border-radius: 4px;
-        }
-      }
-    }
+  /* Custom scrollbar for code blocks */
+  .markdown figure.code-block pre.shiki::-webkit-scrollbar {
+    height: 8px;
+  }
 
-    .embed {
-      @apply h-0 relative;
-      &--16-9 {
-        padding-bottom: 56.25% !important;
-      }
-      &--4-3 {
-        padding-bottom: 75% !important;
-      }
-      video, iframe {
-        @apply absolute top-0 left-0 w-full h-full z-10 my-0;
-      }
-    }
+  .markdown figure.code-block pre.shiki::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .markdown figure.code-block pre.shiki::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: 4px;
+  }
+
+  /* Responsive embeds (videos, iframes) */
+  .markdown .embed {
+    @apply relative h-0 my-8;
+  }
+
+  .markdown .embed--16-9 {
+    padding-bottom: 56.25% !important;
+  }
+
+  .markdown .embed--4-3 {
+    padding-bottom: 75% !important;
+  }
+
+  .markdown .embed :is(video, iframe) {
+    @apply absolute top-0 left-0 w-full h-full z-10 my-0;
   }
 
   .pswp {
