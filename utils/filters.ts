@@ -1,8 +1,3 @@
-import {
-  DOMParser,
-  Element,
-  Node,
-} from "https://deno.land/x/deno_dom@v0.1.45/deno-dom-wasm.ts";
 import * as path from "jsr:@std/path";
 import { random, } from "npm:lodash-es@4.17.22";
 import { DateTime, } from "npm:luxon@^3.7.2";
@@ -142,94 +137,6 @@ export const filters = {
       return matches[0];
     }
     return null;
-  },
-
-  excerpt: function(content: string, customLength?: number,): string {
-    if (!content) {
-      return "";
-    }
-
-    const maxLength = customLength || 500;
-
-    // Use deno-dom instead of JSDOM
-    const doc = new DOMParser().parseFromString(content, "text/html",);
-    if (!doc) return "";
-
-    // 1. Try to find the specific content container first
-    // This avoids indexing site navigation, headers, footers, etc.
-    let root: Node = doc.body;
-    const contentContainer = doc.querySelector(".e-content",)
-      || doc.querySelector(".note__content",);
-    if (contentContainer) {
-      root = contentContainer;
-    }
-
-    let charsCount = 0;
-    let truncated = false;
-
-    // We create a temporary body to hold our result
-    const resultWrapper = doc.createElement("div",);
-
-    // List of tags to strictly ignore (content and all)
-    const ignoredTags = new Set([
-      "SCRIPT",
-      "STYLE",
-      "SVG",
-      "NAV",
-      "HEADER",
-      "FOOTER",
-      "METADATA",
-    ],);
-
-    function processNode(node: Node, targetParent: Node,) {
-      if (truncated) return;
-
-      // SKIP ignored tags
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const tagName = (node as Element).tagName?.toUpperCase();
-        if (tagName && ignoredTags.has(tagName,)) return;
-      }
-
-      if (node.nodeType === Node.TEXT_NODE) {
-        const text = node.textContent || "";
-        // Collapse whitespace to single space to avoid layout weirdness
-        const cleanText = text.replace(/\s+/g, " ",);
-        if (!cleanText.trim()) return; // Skip empty whitespace nodes
-
-        const remainingLength = maxLength - charsCount;
-
-        if (cleanText.length <= remainingLength) {
-          // We clone the node but with clean text?
-          // Deno DOM might not support setting textContent easily on cloned node in this context,
-          // so we create a new text node.
-          targetParent.appendChild(doc!.createTextNode(cleanText,),);
-          charsCount += cleanText.length;
-        } else {
-          // Truncate text node and mark as truncated
-          const truncatedText = cleanText.substring(0, remainingLength,);
-          targetParent.appendChild(doc!.createTextNode(truncatedText + "…",),);
-          truncated = true;
-        }
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        // Clone element (without children initially)
-        const clonedElement = (node as Element).cloneNode(false,);
-        targetParent.appendChild(clonedElement,);
-
-        // Recursively process children
-        for (const child of Array.from(node.childNodes,)) {
-          processNode(child, clonedElement,);
-          if (truncated) break;
-        }
-      }
-    }
-
-    // Process top-level nodes of the chosen root
-    for (const node of Array.from(root.childNodes,)) {
-      if (truncated) break;
-      processNode(node, resultWrapper,);
-    }
-
-    return resultWrapper.innerHTML;
   },
 
   randomItem: function<T,>(arr: T[],): T {
