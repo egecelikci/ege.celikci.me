@@ -42,7 +42,6 @@ import {
   loadAlistralTheme,
   transformerFilename,
 } from "./src/_includes/alistral-shiki.ts";
-import lightboxWrapper from "./src/_plugins/lightbox_wrapper.ts";
 
 export interface Options {
   date?: Partial<DateOptions>;
@@ -202,7 +201,6 @@ export default function(userOptions?: Options,) {
           ...(options.remark?.rehypePlugins || []),
         ],
       },),)
-      .use(lightboxWrapper(),)
       .use(sitemap(),)
       .use(robots({
         rules: [{ userAgent: "*", disallow: "/build.txt", },],
