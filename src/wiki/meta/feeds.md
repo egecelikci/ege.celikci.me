@@ -1,7 +1,7 @@
 ---
 title: "feeds"
 date: 2025-11-23
-updated: 2025-12-27
+updated: 2025-12-29
 icon: rss
 description: "a list of all Atom and JSON feeds available on this website."
 tags: ["feeds"]
