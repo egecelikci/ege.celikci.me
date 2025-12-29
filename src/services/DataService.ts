@@ -2,7 +2,7 @@
  * DataService - Unified caching and fetching layer
  *
  * Features:
- * - Content-based cache hashing
+ * - Content-based cache hashing (URL + Method + Body only)
  * - Automatic retry with exponential backoff
  * - Graceful fallback to stale cache on failure
  * - Type-safe responses
@@ -49,7 +49,7 @@ export class DataService {
       ...fetchOptions
     } = options;
 
-    // Generate cache key from URL + options
+    // Generate cache key using URL + Method + Body (ignoring headers)
     const cacheKey = await this.generateCacheKey(url, fetchOptions,);
     const cachePath = join(this.cacheDir, "http", `${cacheKey}.json`,);
 
@@ -76,7 +76,7 @@ export class DataService {
         console.warn(
           `[DataService] Attempt ${
             attempt + 1
-          }/${retries} failed: ${error.message}`,
+          }/${retries} failed: ${lastError.message}`,
         );
         if (attempt < retries - 1) {
           await this.sleep(retryDelay * Math.pow(2, attempt,),); // Exponential backoff
@@ -115,6 +115,7 @@ export class DataService {
       ...fetchOptions
     } = options;
 
+    // Generate cache key using URL + Method + Body
     const cacheKey = await this.generateCacheKey(url, fetchOptions,);
     const cachePath = join(this.cacheDir, "buffers", `${cacheKey}.bin`,);
 
@@ -158,15 +159,26 @@ export class DataService {
     );
   }
 
+  /**
+   * Generate a stable cache key based on URL, method, and body.
+   * Explicitly excludes headers to prevent cache invalidation across builds
+   * (e.g. changing User-Agent strings).
+   */
   private async generateCacheKey(
     url: string,
-    options: RequestInit,
+    options?: RequestInit,
   ): Promise<string> {
-    const content = JSON.stringify({ url, options, },);
+    const stableIdentifier = JSON.stringify({
+      url,
+      method: options?.method || "GET",
+      body: options?.body || null,
+    },);
+
     const hash = await crypto.subtle.digest(
       "SHA-256",
-      new TextEncoder().encode(content,),
+      new TextEncoder().encode(stableIdentifier,),
     );
+
     return Array.from(new Uint8Array(hash,),)
       .map((b,) => b.toString(16,).padStart(2, "0",))
       .join("",);
@@ -235,5 +247,90 @@ export class DataService {
 
   private sleep(ms: number,): Promise<void> {
     return new Promise((resolve,) => setTimeout(resolve, ms,));
+  }
+
+  /**
+   * Clear expired cache entries
+   */
+  async clearExpired(): Promise<void> {
+    const dirs = [
+      join(this.cacheDir, "http",),
+      join(this.cacheDir, "buffers",),
+    ];
+
+    for (const dir of dirs) {
+      try {
+        for await (const entry of Deno.readDir(dir,)) {
+          if (entry.isFile) {
+            const filePath = join(dir, entry.name,);
+            const stat = await Deno.stat(filePath,);
+            const age = Date.now() - stat.mtime!.getTime();
+
+            // Remove files older than 90 days
+            if (age > this.parseDuration("90d",)) {
+              await Deno.remove(filePath,);
+              console.log(
+                `[DataService] Removed expired cache: ${entry.name}`,
+              );
+            }
+          }
+        }
+      } catch {
+        // Directory doesn't exist yet, safe to ignore
+      }
+    }
+  }
+
+  /**
+   * Get cache statistics
+   */
+  async getCacheStats(): Promise<{
+    http: { count: number; size: number; };
+    buffers: { count: number; size: number; };
+  }> {
+    const stats = {
+      http: { count: 0, size: 0, },
+      buffers: { count: 0, size: 0, },
+    };
+
+    const dirs = [
+      { type: "http" as const, path: join(this.cacheDir, "http",), },
+      { type: "buffers" as const, path: join(this.cacheDir, "buffers",), },
+    ];
+
+    for (const { type, path, } of dirs) {
+      try {
+        for await (const entry of Deno.readDir(path,)) {
+          if (entry.isFile) {
+            const stat = await Deno.stat(join(path, entry.name,),);
+            stats[type].count++;
+            stats[type].size += stat.size;
+          }
+        }
+      } catch {
+        // Directory doesn't exist
+      }
+    }
+
+    return stats;
+  }
+
+  /**
+   * Clear all cache
+   */
+  async clearAll(): Promise<void> {
+    const dirs = [
+      join(this.cacheDir, "http",),
+      join(this.cacheDir, "buffers",),
+    ];
+
+    for (const dir of dirs) {
+      try {
+        await Deno.remove(dir, { recursive: true, },);
+        console.log(`[DataService] Cleared cache directory: ${dir}`,);
+      } catch {
+        // Directory doesn't exist
+      }
+    }
   }
 }
