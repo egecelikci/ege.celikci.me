@@ -10,7 +10,7 @@ templateEngine: [vto, md]
 
 ## site-wide feeds
 
-the combined feeds containing everything: blog posts, notes, and wiki entries.
+the combined feeds containing blog posts and notes. (wiki entries are to do)
 
 {{ set cardContent }}
 
