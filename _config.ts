@@ -6,8 +6,6 @@ import theme from "./src/_data/theme.ts";
 import { filters, } from "./utils/filters.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
 
-import "./src/_data/favorite.ts";
-
 const site = lume({
   src: "./src",
   dest: "./dist",
