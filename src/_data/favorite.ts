@@ -1,13 +1,12 @@
 /**
- * Favorite Music Data
- *
- * Fixed: Page 1 now always bypasses cache to catch new reviews.
+ * Favorite Music Data Fetcher
  */
 
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
 import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import fetch from "npm:make-fetch-happen";
+import fetch from "npm:make-fetch-happen@15.0.3";
+import { createCache, objectValidator, } from "../../utils/cache.ts";
 import { ditherWithSharp, saveColorVersion, } from "../../utils/images.ts";
 import type {
   Album,
@@ -20,319 +19,599 @@ import type {
 // CONFIGURATION
 // ============================================================================
 
-const SYNC_MODE: "append" | "mirror" = "append";
+const CONFIG = {
+  syncMode: "append" as "append" | "mirror",
+  fetchLimit: 50,
+  maxConcurrentImages: 4, // CPU bound: Parallel is fine
+  maxConcurrentFastLane: 20, // Cache bound: High concurrency is safe
+  maxConcurrentMetadata: 1, // Network bound: MUST be 1 for MusicBrainz
+  rateLimitDelayMs: 1100,
+  retryConfig: { retries: 3, minTimeout: 1000, maxTimeout: 5000, },
 
-const CACHE_DIR = join(Deno.cwd(), "_cache",);
-const CACHE_FILE = join(CACHE_DIR, "music_store.json",);
-const HTTP_CACHE_PATH = join(CACHE_DIR, "http-cache",);
+  paths: {
+    cache: join(Deno.cwd(), "_cache",),
+    cacheFile: join(Deno.cwd(), "_cache", "music_store.json",),
+    httpCache: join(Deno.cwd(), "_cache", "http-cache",),
+    coverColor: "src/assets/images/covers/colored",
+    coverMono: "src/assets/images/covers/monochrome",
+  },
 
-const CRITIQUEBRAINZ_API = "https://critiquebrainz.org/ws/1";
-const CRITIQUEBRAINZ_ID = Deno.env.get("CRITIQUEBRAINZ_ID",);
-const MUSICBRAINZ_API = "https://musicbrainz.org/ws/2/release-group/";
-const COVERART_API = "https://coverartarchive.org/release-group/";
+  api: {
+    critiqueBrainz: "https://critiquebrainz.org/ws/1",
+    musicBrainz: "https://musicbrainz.org/ws/2/release-group/",
+    coverArt: "https://coverartarchive.org/release-group/",
+  },
 
-const FETCH_LIMIT = 50;
-const MAX_CONCURRENT_IMAGES = 4;
-const RATE_LIMIT_DELAY = 1100;
-
-const PUBLIC_COVER_DIR_BASE = "src/assets/images/covers";
-const PUBLIC_COVER_DIR_MONO = join(PUBLIC_COVER_DIR_BASE, "monochrome",);
-const PUBLIC_COVER_DIR_COLOR = join(PUBLIC_COVER_DIR_BASE, "colored",);
+  credentials: {
+    critiqueBrainzId: Deno.env.get("CRITIQUEBRAINZ_ID",),
+  },
+} as const;
 
 // ============================================================================
-// HELPERS
+// TYPES
 // ============================================================================
 
-let lastNetworkRequest = 0;
+interface FetchStats {
+  cacheHits: number;
+  networkRequests: number;
+  errors: number;
+}
 
-async function waitForRateLimit() {
-  const now = Date.now();
-  const timeSinceLast = now - lastNetworkRequest;
-  if (timeSinceLast < RATE_LIMIT_DELAY) {
-    await new Promise((resolve,) =>
-      setTimeout(resolve, RATE_LIMIT_DELAY - timeSinceLast,)
+interface ProcessingResult {
+  albums: ProcessedAlbum[];
+  stats: {
+    total: number;
+    cached: number;
+    processed: number;
+    failed: number;
+    coldStart: boolean;
+  };
+}
+
+interface MusicCache {
+  albums: ProcessedAlbum[];
+}
+
+type CachePolicy = "force-cache" | "no-cache" | "only-if-cached";
+
+// ============================================================================
+// LOGGING
+// ============================================================================
+
+class Logger {
+  private static readonly ICONS = {
+    info: "ℹ️",
+    success: "✅",
+    warning: "⚠️",
+    error: "❌",
+    network: "🌐",
+    cache: "💾",
+    process: "⚙️",
+    music: "🎵",
+    coldStart: "🧊",
+    append: "➕",
+  } as const;
+
+  static info(msg: string,) {
+    console.log(`[music] ${this.ICONS.info} ${msg}`,);
+  }
+
+  static success(msg: string,) {
+    console.log(`[music] ${this.ICONS.success} ${msg}`,);
+  }
+
+  static warn(msg: string,) {
+    console.warn(`[music] ${this.ICONS.warning} ${msg}`,);
+  }
+
+  static error(msg: string, error?: unknown,) {
+    const errorMsg = error instanceof Error ? error.message : String(error,);
+    console.error(
+      `[music] ${this.ICONS.error} ${msg}${error ? `: ${errorMsg}` : ""}`,
     );
   }
-  lastNetworkRequest = Date.now();
+
+  static network(msg: string,) {
+    console.log(`[music] ${this.ICONS.network} ${msg}`,);
+  }
+
+  static cache(msg: string,) {
+    // console.log(`[music] ${this.ICONS.cache} ${msg}`); // Keep console clean
+  }
+
+  static progress(current: number, total: number, prefix = "Progress",) {
+    const percentage = ((current / total) * 100).toFixed(0,);
+    Deno.stdout.write(
+      new TextEncoder().encode(
+        `\r[music] ${prefix}: ${current}/${total} (${percentage}%)`,
+      ),
+    );
+    if (current === total) console.log("",);
+  }
 }
 
-interface FetchOptions extends RequestInit {
-  cachePath?: string;
-  retry?: { retries: number; minTimeout: number; maxTimeout?: number; };
-  cache?: RequestCache | "force-cache" | "no-cache";
-}
+// ============================================================================
+// RATE LIMITER
+// ============================================================================
 
-// UPDATE: Added `policy` parameter
-async function cachedFetch(
-  url: string,
-  type: "json" | "buffer",
-  policy: "force-cache" | "no-cache" = "force-cache",
-) {
-  const options: FetchOptions = {
-    cachePath: HTTP_CACHE_PATH,
-    cache: policy, // <--- Dynamic policy
-    retry: { retries: 3, minTimeout: 1000, maxTimeout: 5000, },
-    headers: {
-      "User-Agent": "ege.celikci.me/1.0 (ege@celikci.me)",
-      Accept: "application/json",
-    },
-  };
+class RateLimiter {
+  private lastRequestTime = 0;
 
-  const response = await fetch(url, options,);
+  async enforceCooldown(): Promise<void> {
+    const now = Date.now();
+    const timeSinceLast = now - this.lastRequestTime;
 
-  if (!response.ok) {
-    if (response.status === 404) return null;
-    if (response.status === 503 || response.status === 429) {
-      console.warn(`[music] ⏳ Rate limit hit. Backing off...`,);
-      await new Promise((r,) => setTimeout(r, 2000,));
-      throw new Error("Rate limit",);
+    if (timeSinceLast < CONFIG.rateLimitDelayMs) {
+      const waitTime = CONFIG.rateLimitDelayMs - timeSinceLast;
+      await new Promise((resolve,) => setTimeout(resolve, waitTime,));
     }
-    throw new Error(`HTTP ${response.status}`,);
-  }
 
-  if (!response.headers.get("x-local-cache",)) {
-    // console.log(`[music] ⬇ Network: ${url}`);
-    lastNetworkRequest = Date.now();
-  }
-
-  return type === "json" ? response.json() : response.arrayBuffer();
-}
-
-async function safeFetchMetadata(rgid: string,) {
-  await waitForRateLimit();
-  await fetchAlbumMetadata(rgid,);
-  await fetchAlbumCover(rgid,);
-}
-
-async function checkImagesExist(rgid: string,): Promise<boolean> {
-  try {
-    await Promise.all([
-      Deno.stat(join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,),),
-      Deno.stat(join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,),),
-    ],);
-    return true;
-  } catch {
-    return false;
+    this.lastRequestTime = Date.now();
   }
 }
 
 // ============================================================================
-// FETCH LOGIC
+// HTTP CLIENT
 // ============================================================================
 
-async function getFavoriteAlbumIds(): Promise<Set<string>> {
-  console.log(`[music] 🔍 Fetching favorites (Mode: ${SYNC_MODE})...`,);
-  const allReviews: CritiqueBrainzReview[] = [];
+class HttpClient {
+  private stats: FetchStats = { cacheHits: 0, networkRequests: 0, errors: 0, };
+  private musicBrainzLimiter = new RateLimiter();
 
-  // 1. Always fetch Page 1 with "no-cache" to get updates
-  const firstUrl =
-    `${CRITIQUEBRAINZ_API}/review?user_id=${CRITIQUEBRAINZ_ID}&limit=${FETCH_LIMIT}&offset=0`;
-  const firstData = (await cachedFetch(
-    firstUrl,
-    "json",
-    "no-cache", // <--- IMPORTANT: Force network check
-  )) as CritiqueBrainzResponse;
+  async fetch<T = unknown,>(
+    url: string,
+    type: "json" | "buffer",
+    policy: CachePolicy = "force-cache",
+    applyRateLimit = false,
+  ): Promise<T | null> {
+    try {
+      const options = {
+        cachePath: CONFIG.paths.httpCache,
+        cache: policy,
+        retry: CONFIG.retryConfig,
+        headers: {
+          "User-Agent": "ege.celikci.me/1.0 (ege@celikci.me)",
+          Accept: "application/json",
+        },
+      };
 
-  if (firstData?.reviews) {
+      const response = await fetch(url, options,);
+
+      if (!response.ok) {
+        if (response.status === 404) return null;
+
+        // Handle "only-if-cached" failure (504 is standard for this)
+        if (policy === "only-if-cached" && response.status === 504) {
+          return null; // Signals a cache miss without throwing
+        }
+
+        if (response.status === 503 || response.status === 429) {
+          Logger.warn(`Rate limit hit. Backing off...`,);
+          await new Promise((r,) => setTimeout(r, 2000,));
+          throw new Error(`HTTP ${response.status}: Rate limited`,);
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`,);
+      }
+
+      // Track cache vs network
+      const fromCache = !!response.headers.get("x-local-cache",);
+      if (fromCache) {
+        this.stats.cacheHits++;
+      } else {
+        this.stats.networkRequests++;
+        if (applyRateLimit) {
+          await this.musicBrainzLimiter.enforceCooldown();
+        }
+      }
+
+      return type === "json"
+        ? ((await response.json()) as T)
+        : ((await response.arrayBuffer()) as T);
+    } catch (error) {
+      // If we asked for cached-only and failed, treat as null (cache miss)
+      if (policy === "only-if-cached") return null;
+
+      this.stats.errors++;
+      throw error;
+    }
+  }
+
+  getStats() {
+    return { ...this.stats, };
+  }
+}
+
+// ============================================================================
+// ALBUM FETCHER
+// ============================================================================
+
+class AlbumFetcher {
+  constructor(private httpClient: HttpClient,) {}
+
+  async getFavoriteIds(forceFullSync = false,): Promise<Set<string>> {
+    const mode = CONFIG.syncMode;
+    const coldStartLabel = forceFullSync ? " [Cold Start]" : "";
+    Logger.info(`Fetching favorites (Mode: ${mode}${coldStartLabel})...`,);
+
+    const allReviews: CritiqueBrainzReview[] = [];
+    const firstUrl = this.buildReviewUrl(0,);
+
+    const firstData = await this.httpClient.fetch<CritiqueBrainzResponse>(
+      firstUrl,
+      "json",
+      "no-cache",
+      false,
+    );
+
+    if (!firstData?.reviews) {
+      return new Set();
+    }
+
     allReviews.push(...firstData.reviews,);
 
-    // 2. Decide whether to fetch older pages
-    if (SYNC_MODE === "mirror" && firstData.count > FETCH_LIMIT) {
-      const totalCount = firstData.count;
-      console.log(`[music] 📥 Fetching deep history (${totalCount} items)...`,);
+    const shouldFetchAll = mode === "mirror" || forceFullSync;
+    const hasMorePages = firstData.count > CONFIG.fetchLimit;
 
+    if (shouldFetchAll && hasMorePages) {
+      Logger.info(`Fetching full history (${firstData.count} reviews)...`,);
       for (
-        let offset = FETCH_LIMIT;
-        offset < totalCount;
-        offset += FETCH_LIMIT
+        let offset = CONFIG.fetchLimit;
+        offset < firstData.count;
+        offset += CONFIG.fetchLimit
       ) {
-        await waitForRateLimit();
-        const url =
-          `${CRITIQUEBRAINZ_API}/review?user_id=${CRITIQUEBRAINZ_ID}&limit=${FETCH_LIMIT}&offset=${offset}`;
-        // Old pages can stay cached
-        const data = (await cachedFetch(
-          url,
-          "json",
-          "force-cache",
-        )) as CritiqueBrainzResponse;
-        if (data?.reviews) allReviews.push(...data.reviews,);
+        try {
+          // Rate limit only if not cached
+          await this.httpClient.fetch<CritiqueBrainzResponse>(
+            this.buildReviewUrl(offset,),
+            "json",
+            "force-cache",
+            true, // Use rate limit if network hit
+          ).then(data => {
+            if (data?.reviews) allReviews.push(...data.reviews,);
+          },);
+        } catch { /* ignore */ }
       }
+    }
+
+    return new Set(
+      allReviews
+        .filter((r,) => r.entity_type === "release_group" && r.rating === 5)
+        .map((r,) => r.entity_id),
+    );
+  }
+
+  async fetchMetadata(
+    rgid: string,
+    policy: CachePolicy = "force-cache",
+  ): Promise<Album | null> {
+    try {
+      const url =
+        `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits+releases`;
+      // Only apply rate limit if we allow network access
+      const rateLimit = policy !== "only-if-cached";
+      return await this.httpClient.fetch<Album>(
+        url,
+        "json",
+        policy,
+        rateLimit,
+      );
+    } catch {
+      return null;
     }
   }
 
-  return new Set(
-    allReviews
-      .filter((r,) => r.entity_type === "release_group" && r.rating === 5)
-      .map((r,) => r.entity_id),
-  );
-}
-
-async function fetchAlbumMetadata(rgid: string,): Promise<void> {
-  const url = `${MUSICBRAINZ_API}${rgid}?fmt=json&inc=artist-credits+releases`;
-  await cachedFetch(url, "json", "force-cache",); // Metadata is static
-}
-
-async function fetchAlbumCover(rgid: string,): Promise<void> {
-  const url = `${COVERART_API}${rgid}/front-500`;
-  await cachedFetch(url, "buffer", "force-cache",); // Images are static
-}
-
-async function processAlbumImages(rgid: string,): Promise<void> {
-  const finalColorPath = join(PUBLIC_COVER_DIR_COLOR, `${rgid}.webp`,);
-  const finalMonoPath = join(PUBLIC_COVER_DIR_MONO, `${rgid}.png`,);
-
-  try {
-    const url = `${COVERART_API}${rgid}/front-500`;
-    const buffer = (await cachedFetch(
-      url,
-      "buffer",
-      "force-cache",
-    )) as ArrayBuffer | null;
-    if (!buffer) return;
-
-    await ensureDir(PUBLIC_COVER_DIR_COLOR,);
-    await ensureDir(PUBLIC_COVER_DIR_MONO,);
-
-    const uint8Buffer = new Uint8Array(buffer,);
-    await saveColorVersion(uint8Buffer, finalColorPath,);
-    await ditherWithSharp(uint8Buffer, finalMonoPath,);
-  } catch (error) {
-    console.warn(
-      `[music] ⚠ Image failed ${rgid}: ${(error as Error).message}`,
-    );
+  async fetchCoverImage(rgid: string,): Promise<ArrayBuffer | null> {
+    try {
+      const url = `${CONFIG.api.coverArt}${rgid}/front-500`;
+      return await this.httpClient.fetch<ArrayBuffer>(
+        url,
+        "buffer",
+        "force-cache",
+        false,
+      );
+    } catch {
+      return null;
+    }
   }
-}
 
-async function readAlbumData(rgid: string,): Promise<ProcessedAlbum | null> {
-  try {
-    const url =
-      `${MUSICBRAINZ_API}${rgid}?fmt=json&inc=artist-credits+releases`;
-    const data = (await cachedFetch(url, "json", "force-cache",)) as Album;
-    if (!data) return null;
-
-    return {
-      ...data,
-      imagePath: `/assets/images/covers/colored/${rgid}.webp`,
-      imagePathMono: `/assets/images/covers/monochrome/${rgid}.png`,
-    };
-  } catch {
-    return null;
+  private buildReviewUrl(offset: number,): string {
+    const { critiqueBrainz, } = CONFIG.api;
+    const { critiqueBrainzId, } = CONFIG.credentials;
+    return `${critiqueBrainz}/review?user_id=${critiqueBrainzId}&limit=${CONFIG.fetchLimit}&offset=${offset}`;
   }
 }
 
 // ============================================================================
-// MAIN EXECUTION
+// IMAGE PROCESSOR
+// ============================================================================
+
+class ImageProcessor {
+  async checkExists(rgid: string,): Promise<boolean> {
+    try {
+      await Promise.all([
+        Deno.stat(join(CONFIG.paths.coverColor, `${rgid}.webp`,),),
+        Deno.stat(join(CONFIG.paths.coverMono, `${rgid}.png`,),),
+      ],);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async process(rgid: string, imageBuffer: ArrayBuffer,): Promise<void> {
+    const colorPath = join(CONFIG.paths.coverColor, `${rgid}.webp`,);
+    const monoPath = join(CONFIG.paths.coverMono, `${rgid}.png`,);
+
+    try {
+      await ensureDir(CONFIG.paths.coverColor,);
+      await ensureDir(CONFIG.paths.coverMono,);
+      const uint8Buffer = new Uint8Array(imageBuffer,);
+      await Promise.all([
+        saveColorVersion(uint8Buffer, colorPath,),
+        ditherWithSharp(uint8Buffer, monoPath,),
+      ],);
+    } catch (error) {
+      throw new Error(`Image processing failed: ${(error as Error).message}`,);
+    }
+  }
+
+  buildPaths(rgid: string,) {
+    return {
+      color: `/assets/images/covers/colored/${rgid}.webp`,
+      mono: `/assets/images/covers/monochrome/${rgid}.png`,
+    };
+  }
+}
+
+// ============================================================================
+// ALBUM PROCESSOR
+// ============================================================================
+
+class AlbumProcessor {
+  constructor(
+    private fetcher: AlbumFetcher,
+    private imageProcessor: ImageProcessor,
+    private albumsMap: Map<string, ProcessedAlbum>,
+  ) {}
+
+  async processAlbums(
+    favoriteIds: Set<string>,
+    isColdStart: boolean,
+  ): Promise<ProcessingResult> {
+    const results: ProcessedAlbum[] = [];
+    const needsMetadata: string[] = [];
+    const stats = {
+      total: favoriteIds.size,
+      cached: 0,
+      processed: 0,
+      failed: 0,
+      coldStart: isColdStart,
+    };
+
+    // 1. FILTER: Separate Memory Cache vs Needs Fetch
+    for (const id of favoriteIds) {
+      const cached = this.albumsMap.get(id,);
+      const imagesExist = await this.imageProcessor.checkExists(id,);
+
+      if (cached && imagesExist) {
+        results.push(cached,);
+        stats.cached++;
+      } else {
+        needsMetadata.push(id,);
+      }
+    }
+
+    if (CONFIG.syncMode === "append" && !stats.coldStart) {
+      for (const [id, album,] of this.albumsMap) {
+        if (
+          !favoriteIds.has(id,) && await this.imageProcessor.checkExists(id,)
+        ) {
+          results.push(album,);
+          stats.cached++;
+        }
+      }
+    }
+
+    if (needsMetadata.length === 0) {
+      Logger.success("All albums up to date",);
+      return { albums: results, stats, };
+    }
+
+    Logger.info(`Updating metadata for ${needsMetadata.length} albums...`,);
+
+    // 2. METADATA PHASE: Fast Lane vs Slow Lane
+    const metadataResults = await this.fetchMetadataPhase(needsMetadata,);
+
+    // 3. IMAGE PHASE: Process downloaded buffers
+    const processedAlbums = await this.processImagesPhase(metadataResults,);
+
+    stats.processed = processedAlbums.length;
+    stats.failed = needsMetadata.length - processedAlbums.length;
+    results.push(...processedAlbums,);
+
+    if (stats.failed > 0) Logger.warn(`${stats.failed} albums failed`,);
+    return { albums: results, stats, };
+  }
+
+  /**
+   * Two-Step Metadata Fetching:
+   * 1. Fast Lane: Try to get from disk only (Parallel).
+   * 2. Slow Lane: Fetch missing from network (Serial).
+   */
+  private async fetchMetadataPhase(ids: string[],) {
+    const results: Array<
+      { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
+    > = [];
+    const misses: string[] = [];
+    let processedCount = 0;
+
+    // --- STEP 1: FAST LANE (Cache Only) ---
+    const fastQueue = [...ids,];
+    const fastWorkers = Array(
+      Math.min(CONFIG.maxConcurrentFastLane, ids.length,),
+    ).fill(null,).map(async () => {
+      while (fastQueue.length > 0) {
+        const id = fastQueue.shift();
+        if (!id) break;
+
+        const metadata = await this.fetcher.fetchMetadata(
+          id,
+          "only-if-cached",
+        );
+
+        if (metadata) {
+          // It's in cache! Do we need the image?
+          const imagesExist = await this.imageProcessor.checkExists(id,);
+          if (imagesExist) {
+            results.push({ id, metadata, imageBuffer: null, },); // Skip image download
+          } else {
+            // We have metadata, but need image. Queue for image fetch?
+            // Simplest is to treat as "hit" for metadata, separate fetch for image.
+            // But image fetch isn't rate limited. So we can do it here.
+            const imageBuffer = await this.fetcher.fetchCoverImage(id,);
+            results.push({ id, metadata, imageBuffer, },);
+          }
+        } else {
+          misses.push(id,); // Cache miss -> Go to Slow Lane
+        }
+        processedCount++;
+        // Logger.progress(processedCount, ids.length, "Fast Cache Check");
+      }
+    },);
+    await Promise.all(fastWorkers,);
+
+    if (misses.length > 0) {
+      Logger.info(
+        `Cache miss for ${misses.length} items. Entering Slow Lane...`,
+      );
+    }
+
+    // --- STEP 2: SLOW LANE (Network) ---
+    const slowQueue = [...misses,];
+    const slowWorkers = Array(
+      Math.min(CONFIG.maxConcurrentMetadata, misses.length,),
+    ).fill(null,).map(async () => {
+      while (slowQueue.length > 0) {
+        const id = slowQueue.shift();
+        if (!id) break;
+
+        try {
+          const [metadata, imageBuffer,] = await Promise.all([
+            this.fetcher.fetchMetadata(id, "force-cache",), // Allows network
+            this.fetcher.fetchCoverImage(id,),
+          ],);
+
+          if (metadata) results.push({ id, metadata, imageBuffer, },);
+        } catch (e) {
+          Logger.error(`Failed to fetch ${id}`, e,);
+        }
+        processedCount++;
+        Logger.progress(processedCount, ids.length, "Metadata Sync",);
+      }
+    },);
+    await Promise.all(slowWorkers,);
+
+    return results;
+  }
+
+  private async processImagesPhase(
+    items: Array<
+      { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
+    >,
+  ) {
+    const toProcess = items.filter(i => i.imageBuffer !== null);
+    const completed = items.filter(i => i.imageBuffer === null).map(i => ({
+      ...i.metadata,
+      imagePath: this.imageProcessor.buildPaths(i.id,).color,
+      imagePathMono: this.imageProcessor.buildPaths(i.id,).mono,
+    } as ProcessedAlbum));
+
+    if (toProcess.length === 0) return completed;
+
+    Logger.info(`Processing ${toProcess.length} images...`,);
+    const queue = [...toProcess,];
+    let count = 0;
+
+    const workers = Array(
+      Math.min(CONFIG.maxConcurrentImages, toProcess.length,),
+    ).fill(null,).map(async () => {
+      while (queue.length > 0) {
+        const item = queue.shift();
+        if (!item || !item.imageBuffer) break;
+        try {
+          await this.imageProcessor.process(item.id, item.imageBuffer,);
+          const paths = this.imageProcessor.buildPaths(item.id,);
+          completed.push({
+            ...item.metadata,
+            imagePath: paths.color,
+            imagePathMono: paths.mono,
+          },);
+        } catch (e) {
+          Logger.error(`Img failed ${item.id}`, e,);
+        }
+        count++;
+        Logger.progress(count, toProcess.length, "Image Gen",);
+      }
+    },);
+    await Promise.all(workers,);
+
+    return completed;
+  }
+}
+
+// ============================================================================
+// MAIN
 // ============================================================================
 
 async function getMusicData() {
-  console.log("[music] 🎵 Loading music data...",);
-  const t0 = performance.now();
+  const startTime = performance.now();
+  Logger.info("🎵 Starting music data sync...",);
 
-  // 1. Load Persistence Cache
-  const cachedAlbumsMap = new Map<string, ProcessedAlbum>();
-  try {
-    const cachedText = await Deno.readTextFile(CACHE_FILE,);
-    const cachedData = JSON.parse(cachedText,);
-    if (cachedData?.albums) {
-      cachedData.albums.forEach((a: ProcessedAlbum,) =>
-        cachedAlbumsMap.set(a.id, a,)
-      );
-    }
-  } catch {
-    /* ignore */
-  }
+  const httpClient = new HttpClient();
+  const imageProcessor = new ImageProcessor();
+  const fetcher = new AlbumFetcher(httpClient,);
 
-  // 2. Fetch IDs
-  const incomingIds = await getFavoriteAlbumIds();
-
-  // 3. Prepare Final List
-  const finalAlbums: ProcessedAlbum[] = [];
-  const albumsToProcess: string[] = [];
-  const missingDataIds: string[] = [];
-
-  // 4. Handle Incoming IDs (New & Updated)
-  for (const id of incomingIds) {
-    if (cachedAlbumsMap.has(id,) && (await checkImagesExist(id,))) {
-      finalAlbums.push(cachedAlbumsMap.get(id,)!,);
-    } else {
-      albumsToProcess.push(id,);
-      missingDataIds.push(id,);
-    }
-  }
-
-  // 5. Handle "Append" Mode
-  if (SYNC_MODE === "append") {
-    for (const [id, album,] of cachedAlbumsMap) {
-      if (!incomingIds.has(id,)) {
-        if (await checkImagesExist(id,)) {
-          finalAlbums.push(album,);
-        }
-      }
-    }
-  }
-
-  // 6. Process new items
-  if (albumsToProcess.length > 0) {
-    console.log(`[music] ♻ Processing ${albumsToProcess.length} changes...`,);
-
-    for (const rgid of albumsToProcess) {
-      try {
-        await safeFetchMetadata(rgid,);
-        Deno.stdout.write(new TextEncoder().encode(".",),);
-      } catch (e) {
-        /* ignore */
-      }
-    }
-    console.log("",);
-
-    const imageWorkers = Array(
-      Math.min(MAX_CONCURRENT_IMAGES, albumsToProcess.length,),
-    )
-      .fill(null,)
-      .map(async () => {
-        while (albumsToProcess.length > 0) {
-          const rgid = albumsToProcess.shift();
-          if (rgid) await processAlbumImages(rgid,);
-        }
-      },);
-    await Promise.all(imageWorkers,);
-
-    // Read Data for new items
-    const newProcessed = (
-      await Promise.all(missingDataIds.map(readAlbumData,),)
-    ).filter((a,): a is ProcessedAlbum => a !== null);
-    finalAlbums.push(...newProcessed,);
-  } else {
-    console.log(`[music] ⚡ No changes detected.`,);
-  }
-
-  // 7. Sort & Save
-  const uniqueAlbums = Array.from(
-    new Map(finalAlbums.map((a,) => [a.id, a,]),).values(),
-  );
-
-  uniqueAlbums.sort((a, b,) => {
-    const dateA = new Date(a["first-release-date"] || 0,).getTime();
-    const dateB = new Date(b["first-release-date"] || 0,).getTime();
-    return dateB - dateA;
+  const cache = createCache<MusicCache>({
+    filePath: CONFIG.paths.cacheFile,
+    name: "music",
+    validator: objectValidator(["albums",],),
   },);
 
-  const result = { albums: uniqueAlbums, };
   try {
-    await ensureDir(CACHE_DIR,);
-    await Deno.writeTextFile(CACHE_FILE, JSON.stringify(result, null, 2,),);
-  } catch (e) {
-    console.warn("Failed to save music cache:", e,);
+    const cachedData = await cache.load({ albums: [], },);
+    const albumsMap = new Map(cachedData.albums.map((a,) => [a.id, a,]),);
+    const isColdStart = albumsMap.size === 0;
+
+    if (isColdStart) Logger.info("🧊 Cold start detected",);
+
+    const favoriteIds = await fetcher.getFavoriteIds(isColdStart,);
+    if (favoriteIds.size === 0) return { albums: [], };
+
+    const processor = new AlbumProcessor(fetcher, imageProcessor, albumsMap,);
+    const result = await processor.processAlbums(favoriteIds, isColdStart,);
+
+    result.albums.sort((a, b,) => {
+      const dateA = new Date(a["first-release-date"] || 0,).getTime();
+      const dateB = new Date(b["first-release-date"] || 0,).getTime();
+      return dateB - dateA;
+    },);
+
+    await cache.save({ albums: result.albums, },);
+
+    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2,);
+    const netStats = httpClient.getStats();
+    Logger.success(
+      `Done in ${elapsed}s. Loaded ${result.albums.length} albums.`,
+    );
+    Logger.info(
+      `HTTP: ${netStats.networkRequests} network, ${netStats.cacheHits} cached`,
+    );
+
+    return { albums: result.albums, };
+  } catch (error) {
+    Logger.error("Fatal error", error,);
+    return { albums: cache.get()?.albums || [], };
   }
-
-  const t1 = performance.now();
-  console.log(
-    `[music] ✅ Done in ${
-      ((t1 - t0) / 1000).toFixed(2,)
-    }s. Loaded ${uniqueAlbums.length} albums.`,
-  );
-
-  return result;
 }
 
 export default await getMusicData();
