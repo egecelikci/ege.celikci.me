@@ -81,29 +81,100 @@ export interface CritiqueBrainzResponse {
 // WEBMENTION TYPES
 // ============================================================================
 
+/**
+ * Individual webmention entry
+ */
 export interface Webmention {
+  /** Unique ID from webmention.io */
   "wm-id": number;
+
+  /** Type of webmention interaction */
   "wm-property": "like-of" | "repost-of" | "in-reply-to" | "mention-of";
+
+  /** Source URL where the mention originated */
   "wm-source": string;
+
+  /** Target URL on your site that was mentioned */
   "wm-target": string;
+
+  /** ISO timestamp when webmention.io received this mention */
   "wm-received": string;
+
+  /** Information about the person who sent the mention */
   author?: {
     name: string;
     url?: string;
     photo?: string;
   };
+
+  /** Canonical URL of the source content */
   url?: string;
+
+  /** ISO timestamp when the mention was published */
   published?: string;
+
+  /** Content of the mention (for replies and mentions) */
   content?: {
     html?: string;
     text?: string;
     value?: string;
   };
+
+  /** Private flag (if set, should not be displayed publicly) */
+  "wm-private"?: boolean;
 }
 
-export interface WebmentionFeed {
+/**
+ * Response from webmention.io API
+ */
+export interface WebmentionApiResponse {
+  /** Type identifier for the response format */
+  type: "feed";
+
+  /** Array of webmention entries */
   children: Webmention[];
-  lastFetched?: string | null;
+
+  /** Optional: Name of the feed */
+  name?: string;
+}
+
+/**
+ * Internal feed structure with metadata
+ */
+export interface WebmentionFeed {
+  /** Array of all webmentions */
+  children: Webmention[];
+
+  /** ISO timestamp of last successful fetch */
+  lastFetched: string | null;
+}
+
+/**
+ * Webmentions grouped by target URL
+ */
+export interface WebmentionsByUrl {
+  [targetUrl: string]: Webmention[];
+}
+
+/**
+ * Webmentions grouped by type
+ */
+export interface WebmentionsByType {
+  likes: Webmention[];
+  reposts: Webmention[];
+  replies: Webmention[];
+  mentions: Webmention[];
+}
+
+/**
+ * Statistics about webmentions
+ */
+export interface WebmentionStats {
+  total: number;
+  likes: number;
+  reposts: number;
+  replies: number;
+  mentions: number;
 }
 
 // ============================================================================
