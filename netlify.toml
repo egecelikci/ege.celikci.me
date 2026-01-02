@@ -1,7 +1,6 @@
 [build]
-    # command = "deno task build"
+    command = "deno task build"
     publish = "dist"
-    ignore = "exit 0"
 
 [dev]
     command = "deno task serve"
