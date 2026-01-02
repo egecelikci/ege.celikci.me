@@ -1,107 +1,105 @@
+/**
+ * Webmentions Data File
+ *
+ * This file acts as the primary data source for "webmentions" in Lume.
+ * It handles:
+ * 1. Loading cached mentions from a persistent file (in _cache).
+ * 2. Fetching new mentions from webmention.io.
+ * 3. Merging and saving the updated list back to the cache.
+ * 4. Returning the final data object to Lume.
+ */
+
 import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
 import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
 import { unionBy, } from "npm:lodash-es@4.17.22";
-import { DataService, } from "../services/DataService.ts";
-import type { Webmention, WebmentionFeed, } from "../types/index.ts";
+import fetch from "npm:make-fetch-happen";
+import type { WebmentionFeed, } from "../types/index.ts";
 import settings from "./site.ts";
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
-const CACHE_DIR = "./_cache";
-const CACHE_FILE = join(CACHE_DIR, "webmentions.json",);
+// 1. Internal Persistence: Store the data in _cache so Lume doesn't try to load it twice
+//    or get stuck in a rebuild loop.
+const CACHE_DIR = join(Deno.cwd(), "_cache",);
+const CACHE_FILE = join(CACHE_DIR, "webmentions_store.json",);
+
+// 2. HTTP Cache for the fetch client itself
+const HTTP_CACHE_PATH = join(Deno.cwd(), "_cache", "webmentions_api",);
+
 const API_BASE = "https://webmention.io/api";
 const TOKEN = Deno.env.get("WEBMENTION_IO_TOKEN",);
 const HOST = settings?.host;
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
-// Initialize DataService
-const dataService = new DataService(CACHE_DIR,);
-
 // ============================================================================
-// HELPERS
+// CORE LOGIC
 // ============================================================================
 
-async function fileExists(path: string,): Promise<boolean> {
-  try {
-    await Deno.stat(path,);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-// ============================================================================
-// FETCHING
-// ============================================================================
-
-async function fetchWebmentions(
+async function fetchNewWebmentions(
   since?: string | null,
-  perPage = 10000,
 ): Promise<WebmentionFeed | null> {
   if (!HOST || !TOKEN) {
-    console.warn(
-      "[webmentions.ts] ⚠ Missing config: host or WEBMENTION_IO_TOKEN",
-    );
+    console.warn("[webmentions] ⚠ Missing config (HOST or TOKEN). Skipping.",);
     return null;
   }
 
   let url =
-    `${API_BASE}/mentions.jf2?domain=${HOST}&token=${TOKEN}&per-page=${perPage}`;
+    `${API_BASE}/mentions.jf2?domain=${HOST}&token=${TOKEN}&per-page=1000`;
   if (since) url += `&since=${since}`;
 
   try {
-    // We use duration: "0s" to force checking for new data.
-    // However, DataService will still cache this specific request (URL + since param)
-    // which helps if you rebuild strictly within the same timeframe without new data.
-    const result = await dataService.fetch<WebmentionFeed>(url, {
-      duration: "0s",
-      gracefulFallback: false, // If the API fails, we want to know so we don't update the timestamp
+    const response = await fetch(url, {
+      cachePath: HTTP_CACHE_PATH,
+      cache: "no-cache", // Check for updates, don't serve stale API responses
+      retry: { retries: 2, minTimeout: 1000, },
       headers: {
         "User-Agent": USER_AGENT,
       },
     },);
 
-    const count = result.data.children ? result.data.children.length : 0;
-    console.log(`[webmentions.ts] ✓ Fetched ${count} new entries`,);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`,);
+    }
 
-    return result.data;
-  } catch (e) {
-    console.error(`[webmentions.ts] ✗ Fetch failed: ${(e as Error).message}`,);
+    const data = (await response.json()) as WebmentionFeed;
+    const count = data.children ? data.children.length : 0;
+
+    if (count > 0) {
+      console.log(`[webmentions] ✓ Fetched ${count} new entries from API`,);
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`[webmentions] ✗ API Error: ${(error as Error).message}`,);
     return null;
   }
 }
 
 // ============================================================================
-// CACHE MANAGEMENT (AGGREGATION)
+// PERSISTENCE (Cache Layer)
 // ============================================================================
 
-function mergeWebmentions(a: WebmentionFeed, b: WebmentionFeed,): Webmention[] {
-  // Union by wm-id, preferring 'b' (new data)
-  return unionBy(b.children, a.children, "wm-id",);
-}
-
-async function writeToCache(data: WebmentionFeed,) {
-  await ensureDir(CACHE_DIR,);
-  await Deno.writeTextFile(CACHE_FILE, JSON.stringify(data, null, 2,),);
-  console.log(`[webmentions.ts] Saved merged data to ${CACHE_FILE}`,);
-}
-
-async function readFromCache(): Promise<WebmentionFeed> {
-  if (await fileExists(CACHE_FILE,)) {
-    try {
-      const cacheFile = await Deno.readTextFile(CACHE_FILE,);
-      return JSON.parse(cacheFile,);
-    } catch (e) {
-      console.error("[webmentions.ts] ✗ Error reading cache:", e,);
-    }
+async function readLocalCache(): Promise<WebmentionFeed> {
+  try {
+    const text = await Deno.readTextFile(CACHE_FILE,);
+    return JSON.parse(text,);
+  } catch {
+    // Start fresh if no cache exists
+    return { children: [], lastFetched: null, };
   }
+}
 
-  return {
-    lastFetched: null,
-    children: [],
-  };
+async function saveLocalCache(data: WebmentionFeed,) {
+  try {
+    await ensureDir(CACHE_DIR,);
+    await Deno.writeTextFile(CACHE_FILE, JSON.stringify(data, null, 2,),);
+  } catch (error) {
+    console.error(
+      `[webmentions] ⚠ Failed to save cache: ${(error as Error).message}`,
+    );
+  }
 }
 
 // ============================================================================
@@ -109,36 +107,50 @@ async function readFromCache(): Promise<WebmentionFeed> {
 // ============================================================================
 
 async function getWebmentionsData(): Promise<WebmentionFeed> {
-  const cache = await readFromCache();
+  // 1. Load history from _cache
+  const localData = await readLocalCache();
 
-  if (cache.children.length) {
+  if (!TOKEN) {
+    return localData;
+  }
+
+  // 2. Fetch updates
+  console.log(
+    `[webmentions] Checking for updates since ${
+      localData.lastFetched || "beginning"
+    }...`,
+  );
+
+  const newData = await fetchNewWebmentions(localData.lastFetched,);
+
+  if (newData && newData.children && newData.children.length > 0) {
     console.log(
-      `[webmentions.ts] Loaded ${cache.children.length} entries from local cache`,
+      `[webmentions] ♻ Merging ${newData.children.length} new entries...`,
     );
+
+    // 3. Merge new data with history
+    const mergedChildren = unionBy(
+      newData.children,
+      localData.children,
+      "wm-id",
+    );
+
+    const finalData: WebmentionFeed = {
+      children: mergedChildren,
+      lastFetched: new Date().toISOString(),
+    };
+
+    // 4. Save to _cache for next time
+    await saveLocalCache(finalData,);
+
+    // 5. Return updated data to Lume
+    return finalData;
   }
 
-  // Only fetch if we have a token
-  if (TOKEN) {
-    const feed = await fetchWebmentions(cache.lastFetched,);
-
-    if (feed && feed.children && feed.children.length) {
-      console.log(
-        `[webmentions.ts] Merging ${feed.children.length} new entries...`,
-      );
-
-      const webmentions: WebmentionFeed = {
-        lastFetched: new Date().toISOString(),
-        children: mergeWebmentions(cache, feed,),
-      };
-
-      await writeToCache(webmentions,);
-      return webmentions;
-    } else {
-      console.log("[webmentions.ts] No new webmentions found.",);
-    }
-  }
-
-  return cache;
+  console.log("[webmentions] ✓ No new entries.",);
+  // Return existing data to Lume
+  return localData;
 }
 
+// Lume waits for the promise to resolve and uses the result as the "webmentions" data
 export default await getWebmentionsData();

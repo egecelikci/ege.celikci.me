@@ -14,14 +14,13 @@ export interface MusicBrainzArtist {
   country?: string | null;
 }
 
-export interface Album {
-  id: string;
-  title: string;
-  "first-release-date": string;
-  "artist-credit": ArtistCredit[];
-  releases?: Release[];
-  imagePath?: string;
-  imagePathMono?: string;
+export interface ReleaseEvent {
+  date?: string;
+  area?: {
+    id: string;
+    name: string;
+    "iso-3166-1-codes"?: string[];
+  };
 }
 
 export interface ArtistCredit {
@@ -52,10 +51,30 @@ export interface Release {
   };
 }
 
+export interface Album {
+  id: string;
+  title: string;
+  "first-release-date": string;
+  "artist-credit": ArtistCredit[];
+  releases?: Release[];
+  imagePath?: string;
+  imagePathMono?: string;
+}
+
+export interface ProcessedAlbum extends Album {
+  imagePath: string;
+  imagePathMono: string;
+}
+
 export interface CritiqueBrainzReview {
   entity_id: string;
   entity_type: "release_group" | "recording";
   rating: number;
+}
+
+export interface CritiqueBrainzResponse {
+  reviews: CritiqueBrainzReview[];
+  count: number;
 }
 
 // ============================================================================
@@ -91,6 +110,15 @@ export interface WebmentionFeed {
 // PAGE TYPES (Lume)
 // ============================================================================
 
+export type WikiStatus = "seedling" | "budding" | "evergreen";
+
+export interface PageImage {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
 export interface PageData {
   url: string;
   title: string;
@@ -103,15 +131,6 @@ export interface PageData {
   images?: PageImage[];
   content?: string;
   wordCount?: number;
-}
-
-export type WikiStatus = "seedling" | "budding" | "evergreen";
-
-export interface PageImage {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
 }
 
 // ============================================================================

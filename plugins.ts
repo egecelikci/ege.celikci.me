@@ -236,7 +236,6 @@ export default function(userOptions?: Options,) {
         query: "type=post",
         info: { ...options.feed?.info, title: `blog | ${siteData.host}`, },
       },),)
-      // ... existing blog feed ...
       .use(feed({
         ...options.feed,
         output: ["wiki.xml", "wiki.json",],
