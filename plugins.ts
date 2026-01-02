@@ -6,6 +6,7 @@ import date, { Options as DateOptions, } from "lume/plugins/date.ts";
 import esbuild, { Options as EsbuildOptions, } from "lume/plugins/esbuild.ts";
 import favicon, { Options as FaviconOptions, } from "lume/plugins/favicon.ts";
 import feed, { Options as FeedOptions, } from "lume/plugins/feed.ts";
+import googleFonts from "lume/plugins/google_fonts.ts";
 import icons from "lume/plugins/icons.ts";
 import inline from "lume/plugins/inline.ts";
 import metas from "lume/plugins/metas.ts";
@@ -51,6 +52,7 @@ export interface Options {
   remark?: Partial<RemarkOptions>;
   slugify?: Partial<SlugifyOptions>;
   pagefind?: Partial<PagefindOptions>;
+  googleFonts?: Parameters<typeof googleFonts>[0];
 }
 
 // 4. Move all configurations to defaults
@@ -130,6 +132,17 @@ export const defaults: Options = {
       showEmptyFilters: true,
     },
   },
+  googleFonts: {
+    cssFile: "assets/styles/main.css",
+    fontsFolder: "assets/fonts",
+    placeholder: "/* google-fonts */",
+    fonts: {
+      "Josefin Sans":
+        "https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap",
+      "Inconsolata":
+        "https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap",
+    },
+  },
 };
 
 export default function(userOptions?: Options,) {
@@ -141,6 +154,7 @@ export default function(userOptions?: Options,) {
 
     site
       .use(esbuild(options.esbuild,),)
+      .use(googleFonts(options.googleFonts,),)
       .use(tailwindcss(),)
       .use(postcss(),)
       .use(slugify(options.slugify,),)
@@ -238,7 +252,6 @@ export default function(userOptions?: Options,) {
       .add("assets/scripts/main.ts",)
       .add("assets/styles/main.css",)
       .copy("assets/images",)
-      .copy("assets/fonts",)
       .remote(
         "assets/styles/vendor/photoswipe.css",
         "https://unpkg.com/photoswipe/dist/photoswipe.css",
