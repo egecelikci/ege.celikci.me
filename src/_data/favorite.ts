@@ -1,5 +1,11 @@
 /**
  * Favorite Music Data Fetcher
+ *
+ * Robust, performant music data aggregator with:
+ * - "Fast Lane" caching (Parallel "only-if-cached" checks)
+ * - "Slow Lane" fallback (Serial rate-limited network requests)
+ * - Smart asset skipping (Checks disk before downloading images)
+ * - Connection Timeouts (Prevents build hangs)
  */
 
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
@@ -22,10 +28,11 @@ import type {
 const CONFIG = {
   syncMode: "append" as "append" | "mirror",
   fetchLimit: 50,
-  maxConcurrentImages: 4, // CPU bound: Parallel is fine
-  maxConcurrentFastLane: 20, // Cache bound: High concurrency is safe
-  maxConcurrentMetadata: 1, // Network bound: MUST be 1 for MusicBrainz
+  maxConcurrentImages: 4, // CPU bound
+  maxConcurrentFastLane: 20, // Disk bound
+  maxConcurrentMetadata: 1, // Network bound (Strictly 1 for MusicBrainz)
   rateLimitDelayMs: 1100,
+  requestTimeoutMs: 15000,
   retryConfig: { retries: 3, minTimeout: 1000, maxTimeout: 5000, },
 
   paths: {
@@ -115,12 +122,10 @@ class Logger {
     console.log(`[music] ${this.ICONS.network} ${msg}`,);
   }
 
-  static cache(msg: string,) {
-    // console.log(`[music] ${this.ICONS.cache} ${msg}`); // Keep console clean
-  }
-
   static progress(current: number, total: number, prefix = "Progress",) {
-    const percentage = ((current / total) * 100).toFixed(0,);
+    const percentage = total > 0
+      ? ((current / total) * 100).toFixed(0,)
+      : "100";
     Deno.stdout.write(
       new TextEncoder().encode(
         `\r[music] ${prefix}: ${current}/${total} (${percentage}%)`,
@@ -169,6 +174,7 @@ class HttpClient {
         cachePath: CONFIG.paths.httpCache,
         cache: policy,
         retry: CONFIG.retryConfig,
+        signal: AbortSignal.timeout(CONFIG.requestTimeoutMs,),
         headers: {
           "User-Agent": "ege.celikci.me/1.0 (ege@celikci.me)",
           Accept: "application/json",
@@ -180,9 +186,8 @@ class HttpClient {
       if (!response.ok) {
         if (response.status === 404) return null;
 
-        // Handle "only-if-cached" failure (504 is standard for this)
         if (policy === "only-if-cached" && response.status === 504) {
-          return null; // Signals a cache miss without throwing
+          return null; // Cache miss
         }
 
         if (response.status === 503 || response.status === 429) {
@@ -193,7 +198,6 @@ class HttpClient {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`,);
       }
 
-      // Track cache vs network
       const fromCache = !!response.headers.get("x-local-cache",);
       if (fromCache) {
         this.stats.cacheHits++;
@@ -208,9 +212,7 @@ class HttpClient {
         ? ((await response.json()) as T)
         : ((await response.arrayBuffer()) as T);
     } catch (error) {
-      // If we asked for cached-only and failed, treat as null (cache miss)
       if (policy === "only-if-cached") return null;
-
       this.stats.errors++;
       throw error;
     }
@@ -236,6 +238,7 @@ class AlbumFetcher {
     const allReviews: CritiqueBrainzReview[] = [];
     const firstUrl = this.buildReviewUrl(0,);
 
+    // Page 1 always hits network
     const firstData = await this.httpClient.fetch<CritiqueBrainzResponse>(
       firstUrl,
       "json",
@@ -243,9 +246,7 @@ class AlbumFetcher {
       false,
     );
 
-    if (!firstData?.reviews) {
-      return new Set();
-    }
+    if (!firstData?.reviews) return new Set();
 
     allReviews.push(...firstData.reviews,);
 
@@ -260,12 +261,11 @@ class AlbumFetcher {
         offset += CONFIG.fetchLimit
       ) {
         try {
-          // Rate limit only if not cached
           await this.httpClient.fetch<CritiqueBrainzResponse>(
             this.buildReviewUrl(offset,),
             "json",
             "force-cache",
-            true, // Use rate limit if network hit
+            true,
           ).then(data => {
             if (data?.reviews) allReviews.push(...data.reviews,);
           },);
@@ -287,7 +287,6 @@ class AlbumFetcher {
     try {
       const url =
         `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits+releases`;
-      // Only apply rate limit if we allow network access
       const rateLimit = policy !== "only-if-cached";
       return await this.httpClient.fetch<Album>(
         url,
@@ -419,10 +418,10 @@ class AlbumProcessor {
 
     Logger.info(`Updating metadata for ${needsMetadata.length} albums...`,);
 
-    // 2. METADATA PHASE: Fast Lane vs Slow Lane
+    // 2. METADATA PHASE
     const metadataResults = await this.fetchMetadataPhase(needsMetadata,);
 
-    // 3. IMAGE PHASE: Process downloaded buffers
+    // 3. IMAGE PHASE
     const processedAlbums = await this.processImagesPhase(metadataResults,);
 
     stats.processed = processedAlbums.length;
@@ -433,11 +432,6 @@ class AlbumProcessor {
     return { albums: results, stats, };
   }
 
-  /**
-   * Two-Step Metadata Fetching:
-   * 1. Fast Lane: Try to get from disk only (Parallel).
-   * 2. Slow Lane: Fetch missing from network (Serial).
-   */
   private async fetchMetadataPhase(ids: string[],) {
     const results: Array<
       { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
@@ -446,6 +440,7 @@ class AlbumProcessor {
     let processedCount = 0;
 
     // --- STEP 1: FAST LANE (Cache Only) ---
+    // High concurrency checks against local HTTP cache
     const fastQueue = [...ids,];
     const fastWorkers = Array(
       Math.min(CONFIG.maxConcurrentFastLane, ids.length,),
@@ -460,22 +455,18 @@ class AlbumProcessor {
         );
 
         if (metadata) {
-          // It's in cache! Do we need the image?
           const imagesExist = await this.imageProcessor.checkExists(id,);
           if (imagesExist) {
-            results.push({ id, metadata, imageBuffer: null, },); // Skip image download
+            results.push({ id, metadata, imageBuffer: null, },);
           } else {
-            // We have metadata, but need image. Queue for image fetch?
-            // Simplest is to treat as "hit" for metadata, separate fetch for image.
-            // But image fetch isn't rate limited. So we can do it here.
             const imageBuffer = await this.fetcher.fetchCoverImage(id,);
             results.push({ id, metadata, imageBuffer, },);
           }
         } else {
-          misses.push(id,); // Cache miss -> Go to Slow Lane
+          misses.push(id,);
         }
         processedCount++;
-        // Logger.progress(processedCount, ids.length, "Fast Cache Check");
+        Logger.progress(processedCount, ids.length, "Fast Cache Check",);
       }
     },);
     await Promise.all(fastWorkers,);
@@ -487,6 +478,8 @@ class AlbumProcessor {
     }
 
     // --- STEP 2: SLOW LANE (Network) ---
+    // Serial, rate-limited fetches
+    processedCount = 0;
     const slowQueue = [...misses,];
     const slowWorkers = Array(
       Math.min(CONFIG.maxConcurrentMetadata, misses.length,),
@@ -496,17 +489,31 @@ class AlbumProcessor {
         if (!id) break;
 
         try {
-          const [metadata, imageBuffer,] = await Promise.all([
-            this.fetcher.fetchMetadata(id, "force-cache",), // Allows network
-            this.fetcher.fetchCoverImage(id,),
-          ],);
+          // Check if images exist on disk BEFORE downloading from network
+          // This saves bandwidth if we only lost the metadata cache
+          const imagesExist = await this.imageProcessor.checkExists(id,);
+
+          let metadata: Album | null = null;
+          let imageBuffer: ArrayBuffer | null = null;
+
+          if (imagesExist) {
+            // Images exist: Fetch only metadata (allows network)
+            metadata = await this.fetcher.fetchMetadata(id, "force-cache",);
+          } else {
+            // Images missing: Fetch both
+            [metadata, imageBuffer,] = await Promise.all([
+              this.fetcher.fetchMetadata(id, "force-cache",),
+              this.fetcher.fetchCoverImage(id,),
+            ],);
+          }
 
           if (metadata) results.push({ id, metadata, imageBuffer, },);
         } catch (e) {
           Logger.error(`Failed to fetch ${id}`, e,);
         }
+
         processedCount++;
-        Logger.progress(processedCount, ids.length, "Metadata Sync",);
+        Logger.progress(processedCount, misses.length, "Metadata Sync",);
       }
     },);
     await Promise.all(slowWorkers,);
@@ -519,7 +526,10 @@ class AlbumProcessor {
       { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
     >,
   ) {
+    // Only process items that actually have a new image buffer
     const toProcess = items.filter(i => i.imageBuffer !== null);
+
+    // Items with null buffer (skipped download) just need path reconstruction
     const completed = items.filter(i => i.imageBuffer === null).map(i => ({
       ...i.metadata,
       imagePath: this.imageProcessor.buildPaths(i.id,).color,
