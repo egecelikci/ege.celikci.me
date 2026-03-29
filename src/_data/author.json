@@ -15,9 +15,6 @@
       "username": "eg",
       "metropolis": {
         "host": "metropolis.nexus"
-      },
-      "envs": {
-        "host": "envs.net"
       }
     }
   }
