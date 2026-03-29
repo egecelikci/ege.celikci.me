@@ -2,7 +2,7 @@
 title: chocolate chip cookies
 status: evergreen
 date: 2025-03-01
-updated: 2025-12-26
+updated: 2026-03-29
 tags: ["dessert"]
 templateEngine: [vto, md]
 ---
