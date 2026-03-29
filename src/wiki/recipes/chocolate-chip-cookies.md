@@ -30,7 +30,7 @@ title: "Chocolate Chip Cookies recipe by Burcu Eminoğlu"
 ## instructions
 
 1. **melt the butter** and pour it into your mixing bowl
-2. add the **sugar** to the melted butter and mix by hand for 1–2 minutes until combined
+2. add the **sugar** to the melted butter and whisk it by hand for 1–2 minutes until combined
 3. add the **egg** and continue mixing for another 1–2 minutes
 4. stir in the **molasses**, **baking soda**, and **salt**
 5. once well combined, add the **flour**, **cornstarch** and **vanilla sugar**. mix until a dough forms
