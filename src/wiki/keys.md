@@ -61,6 +61,3 @@ For the HTML page, you can [clone the site source](https://codeberg.org/{{ autho
 - **[@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})**
   - `7jA7yS1uVD` (Element Desktop)
   - `9ovMRDnfeY` (Element X Android)
-
-- **[@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.envs.host }})**
-  - `XLSNVDORMQ` (Element X Android)
