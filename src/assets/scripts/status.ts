@@ -1,5 +1,5 @@
-import gsap from "npm:gsap@^3.14.1";
-import ScrambleTextPlugin from "npm:gsap@^3.14.1/ScrambleTextPlugin";
+import gsap from "gsap";
+import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
 
 try {
   gsap.registerPlugin(ScrambleTextPlugin,);

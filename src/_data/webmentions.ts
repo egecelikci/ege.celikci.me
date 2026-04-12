@@ -1,10 +1,13 @@
 /**
+ * src/_data/webmentions.ts
+ *
  * Webmentions Data Fetcher
+ * Refactored to remove make-fetch-happen in favour of native Deno fetch
+ * with a lightweight retry/timeout wrapper.
  */
 
-import "https://deno.land/std@0.224.0/dotenv/load.ts";
-import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import fetch from "npm:make-fetch-happen@15.0.3";
+import "@std/dotenv/load";
+import { join, } from "@std/path";
 import { createCache, objectValidator, } from "../../utils/cache.ts";
 import type {
   Webmention,
@@ -20,10 +23,10 @@ import settings from "./site.ts";
 const CONFIG = {
   perPage: 1000,
   retryConfig: { retries: 2, minTimeout: 1000, },
+  timeoutMs: 10_000,
 
   paths: {
     cacheFile: join(Deno.cwd(), "_cache", "webmentions_store.json",),
-    httpCache: join(Deno.cwd(), "_cache", "webmentions_api",),
   },
 
   api: {
@@ -50,7 +53,6 @@ class Logger {
     warning: "⚠️",
     error: "❌",
     fetch: "🌐",
-    cache: "💾",
     merge: "♻️",
   } as const;
 
@@ -67,11 +69,9 @@ class Logger {
   }
 
   static error(msg: string, error?: unknown,) {
-    const errorMsg = error instanceof Error ? error.message : String(error,);
+    const detail = error instanceof Error ? error.message : String(error,);
     console.error(
-      `${this.PREFIX} ${this.ICONS.error} ${msg}${
-        error ? `: ${errorMsg}` : ""
-      }`,
+      `${this.PREFIX} ${this.ICONS.error} ${msg}${error ? `: ${detail}` : ""}`,
     );
   }
 
@@ -82,6 +82,60 @@ class Logger {
   static merge(msg: string,) {
     console.log(`${this.PREFIX} ${this.ICONS.merge} ${msg}`,);
   }
+}
+
+// ============================================================================
+// ROBUST FETCH — replaces make-fetch-happen
+// ============================================================================
+
+/**
+ * Wraps native fetch with:
+ *  - AbortSignal.timeout() for a hard deadline on every attempt
+ *  - Exponential-backoff retries on 5xx responses or network errors
+ *  - No retry on 4xx (client errors are permanent)
+ *
+ * This replaces the `retry` and cache options previously supplied to
+ * make-fetch-happen. The webmentions API always needs fresh data, so
+ * no disk-level HTTP caching is implemented here.
+ */
+async function robustFetch(
+  url: string,
+  init: RequestInit = {},
+  maxRetries = CONFIG.retryConfig.retries,
+): Promise<Response> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        ...init,
+        // Hard timeout per attempt — prevents build hangs on slow networks
+        signal: AbortSignal.timeout(CONFIG.timeoutMs,),
+      },);
+
+      // 4xx errors are permanent — no point retrying
+      if (response.ok || (response.status >= 400 && response.status < 500)) {
+        return response;
+      }
+
+      // 5xx: transient server failure, schedule a retry
+      lastError = new Error(`HTTP ${response.status}: ${response.statusText}`,);
+    } catch (err) {
+      // Network failure or timeout: schedule a retry
+      lastError = err;
+    }
+
+    if (attempt < maxRetries) {
+      // Exponential backoff: 1 s → 2 s → 4 s …
+      const delay = Math.min(
+        CONFIG.retryConfig.minTimeout * Math.pow(2, attempt,),
+        8_000,
+      );
+      await new Promise<void>((r,) => setTimeout(r, delay,));
+    }
+  }
+
+  throw lastError;
 }
 
 // ============================================================================
@@ -96,12 +150,10 @@ class HttpClient {
     try {
       this.apiCallCount++;
 
-      const response = await fetch(url, {
-        cachePath: CONFIG.paths.httpCache,
-        cache: "no-cache", // Always check for fresh data
-        retry: CONFIG.retryConfig,
+      const response = await robustFetch(url, {
         headers: {
           "User-Agent": CONFIG.userAgent,
+          Accept: "application/json",
         },
       },);
 
@@ -109,8 +161,7 @@ class HttpClient {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`,);
       }
 
-      const data = await response.json() as WebmentionApiResponse;
-      return data;
+      return await response.json() as WebmentionApiResponse;
     } catch (error) {
       this.errorCount++;
       Logger.error("API request failed", error,);
@@ -119,10 +170,7 @@ class HttpClient {
   }
 
   getStats() {
-    return {
-      apiCalls: this.apiCallCount,
-      errors: this.errorCount,
-    };
+    return { apiCalls: this.apiCallCount, errors: this.errorCount, };
   }
 }
 
@@ -150,12 +198,9 @@ class WebmentionFetcher {
 
     const data = await this.httpClient.fetch(url,);
 
-    if (!data || !data.children) {
-      return [];
-    }
+    if (!data?.children) return [];
 
     const count = data.children.length;
-
     if (count > 0) {
       Logger.success(
         `Fetched ${count} new webmention${count === 1 ? "" : "s"}`,
@@ -174,11 +219,7 @@ class WebmentionFetcher {
   ): string {
     let url =
       `${CONFIG.api.base}/mentions.jf2?domain=${host}&token=${token}&per-page=${CONFIG.perPage}`;
-
-    if (since) {
-      url += `&since=${encodeURIComponent(since,)}`;
-    }
-
+    if (since) url += `&since=${encodeURIComponent(since,)}`;
     return url;
   }
 }
@@ -189,96 +230,81 @@ class WebmentionFetcher {
 
 class WebmentionProcessor {
   mergeMentions(
-    existingMentions: Webmention[],
-    newMentions: Webmention[],
+    existing: Webmention[],
+    incoming: Webmention[],
   ): Webmention[] {
-    if (newMentions.length === 0) {
-      return existingMentions;
-    }
+    if (incoming.length === 0) return existing;
 
     Logger.merge(
-      `Merging ${newMentions.length} new entries with ${existingMentions.length} existing...`,
+      `Merging ${incoming.length} new entries with ${existing.length} existing...`,
     );
 
-    // Create a map of existing mentions for O(1) lookup
-    const mentionMap = new Map<number, Webmention>();
+    // O(1) lookup by wm-id — avoids O(n²) array scanning
+    // Mutate in-place rather than copying to stay memory-efficient on large sets
+    const byId = new Map<number, Webmention>(
+      existing.map((m,) => [m["wm-id"], m,]),
+    );
 
-    for (const mention of existingMentions) {
-      mentionMap.set(mention["wm-id"], mention,);
-    }
+    let added = 0;
+    let updated = 0;
 
-    // Add or update mentions
-    let addedCount = 0;
-    let updatedCount = 0;
-
-    for (const mention of newMentions) {
-      const existingMention = mentionMap.get(mention["wm-id"],);
-
-      if (existingMention) {
-        // Check if the new version is different (updated)
-        if (JSON.stringify(existingMention,) !== JSON.stringify(mention,)) {
-          mentionMap.set(mention["wm-id"], mention,);
-          updatedCount++;
+    for (const mention of incoming) {
+      const prior = byId.get(mention["wm-id"],);
+      if (prior) {
+        // Only overwrite if the content actually changed
+        if (JSON.stringify(prior,) !== JSON.stringify(mention,)) {
+          byId.set(mention["wm-id"], mention,);
+          updated++;
         }
       } else {
-        mentionMap.set(mention["wm-id"], mention,);
-        addedCount++;
+        byId.set(mention["wm-id"], mention,);
+        added++;
       }
     }
 
-    if (addedCount > 0 || updatedCount > 0) {
+    if (added > 0 || updated > 0) {
       Logger.info(
-        `Added ${addedCount} new, updated ${updatedCount} existing mention${
-          addedCount + updatedCount === 1 ? "" : "s"
+        `Added ${added} new, updated ${updated} existing mention${
+          added + updated === 1 ? "" : "s"
         }`,
       );
     }
 
-    // Convert back to array and sort by received date (newest first)
-    return Array.from(mentionMap.values(),).sort((a, b,) => {
-      const dateA = new Date(a["wm-received"],).getTime();
-      const dateB = new Date(b["wm-received"],).getTime();
-      return dateB - dateA;
+    return Array.from(byId.values(),).sort((a, b,) => {
+      return (
+        new Date(b["wm-received"],).getTime()
+        - new Date(a["wm-received"],).getTime()
+      );
     },);
   }
 
   validateMention(mention: Webmention,): boolean {
-    // Basic validation
-    if (!mention["wm-id"] || !mention["wm-received"]) {
-      return false;
-    }
-
-    // Ensure required fields are present
-    if (
-      !mention["wm-property"] || !mention["wm-source"] || !mention["wm-target"]
-    ) {
-      return false;
-    }
-
-    return true;
+    return !!(
+      mention["wm-id"]
+      && mention["wm-received"]
+      && mention["wm-property"]
+      && mention["wm-source"]
+      && mention["wm-target"]
+    );
   }
 
   filterInvalid(mentions: Webmention[],): Webmention[] {
     const valid = mentions.filter((m,) => this.validateMention(m,));
-    const invalid = mentions.length - valid.length;
-
-    if (invalid > 0) {
+    const dropped = mentions.length - valid.length;
+    if (dropped > 0) {
       Logger.warn(
-        `Filtered out ${invalid} invalid mention${invalid === 1 ? "" : "s"}`,
+        `Filtered out ${dropped} invalid mention${dropped === 1 ? "" : "s"}`,
       );
     }
-
     return valid;
   }
 
   getStatsByType(mentions: Webmention[],): Record<string, number> {
     const stats: Record<string, number> = {};
-
     for (const mention of mentions) {
       const type = mention["wm-property"];
-      stats[type] = (stats[type] || 0) + 1;
+      if (type) stats[type] = (stats[type] ?? 0) + 1;
     }
-
     return stats;
   }
 }
@@ -291,12 +317,10 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   const startTime = performance.now();
   Logger.info("Starting webmentions sync...",);
 
-  // Initialize components
   const httpClient = new HttpClient();
   const fetcher = new WebmentionFetcher(httpClient,);
   const processor = new WebmentionProcessor();
 
-  // Use shared cache manager
   const cache = createCache<WebmentionFeed>({
     filePath: CONFIG.paths.cacheFile,
     name: "webmentions",
@@ -304,47 +328,34 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   },);
 
   try {
-    // Load cached data
-    const cachedFeed = await cache.load({
-      children: [],
-      lastFetched: null,
-    },);
+    const cachedFeed = await cache.load({ children: [], lastFetched: null, },);
 
-    // Skip fetch if no token configured
     if (!CONFIG.credentials.token) {
       Logger.warn("No token configured, returning cached data only",);
       return cachedFeed;
     }
 
-    // Fetch new mentions
     const newMentions = await fetcher.fetchNew(cachedFeed.lastFetched,);
 
-    // If no new mentions, return cached data
     if (newMentions.length === 0) {
       const elapsed = ((performance.now() - startTime) / 1000).toFixed(2,);
       Logger.success(`Completed in ${elapsed}s (no updates)`,);
       return cachedFeed;
     }
 
-    // Validate new mentions
     const validMentions = processor.filterInvalid(newMentions,);
-
-    // Merge with existing mentions
     const mergedMentions = processor.mergeMentions(
       cachedFeed.children,
       validMentions,
     );
 
-    // Create updated feed
     const updatedFeed: WebmentionFeed = {
       children: mergedMentions,
       lastFetched: new Date().toISOString(),
     };
 
-    // Save to cache
     await cache.save(updatedFeed,);
 
-    // Report stats
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(2,);
     const httpStats = httpClient.getStats();
     const typeStats = processor.getStatsByType(mergedMentions,);
@@ -352,10 +363,10 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
     Logger.success(`Completed in ${elapsed}s`,);
     Logger.info(
       `Total: ${mergedMentions.length} webmentions `
-        + `(${typeStats["like-of"] || 0} likes, `
-        + `${typeStats["repost-of"] || 0} reposts, `
-        + `${typeStats["in-reply-to"] || 0} replies, `
-        + `${typeStats["mention-of"] || 0} mentions)`,
+        + `(${typeStats["like-of"] ?? 0} likes, `
+        + `${typeStats["repost-of"] ?? 0} reposts, `
+        + `${typeStats["in-reply-to"] ?? 0} replies, `
+        + `${typeStats["mention-of"] ?? 0} mentions)`,
     );
     Logger.info(
       `HTTP: ${httpStats.apiCalls} API calls, ${httpStats.errors} errors`,
@@ -365,7 +376,6 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   } catch (error) {
     Logger.error("Fatal error during webmentions sync", error,);
 
-    // Fallback to cached data
     const cachedFeed = cache.get();
     if (cachedFeed && cachedFeed.children.length > 0) {
       Logger.warn(
@@ -374,7 +384,6 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
       return cachedFeed;
     }
 
-    // Return empty feed if no cache available
     Logger.warn("No cached data available, returning empty feed",);
     return { children: [], lastFetched: null, };
   }

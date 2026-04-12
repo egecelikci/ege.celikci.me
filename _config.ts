@@ -1,4 +1,4 @@
-import * as path from "jsr:@std/path";
+import * as path from "@std/path";
 import lume from "lume/mod.ts";
 import plugins from "./plugins.ts";
 import settings from "./src/_data/site.ts";
@@ -23,7 +23,7 @@ site.addEventListener("afterBuild", async () => {
   console.log("Generating Service Worker…",);
 
   const command = new Deno.Command("deno", {
-    args: ["run", "-A", "npm:workbox-cli", "generateSW", "workbox.config.cjs",],
+    args: ["run", "-A", "workbox-cli", "generateSW", "workbox.config.cjs",],
     env: { NODE_ENV: "production", },
     stdout: "inherit",
     stderr: "inherit",
