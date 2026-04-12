@@ -1,5 +1,5 @@
 import { Buffer, } from "node:buffer";
-import sharp from "npm:sharp@0.34.5";
+import sharp from "sharp";
 /**
  * Saves a resized, color DITHERED version of the cover.
  * OPTIMIZATION: High compression, low color count.

@@ -1,4 +1,4 @@
-import type { LanguageRegistration, ShikiTransformer, } from "npm:shiki";
+import type { LanguageRegistration, ShikiTransformer, } from "shiki";
 
 // --- 1. Custom Language Definitions ---
 export const alistralLangs: LanguageRegistration[] = [
@@ -127,7 +127,7 @@ const alistralColors = [
 // --- 3. Theme Loader Helper ---
 // This takes a base theme and injects your custom colors
 export async function loadAlistralTheme(themeName: string,) {
-  const themeModule = await import(`npm:@shikijs/themes/${themeName}`);
+  const themeModule = await import(`@shikijs/themes/${themeName}`);
   const theme = themeModule.default;
   return {
     ...theme,

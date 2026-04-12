@@ -1,17 +1,25 @@
 /**
+ * src/_data/favorite.ts
+ *
  * Favorite Music Data Fetcher
  *
- * Robust, performant music data aggregator with:
- * - "Fast Lane" caching (Parallel "only-if-cached" checks)
- * - "Slow Lane" fallback (Serial rate-limited network requests)
- * - Smart asset skipping (Checks disk before downloading images)
- * - Connection Timeouts (Prevents build hangs)
+ * Refactored to remove make-fetch-happen in favour of:
+ *  - Native Deno fetch with AbortSignal.timeout()
+ *  - Exponential-backoff retry via robustFetch()
+ *  - SimpleFileCache: a tiny file-based HTTP response cache that replaces
+ *    make-fetch-happen's `cachePath` option, preserving the Fast Lane /
+ *    Slow Lane architecture without any third-party dependency.
+ *
+ * Preserved behaviours:
+ *  - "Fast Lane"  → reads from disk cache without hitting the network
+ *  - "Slow Lane"  → serial, rate-limited network fetches for cache misses
+ *  - Smart asset skipping → checks disk for images before downloading
+ *  - Connection timeouts → AbortSignal.timeout(15 s) per attempt
  */
 
-import "https://deno.land/std@0.224.0/dotenv/load.ts";
-import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
-import { join, } from "https://deno.land/std@0.224.0/path/mod.ts";
-import fetch from "npm:make-fetch-happen@15.0.3";
+import "@std/dotenv/load";
+import { ensureDir, } from "@std/fs/ensure-dir";
+import { join, } from "@std/path";
 import { createCache, objectValidator, } from "../../utils/cache.ts";
 import { ditherWithSharp, saveColorVersion, } from "../../utils/images.ts";
 import type {
@@ -28,16 +36,19 @@ import type {
 const CONFIG = {
   syncMode: "append" as "append" | "mirror",
   fetchLimit: 50,
-  maxConcurrentImages: 4, // CPU bound
-  maxConcurrentFastLane: 20, // Disk bound
-  maxConcurrentMetadata: 1, // Network bound (Strictly 1 for MusicBrainz)
+  maxConcurrentImages: 4, // CPU-bound
+  maxConcurrentFastLane: 20, // Disk-bound
+  maxConcurrentMetadata: 1, // Network-bound (MusicBrainz: strictly 1 req/s)
   rateLimitDelayMs: 1100,
-  requestTimeoutMs: 15000,
+  requestTimeoutMs: 15_000,
   retryConfig: { retries: 3, minTimeout: 1000, maxTimeout: 5000, },
 
   paths: {
     cache: join(Deno.cwd(), "_cache",),
     cacheFile: join(Deno.cwd(), "_cache", "music_store.json",),
+    // Persistent HTTP-response cache used by SimpleFileCache
+    // Keeps the same location as the old make-fetch-happen cachePath so
+    // existing cached responses are automatically superseded on next fetch.
     httpCache: join(Deno.cwd(), "_cache", "http-cache",),
     coverColor: "src/assets/images/covers/colored",
     coverMono: "src/assets/images/covers/monochrome",
@@ -79,6 +90,7 @@ interface MusicCache {
   albums: ProcessedAlbum[];
 }
 
+/** Maps to make-fetch-happen's cache modes; now handled by SimpleFileCache. */
 type CachePolicy = "force-cache" | "no-cache" | "only-if-cached";
 
 // ============================================================================
@@ -112,9 +124,9 @@ class Logger {
   }
 
   static error(msg: string, error?: unknown,) {
-    const errorMsg = error instanceof Error ? error.message : String(error,);
+    const detail = error instanceof Error ? error.message : String(error,);
     console.error(
-      `[music] ${this.ICONS.error} ${msg}${error ? `: ${errorMsg}` : ""}`,
+      `[music] ${this.ICONS.error} ${msg}${error ? `: ${detail}` : ""}`,
     );
   }
 
@@ -123,12 +135,10 @@ class Logger {
   }
 
   static progress(current: number, total: number, prefix = "Progress",) {
-    const percentage = total > 0
-      ? ((current / total) * 100).toFixed(0,)
-      : "100";
+    const pct = total > 0 ? ((current / total) * 100).toFixed(0,) : "100";
     Deno.stdout.write(
       new TextEncoder().encode(
-        `\r[music] ${prefix}: ${current}/${total} (${percentage}%)`,
+        `\r[music] ${prefix}: ${current}/${total} (${pct}%)`,
       ),
     );
     if (current === total) console.log("",);
@@ -136,7 +146,7 @@ class Logger {
 }
 
 // ============================================================================
-// RATE LIMITER
+// RATE LIMITER (unchanged)
 // ============================================================================
 
 class RateLimiter {
@@ -144,15 +154,138 @@ class RateLimiter {
 
   async enforceCooldown(): Promise<void> {
     const now = Date.now();
-    const timeSinceLast = now - this.lastRequestTime;
-
-    if (timeSinceLast < CONFIG.rateLimitDelayMs) {
-      const waitTime = CONFIG.rateLimitDelayMs - timeSinceLast;
-      await new Promise((resolve,) => setTimeout(resolve, waitTime,));
+    const elapsed = now - this.lastRequestTime;
+    if (elapsed < CONFIG.rateLimitDelayMs) {
+      await new Promise<void>((r,) =>
+        setTimeout(r, CONFIG.rateLimitDelayMs - elapsed,)
+      );
     }
-
     this.lastRequestTime = Date.now();
   }
+}
+
+// ============================================================================
+// SIMPLE FILE CACHE — replaces make-fetch-happen's cachePath option
+// ============================================================================
+
+/**
+ * A minimal, persistent file-based cache for HTTP responses.
+ *
+ * Each URL is hashed with SHA-256 to produce a deterministic, filesystem-safe
+ * filename. JSON responses are stored as `.json` files; binary payloads (cover
+ * art) as `.bin` files. This gives us the three cache policies that the rest of
+ * the code depends on:
+ *
+ *   "only-if-cached" → read from disk, return null on miss (no network)
+ *   "force-cache"    → read from disk first, fall through to network on miss
+ *   "no-cache"       → skip disk read, always fetch, then write to disk
+ *
+ * On a cold build the cache directory is empty; subsequent builds reuse it.
+ */
+class SimpleFileCache {
+  constructor(private readonly dir: string,) {}
+
+  /** Derive a stable, filesystem-safe filename from a URL. */
+  private async urlToKey(url: string,): Promise<string> {
+    const buf = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(url,),
+    );
+    return Array.from(new Uint8Array(buf,),)
+      .map((b,) => b.toString(16,).padStart(2, "0",))
+      .join("",);
+  }
+
+  async getJson(url: string,): Promise<unknown | null> {
+    try {
+      const key = await this.urlToKey(url,);
+      const text = await Deno.readTextFile(join(this.dir, `${key}.json`,),);
+      return JSON.parse(text,);
+    } catch {
+      return null;
+    }
+  }
+
+  async setJson(url: string, data: unknown,): Promise<void> {
+    await ensureDir(this.dir,);
+    const key = await this.urlToKey(url,);
+    await Deno.writeTextFile(
+      join(this.dir, `${key}.json`,),
+      JSON.stringify(data,),
+    );
+  }
+
+  async getBuffer(url: string,): Promise<ArrayBuffer | null> {
+    try {
+      const key = await this.urlToKey(url,);
+      const bytes = await Deno.readFile(join(this.dir, `${key}.bin`,),);
+      // Return a copy of the underlying buffer — avoids Uint8Array aliasing
+      return bytes.buffer.slice(
+        bytes.byteOffset,
+        bytes.byteOffset + bytes.byteLength,
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  async setBuffer(url: string, data: ArrayBuffer,): Promise<void> {
+    await ensureDir(this.dir,);
+    const key = await this.urlToKey(url,);
+    await Deno.writeFile(
+      join(this.dir, `${key}.bin`,),
+      new Uint8Array(data,),
+    );
+  }
+}
+
+// ============================================================================
+// ROBUST FETCH — replaces make-fetch-happen's retry option
+// ============================================================================
+
+/**
+ * Fetches a URL with a hard per-attempt timeout and exponential-backoff
+ * retries on 5xx responses or network errors.
+ *
+ *  - 4xx errors are not retried (client errors are permanent)
+ *  - Backoff: minTimeout × 2^attempt, capped at maxTimeout
+ */
+async function robustFetch(
+  url: string,
+  init: RequestInit = {},
+  retries = CONFIG.retryConfig.retries,
+): Promise<Response> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        ...init,
+        signal: AbortSignal.timeout(CONFIG.requestTimeoutMs,),
+      },);
+
+      // 4xx → permanent failure, surface immediately
+      if (response.ok || (response.status >= 400 && response.status < 500)) {
+        return response;
+      }
+
+      // 5xx → transient, retry
+      lastError = new Error(`HTTP ${response.status}: ${response.statusText}`,);
+    } catch (err) {
+      // Network failure or AbortError (timeout) → retry
+      lastError = err;
+    }
+
+    if (attempt < retries) {
+      const delay = Math.min(
+        CONFIG.retryConfig.minTimeout * Math.pow(2, attempt,),
+        CONFIG.retryConfig.maxTimeout,
+      );
+      await new Promise<void>((r,) => setTimeout(r, delay,));
+    }
+  }
+
+  throw lastError;
 }
 
 // ============================================================================
@@ -162,55 +295,91 @@ class RateLimiter {
 class HttpClient {
   private stats: FetchStats = { cacheHits: 0, networkRequests: 0, errors: 0, };
   private musicBrainzLimiter = new RateLimiter();
+  private fileCache = new SimpleFileCache(CONFIG.paths.httpCache,);
 
+  /**
+   * Unified fetch method that mirrors make-fetch-happen's three cache policies.
+   *
+   * "only-if-cached" — disk only (Fast Lane): returns null on a miss
+   * "force-cache"    — disk first, then network (normal builds)
+   * "no-cache"       — always network (first page of CritiqueBrainz reviews)
+   */
   async fetch<T = unknown,>(
     url: string,
     type: "json" | "buffer",
     policy: CachePolicy = "force-cache",
     applyRateLimit = false,
   ): Promise<T | null> {
+    // ── Fast path: disk cache read ──────────────────────────────────────────
+    if (policy === "only-if-cached") {
+      const cached = type === "json"
+        ? await this.fileCache.getJson(url,)
+        : await this.fileCache.getBuffer(url,);
+
+      if (cached !== null) {
+        this.stats.cacheHits++;
+        return cached as T;
+      }
+      // Cache miss — caller treats null as "not in cache"
+      return null;
+    }
+
+    if (policy === "force-cache") {
+      const cached = type === "json"
+        ? await this.fileCache.getJson(url,)
+        : await this.fileCache.getBuffer(url,);
+
+      if (cached !== null) {
+        this.stats.cacheHits++;
+        return cached as T;
+      }
+      // Fall through to network below
+    }
+
+    // ── Slow path: network request ──────────────────────────────────────────
     try {
-      const options = {
-        cachePath: CONFIG.paths.httpCache,
-        cache: policy,
-        retry: CONFIG.retryConfig,
-        signal: AbortSignal.timeout(CONFIG.requestTimeoutMs,),
+      const response = await robustFetch(url, {
         headers: {
           "User-Agent": "ege.celikci.me/1.0 (ege@celikci.me)",
           Accept: "application/json",
         },
-      };
-
-      const response = await fetch(url, options,);
+      },);
 
       if (!response.ok) {
         if (response.status === 404) return null;
 
-        if (policy === "only-if-cached" && response.status === 504) {
-          return null; // Cache miss
-        }
-
         if (response.status === 503 || response.status === 429) {
-          Logger.warn(`Rate limit hit. Backing off...`,);
-          await new Promise((r,) => setTimeout(r, 2000,));
+          Logger.warn("Rate limit hit. Backing off...",);
+          await new Promise<void>((r,) => setTimeout(r, 2_000,));
           throw new Error(`HTTP ${response.status}: Rate limited`,);
         }
+
         throw new Error(`HTTP ${response.status}: ${response.statusText}`,);
       }
 
-      const fromCache = !!response.headers.get("x-local-cache",);
-      if (fromCache) {
-        this.stats.cacheHits++;
-      } else {
-        this.stats.networkRequests++;
-        if (applyRateLimit) {
-          await this.musicBrainzLimiter.enforceCooldown();
-        }
+      this.stats.networkRequests++;
+
+      // Enforce MusicBrainz rate limit AFTER a successful network response
+      // (same timing as the original make-fetch-happen version).
+      if (applyRateLimit) {
+        await this.musicBrainzLimiter.enforceCooldown();
       }
 
-      return type === "json"
-        ? ((await response.json()) as T)
-        : ((await response.arrayBuffer()) as T);
+      // Consume the response body and persist to disk cache
+      if (type === "json") {
+        const data = await response.json() as T;
+        // Fire-and-forget — don't block the caller on the write
+        this.fileCache.setJson(url, data,).catch((e,) =>
+          Logger.warn(`Cache write failed: ${e.message}`,)
+        );
+        return data;
+      } else {
+        const buffer = await response.arrayBuffer() as T;
+        this.fileCache.setBuffer(url, buffer as ArrayBuffer,).catch((e,) =>
+          Logger.warn(`Cache write failed: ${e.message}`,)
+        );
+        return buffer;
+      }
     } catch (error) {
       if (policy === "only-if-cached") return null;
       this.stats.errors++;
@@ -232,13 +401,13 @@ class AlbumFetcher {
 
   async getFavoriteIds(forceFullSync = false,): Promise<Set<string>> {
     const mode = CONFIG.syncMode;
-    const coldStartLabel = forceFullSync ? " [Cold Start]" : "";
-    Logger.info(`Fetching favorites (Mode: ${mode}${coldStartLabel})...`,);
+    const coldLabel = forceFullSync ? " [Cold Start]" : "";
+    Logger.info(`Fetching favorites (Mode: ${mode}${coldLabel})...`,);
 
     const allReviews: CritiqueBrainzReview[] = [];
     const firstUrl = this.buildReviewUrl(0,);
 
-    // Page 1 always hits network
+    // Page 1 always hits the network to detect new ratings
     const firstData = await this.httpClient.fetch<CritiqueBrainzResponse>(
       firstUrl,
       "json",
@@ -261,15 +430,14 @@ class AlbumFetcher {
         offset += CONFIG.fetchLimit
       ) {
         try {
-          await this.httpClient.fetch<CritiqueBrainzResponse>(
+          const data = await this.httpClient.fetch<CritiqueBrainzResponse>(
             this.buildReviewUrl(offset,),
             "json",
             "force-cache",
             true,
-          ).then(data => {
-            if (data?.reviews) allReviews.push(...data.reviews,);
-          },);
-        } catch { /* ignore */ }
+          );
+          if (data?.reviews) allReviews.push(...data.reviews,);
+        } catch { /* ignore pagination errors */ }
       }
     }
 
@@ -287,6 +455,7 @@ class AlbumFetcher {
     try {
       const url =
         `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits+releases`;
+      // Apply rate limit only when actually hitting the network
       const rateLimit = policy !== "only-if-cached";
       return await this.httpClient.fetch<Album>(
         url,
@@ -301,9 +470,8 @@ class AlbumFetcher {
 
   async fetchCoverImage(rgid: string,): Promise<ArrayBuffer | null> {
     try {
-      const url = `${CONFIG.api.coverArt}${rgid}/front-500`;
       return await this.httpClient.fetch<ArrayBuffer>(
-        url,
+        `${CONFIG.api.coverArt}${rgid}/front-500`,
         "buffer",
         "force-cache",
         false,
@@ -314,14 +482,17 @@ class AlbumFetcher {
   }
 
   private buildReviewUrl(offset: number,): string {
-    const { critiqueBrainz, } = CONFIG.api;
-    const { critiqueBrainzId, } = CONFIG.credentials;
-    return `${critiqueBrainz}/review?user_id=${critiqueBrainzId}&limit=${CONFIG.fetchLimit}&offset=${offset}`;
+    return (
+      `${CONFIG.api.critiqueBrainz}/review`
+      + `?user_id=${CONFIG.credentials.critiqueBrainzId}`
+      + `&limit=${CONFIG.fetchLimit}`
+      + `&offset=${offset}`
+    );
   }
 }
 
 // ============================================================================
-// IMAGE PROCESSOR
+// IMAGE PROCESSOR (unchanged from original)
 // ============================================================================
 
 class ImageProcessor {
@@ -341,17 +512,14 @@ class ImageProcessor {
     const colorPath = join(CONFIG.paths.coverColor, `${rgid}.webp`,);
     const monoPath = join(CONFIG.paths.coverMono, `${rgid}.png`,);
 
-    try {
-      await ensureDir(CONFIG.paths.coverColor,);
-      await ensureDir(CONFIG.paths.coverMono,);
-      const uint8Buffer = new Uint8Array(imageBuffer,);
-      await Promise.all([
-        saveColorVersion(uint8Buffer, colorPath,),
-        ditherWithSharp(uint8Buffer, monoPath,),
-      ],);
-    } catch (error) {
-      throw new Error(`Image processing failed: ${(error as Error).message}`,);
-    }
+    await ensureDir(CONFIG.paths.coverColor,);
+    await ensureDir(CONFIG.paths.coverMono,);
+
+    const uint8 = new Uint8Array(imageBuffer,);
+    await Promise.all([
+      saveColorVersion(uint8, colorPath,),
+      ditherWithSharp(uint8, monoPath,),
+    ],);
   }
 
   buildPaths(rgid: string,) {
@@ -387,7 +555,7 @@ class AlbumProcessor {
       coldStart: isColdStart,
     };
 
-    // 1. FILTER: Separate Memory Cache vs Needs Fetch
+    // Separate already-known albums from those requiring a fetch
     for (const id of favoriteIds) {
       const cached = this.albumsMap.get(id,);
       const imagesExist = await this.imageProcessor.checkExists(id,);
@@ -400,10 +568,13 @@ class AlbumProcessor {
       }
     }
 
-    if (CONFIG.syncMode === "append" && !stats.coldStart) {
+    // In append mode, carry forward albums that dropped out of the favourites
+    // list but whose images still exist on disk — avoids re-fetching anything
+    if (CONFIG.syncMode === "append" && !isColdStart) {
       for (const [id, album,] of this.albumsMap) {
         if (
-          !favoriteIds.has(id,) && await this.imageProcessor.checkExists(id,)
+          !favoriteIds.has(id,)
+          && await this.imageProcessor.checkExists(id,)
         ) {
           results.push(album,);
           stats.cached++;
@@ -418,10 +589,7 @@ class AlbumProcessor {
 
     Logger.info(`Updating metadata for ${needsMetadata.length} albums...`,);
 
-    // 2. METADATA PHASE
     const metadataResults = await this.fetchMetadataPhase(needsMetadata,);
-
-    // 3. IMAGE PHASE
     const processedAlbums = await this.processImagesPhase(metadataResults,);
 
     stats.processed = processedAlbums.length;
@@ -429,18 +597,20 @@ class AlbumProcessor {
     results.push(...processedAlbums,);
 
     if (stats.failed > 0) Logger.warn(`${stats.failed} albums failed`,);
+
     return { albums: results, stats, };
   }
 
   private async fetchMetadataPhase(ids: string[],) {
-    const results: Array<
-      { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
-    > = [];
+    const results: Array<{
+      id: string;
+      metadata: Album;
+      imageBuffer: ArrayBuffer | null;
+    }> = [];
     const misses: string[] = [];
-    let processedCount = 0;
+    let count = 0;
 
-    // --- STEP 1: FAST LANE (Cache Only) ---
-    // High concurrency checks against local HTTP cache
+    // ── FAST LANE: disk-cache reads, high concurrency ──────────────────────
     const fastQueue = [...ids,];
     const fastWorkers = Array(
       Math.min(CONFIG.maxConcurrentFastLane, ids.length,),
@@ -456,17 +626,15 @@ class AlbumProcessor {
 
         if (metadata) {
           const imagesExist = await this.imageProcessor.checkExists(id,);
-          if (imagesExist) {
-            results.push({ id, metadata, imageBuffer: null, },);
-          } else {
-            const imageBuffer = await this.fetcher.fetchCoverImage(id,);
-            results.push({ id, metadata, imageBuffer, },);
-          }
+          const imageBuffer = imagesExist
+            ? null
+            : await this.fetcher.fetchCoverImage(id,);
+          results.push({ id, metadata, imageBuffer, },);
         } else {
           misses.push(id,);
         }
-        processedCount++;
-        Logger.progress(processedCount, ids.length, "Fast Cache Check",);
+
+        Logger.progress(++count, ids.length, "Fast Cache Check",);
       }
     },);
     await Promise.all(fastWorkers,);
@@ -477,9 +645,8 @@ class AlbumProcessor {
       );
     }
 
-    // --- STEP 2: SLOW LANE (Network) ---
-    // Serial, rate-limited fetches
-    processedCount = 0;
+    // ── SLOW LANE: serial, rate-limited network fetches ────────────────────
+    count = 0;
     const slowQueue = [...misses,];
     const slowWorkers = Array(
       Math.min(CONFIG.maxConcurrentMetadata, misses.length,),
@@ -489,18 +656,17 @@ class AlbumProcessor {
         if (!id) break;
 
         try {
-          // Check if images exist on disk BEFORE downloading from network
-          // This saves bandwidth if we only lost the metadata cache
           const imagesExist = await this.imageProcessor.checkExists(id,);
 
-          let metadata: Album | null = null;
-          let imageBuffer: ArrayBuffer | null = null;
+          let metadata: Album | null;
+          let imageBuffer: ArrayBuffer | null;
 
           if (imagesExist) {
-            // Images exist: Fetch only metadata (allows network)
+            // Images already on disk — only fetch metadata
             metadata = await this.fetcher.fetchMetadata(id, "force-cache",);
+            imageBuffer = null;
           } else {
-            // Images missing: Fetch both
+            // Nothing on disk — fetch both in parallel
             [metadata, imageBuffer,] = await Promise.all([
               this.fetcher.fetchMetadata(id, "force-cache",),
               this.fetcher.fetchCoverImage(id,),
@@ -512,8 +678,7 @@ class AlbumProcessor {
           Logger.error(`Failed to fetch ${id}`, e,);
         }
 
-        processedCount++;
-        Logger.progress(processedCount, misses.length, "Metadata Sync",);
+        Logger.progress(++count, misses.length, "Metadata Sync",);
       }
     },);
     await Promise.all(slowWorkers,);
@@ -522,23 +687,34 @@ class AlbumProcessor {
   }
 
   private async processImagesPhase(
-    items: Array<
-      { id: string; metadata: Album; imageBuffer: ArrayBuffer | null; }
-    >,
-  ) {
-    // Only process items that actually have a new image buffer
-    const toProcess = items.filter(i => i.imageBuffer !== null);
+    items: Array<{
+      id: string;
+      metadata: Album;
+      imageBuffer: ArrayBuffer | null;
+    }>,
+  ): Promise<ProcessedAlbum[]> {
+    // Use a single reduce to avoid creating two intermediate arrays
+    // (items that need processing vs items that are already complete)
+    const toProcess: typeof items = [];
+    const completed: ProcessedAlbum[] = [];
 
-    // Items with null buffer (skipped download) just need path reconstruction
-    const completed = items.filter(i => i.imageBuffer === null).map(i => ({
-      ...i.metadata,
-      imagePath: this.imageProcessor.buildPaths(i.id,).color,
-      imagePathMono: this.imageProcessor.buildPaths(i.id,).mono,
-    } as ProcessedAlbum));
+    for (const item of items) {
+      if (item.imageBuffer !== null) {
+        toProcess.push(item,);
+      } else {
+        const paths = this.imageProcessor.buildPaths(item.id,);
+        completed.push({
+          ...item.metadata,
+          imagePath: paths.color,
+          imagePathMono: paths.mono,
+        } as ProcessedAlbum,);
+      }
+    }
 
     if (toProcess.length === 0) return completed;
 
     Logger.info(`Processing ${toProcess.length} images...`,);
+
     const queue = [...toProcess,];
     let count = 0;
 
@@ -547,7 +723,8 @@ class AlbumProcessor {
     ).fill(null,).map(async () => {
       while (queue.length > 0) {
         const item = queue.shift();
-        if (!item || !item.imageBuffer) break;
+        if (!item?.imageBuffer) break;
+
         try {
           await this.imageProcessor.process(item.id, item.imageBuffer,);
           const paths = this.imageProcessor.buildPaths(item.id,);
@@ -555,12 +732,12 @@ class AlbumProcessor {
             ...item.metadata,
             imagePath: paths.color,
             imagePathMono: paths.mono,
-          },);
+          } as ProcessedAlbum,);
         } catch (e) {
-          Logger.error(`Img failed ${item.id}`, e,);
+          Logger.error(`Image processing failed for ${item.id}`, e,);
         }
-        count++;
-        Logger.progress(count, toProcess.length, "Image Gen",);
+
+        Logger.progress(++count, toProcess.length, "Image Gen",);
       }
     },);
     await Promise.all(workers,);
@@ -589,6 +766,7 @@ async function getMusicData() {
 
   try {
     const cachedData = await cache.load({ albums: [], },);
+    // Build a Map once — O(1) lookup used throughout processAlbums
     const albumsMap = new Map(cachedData.albums.map((a,) => [a.id, a,]),);
     const isColdStart = albumsMap.size === 0;
 
@@ -600,11 +778,12 @@ async function getMusicData() {
     const processor = new AlbumProcessor(fetcher, imageProcessor, albumsMap,);
     const result = await processor.processAlbums(favoriteIds, isColdStart,);
 
-    result.albums.sort((a, b,) => {
-      const dateA = new Date(a["first-release-date"] || 0,).getTime();
-      const dateB = new Date(b["first-release-date"] || 0,).getTime();
-      return dateB - dateA;
-    },);
+    // Sort newest release first
+    result.albums.sort(
+      (a, b,) =>
+        new Date(b["first-release-date"] ?? 0,).getTime()
+        - new Date(a["first-release-date"] ?? 0,).getTime(),
+    );
 
     await cache.save({ albums: result.albums, },);
 
@@ -614,14 +793,18 @@ async function getMusicData() {
       `Done in ${elapsed}s. Loaded ${result.albums.length} albums.`,
     );
     Logger.info(
-      `HTTP: ${netStats.networkRequests} network, ${netStats.cacheHits} cached`,
+      `HTTP: ${netStats.networkRequests} network, ${netStats.cacheHits} cached, ${netStats.errors} errors`,
     );
 
     return { albums: result.albums, };
   } catch (error) {
     Logger.error("Fatal error", error,);
-    return { albums: cache.get()?.albums || [], };
+    return { albums: cache.get()?.albums ?? [], };
   }
 }
+
+// ============================================================================
+// EXPORT
+// ============================================================================
 
 export default await getMusicData();

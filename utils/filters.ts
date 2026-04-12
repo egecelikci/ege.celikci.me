@@ -1,7 +1,7 @@
-import * as path from "jsr:@std/path";
-import { random, } from "npm:lodash-es@4.17.23";
-import { DateTime, } from "npm:luxon@^3.7.2";
-import sanitizeHTML from "npm:sanitize-html@2.17.0";
+import * as path from "@std/path";
+import { random, } from "lodash-es";
+import { DateTime, } from "luxon";
+import sanitizeHTML from "sanitize-html";
 
 import siteData from "../src/_data/site.ts";
 

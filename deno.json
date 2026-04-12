@@ -1,7 +1,29 @@
 {
+  "nodeModulesDir": "auto",
   "imports": {
+    "@shikijs/rehype": "npm:@shikijs/rehype@^4.0.2",
+    "@shikijs/themes": "npm:@shikijs/themes@^4.0.2",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
+    "@std/fs": "jsr:@std/fs@^1.0.23",
+    "@std/path": "jsr:@std/path@^1.1.4",
+    "gsap": "npm:gsap@^3.14.2",
+    "instant.page": "npm:instant.page@^5.2.0",
+    "lodash-es": "npm:lodash-es@^4.18.1",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.1/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts"
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
+    "luxon": "npm:luxon@^3.7.2",
+    "make-fetch-happen": "npm:make-fetch-happen@^15.0.5",
+    "photoswipe": "npm:photoswipe@^5.4.4",
+    "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
+    "rehype-slug": "npm:rehype-slug@^6.0.0",
+    "remark-gfm": "npm:remark-gfm@^4.0.1",
+    "remark-smartypants": "npm:remark-smartypants@^3.0.2",
+    "remark-toc": "npm:remark-toc@^9.0.0",
+    "remark-wiki-link": "npm:remark-wiki-link@^2.0.1",
+    "sanitize-html": "npm:sanitize-html@^2.17.2",
+    "sharp": "npm:sharp@^0.34.5",
+    "shiki": "npm:shiki@^4.0.2",
+    "workbox-cli": "npm:workbox-cli@^7.4.0"
   },
   "tasks": {
     "lume": {
@@ -72,5 +94,6 @@
       "ffi": true,
       "sys": true
     }
-  }
+  },
+  "allowScripts": ["npm:dprint", "npm:sharp"]
 }

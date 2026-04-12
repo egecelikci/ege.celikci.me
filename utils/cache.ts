@@ -5,7 +5,7 @@
  * Handles JSON file caching with validation and error handling.
  */
 
-import { ensureDir, } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
+import { ensureDir, } from "@std/fs/ensure-dir";
 
 // ============================================================================
 // TYPES
