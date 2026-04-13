@@ -1,0 +1,43 @@
+{{#
+  88x31 Badges Component
+  Renders a collection of 88x31 buttons from the bookmarks data.
+#}}
+
+{{# Shuffle the bookmarks to give equal visibility #}}
+{{ set shuffled = bookmarks |> shuffle }}
+
+<div class="flex flex-wrap gap-2 justify-center md:justify-start my-8">
+  {{ for item of shuffled }}
+    {{ if item.img }}
+      {{ if item.url }}
+        <a
+          href="{{ item.url }}"
+          class="block flex-none transition-all duration-150 ease-out hover:scale-110 hover:brightness-110"
+          title="{{ item.title }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="{{ item.img |> url }}"
+            alt="{{ item.title }}"
+            width="88"
+            height="31"
+            loading="lazy"
+            class="block w-[88px] h-[31px] [image-rendering:pixelated] border-none shadow-none"
+          />
+        </a>
+      {{ else }}
+        <span class="block flex-none transition-all duration-150 ease-out hover:scale-110 hover:brightness-110" title="{{ item.title }}">
+          <img
+            src="{{ item.img |> url }}"
+            alt="{{ item.title }}"
+            width="88"
+            height="31"
+            loading="lazy"
+            class="block w-[88px] h-[31px] [image-rendering:pixelated] border-none shadow-none"
+          />
+        </span>
+      {{ /if }}
+    {{ /if }}
+  {{ /for }}
+</div>
