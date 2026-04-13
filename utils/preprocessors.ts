@@ -1,3 +1,4 @@
+import * as path from "@std/path";
 import type { Page, Site, } from "lume/core.ts";
 import settings from "../src/_data/site.ts";
 
@@ -55,7 +56,12 @@ export default function registerPreprocessors(site: Site,) {
             page.data.images = images;
             page.data.coverImage = images[0]?.src;
             page.data.coverImageAlt = images[0]?.alt;
-
+            // Set metas.image to optimized social preview version
+            if (page.data.coverImage) {
+              const { dir, name, } = path.parse(String(page.data.coverImage,),);
+              page.data.metas = page.data.metas || {};
+              page.data.metas.image = path.join(dir, `${name}-preview.jpg`,);
+            }
             // Optional: remove Markdown image syntax from content
             page.data.content = rawContent.replace(
               /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
