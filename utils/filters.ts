@@ -33,7 +33,7 @@ function formatDate(date: Date, format: string): string {
 }
 
 function dateToISOString(date: Date): string {
-  return new Date(date).toISOString().replace(/\.\d{3}Z$/, "");
+  return new Date(date).toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
 function dateFromISOString(iso: string): Date {
