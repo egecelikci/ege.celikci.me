@@ -1,6 +1,4 @@
 import * as path from "@std/path";
-import { random, } from "lodash-es";
-import { DateTime, } from "luxon";
 import sanitizeHTML from "sanitize-html";
 
 import siteData from "../src/_data/site.ts";
@@ -16,6 +14,31 @@ export interface NoteGridData {
 }
 
 const TIMEZONE = "Europe/Istanbul";
+
+// Native date helpers (replacing luxon)
+function formatDate(date: Date, format: string): string {
+  const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE };
+
+  if (format.includes("yyyy")) {
+    opts.year = "numeric";
+    opts.month = "2-digit";
+    opts.day = "2-digit";
+  }
+  if (format.includes("HH")) {
+    opts.hour = "2-digit";
+    opts.minute = "2-digit";
+  }
+
+  return new Intl.DateTimeFormat("en-US", opts).format(date);
+}
+
+function dateToISOString(date: Date): string {
+  return new Date(date).toISOString().replace(/\.\d{3}Z$/, "");
+}
+
+function dateFromISOString(iso: string): Date {
+  return new Date(iso);
+}
 
 // Helper interfaces
 interface Post {
@@ -54,20 +77,15 @@ export const filters = {
   },
 
   dateToFormat: function(date: Date, format: string,): string {
-    return DateTime.fromJSDate(date, { zone: TIMEZONE, },).toFormat(
-      String(format,),
-    );
+    return formatDate(date, String(format,));
   },
 
   dateToISO: function(date: Date,): string | null {
-    return DateTime.fromJSDate(date, { zone: TIMEZONE, },).toISO({
-      includeOffset: false,
-      suppressMilliseconds: true,
-    },);
+    return dateToISOString(date);
   },
 
   dateFromISO: function(timestamp: string,): Date {
-    return DateTime.fromISO(timestamp, { zone: TIMEZONE, },).toJSDate();
+    return dateFromISOString(timestamp);
   },
 
   humanizeNumber: function(num: number,): string | number {
@@ -140,7 +158,7 @@ export const filters = {
   },
 
   randomItem: function<T,>(arr: T[],): T {
-    return arr[random(arr.length - 1,)];
+    return arr[Math.floor(Math.random() * arr.length)];
   },
 
   shuffle: function<T,>(arr: T[] | null | undefined,): T[] {
