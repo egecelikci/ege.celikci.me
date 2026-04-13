@@ -41,5 +41,11 @@
     "url": "https://xn--gckvb8fzb.com/",
     "feed": "https://xn--gckvb8fzb.com/index.xml",
     "category": "person"
+  },
+  {
+    "title": "boo.kim",
+    "url": "https://boo.kim",
+    "img": "/assets/images/88x31/bookim.gif",
+    "category": "person"
   }
 ]
