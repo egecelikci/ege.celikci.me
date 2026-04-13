@@ -9,7 +9,7 @@ templateEngine: [vto, md]
 gotta list everything
 
 {{# Create a randomized copy of the bookmarks data #}}
-{{ set shuffled = bookmarks.slice().sort(() => 0.5 - Math.random()) }}
+{{ set shuffled = bookmarks |> shuffle }}
 
 ## people
 
