@@ -53,6 +53,8 @@ export default function registerPreprocessors(site: Site,) {
 
           if (images.length > 0) {
             page.data.images = images;
+            page.data.coverImage = images[0]?.src;
+            page.data.coverImageAlt = images[0]?.alt;
 
             // Optional: remove Markdown image syntax from content
             page.data.content = rawContent.replace(

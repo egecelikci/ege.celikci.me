@@ -3,5 +3,5 @@ layout: layouts/note.vto
 templateEngine: [vto, md]
 metas:
   title: "=title || $ .dt-published"
-  image: "$ .h-entry img attr(src)"
+  image: "=coverImage"
   description: "$ .e-content p"
