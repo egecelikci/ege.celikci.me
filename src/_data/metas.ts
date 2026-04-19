@@ -10,7 +10,7 @@ export default {
   author: author.name,
   fediverse: author.social.mastodon.url,
   title: "=title",
-  image: "=image",
+  image: "=metaImage || =image || =coverImage",
   icon: "/assets/images/favicon/favicon.svg",
   generator: true,
 };

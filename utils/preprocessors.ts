@@ -44,8 +44,14 @@ export default function registerPreprocessors(site: Site,) {
 
         if (images.length > 0) {
           page.data.images = images;
-          page.data.coverImage = images[0]?.src;
+          const coverSrc = images[0]?.src;
+          page.data.coverImage = coverSrc;
           page.data.coverImageAlt = images[0]?.alt;
+
+          // Optimization: Use the -preview.jpg version for social media if it's a gallery image
+          if (coverSrc && coverSrc.includes("/gallery/")) {
+            page.data.metaImage = coverSrc.replace(/(\.[a-z]+)$/, "-preview.jpg");
+          }
 
           page.data.content = rawContent.replace(
             /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,

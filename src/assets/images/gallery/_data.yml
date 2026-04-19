@@ -1,2 +1,6 @@
-# Image transformations are handled automatically by the 'picture' plugin
-# based on the transform-images attribute in HTML templates.
+# Generate high-quality social media previews for gallery images.
+# Thumbnails (200px) are handled automatically via transform-images attributes in templates.
+transformImages:
+  - resize: [1200, 630]
+    suffix: "-preview"
+    format: jpg
