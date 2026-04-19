@@ -91,8 +91,16 @@ async function getMusicStatus(): Promise<string | null> {
           `1/feedback/user/${LISTENBRAINZ_USERNAME}/get-feedback-for-recordings`,
           { [paramName]: idToUse },
         );
+        
+        // The API returns a "feedback" array. Find the item matching our ID.
+        const item = feedbackData.payload?.feedback?.find((f: any) => 
+          (isMsid ? f.recording_msid : f.recording_mbid) === idToUse
+        ) || feedbackData.feedback?.find((f: any) => 
+          (isMsid ? f.recording_msid : f.recording_mbid) === idToUse
+        );
+        
         // score 1 = love, 0 = neutral, -1 = hate
-        isLiked = feedbackData.feedback?.[0]?.score === 1;
+        isLiked = item?.score === 1;
       } catch (err) {
         console.error("Error fetching feedback:", err,);
       }
