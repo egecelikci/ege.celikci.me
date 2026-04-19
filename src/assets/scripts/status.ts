@@ -1,5 +1,6 @@
 import gsap from "gsap";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
+import { initAuthModal, signWithPasskey } from "./admin.ts";
 
 try {
   gsap.registerPlugin(ScrambleTextPlugin,);
@@ -20,6 +21,13 @@ let currentInterval = CONFIG.baseInterval;
 let pollTimeout: number | null = null;
 let abortController: AbortController | null = null;
 let hasPeeked = false;
+
+// Initialize Auth
+try {
+  initAuthModal();
+} catch (e) {
+  console.error("Auth modal init failed:", e);
+}
 
 /**
  * Updates the visual state classes.
@@ -299,26 +307,48 @@ function performUpdate(
     if (mbid) {
       const heartIcon = likeBtn.querySelector("svg",);
       
-      const updateLikeUI = (liked: boolean) => {
+      const updateLikeUI = (liked: boolean, animate = false) => {
         if (!heartIcon) return;
         
-        // Target both the SVG and its paths to ensure consistent filling across different browsers/inliners
         const elements = [heartIcon, ...heartIcon.querySelectorAll("path")];
         
-        if (liked) {
-          heartIcon.classList.add("fill-primary");
-          heartIcon.classList.remove("fill-none");
-          elements.forEach(el => el.setAttribute("fill", "currentColor"));
+        if (animate) {
+          // Playful pop animation
+          gsap.to(likeBtn, {
+            scale: 1.3,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+            ease: "back.out(2)",
+            onStart: () => {
+              if (liked) {
+                heartIcon.classList.add("fill-primary");
+                heartIcon.classList.remove("fill-none");
+                elements.forEach(el => el.setAttribute("fill", "currentColor"));
+              } else {
+                heartIcon.classList.add("fill-none");
+                heartIcon.classList.remove("fill-primary");
+                elements.forEach(el => el.setAttribute("fill", "none"));
+              }
+            }
+          });
         } else {
-          heartIcon.classList.add("fill-none");
-          heartIcon.classList.remove("fill-primary");
-          elements.forEach(el => el.setAttribute("fill", "none"));
+          // Silent update
+          if (liked) {
+            heartIcon.classList.add("fill-primary");
+            heartIcon.classList.remove("fill-none");
+            elements.forEach(el => el.setAttribute("fill", "currentColor"));
+          } else {
+            heartIcon.classList.add("fill-none");
+            heartIcon.classList.remove("fill-primary");
+            elements.forEach(el => el.setAttribute("fill", "none"));
+          }
         }
         heartIcon.classList.add("text-primary");
       };
 
       // Set initial state from data
-      updateLikeUI(isLiked);
+      updateLikeUI(isLiked, !!curTxt);
 
       // Smooth reveal of the like widget
       if (actionWrapper.classList.contains("hidden")) {
@@ -339,11 +369,55 @@ function performUpdate(
           }
         );
       }
-      
-      // Interaction disabled on main branch refactor
-      likeBtn.onclick = null;
-      likeBtn.style.cursor = "default";
-      likeBtn.title = "";
+
+      likeBtn.onclick = async (e,) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const currentLiked = newSpan?.getAttribute("data-liked") === "true";
+        likeBtn.classList.add("animate-pulse",);
+        
+        try {
+          const token = localStorage.getItem("status_owner_token",);
+          const headers: Record<string, string> = { "Content-Type": "application/json" };
+          
+          if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+          } else if (localStorage.getItem("status_owner_verified") === "true") {
+            try {
+              const assertion = await signWithPasskey("authorize-like-" + mbid);
+              if (assertion) headers["X-Passkey-Assertion"] = JSON.stringify(assertion);
+            } catch (err) {
+              console.warn("Passkey assertion failed or cancelled", err);
+              document.getElementById("status-auth-trigger")?.click();
+              return;
+            }
+          } else {
+            document.getElementById("status-auth-trigger")?.click();
+            return;
+          }
+
+          const res = await fetch("/api/like", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid }),
+          },);
+
+          if (res.ok) {
+            const data = await res.json();
+            const nowLiked = data.score === 1;
+            updateLikeUI(nowLiked, true);
+            newSpan?.setAttribute("data-liked", String(nowLiked));
+          } else if (res.status === 401) {
+            localStorage.removeItem("status_owner_verified");
+            document.getElementById("status-auth-trigger")?.click();
+          }
+        } catch (err) {
+          console.error("Like failed:", err,);
+        } finally {
+          likeBtn.classList.remove("animate-pulse",);
+        }
+      };
     } else {
       // Hide with animation
       if (!actionWrapper.classList.contains("hidden")) {

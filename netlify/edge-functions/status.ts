@@ -92,12 +92,15 @@ async function getMusicStatus(): Promise<string | null> {
           { [paramName]: idToUse },
         );
         
-        // The API returns a "feedback" array. Find the item matching our ID.
-        const item = feedbackData.payload?.feedback?.find((f: any) => 
-          (isMsid ? f.recording_msid : f.recording_mbid) === idToUse
-        ) || feedbackData.feedback?.find((f: any) => 
-          (isMsid ? f.recording_msid : f.recording_mbid) === idToUse
-        );
+        // Extract array from payload or root
+        const feedbackList = feedbackData.payload?.feedback || feedbackData.feedback || [];
+        
+        // Find item by matching against ALL possible ID combinations
+        const item = feedbackList.find((f: any) => {
+          const matchMbid = recordingMbid && (f.recording_mbid === recordingMbid || f.recording_msid === recordingMbid);
+          const matchMsid = recordingMsid && (f.recording_mbid === recordingMsid || f.recording_msid === recordingMsid);
+          return matchMbid || matchMsid;
+        });
         
         // score 1 = love, 0 = neutral, -1 = hate
         isLiked = item?.score === 1;
