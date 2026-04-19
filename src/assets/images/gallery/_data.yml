@@ -1,9 +1,2 @@
-# Transform images for gallery covers - generate social media preview sizes
-transformImages:
-  # High-quality social media preview (1200x630 - optimal for OpenGraph/Twitter)
-  - resize: [1200, 630]
-    suffix: "-preview"
-    format: [jpg]
-    options:
-      quality: 80
-      progressive: true
+# Image transformations are handled automatically by the 'picture' plugin
+# based on the transform-images attribute in HTML templates.
