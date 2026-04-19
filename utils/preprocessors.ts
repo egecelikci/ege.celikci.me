@@ -1,13 +1,6 @@
 import * as path from "@std/path";
 import type { Page, Site, } from "lume/core.ts";
-import settings from "../src/_data/site.ts";
-
-interface Backlink {
-  title: string;
-  url: string;
-  date: Date;
-  excerpt: string;
-}
+import { site as settings, } from "../_config/metadata.ts";
 
 function extractImagesFromNote(content: string,) {
   const images: Array<{
@@ -36,126 +29,56 @@ function normalizeUrl(url: string,) {
 }
 
 export default function registerPreprocessors(site: Site,) {
-  site.preprocess([".md", ".vto",], (pages: Page[],) => {
-    // --- GRAPH SETUP ---
-    const titleToUrl = new Map<string, string>();
-    const urlToPage = new Map<string, Page>();
-
-    // --- PASS 1: Initialize Data & Process Notes ---
+  site.preprocess([".md",], (pages: Page[],) => {
     for (const page of pages) {
       const pageUrl = page.data.url as string;
       if (!pageUrl) continue;
 
-      // A. Extract images for gallery
-      if (page.src.path.startsWith("/notes/",) || page.data.type === "note") {
-        if (typeof page.data.content === "string") {
-          const rawContent = page.data.content;
-          const images = extractImagesFromNote(rawContent,);
+      const isNote = page.src.path.startsWith("/notes/",) ||
+        page.data.type === "note";
 
-          if (images.length > 0) {
-            page.data.images = images;
-            page.data.coverImage = images[0]?.src;
-            page.data.coverImageAlt = images[0]?.alt;
-            // Set metas.image to optimized social preview version
-            if (page.data.coverImage) {
-              const { dir, name, } = path.parse(String(page.data.coverImage,),);
-              page.data.metas = page.data.metas || {};
-              page.data.metas.image = path.join(dir, `${name}-preview.jpg`,);
-            }
-            // Optional: remove Markdown image syntax from content
-            page.data.content = rawContent.replace(
-              /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
-              "",
-            ).trim();
-          }
-        }
+      // Extract images ONLY for notes (Arts Journal style)
+      if (isNote && typeof page.data.content === "string") {
+        const rawContent = page.data.content;
+        const images = extractImagesFromNote(rawContent,);
 
-        // B. Webmention stats
-        const stats = { likes: 0, reposts: 0, replies: 0, };
-        const webmentions = page.data.webmentions as any;
+        if (images.length > 0) {
+          page.data.images = images;
+          page.data.coverImage = images[0]?.src;
+          page.data.coverImageAlt = images[0]?.alt;
 
-        if (webmentions?.children?.length) {
-          const siteUrl = settings.url;
-          const absPageUrl = normalizeUrl(siteUrl + pageUrl,);
-
-          const relevantMentions = webmentions.children.filter(
-            (entry: any,) =>
-              normalizeUrl(entry["wm-target"] || "",) === absPageUrl,
-          );
-
-          stats.likes = relevantMentions.filter(m =>
-            m["wm-property"] === "like-of"
-          ).length;
-          stats.reposts = relevantMentions.filter(m =>
-            m["wm-property"] === "repost-of"
-          ).length;
-          stats.replies = relevantMentions.filter(m =>
-            ["mention-of", "in-reply-to",].includes(m["wm-property"],)
-          ).length;
-        }
-
-        page.data.stats = stats;
-      }
-
-      // C. Build lookup maps for backlinks
-      if (page.data.title) {
-        titleToUrl.set(page.data.title.toLowerCase(), pageUrl,);
-      }
-      urlToPage.set(normalizeUrl(pageUrl,), page,);
-
-      if (!page.data.backlinks) page.data.backlinks = [];
-    }
-
-    // --- PASS 2: Scan content for links and build backlinks ---
-    const wikilinkRegex = /\[\[(.*?)(?:\|.*?)?\]\]/g;
-    const standardLinkRegex = /\[([^\]]+)\]\(([^)"]+)(?: "[^"]+")?\)/g;
-
-    for (const sourcePage of pages) {
-      const content = sourcePage.data.content as string;
-      if (typeof content !== "string") continue;
-
-      const foundUrls = new Set<string>();
-
-      // Wikilinks
-      for (const match of content.matchAll(wikilinkRegex,)) {
-        const targetTitle = match[1].toLowerCase();
-        const targetUrl = titleToUrl.get(targetTitle,);
-        if (targetUrl) foundUrls.add(targetUrl,);
-      }
-
-      // Standard links
-      for (const match of content.matchAll(standardLinkRegex,)) {
-        const rawUrl = match[2];
-        if (!rawUrl.startsWith("http",) && !rawUrl.startsWith("#",)) {
-          foundUrls.add(rawUrl,);
+          page.data.content = rawContent.replace(
+            /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
+            "",
+          ).trim();
         }
       }
 
-      // Build backlinks
-      for (const rawTargetUrl of foundUrls) {
-        const targetUrl = normalizeUrl(rawTargetUrl,);
-        if (normalizeUrl(sourcePage.data.url as string,) === targetUrl) {
-          continue;
-        }
+      // Webmention stats logic
+      const stats = { likes: 0, reposts: 0, replies: 0, };
+      const webmentions = page.data.webmentions as any;
 
-        const targetPage = urlToPage.get(targetUrl,);
-        if (!targetPage) continue;
+      if (webmentions?.children?.length) {
+        const siteUrl = settings.url;
+        const absPageUrl = normalizeUrl(siteUrl + pageUrl,);
 
-        const backlinks = targetPage.data.backlinks as Backlink[];
-        const isDuplicate = backlinks.some(link =>
-          link.url === sourcePage.data.url
+        const relevantMentions = webmentions.children.filter(
+          (entry: any,) =>
+            normalizeUrl(entry["wm-target"] || "",) === absPageUrl,
         );
 
-        if (!isDuplicate) {
-          backlinks.push({
-            title: sourcePage.data.title || "Untitled",
-            url: sourcePage.data.url as string,
-            date: sourcePage.data.date as Date,
-            excerpt: sourcePage.data.description || "No description",
-          },);
-          backlinks.sort((a, b,) => b.date.getTime() - a.date.getTime());
-        }
+        stats.likes = relevantMentions.filter((m: any) =>
+          m["wm-property"] === "like-of"
+        ).length;
+        stats.reposts = relevantMentions.filter((m: any) =>
+          m["wm-property"] === "repost-of"
+        ).length;
+        stats.replies = relevantMentions.filter((m: any) =>
+          ["mention-of", "in-reply-to",].includes(m["wm-property"],)
+        ).length;
       }
+
+      page.data.stats = stats;
     }
   },);
 }

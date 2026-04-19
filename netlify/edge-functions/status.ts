@@ -13,10 +13,11 @@ function createStatusHtml(
   plainText: string,
   richContent: string,
   isActive: boolean,
+  meta: { isLiked?: boolean; mbid?: string; isMsid?: boolean } = {},
 ) {
   const timestamp = Date.now();
   const span =
-    `<span data-chars="×" data-status="${plainText}" data-timestamp="${timestamp}" data-active="${isActive}">${richContent}</span>`;
+    `<span data-chars="×" data-status="${plainText}" data-timestamp="${timestamp}" data-active="${isActive}" data-mbid="${meta.mbid || ""}" data-liked="${meta.isLiked || false}" data-is-msid="${meta.isMsid || false}">${richContent}</span>`;
   return `<div id="${id}">${span}</div>`;
 }
 
@@ -73,14 +74,32 @@ async function getMusicStatus(): Promise<string | null> {
     const track = listen.track_metadata;
     const trackName = track.track_name || "Unknown Track";
     const additionalInfo = track.additional_info || {};
-    const recordingMbid = additionalInfo.recording_mbid || track.recording_msid;
+    const recordingMbid = additionalInfo.recording_mbid;
+    const recordingMsid = track.recording_msid;
+    const idToUse = recordingMbid || recordingMsid;
+    const isMsid = !recordingMbid;
+    
     const artistNames = additionalInfo.artist_names || [track.artist_name,];
     const artistMbids = additionalInfo.artist_mbids || [];
 
-    // REMOVED: Duration extraction logic
+    // Fetch Feedback Status (Is it liked?)
+    let isLiked = false;
+    if (LISTENBRAINZ_TOKEN && idToUse) {
+      try {
+        const paramName = isMsid ? "recording_msids" : "recording_mbids";
+        const feedbackData: any = await client.get(
+          `1/feedback/user/${LISTENBRAINZ_USERNAME}/get-feedback-for-recordings`,
+          { [paramName]: idToUse },
+        );
+        // score 1 = love, 0 = neutral, -1 = hate
+        isLiked = feedbackData.feedback?.[0]?.score === 1;
+      } catch (err) {
+        console.error("Error fetching feedback:", err,);
+      }
+    }
 
-    const trackLink = recordingMbid
-      ? `<a href="https://listenbrainz.org/track/${recordingMbid}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
+    const trackLink = idToUse
+      ? `<a href="https://listenbrainz.org/${isMsid ? "msid" : "track"}/${idToUse}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
       : `<cite>${trackName}</cite>`;
 
     const artistLinks = artistNames
@@ -94,11 +113,13 @@ async function getMusicStatus(): Promise<string | null> {
 
     const plainText = `${trackName} by ${artistNames.join(" · ",)}`;
 
+    // Pass isLiked and idToUse to createStatusHtml
     return createStatusHtml(
       "music-status",
       plainText,
       `${trackLink} by ${artistLinks}`,
       isActive,
+      { isLiked, mbid: idToUse, isMsid },
     );
   } catch (err) {
     console.error("Error fetching music:", err,);

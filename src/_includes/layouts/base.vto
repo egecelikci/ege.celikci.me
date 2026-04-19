@@ -46,7 +46,7 @@
       ></script>
     {{ /if }}
   </head>
-  <body class="overflow-x-hidden print:bg-white print:text-black">
+  <body class="overflow-x-hidden print:bg-white print:text-black flex flex-col min-h-screen" {{ if it.disable_animation }}data-disable-animation="true"{{ /if }}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:left-1/2 focus:top-0 focus:text-base focus:-translate-x-1/2 bg-surface focus:text-white focus:rounded-b-lg focus:px-6 focus:py-4 focus:outline-none focus:whitespace-nowrap print:hidden"
@@ -59,6 +59,9 @@
     </main>
 
     {{ comp.ui.Footer({ page: page }) }}
+
+    {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}
+    {{ comp.features.SocialLinks({ variant: "hidden" }) }}
 
     <script type="module" src="/assets/scripts/main.js"></script>
   </body>

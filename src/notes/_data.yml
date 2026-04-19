@@ -1,7 +1,0 @@
-type: note
-layout: layouts/note.vto
-templateEngine: [vto, md]
-metas:
-  title: "=title || $ .dt-published"
-  image: "=coverImage"
-  description: "$ .e-content p"

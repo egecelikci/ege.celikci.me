@@ -1,24 +1,20 @@
-import * as path from "@std/path";
 import lume from "lume/mod.ts";
-import plugins from "./plugins.ts";
-import settings from "./src/_data/site.ts";
-import theme from "./src/_data/theme.ts";
-import { filters, } from "./utils/filters.ts";
+import config from "./_config/index.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
 
 const site = lume({
   src: "./src",
   dest: "./dist",
-  location: new URL(settings.url,),
+  location: new URL("https://ege.celikci.me",),
 },);
 
-site.use(plugins(),);
+// Modular configuration
+site.use(config(),);
 
-for (const [name, fn,] of Object.entries(filters,)) {
-  site.filter(name, fn as (value: unknown, ...args: unknown[]) => unknown,)
-    .filter("cx", theme.cx,);
-}
+// Preprocessors
+registerPreprocessors(site,);
 
+// Service Worker generation
 site.addEventListener("afterBuild", async () => {
   console.log("Generating Service Worker…",);
 
@@ -31,6 +27,5 @@ site.addEventListener("afterBuild", async () => {
   const process = command.spawn();
   await process.status;
 },);
-registerPreprocessors(site,);
 
 export default site;

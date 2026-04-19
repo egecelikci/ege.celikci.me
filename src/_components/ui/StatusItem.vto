@@ -1,0 +1,59 @@
+{{#
+  Minimal Status Item Component (Standardized)
+  Props:
+    - id: string (optional)
+    - icon: string (optional)
+    - iconClasses: string (optional)
+    - classes: string (optional)
+    - label: string (optional)
+    - labelSize: string (default: "text-[10px]")
+    - content: string | html (required)
+    - rightContent: html (optional)
+    - rawContent: boolean (default: false)
+#}}
+
+<div class="relative grid grid-cols-[1rem_1fr] items-start gap-4 group transition-all duration-500 rounded-lg px-2 py-2 hover:bg-primary/5 cursor-default {{ it.classes || '' }}" {{ if it.id }}id="{{ it.id }}"{{ /if }}>
+  {{ if it.icon }}
+    <div class="shrink-0 pt-1 flex items-center justify-center w-4 h-4">
+      {{
+        comp.ui.Icon({
+          name: it.icon,
+          catalog: "lucide",
+          classes: "w-4 h-4 transition-all duration-500 " + (it.iconClasses || ""),
+        })
+      }}
+    </div>
+  {{ /if }}
+
+  <div class="overflow-hidden min-w-0">
+    {{ if it.label }}
+      <div class="{{ it.labelSize || 'text-[10px]' }} uppercase opacity-50 mb-0.5 tracking-[0.2em] font-mono leading-tight">
+        {{ it.label }}
+      </div>
+    {{ /if }}
+
+    <div class="flex items-center gap-3">
+      {{# 
+        Fixed-width wrapper using 'ch' units for pixel-perfect mono alignment. 
+        26ch is roughly 200px at text-sm, fitting perfectly in your header container.
+      #}}
+      <div class="status-content-wrapper w-[26ch] text-text font-mono truncate transition-all duration-500 group-[.is-active]:text-primary group-[.is-active]:font-bold group-[.is-inactive]:opacity-40">{{ if it.rawContent }}{{ it.content |> safe }}{{ else }}{{ it.content }}{{ /if }}</div>
+    </div>
+  </div>
+
+  {{# 
+    Heart Button (Subtle Square-Circle Widget)
+    Positioned absolutely to the right, sticking out of the container
+  #}}
+  <div class="status-action-wrapper hidden absolute -right-9 top-1/2 -translate-y-1/2 shrink-0">
+    <button class="status-like-button w-7 h-7 flex items-center justify-center rounded-lg bg-primary/5 hover:bg-primary/10 transition-all active:scale-90 group/heart" title="Like on ListenBrainz">
+      {{ comp.ui.Icon({ name: "heart", classes: "w-3.5 h-3.5 text-primary transition-all duration-300 fill-none" }) }}
+    </button>
+  </div>
+
+  {{ if it.rightContent }}
+    <div class="shrink-0 ml-4">
+      {{ it.rightContent |> safe }}
+    </div>
+  {{ /if }}
+</div>

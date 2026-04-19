@@ -1,51 +1,25 @@
 ---
-layout: layouts/base.vto
 title: music
-description: "a collection of favorite music albums."
-url: /music/
-menu:
-  visible: true
-  order: 2
-templateEngine: [vto]
+description: "curated collection of favorite albums."
+article_classes: "not-prose"
+menu_label: atlas
+label: favorite albums
+headerExtension:
+  comp: "ui.SourceMeta"
+  props:
+    icon: music
+    label: critiquebrainz
 ---
 
-{{ set intro }}
-  automatically fetched from my public <a
-    href="https://critiquebrainz.org/user/{{ author.username }}"
-  >
-    album ratings</a>.
-{{ /set }}
-
-{{# --- HEADER --- #}}
-{{
-  comp.ui.PageHeader({
-    title: title,
-    subtitle: intro,
-    centered: true,
-  })
-}}
-
-{{# --- ALBUM GRID --- #}}
-{{ set gridContent }}
-  <div
-    class="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4 md:gap-8 lg:gap-10 py-8"
-  >
-    {{ for i, album of favorite.albums |> shuffle }}
+<div class="mt-10">
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-12">
+    {{ for i, album of favorite.albums }}
       {{
         comp.ui.Album({
           album: album,
-          priority: i < 6,
+          priority: i < 15,
         })
       }}
     {{ /for }}
   </div>
-{{ /set }}
-
-{{# --- CONTAINER --- #}}
-{{
-  comp.ui.Container({
-    width: "default",
-    classes: "pb-20",
-    content: gridContent,
-  })
-}}
+</div>

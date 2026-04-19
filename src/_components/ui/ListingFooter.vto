@@ -1,0 +1,21 @@
+{{#
+  Component: ListingFooter
+  Standardized footer for listings (Notes, EntryCards, etc.)
+  
+  Props:
+    - leftContent: html/string (Optional content for the left side)
+    - text: string (default: "view details &rarr;")
+#}}
+<footer class="{{ theme.components.listing.footer }}">
+  {{ if it.leftContent }}
+    {{ it.leftContent |> safe }}
+  {{ else }}
+    <div class="grow"></div>
+  {{ /if }}
+  
+  <div class="flex items-center gap-4">
+     <span class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+        {{ it.text || 'view details &rarr;' }}
+     </span>
+  </div>
+</footer>

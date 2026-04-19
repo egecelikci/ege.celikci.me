@@ -22,7 +22,6 @@ let abortController: AbortController | null = null;
 
 /**
  * Updates the visual state classes.
- * FIX: Now explicitly removes 'is-changing' to prevent stuck states.
  */
 function setStatusState(
   type: "loading" | "error" | "active" | "inactive" | "clear",
@@ -30,11 +29,10 @@ function setStatusState(
 ) {
   const targetItems = container
     ? [container,]
-    : document.querySelectorAll(".status-dashboard > div",);
+    : document.querySelectorAll(".status-dashboard > div > div",); // Fixed selector to target the StatusItem root
 
   targetItems.forEach((item,) => {
     if (!item) return;
-    // CRITICAL FIX: Ensure 'is-changing' is removed when setting a new stable state
     item.classList.remove(
       "is-loading",
       "is-error",
@@ -83,11 +81,6 @@ async function loadStatus() {
   if (abortController) abortController.abort();
   abortController = new AbortController();
 
-  const hasData = document.querySelector(
-    ".status-dashboard div.is-active, .status-dashboard div.is-inactive",
-  );
-  if (!hasData) setStatusState("loading",);
-
   try {
     const res = await fetch("/api/status", {
       signal: abortController.signal,
@@ -112,6 +105,7 @@ async function loadStatus() {
     if (buffer.trim()) processChunk(buffer,);
   } catch (err: any) {
     if (err.name === "AbortError") return;
+    console.error("Status Load Error:", err);
     setStatusState("error",);
     currentInterval = Math.min(
       currentInterval * CONFIG.backoffFactor,
@@ -161,13 +155,48 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
     return s?.getAttribute("data-active",) === "true";
   };
 
+  const getLikedState = (el: Element | null,) => {
+    const s = el?.querySelector("span[data-status]",)
+      || el?.querySelector(".text-text",);
+    return s?.getAttribute("data-liked",) === "true";
+  };
+
+  const getMbid = (el: Element | null,) => {
+    const s = el?.querySelector("span[data-status]",)
+      || el?.querySelector(".text-text",);
+    return s?.getAttribute("data-mbid",) || "";
+  };
+
+  const getIsMsid = (el: Element | null,) => {
+    const s = el?.querySelector("span[data-status]",)
+      || el?.querySelector(".text-text",);
+    return s?.getAttribute("data-is-msid",) === "true";
+  };
+
   const newTxt = getTxt(newData,);
   const curTxt = getTxt(container,);
 
   const newState = getActiveState(newData,);
   const curState = container.classList.contains("is-active",);
 
-  if (newTxt === curTxt && newState === curState && curTxt !== "") return;
+  const newLiked = getLikedState(newData,);
+  const curLiked = getLikedState(container,);
+
+  const newMbid = getMbid(newData,);
+  const curMbid = getMbid(container,);
+  
+  const newIsMsid = getIsMsid(newData,);
+  const curIsMsid = getIsMsid(container,);
+
+  // Allow update if text, state, liked status, or MBID changed
+  if (
+    newTxt === curTxt && 
+    newState === curState && 
+    newLiked === curLiked && 
+    newMbid === curMbid && 
+    newIsMsid === curIsMsid &&
+    curTxt !== ""
+  ) return;
 
   if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
     container.classList.add("is-changing",);
@@ -193,12 +222,12 @@ function performUpdate(
   newTxt: string,
   curTxt: string,
 ) {
-  // 1. Determine State
-  // We check for the span, but default to 'inactive' if missing to avoid crashes
   const newSpan = newData.querySelector("span",);
   const isActive = newSpan?.getAttribute("data-active",) === "true";
+  const mbid = newSpan?.getAttribute("data-mbid",);
+  const isLiked = newSpan?.getAttribute("data-liked",) === "true";
+  const isMsid = newSpan?.getAttribute("data-is-msid",) === "true";
 
-  // 2. Apply State (This removes is-changing and applies is-active/inactive)
   setStatusState(isActive ? "active" : "inactive", container,);
 
   if (activeContexts.has(container,)) {
@@ -206,90 +235,128 @@ function performUpdate(
   }
 
   const richHTML = newSpan?.innerHTML || "";
-  const placeholderChar = newSpan?.dataset.chars || "█";
+  const placeholderChar = newSpan?.dataset.chars || "×";
   const scrambleNoise = placeholderChar;
   const scrambleDuration = 1 + newTxt.length * 0.03;
 
-  // 3. Update DOM Content
   container.setAttribute("aria-label", newTxt,);
 
-  const textWrapper = container.querySelector(".overflow-hidden.grow",);
+  const textWrapper = container.querySelector(".status-content-wrapper",);
+  const actionWrapper = container.querySelector(".status-action-wrapper",) as HTMLElement;
+  const likeBtn = container.querySelector(".status-like-button",) as HTMLElement;
 
   if (textWrapper && newSpan) {
-    const oldSpan = textWrapper.querySelector(".text-text",);
-    if (oldSpan) oldSpan.remove();
-
-    newSpan.classList.add("inline-block", "whitespace-nowrap", "text-text",);
+    textWrapper.innerHTML = "";
+    newSpan.classList.add("inline-block", "whitespace-nowrap",);
     textWrapper.appendChild(newSpan,);
   }
 
-  if (activeContexts.has(container,)) {
-    const oldCtx = activeContexts.get(container,);
-    oldCtx?.revert();
+  if (actionWrapper && likeBtn) {
+    if (mbid) {
+      const heartIcon = likeBtn.querySelector("svg",);
+      
+      const updateLikeUI = (liked: boolean) => {
+        if (!heartIcon) return;
+        
+        // Target both the SVG and its paths to ensure consistent filling across different browsers/inliners
+        const elements = [heartIcon, ...heartIcon.querySelectorAll("path")];
+        
+        if (liked) {
+          heartIcon.classList.add("fill-primary");
+          heartIcon.classList.remove("fill-none");
+          elements.forEach(el => el.setAttribute("fill", "currentColor"));
+        } else {
+          heartIcon.classList.add("fill-none");
+          heartIcon.classList.remove("fill-primary");
+          elements.forEach(el => el.setAttribute("fill", "none"));
+        }
+        heartIcon.classList.add("text-primary");
+      };
+
+      // Set initial state from data
+      updateLikeUI(isLiked);
+
+      // Smooth reveal of the like widget
+      if (actionWrapper.classList.contains("hidden")) {
+        actionWrapper.classList.remove("hidden");
+        gsap.fromTo(actionWrapper, 
+          { 
+            opacity: 0, 
+            scale: 0.5,
+            x: 20
+          }, 
+          { 
+            opacity: 1, 
+            scale: 1, 
+            x: 0,
+            duration: 0.8, 
+            delay: scrambleDuration, 
+            ease: "back.out(2)" 
+          }
+        );
+      }
+      
+      // Interaction disabled on main branch refactor
+      likeBtn.onclick = null;
+      likeBtn.style.cursor = "default";
+      likeBtn.title = "";
+    } else {
+      // Hide with animation
+      if (!actionWrapper.classList.contains("hidden")) {
+        gsap.to(actionWrapper, { 
+          opacity: 0, 
+          scale: 0.5, 
+          duration: 0.4, 
+          onComplete: () => actionWrapper.classList.add("hidden") 
+        });
+      }
+    }
   }
 
-  // 4. Run Animation
   const ctx = gsap.context(() => {
-    // We target the newSpan we just appended
     const targetSpan = newSpan;
     if (!targetSpan) return;
-
     gsap.set(targetSpan, {
       opacity: curTxt ? 1 : 0,
       y: 0,
       whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      display: "block",
+      display: "inline-block",
       maxWidth: "100%",
     },);
 
     const tl = gsap.timeline({
-      delay: 0,
       onComplete: () => {
         ctx.add(() => {
           targetSpan.dataset.unscrambled = "true";
-          gsap.set(targetSpan, {
-            overflow: "visible",
-            textOverflow: "clip",
-            maxWidth: "none",
-          },);
+          gsap.set(targetSpan, { maxWidth: "none" });
           targetSpan.innerHTML = richHTML;
           createMarqueeAnimation(targetSpan,);
         },);
       },
     },);
 
-    const hasPlugin = gsap.plugins?.scrambleText;
-
-    if (curTxt && hasPlugin) {
+    if (curTxt && gsap.plugins?.scrambleText) {
       tl.to(targetSpan, {
         duration: scrambleDuration,
         ease: "power2.out",
-        scrambleText: {
-          text: newTxt,
-          chars: scrambleNoise,
-          speed: 0.2,
-          tweenLength: true,
-          revealDelay: 0,
-        },
+        scrambleText: { text: newTxt, chars: scrambleNoise, speed: 0.2, tweenLength: true },
       },);
     } else {
       tl.to(targetSpan, {
         opacity: 1,
         duration: scrambleDuration,
         ease: "power2.out",
-        onStart: () => {
-          targetSpan.textContent = newTxt;
-        },
+        onStart: () => { targetSpan.textContent = newTxt; },
       },);
     }
   }, container,);
-
   activeContexts.set(container, ctx,);
 }
 
-loadStatus();
+// Global start
+if (document.visibilityState === "visible") {
+  loadStatus();
+}
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {

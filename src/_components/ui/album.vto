@@ -1,81 +1,62 @@
-{{ set artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ") }}
+{{#
+  Component: Album (Content-aware wrapper)
+  Balanced contrast: Monochrome by default, reveals color on hover.
+  
+  Props:
+    - album: object (required)
+    - priority: boolean (for LCP optimization)
+    - classes: additional classes for the root <a>
+    - hideMetadata: boolean (optional)
+    - attributes: object
+#}}
 
-{{
-  set containerClasses = [
-    "album-item group flex flex-col gap-2 relative z-1",
-    theme.utilities.link,
-    theme.utilities.transition,
-    "hover:z-50 hover:text-primary-offset",
-  ]
-  |> join(" ")
-}}
-
-{{
-  set coverClasses = [
-    "w-full aspect-square block relative z-10",
-    "border-[1px] md:border-2 border-border bg-transparent",
-    "transition-all duration-[400ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]",
-    "transform-gpu overflow-hidden dark:border-gray-900",
-    "group-hover:scale-105 group-hover:shadow-[4px_4px_0px_var(--color-primary-offset)]",
-    "group-focus:scale-105 group-focus:shadow-[4px_4px_0px_var(--color-primary-offset)]",
-    "group-active:scale-105",
-    "md:group-hover:shadow-[8px_8px_0px_var(--color-primary-offset)]",
-  ]
-  |> join(" ")
+{{>
+  const artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ");
 }}
 
 <a
   href="https://listenbrainz.org/album/{{ album.id }}"
-  class="{{ containerClasses }}"
+  class="{{ theme.components.album.card }} {{ classes }}"
   title="{{ album.title }} by {{ artistNames }}"
+  {{ attributes |> attr |> safe }}
 >
-  <div class="{{ coverClasses }}">
-    {{# 
-      COLORED IMAGE (WebP) 
-      Uses the path injected by music.ts
-    #}}
+  {{# Cover Wrapper #}}
+  <div class="{{ theme.components.album.coverWrapper }}">
+    
+    {{# COLORED IMAGE (Reveals on Hover) #}}
     <img
-      class="
-        absolute top-0 left-0 z-20 w-full h-full object-cover block
-        [clip-path:inset(0_100%_0_0)]
-        transition-[clip-path] duration-700 ease-in-out delay-500
-        group-hover:delay-0 group-hover:[clip-path:inset(0_0%_0_0)]
-        group-focus:delay-0 group-focus:[clip-path:inset(0_0%_0_0)]
-        group-active:delay-0 group-active:[clip-path:inset(0_0%_0_0)]
-      "
+      class="absolute inset-0 z-20 w-full h-full object-cover block opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
       src="{{ album.imagePath }}"
       alt=""
       aria-hidden="true"
       loading="{{ priority ? 'eager' : 'lazy' }}"
-      {{ if priority }}
-        fetchpriority="high"
-      {{ /if }}
+      {{ if priority }}fetchpriority="high"{{ /if }}
       width="290"
       height="290"
     />
 
-    {{# 
-      MONOCHROME IMAGE (PNG)
-      Uses the path injected by music.ts 
-    #}}
+    {{# MONOCHROME IMAGE (Base State) #}}
     <img
-      class="relative z-1 w-full h-full object-cover block dark:invert dark:opacity-90"
+      class="absolute inset-0 z-10 w-full h-full object-cover block opacity-90 transition-opacity duration-700 dark:invert dark:brightness-[1.1] dark:contrast-[0.8] dark:opacity-70 group-hover:opacity-0"
       src="{{ album.imagePathMono }}"
       alt=""
       aria-hidden="true"
       loading="{{ priority ? 'eager' : 'lazy' }}"
-      {{ if priority }}
-        fetchpriority="high"
-      {{ /if }}
+      {{ if priority }}fetchpriority="high"{{ /if }}
       width="290"
       height="290"
     />
   </div>
 
-  <div class="font-mono text-xs mt-1">
-    <span
-      class="block font-bold truncate group-hover:underline group-focus:underline"
-    >{{ album.title }}</span>
-    <span class="block opacity-75 truncate">{{ artistNames }}</span>
-  </div>
+  {{# Metadata #}}
+  {{ if !it.hideMetadata }}
+    <div class="{{ theme.components.album.meta }}">
+      <span class="{{ theme.components.album.title }}">
+        {{ album.title }}
+      </span>
+      <span class="{{ theme.components.album.artist }}">
+        {{ artistNames }}
+      </span>
+    </div>
+  {{ /if }}
 </a>

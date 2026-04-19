@@ -1,11 +1,24 @@
-<article class="mb-12">
-  <h2
-    class="{{ theme.typography.heading.h2 }} mb-4 border-b border-border pb-2"
-  >
-    {{ date |> date("yyyy-MM-dd") }}
-  </h2>
+{{#
+  Component: Journal (Primitive)
+  Follows the HTML Journal spec: https://journal.miso.town/
+  Structure: <article> <h2>Date</h2> content </article>
+  
+  Props:
+    - date: Date (required)
+    - content: string | html (required)
+    - classes: additional classes for the <article>
+    - attributes: object
+#}}
 
-  <div class="markdown">
-    {{ content }}
+<article class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}" {{ attributes |> attr |> safe }}>
+  <header class="{{ theme.components.listing.metaRow }}">
+    <time class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+      {{ date |> date("dd MMM yyyy") }}
+    </time>
+    <div class="h-px grow bg-border/10"></div>
+  </header>
+
+  <div class="e-content markdown {{ theme.components.listing.description }}">
+    {{ content |> safe }}
   </div>
 </article>

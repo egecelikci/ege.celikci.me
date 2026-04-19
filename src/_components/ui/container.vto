@@ -36,11 +36,7 @@
 
 <{{ tag }}
 class="{{ containerClasses }}"
-{{ if attributes }}
-  {{ for key, val of attributes }}
-    {{ key }}="{{ val }}"
-  {{ /for }}
-{{ /if }}
+{{ if attributes }}{{ attributes |> attr |> safe }}{{ /if }}
 >
 {{ content |> safe }}
 </{{ tag }}>

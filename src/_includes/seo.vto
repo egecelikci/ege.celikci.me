@@ -7,9 +7,11 @@
 
 {{# Auto Description Logic #}}
 {{ set autoDescription = "" }}
-{{ if isPost }}
+{{ if isPost && content }}
   {{ set cleanContent = content |> replace(/<[^>]+>/g, '') }}
-  {{ set autoDescription = cleanContent.substring(0, 200) + "..." }}
+  {{ if cleanContent }}
+    {{ set autoDescription = cleanContent.substring(0, 200) + "..." }}
+  {{ /if }}
 {{ /if }}
 
 {{ if isPost }}

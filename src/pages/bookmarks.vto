@@ -1,0 +1,19 @@
+---
+layout: layouts/page.vto
+title: bookmarks
+description: "a curation of people, tools, etc."
+article_classes: "not-prose"
+menu_label: atlas
+menu_order: 2
+label: internet
+sections:
+  - title: People
+    category: person
+    blogroll: true
+  - title: Tools & Projects
+    category: tool
+  - title: 88x31 Buttons
+    retro: true
+---
+
+{{ comp.features.Bookmarks({ sections: sections, bookmarks: bookmarks }) }}

@@ -3,9 +3,13 @@ import { initLazyLoad, } from "./common/lazyload.ts";
 async function init() {
   initLazyLoad();
 
-  if (document.querySelector(".album-item",)) {
+  const albumItems = document.querySelector(".album-item",);
+  if (albumItems && !document.body.dataset.disableAnimation) {
     const { animateGridItems, } = await import("./common/grid.ts");
     animateGridItems(".album-item",);
+
+    const { initTouchReveal, } = await import("./common/touch.ts");
+    initTouchReveal(".album-item",);
   }
 
   if (document.querySelector("[data-pswp-gallery]",)) {

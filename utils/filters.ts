@@ -1,7 +1,8 @@
 import * as path from "@std/path";
 import sanitizeHTML from "sanitize-html";
+import { site as siteData, } from "../_config/metadata.ts";
 
-import siteData from "../src/_data/site.ts";
+const SITE_URL = siteData.url;
 
 export interface NoteGridData {
   hasImage: boolean;
@@ -15,7 +16,7 @@ export interface NoteGridData {
 
 const TIMEZONE = "Europe/Istanbul";
 
-// Native date helpers (replacing luxon)
+// Native date helpers
 function formatDate(date: Date, format: string,): string {
   const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE, };
 
@@ -204,7 +205,7 @@ export const filters = {
   },
 
   isOwnWebmention: function(webmention: Webmention,): boolean {
-    const urls = [siteData.url,];
+    const urls = [SITE_URL,];
     const authorUrl = webmention && webmention.author
       ? webmention.author.url
       : undefined;
@@ -216,7 +217,7 @@ export const filters = {
     url: string,
   ): Webmention[] {
     if (!webmentions) return [];
-    const absoluteUrl = url.startsWith("http",) ? url : siteData.url + url;
+    const absoluteUrl = url.startsWith("http",) ? url : SITE_URL + url;
     const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
     const targetUrl = cleanUrl(absoluteUrl,);
     const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of",];
@@ -262,12 +263,30 @@ export const filters = {
       .filter((entry,) => cleanUrl(entry["wm-target"] || "",) === targetUrl)
       .filter((entry,) => allowedTypes.includes(entry["wm-property"] || "",))
       .filter(checkRequiredFields,)
-      // .sort(orderByDate) // TypeScript hatası alırsanız bunu map'ten sonraya alabilirsiniz veya tip tanımlarını düzeltin
       .map(clean,)
       .sort(orderByDate,);
   },
 
-  // src/utils/filters.ts
+  truncate: function(str: unknown, length: number, suffix = "...",): string {
+    const s = String(str || "",);
+    if (s.length <= length) return s;
+    return s.substring(0, length,).trim() + suffix;
+  },
+
+  teaser: function(content: unknown, length = 160,): string {
+    let text = String(content || "",);
+    // 1. Remove HTML tags
+    text = text.replace(/<[^>]*>?/gm, "",);
+    // 2. Remove Markdown links [text](url) -> text
+    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1",);
+    // 3. Remove other Markdown artifacts (backticks, etc.)
+    text = text.replace(/[`*#_]/g, "",);
+    // 4. Normalize whitespace
+    text = text.replace(/\s+/g, " ",).trim();
+
+    if (text.length <= length) return text;
+    return text.substring(0, length,).trim() + "...";
+  },
 
   webmentionCountByType: function(
     webmentions: Webmention[] | undefined,
@@ -276,7 +295,7 @@ export const filters = {
   ): string {
     if (!webmentions) return "0";
 
-    const absoluteUrl = url.startsWith("http",) ? url : siteData.url + url;
+    const absoluteUrl = url.startsWith("http",) ? url : SITE_URL + url;
     const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
     const targetUrl = cleanUrl(absoluteUrl,);
 

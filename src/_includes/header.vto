@@ -1,44 +1,47 @@
 {{#
   Site Header Component
-  Sticky navigation with backdrop blur effect
+  Subtle "Status Bar" style top navigation
 #}}
 
-{{# Define header content structure #}}
 {{ set headerContent }}
-  {{# Site logo/home link #}}
-  <a
-    href="/"
-    rel="home"
-    aria-label="Navigate to homepage"
-    class="flex-shrink-0 font-bold text-lg md:text-xl text-text hover:text-text-muted transition-colors duration-200 focus-ring rounded-sm"
-  >
-    <span>{{ site.host }}</span><span class="text-primary" aria-hidden="true"
-    >.</span>
-  </a>
+  <div class="flex items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-[0.2em]">
+    <div class="flex items-center gap-3">
+      {{# 1. SITE LOGO / BRAND #}}
+      <a
+        href="/"
+        rel="home"
+        class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline"
+      >
+        {{ site.host }}
+      </a>
 
-  {{# Navigation container #}}
-  <div class="flex-1 min-w-0 flex justify-end items-center">
-    {{ comp.ui.Navigation({ url: url }) }}
+      {{# 2. BREADCRUMBS (Left-aligned context) #}}
+      {{ if url !== "/" }}
+        <span class="text-text-muted/50 select-none">/</span>
+        <div class="opacity-60 hover:opacity-100 transition-opacity duration-500">
+          {{ comp.ui.Breadcrumbs({ url: url }) }}
+        </div>
+      {{ /if }}
+    </div>
+
+    {{# 3. QUICK NAV (Unified) #}}
+    {{ comp.ui.Navigation({
+      items: [
+        { title: "about", href: "/about/", visible: true, classes: "hidden md:block" },
+        { title: "top", href: "#", onclick: "window.scrollTo({ top: 0, behavior: 'smooth' }); return false;" }
+      ]
+    }) }}
   </div>
 {{ /set }}
 
-{{# Main header #}}
 <header
   id="site-header"
-  class="sticky top-0 w-full z-[100] border-b border-text-muted/10 backdrop-blur-md transition-all duration-300"
-  style="background-color: color-mix(in srgb, var(--color-bg) 80%, transparent)"
+  class="w-full bg-surface/80 backdrop-blur-md border-b border-border/10 py-3 px-4 mb-0 select-none print:hidden sticky top-0 z-50"
   role="banner"
 >
   {{
     comp.ui.Container({
-      as: "nav",
-      width: "default",
-      classes:
-        "flex flex-row items-center justify-between gap-4 py-4 md:py-6 lg:py-8",
-      attributes: {
-        "aria-label": "Main navigation",
-        "role": "navigation",
-      },
+      width: "narrow",
       content: headerContent,
     })
   }}

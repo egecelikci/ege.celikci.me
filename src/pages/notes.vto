@@ -1,51 +1,29 @@
 ---
-layout: layouts/base.vto
 title: notes
-description: "short form of content and thoughts"
-url: /notes/
+description: "ephemeral updates, logs & short form of content"
+article_classes: "e-content"
+menu_label: journal
 ---
 
 {{ set results = search.pages("type=note", "date=desc") }}
-
-{{
-  comp.ui.PageHeader({
-    title: title,
-    subtitle: description,
-    centered: true,
-  })
-}}
-
-{{ set notesTimeline }}
-  {{ if results.length }}
-    {{# Use the new Timeline Component #}}
-    {{ set timelineContent }}
+{{ if results.length }}
+  {{ set timelineContent }}
+    <div class="flex flex-col gap-12">
       {{ for note of results }}
-        <div class="mb-12">
-          {{ comp.ui.Note({ note: note }) }}
-        </div>
+        {{ comp.ui.Note({ note: note, variant: "listing" }) }}
       {{ /for }}
-    {{ /set }}
-
-    {{ comp.ui.Timeline({ content: timelineContent }) }}
-  {{ else }}
-    {{# Empty State #}}
-    <div class="pl-8 md:pl-12">
-      {{
-        comp.ui.EmptyState({
-          icon: "sticky-note",
-          title: "Quiet in here",
-          description:
-            "No notes found. Once you publish a note, it will appear on this timeline.",
-        })
-      }}
     </div>
-  {{ /if }}
-{{ /set }}
+  {{ /set }}
 
-{{
-  comp.ui.Container({
-    width: "narrow",
-    classes: "min-h-screen",
-    content: notesTimeline,
-  })
-}}
+  {{ comp.ui.Timeline({ content: timelineContent }) }}
+{{ else }}
+  <div class="py-24">
+    {{
+      comp.ui.EmptyState({
+        icon: "message-square",
+        title: "Quiet in here",
+        description: "No notes found. Once you publish a note, it will appear on this timeline.",
+      })
+    }}
+  </div>
+{{ /if }}

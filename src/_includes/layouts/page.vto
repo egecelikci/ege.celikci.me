@@ -1,0 +1,39 @@
+---
+layout: layouts/content.vto
+---
+
+{{# Resolve header extension if it's an object #}}
+{{ set extensionContent }}
+  {{ if it.headerExtension }}
+    {{ if it.headerExtension.comp }}
+      {{ set compParts = it.headerExtension.comp.split('.') }}
+      {{ set resolvedComp = comp }}
+      {{ for part of compParts }}
+        {{ set resolvedComp = resolvedComp[part] }}
+      {{ /for }}
+      {{ if resolvedComp }}
+        {{ await resolvedComp({ ...it.headerExtension.props, ...author }) }}
+      {{ /if }}
+    {{ else }}
+      {{ it.headerExtension }}
+    {{ /if }}
+  {{ /if }}
+{{ /set }}
+
+{{# Each page can now define its own header since content shell is neutralized #}}
+{{
+  comp.ui.PageHeader({
+    title: title,
+    subtitle: subtitle || description,
+    backlink: backlink ?? false,
+    breadcrumbs: breadcrumbs === true,
+    url: url,
+    centered: centered || false,
+    metadata: { tags: tags },
+    rightContent: extensionContent
+  })
+}}
+
+<div class="mt-12 markdown text-lg leading-relaxed {{ it.article_classes }}">
+  {{ content |> safe }}
+</div>

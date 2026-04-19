@@ -1,0 +1,19 @@
+{{#
+  Component: CuratedSection
+  Standardized wrapper for homepage side-curations (Collages, Music Grids, etc.)
+  
+  Props:
+    - label: string
+    - allHref?: string
+    - classes?: string
+#}}
+<section class="{{ it.classes || '' }}">
+  <div class="flex items-center justify-between mb-6 opacity-60 md:opacity-40 hover:opacity-100 transition-opacity group/curated">
+    <h2 class="{{ theme.typography.label }} lowercase">{{ it.label }}</h2>
+    {{ if it.allHref }}
+      <a href="{{ it.allHref }}" class="text-[9px] font-mono uppercase tracking-widest hover:text-primary transition-colors">all &rarr;</a>
+    {{ /if }}
+  </div>
+  
+  {{ content |> safe }}
+</section>

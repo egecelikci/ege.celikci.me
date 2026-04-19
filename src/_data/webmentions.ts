@@ -14,7 +14,7 @@ import type {
   WebmentionApiResponse,
   WebmentionFeed,
 } from "../types/index.ts";
-import settings from "./site.ts";
+import site from "./site.ts";
 
 // ============================================================================
 // CONFIGURATION
@@ -35,7 +35,7 @@ const CONFIG = {
 
   credentials: {
     token: Deno.env.get("WEBMENTION_IO_TOKEN",),
-    host: settings?.host,
+    host: site.host,
   },
 
   userAgent: "ege.celikci.me/1.0 (ege@celikci.me)",
