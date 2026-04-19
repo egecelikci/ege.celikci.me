@@ -1,0 +1,25 @@
+{{#
+  Component: SourceMeta
+  Standardized indicator for data provenance (where data is synced from).
+  Designed to be used as a PageHeader extension.
+#}}
+
+{{>
+  let targetUrl = it.url;
+  if (!targetUrl && it.label === "critiquebrainz" && it.username) {
+    targetUrl = `https://critiquebrainz.org/user/${it.username}`;
+  }
+}}
+
+<div class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 max-w-[240px]">
+  <div class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10">
+    {{ comp.ui.Icon({ name: it.icon || "database", classes: "w-2.5 h-2.5 text-primary/60" }) }}
+  </div>
+  <p class="text-[9px] font-mono uppercase tracking-[0.1em] text-text-muted leading-tight m-0">
+    {{ if targetUrl }}
+      Synced from <a href="{{ targetUrl }}" class="text-text-muted hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary">{{ it.label }}</a>
+    {{ else }}
+      Source: {{ it.label }}
+    {{ /if }}
+  </p>
+</div>

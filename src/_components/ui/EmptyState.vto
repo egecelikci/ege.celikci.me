@@ -1,17 +1,21 @@
 {{#
+  Component: EmptyState (Primitive)
+  A placeholder for empty lists or states.
+  
   Props:
-    - icon: string (icon name)
-    - title: string
-    - description: string
+    - icon: string (required)
+    - title: string (optional)
+    - description: string (optional)
 #}}
+
 <div
   class="flex flex-col items-center justify-center py-16 md:py-24 text-center border border-dashed border-border rounded-2xl bg-surface/20"
 >
   <div class="p-4 rounded-full bg-surface mb-4 text-text-muted/50">
     {{
       comp.ui.Icon({
-        name: icon || "inbox",
-        type: "lucide",
+        name: icon,
+        catalog: "lucide",
         classes: "w-8 h-8 md:w-10 md:h-10",
       })
     }}
@@ -19,7 +23,9 @@
   {{ if title }}
     <h3 class="text-lg font-bold text-text mb-2">{{ title }}</h3>
   {{ /if }}
-  <p class="text-text-muted max-w-sm mx-auto leading-relaxed">
-    {{ description || "No items found." }}
-  </p>
+  {{ if description }}
+    <p class="text-text-muted max-w-sm mx-auto leading-relaxed">
+      {{ description |> safe }}
+    </p>
+  {{ /if }}
 </div>

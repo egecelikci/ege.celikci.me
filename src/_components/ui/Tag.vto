@@ -1,29 +1,21 @@
 {{#
-  Component: Tag
+  Component: Tag (Primitive)
+  A clean typographic label for tags.
+  
   Props:
-    - tag: string (the tag name)
-    - count: number (optional number to show)
-    - active: boolean (optional, for tag pages)
-    - classes: string (optional override)
+    - content: string (the tag name) (required)
+    - href: optional link (turns component into <a>)
+    - classes: additional classes
+    - attributes: object
 #}}
 
-{{ set slug = tag |> slugify }}
-{{ set url = "/tags/" + slug + "/" }}
+{{ set tag = href ? "a" : "span" }}
 
-<a
-  href="{{ url }}"
-  class="
-    {{ theme.components.tag.base }}
-    {{ active ? theme.components.tag.active : theme.components.tag.default }}
-    {{ classes }}
-    no-underline
-  "
+<{{ tag }}
+  {{ if href }}href="{{ href }}"{{ /if }}
+  class="inline-flex items-center text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-text-muted/70 hover:text-primary no-underline transition-colors not-prose [box-shadow:none!important] {{ classes }}"
+  {{ attributes |> attr |> safe }}
 >
-  <span class="opacity-70 mr-0.5 text-[9px] font-normal">#</span>{{ tag }}
-
-  {{ if count !== undefined }}
-    <span class="ml-1.5 opacity-60 font-normal border-l border-current pl-1.5">
-      {{ count }}
-    </span>
-  {{ /if }}
-</a>
+  <span class="opacity-60 mr-1 font-mono">#</span>
+  <span>{{ content |> safe }}</span>
+</{{ tag }}>

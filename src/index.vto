@@ -1,27 +1,6 @@
 ---
-layout: layouts/base.vto
+layout: layouts/home.vto
 title: home
 url: /
-templateEngine: [vto]
+description: "a personal website"
 ---
-
-{{ set body }}
-  {{
-    comp.ui.PageHeader({
-      title: title,
-      centered: true,
-    })
-  }}
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-    <section>
-      {{ comp.ui.SectionHeader({ title: "Connect", icon: "share-2" }) }}
-      {{ comp.features.SocialLinks() }}
-    </section>
-    <section>
-      {{ comp.ui.SectionHeader({ title: "Live Status", icon: "activity" }) }}
-      {{ comp.features.StatusDashboard() }}
-    </section>
-  </div>
-{{ /set }}
-
-{{ comp.ui.Container({ width: "narrow", content: body }) }}

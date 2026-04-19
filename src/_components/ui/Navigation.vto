@@ -1,20 +1,25 @@
-<nav class="relative max-w-full" role="navigation">
-  <ul
-    class="flex flex-row overflow-x-auto lg:overflow-visible items-center gap-5 lg:gap-6 scrollbar-hide"
-  >
-    {{ for item of navigation.navigation }}
-      {{ if item.visible }}
-        {{ set isCurrent = item.href == url }}
-        {{
-          set isActive = isCurrent || (item.href != "/" && url.includes(item.href))
-        }}
+{{#
+  Component: Navigation (System Component)
+  Renders the main site navigation or quick links.
+  
+  Props:
+    - items: Array of { title, href, visible }
+    - classes: additional classes
+#}}
 
-        <li class="flex-shrink-0">
+<nav
+  class="relative {{ it.classes || '' }}"
+  role="navigation"
+>
+  <ul class="flex items-center gap-4 md:gap-6 list-none p-0 m-0 text-[10px] font-mono uppercase tracking-[0.2em]">
+    {{ for item of it.items }}
+      {{ if item.visible !== false }}
+        <li>
           <a
-            href="{{ isCurrent ? '#main' : item.href }}"
-            data-active="{{ isActive }}"
-            class="{{ theme.utilities.navLink }} {{ theme.utilities.navUnderline }}"
-            {{ if isCurrent }}aria-current="page"{{ /if }}
+            href="{{ item.href }}"
+            class="text-text-muted/70 hover:text-primary transition-colors no-underline"
+            {{ if item.target }}target="{{ item.target }}"{{ /if }}
+            {{ if item.onclick }}onclick="{{ item.onclick }}"{{ /if }}
           >
             {{ item.title }}
           </a>

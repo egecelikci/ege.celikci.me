@@ -2,67 +2,62 @@
 layout: layouts/base.vto
 ---
 
-{{# Capture the entire note content first #}}
-{{ set noteBody }}
-  {{# Backlink #}}
-  <div class="mb-6">
-    {{ comp.ui.Backlink({ href: "/notes/", text: "back to notes" }) }}
-  </div>
+{{# 1. Format metadata before calling components #}}
+{{ set dateStr = date |> date("dd LLL yyyy HH:mm") }}
+{{ set updatedStr = "" }}
+{{ if updated }}
+  {{ set formattedUpdated = updated |> date("dd MMM yyyy") }}
+  {{ set updatedStr = " • edited " + formattedUpdated }}
+{{ /if }}
+{{ set noteSubtitle = dateStr + updatedStr }}
 
-  {{# Capture the Card Inner Content #}}
-  {{ set cardContent }}
-    {{# Note Header #}}
+{{# 2. Capture the entire body to a variable #}}
+{{ set noteBody }}
+  <div class="flex flex-col gap-12">
+    {{# Standard PageHeader restored as requested #}}
     {{
-      comp.ui.NoteHeader({
-        date: date,
-        tags: tags,
+      comp.ui.PageHeader({
+        title: title || "note",
+        subtitle: noteSubtitle,
+        backlink: { href: "/notes/", text: "notes" },
+        metadata: { tags: tags }
       })
     }}
 
-    {{# Main Content Area #}}
-    <div class="p-6">
-      {{ if title && !isAutoTitle }}
-        <h1 class="p-name text-2xl font-bold text-balance mb-4">
-          {{ title }}
-        </h1>
+    {{# Using the component with hideHeader to avoid duplication #}}
+    {{ comp.ui.Note({ 
+      note: {
+        url: url,
+        date: date,
+        title: title,
+        tags: tags,
+        images: images,
+        content: content,
+        stats: stats,
+        syndication: syndication
+      },
+      variant: "full",
+      hideHeader: true
+    }) }}
+
+    {{ comp.ui.IncomingLinks({ backlinks: backlinks }) }}
+
+    {{# Webmentions #}}
+    <div class="mt-12">
+      <h3 class="text-xs font-mono uppercase tracking-[0.3em] text-text-muted/60 mb-10">Interactions</h3>
+      {{ set mentionsData = [] }}
+      {{ if webmentions }}
+        {{ set mentionsData = webmentions.children |> webmentionsByUrl(url) }}
       {{ /if }}
-
-      {{ comp.ui.Gallery({ images: images }) }}
-
-      <div class="e-content markdown text-lg" data-pagefind-body>
-        {{ content |> safe }}
-      </div>
+      {{ comp.ui.Webmentions({ mentions: mentionsData }) }}
     </div>
-
-    {{# Footer Actions #}}
-    <div
-      class="bg-surface border-t border-border px-4 py-3 flex items-center justify-between"
-    >
-      {{ comp.ui.NoteStats({ stats: stats }) }}
-      {{ comp.ui.Syndication({ syndication: syndication }) }}
-    </div>
-
-    {{# Webmentions (Inside Card) #}}
-    {{ comp.ui.Webmentions({ url: url, webmentions: webmentions }) }}
-  {{ /set }}
-
-  {{# Render the Card #}}
-  {{
-    comp.ui.Card({
-      elevated: true,
-      padding: "p-0",
-      background: "bg-bg",
-      classes: "h-entry overflow-hidden",
-      content: cardContent,
-    })
-  }}
+  </div>
 {{ /set }}
 
-{{# Wrap everything in the Container (narrow width matches your original 65ch) #}}
 {{
   comp.ui.Container({
     width: "narrow",
-    classes: "my-8 mb-16",
+    classes: "min-h-screen pb-32",
     content: noteBody,
   })
 }}

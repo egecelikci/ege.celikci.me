@@ -88,6 +88,8 @@
 
   --color-prose-pre-code: var(--color-text);
   --color-prose-pre-bg: var(--color-surface);
+
+  --animate-panic: panic 0.5s infinite alternate;
 }
 
 :root {
@@ -179,13 +181,13 @@
   }
 
   /* Link styles with fancy underline effect */
-  .markdown a:not(.btn, .heading-anchor) {
+  .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {
     @apply no-underline border-b border-current transition-all duration-200
       font-normal text-[length:inherit] text-[color:var(--tw-prose-links)];
     box-shadow: inset 0 -2px 0 0 currentColor;
   }
 
-  .markdown a:not(.btn, .heading-anchor):hover {
+  .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline):hover {
     @apply text-white border-primary outline-none;
     box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
   }
@@ -289,4 +291,23 @@
       opacity: 0.2;
     }
   }
+}
+
+/* Additional typography refinements */
+.markdown > p {
+  @apply my-0;
+}
+
+.markdown ul, .markdown ol {
+  @apply space-y-2;
+}
+
+.markdown li {
+  @apply my-0 leading-relaxed;
+}
+
+/* Remove background/border from inline code in links and lists */
+.markdown li > code,
+.markdown a:not(.btn, .heading-anchor) > code {
+  @apply bg-transparent border-0 px-0 py-0;
 }

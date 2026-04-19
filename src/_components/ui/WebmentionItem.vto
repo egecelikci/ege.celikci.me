@@ -1,62 +1,72 @@
+{{#
+  Component: WebmentionItem (Content-aware wrapper)
+  Displays a single webmention comment/reply.
+  
+  Props:
+    - webmention: object (required)
+    - classes: additional classes
+    - attributes: object
+#}}
+
+{{ set isOwn = webmention |> isOwnWebmention }}
+
 <div
   id="webmention-{{ webmention['wm-id'] }}"
-  class="
-    relative flex flex-col py-4 pr-0
-    pl-[calc(3rem+0.75rem)]
-    border-b border-border
-    transition-colors duration-150 ease-default
-    last:border-b-0
-    {{ if webmention |> isOwnWebmention }}
-    bg-surface rounded-md mb-4 border-b-0 pr-4
-    {{ /if }}
-  "
+  class="relative flex flex-col gap-3 py-6 last:border-b-0 {{ isOwn ? 'bg-surface/10 rounded-2xl p-6 -mx-6' : 'border-b border-border/10' }} {{ classes }}"
+  {{ attributes |> attr |> safe }}
 >
-  <div
-    class="order-[-1] mb-2 flex flex-wrap items-center text-sm leading-[1.4]"
-  >
-    {{ if webmention.author }}
-      <a
-        class="group flex items-center font-semibold text-text no-underline hover:text-primary hover:underline h-card u-url"
-        {{ if webmention.url }}href="{{ webmention.url }}"{{ /if }}
-        target="_blank"
-        rel="ugc nofollow"
-      >
-        <span
-          class="absolute top-4 left-0 h-12 w-12 rounded-full overflow-hidden bg-surface shadow-[0_0_0_1px_var(--color-border)] flex items-center justify-center u-photo"
-        >
-          {{ if webmention.author.photo }}
-            <img
-              class="h-full w-full object-cover"
-              src="{{ webmention.author.photo }}"
-              alt="{{ webmention.author.name }}"
-              width="48"
-              height="48"
-              loading="lazy"
-              decoding="async"
-            />
-          {{ else }}
-            {{ "user" |> icon("lucide") }}
-          {{ /if }}
-        </span>
-        <strong class="p-name">{{ webmention.author.name }}</strong>
-      </a>
-    {{ /if }}
+  <header class="flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      {{# Author Image #}}
+      <div class="w-8 h-8 rounded-full overflow-hidden border border-border/10 bg-surface shadow-sm">
+        {{ if webmention.author.photo }}
+          <img
+            class="h-full w-full object-cover"
+            src="{{ webmention.author.photo }}"
+            alt="{{ webmention.author.name }}"
+            width="32"
+            height="32"
+            loading="lazy"
+          />
+        {{ else }}
+          <div class="flex w-full h-full items-center justify-center text-text-muted/60">
+            {{ comp.ui.Icon({ name: "user", classes: "w-4 h-4" }) }}
+          </div>
+        {{ /if }}
+      </div>
 
+      {{# Author Name and Action #}}
+      <div class="flex flex-col">
+        <a
+          class="font-bold text-sm text-text no-underline hover:text-primary transition-colors"
+          {{ if webmention.url }}href="{{ webmention.url }}"{{ /if }}
+          target="_blank"
+          rel="ugc nofollow"
+        >
+          {{ webmention.author.name }}
+        </a>
+        <div class="text-[10px] text-text-muted/70 font-mono uppercase tracking-widest">
+          {{ if webmention['wm-property'] === 'in-reply-to' }}
+            replied
+          {{ else if webmention['wm-property'] === 'mention-of' }}
+            mentioned
+          {{ else }}
+            interacted
+          {{ /if }}
+        </div>
+      </div>
+    </div>
+
+    {{# Date #}}
     {{ if webmention.published }}
-      <span class="inline-block px-1 text-text-muted" aria-hidden="true"
-      >&sdot;</span>
-      <time
-        class="text-text-muted text-xs dt-published"
-        datetime="{{ webmention.published }}"
-      >
-        {{ webmention.published |> date("dd LLL yyyy") }}
+      <time class="text-[10px] font-mono text-text-muted/60 uppercase tracking-widest" datetime="{{ webmention.published }}">
+        {{ webmention.published |> date("dd MMM yyyy") }}
       </time>
     {{ /if }}
-  </div>
+  </header>
 
-  <div
-    class="markdown text-base leading-relaxed p-content break-words overflow-hidden w-full"
-  >
+  {{# Content #}}
+  <div class="markdown text-base leading-relaxed text-text-muted/80 pl-11">
     {{ webmention.content.value |> safe }}
   </div>
 </div>

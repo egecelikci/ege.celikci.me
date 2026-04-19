@@ -59,17 +59,20 @@ export interface Album {
   releases?: Release[];
   imagePath?: string;
   imagePathMono?: string;
+  ratedAt?: string;
 }
 
 export interface ProcessedAlbum extends Album {
   imagePath: string;
   imagePathMono: string;
+  ratedAt: string;
 }
 
 export interface CritiqueBrainzReview {
   entity_id: string;
   entity_type: "release_group" | "recording";
   rating: number;
+  created: string;
 }
 
 export interface CritiqueBrainzResponse {

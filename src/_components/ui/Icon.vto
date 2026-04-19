@@ -1,6 +1,8 @@
-<svg
-  src="{{ name |> icon(type || 'lucide') }}"
-  class="inline-block text-[1.5em] h-[1em] w-[1em] align-middle pointer-events-none {{ if filled }}fill-current{{ /if }} {{ classes }}"
-  inline
->
-</svg>
+{{#
+  Component: Icon (Primitive)
+  Lume-native icon loader using the icons & inline plugins.
+  Ensures absolute paths for reliable inlining.
+#}}
+{{- set iconPath = it.name |> icon(it.catalog || 'lucide') -}}
+{{- set absolutePath = iconPath.startsWith('/') ? iconPath : '/' + iconPath -}}
+<img src="{{ absolutePath }}" class="inline-block text-[1.5em] h-[1em] w-[1em] align-middle pointer-events-none {{ if it.filled }}fill-current{{ /if }} {{ it.classes || '' }}" inline />

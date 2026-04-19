@@ -1,0 +1,90 @@
+{{#
+  Component: ListingItem (Shared Primitive)
+  The common structure for all Artsy Journal style listings.
+  
+  Props:
+    - url: string (required)
+    - title?: string
+    - date?: Date
+    - tags?: string[]
+    - images?: Array<{ src: string, alt: string }>
+    - content: html/string (The main body text/teaser)
+    - footerLeft?: html/string (Optional left-aligned footer content)
+    - footerText?: string (default: "view details &rarr;")
+    - classes?: string
+    - bodyClasses?: string
+#}}
+
+<article class="{{ theme.components.listing.container }} {{ it.classes || '' }}">
+  {{# 0. CINEMATIC ACCENT #}}
+  <div class="{{ theme.components.listing.accentBar }}"></div>
+
+  {{# Overlay link #}}
+  <a
+    href="{{ it.url |> url }}"
+    class="absolute inset-0 z-30 pointer-events-auto"
+    aria-label="{{ it.title || 'View Item' }}"
+  ></a>
+
+  {{# 1. HEADER (Subtle Meta Bar) #}}
+  <header class="{{ theme.components.listing.metaRow }}">
+    {{ if it.date }}
+      <time class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+        {{ it.date |> date("dd MMM yyyy") }}
+      </time>
+    {{ /if }}
+    
+    <div class="h-px grow bg-border/10"></div>
+    
+    {{ if it.tags && it.tags.length > 0 }}
+      <div class="flex gap-4">
+        {{ for tag of it.tags |> slice(0, 3) }}
+          <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
+        {{ /for }}
+      </div>
+    {{ /if }}
+  </header>
+
+  {{# 2. VISUALS #}}
+  {{ if it.images && it.images.length > 0 }}
+    <div class="relative z-20">
+      <div class="relative">
+        {{# Multi-image Indicator #}}
+        {{ if it.images.length > 1 }}
+          <div class="{{ theme.components.gallery.overlay }}">
+            {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+            <span>1 / {{ it.images.length }}</span>
+          </div>
+        {{ /if }}
+
+        {{# Main Thumbnail #}}
+        {{ set firstImage = it.images |> slice(0, 1) }}
+        {{ comp.ui.Gallery({ 
+          images: firstImage, 
+          static: true,
+          aspect: "aspect-video md:aspect-[16/10]",
+          classes: "m-0 relative z-10"
+        }) }}
+      </div>
+    </div>
+  {{ /if }}
+
+  {{# 3. TEXTUAL CONTENT #}}
+  <div class="relative z-20 flex flex-col gap-6">
+    {{ if it.title }}
+      <h3 class="{{ theme.components.listing.title }}">
+        {{ it.title }}
+      </h3>
+    {{ /if }}
+
+    <div class="e-content markdown {{ theme.components.listing.description }} {{ it.bodyClasses || '' }}">
+      {{ it.content |> safe }}
+    </div>
+  </div>
+
+  {{# 4. FOOTER #}}
+  {{ comp.ui.ListingFooter({ 
+    leftContent: it.footerLeft, 
+    text: it.footerText 
+  }) }}
+</article>

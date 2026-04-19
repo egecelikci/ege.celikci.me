@@ -1,103 +1,42 @@
 {{#
-  Social Links Component
-  Displays social media and contact links
+  Component: SocialLinks (Feature)
+  Adaptable "Chameleon" social coordinates.
 #}}
+{{->
+  const variantVal = it.variant || "grid";
+  const ids = it.ids || [];
+  const signalUrlVal = author.social?.signal?.url ? atob(author.social.signal.url) : "";
+  const emailUrlVal = "mailto:" + author.email;
+  const matrixUrlVal = "https://matrix.to/#/@" + author.social.matrix.username + ":" + author.social.matrix.metropolis.host;
 
-{{
-  set linkIconClass = "text-3xl mr-3 group-hover:text-primary transition-colors duration-300"
-}}
-{{ set signalUrl = author.social.signal.url |> decodeBase64 }}
-{{ set emailUrl = "mailto:" + author.email |> obfuscate }}
-{{
-  set matrixUrl = "https://matrix.to/#/@" + author.social.matrix.username + ":" +
-    author.social.matrix.metropolis.host
-}}
+  let links = [
+    { id: "listenbrainz", name: "ListenBrainz", url: `https://listenbrainz.org/user/${author.username}`, icon: "music", label: "Curation" },
+    { id: "steam", name: "Steam", url: `https://steamcommunity.com/id/${author.username}`, icon: "gamepad", label: "Identity" },
+    { id: "signal", name: "Signal", url: signalUrlVal, icon: "message-circle-dashed", label: "Secure", relMe: true },
+    { id: "matrix", name: "Matrix", url: matrixUrlVal, icon: "messages-square", label: "Federated", keyUrl: "/keys#matrix", relMe: true },
+    { id: "codeberg", name: "Codeberg", url: `https://codeberg.org/${author.username}`, icon: "mountain", label: "Git", relMe: true },
+    { id: "gitlab", name: "GitLab", url: `https://gitlab.com/${author.username}`, icon: "gitlab", label: "Source", relMe: true },
+    { id: "github", name: "GitHub", url: `https://github.com/${author.username}`, icon: "github", label: "Mirrors", relMe: true }
+  ];
 
-{{
-  set links = [
-    {
-      name: "ListenBrainz",
-      url: "https://listenbrainz.org/user/" + author.username,
-      icon: "music",
-    },
-    {
-      name: "Steam",
-      url: "https://steamcommunity.com/id/" + author.username,
-      icon: "gamepad",
-    },
-    { name: "Signal", url: signalUrl, icon: "message-circle-dashed" },
-    { name: "Email", url: emailUrl, icon: "mail" },
-    {
-      name: "Matrix",
-      url: matrixUrl,
-      icon: "messages-square",
-      keyUrl: "keys#matrix",
-    },
-    {
-      name: "Codeberg",
-      url: "https://codeberg.org/" + author.username,
-      hidden: true,
-    },
-    {
-      name: "GitLab",
-      url: "https://gitlab.com/" + author.username,
-      hidden: true,
-    },
-    {
-      name: "GitHub",
-      url: "https://github.com/" + author.username,
-      hidden: true,
-    },
-  ]
-}}
+  if (ids.length > 0) {
+    links = links.filter(link => ids.includes(link.id));
+  }
 
-<ul class="list-none p-0 space-y-4">
-  {{ for link of links }}
-    {{ if !link.hidden }}
-      <li class="group flex items-center justify-between">
-        <div class="flex items-center">
-          <a
-            href="{{ link.url }}"
-            class="flex items-center text-xl font-semibold no-underline hover:text-primary transition-all"
-            {{ if link.name === "Matrix" }}
-              rel="me"{{ /if }}
-          >{{
-              comp.ui.Icon({
-                name: link.icon,
-                type: "lucide",
-                classes: linkIconClass,
-              })
-            }}<span
-              class="border-b-2 border-transparent group-hover:border-primary transition-all ml-1"
-            >
-              {{ link.name }}
-            </span>
-          </a>
-        </div>
-        {{ if link.keyUrl }}
-          <a
-            href="{{ link.keyUrl }}"
-            title="View {{ link.name }} encryption keys"
-            aria-label="View {{ link.name }} encryption keys"
-            class="flex items-center justify-center ml-2 w-9 h-9 rounded-xl text-text-muted/60 bg-transparent hover:text-primary hover:bg-primary/5 transition-all"
-          >{{
-            comp.ui.Icon({
-              name: "key",
-              type: "lucide",
-              classes: "w-5 h-5",
-            })
-          }}</a>
-        {{ /if }}
-      </li>
-    {{ /if }}
-  {{ /for }}
-</ul>
-
-{{# Hidden rel=me links for verification #}}
-<div hidden aria-hidden="true">
-  {{ for link of links }}
-    {{ if link.hidden }}
+  const resetStyles = "not-prose [box-shadow:none!important] hover:[box-shadow:none!important] hover:[background-color:transparent!important] border-none transition-none";
+-}}
+{{- if variantVal === "highlights" -}}
+<ul class="flex items-center gap-1 list-none p-0 m-0 {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" title="{{ link.name }}" aria-label="{{ link.name }}" class="flex items-center justify-center w-7 h-7 rounded-lg text-text-muted/70 hover:text-primary hover:bg-primary/5 transition-all duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-3.5 h-3.5" }) }}</a></li>{{- /for -}}</ul>
+{{- else if variantVal === "grid" -}}
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<div class="group flex items-center justify-between py-5 border-b border-border/10 transition-colors duration-300 hover:border-primary/20"><a href="{{ link.url }}" class="flex items-center gap-4 no-underline grow {{ resetStyles }} transition-colors duration-300" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 text-text-muted/50 group-hover:text-primary transition-colors duration-300" }) -}}<span class="text-sm font-bold text-text/80 group-hover:text-primary transition-colors duration-300 tracking-tight">{{ link.name }}</span></a><div class="flex items-center gap-4">{{- if link.keyUrl -}}<a href="{{ link.keyUrl }}" class="text-[9px] font-mono font-bold text-primary/60 hover:text-primary hover:border-primary/40 transition-colors uppercase tracking-tighter border border-primary/10 px-1.5 py-0.5 rounded-sm no-underline {{ resetStyles }}" title="View verification key">Key</a>{{- /if -}}<span class="text-[10px] font-mono text-text-muted/40 uppercase tracking-[0.2em] group-hover:text-text-muted/70 transition-colors duration-300">{{ link.label }}</span></div></div>{{- /for -}}</div>
+{{- else if variantVal === "hidden" -}}
+<div class="hidden" aria-hidden="true">
+  {{- for link of links -}}
+    {{- if link.relMe -}}
       <a href="{{ link.url }}" rel="me">{{ link.name }}</a>
-    {{ /if }}
-  {{ /for }}
+    {{- /if -}}
+  {{- /for -}}
 </div>
+{{- else -}}
+<ul class="flex flex-col gap-4 list-none p-0 m-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" class="group inline-flex items-center gap-3 no-underline text-text-muted/60 hover:text-primary transition-colors duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 opacity-50 group-hover:opacity-100 transition-all duration-300" }) -}}<span class="text-sm font-medium">{{ link.name }}</span><span class="text-[10px] font-mono opacity-50 group-hover:opacity-40 uppercase tracking-widest">{{ link.label }}</span></a></li>{{- /for -}}</ul>
+{{- /if -}}

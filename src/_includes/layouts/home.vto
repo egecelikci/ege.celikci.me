@@ -1,0 +1,133 @@
+---
+layout: layouts/base.vto
+---
+
+{{# --- 1. HEADER (Customized with Status) --- #}}
+{{ set headerRight }}
+  <div class="w-full md:w-[240px] opacity-60 hover:opacity-100 transition-opacity">
+    {{ comp.features.StatusDashboard() }}
+  </div>
+{{ /set }}
+
+{{ set homeHeader }}
+  {{
+    comp.ui.PageHeader({
+      title: title,
+      subtitle: description,
+      centered: false,
+      url: url,
+      rightContent: headerRight
+    })
+  }}
+{{ /set }}
+
+{{ comp.ui.Container({ width: "narrow", content: homeHeader, padding: true }) }}
+
+{{# --- 2. THE GARDEN CONTENT --- #}}
+
+{{ set gardenContent }}
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16">
+    
+    {{# LEFT: The Main Stream #}}
+    <div class="lg:col-span-7 flex flex-col gap-10 md:gap-16">
+      
+      {{# Primary Journal Section #}}
+      <nav aria-label="Journal" class="flex flex-col gap-4 md:gap-8">
+        {{ set dynamicJournal = search.pages("menu_label=journal") }}
+        {{ set staticJournal = journal || [] }}
+        {{ set combinedJournal = [...dynamicJournal, ...staticJournal].sort((a, b) => (a.menu_order ?? 99) - (b.menu_order ?? 99)) }}
+
+        {{ for item of combinedJournal }}
+          {{ set displayTitle = item.menu_title || item.title }}
+          {{ set displayDesc = item.menu_desc || item.description || item.subtitle || item.desc }}
+
+          <a href="{{ item.url }}" class="group flex flex-col gap-1 md:gap-2 no-underline border-b border-border/5 pb-6 md:pb-8 hover:border-primary/20 transition-colors duration-500">
+            <span class="text-3xl md:text-5xl font-bold text-text group-hover:text-primary transition-colors tracking-tighter leading-none">
+              {{ displayTitle }}
+            </span>
+            {{ if displayDesc }}
+              <span class="text-xs md:text-sm {{ theme.typography.colors.muted }} group-hover:text-text transition-colors max-w-md line-clamp-1 md:line-clamp-none">
+                {{ displayDesc }}
+              </span>
+            {{ /if }}
+          </a>
+        {{ /for }}
+      </nav>
+
+      <section>
+        <div class="flex items-center gap-4 mb-6 md:mb-8 opacity-40">
+          <h2 class="{{ theme.typography.label }} lowercase">atlas</h2>
+          <span class="h-px grow bg-border/20"></span>
+        </div>
+        <div class="grid grid-cols-2 gap-x-4 md:gap-x-12 gap-y-4 md:gap-y-10">
+          {{ set dynamicAtlas = search.pages("menu_label=atlas") }}
+          {{ set staticAtlas = index_links || [] }}
+          {{ set combinedAtlas = [...dynamicAtlas, ...staticAtlas].sort((a, b) => (a.menu_order ?? 99) - (b.menu_order ?? 99)) }}
+
+          {{ for item of combinedAtlas }}
+            {{# If it's a static link, we might still want to fetch target page data just in case #}}
+            {{ set isStatic = !item.type }}
+            {{ set targetPage = isStatic ? search.page("url=" + item.url) : item }}
+            {{ set displayTitle = item.menu_title || item.title || targetPage?.title }}
+            {{ set displayDesc = item.menu_desc || item.desc || targetPage?.description || targetPage?.subtitle }}
+            {{ set displayLabel = item.label || targetPage?.label }}
+
+            <a href="{{ item.url }}" class="group flex flex-col gap-1 no-underline border-b border-border/5 pb-2 md:border-none md:pb-0">
+              <div class="flex items-center justify-between">
+                <span class="text-sm md:text-base font-bold text-text group-hover:text-primary transition-colors tracking-tight">{{ displayTitle }}</span>
+                {{ if displayLabel }}
+                  <span class="text-[7px] md:text-[9px] font-mono {{ theme.typography.colors.dim }} group-hover:text-primary/40 uppercase tracking-widest">{{ displayLabel }}</span>
+                {{ /if }}
+              </div>
+              {{ if displayDesc }}
+                <p class="hidden md:block text-[12px] leading-relaxed {{ theme.typography.colors.muted }} m-0">
+                  {{ displayDesc }}
+                </p>
+              {{ /if }}
+            </a>
+          {{ /for }}
+        </div>
+      </section>
+    </div>
+
+    {{# RIGHT: Visual Curations #}}
+    <div class="lg:col-span-5 flex flex-col gap-12 md:gap-20">
+      
+      {{# Kedi Collage (Unified) #}}
+      {{ layout "ui/CuratedSection.vto" { label: "kedi.log", allHref: "/tags/kedi/" } }}
+        {{ set catNotes = search.pages("type=note 'kedi'", "date=desc") }}
+        {{ comp.ui.Collage({ items: catNotes }) }}
+      {{ /layout }}
+
+      {{# Music Snippet (Unified) #}}
+      {{ layout "ui/CuratedSection.vto" { label: "recent favorites", allHref: "/music/" } }}
+        <div class="grid grid-cols-3 gap-3">
+          {{ for album of favorite.albums |> slice(0, 6) }}
+            {{ comp.ui.album({ album: album, classes: "scale-100 hover:scale-105 transition-transform", hideMetadata: true }) }}
+          {{ /for }}
+        </div>
+      {{ /layout }}
+
+      {{# Subtle Snippet (Unified Header) #}}
+      {{ set subNote = search.pages("type=note 'coffee'|'recipes'", "date=desc")[0] }}
+      {{ if subNote }}
+        {{ layout "ui/CuratedSection.vto" { label: "fragment" } }}
+          <a href="{{ subNote.url }}" class="group block no-underline italic font-serif text-base md:text-lg text-text/60 hover:text-text transition-colors leading-relaxed line-clamp-3 md:line-clamp-none">
+            {{ subNote.content |> vto({ ...subNote, author, site, comp }) |> md |> safe |> truncate(120) }}
+          </a>
+        {{ /layout }}
+      {{ /if }}
+    </div>
+  </div>
+
+  {{# Bottom Search #}}
+  <div class="mt-20 md:mt-32 pt-16 md:pt-20 border-t border-border/10 opacity-60 hover:opacity-100 transition-opacity max-w-xl mx-auto text-center">
+    <p class="text-[9px] font-mono uppercase tracking-[0.3em] mb-6 md:mb-10 text-text-muted/40">Search the notebook</p>
+    {{ comp.features.Search({ compId: "home-bottom" }) }}
+  </div>
+
+  {{# Authentication Modal (Hidden by default) #}}
+  {{ comp.features.StatusAuth() }}
+{{ /set }}
+
+{{ comp.ui.Container({ width: "narrow", content: gardenContent, classes: "pb-24 md:pb-32 pt-4 md:pt-8", padding: true }) }}

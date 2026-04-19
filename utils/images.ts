@@ -7,10 +7,11 @@ import sharp from "sharp";
 export async function saveColorVersion(
   inputPath: string | Buffer,
   outputPath: string,
+  width = 290,
 ) {
   try {
     const ditheredBuffer = await sharp(inputPath,)
-      .resize(290, 290, { fit: "cover", },)
+      .resize(width, width, { fit: "cover", },)
       .png({
         palette: true,
         colors: 16,
@@ -39,33 +40,34 @@ export async function saveColorVersion(
 export async function ditherWithSharp(
   inputPath: string | Buffer,
   outputPath: string,
+  width = 290,
 ) {
   const { data, info, } = await sharp(inputPath,)
-    .resize(290, 290, { fit: "cover", },)
+    .resize(width, width, { fit: "cover", },)
     .greyscale()
     .raw()
     .toBuffer({ resolveWithObject: true, },);
 
-  const width = info.width;
-  const height = info.height;
+  const w = info.width;
+  const h = info.height;
   const inputPixels = new Uint8Array(data,);
 
-  const outputPixels = new Uint8Array(width * height * 4,);
+  const outputPixels = new Uint8Array(w * h * 4,);
 
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const idx = y * width + x;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = y * w + x;
       const oldPixel = inputPixels[idx];
       const newPixel = oldPixel < 128 ? 0 : 255;
 
       const error = oldPixel - newPixel;
       inputPixels[idx] = newPixel;
 
-      if (x + 1 < width) inputPixels[idx + 1] += (error * 7) / 16;
-      if (y + 1 < height) {
-        if (x > 0) inputPixels[idx + width - 1] += (error * 3) / 16;
-        inputPixels[idx + width] += (error * 5) / 16;
-        if (x + 1 < width) inputPixels[idx + width + 1] += (error * 1) / 16;
+      if (x + 1 < w) inputPixels[idx + 1] += (error * 7) / 16;
+      if (y + 1 < h) {
+        if (x > 0) inputPixels[idx + w - 1] += (error * 3) / 16;
+        inputPixels[idx + w] += (error * 5) / 16;
+        if (x + 1 < w) inputPixels[idx + w + 1] += (error * 1) / 16;
       }
 
       const outIdx = idx * 4;
@@ -85,8 +87,8 @@ export async function ditherWithSharp(
 
   await sharp(Buffer.from(outputPixels,), {
     raw: {
-      width: width,
-      height: height,
+      width: w,
+      height: h,
       channels: 4,
     },
   },)

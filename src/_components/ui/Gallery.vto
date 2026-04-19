@@ -1,55 +1,60 @@
+{{#
+  Component: Gallery (Content-aware wrapper)
+  Reworked: Cinematic, accessible gallery for a "chill" visual diary.
+  
+  Props:
+    - images: Array of { src, alt, width, height }
+    - static: boolean (default: false)
+    - classes: additional classes
+    - aspect: string (default: "aspect-square")
+#}}
+
 {{ if images && images.length > 0 }}
   {{ set isSingle = images.length == 1 }}
+  {{ set gridClasses = isSingle ? "block" : "grid grid-cols-1 sm:grid-cols-2 gap-4" }}
 
   <div
-    class="{{ if isSingle }}block{{ else }}grid grid-cols-2 gap-2{{ /if }} mb-4"
+    class="{{ gridClasses }} {{ theme.components.gallery.container }} {{ classes }}"
     {{ if !static }}data-pswp-gallery{{ /if }}
   >
-    {{ for image of images }}
-      {{ if static }}
-        <div
-          class="
-            block relative overflow-hidden border border-border/50
-            aspect-square rounded-xl group
-          "
-        >
-          <img
-            src="{{ image.src |> url }}"
-            alt="{{ image.alt }}"
-            transform-images="avif webp jpg 640 1280 1920"
-            class="block w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
-          <div
-            class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-          >
-            <div class="bg-bg/80 rounded-full p-2 text-primary">
-              {{ comp.ui.Icon({ name: "maximize", classes: "w-6 h-6" }) }}
-            </div>
-          </div>
-        </div>
-      {{ else }}
-        <a
+    {{ for i, image of images }}
+      {{# 1. WRAPPER ELEMENT #}}
+      {{ set tag = static ? "div" : "a" }}
+      
+      <{{ tag }}
+        {{ if !static }}
           href="{{ image.src |> url }}"
-          class="
-            note-gallery__link block relative z-10
-            cursor-zoom-in transition-all duration-200 hover:brightness-95
-            overflow-hidden border border-border/50
-            aspect-square rounded-xl
-          "
-          data-pswp-width="{{ image.width }}"
-          data-pswp-height="{{ image.height }}"
+          data-pswp-width="{{ image.width || 'auto' }}"
+          data-pswp-height="{{ image.height || 'auto' }}"
           target="_blank"
-        >
-          <img
-            src="{{ image.src |> url }}"
-            alt="{{ image.alt }}"
-            transform-images="avif webp jpg 640 1280 1920"
-            class="block w-full h-full object-cover"
-            loading="lazy"
-          />
-        </a>
-      {{ /if }}
+          aria-label="View larger image: {{ image.alt }}"
+          class="{{ theme.components.gallery.item }} {{ it.aspect || 'aspect-square' }}"
+        {{ else }}
+          class="{{ theme.components.gallery.item |> replace('cursor-zoom-in shadow-sm hover:shadow-xl', '') }} {{ it.aspect || 'aspect-square' }}"
+        {{ /if }}
+      >
+        {{# 2. THE IMAGE #}}
+        <img
+          src="{{ image.src |> url }}"
+          alt="{{ image.alt }}"
+          transform-images="avif webp jpg 640 1280 1920"
+          class="{{ theme.components.gallery.image }}"
+          loading="lazy"
+        />
+
+        {{# 3. MINIMALIST OVERLAY #}}
+        {{ if images.length > 1 }}
+          <div class="{{ theme.components.gallery.overlay }}">
+            {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+            <span>{{ i + 1 }} / {{ images.length }}</span>
+          </div>
+        {{ /if }}
+
+        {{# 4. CAPTION (Optional) #}}
+        {{ if image.alt && !static }}
+          <span class="sr-only">{{ image.alt }}</span>
+        {{ /if }}
+      </{{ tag }}>
     {{ /for }}
   </div>
 {{ /if }}

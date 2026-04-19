@@ -1,0 +1,110 @@
+{{#
+  Component: Feeds (Feature)
+  Data-driven feeds listing.
+  
+  Props:
+    - primary_streams: Array of feed objects
+    - filtered_streams: Array of category objects { title, desc, feeds }
+    - search: Lume search object (passed from global data)
+#}}
+
+<div class="flex flex-col gap-24">
+
+{{# 1. PRIMARY STREAM (Site-wide) #}}
+<section class="relative group/stream">
+  {{# Accent Bar #}}
+  <div class="absolute -left-6 top-0 bottom-0 w-0.5 bg-primary/0 group-hover/stream:bg-primary/40 transition-all duration-700"></div>
+
+  <header class="mb-10">
+    <h2 class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4">Site Stream</h2>
+    <p class="text-lg text-text leading-relaxed max-w-lg">
+      The master feeds containing all long-form writing and ephemeral notes.
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
+    {{ for stream of it.primary_streams }}
+      <a href="{{ site.url }}{{ stream.url }}" class="group flex items-center justify-between no-underline border-b border-border/5 pb-6 not-prose">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm font-bold text-text group-hover:text-primary transition-colors">{{ stream.title }}</span>
+          <span class="text-[10px] font-mono {{ theme.typography.colors.muted }} uppercase tracking-widest">{{ stream.label }}</span>
+        </div>
+        <span class="text-[10px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors tracking-tighter">{{ stream.file }}</span>
+      </a>
+    {{ /for }}
+  </div>
+</section>
+
+{{# 2. CATEGORY STREAMS #}}
+<section class="relative group/stream">
+  {{# Accent Bar #}}
+  <div class="absolute -left-6 top-0 bottom-0 w-0.5 bg-primary/0 group-hover/stream:bg-primary/40 transition-all duration-700"></div>
+
+  <header class="mb-12">
+    <h2 class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4">Filtered Streams</h2>
+  </header>
+
+  <div class="flex flex-col gap-16">
+    {{ for cat of it.filtered_streams }}
+      <div>
+        <h3 class="text-xs font-bold text-text mb-6 flex items-center gap-2">
+          {{ cat.title }}
+          <span class="w-1 h-1 rounded-full bg-primary/20"></span>
+          <span class="text-[9px] font-mono font-normal uppercase tracking-widest {{ theme.typography.colors.muted }}">{{ cat.desc }}</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
+          {{ for feed of cat.feeds }}
+            <a href="{{ site.url }}{{ feed.url }}" class="group flex items-center justify-between no-underline border-b border-border/5 pb-4 opacity-60 hover:opacity-100 transition-opacity not-prose">
+              <span class="text-sm font-medium text-text group-hover:text-primary transition-colors">{{ feed.title }}</span>
+              <span class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors tracking-tighter">{{ feed.file }}</span>
+            </a>
+          {{ /for }}
+        </div>
+      </div>
+    {{ /for }}
+  </div>
+</section>
+
+{{# 3. TOPIC FEEDS #}}
+<section class="relative group/stream">
+  {{# Accent Bar #}}
+  <div class="absolute -left-6 top-0 bottom-0 w-0.5 bg-primary/0 group-hover/stream:bg-primary/40 transition-all duration-700"></div>
+
+  <header class="mb-12">
+    <h2 class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4">Topic Feeds</h2>
+    <p class="text-sm {{ theme.typography.colors.subtle }} leading-relaxed max-w-lg">
+      Subscribe to specific topics. Each tag has its own Atom and JSON feed.
+    </p>
+  </header>
+
+  <div class="flex flex-col gap-8">
+    {{ set allTags = search.values("tags") }}
+    {{ if allTags.length > 0 }}
+      {{ for tag of allTags |> sort }}
+        {{ set slug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-3 mb-2">
+            {{ comp.ui.Tag({ content: tag, href: "/tags/" + slug + "/", classes: "text-sm" }) }}
+            <span class="text-[9px] font-mono {{ theme.typography.colors.muted }} uppercase tracking-widest">{{ search.pages("'" + tag + "'").length }} entries</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 pl-4">
+            <a href="{{ site.url }}/tags/{{ slug }}.atom" class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose">
+              <span class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors">Atom Feed</span>
+              <span class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.muted }} transition-colors">.atom</span>
+            </a>
+            <a href="{{ site.url }}/tags/{{ slug }}.json" class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose">
+              <span class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors">JSON Feed</span>
+              <span class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.muted }} transition-colors">.json</span>
+            </a>
+          </div>
+        </div>
+      {{ /for }}
+    {{ else }}
+      <div class="pl-4">
+        {{ comp.ui.EmptyState({ icon: "tag", title: "No topics yet", description: "Tags will appear here once you add them to your content.", size: "sm", }) }}
+      </div>
+    {{ /if }}
+  </div>
+</section>
+
+</div>

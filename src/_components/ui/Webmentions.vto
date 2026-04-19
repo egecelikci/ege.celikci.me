@@ -1,83 +1,86 @@
-{{ set allMentions = webmentions ? webmentions.children : [] }}
-{{ set mentions = allMentions |> webmentionsByUrl(url) }}
+{{#
+  Component: Webmentions (Feature)
+  Unified, minimalist display for interactions and comments.
+  
+  Props:
+    - mentions: Array of filtered webmention objects (required)
+    - classes: additional classes
+#}}
 
-<div class="border-t border-border p-4 bg-surface/30 rounded-b-lg" id="webmentions">
-  <div class="mt-1">
-    {{ set hasInteractions = false }}
-    {{ for mention of mentions }}
-      {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
-        {{ set hasInteractions = true }}
-      {{ /if }}
-    {{ /for }}
+<div class="webmentions-list {{ classes }}">
+  {{# Split mentions by type #}}
+  {{ set interactions = mentions.filter(m => m['wm-property'] === 'like-of' || m['wm-property'] === 'repost-of') }}
+  {{ set comments = mentions.filter(m => m['wm-property'] !== 'like-of' && m['wm-property'] !== 'repost-of') }}
 
-    {{ if hasInteractions }}
-      <div class="mb-8 pb-4 border-b border-border">
-        <div class="flex flex-wrap items-center mt-4 pl-1">
-          {{ set zIndex = mentions.length }}
-          
-          {{ for mention of mentions }}
-            {{ if mention['wm-property'] == 'like-of' || mention['wm-property'] == 'repost-of' }}
-              <a
-                class="
-                  group/face peer relative block w-8 h-8 rounded-full -ml-2 first:ml-0
-                  bg-surface shadow-[0_0_0_2px_var(--color-bg)] 
-                  overflow-visible transition-all duration-200 ease-default
-                  hover:z-50 hover:scale-135 hover:-translate-y-1 hover:shadow-lg
-                  focus-visible:z-50 focus-visible:scale-135 focus-visible:-translate-y-1
-                  peer-hover:translate-x-3 peer-focus-visible:translate-x-3
-                "
-                href="{{ mention.author.url }}"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="{{ mention.author.name }}"
-                style="z-index: {{ zIndex }}"
-              >
-                {{ if mention.author.photo }}
-                  <img
-                    src="{{ mention.author.photo }}"
-                    alt="{{ mention.author.name }}"
-                    width="64" height="64"
-                    loading="lazy" decoding="async"
-                    class="block w-full h-full rounded-full object-cover"
-                  />
-                {{ else }}
-                  <span class="flex w-full h-full items-center justify-center text-xs">
-                    {{ comp.ui.Icon({ name: "user", type: "lucide" }) }}
-                  </span>
-                {{ /if }}
+  {{# 1. FACES (Interactions) #}}
+  {{ if interactions.length > 0 }}
+    <div class="flex flex-wrap items-center gap-3 mb-8 pl-1">
+      <div class="flex -space-x-2">
+        {{ set zIndex = interactions.length }}
+        {{ for mention of interactions }}
+          <a
+            class="
+              group/face relative block w-7 h-7 rounded-full 
+              border-2 border-bg bg-surface overflow-visible
+              transition-all duration-300 hover:scale-110 hover:z-50
+            "
+            href="{{ mention.author.url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="{{ mention.author.name }}"
+            style="z-index: {{ zIndex }}"
+          >
+            <div class="w-full h-full rounded-full overflow-hidden">
+              {{ if mention.author.photo }}
+                <img
+                  src="{{ mention.author.photo }}"
+                  alt="{{ mention.author.name }}"
+                  width="48" height="48"
+                  loading="lazy" decoding="async"
+                  class="block w-full h-full object-cover grayscale opacity-60 group-hover/face:grayscale-0 group-hover/face:opacity-100 transition-all"
+                />
+              {{ else }}
+                <div class="flex w-full h-full items-center justify-center bg-surface text-text-muted/50">
+                  {{ comp.ui.Icon({ name: "user", classes: "text-[10px]" }) }}
+                </div>
+              {{ /if }}
+            </div>
 
-                <span class="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-3.5 h-3.5 bg-bg rounded-full shadow-[0_0_0_2px_var(--color-bg)] text-primary z-20 transition-transform duration-200 group-hover/face:scale-110">
-                  {{ if mention['wm-property'] == 'like-of' }}
-                    {{ comp.ui.Icon({ name: "heart", type: "lucide", class: "w-2.5 h-2.5" }) }}
-                  {{ else if mention['wm-property'] == 'repost-of' }}
-                    {{ comp.ui.Icon({ name: "repeat-2", type: "lucide", class: "w-2.5 h-2.5" }) }}
-                  {{ /if }}
-                </span>
-              </a>
-            {{ /if }}
-            {{ set zIndex = zIndex - 1 }}
-          {{ /for }}
-        </div>
+            {{# Tiny Type Indicator #}}
+            <span class="absolute -bottom-1 -right-1 flex items-center justify-center w-3.5 h-3.5 bg-bg rounded-full text-primary/70 group-hover/face:text-primary transition-colors border border-border/10 shadow-sm">
+              {{ if mention['wm-property'] == 'like-of' }}
+                {{ comp.ui.Icon({ name: "heart", classes: "text-[7px] fill-current" }) }}
+              {{ else }}
+                {{ comp.ui.Icon({ name: "repeat-2", classes: "text-[7px]" }) }}
+              {{ /if }}
+            </span>
+          </a>
+          {{ set zIndex = zIndex - 1 }}
+        {{ /for }}
       </div>
-    {{ /if }}
+      
+      <span class="text-[9px] font-mono uppercase tracking-[0.2em] text-text-muted/50">
+        {{ interactions.length }} {{ interactions.length == 1 ? 'interaction' : 'interactions' }}
+      </span>
+    </div>
+  {{ /if }}
 
-    {{# --- COMMENTS LIST --- #}}
-    {{ set comments = mentions.filter(m => m['wm-property'] !== 'like-of' && m['wm-property'] !== 'repost-of') }}
-    {{ set commentCount = comments.length }}
+  {{# 2. COMMENTS LIST #}}
+  {{ if comments.length > 0 }}
+    <div class="space-y-4">
+      <ol class="list-none p-0 m-0">
+        {{ for mention of comments }}
+          <li class="mb-0">
+            {{ comp.ui.WebmentionItem({ webmention: mention }) }}
+          </li>
+        {{ /for }}
+      </ol>
+    </div>
+  {{ /if }}
 
-    {{ if commentCount > 0 }}
-      <div class="relative">
-        <ol class="list-none p-0 m-0">
-          {{ for mention of comments }}
-            <li class="mb-0">
-              {{ comp.ui.WebmentionItem({ webmention: mention }) }}
-            </li>
-          {{ /for }}
-        </ol>
-      </div>
-
-    {{ else if !hasInteractions }}
-      <p class="text-text-muted italic py-4">No webmentions yet.</p>
-    {{ /if }}
-  </div>
+  {{ if interactions.length === 0 && comments.length === 0 }}
+    <div class="py-6 pl-4 border-l border-border/10 text-[10px] font-mono uppercase tracking-widest text-text-muted/50 italic">
+      No interactions recorded.
+    </div>
+  {{ /if }}
 </div>

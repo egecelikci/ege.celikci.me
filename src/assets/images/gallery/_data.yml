@@ -3,7 +3,7 @@ transformImages:
   # High-quality social media preview (1200x630 - optimal for OpenGraph/Twitter)
   - resize: [1200, 630]
     suffix: "-preview"
-    format: [webp, jpg]
+    format: [jpg]
     options:
       quality: 80
       progressive: true

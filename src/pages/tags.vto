@@ -1,72 +1,44 @@
 ---
-url: /tags/
-layout: layouts/base.vto
 title: topics
+description: "a curated map of thoughts and archives."
+article_classes: "e-content"
+menu_label: atlas
+menu_order: 3
+label: tags
 ---
 
-{{# --- 1. HEADER --- #}}
-{{
-  comp.ui.PageHeader({
-    title: title,
-    subtitle: "an index of all tags",
-    backlink: { href: "/wiki/", text: "back to wiki" },
-    width: "narrow",
-  })
-}}
-
-{{# --- 2. TAG CLOUD CONTENT --- #}}
+{{# --- 1. TAG CLOUD (Clean Typographic Style) --- #}}
 {{ set tagsContent }}
-  {{# CHANGE: Removed "type=entry" filter to get tags from posts/notes too #}}
   {{ set allTags = search.values("tags") }}
-
-  {{ if allTags && allTags.length > 0 }}
-    <div class="flex flex-wrap gap-3">
+  
+  <div class="flex flex-wrap gap-8">
+    {{ if allTags.length > 0 }}
       {{ for tag of allTags }}
-        {{ if tag !== "meta" }}
-          {{# CHANGE: Count ALL pages with this tag, not just entries #}}
-          {{ set count = search.pages("'" + tag + "'").length }}
-
-          <a
-            href="/tags/{{ tag |> slugify }}/"
-            class="
-              group flex items-center gap-3
-              pl-4 pr-3 py-2.5
-              rounded-lg border border-border/60 bg-surface/40
-              hover:bg-surface hover:border-primary/40 hover:shadow-sm hover:-translate-y-0.5
-              transition-all duration-300 ease-out no-underline
-            "
-          >
-            <span
-              class="font-bold text-sm text-text-muted group-hover:text-primary transition-colors"
-            >
-              <span class="opacity-40 font-normal mr-0.5">#</span>{{ tag }}
-            </span>
-            <span
-              class="flex items-center justify-center h-5 min-w-[1.25rem] px-1.5 text-[10px] font-mono font-bold rounded-md bg-bg border border-border/50 text-text-muted group-hover:text-primary group-hover:border-primary/20 transition-colors"
-            >
-              {{ count }}
-            </span>
-          </a>
-        {{ /if }}
-      {{ /for }}
-    </div>
-  {{ else }}
-    {{# Empty State #}}{{
-      comp.ui.EmptyState({
-        icon: "tag",
-        title: "No topics found",
-        description:
-          "Start tagging your posts, notes, and wiki entries to see them appear here.",
-      })
-    }}
-  {{ /if }}
+        {{# Get count for this tag #}}
+        {{ set tagCount = search.pages("'" + tag + "'").length }}
+        {{ set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
+        
+        <div class="group flex items-baseline gap-2">
+          {{ comp.ui.Tag({ 
+            content: tag, 
+            href: "/tags/" + tagSlug + "/",
+            classes: "text-base"
+          }) }}
+          <span class="text-[9px] font-mono text-text-muted/40 group-hover:text-text-muted/70 transition-colors uppercase tracking-widest">
+            {{ tagCount }}
+          </span>
+        </div>
+    {{ /for }}
+    {{ else }}
+      {{
+        comp.ui.EmptyState({
+          icon: "tag",
+          title: "No topics found",
+          description: "Tags will appear here once you add them to your posts or notes.",
+        })
+      }}
+    {{ /if }}
+  </div>
 {{ /set }}
 
-{{# --- 3. CONTAINER --- #}}
-{{
-  comp.ui.Container({
-    width: "narrow",
-    classes: "min-h-screen pb-20",
-    content: tagsContent,
-  })
-}}
+{{ tagsContent |> safe }}

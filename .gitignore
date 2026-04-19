@@ -1,7 +1,9 @@
-_cache
-.DS_Store
+_cache/
+dist/
+node_modules/
 .env
 .netlify
-dist
-node_modules
-src/_data/favorite.json
+.DS_Store
+
+!/.docs/
+!/.docs/**

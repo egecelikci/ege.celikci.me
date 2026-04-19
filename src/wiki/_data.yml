@@ -1,8 +1,0 @@
-layout: layouts/content.vto
-type: entry
-templateEngine: [vto, md]
-breadcrumbs: true
-show_related: true
-show_webmentions: false
-container_width: narrow
-article_classes: "e-content text-lg leading-relaxed"

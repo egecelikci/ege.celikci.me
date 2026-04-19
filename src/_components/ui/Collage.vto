@@ -1,0 +1,27 @@
+{{#
+  Component: Collage
+  A visual 3x3 grid for curated note images.
+  
+  Props:
+    - items: Array of { url, images: { src, alt }[] }
+    - maxItems?: number (default: 9)
+    - classes?: string
+#}}
+
+<div class="grid grid-cols-3 gap-2 {{ it.classes || '' }}">
+  {{ set count = 0 }}
+  {{ for item of it.items }}
+    {{ if item.images?.length > 0 && count < (it.maxItems || 9) }}
+      <a href="{{ item.url }}" class="block aspect-square overflow-hidden rounded-sm grayscale opacity-60 md:opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700 active:scale-95" title="view note">
+        <img 
+          src="{{ item.images[0].src }}" 
+          alt="{{ item.images[0].alt || 'collage image' }}" 
+          class="w-full h-full object-cover" 
+          loading="lazy" 
+          transform-images="avif webp jpg 200"
+        />
+      </a>
+      {{ set count = count + 1 }}
+    {{ /if }}
+  {{ /for }}
+</div>

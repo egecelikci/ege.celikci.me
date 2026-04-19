@@ -1,0 +1,44 @@
+---
+layout: layouts/page.vto
+title: "feeds"
+description: "a curated map of Atom and JSON streams."
+article_classes: "not-prose"
+tags: ["meta"]
+menu_label: atlas
+menu_order: 4
+label: Atom & JSON feeds
+primary_streams:
+  - title: Atom Stream
+    label: XML Standard
+    file: feed.atom
+    url: /feed.atom
+  - title: JSON Stream
+    label: Modern API
+    file: feed.json
+    url: /feed.json
+filtered_streams:
+  - title: Notes
+    desc: Short-form only
+    feeds:
+      - title: Atom
+        file: notes.atom
+        url: /notes.atom
+      - title: JSON
+        file: notes.json
+        url: /notes.json
+  - title: Writing
+    desc: Long-form only
+    feeds:
+      - title: Atom
+        file: blog.atom
+        url: /blog.atom
+      - title: JSON
+        file: blog.json
+        url: /blog.json
+---
+
+{{ comp.features.Feeds({ 
+  primary_streams: primary_streams, 
+  filtered_streams: filtered_streams,
+  search: search 
+}) }}
