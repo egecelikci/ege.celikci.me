@@ -9,6 +9,7 @@ import inline from "lume/plugins/inline.ts";
 import postcss from "lume/plugins/postcss.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
+import picture from "lume/plugins/picture.ts";
 
 export interface AssetOptions {
   esbuild?: Partial<EsbuildOptions>;
@@ -54,10 +55,11 @@ export default function(options: AssetOptions = {},) {
         ],
       },),)
       .use(inline(),)
+      .use(picture(),)
       .use(transformImages(),)
       // Static copies
-      .copy("assets/images",)
       .copy("assets/fonts",)
+      .copy("assets/images",)
       .remote(
         "assets/styles/vendor/photoswipe.css",
         "https://unpkg.com/photoswipe/dist/photoswipe.css",

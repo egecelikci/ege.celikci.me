@@ -4,7 +4,7 @@
   
   Props:
     - compId: string (unique ID for multiple instances)
-    - placeholder: string (default: "search notebook…")
+    - placeholder: string (default: "search")
 #}}
 
 <div class="search-container group relative" id="search-root-{{ compId || 'main' }}">
@@ -17,7 +17,7 @@
     <input
       type="text"
       id="site-search-input-{{ compId || 'main' }}"
-      placeholder="{{ placeholder || 'search notebook…' }}"
+      placeholder="{{ placeholder || 'search…' }}"
       class="w-full bg-surface/40 border border-border/10 rounded-xl py-3 pl-10 pr-12 text-sm text-text placeholder:text-text-muted/60 {{ theme.components.input.focus }} transition-all"
       autocomplete="off"
     />

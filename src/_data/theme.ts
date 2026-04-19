@@ -63,18 +63,18 @@ export const components = {
   gallery: {
     container: "mb-4",
     item:
-      "note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in shadow-sm hover:shadow-xl transition-all duration-700",
+      "note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents",
     image:
-      "block w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105",
+      "absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105",
     overlay:
-      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/80 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted/60 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-all duration-500 pointer-events-none",
+      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/80 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted/60 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-all duration-500 pointer-events-none z-20",
   },
 
   album: {
     card:
       "album-item group flex flex-col gap-3 relative no-underline transition-all duration-500",
     coverWrapper:
-      "w-full aspect-square block relative z-10 rounded-xl overflow-hidden bg-white/80 dark:bg-white/5 transition-all duration-700 ease-out group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-primary/10",
+      "w-full aspect-square block relative z-10 rounded-xl overflow-hidden bg-white/80 dark:bg-white/5 transition-all duration-700 ease-out group-hover:scale-105",
     meta:
       "flex flex-col gap-0.5 opacity-60 md:opacity-40 group-hover:opacity-100 transition-opacity duration-500",
     title: "block text-[11px] font-bold text-text truncate tracking-tight",

@@ -12,9 +12,9 @@
     - rawContent: boolean (default: false)
 #}}
 
-<div class="relative grid grid-cols-[1rem_1fr] items-start gap-4 group transition-all duration-500 rounded-lg px-2 py-2 hover:bg-primary/5 cursor-default {{ it.classes || '' }}" {{ if it.id }}id="{{ it.id }}"{{ /if }}>
+<div class="relative flex items-center gap-4 group transition-all duration-500 rounded-xl px-4 py-3 bg-primary/2.5 md:bg-transparent md:hover:bg-primary/5 cursor-default {{ it.classes || '' }}" {{ if it.id }}id="{{ it.id }}"{{ /if }}>
   {{ if it.icon }}
-    <div class="shrink-0 pt-1 flex items-center justify-center w-4 h-4">
+    <div class="shrink-0 flex items-center justify-center w-5 h-5">
       {{
         comp.ui.Icon({
           name: it.icon,
@@ -25,34 +25,31 @@
     </div>
   {{ /if }}
 
-  <div class="overflow-hidden min-w-0">
+  <div class="flex-1 min-w-0">
     {{ if it.label }}
-      <div class="{{ it.labelSize || 'text-[10px]' }} uppercase opacity-50 mb-0.5 tracking-[0.2em] font-mono leading-tight">
+      <div class="{{ it.labelSize || 'text-[10px]' }} uppercase opacity-40 mb-0.5 tracking-[0.2em] font-mono leading-tight">
         {{ it.label }}
       </div>
     {{ /if }}
 
-    <div class="flex items-center gap-3">
-      {{# 
-        Fixed-width wrapper using 'ch' units for pixel-perfect mono alignment. 
-        26ch is roughly 200px at text-sm, fitting perfectly in your header container.
-      #}}
-      <div class="status-content-wrapper w-[26ch] text-text font-mono truncate transition-all duration-500 group-[.is-active]:text-primary group-[.is-active]:font-bold group-[.is-inactive]:opacity-40">{{ if it.rawContent }}{{ it.content |> safe }}{{ else }}{{ it.content }}{{ /if }}</div>
+    <div class="status-content-wrapper w-full md:w-[26ch] text-text font-mono text-xs md:text-sm truncate transition-all duration-500 group-[.is-active]:text-primary group-[.is-active]:font-bold group-[.is-inactive]:opacity-40">
+      {{ if it.rawContent }}{{ it.content |> safe }}{{ else }}{{ it.content }}{{ /if }}
     </div>
   </div>
 
   {{# 
-    Heart Button (Subtle Square-Circle Widget)
-    Positioned absolutely to the right, sticking out of the container
+    Heart Button
+    - Mobile: Pinned to the right within the flex flow
+    - Desktop: Absolute positioned for the signature look
   #}}
-  <div class="status-action-wrapper hidden absolute -right-9 top-1/2 -translate-y-1/2 shrink-0">
-    <button class="status-like-button w-7 h-7 flex items-center justify-center rounded-lg bg-primary/5 hover:bg-primary/10 transition-all active:scale-90 group/heart" title="Like on ListenBrainz">
+  <div class="status-action-wrapper hidden shrink-0 md:absolute md:-right-10 md:top-1/2 md:-translate-y-1/2">
+    <button class="status-like-button w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 md:bg-primary/5 hover:bg-primary/20 transition-all active:scale-90 group/heart" title="Like on ListenBrainz">
       {{ comp.ui.Icon({ name: "heart", classes: "w-3.5 h-3.5 text-primary transition-all duration-300 fill-none" }) }}
     </button>
   </div>
 
   {{ if it.rightContent }}
-    <div class="shrink-0 ml-4">
+    <div class="shrink-0">
       {{ it.rightContent |> safe }}
     </div>
   {{ /if }}

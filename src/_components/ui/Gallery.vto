@@ -30,7 +30,7 @@
           aria-label="View larger image: {{ image.alt }}"
           class="{{ theme.components.gallery.item }} {{ it.aspect || 'aspect-square' }}"
         {{ else }}
-          class="{{ theme.components.gallery.item |> replace('cursor-zoom-in shadow-sm hover:shadow-xl', '') }} {{ it.aspect || 'aspect-square' }}"
+          class="{{ theme.components.gallery.item |> replace('cursor-zoom-in', '') }} {{ it.aspect || 'aspect-square' }}"
         {{ /if }}
       >
         {{# 2. THE IMAGE #}}

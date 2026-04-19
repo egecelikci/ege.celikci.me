@@ -19,6 +19,7 @@ const pendingTransitions = new WeakMap<Element, number>();
 let currentInterval = CONFIG.baseInterval;
 let pollTimeout: number | null = null;
 let abortController: AbortController | null = null;
+let hasPeeked = false;
 
 /**
  * Updates the visual state classes.
@@ -75,6 +76,49 @@ function createMarqueeAnimation(element: HTMLElement,) {
     container.onmouseenter = () => tl.pause();
     container.onmouseleave = () => tl.play();
   },);
+}
+
+function initScrollInteractions() {
+  const container = document.getElementById("status-scroll-container");
+  const dots = document.querySelectorAll(".status-dot");
+  if (!container || dots.length === 0) return;
+
+  // 1. Sync dots with scroll
+  container.addEventListener("scroll", () => {
+    const scrollLeft = container.scrollLeft;
+    const width = container.offsetWidth;
+    const index = Math.round(scrollLeft / width);
+
+    dots.forEach((dot, i) => {
+      dot.setAttribute("aria-current", i === index ? "true" : "false");
+    });
+  }, { passive: true });
+
+  // 2. Click dots to scroll
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      const width = container.offsetWidth;
+      container.scrollTo({
+        left: width * i,
+        behavior: "smooth"
+      });
+    });
+  });
+
+  // 3. Intro Peek Animation (Mobile Only)
+  if (!hasPeeked && window.innerWidth < 768) {
+    hasPeeked = true;
+    setTimeout(() => {
+      gsap.to(container, {
+        scrollLeft: 60,
+        duration: 0.6,
+        ease: "power2.inOut",
+        yoyo: true,
+        repeat: 1,
+        delay: 1
+      });
+    }, 1000);
+  }
 }
 
 async function loadStatus() {
@@ -356,6 +400,7 @@ function performUpdate(
 // Global start
 if (document.visibilityState === "visible") {
   loadStatus();
+  initScrollInteractions();
 }
 
 document.addEventListener("visibilitychange", () => {
