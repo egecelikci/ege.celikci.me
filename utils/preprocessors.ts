@@ -34,8 +34,8 @@ export default function registerPreprocessors(site: Site,) {
       const pageUrl = page.data.url as string;
       if (!pageUrl) continue;
 
-      const isNote = page.src.path.startsWith("/notes/",) ||
-        page.data.type === "note";
+      const isNote = page.src.path.startsWith("/notes/",)
+        || page.data.type === "note";
 
       // Extract images ONLY for notes (Arts Journal style)
       if (isNote && typeof page.data.content === "string") {
@@ -49,8 +49,11 @@ export default function registerPreprocessors(site: Site,) {
           page.data.coverImageAlt = images[0]?.alt;
 
           // Optimization: Use the -preview.jpg version for social media if it's a gallery image
-          if (coverSrc && coverSrc.includes("/gallery/")) {
-            page.data.metaImage = coverSrc.replace(/(\.[a-z]+)$/, "-preview.jpg");
+          if (coverSrc && coverSrc.includes("/gallery/",)) {
+            page.data.metaImage = coverSrc.replace(
+              /(\.[a-z]+)$/,
+              "-preview.jpg",
+            );
           }
 
           page.data.content = rawContent.replace(
@@ -73,13 +76,13 @@ export default function registerPreprocessors(site: Site,) {
             normalizeUrl(entry["wm-target"] || "",) === absPageUrl,
         );
 
-        stats.likes = relevantMentions.filter((m: any) =>
+        stats.likes = relevantMentions.filter((m: any,) =>
           m["wm-property"] === "like-of"
         ).length;
-        stats.reposts = relevantMentions.filter((m: any) =>
+        stats.reposts = relevantMentions.filter((m: any,) =>
           m["wm-property"] === "repost-of"
         ).length;
-        stats.replies = relevantMentions.filter((m: any) =>
+        stats.replies = relevantMentions.filter((m: any,) =>
           ["mention-of", "in-reply-to",].includes(m["wm-property"],)
         ).length;
       }

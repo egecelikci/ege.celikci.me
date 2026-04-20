@@ -13,11 +13,15 @@ function createStatusHtml(
   plainText: string,
   richContent: string,
   isActive: boolean,
-  meta: { isLiked?: boolean; mbid?: string; isMsid?: boolean } = {},
+  meta: { isLiked?: boolean; mbid?: string; isMsid?: boolean; } = {},
 ) {
   const timestamp = Date.now();
   const span =
-    `<span data-chars="×" data-status="${plainText}" data-timestamp="${timestamp}" data-active="${isActive}" data-mbid="${meta.mbid || ""}" data-liked="${meta.isLiked || false}" data-is-msid="${meta.isMsid || false}">${richContent}</span>`;
+    `<span data-chars="×" data-status="${plainText}" data-timestamp="${timestamp}" data-active="${isActive}" data-mbid="${
+      meta.mbid || ""
+    }" data-liked="${meta.isLiked || false}" data-is-msid="${
+      meta.isMsid || false
+    }">${richContent}</span>`;
   return `<div id="${id}">${span}</div>`;
 }
 
@@ -78,7 +82,7 @@ async function getMusicStatus(): Promise<string | null> {
     const recordingMsid = track.recording_msid;
     const idToUse = recordingMbid || recordingMsid;
     const isMsid = !recordingMbid;
-    
+
     const artistNames = additionalInfo.artist_names || [track.artist_name,];
     const artistMbids = additionalInfo.artist_mbids || [];
 
@@ -89,19 +93,24 @@ async function getMusicStatus(): Promise<string | null> {
         const paramName = isMsid ? "recording_msids" : "recording_mbids";
         const feedbackData: any = await client.get(
           `1/feedback/user/${LISTENBRAINZ_USERNAME}/get-feedback-for-recordings`,
-          { [paramName]: idToUse },
+          { [paramName]: idToUse, },
         );
-        
+
         // Extract array from payload or root
-        const feedbackList = feedbackData.payload?.feedback || feedbackData.feedback || [];
-        
+        const feedbackList = feedbackData.payload?.feedback
+          || feedbackData.feedback || [];
+
         // Find item by matching against ALL possible ID combinations
-        const item = feedbackList.find((f: any) => {
-          const matchMbid = recordingMbid && (f.recording_mbid === recordingMbid || f.recording_msid === recordingMbid);
-          const matchMsid = recordingMsid && (f.recording_mbid === recordingMsid || f.recording_msid === recordingMsid);
+        const item = feedbackList.find((f: any,) => {
+          const matchMbid = recordingMbid
+            && (f.recording_mbid === recordingMbid
+              || f.recording_msid === recordingMbid);
+          const matchMsid = recordingMsid
+            && (f.recording_mbid === recordingMsid
+              || f.recording_msid === recordingMsid);
           return matchMbid || matchMsid;
-        });
-        
+        },);
+
         // score 1 = love, 0 = neutral, -1 = hate
         isLiked = item?.score === 1;
       } catch (err) {
@@ -110,7 +119,9 @@ async function getMusicStatus(): Promise<string | null> {
     }
 
     const trackLink = idToUse
-      ? `<a href="https://listenbrainz.org/${isMsid ? "msid" : "track"}/${idToUse}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
+      ? `<a href="https://listenbrainz.org/${
+        isMsid ? "msid" : "track"
+      }/${idToUse}" target="_blank" rel="noopener noreferrer"><cite>${trackName}</cite></a>`
       : `<cite>${trackName}</cite>`;
 
     const artistLinks = artistNames
@@ -130,7 +141,7 @@ async function getMusicStatus(): Promise<string | null> {
       plainText,
       `${trackLink} by ${artistLinks}`,
       isActive,
-      { isLiked, mbid: idToUse, isMsid },
+      { isLiked, mbid: idToUse, isMsid, },
     );
   } catch (err) {
     console.error("Error fetching music:", err,);
