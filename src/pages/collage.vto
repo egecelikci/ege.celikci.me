@@ -1,18 +1,26 @@
 ---
 title: collage tool
-description: "generate minimalist album collages from listenbrainz"
-layout: layouts/page.vto
+description: "generate minimalist album collages from listenbrainz or last.fm"
 prose: false
-menu_label: tool
 ---
 
+{{# dprint-ignore-start #}}
 <div class="max-w-4xl mx-auto">
   <div class="flex flex-col md:flex-row gap-12 items-start">
     {{# 1. CONTROLS #}}
     <div class="w-full md:w-80 shrink-0 flex flex-col gap-8">
       <div class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10">
+        
         <div class="flex flex-col gap-2">
-          <label for="username" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">ListenBrainz User</label>
+          <label class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Data Source</label>
+          <div class="flex p-1 bg-surface/50 rounded-lg border border-border/10">
+             <button id="source-lb" class="grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all">ListenBrainz</button>
+             <button id="source-lfm" class="grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all">Last.fm</button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="username" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Username</label>
           <input 
             type="text" 
             id="username" 
@@ -34,11 +42,22 @@ menu_label: tool
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="bg-mode" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Background</label>
+          <label for="bg-mode" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Background Style</label>
           <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
-            <option value="aura">Aura (Gradient)</option>
-            <option value="dark">Dark (Deep Black)</option>
+            <option value="aura">Aura</option>
+            <option value="dark">Dark</option>
           </select>
+        </div>
+
+        <div class="flex flex-col gap-3 pt-2">
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
+            <label for="grain" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Apply Film Grain</label>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
+            <label for="show-counts" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Show Listen Counts</label>
+          </div>
         </div>
 
         <button 
@@ -50,8 +69,9 @@ menu_label: tool
         </button>
       </div>
 
-      <div id="status-msg" class="text-xs font-mono opacity-0 transition-opacity">
-        Fetching data...
+      <div id="status-msg" class="text-[10px] font-mono uppercase tracking-widest opacity-0 transition-opacity flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+        <span id="status-text">Fetching data...</span>
       </div>
 
       <button 
@@ -66,8 +86,8 @@ menu_label: tool
     {{# 2. PREVIEW #}}
     <div class="grow flex justify-center w-full">
       <div id="canvas-container" class="relative group shadow-elevated rounded-lg overflow-hidden border border-border/5 max-w-full">
-        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[70vh] bg-[#09090b] cursor-crosshair"></canvas>
-        <div id="canvas-overlay" class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[75vh] bg-[#09090b] cursor-crosshair"></canvas>
+        <div class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
            <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm">1080 x 1920 (9:16)</span>
         </div>
       </div>
@@ -77,8 +97,8 @@ menu_label: tool
 
 <script type="module">
   /**
-   * ListenBrainz Collage Generator (Client-Side)
-   * A port of the lb-collage tool.
+   * ListenBrainz & Last.fm Collage Generator (Proxy-Based)
+   * Secure, Offline-Ready, and Optimized.
    */
 
   const canvas = document.getElementById('collage-canvas');
@@ -86,8 +106,14 @@ menu_label: tool
   const generateBtn = document.getElementById('generate-btn');
   const downloadBtn = document.getElementById('download-btn');
   const statusMsg = document.getElementById('status-msg');
+  const statusText = document.getElementById('status-text');
+  
+  const sourceLb = document.getElementById('source-lb');
+  const sourceLfm = document.getElementById('source-lfm');
 
-  // CONFIG CONSTANTS (Sync with lb-collage.fish)
+  let currentSource = 'lb';
+
+  // CONFIG CONSTANTS (9:16 Geometry)
   const W = 1080;
   const H = 1920;
   const COVER_SIZE = 280;
@@ -97,8 +123,42 @@ menu_label: tool
   const LIST_BASE_Y = 1120;
   const LIST_ROW_HEIGHT = 76;
 
+  // SOURCE SWITCHING
+  sourceLb.onclick = () => setSource('lb');
+  sourceLfm.onclick = () => setSource('lfm');
+
+  function setSource(src) {
+    currentSource = src;
+    if (src === 'lb') {
+      sourceLb.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all';
+      sourceLfm.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all';
+    } else {
+      sourceLfm.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all';
+      sourceLb.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all';
+    }
+  }
+
+  // OFLINE CACHING HELPER
+  const CACHE_NAME = 'collage-tool-v1';
+  async function fetchWithCache(url, isImage = false) {
+    const cache = await caches.open(CACHE_NAME);
+    const cachedResponse = await cache.match(url);
+    
+    if (cachedResponse) return cachedResponse;
+
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        cache.put(url, response.clone());
+        return response;
+      }
+    } catch (e) {
+      console.warn('Network fetch failed, no cache for:', url);
+    }
+    return null;
+  }
+
   async function loadFont() {
-    // We try to use Inconsolata or fallback to mono
     const font = new FontFace('Inconsolata', 'url(/assets/fonts/Inconsolata.woff2)');
     await font.load();
     document.fonts.add(font);
@@ -122,36 +182,53 @@ menu_label: tool
     const user = document.getElementById('username').value.trim();
     const period = document.getElementById('period').value;
     const bgMode = document.getElementById('bg-mode').value;
+    const applyGrain = document.getElementById('grain').checked;
+    const showCounts = document.getElementById('show-counts').checked;
 
     if (!user) return alert('Please enter a username');
 
-    statusMsg.innerText = 'Fetching stats...';
+    statusText.innerText = 'Syncing...';
     statusMsg.style.opacity = '1';
     generateBtn.disabled = true;
 
     try {
-      // 1. Fetch Stats from ListenBrainz
-      const statsRes = await fetch(`https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=9`);
-      if (!statsRes.ok) throw new Error('API Error');
-      const statsData = await statsRes.json();
-      const albums = statsData.payload.release_groups.slice(0, 9);
+      // 0. Reset state for clean run
+      ctx.letterSpacing = "0px";
+      ctx.filter = "none";
 
-      if (albums.length === 0) throw new Error('No albums found for this period');
+      // 1. Fetch Stats via Proxy
+      const proxyUrl = `/api/collage-proxy?source=${currentSource}&user=${user}&period=${period}`;
+      const res = await fetchWithCache(proxyUrl);
+      if (!res) throw new Error('Could not fetch stats (Offline & no cache?)');
+      
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      const albums = data.albums;
 
-      // 2. Fetch Images (Proxying might be needed if CORS is tight, but CAA usually allows browser fetch)
-      statusMsg.innerText = 'Loading covers...';
+      if (!albums || albums.length === 0) throw new Error('No albums found for this period');
+
+      // 2. Load Images
+      statusText.innerText = 'Downloading covers...';
       const images = await Promise.all(albums.map(async (album) => {
         try {
           const img = new Image();
           img.crossOrigin = "anonymous";
-          img.src = `https://coverartarchive.org/release-group/${album.release_group_mbid}/front-500`;
-          await new Promise((resolve, reject) => {
+          
+          // Determine image URL (LFM returns it, LB needs construction)
+          let imgUrl = album.img;
+          if (!imgUrl) {
+             imgUrl = `https://coverartarchive.org/release-group/${album.mbid}/front-500`;
+          }
+
+          const imgRes = await fetchWithCache(imgUrl, true);
+          if (!imgRes) return null;
+
+          const blob = await imgRes.blob();
+          img.src = URL.createObjectURL(blob);
+          
+          await new Promise((resolve) => {
             img.onload = resolve;
-            img.onerror = () => {
-              // Fallback if CAA fails
-              img.src = '/assets/images/favicon/favicon.svg'; 
-              img.onload = resolve;
-            };
+            img.onerror = () => resolve(null);
           });
           return img;
         } catch (e) {
@@ -159,24 +236,23 @@ menu_label: tool
         }
       }));
 
-      // 3. Draw Background
+      // 3. Background
       ctx.fillStyle = '#09090b';
       ctx.fillRect(0, 0, W, H);
 
       if (bgMode === 'aura') {
-        // Simple aura effect with first 3 images blurred
         for (let i = 0; i < Math.min(3, images.length); i++) {
           if (!images[i]) continue;
           ctx.save();
-          ctx.filter = 'blur(100px) opacity(0.3)';
-          const x = i * (W/3);
-          ctx.drawImage(images[i], x - 200, 200, W, W);
+          ctx.filter = 'blur(120px) opacity(0.25) saturate(1.5)';
+          const x = (i * (W/2.5)) - 100;
+          ctx.drawImage(images[i], x, 300, W, W);
           ctx.restore();
         }
       }
 
-      // 4. Draw Grid
-      statusMsg.innerText = 'Rendering collage...';
+      // 4. Grid
+      statusText.innerText = 'Polishing...';
       for (let i = 0; i < albums.length; i++) {
         const x = GRID_X[i];
         const y = GRID_Y[i];
@@ -193,39 +269,91 @@ menu_label: tool
         ctx.restore();
       }
 
-      // 5. Draw List
-      ctx.fillStyle = '#f4f4f5';
-      ctx.font = 'bold 24px Inconsolata, monospace';
-      ctx.textAlign = 'left';
+      // 5. Film Grain (Optimized)
+      if (applyGrain) {
+        const grainCanvas = document.createElement('canvas');
+        grainCanvas.width = 128; // Small tile
+        grainCanvas.height = 128;
+        const gctx = grainCanvas.getContext('2d');
+        const gdata = gctx.createImageData(128, 128);
+        for (let i = 0; i < gdata.data.length; i += 4) {
+          const v = Math.random() * 255;
+          gdata.data[i] = gdata.data[i+1] = gdata.data[i+2] = v;
+          gdata.data[i+3] = 15;
+        }
+        gctx.putImageData(gdata, 0, 0);
+        ctx.save();
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.fillStyle = ctx.createPattern(grainCanvas, 'repeat');
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+
+      // 6. List
+      const MARGIN = 80;
+      const GAP = 40;
 
       for (let i = 0; i < albums.length; i++) {
         const y = LIST_BASE_Y + (i * LIST_ROW_HEIGHT);
-        const name = albums[i].release_group_name || 'Unknown';
-        const artist = albums[i].artist_name || 'Unknown';
+        const name = (albums[i].name || 'Unknown').toUpperCase();
+        const artist = (albums[i].artist || 'Unknown').toUpperCase();
         
+        // Listen Counts (Measure first to calculate available width)
+        let countWidth = 0;
+        const countText = showCounts ? `⨯${albums[i].count}` : "";
+        
+        if (showCounts) {
+          ctx.textAlign = 'right';
+          ctx.fillStyle = '#f4f4f5';
+          ctx.font = '700 22px Inconsolata, monospace';
+          ctx.fillText(countText, W - MARGIN, y);
+          countWidth = ctx.measureText(countText).width;
+        }
+
+        // Album Name (Truncate based on available space)
+        ctx.textAlign = 'left';
         ctx.fillStyle = '#f4f4f5';
-        ctx.font = 'bold 26px Inconsolata, monospace';
-        ctx.fillText(`${i + 1}. ${name.substring(0, 40)}${name.length > 40 ? '...' : ''}`, 80, y);
+        ctx.font = '900 24px Inconsolata, monospace';
         
+        const prefix = `${i + 1}. `;
+        const prefixWidth = ctx.measureText(prefix).width;
+        const availableWidth = W - MARGIN - MARGIN - prefixWidth - (showCounts ? countWidth + GAP : 0);
+        
+        let displayName = name;
+        if (ctx.measureText(name).width > availableWidth) {
+          let tempName = name;
+          while (ctx.measureText(tempName + '...').width > availableWidth && tempName.length > 0) {
+            tempName = tempName.slice(0, -1);
+          }
+          displayName = tempName + '...';
+        }
+
+        ctx.fillText(prefix + displayName, MARGIN, y);
+        
+        // Artist Name
+        ctx.textAlign = 'left';
         ctx.fillStyle = '#a1a1aa';
-        ctx.font = '22px Inconsolata, monospace';
-        ctx.fillText(artist.substring(0, 50), 80, y + 32);
+        ctx.font = '500 20px Inconsolata, monospace';
+        ctx.fillText(artist.substring(0, 45), MARGIN, y + 32);
       }
 
-      // 6. Draw Footer
-      const footerText = `top albums • ${period.replace('_', ' ')} for ${user}`;
-      ctx.fillStyle = '#71717a';
-      ctx.font = 'bold 20px Inconsolata, monospace';
+      // 7. Footer
+      const footerText = `TOP ALBUMS • ${period.replace('_', ' ')} • ${user}`.toUpperCase();
+      ctx.fillStyle = '#52525b';
+      ctx.font = 'bold 18px Inconsolata, monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(footerText.toUpperCase(), W/2, H - 100);
+      ctx.letterSpacing = "4px";
+      ctx.fillText(footerText, W/2, H - 100);
       ctx.fillText("EGE.CELIKCI.ME", W/2, H - 70);
+      ctx.letterSpacing = "0px";
 
-      statusMsg.innerText = 'Collage ready!';
+
+      statusText.innerText = 'Ready!';
       downloadBtn.classList.remove('hidden');
 
     } catch (err) {
       console.error(err);
-      statusMsg.innerText = `Error: ${err.message}`;
+      statusText.innerText = `Error: ${err.message}`;
     } finally {
       generateBtn.disabled = false;
     }
@@ -234,7 +362,7 @@ menu_label: tool
   downloadBtn.onclick = () => {
     const link = document.createElement('a');
     link.download = `collage-${document.getElementById('username').value}-${document.getElementById('period').value}.jpg`;
-    link.href = canvas.toDataURL('image/jpeg', 0.9);
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
     link.click();
   };
 
@@ -242,8 +370,8 @@ menu_label: tool
 
   // Initialize
   loadFont().then(() => {
-    // Initial draw
     ctx.fillStyle = '#09090b';
     ctx.fillRect(0, 0, W, H);
   });
 </script>
+{{# dprint-ignore-end #}}
