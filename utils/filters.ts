@@ -267,7 +267,7 @@ export const filters = {
       .sort(orderByDate,);
   },
 
-  truncate: function(str: unknown, length: number, suffix = "...",): string {
+  truncate: function(str: unknown, length: number, suffix = "…",): string {
     const s = String(str || "",);
     if (s.length <= length) return s;
     return s.substring(0, length,).trim() + suffix;
@@ -285,7 +285,19 @@ export const filters = {
     text = text.replace(/\s+/g, " ",).trim();
 
     if (text.length <= length) return text;
-    return text.substring(0, length,).trim() + "...";
+    return text.substring(0, length,).trim() + "…";
+  },
+
+  // Specialized teaser for notes that preserves some formatting/components
+  renderNoteTeaser: function(content: string, length = 400,): string {
+    if (!content) return "";
+    let text = content;
+    
+    // Remove images from teaser
+    text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "",);
+    
+    if (text.length <= length) return text;
+    return text.substring(0, length,).trim() + "…";
   },
 
   webmentionCountByType: function(

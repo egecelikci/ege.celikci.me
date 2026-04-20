@@ -37,11 +37,13 @@ layout: layouts/base.vto
   {{ if matchingEntries.length > 0 }}
     <div class="flex flex-col gap-2">
       {{ for item of matchingEntries }}
-        {{ if item.type === "note" }}
-          {{ comp.ui.Note({ note: item, variant: "listing" }) }}
-        {{ else }}
-          {{ comp.ui.EntryCard({ entry: item }) }}
-        {{ /if }}
+        <div class="not-prose">
+          {{ if item.type === "note" }}
+            {{ comp.ui.Note({ note: item, variant: "listing" }) }}
+          {{ else }}
+            {{ comp.ui.EntryCard({ entry: item }) }}
+          {{ /if }}
+        </div>
       {{ /for }}
     </div>
   {{ else }}

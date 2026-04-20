@@ -19,10 +19,10 @@ export function initTouchReveal(selector: string,) {
       }
     },);
   }, {
-    // The "active" zone is the central 60% of the screen.
-    // This allows multiple rows of albums to be colorful at once,
-    // making the experience feel natural and less "forced".
-    rootMargin: "-20% 0px -20% 0px",
+    // The "active" zone is the central 40% of the screen.
+    // This allows multiple rows of items to be active at once,
+    // making the experience feel natural and responsive.
+    rootMargin: "-30% 0px -30% 0px",
     threshold: 0.1,
   },);
 

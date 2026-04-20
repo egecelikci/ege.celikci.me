@@ -20,12 +20,18 @@ layout: layouts/content.vto
   {{ /if }}
 {{ /set }}
 
+{{# Support Post-style subtitle (Date) #}}
+{{ set displaySubtitle = it.subtitle || it.description }}
+{{ if it.type === "post" && it.date }}
+  {{ set displaySubtitle = it.date |> date("dd MMMM yyyy") }}
+{{ /if }}
+
 {{# Each page can now define its own header since content shell is neutralized #}}
 {{
   comp.ui.PageHeader({
     title: title,
-    subtitle: subtitle || description,
-    backlink: backlink ?? false,
+    subtitle: displaySubtitle,
+    backlink: it.backlink ?? (it.type === "post" ? { href: "/blog/", text: "writing" } : false),
     breadcrumbs: breadcrumbs === true,
     url: url,
     centered: centered || false,
@@ -34,6 +40,6 @@ layout: layouts/content.vto
   })
 }}
 
-<div class="mt-12 markdown text-lg leading-relaxed {{ it.article_classes }}">
+<div class="mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}">
   {{ content |> safe }}
 </div>

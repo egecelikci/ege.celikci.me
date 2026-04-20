@@ -1,7 +1,7 @@
 {{#
   Universal Entry Card (Clean Ledger)
-  A semantic, typographic entry for posts, recipes, and notes.
-  Handles internal data differences (notes vs posts) automatically.
+  A semantic, typographic entry adapter for posts, recipes, and notes.
+  Consumes ListingItem primitive.
   
   Props:
     - entry: page object (required)
@@ -12,24 +12,17 @@
   const isNote = it.entry.type === "note" || it.entry.url.startsWith("/notes/");
   const vtoContext = { ...it.entry, author, site, comp, theme };
   
-  // 1. Content logic
+  // 1. Content logic (Now encapsulated in filters/helpers where possible)
   let displayContent = "";
   if (isNote) {
-    displayContent = teaser(it.entry.content, 400);
-    // Process Vento/Markdown if it's a note teaser
+    displayContent = renderNoteTeaser(it.entry.content, 400);
     displayContent = vto(displayContent, vtoContext);
     displayContent = md(displayContent);
   } else {
     displayContent = it.entry.description || "";
   }
 
-  // 2. Stats logic (Notes only)
-  let footerLeft = "";
-  if (isNote && it.entry.stats) {
-    // We can't await inside this JS block easily, so we handle it in the Vto part below
-  }
-
-  // 3. Title logic
+  // 2. Title logic
   const displayTitle = (isNote && it.entry.isAutoTitle) ? "" : it.entry.title;
 }}
 
@@ -49,5 +42,6 @@
   footerLeft: leftContent,
   footerText: "view details &rarr;",
   bodyClasses: isNote ? "line-clamp-[12] md:line-clamp-6" : "line-clamp-3",
-  classes: it.classes
+  classes: it.classes,
+  isNote: isNote
 }) }}
