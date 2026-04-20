@@ -292,10 +292,10 @@ export const filters = {
   renderNoteTeaser: function(content: string, length = 400,): string {
     if (!content) return "";
     let text = content;
-    
+
     // Remove images from teaser
     text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "",);
-    
+
     if (text.length <= length) return text;
     return text.substring(0, length,).trim() + "…";
   },

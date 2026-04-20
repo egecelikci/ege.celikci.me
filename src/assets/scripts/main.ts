@@ -8,7 +8,9 @@ async function init() {
     await import("./common/register-serviceworker.ts");
   }
 
-  const albumItems = document.querySelector(".album-item, .collage-item, .h-entry",);
+  const albumItems = document.querySelector(
+    ".album-item, .collage-item, .h-entry",
+  );
   if (albumItems && !document.body.dataset.disableAnimation) {
     const { animateGridItems, } = await import("./common/grid.ts");
     animateGridItems(".album-item",);

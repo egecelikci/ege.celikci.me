@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { initAuthModal, signWithPasskey } from "./admin.ts";
+import { initAuthModal, signWithPasskey, } from "./admin.ts";
 
 try {
   gsap.registerPlugin(ScrambleTextPlugin,);
@@ -26,7 +26,7 @@ let hasPeeked = false;
 try {
   initAuthModal();
 } catch (e) {
-  console.error("Auth modal init failed:", e);
+  console.error("Auth modal init failed:", e,);
 }
 
 /**
@@ -87,31 +87,31 @@ function createMarqueeAnimation(element: HTMLElement,) {
 }
 
 function initScrollInteractions() {
-  const container = document.getElementById("status-scroll-container");
-  const dots = document.querySelectorAll(".status-dot");
+  const container = document.getElementById("status-scroll-container",);
+  const dots = document.querySelectorAll(".status-dot",);
   if (!container || dots.length === 0) return;
 
   // 1. Sync dots with scroll
   container.addEventListener("scroll", () => {
     const scrollLeft = container.scrollLeft;
     const width = container.offsetWidth;
-    const index = Math.round(scrollLeft / width);
+    const index = Math.round(scrollLeft / width,);
 
-    dots.forEach((dot, i) => {
-      dot.setAttribute("aria-current", i === index ? "true" : "false");
-    });
-  }, { passive: true });
+    dots.forEach((dot, i,) => {
+      dot.setAttribute("aria-current", i === index ? "true" : "false",);
+    },);
+  }, { passive: true, },);
 
   // 2. Click dots to scroll
-  dots.forEach((dot, i) => {
+  dots.forEach((dot, i,) => {
     dot.addEventListener("click", () => {
       const width = container.offsetWidth;
       container.scrollTo({
         left: width * i,
-        behavior: "smooth"
-      });
-    });
-  });
+        behavior: "smooth",
+      },);
+    },);
+  },);
 
   // 3. Intro Peek Animation (Mobile Only)
   if (!hasPeeked && window.innerWidth < 768) {
@@ -123,9 +123,9 @@ function initScrollInteractions() {
         ease: "power2.inOut",
         yoyo: true,
         repeat: 1,
-        delay: 1
-      });
-    }, 1000);
+        delay: 1,
+      },);
+    }, 1000,);
   }
 }
 
@@ -157,7 +157,7 @@ async function loadStatus() {
     if (buffer.trim()) processChunk(buffer,);
   } catch (err: any) {
     if (err.name === "AbortError") return;
-    console.error("Status Load Error:", err);
+    console.error("Status Load Error:", err,);
     setStatusState("error",);
     currentInterval = Math.min(
       currentInterval * CONFIG.backoffFactor,
@@ -236,18 +236,18 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
 
   const newMbid = getMbid(newData,);
   const curMbid = getMbid(container,);
-  
+
   const newIsMsid = getIsMsid(newData,);
   const curIsMsid = getIsMsid(container,);
 
   // Allow update if text, state, liked status, or MBID changed
   if (
-    newTxt === curTxt && 
-    newState === curState && 
-    newLiked === curLiked && 
-    newMbid === curMbid && 
-    newIsMsid === curIsMsid &&
-    curTxt !== ""
+    newTxt === curTxt
+    && newState === curState
+    && newLiked === curLiked
+    && newMbid === curMbid
+    && newIsMsid === curIsMsid
+    && curTxt !== ""
   ) return;
 
   if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
@@ -294,8 +294,12 @@ function performUpdate(
   container.setAttribute("aria-label", newTxt,);
 
   const textWrapper = container.querySelector(".status-content-wrapper",);
-  const actionWrapper = container.querySelector(".status-action-wrapper",) as HTMLElement;
-  const likeBtn = container.querySelector(".status-like-button",) as HTMLElement;
+  const actionWrapper = container.querySelector(
+    ".status-action-wrapper",
+  ) as HTMLElement;
+  const likeBtn = container.querySelector(
+    ".status-like-button",
+  ) as HTMLElement;
 
   if (textWrapper && newSpan) {
     textWrapper.innerHTML = "";
@@ -306,12 +310,12 @@ function performUpdate(
   if (actionWrapper && likeBtn) {
     if (mbid) {
       const heartIcon = likeBtn.querySelector("svg",);
-      
-      const updateLikeUI = (liked: boolean, animate = false) => {
+
+      const updateLikeUI = (liked: boolean, animate = false,) => {
         if (!heartIcon) return;
-        
-        const elements = [heartIcon, ...heartIcon.querySelectorAll("path")];
-        
+
+        const elements = [heartIcon, ...heartIcon.querySelectorAll("path",),];
+
         if (animate) {
           // Playful pop animation
           gsap.to(likeBtn, {
@@ -322,95 +326,102 @@ function performUpdate(
             ease: "back.out(2)",
             onStart: () => {
               if (liked) {
-                heartIcon.classList.add("fill-primary");
-                heartIcon.classList.remove("fill-none");
-                elements.forEach(el => el.setAttribute("fill", "currentColor"));
+                heartIcon.classList.add("fill-primary",);
+                heartIcon.classList.remove("fill-none",);
+                elements.forEach(el =>
+                  el.setAttribute("fill", "currentColor",)
+                );
               } else {
-                heartIcon.classList.add("fill-none");
-                heartIcon.classList.remove("fill-primary");
-                elements.forEach(el => el.setAttribute("fill", "none"));
+                heartIcon.classList.add("fill-none",);
+                heartIcon.classList.remove("fill-primary",);
+                elements.forEach(el => el.setAttribute("fill", "none",));
               }
-            }
-          });
+            },
+          },);
         } else {
           // Silent update
           if (liked) {
-            heartIcon.classList.add("fill-primary");
-            heartIcon.classList.remove("fill-none");
-            elements.forEach(el => el.setAttribute("fill", "currentColor"));
+            heartIcon.classList.add("fill-primary",);
+            heartIcon.classList.remove("fill-none",);
+            elements.forEach(el => el.setAttribute("fill", "currentColor",));
           } else {
-            heartIcon.classList.add("fill-none");
-            heartIcon.classList.remove("fill-primary");
-            elements.forEach(el => el.setAttribute("fill", "none"));
+            heartIcon.classList.add("fill-none",);
+            heartIcon.classList.remove("fill-primary",);
+            elements.forEach(el => el.setAttribute("fill", "none",));
           }
         }
-        heartIcon.classList.add("text-primary");
+        heartIcon.classList.add("text-primary",);
       };
 
       // Set initial state from data
-      updateLikeUI(isLiked, !!curTxt);
+      updateLikeUI(isLiked, !!curTxt,);
 
       // Smooth reveal of the like widget
-      if (actionWrapper.classList.contains("hidden")) {
-        actionWrapper.classList.remove("hidden");
-        gsap.fromTo(actionWrapper, 
-          { 
-            opacity: 0, 
-            scale: 0.5,
-            x: 20
-          }, 
-          { 
-            opacity: 1, 
-            scale: 1, 
-            x: 0,
-            duration: 0.8, 
-            delay: scrambleDuration, 
-            ease: "back.out(2)" 
-          }
-        );
+      if (actionWrapper.classList.contains("hidden",)) {
+        actionWrapper.classList.remove("hidden",);
+        gsap.fromTo(actionWrapper, {
+          opacity: 0,
+          scale: 0.5,
+          x: 20,
+        }, {
+          opacity: 1,
+          scale: 1,
+          x: 0,
+          duration: 0.8,
+          delay: scrambleDuration,
+          ease: "back.out(2)",
+        },);
       }
 
       likeBtn.onclick = async (e,) => {
         e.preventDefault();
         e.stopPropagation();
-        
-        const currentLiked = newSpan?.getAttribute("data-liked") === "true";
+
+        const currentLiked = newSpan?.getAttribute("data-liked",) === "true";
         likeBtn.classList.add("animate-pulse",);
-        
+
         try {
           const token = localStorage.getItem("status_owner_token",);
-          const headers: Record<string, string> = { "Content-Type": "application/json" };
-          
+          const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+          };
+
           if (token) {
             headers["Authorization"] = `Bearer ${token}`;
-          } else if (localStorage.getItem("status_owner_verified") === "true") {
+          } else if (
+            localStorage.getItem("status_owner_verified",) === "true"
+          ) {
             try {
-              const assertion = await signWithPasskey("authorize-like-" + mbid);
-              if (assertion) headers["X-Passkey-Assertion"] = JSON.stringify(assertion);
+              const assertion = await signWithPasskey(
+                "authorize-like-" + mbid,
+              );
+              if (assertion) {
+                headers["X-Passkey-Assertion"] = JSON.stringify(assertion,);
+              }
             } catch (err) {
-              console.warn("Passkey assertion failed or cancelled", err);
-              document.getElementById("status-auth-trigger")?.click();
+              console.warn("Passkey assertion failed or cancelled", err,);
+              document.getElementById("status-auth-trigger",)?.click();
               return;
             }
           } else {
-            document.getElementById("status-auth-trigger")?.click();
+            document.getElementById("status-auth-trigger",)?.click();
             return;
           }
 
           const res = await fetch("/api/like", {
             method: "POST",
             headers,
-            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid }),
+            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid, },),
           },);
 
           if (res.ok) {
             const data = await res.json();
             const nowLiked = data.score === 1;
-            updateLikeUI(nowLiked, true);
-            newSpan?.setAttribute("data-liked", String(nowLiked));
+            updateLikeUI(nowLiked, true,);
+            newSpan?.setAttribute("data-liked", String(nowLiked,),);
           } else if (res.status === 401) {
-            localStorage.removeItem("status_owner_verified");
-            document.getElementById("status-auth-trigger")?.click();
+            localStorage.removeItem("status_owner_verified",);
+            document.getElementById("status-auth-trigger",)?.click();
           }
         } catch (err) {
           console.error("Like failed:", err,);
@@ -420,13 +431,13 @@ function performUpdate(
       };
     } else {
       // Hide with animation
-      if (!actionWrapper.classList.contains("hidden")) {
-        gsap.to(actionWrapper, { 
-          opacity: 0, 
-          scale: 0.5, 
-          duration: 0.4, 
-          onComplete: () => actionWrapper.classList.add("hidden") 
-        });
+      if (!actionWrapper.classList.contains("hidden",)) {
+        gsap.to(actionWrapper, {
+          opacity: 0,
+          scale: 0.5,
+          duration: 0.4,
+          onComplete: () => actionWrapper.classList.add("hidden",),
+        },);
       }
     }
   }
@@ -446,7 +457,7 @@ function performUpdate(
       onComplete: () => {
         ctx.add(() => {
           targetSpan.dataset.unscrambled = "true";
-          gsap.set(targetSpan, { maxWidth: "none" });
+          gsap.set(targetSpan, { maxWidth: "none", },);
           targetSpan.innerHTML = richHTML;
           createMarqueeAnimation(targetSpan,);
         },);
@@ -457,14 +468,21 @@ function performUpdate(
       tl.to(targetSpan, {
         duration: scrambleDuration,
         ease: "power2.out",
-        scrambleText: { text: newTxt, chars: scrambleNoise, speed: 0.2, tweenLength: true },
+        scrambleText: {
+          text: newTxt,
+          chars: scrambleNoise,
+          speed: 0.2,
+          tweenLength: true,
+        },
       },);
     } else {
       tl.to(targetSpan, {
         opacity: 1,
         duration: scrambleDuration,
         ease: "power2.out",
-        onStart: () => { targetSpan.textContent = newTxt; },
+        onStart: () => {
+          targetSpan.textContent = newTxt;
+        },
       },);
     }
   }, container,);

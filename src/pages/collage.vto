@@ -1,0 +1,249 @@
+---
+title: collage tool
+description: "generate minimalist album collages from listenbrainz"
+layout: layouts/page.vto
+prose: false
+menu_label: tool
+---
+
+<div class="max-w-4xl mx-auto">
+  <div class="flex flex-col md:flex-row gap-12 items-start">
+    {{# 1. CONTROLS #}}
+    <div class="w-full md:w-80 shrink-0 flex flex-col gap-8">
+      <div class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10">
+        <div class="flex flex-col gap-2">
+          <label for="username" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">ListenBrainz User</label>
+          <input 
+            type="text" 
+            id="username" 
+            placeholder="username" 
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }}"
+            value="{{ author.username }}"
+          />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="period" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Time Period</label>
+          <select id="period" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
+            <option value="week">Past Week</option>
+            <option value="month">Past Month</option>
+            <option value="quarter">Past Quarter</option>
+            <option value="year">Past Year</option>
+            <option value="all_time">All Time</option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="bg-mode" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Background</label>
+          <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
+            <option value="aura">Aura (Gradient)</option>
+            <option value="dark">Dark (Deep Black)</option>
+          </select>
+        </div>
+
+        <button 
+          id="generate-btn" 
+          class="{{ theme.components.button.base }} {{ theme.components.button.primary }} justify-center mt-2"
+        >
+          {{ comp.ui.Icon({ name: "sparkles", classes: "w-4 h-4" }) }}
+          Generate Collage
+        </button>
+      </div>
+
+      <div id="status-msg" class="text-xs font-mono opacity-0 transition-opacity">
+        Fetching data...
+      </div>
+
+      <button 
+        id="download-btn" 
+        class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} justify-center hidden"
+      >
+        {{ comp.ui.Icon({ name: "download", classes: "w-4 h-4" }) }}
+        Download JPG
+      </button>
+    </div>
+
+    {{# 2. PREVIEW #}}
+    <div class="grow flex justify-center w-full">
+      <div id="canvas-container" class="relative group shadow-elevated rounded-lg overflow-hidden border border-border/5 max-w-full">
+        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[70vh] bg-[#09090b] cursor-crosshair"></canvas>
+        <div id="canvas-overlay" class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+           <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm">1080 x 1920 (9:16)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  /**
+   * ListenBrainz Collage Generator (Client-Side)
+   * A port of the lb-collage tool.
+   */
+
+  const canvas = document.getElementById('collage-canvas');
+  const ctx = canvas.getContext('2d');
+  const generateBtn = document.getElementById('generate-btn');
+  const downloadBtn = document.getElementById('download-btn');
+  const statusMsg = document.getElementById('status-msg');
+
+  // CONFIG CONSTANTS (Sync with lb-collage.fish)
+  const W = 1080;
+  const H = 1920;
+  const COVER_SIZE = 280;
+  const CORNER_RADIUS = 16;
+  const GRID_X = [80, 400, 720, 80, 400, 720, 80, 400, 720];
+  const GRID_Y = [130, 130, 130, 450, 450, 450, 770, 770, 770];
+  const LIST_BASE_Y = 1120;
+  const LIST_ROW_HEIGHT = 76;
+
+  async function loadFont() {
+    // We try to use Inconsolata or fallback to mono
+    const font = new FontFace('Inconsolata', 'url(/assets/fonts/Inconsolata.woff2)');
+    await font.load();
+    document.fonts.add(font);
+  }
+
+  function drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+
+  async function generate() {
+    const user = document.getElementById('username').value.trim();
+    const period = document.getElementById('period').value;
+    const bgMode = document.getElementById('bg-mode').value;
+
+    if (!user) return alert('Please enter a username');
+
+    statusMsg.innerText = 'Fetching stats...';
+    statusMsg.style.opacity = '1';
+    generateBtn.disabled = true;
+
+    try {
+      // 1. Fetch Stats from ListenBrainz
+      const statsRes = await fetch(`https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=9`);
+      if (!statsRes.ok) throw new Error('API Error');
+      const statsData = await statsRes.json();
+      const albums = statsData.payload.release_groups.slice(0, 9);
+
+      if (albums.length === 0) throw new Error('No albums found for this period');
+
+      // 2. Fetch Images (Proxying might be needed if CORS is tight, but CAA usually allows browser fetch)
+      statusMsg.innerText = 'Loading covers...';
+      const images = await Promise.all(albums.map(async (album) => {
+        try {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.src = `https://coverartarchive.org/release-group/${album.release_group_mbid}/front-500`;
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () => {
+              // Fallback if CAA fails
+              img.src = '/assets/images/favicon/favicon.svg'; 
+              img.onload = resolve;
+            };
+          });
+          return img;
+        } catch (e) {
+          return null;
+        }
+      }));
+
+      // 3. Draw Background
+      ctx.fillStyle = '#09090b';
+      ctx.fillRect(0, 0, W, H);
+
+      if (bgMode === 'aura') {
+        // Simple aura effect with first 3 images blurred
+        for (let i = 0; i < Math.min(3, images.length); i++) {
+          if (!images[i]) continue;
+          ctx.save();
+          ctx.filter = 'blur(100px) opacity(0.3)';
+          const x = i * (W/3);
+          ctx.drawImage(images[i], x - 200, 200, W, W);
+          ctx.restore();
+        }
+      }
+
+      // 4. Draw Grid
+      statusMsg.innerText = 'Rendering collage...';
+      for (let i = 0; i < albums.length; i++) {
+        const x = GRID_X[i];
+        const y = GRID_Y[i];
+        
+        ctx.save();
+        drawRoundedRect(ctx, x, y, COVER_SIZE, COVER_SIZE, CORNER_RADIUS);
+        ctx.clip();
+        if (images[i]) {
+          ctx.drawImage(images[i], x, y, COVER_SIZE, COVER_SIZE);
+        } else {
+          ctx.fillStyle = '#18181b';
+          ctx.fillRect(x, y, COVER_SIZE, COVER_SIZE);
+        }
+        ctx.restore();
+      }
+
+      // 5. Draw List
+      ctx.fillStyle = '#f4f4f5';
+      ctx.font = 'bold 24px Inconsolata, monospace';
+      ctx.textAlign = 'left';
+
+      for (let i = 0; i < albums.length; i++) {
+        const y = LIST_BASE_Y + (i * LIST_ROW_HEIGHT);
+        const name = albums[i].release_group_name || 'Unknown';
+        const artist = albums[i].artist_name || 'Unknown';
+        
+        ctx.fillStyle = '#f4f4f5';
+        ctx.font = 'bold 26px Inconsolata, monospace';
+        ctx.fillText(`${i + 1}. ${name.substring(0, 40)}${name.length > 40 ? '...' : ''}`, 80, y);
+        
+        ctx.fillStyle = '#a1a1aa';
+        ctx.font = '22px Inconsolata, monospace';
+        ctx.fillText(artist.substring(0, 50), 80, y + 32);
+      }
+
+      // 6. Draw Footer
+      const footerText = `top albums • ${period.replace('_', ' ')} for ${user}`;
+      ctx.fillStyle = '#71717a';
+      ctx.font = 'bold 20px Inconsolata, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(footerText.toUpperCase(), W/2, H - 100);
+      ctx.fillText("EGE.CELIKCI.ME", W/2, H - 70);
+
+      statusMsg.innerText = 'Collage ready!';
+      downloadBtn.classList.remove('hidden');
+
+    } catch (err) {
+      console.error(err);
+      statusMsg.innerText = `Error: ${err.message}`;
+    } finally {
+      generateBtn.disabled = false;
+    }
+  }
+
+  downloadBtn.onclick = () => {
+    const link = document.createElement('a');
+    link.download = `collage-${document.getElementById('username').value}-${document.getElementById('period').value}.jpg`;
+    link.href = canvas.toDataURL('image/jpeg', 0.9);
+    link.click();
+  };
+
+  generateBtn.onclick = generate;
+
+  // Initialize
+  loadFont().then(() => {
+    // Initial draw
+    ctx.fillStyle = '#09090b';
+    ctx.fillRect(0, 0, W, H);
+  });
+</script>
