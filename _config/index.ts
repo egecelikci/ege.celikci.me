@@ -35,7 +35,35 @@ export default function() {
       .use(sitemap(),)
       .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt", },], },),)
       .use(minifyHTML(),)
-      .use(favicon({ input: "assets/images/favicon/favicon.svg", },),)
+      .use(favicon({
+        input: "/assets/images/favicon/favicon.svg",
+        favicons: [
+          {
+            url: "/assets/images/favicon/favicon.ico",
+            size: [32],
+            rel: "icon",
+            format: "ico",
+          },
+          {
+            url: "/assets/images/favicon/apple-touch-icon.png",
+            size: [180],
+            rel: "apple-touch-icon",
+            format: "png",
+          },
+          {
+            url: "/assets/images/favicon/android-chrome-192x192.png",
+            size: [192],
+            rel: "icon",
+            format: "png",
+          },
+          {
+            url: "/assets/images/favicon/android-chrome-512x512.png",
+            size: [512],
+            rel: "icon",
+            format: "png",
+          },
+        ],
+      },),)
       .use(pagefind({
         outputPath: "/pagefind",
         ui: {

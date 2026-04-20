@@ -51,13 +51,13 @@ export const components = {
     accentBar:
       "absolute -left-[1px] top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
     metaRow:
-      "relative z-20 flex items-center gap-4 opacity-80 md:opacity-40 group-hover:opacity-100 transition-opacity",
+      "relative z-20 flex items-center gap-4 opacity-80 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity",
     title:
-      "text-3xl md:text-4xl font-bold tracking-tighter text-text group-hover:text-primary transition-colors leading-tight m-0 relative z-20",
+      "text-3xl md:text-4xl font-bold tracking-tighter text-text group-hover:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20",
     description:
-      "text-lg md:text-xl font-serif italic text-text-muted/70 group-hover:text-text transition-colors leading-relaxed relative z-20",
+      "text-lg md:text-xl font-serif italic text-text-muted/70 group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20",
     footer:
-      "relative z-10 flex items-center justify-between pt-8 border-t border-border/5 opacity-60 md:opacity-40 group-hover:opacity-100 transition-opacity duration-500",
+      "relative z-10 flex items-center justify-between pt-8 border-t border-border/5 opacity-60 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
   },
 
   gallery: {
@@ -65,18 +65,18 @@ export const components = {
     item:
       "note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents",
     image:
-      "absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105",
+      "absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105 group-[.is-active]/img:scale-105",
     overlay:
-      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/80 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted/60 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-all duration-500 pointer-events-none z-20",
+      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/80 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted/60 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20",
   },
 
   album: {
     card:
       "album-item group flex flex-col gap-3 relative no-underline transition-all duration-500",
     coverWrapper:
-      "w-full aspect-square block relative z-10 rounded-xl overflow-hidden bg-white/80 dark:bg-white/5 transition-all duration-700 ease-out group-hover:scale-105",
+      "w-full aspect-square block relative z-10 rounded-xl overflow-hidden bg-white/80 dark:bg-white/5 transition-all duration-700 ease-out group-hover:scale-105 group-[.is-active]:scale-105",
     meta:
-      "flex flex-col gap-0.5 opacity-60 md:opacity-40 group-hover:opacity-100 transition-opacity duration-500",
+      "flex flex-col gap-0.5 opacity-60 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
     title: "block text-[11px] font-bold text-text truncate tracking-tight",
     artist:
       "block text-[9px] font-mono uppercase tracking-[0.1em] text-text-muted/60 truncate",

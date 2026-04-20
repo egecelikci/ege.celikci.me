@@ -22,7 +22,7 @@ import type {
 // ============================================================================
 
 const CONFIG = {
-  syncMode: "append" as "append" | "mirror",
+  syncMode: "mirror" as "append" | "mirror",
   fetchLimit: 50,
   maxConcurrentImages: 4, // CPU-bound
   maxConcurrentFastLane: 20, // Disk-bound

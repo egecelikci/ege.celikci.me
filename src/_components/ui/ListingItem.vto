@@ -1,18 +1,20 @@
 {{#
   Component: ListingItem (Shared Primitive)
-  The common structure for all Artsy Journal style listings.
+  The core structural layout for all list-style entries (Notes, Posts, Recipes).
   
   Props:
     - url: string (required)
-    - title?: string
-    - date?: Date
+    - title?: string | html
+    - date?: Date | string
     - tags?: string[]
-    - images?: Array<{ src: string, alt: string }>
-    - content: html/string (The main body text/teaser)
-    - footerLeft?: html/string (Optional left-aligned footer content)
+    - visuals?: html (Custom visuals like a Gallery)
+    - images?: Array<{ src: string, alt: string }> (Default fallback visuals)
+    - content: html/string (The main body text)
+    - footerLeft?: html/string
     - footerText?: string (default: "view details &rarr;")
     - classes?: string
     - bodyClasses?: string
+    - isNote?: boolean (applies specific note-style logic if needed)
 #}}
 
 <article class="{{ theme.components.listing.container }} {{ it.classes || '' }}">
@@ -26,18 +28,18 @@
     aria-label="{{ it.title || 'View Item' }}"
   ></a>
 
-  {{# 1. HEADER (Subtle Meta Bar) #}}
+  {{# 1. HEADER (Meta Row) #}}
   <header class="{{ theme.components.listing.metaRow }}">
     {{ if it.date }}
       <time class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
-        {{ it.date |> date("dd MMM yyyy") }}
+        {{ if typeof it.date === 'string' }}{{ it.date }}{{ else }}{{ it.date |> date("dd MMM yyyy") }}{{ /if }}
       </time>
     {{ /if }}
     
     <div class="h-px grow bg-border/10"></div>
     
     {{ if it.tags && it.tags.length > 0 }}
-      <div class="flex gap-4">
+      <div class="flex gap-4 relative z-40">
         {{ for tag of it.tags |> slice(0, 3) }}
           <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
         {{ /for }}
@@ -46,8 +48,10 @@
   </header>
 
   {{# 2. VISUALS #}}
-  {{ if it.images && it.images.length > 0 }}
-    <div class="relative z-20">
+  <div class="relative z-20">
+    {{ if it.visuals }}
+      {{ it.visuals |> safe }}
+    {{ else if it.images && it.images.length > 0 }}
       <div class="relative">
         {{# Multi-image Indicator #}}
         {{ if it.images.length > 1 }}
@@ -66,15 +70,19 @@
           classes: "m-0 relative z-10"
         }) }}
       </div>
-    </div>
-  {{ /if }}
+    {{ /if }}
+  </div>
 
   {{# 3. TEXTUAL CONTENT #}}
   <div class="relative z-20 flex flex-col gap-6">
     {{ if it.title }}
-      <h3 class="{{ theme.components.listing.title }}">
-        {{ it.title }}
-      </h3>
+      {{ if typeof it.title === 'string' }}
+        <h3 class="{{ theme.components.listing.title }}">
+          {{ it.title }}
+        </h3>
+      {{ else }}
+        {{ it.title |> safe }}
+      {{ /if }}
     {{ /if }}
 
     <div class="e-content markdown {{ theme.components.listing.description }} {{ it.bodyClasses || '' }}">
@@ -83,8 +91,10 @@
   </div>
 
   {{# 4. FOOTER #}}
-  {{ comp.ui.ListingFooter({ 
-    leftContent: it.footerLeft, 
-    text: it.footerText 
-  }) }}
+  <div class="relative z-40">
+    {{ comp.ui.ListingFooter({ 
+      leftContent: it.footerLeft, 
+      text: it.footerText 
+    }) }}
+  </div>
 </article>

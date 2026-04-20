@@ -78,7 +78,7 @@ export function initAuthModal() {
 
   loginBtn!.onclick = async (e) => {
     e.preventDefault(); e.stopPropagation();
-    loginBtn.disabled = true; loginBtn.innerText = "...";
+    loginBtn.disabled = true; loginBtn.innerText = "…";
     try {
       if (await signWithPasskey("verify-session")) {
         localStorage.setItem("status_owner_verified", "true");

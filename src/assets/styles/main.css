@@ -197,6 +197,27 @@
     @apply bg-primary border-primary text-white;
   }
 
+  /* Ensure links and interactive elements inside listings are clickable above the overlay link */
+  .group.relative .markdown a,
+  .group.relative .relative.z-40 {
+    @apply relative z-40;
+  }
+
+  /* MOBILE REVEAL REFINEMENTS (The Lens) */
+  /* If device has no hover, we can force reveal some essential states. 
+     Otherwise, we rely on the .is-active class added via JS intersection observer. */
+  @media (hover: none) {
+    .group.is-active .grayscale {
+      @apply grayscale-0;
+    }
+    .group.is-active .opacity-0 {
+      @apply opacity-100;
+    }
+    .group.is-active .group-hover\:opacity-100 {
+      @apply opacity-100;
+    }
+  }
+
   /* Code block container */
   .markdown figure.code-block {
     @apply my-8 block w-full max-w-full rounded-md border border-border
@@ -284,7 +305,7 @@
 
 @layer utilities {
   @keyframes panic {
-    0% {
+    0 {
       opacity: 1;
     }
     100% {

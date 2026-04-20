@@ -1,3 +1,5 @@
-layout: layouts/post.vto
+layout: layouts/page.vto
 templateEngine: [vto, md]
 type: post
+show_webmentions: true
+show_related: true
