@@ -10,6 +10,10 @@
     framework = "#custom"
 
 [[edge_functions]]
+    path = "/api/collage-proxy"
+    function = "collage-proxy"
+
+[[edge_functions]]
     path = "/api/status"
     function = "status"
 
