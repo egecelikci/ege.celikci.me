@@ -10,13 +10,13 @@
   const matrixUrlVal = "https://matrix.to/#/@" + author.social.matrix.username + ":" + author.social.matrix.metropolis.host;
 
   let links = [
-    { id: "listenbrainz", name: "ListenBrainz", url: `https://listenbrainz.org/user/${author.username}`, icon: "music", label: "Curation" },
-    { id: "steam", name: "Steam", url: `https://steamcommunity.com/id/${author.username}`, icon: "gamepad", label: "Identity" },
-    { id: "signal", name: "Signal", url: signalUrlVal, icon: "message-circle-dashed", label: "Secure", relMe: true },
-    { id: "matrix", name: "Matrix", url: matrixUrlVal, icon: "messages-square", label: "Federated", keyUrl: "/keys#matrix", relMe: true },
-    { id: "codeberg", name: "Codeberg", url: `https://codeberg.org/${author.username}`, icon: "mountain", label: "Git", relMe: true },
-    { id: "gitlab", name: "GitLab", url: `https://gitlab.com/${author.username}`, icon: "gitlab", label: "Source", relMe: true },
-    { id: "github", name: "GitHub", url: `https://github.com/${author.username}`, icon: "github", label: "Mirrors", relMe: true }
+    { id: "listenbrainz", name: "ListenBrainz", url: `https://listenbrainz.org/user/${author.username}`, icon: "music" },
+    { id: "steam", name: "Steam", url: `https://steamcommunity.com/id/${author.username}`, icon: "gamepad" },
+    { id: "signal", name: "Signal", url: signalUrlVal, icon: "message-circle-dashed", },
+    { id: "matrix", name: "Matrix", url: matrixUrlVal, icon: "messages-square", keyUrl: "/keys#matrix" },
+    { id: "codeberg", name: "Codeberg", url: `https://codeberg.org/${author.username}`, icon: "mountain" },
+    { id: "gitlab", name: "GitLab", url: `https://gitlab.com/${author.username}`, icon: "gitlab", relMe: true },
+    { id: "github", name: "GitHub", url: `https://github.com/${author.username}`, icon: "github", relMe: true }
   ];
 
   if (ids.length > 0) {

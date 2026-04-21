@@ -1,4 +1,5 @@
 export const layout = "layouts/tag.vto";
+export const searchable = false;
 
 export default function*({ search, }: any, { slugify, }: any,) {
   const tags = search.values("tags",);

@@ -1,5 +1,5 @@
 ---
-layout: layouts/content.vto
+layout: layouts/base.vto
 ---
 
 {{# Resolve header extension if it's an object #}}
@@ -20,26 +20,109 @@ layout: layouts/content.vto
   {{ /if }}
 {{ /set }}
 
-{{# Support Post-style subtitle (Date) #}}
+{{# Support Subtitle Logic #}}
 {{ set displaySubtitle = it.subtitle || it.description }}
+
+{{# 1. Post-style subtitle (Date) #}}
 {{ if it.type === "post" && it.date }}
   {{ set displaySubtitle = it.date |> date("dd MMMM yyyy") }}
 {{ /if }}
 
-{{# Each page can now define its own header since content shell is neutralized #}}
+{{# 2. Note-style subtitle (Precision Date + Updated) #}}
+{{ if it.type === "note" && it.date }}
+  {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
+  {{ set updatedStr = "" }}
+  {{ if it.updated }}
+    {{ set formattedUpdated = it.updated |> date("dd MMM yyyy") }}
+    {{ set updatedStr = " • edited " + formattedUpdated }}
+  {{ /if }}
+  {{ set displaySubtitle = dateStr + updatedStr }}
+{{ /if }}
+
+{{# Title Logic for titleless notes #}}
+{{ set displayTitle = it.title }}
+{{ if it.type === "note" && !it.title }}
+  {{ set displayTitle = "note" }}
+{{ /if }}
+
+{{# Capture the entire page body #}}
+{{ set pageBody }}
+  {{# 1. Page Header #}}
+  <div>
+    {{
+      comp.ui.PageHeader({
+        title: displayTitle,
+        subtitle: displaySubtitle,
+        backlink: it.backlink ?? (
+          it.type === "post" ? { href: "/blog/", text: "writing" } : 
+          it.type === "note" ? { href: "/notes/", text: "notes" } : 
+          false
+        ),
+        breadcrumbs: breadcrumbs === true,
+        url: url,
+        centered: centered || false,
+        metadata: { tags: tags },
+        rightContent: extensionContent
+      })
+    }}
+  </div>
+
+  {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
+  <div 
+    class="mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
+    {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
+  >
+    {{ if it.type === "note" }}
+      {{# Handle missing titles for search results #}}
+      {{ if !it.title }}
+        <span data-pagefind-meta="title:Note from {{ it.date |> date('dd MMM yyyy HH:mm') }}" class="sr-only"></span>
+      {{ /if }}
+
+      {{ comp.ui.Note({ 
+        note: {
+          url: url,
+          date: date,
+          title: it.title,
+          tags: tags,
+          images: images,
+          content: content,
+          stats: stats,
+          syndication: syndication
+        },
+        variant: "full",
+        hideHeader: true
+      }) }}
+    {{ else }}
+      {{ content |> safe }}
+    {{ /if }}
+  </div>
+
+  {{# 3. Supplemental UI #}}
+  <div>
+    {{ if show_related && tags }}
+      {{ set relatedData = utils.getRelatedContent(search, url, tags) }}
+      {{ comp.ui.RelatedContent({ related: relatedData, tags: tags }) }}
+    {{ /if }}
+
+    {{ comp.ui.IncomingLinks({ backlinks: backlinks }) }}
+
+    {{ if show_webmentions }}
+      <div class="mt-24">
+        <h3 class="text-xs font-mono uppercase tracking-[0.3em] text-text-muted/60 mb-10">Interactions</h3>
+        {{ set mentionsData = [] }}
+        {{ if webmentions }}
+          {{ set mentionsData = webmentions.children |> webmentionsByUrl(url) }}
+        {{ /if }}
+        {{ comp.ui.Webmentions({ mentions: mentionsData }) }}
+      </div>
+    {{ /if }}
+  </div>
+{{ /set }}
+
 {{
-  comp.ui.PageHeader({
-    title: title,
-    subtitle: displaySubtitle,
-    backlink: it.backlink ?? (it.type === "post" ? { href: "/blog/", text: "writing" } : false),
-    breadcrumbs: breadcrumbs === true,
-    url: url,
-    centered: centered || false,
-    metadata: { tags: tags },
-    rightContent: extensionContent
+  comp.ui.Container({
+    width: it.container_width || "narrow",
+    classes: "min-h-screen pb-32",
+    content: pageBody,
   })
 }}
-
-<div class="mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}">
-  {{ content |> safe }}
-</div>

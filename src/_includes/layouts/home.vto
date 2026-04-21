@@ -26,7 +26,7 @@ layout: layouts/base.vto
 {{# --- 2. THE GARDEN CONTENT --- #}}
 
 {{ set gardenContent }}
-  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16" data-pagefind-body>
     
     {{# LEFT: The Main Stream #}}
     <div class="lg:col-span-7 flex flex-col gap-10 md:gap-16">
@@ -125,9 +125,6 @@ layout: layouts/base.vto
     <p class="text-[9px] font-mono uppercase tracking-[0.3em] mb-6 md:mb-10 text-text-muted/40">search the website</p>
     {{ comp.features.Search({ compId: "home-bottom" }) }}
   </div>
-
-  {{# Authentication Modal (Hidden by default) #}}
-  {{ comp.features.StatusAuth() }}
 {{ /set }}
 
 {{ comp.ui.Container({ width: "narrow", content: gardenContent, classes: "pb-24 md:pb-32 pt-4 md:pt-8", padding: true }) }}
