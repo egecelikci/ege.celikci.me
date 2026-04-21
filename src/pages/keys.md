@@ -58,5 +58,5 @@ For the HTML page, you can [clone the site source](https://codeberg.org/{{ autho
 ## Matrix
 
 - **[@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})**
-  - `7jA7yS1uVD` (Element Desktop)
-  - `9ovMRDnfeY` (Element X Android)
+  - `F0xxKVPj64` (Element Desktop)
+  - `+Zzdv2gXqVcZWldRyG+jamEeQG5aj0NB/0eUtgzCICA` (Element X Android)

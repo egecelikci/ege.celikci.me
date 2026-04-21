@@ -1,6 +1,7 @@
-export const layout = "layouts/note.vto";
+export const layout = "layouts/page.vto";
 export const templateEngine = ["vto", "md",];
 export const type = "note";
+export const show_webmentions = true;
 
 /**
  * High-precision URL generator for notes.
