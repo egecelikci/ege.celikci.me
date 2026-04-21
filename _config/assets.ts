@@ -66,6 +66,7 @@ export default function(options: AssetOptions = {},) {
       )
       // Main entry points
       .add("assets/scripts/main.ts",)
+      .add("assets/scripts/collage-worker.ts",)
       .add("assets/styles/main.css",);
   };
 }
