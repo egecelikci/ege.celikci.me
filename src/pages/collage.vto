@@ -1,6 +1,6 @@
 ---
 title: collage tool
-description: "generate minimalist album collages from listenbrainz or last.fm"
+description: "generate minimalist album collages from ListenBrainz or Last.fm"
 prose: false
 ---
 
@@ -44,8 +44,8 @@ prose: false
         <div class="flex flex-col gap-2">
           <label for="bg-mode" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Background Style</label>
           <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
-            <option value="aura">Aura</option>
-            <option value="dark">Dark</option>
+            <option value="aura">Dynamic Aura</option>
+            <option value="dark">True Dark</option>
           </select>
         </div>
 
@@ -55,9 +55,19 @@ prose: false
             <label for="grain" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Apply Film Grain</label>
           </div>
           <div class="flex items-center gap-3">
-            <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
+            <input type="checkbox" id="show-counts" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
             <label for="show-counts" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Show Listen Counts</label>
           </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="aliases" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Aliases (e.g. YE -> KANYE WEST)</label>
+          <textarea 
+            id="aliases" 
+            placeholder="Artist A -> Artist B&#10;Album X -> Album Y" 
+            rows="3"
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-2"
+          ></textarea>
         </div>
 
         <button 
@@ -79,16 +89,16 @@ prose: false
         class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} justify-center hidden"
       >
         {{ comp.ui.Icon({ name: "download", classes: "w-4 h-4" }) }}
-        Download JPG
+        Download High-Res JPG
       </button>
     </div>
 
     {{# 2. PREVIEW #}}
     <div class="grow flex justify-center w-full">
       <div id="canvas-container" class="relative group shadow-elevated rounded-lg overflow-hidden border border-border/5 max-w-full">
-        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[75vh] bg-[#09090b] cursor-crosshair"></canvas>
+        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[75vh] bg-[#09090b] cursor-crosshair transition-transform duration-700"></canvas>
         <div class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-           <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm">1080 x 1920 (9:16)</span>
+           <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm text-text">1080 x 1920 (9:16)</span>
         </div>
       </div>
     </div>
@@ -97,281 +107,170 @@ prose: false
 
 <script type="module">
   /**
-   * ListenBrainz & Last.fm Collage Generator (Proxy-Based)
-   * Secure, Offline-Ready, and Optimized.
+   * ListenBrainz & Last.fm Collage Generator (Worker-Powered)
+   * High-Performance Offscreen Rendering and Service Worker Caching.
    */
 
-  const canvas = document.getElementById('collage-canvas');
-  const ctx = canvas.getContext('2d');
-  const generateBtn = document.getElementById('generate-btn');
-  const downloadBtn = document.getElementById('download-btn');
-  const statusMsg = document.getElementById('status-msg');
-  const statusText = document.getElementById('status-text');
+  let canvas = document.getElementById("collage-canvas",);
+  const generateBtn = document.getElementById("generate-btn",);
+  const downloadBtn = document.getElementById("download-btn",);
+  const statusMsg = document.getElementById("status-msg",);
+  const statusText = document.getElementById("status-text",);
+  const usernameInput = document.getElementById("username",);
   
-  const sourceLb = document.getElementById('source-lb');
-  const sourceLfm = document.getElementById('source-lfm');
+  const sourceLb = document.getElementById("source-lb",);
+  const sourceLfm = document.getElementById("source-lfm",);
 
-  let currentSource = 'lb';
+  let currentSource = "lb";
+  let currentWorker = null;
+  let latestBlob = null;
 
-  // CONFIG CONSTANTS (9:16 Geometry)
-  const W = 1080;
-  const H = 1920;
-  const COVER_SIZE = 280;
-  const CORNER_RADIUS = 16;
-  const GRID_X = [80, 400, 720, 80, 400, 720, 80, 400, 720];
-  const GRID_Y = [130, 130, 130, 450, 450, 450, 770, 770, 770];
-  const LIST_BASE_Y = 1120;
-  const LIST_ROW_HEIGHT = 76;
+  // --- SOURCE SWITCHING ---
+  sourceLb.onclick = () => setSource("lb",);
+  sourceLfm.onclick = () => setSource("lfm",);
 
-  // SOURCE SWITCHING
-  sourceLb.onclick = () => setSource('lb');
-  sourceLfm.onclick = () => setSource('lfm');
-
-  function setSource(src) {
+  function setSource(src,) {
     currentSource = src;
-    if (src === 'lb') {
-      sourceLb.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all';
-      sourceLfm.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all';
-    } else {
-      sourceLfm.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all';
-      sourceLb.className = 'grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all';
-    }
+    sourceLb.className = `grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${src === "lb" ? "bg-primary text-white" : "text-text-muted/60 hover:text-text"}`;
+    sourceLfm.className = `grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${src === "lfm" ? "bg-primary text-white" : "text-text-muted/60 hover:text-text"}`;
   }
 
-  // OFLINE CACHING HELPER
-  const CACHE_NAME = 'collage-tool-v1';
-  async function fetchWithCache(url, isImage = false) {
-    const cache = await caches.open(CACHE_NAME);
-    const cachedResponse = await cache.match(url);
-    
-    if (cachedResponse) return cachedResponse;
-
-    try {
-      const response = await fetch(url);
-      if (response.ok) {
-        cache.put(url, response.clone());
-        return response;
-      }
-    } catch (e) {
-      console.warn('Network fetch failed, no cache for:', url);
-    }
-    return null;
+  // --- FETCH HELPERS ---
+  async function safeFetch(url,) {
+    const res = await fetch(url,);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`,);
+    return res;
   }
 
-  async function loadFont() {
-    const font = new FontFace('Inconsolata', 'url(/assets/fonts/Inconsolata.woff2)');
-    await font.load();
-    document.fonts.add(font);
-  }
-
-  function drawRoundedRect(ctx, x, y, width, height, radius) {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-  }
-
+  // --- CORE GENERATION ENGINE ---
   async function generate() {
-    const user = document.getElementById('username').value.trim();
-    const period = document.getElementById('period').value;
-    const bgMode = document.getElementById('bg-mode').value;
-    const applyGrain = document.getElementById('grain').checked;
-    const showCounts = document.getElementById('show-counts').checked;
+    const user = usernameInput.value.trim();
+    const period = document.getElementById("period",).value;
+    const bgMode = document.getElementById("bg-mode",).value;
+    const applyGrain = document.getElementById("grain",).checked;
+    const showCounts = document.getElementById("show-counts",).checked;
+    const aliasesRaw = document.getElementById("aliases",).value;
 
-    if (!user) return alert('Please enter a username');
+    if (!user) return alert("Enter a username",);
 
-    statusText.innerText = 'Syncing...';
-    statusMsg.style.opacity = '1';
+    statusText.innerText = "Synchronizing...";
+    statusMsg.style.opacity = "1";
     generateBtn.disabled = true;
+    downloadBtn.classList.add("hidden",);
 
     try {
-      // 0. Reset state for clean run
-      ctx.letterSpacing = "0px";
-      ctx.filter = "none";
-
-      // 1. Fetch Stats via Proxy
+      // 1. DATA ACQUISITION
       const proxyUrl = `/api/collage-proxy?source=${currentSource}&user=${user}&period=${period}`;
-      const res = await fetchWithCache(proxyUrl);
-      if (!res) throw new Error('Could not fetch stats (Offline & no cache?)');
-      
+      const res = await safeFetch(proxyUrl,);
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      const albums = data.albums;
+      if (data.error) throw new Error(data.error,);
+      let albums = data.albums;
 
-      if (!albums || albums.length === 0) throw new Error('No albums found for this period');
+      if (!albums?.length) throw new Error("No data found",);
 
-      // 2. Load Images
-      statusText.innerText = 'Downloading covers...';
-      const images = await Promise.all(albums.map(async (album) => {
-        try {
-          const img = new Image();
-          img.crossOrigin = "anonymous";
-          
-          // Determine image URL (LFM returns it, LB needs construction)
-          let imgUrl = album.img;
-          if (!imgUrl) {
-             imgUrl = `https://coverartarchive.org/release-group/${album.mbid}/front-500`;
+      // 2. DATA REFINEMENT (Aliases & Merging)
+      if (aliasesRaw.trim()) {
+        const aliasMap = new Map();
+        aliasesRaw.split("\n").forEach((line) => {
+          const [from, to] = line.split("->").map((s) => s.trim());
+          if (from && to) aliasMap.set(from.toUpperCase(), to.toUpperCase());
+        });
+
+        const merged = new Map();
+        albums.forEach((album) => {
+          const artist = aliasMap.get(album.artist.toUpperCase()) ||
+            album.artist.toUpperCase();
+          const name = aliasMap.get(album.name.toUpperCase()) ||
+            album.name.toUpperCase();
+          const key = `${artist}|${name}`;
+
+          if (merged.has(key)) {
+            const existing = merged.get(key);
+            existing.count = parseInt(existing.count) + parseInt(album.count);
+          } else {
+            merged.set(key, { ...album, artist, name, });
           }
+        });
 
-          const imgRes = await fetchWithCache(imgUrl, true);
-          if (!imgRes) return null;
-
-          const blob = await imgRes.blob();
-          img.src = URL.createObjectURL(blob);
-          
-          await new Promise((resolve) => {
-            img.onload = resolve;
-            img.onerror = () => resolve(null);
-          });
-          return img;
-        } catch (e) {
-          return null;
-        }
-      }));
-
-      // 3. Background
-      ctx.fillStyle = '#09090b';
-      ctx.fillRect(0, 0, W, H);
-
-      if (bgMode === 'aura') {
-        for (let i = 0; i < Math.min(3, images.length); i++) {
-          if (!images[i]) continue;
-          ctx.save();
-          ctx.filter = 'blur(120px) opacity(0.25) saturate(1.5)';
-          const x = (i * (W/2.5)) - 100;
-          ctx.drawImage(images[i], x, 300, W, W);
-          ctx.restore();
-        }
+        albums = Array.from(merged.values())
+          .sort((a, b) => b.count - a.count);
       }
 
-      // 4. Grid
-      statusText.innerText = 'Polishing...';
-      for (let i = 0; i < albums.length; i++) {
-        const x = GRID_X[i];
-        const y = GRID_Y[i];
+      // Always slice to exactly 9 to fill the grid and list perfectly
+      albums = albums.slice(0, 9);
+
+      // 3. WORKER ORCHESTRATION
+      if (currentWorker) currentWorker.terminate();
+
+      // Clone canvas to reset transferControlToOffscreen
+      const newCanvas = canvas.cloneNode(false,);
+      canvas.replaceWith(newCanvas,);
+      canvas = newCanvas;
+
+      currentWorker = new Worker("/assets/scripts/collage-worker.js", {
+        type: "module",
+      },);
+      const offscreen = canvas.transferControlToOffscreen();
+
+      currentWorker.onerror = (e,) => {
+        console.error("Worker failed to load:", e,);
+        statusText.innerText = `Worker error: ${e.message}`;
+        generateBtn.disabled = false;
+        currentWorker = null;
+      };
+
+      currentWorker.onmessage = (e,) => {
+        const { type, text, blob, message, } = e.data;
         
-        ctx.save();
-        drawRoundedRect(ctx, x, y, COVER_SIZE, COVER_SIZE, CORNER_RADIUS);
-        ctx.clip();
-        if (images[i]) {
-          ctx.drawImage(images[i], x, y, COVER_SIZE, COVER_SIZE);
-        } else {
-          ctx.fillStyle = '#18181b';
-          ctx.fillRect(x, y, COVER_SIZE, COVER_SIZE);
+        if (type === "status") {
+          statusText.innerText = text;
+        } else if (type === "done") {
+          latestBlob = blob;
+          statusText.innerText = "Ready!";
+          downloadBtn.classList.remove("hidden",);
+          generateBtn.disabled = false;
+          // IMPORTANT: Do NOT terminate the worker here. 
+          // Keeping the worker alive ensures the OffscreenCanvas sync remains active
+          // and the preview doesn't disappear/turn black.
+        } else if (type === "error") {
+          statusText.innerText = `Error: ${message}`;
+          generateBtn.disabled = false;
+          currentWorker.terminate();
+          currentWorker = null;
         }
-        ctx.restore();
-      }
+      };
 
-      // 5. Film Grain (Optimized)
-      if (applyGrain) {
-        const grainCanvas = document.createElement('canvas');
-        grainCanvas.width = 128; // Small tile
-        grainCanvas.height = 128;
-        const gctx = grainCanvas.getContext('2d');
-        const gdata = gctx.createImageData(128, 128);
-        for (let i = 0; i < gdata.data.length; i += 4) {
-          const v = Math.random() * 255;
-          gdata.data[i] = gdata.data[i+1] = gdata.data[i+2] = v;
-          gdata.data[i+3] = 15;
-        }
-        gctx.putImageData(gdata, 0, 0);
-        ctx.save();
-        ctx.globalCompositeOperation = 'overlay';
-        ctx.fillStyle = ctx.createPattern(grainCanvas, 'repeat');
-        ctx.fillRect(0, 0, W, H);
-        ctx.restore();
-      }
-
-      // 6. List
-      const MARGIN = 80;
-      const GAP = 40;
-
-      for (let i = 0; i < albums.length; i++) {
-        const y = LIST_BASE_Y + (i * LIST_ROW_HEIGHT);
-        const name = (albums[i].name || 'Unknown').toUpperCase();
-        const artist = (albums[i].artist || 'Unknown').toUpperCase();
-        
-        // Listen Counts (Measure first to calculate available width)
-        let countWidth = 0;
-        const countText = showCounts ? `⨯${albums[i].count}` : "";
-        
-        if (showCounts) {
-          ctx.textAlign = 'right';
-          ctx.fillStyle = '#f4f4f5';
-          ctx.font = '700 22px Inconsolata, monospace';
-          ctx.fillText(countText, W - MARGIN, y);
-          countWidth = ctx.measureText(countText).width;
-        }
-
-        // Album Name (Truncate based on available space)
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#f4f4f5';
-        ctx.font = '900 24px Inconsolata, monospace';
-        
-        const prefix = `${i + 1}. `;
-        const prefixWidth = ctx.measureText(prefix).width;
-        const availableWidth = W - MARGIN - MARGIN - prefixWidth - (showCounts ? countWidth + GAP : 0);
-        
-        let displayName = name;
-        if (ctx.measureText(name).width > availableWidth) {
-          let tempName = name;
-          while (ctx.measureText(tempName + '...').width > availableWidth && tempName.length > 0) {
-            tempName = tempName.slice(0, -1);
-          }
-          displayName = tempName + '...';
-        }
-
-        ctx.fillText(prefix + displayName, MARGIN, y);
-        
-        // Artist Name
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#a1a1aa';
-        ctx.font = '500 20px Inconsolata, monospace';
-        ctx.fillText(artist.substring(0, 45), MARGIN, y + 32);
-      }
-
-      // 7. Footer
-      const footerText = `TOP ALBUMS • ${period.replace('_', ' ')} • ${user}`.toUpperCase();
-      ctx.fillStyle = '#52525b';
-      ctx.font = 'bold 18px Inconsolata, monospace';
-      ctx.textAlign = 'center';
-      ctx.letterSpacing = "4px";
-      ctx.fillText(footerText, W/2, H - 100);
-      ctx.fillText("EGE.CELIKCI.ME", W/2, H - 70);
-      ctx.letterSpacing = "0px";
-
-
-      statusText.innerText = 'Ready!';
-      downloadBtn.classList.remove('hidden');
+      currentWorker.postMessage(
+        {
+          type: "generate",
+          canvas: offscreen,
+          albums,
+          options: { bgMode, applyGrain, showCounts, user, period, },
+        },
+        [offscreen,],
+      );
 
     } catch (err) {
-      console.error(err);
+      console.error(err,);
       statusText.innerText = `Error: ${err.message}`;
-    } finally {
       generateBtn.disabled = false;
     }
   }
 
   downloadBtn.onclick = () => {
-    const link = document.createElement('a');
-    link.download = `collage-${document.getElementById('username').value}-${document.getElementById('period').value}.jpg`;
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    if (!latestBlob) return;
+    const link = document.createElement("a",);
+    link.download = `collage-${currentSource}-${usernameInput.value}.jpg`;
+    link.href = URL.createObjectURL(latestBlob,);
     link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href,), 10000,);
   };
 
   generateBtn.onclick = generate;
 
-  // Initialize
-  loadFont().then(() => {
-    ctx.fillStyle = '#09090b';
-    ctx.fillRect(0, 0, W, H);
-  });
+  // Initial Draw (Placeholder)
+  const ctx = canvas.getContext("2d",);
+  ctx.fillStyle = "#09090b";
+  ctx.fillRect(0, 0, canvas.width, canvas.height,);
 </script>
 {{# dprint-ignore-end #}}
