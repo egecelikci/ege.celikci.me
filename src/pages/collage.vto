@@ -59,6 +59,10 @@ hide_title: true
             <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Film Grain</span>
           </label>
           <label class="flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="skip-missing" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
+            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Skip Missing Covers</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer group">
             <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
             <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Listen Counts</span>
           </label>
@@ -128,6 +132,7 @@ hide_title: true
     periodSelect,
     document.getElementById("bg-mode"),
     document.getElementById("grain"),
+    document.getElementById("skip-missing"),
     document.getElementById("show-counts"),
     document.getElementById("aliases")
   ];
@@ -140,6 +145,43 @@ hide_title: true
   let latestBlob = null;
   let debounceTimeout = null;
 
+  const STORAGE_KEY = "collage-settings-v1";
+
+  function saveSettings() {
+    const settings = {
+      source: currentSource,
+      user: usernameInput.value,
+      period: periodSelect.value,
+      bgMode: document.getElementById("bg-mode").value,
+      grain: document.getElementById("grain").checked,
+      skipMissing: document.getElementById("skip-missing").checked,
+      showCounts: document.getElementById("show-counts").checked,
+      aliases: document.getElementById("aliases").value
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  }
+
+  function loadSettings() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const settings = JSON.parse(saved);
+      currentSource = settings.source || "lb";
+      usernameInput.value = settings.user || "";
+      sourceLb.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${currentSource === "lb" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+      sourceLfm.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${currentSource === "lfm" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+      updatePeriods();
+      if (settings.period) periodSelect.value = settings.period;
+      if (settings.bgMode) document.getElementById("bg-mode").value = settings.bgMode;
+      document.getElementById("grain").checked = settings.grain !== undefined ? settings.grain : true;
+      document.getElementById("skip-missing").checked = settings.skipMissing !== undefined ? settings.skipMissing : true;
+      document.getElementById("show-counts").checked = settings.showCounts !== undefined ? settings.showCounts : false;
+      document.getElementById("aliases").value = settings.aliases || "";
+    } catch (e) {
+      console.error("Failed to load settings:", e);
+    }
+  }
+
   const PERIODS = {
     lb: [
       { v: "this_week", l: "This Week" },
@@ -151,12 +193,12 @@ hide_title: true
       { v: "all_time", l: "All Time" }
     ],
     lfm: [
-      { v: "7day", l: "7 Days" },
-      { v: "1month", l: "1 Month" },
-      { v: "3month", l: "3 Months" },
-      { v: "6month", l: "6 Months" },
-      { v: "12month", l: "12 Months" },
-      { v: "overall", l: "Overall" }
+      { v: "week", l: "7 Days" },
+      { v: "month", l: "1 Month" },
+      { v: "quarter", l: "3 Months" },
+      { v: "half_year", l: "6 Months" },
+      { v: "year", l: "12 Months" },
+      { v: "all_time", l: "Overall" }
     ]
   };
 
@@ -171,6 +213,7 @@ hide_title: true
     sourceLb.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lb" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
     sourceLfm.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lfm" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
     updatePeriods();
+    saveSettings();
     generate();
   }
 
@@ -179,6 +222,7 @@ hide_title: true
 
   inputs.forEach(input => {
     input.oninput = () => {
+      saveSettings();
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(generate, 600);
     };
@@ -222,8 +266,6 @@ hide_title: true
         albums = Array.from(merged.values()).sort((a, b) => b.count - a.count);
       }
 
-      albums = albums.slice(0, 9);
-
       if (currentWorker) currentWorker.terminate();
       const newCanvas = canvas.cloneNode(false);
       canvas.replaceWith(newCanvas);
@@ -254,6 +296,7 @@ hide_title: true
         options: { 
           bgMode: document.getElementById("bg-mode").value, 
           applyGrain: document.getElementById("grain").checked, 
+          skipMissing: document.getElementById("skip-missing").checked,
           showCounts: document.getElementById("show-counts").checked, 
           user, 
           period: periodSelect.value 
@@ -290,6 +333,7 @@ hide_title: true
   };
 
   updatePeriods();
+  loadSettings();
   if (usernameInput.value) generate();
 
   const ctx = canvas.getContext("2d");

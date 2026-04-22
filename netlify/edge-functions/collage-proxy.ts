@@ -65,9 +65,9 @@ export default async (req: Request,) => {
     let albums = [];
 
     if (source === "lb") {
-      // Increased count to 50 to allow for merging on the client side
+      // Increased count to 100 to allow for merging on the client side and skipping missing covers
       const lbUrl =
-        `https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=50`;
+        `https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=100`;
       const res = await fetch(lbUrl, {
         headers: { "User-Agent": USER_AGENT, },
       },);
@@ -75,7 +75,7 @@ export default async (req: Request,) => {
 
       const data = await res.json();
       albums = (data.payload.release_groups || [])
-        .filter((a: any,) => a.release_group_mbid && a.release_group_name)
+        .filter((a: any,) => a.release_group_name) // Removed strict mbid requirement here to get more potential results
         .map((a: any,) => ({
           name: a.release_group_name,
           artist: a.artist_name,
@@ -97,15 +97,16 @@ export default async (req: Request,) => {
         week: "7day",
         month: "1month",
         quarter: "3month",
+        half_year: "6month",
         year: "12month",
         all_time: "overall",
       };
 
-      // Increased limit to 50 to allow for merging on the client side
+      // Increased limit to 100 to allow for merging and skipping missing covers
       const lfmUrl =
         `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${user}&api_key=${LASTFM_API_KEY}&period=${
           lfmPeriods[period] || "7day"
-        }&limit=50&format=json`;
+        }&limit=100&format=json`;
       const res = await fetch(lfmUrl, {
         headers: { "User-Agent": USER_AGENT, },
       },);
