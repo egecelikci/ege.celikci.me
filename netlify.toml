@@ -18,6 +18,10 @@
     function = "status"
 
 [[edge_functions]]
+    path = "/api/verify"
+    function = "verify"
+
+[[edge_functions]]
     path = "/api/like"
     function = "like"
 

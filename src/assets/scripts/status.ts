@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { initAuthModal, signWithPasskey, } from "./admin.ts";
+import { initAuthModal, isSessionValid, openAuthModal, signWithPasskey, } from "./admin.ts";
 
 try {
   gsap.registerPlugin(ScrambleTextPlugin,);
@@ -23,10 +23,12 @@ let abortController: AbortController | null = null;
 let hasPeeked = false;
 
 // Initialize Auth
-try {
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initAuthModal();
+  },);
+} else {
   initAuthModal();
-} catch (e) {
-  console.error("Auth modal init failed:", e,);
 }
 
 /**
@@ -38,7 +40,7 @@ function setStatusState(
 ) {
   const targetItems = container
     ? [container,]
-    : document.querySelectorAll(".status-dashboard > div > div",); // Fixed selector to target the StatusItem root
+    : document.querySelectorAll(".status-dashboard > div",);
 
   targetItems.forEach((item,) => {
     if (!item) return;
@@ -86,12 +88,159 @@ function createMarqueeAnimation(element: HTMLElement,) {
   },);
 }
 
+/**
+ * Shared Like UI logic
+ */
+function updateLikeUI(
+  container: HTMLElement,
+  liked: boolean,
+  animate = false,
+) {
+  const likeBtn = container.querySelector(
+    ".status-like-button",
+  ) as HTMLElement;
+  const heartIcon = likeBtn?.querySelector("svg",);
+  if (!heartIcon) return;
+
+  const elements = [heartIcon, ...heartIcon.querySelectorAll("path",),];
+
+  if (animate) {
+    const tl = gsap.timeline();
+
+    // Playful scale & fill animation
+    tl.to(likeBtn, {
+      scale: 1.4,
+      duration: 0.15,
+      ease: "power2.out",
+    },);
+
+    tl.add(() => {
+      if (liked) {
+        heartIcon.classList.add("fill-primary",);
+        heartIcon.classList.remove("fill-none",);
+        elements.forEach(el => el.setAttribute("fill", "currentColor",));
+      } else {
+        heartIcon.classList.add("fill-none",);
+        heartIcon.classList.remove("fill-primary",);
+        elements.forEach(el => el.setAttribute("fill", "none",));
+      }
+    },);
+
+    tl.to(likeBtn, {
+      scale: 1,
+      duration: 0.4,
+      ease: "back.out(3)",
+    },);
+  } else {
+    // Immediate state set
+    if (liked) {
+      heartIcon.classList.add("fill-primary",);
+      heartIcon.classList.remove("fill-none",);
+      elements.forEach(el => el.setAttribute("fill", "currentColor",));
+    } else {
+      heartIcon.classList.add("fill-none",);
+      heartIcon.classList.remove("fill-primary",);
+      elements.forEach(el => el.setAttribute("fill", "none",));
+    }
+  }
+}
+
+/**
+ * --- EVENT DELEGATION (Reliable interaction) ---
+ */
+function initGlobalInteractions() {
+  document.addEventListener("click", async (e,) => {
+    const target = e.target as HTMLElement;
+
+    // 2. Like Button -> Handle Like
+    const likeBtn = target.closest(".status-like-button",) as HTMLElement;
+    if (likeBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const container = likeBtn.closest(
+        "[id$='-status-container']",
+      ) as HTMLElement;
+      const dataSpan = container?.querySelector("span[data-status]",);
+      if (!container || !dataSpan) return;
+
+      const mbid = dataSpan.getAttribute("data-mbid",);
+      const isMsid = dataSpan.getAttribute("data-is-msid",) === "true";
+      const currentLiked = dataSpan.getAttribute("data-liked",) === "true";
+
+      if (!mbid) return;
+
+      const performLike = async () => {
+        // UX: Visual feedback - "Panic" while loading
+        container.classList.add("is-changing",);
+        likeBtn.classList.add("animate-pulse",);
+
+        try {
+          const token = localStorage.getItem("status_owner_token",);
+          const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+          };
+
+          if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
+          } else {
+            // One-time signature for this specific like intent
+            try {
+              const assertion = await signWithPasskey("authorize-like-" + mbid,);
+              if (assertion) {
+                headers["X-Passkey-Assertion"] = JSON.stringify(assertion,);
+              }
+            } catch (err: any) {
+              console.warn("[auth] Passkey assertion failed", err,);
+              container.classList.remove("is-changing",);
+              if (err.name !== "NotAllowedError") {
+                openAuthModal(performLike);
+              }
+              return;
+            }
+          }
+
+          const res = await fetch("/api/like", {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid, },),
+          },);
+
+          if (res.ok) {
+            loadStatus();
+          } else if (res.status === 401) {
+            localStorage.removeItem("status_owner_verified",);
+            localStorage.removeItem("status_session_expiry",);
+            container.classList.remove("is-changing",);
+            openAuthModal(performLike);
+          } else {
+            container.classList.remove("is-changing",);
+          }
+        } catch (err) {
+          console.error("[Status] Like failed:", err,);
+          container.classList.remove("is-changing",);
+        } finally {
+          likeBtn.classList.remove("animate-pulse",);
+        }
+      };
+
+      // Identity Recognition Check
+      if (!isSessionValid()) {
+        openAuthModal(performLike);
+        return;
+      }
+
+      // If already verified, perform immediately
+      performLike();
+    }
+  },);
+}
+
 function initScrollInteractions() {
   const container = document.getElementById("status-scroll-container",);
   const dots = document.querySelectorAll(".status-dot",);
   if (!container || dots.length === 0) return;
 
-  // 1. Sync dots with scroll
   container.addEventListener("scroll", () => {
     const scrollLeft = container.scrollLeft;
     const width = container.offsetWidth;
@@ -102,7 +251,6 @@ function initScrollInteractions() {
     },);
   }, { passive: true, },);
 
-  // 2. Click dots to scroll
   dots.forEach((dot, i,) => {
     dot.addEventListener("click", () => {
       const width = container.offsetWidth;
@@ -113,8 +261,7 @@ function initScrollInteractions() {
     },);
   },);
 
-  // 3. Intro Peek Animation (Mobile Only)
-  if (!hasPeeked && window.innerWidth < 768) {
+  if (!hasPeeked && globalThis.innerWidth < 768) {
     hasPeeked = true;
     setTimeout(() => {
       gsap.to(container, {
@@ -165,6 +312,7 @@ async function loadStatus() {
     );
   } finally {
     if (document.visibilityState === "visible") {
+      if (pollTimeout) clearTimeout(pollTimeout,);
       pollTimeout = setTimeout(loadStatus, currentInterval,);
     }
   }
@@ -240,7 +388,24 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
   const newIsMsid = getIsMsid(newData,);
   const curIsMsid = getIsMsid(container,);
 
-  // Allow update if text, state, liked status, or MBID changed
+  // Detect if only liked status changed for the SAME song
+  const likedChangedOnly = newTxt === curTxt
+    && newState === curState
+    && newMbid === curMbid
+    && newIsMsid === curIsMsid
+    && newLiked !== curLiked;
+
+  if (likedChangedOnly) {
+    // Clear loading/panic state
+    setStatusState(newState ? "active" : "inactive", container,);
+    updateLikeUI(container, newLiked, true,);
+
+    // Sync the local data-liked attribute
+    const dataSpan = container.querySelector("span[data-status]",);
+    if (dataSpan) dataSpan.setAttribute("data-liked", String(newLiked,),);
+    return;
+  }
+
   if (
     newTxt === curTxt
     && newState === curState
@@ -248,7 +413,13 @@ function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
     && newMbid === curMbid
     && newIsMsid === curIsMsid
     && curTxt !== ""
-  ) return;
+  ) {
+    // Even if no data changed, ensure we clear any lingering panic state from interaction
+    if (container.classList.contains("is-changing",)) {
+      setStatusState(curState ? "active" : "inactive", container,);
+    }
+    return;
+  }
 
   if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
     container.classList.add("is-changing",);
@@ -278,7 +449,6 @@ function performUpdate(
   const isActive = newSpan?.getAttribute("data-active",) === "true";
   const mbid = newSpan?.getAttribute("data-mbid",);
   const isLiked = newSpan?.getAttribute("data-liked",) === "true";
-  const isMsid = newSpan?.getAttribute("data-is-msid",) === "true";
 
   setStatusState(isActive ? "active" : "inactive", container,);
 
@@ -309,54 +479,9 @@ function performUpdate(
 
   if (actionWrapper && likeBtn) {
     if (mbid) {
-      const heartIcon = likeBtn.querySelector("svg",);
+      // Set initial like state without animation
+      updateLikeUI(container, isLiked, false,);
 
-      const updateLikeUI = (liked: boolean, animate = false,) => {
-        if (!heartIcon) return;
-
-        const elements = [heartIcon, ...heartIcon.querySelectorAll("path",),];
-
-        if (animate) {
-          // Playful pop animation
-          gsap.to(likeBtn, {
-            scale: 1.3,
-            duration: 0.2,
-            yoyo: true,
-            repeat: 1,
-            ease: "back.out(2)",
-            onStart: () => {
-              if (liked) {
-                heartIcon.classList.add("fill-primary",);
-                heartIcon.classList.remove("fill-none",);
-                elements.forEach(el =>
-                  el.setAttribute("fill", "currentColor",)
-                );
-              } else {
-                heartIcon.classList.add("fill-none",);
-                heartIcon.classList.remove("fill-primary",);
-                elements.forEach(el => el.setAttribute("fill", "none",));
-              }
-            },
-          },);
-        } else {
-          // Silent update
-          if (liked) {
-            heartIcon.classList.add("fill-primary",);
-            heartIcon.classList.remove("fill-none",);
-            elements.forEach(el => el.setAttribute("fill", "currentColor",));
-          } else {
-            heartIcon.classList.add("fill-none",);
-            heartIcon.classList.remove("fill-primary",);
-            elements.forEach(el => el.setAttribute("fill", "none",));
-          }
-        }
-        heartIcon.classList.add("text-primary",);
-      };
-
-      // Set initial state from data
-      updateLikeUI(isLiked, !!curTxt,);
-
-      // Smooth reveal of the like widget
       if (actionWrapper.classList.contains("hidden",)) {
         actionWrapper.classList.remove("hidden",);
         gsap.fromTo(actionWrapper, {
@@ -372,65 +497,7 @@ function performUpdate(
           ease: "back.out(2)",
         },);
       }
-
-      likeBtn.onclick = async (e,) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const currentLiked = newSpan?.getAttribute("data-liked",) === "true";
-        likeBtn.classList.add("animate-pulse",);
-
-        try {
-          const token = localStorage.getItem("status_owner_token",);
-          const headers: Record<string, string> = {
-            "Content-Type": "application/json",
-          };
-
-          if (token) {
-            headers["Authorization"] = `Bearer ${token}`;
-          } else if (
-            localStorage.getItem("status_owner_verified",) === "true"
-          ) {
-            try {
-              const assertion = await signWithPasskey(
-                "authorize-like-" + mbid,
-              );
-              if (assertion) {
-                headers["X-Passkey-Assertion"] = JSON.stringify(assertion,);
-              }
-            } catch (err) {
-              console.warn("Passkey assertion failed or cancelled", err,);
-              document.getElementById("status-auth-trigger",)?.click();
-              return;
-            }
-          } else {
-            document.getElementById("status-auth-trigger",)?.click();
-            return;
-          }
-
-          const res = await fetch("/api/like", {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid, },),
-          },);
-
-          if (res.ok) {
-            const data = await res.json();
-            const nowLiked = data.score === 1;
-            updateLikeUI(nowLiked, true,);
-            newSpan?.setAttribute("data-liked", String(nowLiked,),);
-          } else if (res.status === 401) {
-            localStorage.removeItem("status_owner_verified",);
-            document.getElementById("status-auth-trigger",)?.click();
-          }
-        } catch (err) {
-          console.error("Like failed:", err,);
-        } finally {
-          likeBtn.classList.remove("animate-pulse",);
-        }
-      };
     } else {
-      // Hide with animation
       if (!actionWrapper.classList.contains("hidden",)) {
         gsap.to(actionWrapper, {
           opacity: 0,
@@ -493,6 +560,7 @@ function performUpdate(
 if (document.visibilityState === "visible") {
   loadStatus();
   initScrollInteractions();
+  initGlobalInteractions();
 }
 
 document.addEventListener("visibilitychange", () => {
@@ -507,3 +575,4 @@ document.addEventListener("visibilitychange", () => {
 },);
 
 export { loadStatus, };
+

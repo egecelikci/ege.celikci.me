@@ -1,8 +1,7 @@
 ---
 title: topics
-description: "a curated map of thoughts and archives."
 menu_label: atlas
-menu_order: 3
+menu_order: 5
 label: tags
 searchable: false
 prose: false
@@ -11,31 +10,38 @@ prose: false
 {{# --- 1. TAG CLOUD (Clean Typographic Style) --- #}}
 {{ set tagsContent }}
   {{ set allTags = search.values("tags") }}
-  
+
   <div class="flex flex-wrap gap-8">
     {{ if allTags.length > 0 }}
       {{ for tag of allTags }}
         {{# Get count for this tag #}}
         {{ set tagCount = search.pages("'" + tag + "'").length }}
-        {{ set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
-        
+        {{
+          set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
+        }}
+
         <div class="group flex items-baseline gap-2">
-          {{ comp.ui.Tag({ 
-            content: tag, 
-            href: "/tags/" + tagSlug + "/",
-            classes: "text-base"
-          }) }}
-          <span class="text-[9px] font-mono text-text-muted/40 group-hover:text-text-muted/70 transition-colors uppercase tracking-widest">
+          {{
+            comp.ui.Tag({
+              content: tag,
+              href: "/tags/" + tagSlug + "/",
+              classes: "text-base",
+            })
+          }}
+          <span
+            class="text-[9px] font-mono text-text-muted/40 group-hover:text-text-muted/70 transition-colors uppercase tracking-widest"
+          >
             {{ tagCount }}
           </span>
         </div>
-    {{ /for }}
+      {{ /for }}
     {{ else }}
       {{
         comp.ui.EmptyState({
           icon: "tag",
           title: "No topics found",
-          description: "Tags will appear here once you add them to your posts or notes.",
+          description:
+            "Tags will appear here once you add them to your posts or notes.",
         })
       }}
     {{ /if }}

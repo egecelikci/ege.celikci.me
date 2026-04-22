@@ -6,17 +6,21 @@ import gsap from "gsap";
  */
 
 const CHALLENGE = "ege-celikci-me-secure-challenge";
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+// Intent persistence: store a callback to run after successful verification
+let pendingVerificationAction: (() => void) | null = null;
 
 export async function registerPasskey(): Promise<string> {
-  const rpId = window.location.hostname.includes("ege.celikci.me",)
+  const rpId = globalThis.location.hostname.includes("ege.celikci.me",)
     ? "ege.celikci.me"
-    : window.location.hostname;
+    : globalThis.location.hostname;
   const publicKeyCredentialCreationOptions: PublicKeyCredentialCreationOptions =
     {
-      challenge: Uint8Array.from(CHALLENGE, c => c.charCodeAt(0,),),
+      challenge: Uint8Array.from(CHALLENGE, (c,) => c.charCodeAt(0,),),
       rp: { name: "ege.celikci.me", id: rpId, },
       user: {
-        id: Uint8Array.from("owner", c => c.charCodeAt(0,),),
+        id: Uint8Array.from("owner", (c,) => c.charCodeAt(0,),),
         name: "ege@celikci.me",
         displayName: "Ege Celikci",
       },
@@ -35,24 +39,56 @@ export async function registerPasskey(): Promise<string> {
   const response = credential.response as AuthenticatorAttestationResponse;
   const publicKeyBuffer = response.getPublicKey();
   if (!publicKeyBuffer) throw new Error("No public key returned",);
-  return JSON.stringify({
+
+  const config = JSON.stringify({
     id: credential.id,
     publicKey: btoa(String.fromCharCode(...new Uint8Array(publicKeyBuffer,),),),
   },);
+
+  // Store passkey info locally
+  localStorage.setItem("status_passkey_config", config,);
+  localStorage.setItem("status_passkey_enrolled", "true",);
+
+  return config;
+}
+
+/**
+ * Helper to convert base64/url to buffer
+ */
+function bufferFromBase64(base64: string): Uint8Array {
+  const bin = atob(base64.replace(/-/g, "+").replace(/_/g, "/"));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 
 export async function signWithPasskey(payload: string,): Promise<any> {
-  const rpId = window.location.hostname.includes("ege.celikci.me",)
+  const rpId = globalThis.location.hostname.includes("ege.celikci.me",)
     ? "ege.celikci.me"
-    : window.location.hostname;
+    : globalThis.location.hostname;
+
+  const configStr = localStorage.getItem("status_passkey_config",);
+  const allowCredentials: PublicKeyCredentialDescriptor[] = [];
+  
+  if (configStr) {
+    try {
+      const config = JSON.parse(configStr,);
+      allowCredentials.push({
+        id: bufferFromBase64(config.id),
+        type: "public-key",
+      });
+    } catch (e) {
+      console.warn("[auth] Failed to parse enrolled key ID", e);
+    }
+  }
+
   const assertion = await navigator.credentials.get({
     publicKey: {
-      challenge: Uint8Array.from(payload, c => c.charCodeAt(0,),),
-      allowCredentials: [],
+      challenge: Uint8Array.from(payload, (c,) => c.charCodeAt(0,),),
+      allowCredentials,
       userVerification: "required",
       rpId: rpId,
     },
   },) as PublicKeyCredential;
+
   const response = assertion.response as AuthenticatorAssertionResponse;
   return {
     id: assertion.id,
@@ -68,138 +104,309 @@ export async function signWithPasskey(payload: string,): Promise<any> {
   };
 }
 
-export function initAuthModal() {
-  const trigger = document.getElementById("status-auth-trigger",);
+/**
+ * Persistence Logic
+ */
+function setVerifiedSession(assertion?: any) {
+  const expiry = Date.now() + SESSION_DURATION;
+  localStorage.setItem("status_owner_verified", "true",);
+  localStorage.setItem("status_session_expiry", expiry.toString(),);
+  
+  // Implicitly recognize the device ID if verified successfully
+  if (assertion && assertion.id) {
+     const existingConfig = localStorage.getItem("status_passkey_config");
+     if (!existingConfig) {
+        localStorage.setItem("status_passkey_config", JSON.stringify({ id: assertion.id, publicKey: "" }));
+        localStorage.setItem("status_passkey_enrolled", "true");
+     }
+  }
+  
+  updatePasskeyInfoUI();
+}
+
+function clearSession() {
+  localStorage.removeItem("status_owner_verified",);
+  localStorage.removeItem("status_session_expiry",);
+  updatePasskeyInfoUI();
+}
+
+export function isSessionValid(): boolean {
+  const verified = localStorage.getItem("status_owner_verified",) === "true";
+  const expiryStr = localStorage.getItem("status_session_expiry",);
+  if (!expiryStr) return false;
+  
+  const expiry = parseInt(expiryStr,);
+  const isValid = verified && Date.now() < expiry;
+  
+  if (verified && !isValid) {
+    clearSession();
+  }
+  return isValid;
+}
+
+/**
+ * Open the auth modal
+ */
+export function openAuthModal(onSuccess?: () => void) {
   const modal = document.getElementById("status-auth-modal",);
-  const close = document.getElementById("status-auth-close",);
-  const loginBtn = document.getElementById(
-    "status-passkey-login",
-  ) as HTMLButtonElement;
-  const registerBtn = document.getElementById(
-    "status-passkey-register",
-  ) as HTMLButtonElement;
-  const label = document.getElementById("status-auth-label",);
-  const initialView = document.getElementById("status-auth-initial",);
-  const successView = document.getElementById("status-auth-success",);
-  const configOutput = document.getElementById(
-    "status-config-output",
-  ) as HTMLInputElement;
-  const copyBtn = document.getElementById("status-config-copy",);
+  const innerCard = modal?.querySelector("#status-auth-card",);
+  if (!modal || !innerCard) return;
 
-  if (!trigger || !modal || !initialView || !successView) return;
-
-  if (localStorage.getItem("status_owner_verified",) === "true") {
-    trigger.classList.add("text-primary", "opacity-100",);
+  // Store intent
+  if (onSuccess) {
+    pendingVerificationAction = onSuccess;
   }
 
-  trigger.onclick = (e,) => {
-    e.preventDefault();
-    e.stopPropagation();
-    modal.classList.remove("hidden",);
-    modal.classList.add("flex",);
-    gsap.fromTo(modal, { xPercent: 100, opacity: 0, }, {
-      xPercent: 0,
-      opacity: 1,
-      duration: 0.4,
-      ease: "power4.out",
-    },);
-  };
+  modal.classList.remove("hidden",);
+  modal.classList.add("flex",);
+  void (innerCard as HTMLElement).offsetHeight; // Force reflow
+  modal.classList.add("opened",);
 
-  const closeModal = (delay = 0,) => {
-    const run = () => {
-      gsap.to(modal, {
-        xPercent: 100,
+  // Initialize UI state
+  const initialView = document.getElementById("status-auth-initial",);
+  const detailsView = document.getElementById("status-passkey-details",);
+  if (initialView && detailsView) {
+    initialView.classList.remove("hidden");
+    initialView.style.opacity = "1";
+    initialView.style.transform = "none";
+    detailsView.classList.add("hidden",);
+  }
+
+  updatePasskeyInfoUI();
+}
+
+function updatePasskeyInfoUI() {
+  const passkeyInfo = document.getElementById("status-passkey-info",);
+  const passkeyLabel = document.getElementById("status-passkey-label",);
+  const registerBtn = document.getElementById("status-passkey-register",);
+  const verifiedBadge = document.getElementById("status-verified-badge",);
+  
+  const isEnrolled = localStorage.getItem("status_passkey_enrolled",) === "true";
+  const verified = isSessionValid();
+
+  if (verifiedBadge) {
+    verifiedBadge.classList.toggle("flex", verified,);
+    verifiedBadge.classList.toggle("hidden", !verified,);
+  }
+
+  if (isEnrolled || verified) {
+    passkeyInfo?.classList.remove("hidden",);
+    registerBtn?.classList.add("hidden",);
+    if (passkeyLabel) {
+      const statusText = verified ? "Active Session" : "Device Recognized";
+      passkeyLabel.textContent = `eg • ${statusText}`;
+    }
+  } else {
+    passkeyInfo?.classList.add("hidden",);
+    registerBtn?.classList.remove("hidden",);
+  }
+}
+
+/**
+ * Animated view switching
+ */
+function switchModalView(to: "initial" | "details",) {
+  const initial = document.getElementById("status-auth-initial",);
+  const details = document.getElementById("status-passkey-details",);
+  if (!initial || !details) return;
+
+  const isGoingToDetails = to === "details";
+  const incoming = isGoingToDetails ? details : initial;
+  const outgoing = isGoingToDetails ? initial : details;
+
+  const tl = gsap.timeline();
+
+  tl.to(outgoing, {
+    opacity: 0,
+    x: isGoingToDetails ? -15 : 15,
+    duration: 0.2,
+    ease: "power2.in",
+    onComplete: () => {
+      outgoing.classList.add("hidden",);
+      incoming.classList.remove("hidden",);
+      gsap.set(incoming, {
         opacity: 0,
-        duration: 0.3,
-        ease: "power4.in",
-        onComplete: () => {
-          modal.classList.add("hidden",);
-          modal.classList.remove("flex",);
-          loginBtn.innerText = "Authorize";
-          loginBtn.disabled = false;
-          initialView.classList.remove("hidden",);
-          successView.classList.add("hidden",);
-          if (label) label.innerText = "Security";
-        },
+        x: isGoingToDetails ? 15 : -15,
       },);
-    };
-    if (delay > 0) setTimeout(run, delay,);
-    else run();
-  };
+    },
+  },);
 
-  close!.onclick = (e,) => {
-    e.preventDefault();
-    e.stopPropagation();
-    closeModal();
-  };
+  tl.to(incoming, {
+    opacity: 1,
+    x: 0,
+    duration: 0.3,
+    ease: "power2.out",
+  },);
+}
 
-  loginBtn!.onclick = async (e,) => {
-    e.preventDefault();
-    e.stopPropagation();
+/**
+ * Close the auth modal
+ */
+export function closeAuthModal() {
+  const modal = document.getElementById("status-auth-modal",);
+  if (!modal) return;
+
+  // Clear intent on close
+  pendingVerificationAction = null;
+
+  modal.classList.remove("opened",);
+  setTimeout(() => {
+    if (modal.classList.contains("opened",)) return;
+    modal.classList.remove("flex",);
+    modal.classList.add("hidden",);
+  }, 700,);
+}
+
+export function initAuthModal() {
+  const modal = document.getElementById("status-auth-modal",);
+  const closeBtn = document.getElementById("status-auth-close",);
+  const loginBtn = document.getElementById("status-passkey-login",) as HTMLButtonElement;
+  const registerBtn = document.getElementById("status-passkey-register",) as HTMLButtonElement;
+  const viewDetailsBtn = document.getElementById("-status-view-passkey",);
+  const backToMainBtn = document.getElementById("-status-back-to-main",);
+  const copyBtn = document.getElementById("-status-details-copy",);
+  const removeBtn = document.getElementById("-status-details-remove",);
+  const statusText = document.getElementById("status-auth-status-text",);
+  const detailJson = document.getElementById("-status-passkey-detail-json",) as HTMLTextAreaElement;
+
+  if (!modal) return;
+  const innerCard = modal.querySelector("#status-auth-card",) as HTMLElement;
+
+  updatePasskeyInfoUI();
+
+  // Navigation listeners
+  closeBtn?.addEventListener("click", () => closeAuthModal(),);
+  viewDetailsBtn?.addEventListener("click", () => {
+    const config = localStorage.getItem("status_passkey_config",);
+    if (detailJson && config) detailJson.value = config;
+    switchModalView("details",);
+  },);
+  backToMainBtn?.addEventListener("click", () => switchModalView("initial",),);
+
+  copyBtn?.addEventListener("click", () => {
+    const config = localStorage.getItem("status_passkey_config",);
+    if (config) {
+      navigator.clipboard.writeText(config,).then(() => {
+        const originalText = copyBtn.querySelector("span",)?.textContent;
+        copyBtn.querySelector("span",)!.textContent = "JSON Copied";
+        setTimeout(() => {
+          copyBtn.querySelector("span",)!.textContent = originalText || "Copy JSON";
+        }, 1500,);
+      },);
+    }
+  },);
+
+  removeBtn?.addEventListener("click", () => {
+    if (confirm("Delete hardware key from browser cache? Identity will no longer be confirmed.",)) {
+      localStorage.removeItem("status_passkey_config",);
+      localStorage.removeItem("status_passkey_enrolled",);
+      clearSession();
+      switchModalView("initial",);
+    }
+  },);
+
+  // Verification Logic
+  loginBtn?.addEventListener("click", async () => {
     loginBtn.disabled = true;
-    loginBtn.innerText = "…";
+    if (statusText) {
+      statusText.innerText = "Synchronizing...";
+      statusText.classList.remove("text-primary", "text-status-error");
+      statusText.classList.add("opacity-100");
+    }
+
     try {
-      if (await signWithPasskey("verify-session",)) {
-        localStorage.setItem("status_owner_verified", "true",);
-        trigger.classList.add("text-primary", "opacity-100",);
-        loginBtn.innerText = "Authorized";
-        closeModal(800,);
+      const assertion = await signWithPasskey("verify-session",);
+      if (assertion) {
+        const res = await fetch("/api/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assertion }),
+        });
+
+        if (res.ok) {
+          setVerifiedSession(assertion);
+          if (statusText) {
+            statusText.innerText = "Identity Confirmed";
+            statusText.classList.add("text-primary");
+          }
+          
+          // Execute pending action if any
+          if (pendingVerificationAction) {
+            const action = pendingVerificationAction;
+            pendingVerificationAction = null;
+            setTimeout(() => {
+              action();
+              closeAuthModal();
+            }, 600);
+          } else {
+            setTimeout(closeAuthModal, 1000,);
+          }
+        } else {
+          throw new Error("SERVER_REJECTED");
+        }
       }
-    } catch (err) {
-      console.error(err,);
-      loginBtn.innerText = "Error";
+    } catch (err: any) {
+      console.error("[auth] Verification failed:", err,);
+      
+      let message = "Verification Failed";
+      if (err.message === "SERVER_REJECTED") message = "Invalid Key";
+      if (err.name === "NotAllowedError") message = "Verification Cancelled";
+
+      if (statusText) {
+        statusText.innerText = message;
+        statusText.classList.add("text-status-error");
+      }
+
+      gsap.to(innerCard, { x: 8, duration: 0.05, repeat: 5, yoyo: true, onComplete: () => gsap.set(innerCard, { x: 0 }), },);
+      
       setTimeout(() => {
-        loginBtn.innerText = "Authorize";
+        if (statusText) {
+          statusText.innerText = "Identity not confirmed";
+          statusText.classList.remove("text-status-error", "opacity-100");
+        }
         loginBtn.disabled = false;
       }, 2000,);
-    }
-  };
 
-  registerBtn!.onclick = async (e,) => {
-    e.preventDefault();
-    e.stopPropagation();
+      clearSession();
+    }
+  },);
+
+  registerBtn?.addEventListener("click", async () => {
     registerBtn.disabled = true;
+    if (statusText) {
+      statusText.innerText = "Provisioning Key...";
+      statusText.classList.remove("text-primary", "text-status-error");
+      statusText.classList.add("opacity-100");
+    }
+
     try {
       const config = await registerPasskey();
-      gsap.to(initialView, {
-        opacity: 0,
-        y: -5,
-        duration: 0.2,
-        onComplete: () => {
-          initialView.classList.add("hidden",);
-          successView.classList.remove("hidden",);
-          if (label) label.innerText = "Success";
-          if (configOutput) configOutput.value = config;
-          gsap.fromTo(successView, { opacity: 0, y: 5, }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.3,
-          },);
-        },
-      },);
+      if (statusText) {
+        statusText.innerText = "Token Provisioned";
+        statusText.classList.add("text-primary");
+      }
+      if (detailJson) detailJson.value = config;
+      updatePasskeyInfoUI();
+      setTimeout(() => switchModalView("details",), 800,);
     } catch (err) {
-      console.error(err,);
+      console.error("[auth] Registration failed:", err,);
+      if (statusText) {
+        statusText.innerText = "Provisioning Failed";
+        statusText.classList.add("text-status-error");
+        gsap.to(innerCard, { x: 8, duration: 0.05, repeat: 5, yoyo: true, onComplete: () => gsap.set(innerCard, { x: 0 }), },);
+      }
+      setTimeout(() => {
+        if (statusText) statusText.classList.remove("text-status-error", "opacity-100");
+      }, 2000,);
     } finally {
       registerBtn.disabled = false;
     }
-  };
+  },);
 
-  if (copyBtn && configOutput) {
-    copyBtn.onclick = (e,) => {
-      e.preventDefault();
-      configOutput.select();
-      navigator.clipboard.writeText(configOutput.value,);
-      copyBtn.innerText = "OK";
-      setTimeout(() => {
-        copyBtn.innerText = "Copy";
-      }, 1500,);
-    };
-  }
-
-  document.addEventListener("click", (e,) => {
-    if (
-      !modal.classList.contains("hidden",) && !modal.contains(e.target as Node,)
-      && e.target !== trigger
-    ) closeModal();
+  // Outside click logic
+  document.addEventListener("click", (e) => {
+    if (modal.classList.contains("opened",) && !innerCard.contains(e.target as Node,)) {
+      closeAuthModal();
+    }
   },);
 }
