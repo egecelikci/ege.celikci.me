@@ -38,13 +38,6 @@
     <link rel="stylesheet" href="/assets/styles/main.css" inline />
 
     {{ include "meta.vto" }}
-    {{ if !build.dev && build.umamiScript && build.umamiId }}
-      <script
-        defer
-        src="{{ build.umamiScript }}"
-        data-website-id="{{ build.umamiId }}"
-      ></script>
-    {{ /if }}
   </head>
   <body 
     class="overflow-x-hidden print:bg-white print:text-black flex flex-col min-h-screen" 

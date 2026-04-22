@@ -7,7 +7,7 @@ layout: null
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: browsing-topics=(), attribution-reporting=(), run-ad-auction=(), join-ad-interest-group=()
-  Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://umami.balcova.online {{ if build.dev }}http://localhost:*{{ /if }}; style-src 'self' 'unsafe-inline' {{ if build.dev }}http://localhost:*{{ /if }}; img-src 'self' data: https://webmention.io https://avatars.webmention.io {{ if build.dev }}http://localhost:*{{ /if }}; connect-src 'self' https://umami.balcova.online https://webmention.io {{ if build.dev }}http://localhost:* ws://localhost:*{{ /if }}; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' {{ if build.dev }}http://localhost:*{{ /if }}; style-src 'self' 'unsafe-inline' {{ if build.dev }}http://localhost:*{{ /if }}; img-src 'self' data: https://webmention.io https://avatars.webmention.io {{ if build.dev }}http://localhost:*{{ /if }}; connect-src 'self' https://webmention.io {{ if build.dev }}http://localhost:* ws://localhost:*{{ /if }}; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'
 
 /sw.js
   Cache-Control: max-age=0, no-cache, no-store, must-revalidate
