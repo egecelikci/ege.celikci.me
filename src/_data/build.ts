@@ -32,8 +32,6 @@ const systemEnv = Deno.env.get("LUME_ENV",) || Deno.env.get("DENO_ENV",);
 const env = systemEnv || (isServe ? "development" : "production");
 const isDev = env === "development";
 
-const umamiScriptUrl = Deno.env.get("UMAMI_SCRIPT_URL",);
-const umamiWebsiteId = Deno.env.get("UMAMI_WEBSITE_ID",);
 const timestamp = new Date();
 
 export default {
@@ -43,6 +41,4 @@ export default {
   id: timestamp.valueOf(),
   naked: isCSSNakedDay(),
   git: getGitHash(),
-  umamiScript: umamiScriptUrl,
-  umamiId: umamiWebsiteId,
 };
