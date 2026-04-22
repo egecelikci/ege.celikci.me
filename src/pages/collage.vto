@@ -1,10 +1,12 @@
 ---
-title: collage tool
+title: collage
 description: "generate album collages from ListenBrainz or Last.fm"
 prose: false
 menu_label: atlas
 menu_order: 4
 label: for 9:16 stories
+container_width: wide
+hide_title: true
 ---
 
 {{# dprint-ignore-start #}}
@@ -12,96 +14,98 @@ label: for 9:16 stories
   <div class="flex flex-col md:flex-row gap-12 items-start">
     {{# 1. CONTROLS #}}
     <div class="w-full md:w-80 shrink-0 flex flex-col gap-8">
-      <div class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10">
+      <div class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10 shadow-sm">
         
         <div class="flex flex-col gap-2">
-          <label class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Data Source</label>
-          <div class="flex p-1 bg-surface/50 rounded-lg border border-border/10">
-             <button id="source-lb" class="grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-primary text-white transition-all">ListenBrainz</button>
-             <button id="source-lfm" class="grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md text-text-muted/60 transition-all">Last.fm</button>
+          <label class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Data Source</label>
+          <div class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10">
+             <button id="source-lb" class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-primary text-white shadow-sm transition-all active:scale-95">ListenBrainz</button>
+             <button id="source-lfm" class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg text-text-muted/40 hover:text-text-muted/70 transition-all active:scale-95">Last.fm</button>
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="username" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Username</label>
+          <label for="username" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Username</label>
           <input 
             type="text" 
             id="username" 
             placeholder="username" 
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }}"
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-3 !px-4"
             value="{{ author.username }}"
           />
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label for="period" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Time Period</label>
-          <select id="period" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
-            <option value="week">Past Week</option>
-            <option value="month">Past Month</option>
-            <option value="quarter">Past Quarter</option>
-            <option value="year">Past Year</option>
-            <option value="all_time">All Time</option>
-          </select>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label for="bg-mode" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Background Style</label>
-          <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }}">
-            <option value="aura">Dynamic Aura</option>
-            <option value="dark">True Dark</option>
-          </select>
-        </div>
-
-        <div class="flex flex-col gap-3 pt-2">
-          <div class="flex items-center gap-3">
-            <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
-            <label for="grain" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Apply Film Grain</label>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label for="period" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Period</label>
+            <select id="period" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"></select>
           </div>
-          <div class="flex items-center gap-3">
-            <input type="checkbox" id="show-counts" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
-            <label for="show-counts" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Show Listen Counts</label>
+
+          <div class="flex flex-col gap-2">
+            <label for="bg-mode" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Style</label>
+            <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]">
+              <option value="aura" selected>Aura (Subtle)</option>
+              <option value="chromatic">Chromatic (Vivid)</option>
+              <option value="velvet">Deep Velvet</option>
+              <option value="silver">Silver Screen</option>
+              <option value="dark">True Dark</option>
+            </select>
           </div>
         </div>
 
+        <div class="flex flex-col gap-3 py-2 border-y border-border/5">
+          <label class="flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
+            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Film Grain</span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
+            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Listen Counts</span>
+          </label>
+        </div>
+
         <div class="flex flex-col gap-2">
-          <label for="aliases" class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">Aliases (e.g. YE -> KANYE WEST)</label>
+          <label for="aliases" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Artist Aliases</label>
           <textarea 
             id="aliases" 
-            placeholder="Artist A -> Artist B&#10;Album X -> Album Y" 
-            rows="3"
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-2"
+            placeholder="Artist A -> Artist B" 
+            rows="2"
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-3 px-4"
           ></textarea>
         </div>
+      </div>
 
-        <button 
-          id="generate-btn" 
-          class="{{ theme.components.button.base }} {{ theme.components.button.primary }} justify-center mt-2"
-        >
-          {{ comp.ui.Icon({ name: "sparkles", classes: "w-4 h-4" }) }}
-          Generate Collage
+      <div id="status-msg" class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex items-center justify-center gap-3 py-2 bg-surface/20 rounded-full border border-border/5">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+        <span id="status-text" class="text-text-muted">Ready</span>
+      </div>
+
+      <div id="result-actions" class="grid grid-cols-2 gap-3 hidden">
+        <button id="download-btn" class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 !text-[10px] !py-3">
+          {{ comp.ui.Icon({ name: "download", classes: "w-3.5 h-3.5 opacity-50" }) }}
+          <span>JPG</span>
+        </button>
+        <button id="share-btn" class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 border-primary/20 text-primary/80 !text-[10px] !py-3">
+          {{ comp.ui.Icon({ name: "share-2", classes: "w-3.5 h-3.5 opacity-50" }) }}
+          <span>Share</span>
         </button>
       </div>
-
-      <div id="status-msg" class="text-[10px] font-mono uppercase tracking-widest opacity-0 transition-opacity flex items-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-        <span id="status-text">Fetching data...</span>
-      </div>
-
-      <button 
-        id="download-btn" 
-        class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} justify-center hidden"
-      >
-        {{ comp.ui.Icon({ name: "download", classes: "w-4 h-4" }) }}
-        Download JPG
-      </button>
     </div>
 
     {{# 2. PREVIEW #}}
     <div class="grow flex justify-center w-full">
-      <div id="canvas-container" class="relative group shadow-elevated rounded-lg overflow-hidden border border-border/5 max-w-full">
-        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[75vh] bg-[#09090b] cursor-crosshair transition-transform duration-700"></canvas>
-        <div class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+      <div id="canvas-container" class="relative group shadow-elevated rounded-2xl overflow-hidden border border-border/10 max-w-full bg-[#09090b]">
+        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[80vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"></canvas>
+        
+        <div class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-[.is-ready]:group-hover:opacity-100 transition-opacity pointer-events-none">
            <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm text-text">1080 x 1920 (9:16)</span>
+        </div>
+
+        <div id="canvas-loader" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md pointer-events-none transition-opacity duration-300 opacity-0 group-[.is-loading]:opacity-100">
+           <div class="flex flex-col items-center gap-4">
+             <div class="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+             <span class="text-[9px] font-mono uppercase tracking-[0.3em] text-white/60">Rendering</span>
+           </div>
         </div>
       </div>
     </div>
@@ -109,171 +113,187 @@ label: for 9:16 stories
 </div>
 
 <script type="module">
-  /**
-   * ListenBrainz & Last.fm Collage Generator (Worker-Powered)
-   * High-Performance Offscreen Rendering and Service Worker Caching.
-   */
-
   let canvas = document.getElementById("collage-canvas",);
-  const generateBtn = document.getElementById("generate-btn",);
+  const canvasContainer = document.getElementById("canvas-container");
   const downloadBtn = document.getElementById("download-btn",);
+  const shareBtn = document.getElementById("share-btn");
+  const resultActions = document.getElementById("result-actions");
   const statusMsg = document.getElementById("status-msg",);
   const statusText = document.getElementById("status-text",);
   const usernameInput = document.getElementById("username",);
+  const periodSelect = document.getElementById("period");
   
+  const inputs = [
+    usernameInput,
+    periodSelect,
+    document.getElementById("bg-mode"),
+    document.getElementById("grain"),
+    document.getElementById("show-counts"),
+    document.getElementById("aliases")
+  ];
+
   const sourceLb = document.getElementById("source-lb",);
   const sourceLfm = document.getElementById("source-lfm",);
 
   let currentSource = "lb";
   let currentWorker = null;
   let latestBlob = null;
+  let debounceTimeout = null;
 
-  // --- SOURCE SWITCHING ---
-  sourceLb.onclick = () => setSource("lb",);
-  sourceLfm.onclick = () => setSource("lfm",);
+  const PERIODS = {
+    lb: [
+      { v: "this_week", l: "This Week" },
+      { v: "this_month", l: "This Month" },
+      { v: "this_year", l: "This Year" },
+      { v: "week", l: "Last Week" },
+      { v: "month", l: "Last Month" },
+      { v: "year", l: "Last Year" },
+      { v: "all_time", l: "All Time" }
+    ],
+    lfm: [
+      { v: "7day", l: "7 Days" },
+      { v: "1month", l: "1 Month" },
+      { v: "3month", l: "3 Months" },
+      { v: "6month", l: "6 Months" },
+      { v: "12month", l: "12 Months" },
+      { v: "overall", l: "Overall" }
+    ]
+  };
+
+  function updatePeriods() {
+    const list = PERIODS[currentSource];
+    periodSelect.innerHTML = list.map(p => `<option value="${p.v}">${p.l}</option>`).join("");
+  }
 
   function setSource(src,) {
+    if (currentSource === src) return;
     currentSource = src;
-    sourceLb.className = `grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${src === "lb" ? "bg-primary text-white" : "text-text-muted/60 hover:text-text"}`;
-    sourceLfm.className = `grow py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${src === "lfm" ? "bg-primary text-white" : "text-text-muted/60 hover:text-text"}`;
+    sourceLb.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lb" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+    sourceLfm.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lfm" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+    updatePeriods();
+    generate();
   }
 
-  // --- FETCH HELPERS ---
-  async function safeFetch(url,) {
-    const res = await fetch(url,);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`,);
-    return res;
-  }
+  sourceLb.onclick = () => setSource("lb");
+  sourceLfm.onclick = () => setSource("lfm");
 
-  // --- CORE GENERATION ENGINE ---
+  inputs.forEach(input => {
+    input.oninput = () => {
+      clearTimeout(debounceTimeout);
+      debounceTimeout = setTimeout(generate, 600);
+    };
+  });
+
   async function generate() {
     const user = usernameInput.value.trim();
-    const period = document.getElementById("period",).value;
-    const bgMode = document.getElementById("bg-mode",).value;
-    const applyGrain = document.getElementById("grain",).checked;
-    const showCounts = document.getElementById("show-counts",).checked;
-    const aliasesRaw = document.getElementById("aliases",).value;
-
-    if (!user) return alert("Enter a username",);
+    if (!user) return;
 
     statusText.innerText = "Synchronizing...";
     statusMsg.style.opacity = "1";
-    generateBtn.disabled = true;
-    downloadBtn.classList.add("hidden",);
+    canvasContainer.classList.add("is-loading");
+    canvasContainer.classList.remove("is-ready");
+    resultActions.classList.add("hidden");
 
     try {
-      // 1. DATA ACQUISITION
-      const proxyUrl = `/api/collage-proxy?source=${currentSource}&user=${user}&period=${period}`;
-      const res = await safeFetch(proxyUrl,);
+      const proxyUrl = `/api/collage-proxy?source=${currentSource}&user=${user}&period=${periodSelect.value}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      if (data.error) throw new Error(data.error,);
+      if (data.error) throw new Error(data.error);
+      
       let albums = data.albums;
+      if (!albums?.length) throw new Error("No data found");
 
-      if (!albums?.length) throw new Error("No data found",);
-
-      // 2. DATA REFINEMENT (Aliases & Merging)
+      const aliasesRaw = document.getElementById("aliases").value;
       if (aliasesRaw.trim()) {
         const aliasMap = new Map();
-        aliasesRaw.split("\n").forEach((line) => {
-          const [from, to] = line.split("->").map((s) => s.trim());
+        aliasesRaw.split("\n").forEach(line => {
+          const [from, to] = line.split("->").map(s => s.trim());
           if (from && to) aliasMap.set(from.toUpperCase(), to.toUpperCase());
         });
-
         const merged = new Map();
-        albums.forEach((album) => {
-          const artist = aliasMap.get(album.artist.toUpperCase()) ||
-            album.artist.toUpperCase();
-          const name = aliasMap.get(album.name.toUpperCase()) ||
-            album.name.toUpperCase();
+        albums.forEach(album => {
+          const artist = aliasMap.get(album.artist.toUpperCase()) || album.artist.toUpperCase();
+          const name = aliasMap.get(album.name.toUpperCase()) || album.name.toUpperCase();
           const key = `${artist}|${name}`;
-
-          if (merged.has(key)) {
-            const existing = merged.get(key);
-            existing.count = parseInt(existing.count) + parseInt(album.count);
-          } else {
-            merged.set(key, { ...album, artist, name, });
-          }
+          if (merged.has(key)) merged.get(key).count += parseInt(album.count);
+          else merged.set(key, { ...album, artist, name });
         });
-
-        albums = Array.from(merged.values())
-          .sort((a, b) => b.count - a.count);
+        albums = Array.from(merged.values()).sort((a, b) => b.count - a.count);
       }
 
-      // Always slice to exactly 9 to fill the grid and list perfectly
       albums = albums.slice(0, 9);
 
-      // 3. WORKER ORCHESTRATION
       if (currentWorker) currentWorker.terminate();
-
-      // Clone canvas to reset transferControlToOffscreen
-      const newCanvas = canvas.cloneNode(false,);
-      canvas.replaceWith(newCanvas,);
+      const newCanvas = canvas.cloneNode(false);
+      canvas.replaceWith(newCanvas);
       canvas = newCanvas;
 
-      currentWorker = new Worker("/assets/scripts/collage-worker.js", {
-        type: "module",
-      },);
+      currentWorker = new Worker("/assets/scripts/collage-worker.js", { type: "module" });
       const offscreen = canvas.transferControlToOffscreen();
 
-      currentWorker.onerror = (e,) => {
-        console.error("Worker failed to load:", e,);
-        statusText.innerText = `Worker error: ${e.message}`;
-        generateBtn.disabled = false;
-        currentWorker = null;
-      };
-
-      currentWorker.onmessage = (e,) => {
-        const { type, text, blob, message, } = e.data;
-        
-        if (type === "status") {
-          statusText.innerText = text;
-        } else if (type === "done") {
+      currentWorker.onmessage = (e) => {
+        const { type, text, blob, message } = e.data;
+        if (type === "status") statusText.innerText = text;
+        else if (type === "done") {
           latestBlob = blob;
-          statusText.innerText = "Ready!";
-          downloadBtn.classList.remove("hidden",);
-          generateBtn.disabled = false;
-          // IMPORTANT: Do NOT terminate the worker here. 
-          // Keeping the worker alive ensures the OffscreenCanvas sync remains active
-          // and the preview doesn't disappear/turn black.
+          statusText.innerText = "Ready";
+          canvasContainer.classList.remove("is-loading");
+          canvasContainer.classList.add("is-ready");
+          resultActions.classList.remove("hidden");
         } else if (type === "error") {
           statusText.innerText = `Error: ${message}`;
-          generateBtn.disabled = false;
-          currentWorker.terminate();
-          currentWorker = null;
+          canvasContainer.classList.remove("is-loading");
         }
       };
 
-      currentWorker.postMessage(
-        {
-          type: "generate",
-          canvas: offscreen,
-          albums,
-          options: { bgMode, applyGrain, showCounts, user, period, },
-        },
-        [offscreen,],
-      );
+      currentWorker.postMessage({
+        type: "generate",
+        canvas: offscreen,
+        albums,
+        options: { 
+          bgMode: document.getElementById("bg-mode").value, 
+          applyGrain: document.getElementById("grain").checked, 
+          showCounts: document.getElementById("show-counts").checked, 
+          user, 
+          period: periodSelect.value 
+        }
+      }, [offscreen]);
 
     } catch (err) {
-      console.error(err,);
       statusText.innerText = `Error: ${err.message}`;
-      generateBtn.disabled = false;
+      canvasContainer.classList.remove("is-loading");
     }
   }
 
   downloadBtn.onclick = () => {
     if (!latestBlob) return;
-    const link = document.createElement("a",);
+    const link = document.createElement("a");
     link.download = `collage-${currentSource}-${usernameInput.value}.jpg`;
-    link.href = URL.createObjectURL(latestBlob,);
+    link.href = URL.createObjectURL(latestBlob);
     link.click();
-    setTimeout(() => URL.revokeObjectURL(link.href,), 10000,);
+    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
   };
 
-  generateBtn.onclick = generate;
+  shareBtn.onclick = async () => {
+    if (!latestBlob || !navigator.share) return;
+    const file = new File([latestBlob], `collage-${usernameInput.value}.jpg`, { type: "image/jpeg" });
+    try {
+      await navigator.share({
+        files: [file],
+        title: 'My Music Collage',
+        text: 'Generated on ege.celikci.me'
+      });
+    } catch (err) {
+      console.error("Share failed:", err);
+    }
+  };
 
-  // Initial Draw (Placeholder)
-  const ctx = canvas.getContext("2d",);
+  updatePeriods();
+  if (usernameInput.value) generate();
+
+  const ctx = canvas.getContext("2d");
   ctx.fillStyle = "#09090b";
-  ctx.fillRect(0, 0, canvas.width, canvas.height,);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 </script>
 {{# dprint-ignore-end #}}

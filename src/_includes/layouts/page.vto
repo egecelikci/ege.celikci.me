@@ -17,6 +17,8 @@ layout: layouts/base.vto
     {{ else }}
       {{ it.headerExtension }}
     {{ /if }}
+  {{ else if it.type === "tag" }}
+    {{ comp.features.TagFeeds({ tag: it.tag }) }}
   {{ /if }}
 {{ /set }}
 
@@ -55,28 +57,37 @@ layout: layouts/base.vto
 {{# Capture the entire page body #}}
 {{ set pageBody }}
   {{# 1. Page Header #}}
-  {{
-    comp.ui.PageHeader({
-      title: displayTitle,
-      subtitle: displaySubtitle,
-      backlink: it.backlink ?? (
-        it.type === "post" ? { href: "/blog/", text: "writing" } : 
-        it.type === "note" ? { href: "/notes/", text: "notes" } : 
-        false
-      ),
-      breadcrumbs: breadcrumbs === true,
-      url: url,
-      centered: centered || false,
-      metadata: { tags: tags },
-      rightContent: extensionContent
-    })
-  }}
+  {{ if it.hide_title !== true }}
+    {{
+      comp.ui.PageHeader({
+        title: displayTitle,
+        subtitle: displaySubtitle,
+        backlink: it.backlink ?? (
+          it.type === "post" ? { href: "/blog/", text: "writing" } : 
+          it.type === "note" ? { href: "/notes/", text: "notes" } : 
+          it.type === "tag" ? { href: "/tags/", text: "topics" } :
+          false
+        ),
+        breadcrumbs: breadcrumbs === true,
+        url: url,
+        centered: centered || false,
+        metadata: { tags: tags },
+        rightContent: extensionContent
+      })
+    }}
+  {{ /if }}
 
   {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
   <article 
-    class="h-entry mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
+    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
+    {{# Hidden IndieWeb Author Identity #}}
+    <div class="p-author h-card hidden" aria-hidden="true">
+      <a href="/" class="u-url p-name">{{ author.name }}</a>
+      <img src="{{ author.avatar }}" class="u-photo">
+    </div>
+
     {{ if it.type === "note" }}
       {{# Handle missing titles for search results #}}
       {{ if !it.title }}

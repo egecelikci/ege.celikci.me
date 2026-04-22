@@ -23,7 +23,6 @@ const SIGNAL_URL =
 export const author = {
   name: "Ege Çelikçi",
   nickname: "eg",
-  avatar: "/assets/images/favicon/favicon-32x32.png",
   email: EMAIL,
   username: USERNAME,
   social: {
