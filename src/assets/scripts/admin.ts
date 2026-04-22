@@ -55,9 +55,9 @@ export async function registerPasskey(): Promise<string> {
 /**
  * Helper to convert base64/url to buffer
  */
-function bufferFromBase64(base64: string): Uint8Array {
-  const bin = atob(base64.replace(/-/g, "+").replace(/_/g, "/"));
-  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+function bufferFromBase64(base64: string,): Uint8Array {
+  const bin = atob(base64.replace(/-/g, "+",).replace(/_/g, "/",),);
+  return Uint8Array.from(bin, (c,) => c.charCodeAt(0,),);
 }
 
 export async function signWithPasskey(payload: string,): Promise<any> {
@@ -67,16 +67,16 @@ export async function signWithPasskey(payload: string,): Promise<any> {
 
   const configStr = localStorage.getItem("status_passkey_config",);
   const allowCredentials: PublicKeyCredentialDescriptor[] = [];
-  
+
   if (configStr) {
     try {
       const config = JSON.parse(configStr,);
       allowCredentials.push({
-        id: bufferFromBase64(config.id),
+        id: bufferFromBase64(config.id,),
         type: "public-key",
-      });
+      },);
     } catch (e) {
-      console.warn("[auth] Failed to parse enrolled key ID", e);
+      console.warn("[auth] Failed to parse enrolled key ID", e,);
     }
   }
 
@@ -107,20 +107,23 @@ export async function signWithPasskey(payload: string,): Promise<any> {
 /**
  * Persistence Logic
  */
-function setVerifiedSession(assertion?: any) {
+function setVerifiedSession(assertion?: any,) {
   const expiry = Date.now() + SESSION_DURATION;
   localStorage.setItem("status_owner_verified", "true",);
   localStorage.setItem("status_session_expiry", expiry.toString(),);
-  
+
   // Implicitly recognize the device ID if verified successfully
   if (assertion && assertion.id) {
-     const existingConfig = localStorage.getItem("status_passkey_config");
-     if (!existingConfig) {
-        localStorage.setItem("status_passkey_config", JSON.stringify({ id: assertion.id, publicKey: "" }));
-        localStorage.setItem("status_passkey_enrolled", "true");
-     }
+    const existingConfig = localStorage.getItem("status_passkey_config",);
+    if (!existingConfig) {
+      localStorage.setItem(
+        "status_passkey_config",
+        JSON.stringify({ id: assertion.id, publicKey: "", },),
+      );
+      localStorage.setItem("status_passkey_enrolled", "true",);
+    }
   }
-  
+
   updatePasskeyInfoUI();
 }
 
@@ -134,10 +137,10 @@ export function isSessionValid(): boolean {
   const verified = localStorage.getItem("status_owner_verified",) === "true";
   const expiryStr = localStorage.getItem("status_session_expiry",);
   if (!expiryStr) return false;
-  
+
   const expiry = parseInt(expiryStr,);
   const isValid = verified && Date.now() < expiry;
-  
+
   if (verified && !isValid) {
     clearSession();
   }
@@ -147,7 +150,7 @@ export function isSessionValid(): boolean {
 /**
  * Open the auth modal
  */
-export function openAuthModal(onSuccess?: () => void) {
+export function openAuthModal(onSuccess?: () => void,) {
   const modal = document.getElementById("status-auth-modal",);
   const innerCard = modal?.querySelector("#status-auth-card",);
   if (!modal || !innerCard) return;
@@ -166,7 +169,7 @@ export function openAuthModal(onSuccess?: () => void) {
   const initialView = document.getElementById("status-auth-initial",);
   const detailsView = document.getElementById("status-passkey-details",);
   if (initialView && detailsView) {
-    initialView.classList.remove("hidden");
+    initialView.classList.remove("hidden",);
     initialView.style.opacity = "1";
     initialView.style.transform = "none";
     detailsView.classList.add("hidden",);
@@ -180,8 +183,9 @@ function updatePasskeyInfoUI() {
   const passkeyLabel = document.getElementById("status-passkey-label",);
   const registerBtn = document.getElementById("status-passkey-register",);
   const verifiedBadge = document.getElementById("status-verified-badge",);
-  
-  const isEnrolled = localStorage.getItem("status_passkey_enrolled",) === "true";
+
+  const isEnrolled =
+    localStorage.getItem("status_passkey_enrolled",) === "true";
   const verified = isSessionValid();
 
   if (verifiedBadge) {
@@ -260,14 +264,20 @@ export function closeAuthModal() {
 export function initAuthModal() {
   const modal = document.getElementById("status-auth-modal",);
   const closeBtn = document.getElementById("status-auth-close",);
-  const loginBtn = document.getElementById("status-passkey-login",) as HTMLButtonElement;
-  const registerBtn = document.getElementById("status-passkey-register",) as HTMLButtonElement;
+  const loginBtn = document.getElementById(
+    "status-passkey-login",
+  ) as HTMLButtonElement;
+  const registerBtn = document.getElementById(
+    "status-passkey-register",
+  ) as HTMLButtonElement;
   const viewDetailsBtn = document.getElementById("-status-view-passkey",);
   const backToMainBtn = document.getElementById("-status-back-to-main",);
   const copyBtn = document.getElementById("-status-details-copy",);
   const removeBtn = document.getElementById("-status-details-remove",);
   const statusText = document.getElementById("status-auth-status-text",);
-  const detailJson = document.getElementById("-status-passkey-detail-json",) as HTMLTextAreaElement;
+  const detailJson = document.getElementById(
+    "-status-passkey-detail-json",
+  ) as HTMLTextAreaElement;
 
   if (!modal) return;
   const innerCard = modal.querySelector("#status-auth-card",) as HTMLElement;
@@ -290,14 +300,19 @@ export function initAuthModal() {
         const originalText = copyBtn.querySelector("span",)?.textContent;
         copyBtn.querySelector("span",)!.textContent = "JSON Copied";
         setTimeout(() => {
-          copyBtn.querySelector("span",)!.textContent = originalText || "Copy JSON";
+          copyBtn.querySelector("span",)!.textContent = originalText
+            || "Copy JSON";
         }, 1500,);
       },);
     }
   },);
 
   removeBtn?.addEventListener("click", () => {
-    if (confirm("Delete hardware key from browser cache? Identity will no longer be confirmed.",)) {
+    if (
+      confirm(
+        "Delete hardware key from browser cache? Identity will no longer be confirmed.",
+      )
+    ) {
       localStorage.removeItem("status_passkey_config",);
       localStorage.removeItem("status_passkey_enrolled",);
       clearSession();
@@ -310,8 +325,8 @@ export function initAuthModal() {
     loginBtn.disabled = true;
     if (statusText) {
       statusText.innerText = "Synchronizing...";
-      statusText.classList.remove("text-primary", "text-status-error");
-      statusText.classList.add("opacity-100");
+      statusText.classList.remove("text-primary", "text-status-error",);
+      statusText.classList.add("opacity-100",);
     }
 
     try {
@@ -319,17 +334,17 @@ export function initAuthModal() {
       if (assertion) {
         const res = await fetch("/api/verify", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ assertion }),
-        });
+          headers: { "Content-Type": "application/json", },
+          body: JSON.stringify({ assertion, },),
+        },);
 
         if (res.ok) {
-          setVerifiedSession(assertion);
+          setVerifiedSession(assertion,);
           if (statusText) {
             statusText.innerText = "Identity Confirmed";
-            statusText.classList.add("text-primary");
+            statusText.classList.add("text-primary",);
           }
-          
+
           // Execute pending action if any
           if (pendingVerificationAction) {
             const action = pendingVerificationAction;
@@ -337,32 +352,38 @@ export function initAuthModal() {
             setTimeout(() => {
               action();
               closeAuthModal();
-            }, 600);
+            }, 600,);
           } else {
             setTimeout(closeAuthModal, 1000,);
           }
         } else {
-          throw new Error("SERVER_REJECTED");
+          throw new Error("SERVER_REJECTED",);
         }
       }
     } catch (err: any) {
       console.error("[auth] Verification failed:", err,);
-      
+
       let message = "Verification Failed";
       if (err.message === "SERVER_REJECTED") message = "Invalid Key";
       if (err.name === "NotAllowedError") message = "Verification Cancelled";
 
       if (statusText) {
         statusText.innerText = message;
-        statusText.classList.add("text-status-error");
+        statusText.classList.add("text-status-error",);
       }
 
-      gsap.to(innerCard, { x: 8, duration: 0.05, repeat: 5, yoyo: true, onComplete: () => gsap.set(innerCard, { x: 0 }), },);
-      
+      gsap.to(innerCard, {
+        x: 8,
+        duration: 0.05,
+        repeat: 5,
+        yoyo: true,
+        onComplete: () => gsap.set(innerCard, { x: 0, },),
+      },);
+
       setTimeout(() => {
         if (statusText) {
           statusText.innerText = "Identity not confirmed";
-          statusText.classList.remove("text-status-error", "opacity-100");
+          statusText.classList.remove("text-status-error", "opacity-100",);
         }
         loginBtn.disabled = false;
       }, 2000,);
@@ -375,15 +396,15 @@ export function initAuthModal() {
     registerBtn.disabled = true;
     if (statusText) {
       statusText.innerText = "Provisioning Key...";
-      statusText.classList.remove("text-primary", "text-status-error");
-      statusText.classList.add("opacity-100");
+      statusText.classList.remove("text-primary", "text-status-error",);
+      statusText.classList.add("opacity-100",);
     }
 
     try {
       const config = await registerPasskey();
       if (statusText) {
         statusText.innerText = "Token Provisioned";
-        statusText.classList.add("text-primary");
+        statusText.classList.add("text-primary",);
       }
       if (detailJson) detailJson.value = config;
       updatePasskeyInfoUI();
@@ -392,11 +413,19 @@ export function initAuthModal() {
       console.error("[auth] Registration failed:", err,);
       if (statusText) {
         statusText.innerText = "Provisioning Failed";
-        statusText.classList.add("text-status-error");
-        gsap.to(innerCard, { x: 8, duration: 0.05, repeat: 5, yoyo: true, onComplete: () => gsap.set(innerCard, { x: 0 }), },);
+        statusText.classList.add("text-status-error",);
+        gsap.to(innerCard, {
+          x: 8,
+          duration: 0.05,
+          repeat: 5,
+          yoyo: true,
+          onComplete: () => gsap.set(innerCard, { x: 0, },),
+        },);
       }
       setTimeout(() => {
-        if (statusText) statusText.classList.remove("text-status-error", "opacity-100");
+        if (statusText) {
+          statusText.classList.remove("text-status-error", "opacity-100",);
+        }
       }, 2000,);
     } finally {
       registerBtn.disabled = false;
@@ -404,8 +433,11 @@ export function initAuthModal() {
   },);
 
   // Outside click logic
-  document.addEventListener("click", (e) => {
-    if (modal.classList.contains("opened",) && !innerCard.contains(e.target as Node,)) {
+  document.addEventListener("click", (e,) => {
+    if (
+      modal.classList.contains("opened",)
+      && !innerCard.contains(e.target as Node,)
+    ) {
       closeAuthModal();
     }
   },);

@@ -1,6 +1,11 @@
 import gsap from "gsap";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { initAuthModal, isSessionValid, openAuthModal, signWithPasskey, } from "./admin.ts";
+import {
+  initAuthModal,
+  isSessionValid,
+  openAuthModal,
+  signWithPasskey,
+} from "./admin.ts";
 
 try {
   gsap.registerPlugin(ScrambleTextPlugin,);
@@ -186,7 +191,9 @@ function initGlobalInteractions() {
           } else {
             // One-time signature for this specific like intent
             try {
-              const assertion = await signWithPasskey("authorize-like-" + mbid,);
+              const assertion = await signWithPasskey(
+                "authorize-like-" + mbid,
+              );
               if (assertion) {
                 headers["X-Passkey-Assertion"] = JSON.stringify(assertion,);
               }
@@ -194,7 +201,7 @@ function initGlobalInteractions() {
               console.warn("[auth] Passkey assertion failed", err,);
               container.classList.remove("is-changing",);
               if (err.name !== "NotAllowedError") {
-                openAuthModal(performLike);
+                openAuthModal(performLike,);
               }
               return;
             }
@@ -212,7 +219,7 @@ function initGlobalInteractions() {
             localStorage.removeItem("status_owner_verified",);
             localStorage.removeItem("status_session_expiry",);
             container.classList.remove("is-changing",);
-            openAuthModal(performLike);
+            openAuthModal(performLike,);
           } else {
             container.classList.remove("is-changing",);
           }
@@ -226,7 +233,7 @@ function initGlobalInteractions() {
 
       // Identity Recognition Check
       if (!isSessionValid()) {
-        openAuthModal(performLike);
+        openAuthModal(performLike,);
         return;
       }
 
@@ -575,4 +582,3 @@ document.addEventListener("visibilitychange", () => {
 },);
 
 export { loadStatus, };
-
