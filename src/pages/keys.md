@@ -1,6 +1,5 @@
 ---
 title: "keys"
-description: "Public keys for verifying my digital identity."
 tags: ["meta"]
 templateEngine: [vto, md]
 menu_label: atlas
@@ -57,6 +56,7 @@ For the HTML page, you can [clone the site source](https://codeberg.org/{{ autho
 
 ## Matrix
 
-- **[@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.metropolis.host }})**
-  - `F0xxKVPj64` (Element Desktop)
-  - `+Zzdv2gXqVcZWldRyG+jamEeQG5aj0NB/0eUtgzCICA` (Element X Android)
+- **[@{{ author.social.matrix.username }}:{{ author.social.matrix.homeserver }}](https://matrix.to/#/@{{ author.social.matrix.username }}:{{ author.social.matrix.homeserver }})**
+  {{ for device of author.social.matrix.devices }}
+  - `{{ device.id }}` ({{ device.name }})
+    {{ /for }}

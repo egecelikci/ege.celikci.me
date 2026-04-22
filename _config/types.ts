@@ -19,10 +19,24 @@ export interface SiteData {
     avatar: string;
     email: string;
     username: string;
+    links: Array<{
+      id: string;
+      name: string;
+      url: string;
+      icon: string;
+      label?: string;
+      relMe?: boolean;
+      keyUrl?: string;
+      priority?: number;
+    }>;
     social: {
       mastodon: { name: string; url: string; };
       signal: { url: string; };
-      matrix: { username: string; metropolis: { host: string; }; };
+      matrix: {
+        username: string;
+        homeserver: string;
+        devices: Array<{ name: string; id: string; }>;
+      };
     };
   };
 }

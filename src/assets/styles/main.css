@@ -305,7 +305,7 @@
 
 @layer utilities {
   @keyframes panic {
-    0 {
+    0% {
       opacity: 1;
     }
     100% {

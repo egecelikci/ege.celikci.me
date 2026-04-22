@@ -39,6 +39,13 @@ layout: layouts/base.vto
   {{ set displaySubtitle = dateStr + updatedStr }}
 {{ /if }}
 
+{{# 3. Tag-style subtitle (Item Count) #}}
+{{ if it.type === "tag" }}
+  {{ set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc") }}
+  {{ set count = matchingEntries.length }}
+  {{ set displaySubtitle = count + (count === 1 ? " item" : " items") }}
+{{ /if }}
+
 {{# Title Logic for titleless notes #}}
 {{ set displayTitle = it.title }}
 {{ if it.type === "note" && !it.title }}
@@ -48,28 +55,26 @@ layout: layouts/base.vto
 {{# Capture the entire page body #}}
 {{ set pageBody }}
   {{# 1. Page Header #}}
-  <div>
-    {{
-      comp.ui.PageHeader({
-        title: displayTitle,
-        subtitle: displaySubtitle,
-        backlink: it.backlink ?? (
-          it.type === "post" ? { href: "/blog/", text: "writing" } : 
-          it.type === "note" ? { href: "/notes/", text: "notes" } : 
-          false
-        ),
-        breadcrumbs: breadcrumbs === true,
-        url: url,
-        centered: centered || false,
-        metadata: { tags: tags },
-        rightContent: extensionContent
-      })
-    }}
-  </div>
+  {{
+    comp.ui.PageHeader({
+      title: displayTitle,
+      subtitle: displaySubtitle,
+      backlink: it.backlink ?? (
+        it.type === "post" ? { href: "/blog/", text: "writing" } : 
+        it.type === "note" ? { href: "/notes/", text: "notes" } : 
+        false
+      ),
+      breadcrumbs: breadcrumbs === true,
+      url: url,
+      centered: centered || false,
+      metadata: { tags: tags },
+      rightContent: extensionContent
+    })
+  }}
 
   {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
-  <div 
-    class="mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
+  <article 
+    class="h-entry mt-12 {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
     {{ if it.type === "note" }}
@@ -92,10 +97,14 @@ layout: layouts/base.vto
         variant: "full",
         hideHeader: true
       }) }}
+    {{ else if it.type === "tag" }}
+       {{ comp.ui.TagDetail({ tag: it.tag }) }}
     {{ else }}
-      {{ content |> safe }}
+      <div class="e-content">
+        {{ content |> safe }}
+      </div>
     {{ /if }}
-  </div>
+  </article>
 
   {{# 3. Supplemental UI #}}
   <div>

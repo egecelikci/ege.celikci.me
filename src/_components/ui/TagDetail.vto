@@ -1,0 +1,55 @@
+{{#
+  Component: TagDetail
+  Handles the listing of pages for a specific tag.
+#}}
+{{ set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc") }}
+
+<div class="flex flex-col gap-12">
+  {{# 1. ENTRIES #}}
+  {{ if matchingEntries.length > 0 }}
+    <div class="flex flex-col gap-2">
+      {{ for item of matchingEntries }}
+        <div class="not-prose">
+          {{ if item.type === "note" }}
+            {{ comp.ui.Note({ note: item, variant: "listing" }) }}
+          {{ else }}
+            {{ comp.ui.EntryCard({ entry: item }) }}
+          {{ /if }}
+        </div>
+      {{ /for }}
+    </div>
+  {{ else }}
+    {{
+      comp.ui.EmptyState({
+        icon: "inbox",
+        description: "No entries found for <strong>#" + it.tag + "</strong>.",
+      })
+    }}
+  {{ /if }}
+
+  {{# 2. Related Tags Section #}}
+  {{ set relatedTags = [] }}
+  {{ for entry of matchingEntries }}
+    {{ if entry.tags }}
+      {{ for t of entry.tags }}
+        {{ if t !== it.tag && !relatedTags.includes(t) }}
+          {{ set relatedTags = relatedTags.concat(t) }}
+        {{ /if }}
+      {{ /for }}
+    {{ /if }}
+  {{ /for }}
+
+  {{ if relatedTags.length > 0 }}
+    <div class="mt-24 pt-12 border-t border-border/10">
+      <h3 class="text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted/40 mb-8 flex items-center gap-2">
+        Related Topics
+      </h3>
+      <div class="flex flex-wrap gap-4">
+        {{ for t of relatedTags }}
+          {{ set tagSlug = t.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
+          {{ comp.ui.Tag({ content: t, href: "/tags/" + tagSlug + "/" }) }}
+        {{ /for }}
+      </div>
+    </div>
+  {{ /if }}
+</div>

@@ -5,19 +5,9 @@
 {{->
   const variantVal = it.variant || "grid";
   const ids = it.ids || [];
-  const signalUrlVal = author.social?.signal?.url ? atob(author.social.signal.url) : "";
-  const emailUrlVal = "mailto:" + author.email;
-  const matrixUrlVal = "https://matrix.to/#/@" + author.social.matrix.username + ":" + author.social.matrix.metropolis.host;
-
-  let links = [
-    { id: "listenbrainz", name: "ListenBrainz", url: `https://listenbrainz.org/user/${author.username}`, icon: "music" },
-    { id: "steam", name: "Steam", url: `https://steamcommunity.com/id/${author.username}`, icon: "gamepad" },
-    { id: "signal", name: "Signal", url: signalUrlVal, icon: "message-circle-dashed", },
-    { id: "matrix", name: "Matrix", url: matrixUrlVal, icon: "messages-square", keyUrl: "/keys#matrix" },
-    { id: "codeberg", name: "Codeberg", url: `https://codeberg.org/${author.username}`, icon: "mountain" },
-    { id: "gitlab", name: "GitLab", url: `https://gitlab.com/${author.username}`, icon: "gitlab", relMe: true },
-    { id: "github", name: "GitHub", url: `https://github.com/${author.username}`, icon: "github", relMe: true }
-  ];
+  
+  // Robust data resolution
+  let links = it.links || author?.links || [];
 
   if (ids.length > 0) {
     links = links.filter(link => ids.includes(link.id));
@@ -26,17 +16,17 @@
   const resetStyles = "not-prose [box-shadow:none!important] hover:[box-shadow:none!important] hover:[background-color:transparent!important] border-none transition-none";
 -}}
 {{- if variantVal === "highlights" -}}
-<ul class="flex items-center gap-1 list-none p-0 m-0 {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" title="{{ link.name }}" aria-label="{{ link.name }}" class="flex items-center justify-center w-7 h-7 rounded-lg text-text-muted/70 hover:text-primary hover:bg-primary/5 transition-all duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-3.5 h-3.5" }) }}</a></li>{{- /for -}}</ul>
+<ul class="flex items-center gap-1 list-none p-0 m-0 {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" title="{{ link.name }}" aria-label="{{ link.name }}" class="u-url flex items-center justify-center w-7 h-7 rounded-lg text-text-muted/70 hover:text-primary hover:bg-primary/5 transition-all duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-3.5 h-3.5" }) }}<span class="p-name sr-only">{{ link.name }}</span></a></li>{{- /for -}}</ul>
 {{- else if variantVal === "grid" -}}
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<div class="group flex items-center justify-between py-5 border-b border-border/10 transition-colors duration-300 hover:border-primary/20"><a href="{{ link.url }}" class="flex items-center gap-4 no-underline grow {{ resetStyles }} transition-colors duration-300" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 text-text-muted/50 group-hover:text-primary transition-colors duration-300" }) -}}<span class="text-sm font-bold text-text/80 group-hover:text-primary transition-colors duration-300 tracking-tight">{{ link.name }}</span></a><div class="flex items-center gap-4">{{- if link.keyUrl -}}<a href="{{ link.keyUrl }}" class="text-[9px] font-mono font-bold text-primary/60 hover:text-primary hover:border-primary/40 transition-colors uppercase tracking-tighter border border-primary/10 px-1.5 py-0.5 rounded-sm no-underline {{ resetStyles }}" title="View verification key">Key</a>{{- /if -}}<span class="text-[10px] font-mono text-text-muted/40 uppercase tracking-[0.2em] group-hover:text-text-muted/70 transition-colors duration-300">{{ link.label }}</span></div></div>{{- /for -}}</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<div class="group flex items-center justify-between py-5 border-b border-border/10 transition-colors duration-300 hover:border-primary/20"><a href="{{ link.url }}" class="u-url flex items-center gap-4 no-underline grow {{ resetStyles }} transition-colors duration-300" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 text-text-muted/50 group-hover:text-primary transition-colors duration-300" }) -}}<span class="p-name text-sm font-bold text-text/80 group-hover:text-primary transition-colors duration-300 tracking-tight">{{ link.name }}</span></a><div class="flex items-center gap-4">{{- if link.keyUrl -}}<a href="{{ link.keyUrl }}" class="text-[9px] font-mono font-bold text-primary/60 hover:text-primary hover:border-primary/40 transition-colors uppercase tracking-tighter border border-primary/10 px-1.5 py-0.5 rounded-sm no-underline {{ resetStyles }}" title="View verification key">Key</a>{{- /if -}}<span class="text-[10px] font-mono text-text-muted/40 uppercase tracking-[0.2em] group-hover:text-text-muted/70 transition-colors duration-300">{{ link.label }}</span></div></div>{{- /for -}}</div>
 {{- else if variantVal === "hidden" -}}
 <div class="hidden" aria-hidden="true">
   {{- for link of links -}}
     {{- if link.relMe -}}
-      <a href="{{ link.url }}" rel="me">{{ link.name }}</a>
+      <a href="{{ link.url }}" class="u-url p-name" rel="me">{{ link.name }}</a>
     {{- /if -}}
   {{- /for -}}
 </div>
 {{- else -}}
-<ul class="flex flex-col gap-4 list-none p-0 m-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" class="group inline-flex items-center gap-3 no-underline text-text-muted/60 hover:text-primary transition-colors duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 opacity-50 group-hover:opacity-100 transition-all duration-300" }) -}}<span class="text-sm font-medium">{{ link.name }}</span><span class="text-[10px] font-mono opacity-50 group-hover:opacity-40 uppercase tracking-widest">{{ link.label }}</span></a></li>{{- /for -}}</ul>
+<ul class="flex flex-col gap-4 list-none p-0 m-0 {{ it.classes || '' }} {{ resetStyles }}">{{- for link of links -}}<li><a href="{{ link.url }}" class="u-url group inline-flex items-center gap-3 no-underline text-text-muted/60 hover:text-primary transition-colors duration-300 {{ resetStyles }}" {{ if link.relMe }}rel="me"{{ /if }}>{{ comp.ui.Icon({ name: link.icon, classes: "w-4 h-4 opacity-50 group-hover:opacity-100 transition-all duration-300" }) -}}<span class="p-name text-sm font-medium">{{ link.name }}</span><span class="text-[10px] font-mono opacity-50 group-hover:opacity-40 uppercase tracking-widest">{{ link.label }}</span></a></li>{{- /for -}}</ul>
 {{- /if -}}

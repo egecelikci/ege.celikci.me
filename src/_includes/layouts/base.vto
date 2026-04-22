@@ -64,6 +64,14 @@
 
     {{ comp.ui.Footer({ page: page }) }}
 
+    {{# Representative h-card (IndieWeb Identity Consolidation) #}}
+    <div class="h-card hidden" aria-hidden="true">
+      <a class="p-name u-url u-uid" rel="me" href="/">{{ author.name }}</a>
+      <img class="u-photo" src="{{ author.avatar }}">
+      <p class="p-note">{{ site.description }}</p>
+      <a class="u-email" href="mailto:{{ author.email }}">{{ author.email }}</a>
+    </div>
+
     {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}
     {{ comp.features.SocialLinks({ variant: "hidden" }) }}
 

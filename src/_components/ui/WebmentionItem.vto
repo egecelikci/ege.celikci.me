@@ -12,16 +12,16 @@
 
 <div
   id="webmention-{{ webmention['wm-id'] }}"
-  class="relative flex flex-col gap-3 py-6 last:border-b-0 {{ isOwn ? 'bg-surface/10 rounded-2xl p-6 -mx-6' : 'border-b border-border/10' }} {{ classes }}"
+  class="u-comment h-cite relative flex flex-col gap-3 py-6 last:border-b-0 {{ isOwn ? 'bg-surface/10 rounded-2xl p-6 -mx-6' : 'border-b border-border/10' }} {{ classes }}"
   {{ attributes |> attr |> safe }}
 >
   <header class="flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
+    <div class="p-author h-card flex items-center gap-3">
       {{# Author Image #}}
       <div class="w-8 h-8 rounded-full overflow-hidden border border-border/10 bg-surface shadow-sm">
         {{ if webmention.author.photo }}
           <img
-            class="h-full w-full object-cover"
+            class="u-photo h-full w-full object-cover"
             src="{{ webmention.author.photo }}"
             alt="{{ webmention.author.name }}"
             width="32"
@@ -38,8 +38,8 @@
       {{# Author Name and Action #}}
       <div class="flex flex-col">
         <a
-          class="font-bold text-sm text-text no-underline hover:text-primary transition-colors"
-          {{ if webmention.url }}href="{{ webmention.url }}"{{ /if }}
+          class="p-name u-url font-bold text-sm text-text no-underline hover:text-primary transition-colors"
+          {{ if webmention.author.url }}href="{{ webmention.author.url }}"{{ /if }}
           target="_blank"
           rel="ugc nofollow"
         >
@@ -59,14 +59,14 @@
 
     {{# Date #}}
     {{ if webmention.published }}
-      <time class="text-[10px] font-mono text-text-muted/60 uppercase tracking-widest" datetime="{{ webmention.published }}">
+      <time class="dt-published text-[10px] font-mono text-text-muted/60 uppercase tracking-widest" datetime="{{ webmention.published }}">
         {{ webmention.published |> date("dd MMM yyyy") }}
       </time>
     {{ /if }}
   </header>
 
   {{# Content #}}
-  <div class="markdown text-base leading-relaxed text-text-muted/80 pl-11">
+  <div class="e-content markdown text-base leading-relaxed text-text-muted/80 pl-11">
     {{ webmention.content.value |> safe }}
   </div>
 </div>
