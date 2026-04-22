@@ -14,6 +14,7 @@ interface Album {
 interface Options {
   bgMode: "aura" | "chromatic" | "dark" | "silver" | "velvet";
   applyGrain: boolean;
+  skipMissing: boolean;
   showCounts: boolean;
   user: string;
   period: string;
@@ -89,46 +90,62 @@ self.onmessage = async (e: MessageEvent,) => {
   const ctx = (canvas as OffscreenCanvas).getContext("2d", { alpha: false, },);
   if (!ctx) return;
 
-  const { bgMode, applyGrain, showCounts, user, period, } = options as Options;
+  const { bgMode, applyGrain, skipMissing, showCounts, user, period, } = options as Options;
 
   try {
     self.postMessage({ type: "status", text: "Acquiring Art...", },);
-    const images = await Promise.all(
-      (albums as Album[]).map(async (album,) => {
-        let res;
-        if (album.img) {
-          try {
-            res = await fetch(album.img,);
-          } catch (_e) {}
-        }
-        if ((!res || !res.ok) && album.mbid) {
-          try {
-            res = await fetch(
-              `/api/collage-proxy?source=cover&mbid=${album.mbid}`,
-            );
-          } catch (_e) {}
-        }
-        if (res && res.ok) {
-          try {
-            const blob = await res.blob();
-            return await createImageBitmap(blob,);
-          } catch (_e) {
-            return null;
-          }
-        }
-        return null;
-      },),
-    );
+    
+    const finalAlbums: Album[] = [];
+    const finalImages: (ImageBitmap | null)[] = [];
+    const sourceAlbums = albums as Album[];
+
+    for (let i = 0; i < sourceAlbums.length && finalAlbums.length < 9; i++) {
+      const album = sourceAlbums[i];
+      let res;
+      if (album.img) {
+        try {
+          res = await fetch(album.img,);
+        } catch (_e) {}
+      }
+      if ((!res || !res.ok) && album.mbid) {
+        try {
+          res = await fetch(
+            `/api/collage-proxy?source=cover&mbid=${album.mbid}`,
+          );
+        } catch (_e) {}
+      }
+
+      let bitmap: ImageBitmap | null = null;
+      if (res && res.ok) {
+        try {
+          const blob = await res.blob();
+          bitmap = await createImageBitmap(blob,);
+        } catch (_e) {}
+      }
+
+      if (bitmap || !skipMissing) {
+        finalAlbums.push(album,);
+        finalImages.push(bitmap,);
+      }
+    }
+
+    // Ensure we have 9 items for the grid logic
+    while (finalAlbums.length < 9) {
+      finalAlbums.push({ name: "", artist: "", count: 0, },);
+      finalImages.push(null,);
+    }
 
     // --- 2. BACKGROUND ARCHITECTURE ---
+    ctx.globalCompositeOperation = "source-over";
+    ctx.clearRect(0, 0, W, H,);
     ctx.fillStyle = "#09090b";
     ctx.fillRect(0, 0, W, H,);
 
     if (bgMode === "aura") {
       // Aura: Grid-Mapped Glows (Behind the covers)
-      for (let i = 0; i < images.length; i++) {
-        if (images[i]) {
-          const color = getVibrantColor(images[i],);
+      for (let i = 0; i < finalImages.length; i++) {
+        if (finalImages[i]) {
+          const color = getVibrantColor(finalImages[i],);
           const x = GRID_X[i] + (COVER_SIZE / 2);
           const y = GRID_Y[i] + (COVER_SIZE / 2);
           const grad = ctx.createRadialGradient(x, y, 0, x, y, W * 0.7,);
@@ -143,26 +160,28 @@ self.onmessage = async (e: MessageEvent,) => {
         }
       }
     } else if (bgMode === "chromatic") {
+      // Safari-Safe Chromatic: Using radial gradients instead of ctx.filter
       ctx.save();
-      for (let i = 0; i < images.length; i++) {
-        if (images[i]) {
+      for (let i = 0; i < finalImages.length; i++) {
+        if (finalImages[i]) {
+          const color = getVibrantColor(finalImages[i],);
           const col = i % 3, row = Math.floor(i / 3,);
-          ctx.save();
-          ctx.filter = "blur(180px) saturate(2.0)";
-          ctx.globalAlpha = 0.5;
-          ctx.drawImage(
-            images[i]!,
-            (col * W / 3) - 150,
-            (row * H / 3) - 150,
-            W / 2,
-            H / 2,
-          );
-          ctx.restore();
+          const x = (col * W / 2.5) + (W / 6);
+          const y = (row * H / 4) + (H / 10);
+          
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, W,);
+          grad.addColorStop(0, color,);
+          grad.addColorStop(1, "transparent",);
+          
+          ctx.globalAlpha = 0.4;
+          ctx.globalCompositeOperation = "screen";
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, W, H,);
         }
       }
       ctx.restore();
     } else if (bgMode === "velvet") {
-      const color = getVibrantColor(images[0] || null,);
+      const color = getVibrantColor(finalImages[0] || null,);
       const grad = ctx.createLinearGradient(0, 0, 0, H,);
       grad.addColorStop(0, color,);
       grad.addColorStop(0.6, "#09090b",);
@@ -170,6 +189,7 @@ self.onmessage = async (e: MessageEvent,) => {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H,);
     } else if (bgMode === "silver") {
+      ctx.globalCompositeOperation = "source-over";
       const grad = ctx.createLinearGradient(0, 0, W, H,);
       grad.addColorStop(0, "#121214",);
       grad.addColorStop(0.5, "#09090b",);
@@ -196,7 +216,7 @@ self.onmessage = async (e: MessageEvent,) => {
     // --- 3. THE GRID ---
     ctx.globalCompositeOperation = "source-over";
     self.postMessage({ type: "status", text: "Balancing Layout...", },);
-    for (let i = 0; i < albums.length; i++) {
+    for (let i = 0; i < finalAlbums.length; i++) {
       const x = GRID_X[i], y = GRID_Y[i];
       ctx.shadowColor = "rgba(0,0,0,0.4)";
       ctx.shadowBlur = 30;
@@ -204,7 +224,7 @@ self.onmessage = async (e: MessageEvent,) => {
       ctx.save();
       drawRoundedRect(ctx, x, y, COVER_SIZE, COVER_SIZE, CORNER_RADIUS,);
       ctx.clip();
-      if (images[i]) ctx.drawImage(images[i]!, x, y, COVER_SIZE, COVER_SIZE,);
+      if (finalImages[i]) ctx.drawImage(finalImages[i]!, x, y, COVER_SIZE, COVER_SIZE,);
       else {
         ctx.fillStyle = "#18181b";
         ctx.fillRect(x, y, COVER_SIZE, COVER_SIZE,);
@@ -220,14 +240,14 @@ self.onmessage = async (e: MessageEvent,) => {
 
     // --- 4. THE LIST ---
     ctx.textBaseline = "middle";
-    for (let i = 0; i < albums.length; i++) {
+    for (let i = 0; i < finalAlbums.length; i++) {
       const y = LIST_BASE_Y + (i * LIST_ROW_HEIGHT);
-      const name = (albums[i].name || "Unknown").toUpperCase();
-      const artist = (albums[i].artist || "Unknown").toUpperCase();
+      const name = (finalAlbums[i].name || "Unknown").toUpperCase();
+      const artist = (finalAlbums[i].artist || "Unknown").toUpperCase();
 
       let countWidth = 0;
-      if (showCounts) {
-        const countText = `${albums[i].count}`;
+      if (showCounts && finalAlbums[i].count > 0) {
+        const countText = `${finalAlbums[i].count}`;
         ctx.font = `bold 16px ${FONT_MONO}`; // Monospace for data
         countWidth = ctx.measureText(countText,).width;
         const pW = countWidth + 24, pH = 32;
@@ -258,7 +278,7 @@ self.onmessage = async (e: MessageEvent,) => {
       ctx.fillStyle = "#f4f4f5";
       ctx.font = `900 24px ${FONT_SANS}`;
       const avail = W - (MARGIN * 2) - prefixWidth
-        - (showCounts ? countWidth + 30 : 0);
+        - (showCounts && finalAlbums[i].count > 0 ? countWidth + 30 : 0);
       let dsp = name;
       if (ctx.measureText(dsp,).width > avail) {
         while (ctx.measureText(dsp + "...",).width > avail && dsp.length > 0) {
