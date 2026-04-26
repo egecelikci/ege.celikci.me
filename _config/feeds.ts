@@ -8,6 +8,31 @@ import { site as siteData, } from "./metadata.ts";
 
 export default function(options: FeedOptions = {},) {
   return (site: Lume.Site,) => {
+    // Common configuration for feed items
+    const items = {
+      title: "=title",
+      description: "=excerpt || =description",
+      content: (data: any,) => {
+        let html = data.content as string;
+
+        // If the page has extracted images (e.g. from the preprocessor), prepend them to the feed content
+        if (
+          data.images && Array.isArray(data.images,) && data.images.length > 0
+        ) {
+          const imagesHtml = data.images
+            .map((img: any,) =>
+              `<p><img src="${site.url(img.src, true,)}" alt="${
+                img.alt || ""
+              }" /></p>`
+            )
+            .join("",);
+          html = imagesHtml + html;
+        }
+
+        return html;
+      },
+    };
+
     // 1. All-in-one feed (Blog + Notes)
     site.use(feed({
       ...options,
@@ -17,6 +42,7 @@ export default function(options: FeedOptions = {},) {
         title: siteData.host,
         description: siteData.description,
       },
+      items,
     },),);
 
     // 2. Notes-only feed
@@ -28,6 +54,7 @@ export default function(options: FeedOptions = {},) {
         title: `notes | ${siteData.host}`,
         description: siteData.description,
       },
+      items,
     },),);
 
     // 3. Blog-only feed
@@ -39,6 +66,7 @@ export default function(options: FeedOptions = {},) {
         title: `blog | ${siteData.host}`,
         description: siteData.description,
       },
+      items,
     },),);
 
     // 4. Per-tag feeds
@@ -56,11 +84,7 @@ export default function(options: FeedOptions = {},) {
             title: `topic: ${tag} | ${siteData.host}`,
             description: `all entries tagged with ${tag}`,
           },
-          items: {
-            title: "=title",
-            description: "=excerpt || =description",
-            content: "=content",
-          },
+          items,
         };
       },);
     },),);
