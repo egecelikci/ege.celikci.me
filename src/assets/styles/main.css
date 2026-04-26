@@ -260,66 +260,6 @@
   .markdown figure.code-block pre.shiki code {
     @apply bg-transparent p-0 text-inherit border-0 shadow-none;
   }
-
-  /* Phanpy Media System */
-  .media-container {
-    --media-radius: 12px;
-    --media-border-width: 1px;
-    display: grid;
-    gap: 4px;
-    width: 100%;
-    border-radius: var(--media-radius);
-    overflow: hidden;
-    margin: 8px 0;
-    border: var(--media-border-width) solid var(--divider-color);
-    background-color: var(--bg-faded-color);
-  }
-
-  .media-container.media-eq1 {
-    grid-template-columns: 1fr;
-  }
-  .media-container.media-eq2 {
-    grid-template-columns: 1fr 1fr;
-    aspect-ratio: 2/1;
-  }
-  .media-container.media-eq3 {
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    aspect-ratio: 2/1;
-  }
-  .media-container.media-eq4 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    aspect-ratio: 2/1;
-  }
-
-  .media {
-    position: relative;
-    overflow: hidden;
-    background-color: var(--bg-faded-color);
-    display: block;
-    width: 100%;
-    height: 100%;
-    text-decoration: none;
-    color: inherit;
-    cursor: zoom-in;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.2s ease-in-out;
-      display: block;
-    }
-
-    &:is(:hover, :focus) img {
-      transform: scale(1.05);
-    }
-  }
-
-  .media-eq3 .media:first-child {
-    grid-row: span 2;
-  }
 }
 
 /* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */

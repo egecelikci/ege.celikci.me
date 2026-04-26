@@ -1,27 +1,17 @@
 {{#
   Component: Media (Phanpy-inspired)
   A flexible grid for 1-4 images with hover zoom and Litebox integration.
-  Styles derived from design tokens in theme.ts.
+  Whitespace-tight to prevent text-node offsets in note opener.
 #}}
-
 {{ if images && images.length > 0 }}
   {{ set count = Math.min(images.length, 4) }}
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
   {{ set gridClass = theme.components.media.grids['eq' + count] }}
-
-  <div
-    class="{{ theme.components.media.container }} {{ gridClass }}"
-    data-litebox-group="{{ gid }}"
-  >
+  <div class="{{ theme.components.media.container }} {{ gridClass }}" data-litebox-group="{{ gid }}">
     {{ for i, image of images |> slice(0, 4) }}
       {{ set isPanoramic = image.width && image.height && (image.width / image.height > 2) }}
       {{ set itemClass = "" }}
-      {{ if isPanoramic }}
-        {{ set itemClass = "col-span-full" }}
-      {{ else if count === 3 && i === 0 }}
-        {{ set itemClass = "row-span-2" }}
-      {{ /if }}
-
+      {{ if isPanoramic }}{{ set itemClass = "col-span-full" }}{{ else if count === 3 && i === 0 }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
         class="litebox-trigger {{ theme.components.media.item }} {{ itemClass }}"
@@ -31,8 +21,7 @@
         data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
         data-media-type="{{ image.type || 'image' }}"
         {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}
-      >
-        <img
+      ><img
           src="{{ image.src |> url }}"
           alt="{{ image.alt }}"
           image-size
@@ -40,20 +29,7 @@
           loading="lazy"
           decoding="async"
           class="{{ theme.components.media.image }}"
-        />
-
-        {{# Phanpy-style Alt Badge #}}
-        {{ if image.alt }}
-          <div class="{{ theme.components.media.altBadge }}">ALT</div>
-        {{ /if }}
-
-        {{# Overflow indicator for 5+ images #}}
-        {{ if i === 3 && images.length > 4 }}
-          <div class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
-            <span class="text-white font-bold text-xl">+{{ images.length - 4 }}</span>
-          </div>
-        {{ /if }}
-      </a>
+        />{{ if image.alt }}<div class="{{ theme.components.media.altBadge }}">ALT</div>{{ /if }}{{ if i === 3 && images.length > 4 }}<div class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"><span class="text-white font-bold text-xl">+{{ images.length - 4 }}</span></div>{{ /if }}</a>
     {{ /for }}
   </div>
 {{ /if }}
