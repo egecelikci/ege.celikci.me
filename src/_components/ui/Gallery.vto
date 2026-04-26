@@ -12,10 +12,11 @@
 {{ if images && images.length > 0 }}
   {{ set isSingle = images.length == 1 }}
   {{ set gridClasses = isSingle ? "block" : "grid grid-cols-1 sm:grid-cols-2 gap-4" }}
+  {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
 
   <div
     class="{{ gridClasses }} {{ theme.components.gallery.container }} {{ classes }}"
-    {{ if !static }}data-pswp-gallery{{ /if }}
+    {{ if !static }}data-litebox-group="{{ gid }}"{{ /if }}
   >
     {{ for i, image of images }}
       {{# 1. WRAPPER ELEMENT #}}
@@ -24,11 +25,11 @@
       <{{ tag }}
         {{ if !static }}
           href="{{ image.src |> url }}"
-          data-pswp-width="{{ image.width || 'auto' }}"
-          data-pswp-height="{{ image.height || 'auto' }}"
+          {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
+          {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
           target="_blank"
           aria-label="View larger image: {{ image.alt }}"
-          class="{{ theme.components.gallery.item }} {{ it.aspect || 'aspect-square' }}"
+          class="litebox-trigger {{ theme.components.gallery.item }} {{ it.aspect || 'aspect-square' }}"
         {{ else }}
           class="{{ theme.components.gallery.item |> replace('cursor-zoom-in', '') }} {{ it.aspect || 'aspect-square' }}"
         {{ /if }}
@@ -37,6 +38,7 @@
         <img
           src="{{ image.src |> url }}"
           alt="{{ image.alt }}"
+          image-size
           transform-images="avif webp jpg 640 1280 1920"
           class="{{ theme.components.gallery.image }}"
           loading="lazy"

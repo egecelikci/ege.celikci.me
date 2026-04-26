@@ -12,7 +12,10 @@
     - rawContent: boolean (default: false)
 #}}
 
-<div class="relative flex items-center gap-4 group transition-all duration-500 rounded-xl px-4 py-3 bg-primary/2.5 md:bg-transparent md:hover:bg-primary/5 cursor-default {{ it.classes || '' }}" {{ if it.id }}id="{{ it.id }}"{{ /if }}>
+<div
+  class="relative flex items-center gap-4 group transition-all duration-500 rounded-xl px-4 py-3 bg-primary/2.5 md:bg-transparent md:hover:bg-primary/5 cursor-default {{ it.classes || '' }}"
+  {{ if it.id }}id="{{ it.id }}"{{ /if }}
+>
   {{ if it.icon }}
     <div class="shrink-0 flex items-center justify-center w-5 h-5">
       {{
@@ -27,24 +30,41 @@
 
   <div class="flex-1 min-w-0">
     {{ if it.label }}
-      <div class="{{ it.labelSize || 'text-[10px]' }} uppercase opacity-40 mb-0.5 tracking-[0.2em] font-mono leading-tight">
+      <div
+        class="{{ it.labelSize || 'text-[10px]' }} uppercase opacity-40 mb-0.5 tracking-[0.2em] font-mono leading-tight"
+      >
         {{ it.label }}
       </div>
     {{ /if }}
 
-    <div class="status-content-wrapper w-full md:w-[26ch] text-text font-mono text-xs md:text-sm truncate transition-all duration-500 group-[.is-active]:text-primary group-[.is-active]:font-bold group-[.is-inactive]:opacity-40">
-      {{ if it.rawContent }}{{ it.content |> safe }}{{ else }}{{ it.content }}{{ /if }}
+    <div
+      class="status-content-wrapper w-full md:w-[26ch] text-text font-mono text-xs md:text-sm truncate transition-all duration-500 group-[.is-active]:text-primary group-[.is-active]:font-bold group-[.is-inactive]:opacity-40"
+    >
+      {{ if it.rawContent }}{{ it.content |> safe }}{{ else }}{{ it.content }}{{
+        /if
+      }}
     </div>
   </div>
 
   {{# 
     Heart Button
-    - Mobile: Pinned to the right within the flex flow
-    - Desktop: Absolute positioned for the signature look
+    Absolute positioned for the signature look, sticking out.
+    - Mobile: Small offset to avoid screen overflow
+    - Desktop: Large offset for the overflow look
   #}}
-  <div class="status-action-wrapper hidden shrink-0 md:absolute md:-right-10 md:top-1/2 md:-translate-y-1/2 z-50">
-    <button class="status-like-button w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 md:bg-primary/5 hover:bg-primary/20 transition-all active:scale-90 group/heart cursor-pointer pointer-events-auto relative z-50" title="Like on ListenBrainz">
-      {{ comp.ui.Icon({ name: "heart", classes: "w-3.5 h-3.5 text-primary transition-all duration-300 fill-none" }) }}
+  <div
+    class="status-action-wrapper flex hidden shrink-0 md:absolute md:-right-10 md:top-1/2 md:-translate-y-1/2 z-50"
+  >
+    <button
+      class="status-like-button w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 md:bg-primary/5 hover:bg-primary/20 transition-all active:scale-90 group/heart cursor-pointer pointer-events-auto relative z-50"
+      title="Like on ListenBrainz"
+    >
+      {{
+        comp.ui.Icon({
+          name: "heart",
+          classes: "w-3.5 h-3.5 text-primary transition-all duration-300 fill-none",
+        })
+      }}
     </button>
   </div>
 

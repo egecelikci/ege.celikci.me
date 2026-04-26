@@ -6,11 +6,13 @@
   Props:
     - entry: page object (required)
     - classes: additional classes
+    - compact?: boolean (defaults to true for non-notes)
 #}}
 
 {{>
   const isNote = it.entry.type === "note" || it.entry.url.startsWith("/notes/");
   const vtoContext = { ...it.entry, author, site, comp, theme };
+  const isCompact = it.compact ?? !isNote;
   
   // 1. Content logic (Now encapsulated in filters/helpers where possible)
   let displayContent = "";
@@ -43,5 +45,6 @@
   footerText: "view details &rarr;",
   bodyClasses: isNote ? "line-clamp-[12] md:line-clamp-6" : "line-clamp-3",
   classes: it.classes,
-  isNote: isNote
+  isNote: isNote,
+  compact: isCompact
 }) }}

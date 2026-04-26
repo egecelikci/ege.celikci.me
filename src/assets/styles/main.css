@@ -1,26 +1,9 @@
-@import url("./vendor/photoswipe.css");
 @import "tailwindcss";
+@import "npm:photoswipe/dist/photoswipe.css";
 @plugin "@tailwindcss/typography";
 
 @layer base {
-  @font-face {
-    font-family: "Josefin Sans";
-    font-style: normal;
-    font-display: swap;
-    font-weight: 100 900;
-    src:
-      url("/assets/fonts/JosefinSans-VariableFont_wght.woff2") format("woff2"),
-      url("/assets/fonts/JosefinSans-VariableFont_wght.woff") format("woff");
-  }
-
-  @font-face {
-    font-family: "Inconsolata";
-    font-style: normal;
-    font-display: swap;
-    font-weight: 200 900;
-    src: url("/assets/fonts/Inconsolata.woff2") format("woff2");
-  }
-
+  /* google-fonts */
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
@@ -37,6 +20,8 @@
     background-color: var(--color-bg);
     color: var(--color-text);
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: var(--size-step-0);
+    line-height: 1.7;
   }
 }
 
@@ -66,6 +51,14 @@
   --width-max: 1440px;
   --max-width-max: 1440px;
 
+  /* Fluid Type Scale */
+  --size-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --size-step-1: clamp(1.25rem, 1.16rem + 0.43vw, 1.5rem);
+  --size-step-2: clamp(1.56rem, 1.41rem + 0.76vw, 2rem);
+  --size-step-3: clamp(1.95rem, 1.71rem + 1.24vw, 2.66rem);
+  --size-step-4: clamp(2.44rem, 2.05rem + 1.93vw, 3.55rem);
+  --size-step-5: clamp(3.05rem, 2.46rem + 2.96vw, 4.74rem);
+
   /* Header height for scroll offset */
   --header-height: 5rem;
 
@@ -94,6 +87,10 @@
 
 :root {
   color-scheme: light;
+  --bg-color: var(--color-bg);
+  --text-color: var(--color-text);
+  --divider-color: var(--color-border);
+  --bg-faded-color: var(--color-surface);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -123,31 +120,71 @@
 }
 
 @layer components {
-  .markdown {
-    @apply prose prose-lg max-w-none;
+  /* Piccalilli Flow: consistent vertical rhythm */
+  .flow > * + * {
+    margin-block-start: var(--flow-space, 1.5em);
+  }
 
-    --tw-prose-body: var(--color-prose-body);
-    --tw-prose-headings: var(--color-prose-headings);
-    --tw-prose-links: var(--color-prose-links);
-    --tw-prose-bold: var(--color-prose-bold);
-    --tw-prose-counters: var(--color-prose-counters);
-    --tw-prose-bullets: var(--color-prose-bullets);
+  :is(h1, h2, h3) {
+    --flow-space: 1.5em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  :is(h1, h2, h3) + * {
+    --flow-space: 0.75em;
+  }
+
+  .markdown {
+    @apply prose max-w-none text-text;
+
+    /* Variables for Prose mapping */
+    --tw-prose-body: var(--color-text);
+    --tw-prose-headings: var(--color-text);
+    --tw-prose-links: var(--color-primary);
+    --tw-prose-bold: var(--color-text);
+    --tw-prose-counters: var(--color-text-muted);
+    --tw-prose-bullets: var(--color-text-muted);
     --tw-prose-hr: var(--color-border);
-    --tw-prose-quotes: var(--color-prose-quotes);
-    --tw-prose-quote-borders: var(--color-prose-quote-borders);
+    --tw-prose-quotes: var(--color-text);
+    --tw-prose-quote-borders: var(--color-primary);
     --tw-prose-caption: var(--color-text-muted);
     --tw-prose-pre-code: inherit;
     --tw-prose-pre-bg: transparent;
     --tw-prose-th-borders: var(--color-border);
     --tw-prose-td-borders: var(--color-border);
     --tw-prose-code: var(--color-prose-code);
+
+    & > * + * {
+      margin-block-start: var(--flow-space, 1.5em);
+    }
+
+    p {
+      max-width: 75ch;
+      line-height: 1.7;
+    }
+
+    /* Fix headings in markdown */
+    :is(h1, h2, h3, h4, h5, h6) {
+      @apply font-display font-bold relative;
+      margin-bottom: 0.5em;
+    }
+
+    h1 {
+      font-size: var(--size-step-3);
+    }
+    h2 {
+      font-size: var(--size-step-2);
+    }
+    h3 {
+      font-size: var(--size-step-1);
+    }
   }
 
   /* Inline code styling */
   .markdown :not(pre) > code {
-    @apply inline-block font-mono text-sm px-[0.4em] py-[0.1em] rounded-sm
-      bg-surface border border-border text-text whitespace-pre-wrap break-words
-      align-middle;
+    @apply inline font-mono text-[0.9em] px-[0.3em] py-[0.1em] rounded-sm
+      bg-surface border border-border/20 text-text break-all;
   }
 
   /* Remove Typography plugin's pseudo-elements on inline code */
@@ -156,19 +193,14 @@
     content: none !important;
   }
 
-  /* Heading styles */
-  .markdown :is(h1, h2, h3, h4, h5, h6) {
-    @apply font-display font-bold relative;
-  }
-
   /* Heading anchor links */
   .markdown .heading-anchor {
-    @apply hidden absolute top-0 -left-[1.25em] w-[1em] opacity-0
-      transition-opacity duration-200 no-underline;
+    @apply absolute top-0 -left-[1.25em] w-[1em] opacity-0 transition-opacity
+      duration-200 no-underline text-primary-offset/40;
     box-shadow: none !important;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 1024px) {
     .markdown .heading-anchor {
       @apply block;
     }
@@ -180,32 +212,19 @@
     @apply opacity-100;
   }
 
-  /* Link styles with fancy underline effect */
+  /* Link styles */
   .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {
-    @apply no-underline border-b border-current transition-all duration-200
-      font-normal text-[length:inherit] text-[color:var(--tw-prose-links)];
-    box-shadow: inset 0 -2px 0 0 currentColor;
-  }
-
-  .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline):hover {
-    @apply text-white border-primary outline-none;
-    box-shadow: inset 0 -1.5em 0 0 var(--color-primary);
+    @apply text-primary hover:text-primary-offset underline
+      decoration-primary/10 underline-offset-2 transition-colors;
+    box-shadow: none !important;
   }
 
   /* Hover effect on code inside links */
   .markdown a:not(.btn, .heading-anchor):hover code {
-    @apply bg-primary border-primary text-white;
-  }
-
-  /* Ensure links and interactive elements inside listings are clickable above the overlay link */
-  .group.relative .markdown a,
-  .group.relative .relative.z-40 {
-    @apply relative z-40;
+    @apply bg-primary/10 border-primary/30 text-primary;
   }
 
   /* MOBILE REVEAL REFINEMENTS (The Lens) */
-  /* If device has no hover, we can force reveal some essential states. 
-     Otherwise, we rely on the .is-active class added via JS intersection observer. */
   @media (hover: none) {
     .group.is-active .grayscale {
       @apply grayscale-0;
@@ -220,85 +239,149 @@
 
   /* Code block container */
   .markdown figure.code-block {
-    @apply my-8 block w-full max-w-full rounded-md border border-border
-      bg-surface text-left overflow-hidden;
+    @apply my-8 block w-full max-w-full rounded-xl border border-border/20
+      bg-surface/50 text-left overflow-hidden shadow-sm;
   }
 
   /* Code block header */
   .markdown figure.code-block figcaption.code-header {
-    @apply flex items-center justify-start border-b border-border bg-bg px-4
-      py-2 font-mono text-xs font-bold text-text-muted not-italic;
+    @apply flex items-center justify-start border-b border-border/10 bg-bg/50
+      px-5 py-2.5 font-mono text-[10px] font-bold text-text-muted/60 uppercase
+      tracking-widest not-italic;
   }
 
   /* Shiki syntax highlighting blocks */
   .markdown figure.code-block pre.shiki {
-    @apply m-0 border-0 rounded-none w-full max-w-full p-4 text-xs lg:text-sm
-      overflow-x-auto;
+    @apply m-0 border-0 rounded-none w-full max-w-full p-5 text-xs lg:text-sm
+      overflow-x-auto bg-transparent!;
   }
 
   /* Reset styles for code inside Shiki blocks */
   .markdown figure.code-block pre.shiki code {
-    @apply bg-transparent p-0 text-inherit border-0;
+    @apply bg-transparent p-0 text-inherit border-0 shadow-none;
   }
 
-  /* Custom scrollbar for code blocks */
-  .markdown figure.code-block pre.shiki::-webkit-scrollbar {
-    height: 8px;
+  /* Phanpy Media System */
+  .media-container {
+    --media-radius: 12px;
+    --media-border-width: 1px;
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    border-radius: var(--media-radius);
+    overflow: hidden;
+    margin: 8px 0;
+    border: var(--media-border-width) solid var(--divider-color);
+    background-color: var(--bg-faded-color);
   }
 
-  .markdown figure.code-block pre.shiki::-webkit-scrollbar-track {
-    background: transparent;
+  .media-container.media-eq1 {
+    grid-template-columns: 1fr;
+  }
+  .media-container.media-eq2 {
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: 2/1;
+  }
+  .media-container.media-eq3 {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    aspect-ratio: 2/1;
+  }
+  .media-container.media-eq4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    aspect-ratio: 2/1;
   }
 
-  .markdown figure.code-block pre.shiki::-webkit-scrollbar-thumb {
-    background-color: var(--color-border);
-    border-radius: 4px;
-  }
+  .media {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--bg-faded-color);
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: zoom-in;
 
-  /* Responsive embeds (videos, iframes) */
-  .markdown .embed {
-    @apply relative h-0 my-8;
-  }
-
-  .markdown .embed--16-9 {
-    padding-bottom: 56.25% !important;
-  }
-
-  .markdown .embed--4-3 {
-    padding-bottom: 75% !important;
-  }
-
-  .markdown .embed :is(video, iframe) {
-    @apply absolute top-0 left-0 w-full h-full z-10 my-0;
-  }
-
-  .pswp {
-    --pswp-bg: var(--color-bg);
-    --pswp-placeholder-bg: var(--color-surface);
-    --pswp-top-bar-bg: color-mix(in srgb, var(--color-bg), transparent 60%);
-    --pswp-icon-color: var(--color-text);
-    --pswp-icon-color-secondary: var(--color-text-muted);
-    --pswp-icon-stroke-color: var(--color-bg);
-    --pswp-icon-stroke-width: 1.5px;
-  }
-
-  .pswp__custom-caption {
-    @apply absolute bottom-0 left-0 w-full text-center box-border
-      pointer-events-none p-8 md:p-16;
-    background: linear-gradient(
-      to top,
-      color-mix(in srgb, var(--color-bg), transparent 20%) 0%,
-      transparent 100%
-    );
-    color: var(--color-text);
-    font-size: var(--text-base);
-    line-height: 1.5;
-    transition: opacity 0.25s ease;
-    &--empty {
-      @apply opacity-0 p-0;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s ease-in-out;
+      display: block;
     }
-    a {
-      @apply text-text underline hover:text-primary;
+
+    &:is(:hover, :focus) img {
+      transform: scale(1.05);
+    }
+  }
+
+  .media-eq3 .media:first-child {
+    grid-row: span 2;
+  }
+}
+
+/* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */
+.pswp {
+  --pswp-bg: rgba(0, 0, 0, 0.95);
+  --pswp-placeholder-bg: #222;
+  --pswp-root-z-index: 1000;
+
+  --pswp-preloader-color: rgba(255, 255, 255, 0.4);
+  --pswp-preloader-color-secondary: rgba(0, 0, 0, 0.2);
+
+  /* Aggressively hide all default UI elements */
+  .pswp__top-bar,
+  .pswp__button--close,
+  .pswp__button--zoom,
+  .pswp__button--arrow,
+  .pswp__button--arrow--prev,
+  .pswp__button--arrow--next,
+  .pswp__counter,
+  .pswp__preloader,
+  .pswp__ui--one-button .pswp__button--arrow,
+  button[class*="pswp__button--"] {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Injected Template Overrides */
+.pswp__ui {
+  .carousel-top-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2500;
+    pointer-events: none;
+    & > * {
+      pointer-events: auto;
+    }
+  }
+
+  .media-alt {
+    position: absolute;
+    bottom: max(24px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2500;
+    pointer-events: none;
+    & > * {
+      pointer-events: auto;
+    }
+  }
+
+  .pswp-nav {
+    position: absolute;
+    inset: 0;
+    z-index: 2500;
+    pointer-events: none;
+    & > button {
+      pointer-events: auto;
     }
   }
 }
@@ -312,23 +395,26 @@
       opacity: 0.2;
     }
   }
+  @keyframes appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
 
 /* Additional typography refinements */
 .markdown > p {
   @apply my-0;
 }
-
 .markdown ul, .markdown ol {
   @apply space-y-2;
 }
-
 .markdown li {
   @apply my-0 leading-relaxed;
 }
-
-/* Remove background/border from inline code in links and lists */
-.markdown li > code,
-.markdown a:not(.btn, .heading-anchor) > code {
-  @apply bg-transparent border-0 px-0 py-0;
+.markdown li > code, .markdown a:not(.btn, .heading-anchor) > code {
+  @apply bg-transparent border-0 px-0 py-0 shadow-none;
 }

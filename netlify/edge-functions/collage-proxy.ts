@@ -39,6 +39,14 @@ export default async (req: Request,) => {
         );
       }
 
+      const contentLength = res.headers.get("Content-Length",);
+      if (contentLength && parseInt(contentLength,) > 2 * 1024 * 1024) {
+        return new Response(JSON.stringify({ error: "Image too large", },), {
+          status: 502,
+          headers: { "Content-Type": "application/json", },
+        },);
+      }
+
       return new Response(res.body, {
         headers: {
           "Content-Type": res.headers.get("Content-Type",) || "image/jpeg",
@@ -117,13 +125,16 @@ export default async (req: Request,) => {
 
       albums = (data.topalbums?.album || [])
         .filter((a: any,) => a.mbid || (a.image && a.image.length > 0))
-        .map((a: any,) => ({
-          name: a.name,
-          artist: a.artist.name,
-          count: a.playcount,
-          mbid: a.mbid,
-          img: a.image?.[a.image.length - 1]?.["#text"] || "",
-        }));
+        .map((a: any,) => {
+          const img = a.image?.[a.image.length - 1]?.["#text"];
+          return {
+            name: a.name,
+            artist: a.artist.name,
+            count: a.playcount,
+            mbid: a.mbid,
+            img: img && img.length > 0 ? img : undefined,
+          };
+        },);
     }
 
     return new Response(JSON.stringify({ albums, },), {

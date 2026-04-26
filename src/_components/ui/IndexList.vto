@@ -1,0 +1,41 @@
+{{#
+  Component: IndexList
+  A clean, typographic list for site-wide navigation or page directories.
+  
+  Props:
+    - title?: string (Section header text)
+    - items: Array<{ title: string, href: string, desc: string, marker?: string }>
+    - classes?: string
+#}}
+
+<div class="flex flex-col gap-8 {{ it.classes || '' }}">
+  {{ if it.title }}
+    <div class="flex items-center gap-4 opacity-20">
+      <h2 class="text-[9px] font-mono uppercase tracking-[0.4em]">
+        {{ it.title }}
+      </h2>
+      <span class="h-px grow bg-text"></span>
+    </div>
+  {{ /if }}
+
+  <nav
+    aria-label="{{ it.title || 'Index' }}"
+    class="flex flex-col gap-1 font-mono text-xs md:text-sm"
+  >
+    {{ for item of it.items }}
+      <a
+        href="{{ item.href }}"
+        class="group flex items-baseline gap-4 no-underline text-text/80 hover:text-primary transition-colors py-2"
+      >
+        <span
+          class="shrink-0 text-primary-offset/40 group-hover:text-primary transition-colors w-6"
+        >{{ item.marker || "··" }}</span>
+        <span
+          class="font-bold underline decoration-border/20 underline-offset-4 group-hover:decoration-primary/40"
+        >{{ item.title }}</span>
+        <span class="h-px grow border-t border-dashed border-border/10"></span>
+        <span class="text-text-muted/30 italic">{{ item.desc }}</span>
+      </a>
+    {{ /for }}
+  </nav>
+</div>

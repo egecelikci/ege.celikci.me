@@ -5,97 +5,64 @@
 #}}
 
 {{ set footerContent }}
-  <div
-    class="flex flex-col md:flex-row md:items-center justify-between gap-8 py-8 border-t border-border/20"
-  >
-    {{# --- 1. SITE & COPYRIGHT --- #}}
-    <div class="flex flex-col gap-2 text-center md:text-left">
-      <div class="font-medium text-text text-sm">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border/10 text-[10px] font-mono uppercase tracking-[0.2em]">
+    
+    {{# LEFT: Site Info #}}
+    <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted/60">
+      <div class="flex items-center gap-1.5">
         <span aria-label="Copyright">&copy;</span>
         {{ build.timestamp |> date("yyyy") }}
-        <a
-          href="{{ site.url }}"
-          class="hover:text-primary transition-colors"
-          rel="author"
-        >
-          {{ author.name }}
-        </a>
+        <a href="{{ site.url }}" class="text-text hover:text-primary transition-colors no-underline">{{ author.name }}</a>
       </div>
 
-      <div
-        class="flex flex-wrap items-center justify-center md:justify-start gap-3 text-[10px] text-text-muted/50"
+      <span class="text-border/30 select-none">|</span>
+      <a href="/colophon/" class="hover:text-primary transition-colors no-underline">colophon</a>
+
+      <span class="text-border/30 select-none">|</span>
+      <a
+        href="https://creativecommons.org/licenses/by-sa/4.0/"
+        class="hover:text-primary transition-colors no-underline"
+        rel="license"
       >
+        CC BY-SA 4.0
+      </a>
+
+      {{ if build.git }}
+        <span class="text-border/30 select-none">|</span>
         <a
-          href="https://creativecommons.org/licenses/by-sa/4.0/deed.en"
-          class="hover:text-primary transition-colors uppercase tracking-wider"
-          rel="license"
+          href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
+          class="font-mono hover:text-primary transition-colors opacity-80"
+          aria-label="view latest commit"
         >
-          CC BY-SA 4.0
+          {{ build.git.substring(0, 7) }}
         </a>
+      {{ /if }}
 
-        {{ if build.git }}
-          <span class="text-border/30 select-none">|</span>
-          <a
-            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-            class="font-mono hover:text-primary transition-colors opacity-80"
-            aria-label="view latest commit"
-          >
-            {{ build.git.substring(0, 7) }}
-          </a>
-        {{ /if }}
-
-        {{# Page Update Metadata #}}
-        {{ if page.data.updated || page.data.date }}
-          <span class="text-border/30 select-none">|</span>
-          <div
-            class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/5 text-[9px] uppercase tracking-[0.15em] text-text-muted/70"
-          >
-            <span class="mr-1.5 opacity-60 italic lowercase">rev.</span>
-            {{ page.data.updated || page.data.date |> date("dd MMM yyyy") }}
-          </div>
-        {{ /if }}
-      </div>
+      {{# Page Update Metadata #}}
+      {{ if page.data.updated || page.data.date }}
+        <span class="text-border/30 select-none">|</span>
+        <div
+          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/5 text-[9px] uppercase tracking-[0.15em] text-text-muted/70"
+        >
+          <span class="mr-1.5 opacity-60 italic lowercase">rev.</span>
+          {{ page.data.updated || page.data.date |> date("dd MMM yyyy") }}
+        </div>
+      {{ /if }}
     </div>
 
-    {{# --- 2. HIGHLIGHTS (Text Labels) --- #}}
-    <div class="flex items-center justify-center md:justify-end">
-      <ul
-        class="flex items-center gap-6 list-none p-0 m-0 text-[9px] font-mono font-bold uppercase tracking-[0.2em]"
+    {{# RIGHT: Utility Links #}}
+    <div class="flex items-center justify-center md:justify-end gap-x-6 gap-y-2 font-bold">
+      <a
+        href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
+        class="text-text-muted hover:text-primary transition-colors no-underline"
+        title="edit this page"
       >
-        <li>
-          <a
-            href="/contact/"
-            class="text-text-muted/70 hover:text-primary transition-colors no-underline"
-          >
-            contact
-          </a>
-        </li>
-        <li>
-          <a
-            href="{{ '/feeds' |> url }}"
-            class="text-text-muted/70 hover:text-primary transition-colors no-underline"
-          >
-            feeds
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-            class="text-text-muted/70 hover:text-primary transition-colors no-underline"
-            title="edit this page"
-          >
-            edit
-          </a>
-        </li>
-        <li>
-          <a
-            href="#"
-            class="text-text-muted/70 hover:text-primary transition-colors no-underline"
-          >
-            top
-          </a>
-        </li>
-      </ul>
+        edit
+      </a>
+
+      <a href="/feeds/" class="text-text-muted hover:text-primary transition-colors no-underline">feeds</a>
+
+      <a href="#" class="text-text-muted hover:text-primary transition-colors no-underline">top</a>
     </div>
   </div>
 {{ /set }}
@@ -103,7 +70,7 @@
 <footer class="mt-32 pb-16 print:hidden" role="contentinfo">
   {{
     comp.ui.Container({
-      width: "default",
+      width: "narrow",
       content: footerContent,
     })
   }}

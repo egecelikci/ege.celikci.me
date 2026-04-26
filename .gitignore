@@ -5,5 +5,8 @@ node_modules/
 .netlify
 .DS_Store
 
+# Rust
+src/_rust/**/target/
+
 !/.docs/
 !/.docs/**

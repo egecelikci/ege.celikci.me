@@ -19,10 +19,9 @@ async function init() {
     initTouchReveal(".album-item, .collage-item, .h-entry",);
   }
 
-  if (document.querySelector("[data-pswp-gallery]",)) {
-    const { initPhotoSwipe, } = await import("./common/lightbox.ts");
-    initPhotoSwipe();
-  }
+  // PhotoSwipe Lightbox
+  const { initLightbox, } = await import("./common/lightbox.ts");
+  initLightbox();
 
   if (document.querySelector(".status-dashboard",)) {
     const { loadStatus, } = await import("./status.ts");

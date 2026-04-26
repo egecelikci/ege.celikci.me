@@ -25,11 +25,11 @@
 {{ if items.length > 0 }}
 <nav
   aria-label="Breadcrumb"
-  class="flex items-center {{ classes }}"
+  class="relative z-20 flex items-center {{ classes }}"
 >
   <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
     {{ for index, item of items }}
-      <li class="flex items-center gap-2">
+      <li class="flex items-center gap-2 py-1">
         {{ if item.isLast }}
           <span class="font-bold text-text-muted/80">
             {{ item.label }}

@@ -1,7 +1,94 @@
 ---
-layout: layouts/home.vto
-title: home
+layout: layouts/page.vto
+title: ege.celikci.me
+subtitle: personal index & ledger
+container_width: narrow
 searchable: false
+prose: false
+# headerExtension:
+#   comp: features.StatusDashboard
+#   props:
+#     class: "w-full md:w-[240px] opacity-60 hover:opacity-100 transition-opacity"
 ---
 
-{{# This page uses its layout for most content structure #}}
+<div class="flex flex-col gap-16 pb-12">
+  {{# 1. THE SEARCH (Promoted to Top) #}}
+  <div class="opacity-60 focus-within:opacity-100 transition-opacity">
+    <div class="flex items-center gap-4 mb-8">
+      <span
+        class="text-[9px] font-mono uppercase tracking-[0.4em] text-text-muted/40 whitespace-nowrap"
+      >search index</span>
+      <span class="h-px grow bg-border/10"></span>
+    </div>
+    {{
+      comp.features.Search({
+        compId: "home-index",
+      })
+    }}
+  </div>
+
+  {{# 2. TWO-COLUMN GRID (Nav + Visual) #}}
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+    {{# THE INDEX (Unified Component) #}}
+    <div class="md:col-span-7">
+      {{# Prepare items: Navigation + Music #}}
+      {{ set indexItems = [] }}
+
+      {{# A. Add Primary Navigation (Numbered) #}}
+      {{ for i, item of navigation.primary }}
+        {{ set page = search.page("url=" + item.href) }}
+        {{ set marker = (i + 1 < 10 ? "0" : "") + (i + 1) + "." }}
+        {{
+          set indexItems = indexItems.concat([{
+            title: item.title,
+            href: item.href,
+            desc: page?.label || "",
+            marker: marker,
+          }])
+        }}
+      {{ /for }}
+
+      {{# B. Add Secondary Pages (Dotted) #}}
+      {{ for item of navigation.secondary }}
+        {{ set page = search.page("url=" + item.href) }}
+        {{
+          set indexItems = indexItems.concat([{
+            title: item.title,
+            href: item.href,
+            desc: page?.label || "",
+            marker: "··",
+          }])
+        }}
+      {{ /for }}
+
+      {{ comp.ui.IndexList({ title: "index", items: indexItems }) }}
+    </div>
+
+    {{# 3. VISUAL (Sidebar) #}}
+    <aside class="md:col-span-5 flex flex-col gap-12">
+      {{# 3.1 CATS #}}
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center gap-4 opacity-20">
+          <h2 class="text-[9px] font-mono uppercase tracking-[0.4em]">
+            cat.vision
+          </h2>
+          <span class="h-px grow bg-text"></span>
+        </div>
+        <div
+          class="opacity-80 hover:opacity-100 transition-opacity duration-700"
+        >
+          {{ set catNotes = search.pages("type=note 'kedi'", "date=desc") }}
+          {{ comp.ui.Collage({ items: catNotes, maxItems: 9 }) }}
+        </div>
+        <div class="flex justify-end">
+          <a
+            href="/tags/kedi/"
+            class="text-[8px] font-mono uppercase tracking-widest text-text-muted/40 hover:text-primary transition-colors no-underline"
+          >
+            view log →
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

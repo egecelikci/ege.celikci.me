@@ -15,22 +15,45 @@ export const spacing = {
     lg: "gap-8",
     xl: "gap-12",
   },
+  flow: {
+    base: "var(--flow-space, 1.5em)",
+    tight: "0.75em",
+    loose: "2.5em",
+  },
 };
 
 export const typography = {
+  // Fluid Type Scale (Utopia-inspired clamps)
+  size: {
+    step_0: "clamp(1rem, 0.96rem + 0.22vw, 1.13rem)",
+    step_1: "clamp(1.25rem, 1.16rem + 0.43vw, 1.5rem)",
+    step_2: "clamp(1.56rem, 1.41rem + 0.76vw, 2rem)",
+    step_3: "clamp(1.95rem, 1.71rem + 1.24vw, 2.66rem)",
+    step_4: "clamp(2.44rem, 2.05rem + 1.93vw, 3.55rem)",
+    step_5: "clamp(3.05rem, 2.46rem + 2.96vw, 4.74rem)",
+  },
+
   heading: {
-    h1: "text-4xl md:text-5xl font-display font-bold tracking-tight text-text",
-    h2: "text-3xl md:text-4xl font-display font-bold tracking-tight text-text",
-    h3: "text-2xl md:text-3xl font-display font-bold tracking-tight text-text",
-    h4: "text-xl md:text-2xl font-semibold tracking-tight text-text",
+    h1:
+      "text-[length:var(--size-step-4)] font-display font-bold tracking-tight text-text leading-[1.1] text-balance",
+    h2:
+      "text-[length:var(--size-step-3)] font-display font-bold tracking-tight text-text leading-[1.1] text-balance",
+    h3:
+      "text-[length:var(--size-step-2)] font-display font-bold tracking-tight text-text leading-[1.1] text-balance",
+    h4:
+      "text-[length:var(--size-step-1)] font-semibold tracking-tight text-text leading-[1.2]",
   },
+
   body: {
-    base: "text-base leading-relaxed text-text/90",
-    large: "text-lg leading-relaxed text-text/90",
+    base:
+      "text-[length:var(--size-step-0)] leading-[1.7] text-text/90 max-w-[65ch]",
+    large:
+      "text-[length:var(--size-step-1)] leading-[1.7] text-text/90 max-w-[60ch]",
     small: "text-sm text-text/80",
-    serif: "font-serif italic leading-relaxed",
+    serif: "font-serif leading-[1.7]",
   },
-  mono: "font-mono text-sm tracking-tight",
+
+  mono: "font-mono text-[length:var(--size-step-0)] tracking-tight",
   label: "text-[10px] font-mono uppercase tracking-[0.3em] font-bold",
 
   // Semantic Text Colors
@@ -48,16 +71,82 @@ export const components = {
   listing: {
     container:
       "group relative flex flex-col gap-8 md:gap-12 px-4 -mx-4 py-16 md:py-24 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5",
+    containerCompact:
+      "group relative flex flex-col gap-4 md:gap-6 px-4 -mx-4 py-8 md:py-12 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5",
+    row:
+      "group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline",
     accentBar:
       "absolute -left-[1px] top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
+    accentBarCompact:
+      "absolute -left-[1px] top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
     metaRow:
       "relative z-20 flex items-center gap-4 opacity-80 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity",
     title:
       "text-3xl md:text-4xl font-bold tracking-tighter text-text group-hover:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20",
     description:
-      "text-lg md:text-xl font-serif italic text-text-muted/70 group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20",
+      "text-lg md:text-xl text-text-muted/70 group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20",
     footer:
       "relative z-10 flex items-center justify-between pt-8 border-t border-border/5 opacity-60 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
+  },
+
+  media: {
+    container:
+      "grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-2 bg-surface/20",
+    item:
+      "media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media",
+    image:
+      "w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95 block",
+    grids: {
+      eq1: "grid-cols-1",
+      eq2: "grid-cols-2 aspect-[2/1]",
+      eq3: "grid-cols-2 grid-rows-2 aspect-[2/1]",
+      eq4: "grid-cols-2 grid-rows-2 aspect-[2/1]",
+    },
+    altBadge:
+      "alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none",
+  },
+
+  litebox: {
+    modal:
+      "media-modal-container fixed inset-0 z-[1000] flex flex-col w-full h-full max-w-full max-h-full overflow-hidden bg-black",
+    carousel:
+      "carousel flex w-full h-full overflow-hidden select-none touch-pan-x",
+    item:
+      "carousel-item flex-[0_0_100%] w-full h-full flex items-center justify-center p-0",
+    image:
+      "max-w-full max-h-full object-contain transition-transform duration-300 vertical-middle",
+    controls:
+      "carousel-top-controls absolute top-0 left-0 right-0 p-6 md:p-10 flex justify-between items-center z-10 pointer-events-auto pt-[max(1.5rem,env(safe-area-inset-top))] px-[max(1.5rem,env(safe-area-inset-right,1.5rem))] pl-[max(1.5rem,env(safe-area-inset-left,1.5rem))] transition-opacity duration-500",
+    button:
+      "carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0",
+    dots:
+      "carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg mx-4 min-w-0 overflow-hidden",
+    dot:
+      "carousel-dot w-6 h-6 flex items-center justify-center text-white/30 text-lg transition-all data-[active=true]:text-white data-[active=true]:scale-125 disabled:pointer-events-none hover:text-white/60",
+    indicator: "carousel-indicator flex items-center gap-2",
+    counter:
+      "carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg",
+
+    alt:
+      "media-alt absolute bottom-[max(24px,env(safe-area-inset-bottom,24px))] left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-3 rounded-xl max-w-[min(600px,90vw)] text-sm leading-relaxed text-center z-10 border border-white/10 transition-all duration-300 pointer-events-auto shadow-2xl",
+    altDesc: "media-alt-desc inline-block text-left",
+    sheet: {
+      backdrop:
+        "fixed inset-0 bg-black/40 backdrop-blur-sm z-[1100] transition-opacity duration-300",
+      container:
+        "fixed bottom-0 left-0 right-0 z-[1200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border",
+      header: "flex items-center justify-between gap-4",
+      title: "text-xl font-bold tracking-tight text-text",
+      close: "p-2 rounded-full hover:bg-black/5 transition-colors",
+      content:
+        "text-base leading-relaxed text-text/90 whitespace-pre-wrap text-pretty",
+    },
+    menu: {
+      container:
+        "absolute top-full right-0 mt-2 min-w-[200px] bg-surface border border-border rounded-xl shadow-xl z-[1300] overflow-hidden transform origin-top-right transition-all",
+      item:
+        "flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left",
+    },
   },
 
   gallery: {

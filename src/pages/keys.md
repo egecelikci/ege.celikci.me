@@ -2,8 +2,6 @@
 title: "keys"
 tags: ["meta"]
 templateEngine: [vto, md]
-menu_label: atlas
-menu_order: 7
 label: cryptograpic keys
 ---
 

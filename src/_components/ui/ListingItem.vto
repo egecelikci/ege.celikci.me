@@ -15,21 +15,25 @@
     - classes?: string
     - bodyClasses?: string
     - isNote?: boolean (applies specific note-style logic if needed)
+    - compact?: boolean (reduces vertical padding and gaps)
 #}}
 
-<article class="{{ theme.components.listing.container }} {{ it.classes || '' }}">
-  {{# 0. CINEMATIC ACCENT #}}
-  <div class="{{ theme.components.listing.accentBar }}"></div>
+{{ set containerClass = it.compact ? theme.components.listing.containerCompact : theme.components.listing.container }}
+{{ set accentBarClass = it.compact ? theme.components.listing.accentBarCompact : theme.components.listing.accentBar }}
 
-  {{# Overlay link #}}
+<article class="{{ containerClass }} {{ it.classes || '' }}">
+  {{# 0. CINEMATIC ACCENT #}}
+  <div class="{{ accentBarClass }}"></div>
+
+  {{# Overlay link (Base layer for card click) #}}
   <a
     href="{{ it.url |> url }}"
-    class="absolute inset-0 z-30 pointer-events-auto"
+    class="absolute inset-0 z-10 pointer-events-auto"
     aria-label="{{ it.title || 'View Item' }}"
   ></a>
 
   {{# 1. HEADER (Meta Row) #}}
-  <header class="{{ theme.components.listing.metaRow }}">
+  <header class="{{ theme.components.listing.metaRow }} relative z-20">
     {{ if it.date }}
       <time class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
         {{ if typeof it.date === 'string' }}{{ it.date }}{{ else }}{{ it.date |> date("dd MMM yyyy") }}{{ /if }}
@@ -48,7 +52,7 @@
   </header>
 
   {{# 2. VISUALS #}}
-  <div class="relative z-20">
+  <div class="relative z-30">
     {{ if it.visuals }}
       {{ it.visuals |> safe }}
     {{ else if it.images && it.images.length > 0 }}

@@ -1,0 +1,26 @@
+---
+url: /blogroll.xml
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.1">
+  <head>
+    <title>Blogroll for {{ author.name }}</title>
+    <ownerName>{{ author.name }}</ownerName>
+    <dateCreated>{{ build.timestamp |> date("ATOM") }}</dateCreated>
+  </head>
+  <body>
+    {{ for item of bookmarks }}
+      {{ if item.feed }}
+        <outline
+          text="{{ item.title }}"
+          title="{{ item.title }}"
+          type="rss"
+          xmlUrl="{{ item.feed }}"
+          htmlUrl="{{ item.url }}"
+          category="{{ item.category || 'uncategorized' }}"
+        />
+      {{ /if }}
+    {{ /for }}
+  </body>
+</opml>

@@ -13,35 +13,47 @@
 
 {{ set isCentered = it.centered || false }}
 
-<section class="border-b border-border/10 pb-12 mb-16 pt-24 {{ if isCentered }}text-center{{ /if }} flex flex-col md:flex-row md:items-start justify-between gap-12">
+<section
+  class="border-b border-border/10 pb-12 pt-24 {{ if isCentered }}text-center{{ /if }} flex flex-col md:flex-row md:items-start justify-between gap-12"
+>
   <div class="grow min-w-0">
     {{# 1. NAVIGATION / BREADCRUMB #}}
     <div class="mb-8 h-4">
       {{ if it.backlink }}
-        {{ comp.ui.backlink({ 
-          href: it.backlink.href, 
-          text: it.backlink.text 
-        }) }}
+        {{
+          comp.ui.backlink({
+            href: it.backlink.href,
+            text: it.backlink.text,
+          })
+        }}
       {{ else }}
         <span class="opacity-0 cursor-default" aria-hidden="true">&nbsp;</span>
       {{ /if }}
     </div>
 
     {{# 2. MAIN TITLE #}}
-    <h1 class="p-name text-4xl md:text-5xl font-bold tracking-tight text-text mb-4">
+    <h1
+      class="p-name text-5xl md:text-7xl font-bold tracking-tighter text-text mb-4 leading-[0.9]"
+    >
       {{ it.title }}<span class="text-primary-offset/40">.</span>
     </h1>
 
     {{# 3. SUBTITLE / DESCRIPTION #}}
-    <div class="text-xs font-mono uppercase tracking-[0.2em] text-text-muted/70 max-w-lg leading-relaxed text-balance {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}">
-      {{ it.subtitle || 'placeholder' }}
+    <div
+      class="text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted/60 max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}"
+    >
+      {{ it.subtitle || "placeholder" }}
     </div>
 
     {{# 4. TAGS (Unified Typographic) #}}
     {{ if it.metadata?.tags && it.metadata.tags.length > 0 }}
-      <div class="flex flex-wrap gap-6 mt-10 {{ if isCentered }}justify-center{{ /if }}">
+      <div
+        class="flex flex-wrap gap-6 mt-12 {{ if isCentered }}justify-center{{ /if }}"
+      >
         {{ for tag of it.metadata.tags }}
-          {{ set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
+          {{
+            set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
+          }}
           {{ comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) }}
         {{ /for }}
       </div>
@@ -49,7 +61,7 @@
   </div>
 
   {{ if it.rightContent }}
-    <div class="shrink-0 flex items-end">
+    <div class="shrink-0 flex items-end w-full md:w-auto overflow">
       {{ it.rightContent |> safe }}
     </div>
   {{ /if }}

@@ -27,7 +27,7 @@
   {{ set noteDate = it.note.date |> date("dd MMM yyyy · HH:mm") }}
   {{ set noteVisuals }}
     {{ if hasImages }}
-       {{ comp.ui.Gallery({ images: it.note.images }) }}
+       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
     {{ /if }}
   {{ /set }}
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
@@ -66,7 +66,7 @@
 
     {{# Visuals #}}
     {{ if hasImages }}
-       {{ comp.ui.Gallery({ images: it.note.images }) }}
+       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
     {{ /if }}
 
     {{# Textual Content #}}
@@ -77,7 +77,7 @@
         </h2>
       {{ /if }}
 
-      <div class="e-content markdown {{ theme.components.listing.description }}">
+      <div class="e-content markdown">
         {{ it.note.content |> vto(vtoContext) |> md |> safe }}
       </div>
     </div>
