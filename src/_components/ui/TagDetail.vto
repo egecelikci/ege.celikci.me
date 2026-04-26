@@ -1,23 +1,77 @@
 {{#
   Component: TagDetail
   Handles the listing of pages for a specific tag.
+  Streamlined to match notes.vto and blog.vto styles.
 #}}
+
 {{ set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc") }}
 
-<div class="flex flex-col gap-12">
-  {{# 1. ENTRIES #}}
+<div class="flex flex-col gap-16 md:gap-24">
+  {{# 1. ENTRIES GROUPED BY YEAR #}}
   {{ if matchingEntries.length > 0 }}
-    <div class="flex flex-col gap-2">
-      {{ for item of matchingEntries }}
-        <div class="not-prose">
-          {{ if item.type === "note" }}
-            {{ comp.ui.Note({ note: item, variant: "listing" }) }}
-          {{ else }}
-            {{ comp.ui.EntryCard({ entry: item }) }}
-          {{ /if }}
+    {{>
+      const groupedByYear = matchingEntries.reduce((groups, item) => {
+        const year = item.date.getFullYear();
+        if (!groups[year]) groups[year] = [];
+        groups[year].push(item);
+        return groups;
+      }, {});
+      const years = Object.keys(groupedByYear).sort((a, b) => b - a);
+    }}
+
+    {{ for year of years }}
+      <section class="flex flex-col gap-8 md:gap-12">
+        {{# Year Header (Blog-style) #}}
+        <div class="flex items-center gap-6 opacity-30">
+          <h2 class="text-4xl md:text-5xl font-bold tracking-tighter">{{ year }}</h2>
+          <div class="h-px grow bg-current"></div>
         </div>
-      {{ /for }}
-    </div>
+
+        {{# Group items within year by date (Notes-style) #}}
+        {{>
+          const itemsInYear = groupedByYear[year];
+          const groupedByDate = itemsInYear.reduce((groups, item) => {
+            const dateKey = item.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            if (!groups[dateKey]) groups[dateKey] = [];
+            groups[dateKey].push(item);
+            return groups;
+          }, {});
+          const dateKeys = Object.keys(groupedByDate);
+        }}
+
+        <div class="flex flex-col gap-12">
+          {{ for dateKey of dateKeys }}
+            <div class="flex flex-col gap-4">
+              {{# Date Marker #}}
+              <div class="flex items-center gap-4">
+                <div class="shrink-0 w-2 h-2 rounded-full bg-primary/40 ring-4 ring-primary/5"></div>
+                <h3 class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted/60 font-bold">
+                  {{ dateKey }}
+                </h3>
+                <div class="h-px grow bg-border/5"></div>
+              </div>
+
+              {{# Items for this date #}}
+              {{ set timelineContent }}
+                <div class="flex flex-col">
+                  {{ for item of groupedByDate[dateKey] }}
+                    {{ if item.type === "note" }}
+                      {{ await comp.ui.NoteRow({ note: item }) }}
+                    {{ else if item.type === "post" }}
+                      {{ comp.ui.PostRow({ post: item }) }}
+                    {{ else }}
+                      {{ comp.ui.PageRow({ page: item }) }}
+                    {{ /if }}
+                  {{ /for }}
+                </div>
+              {{ /set }}
+
+              {{ await comp.ui.Timeline({ content: timelineContent, classes: "ml-0.5" }) }}
+            </div>
+          {{ /for }}
+        </div>
+      </section>
+    {{ /for }}
   {{ else }}
     {{
       comp.ui.EmptyState({
@@ -42,6 +96,7 @@
   {{ if relatedTags.length > 0 }}
     <div class="mt-24 pt-12 border-t border-border/10">
       <h3 class="text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted/40 mb-8 flex items-center gap-2">
+        {{ comp.ui.Icon({ name: "hash", classes: "w-3 h-3" }) }}
         Related Topics
       </h3>
       <div class="flex flex-wrap gap-4">

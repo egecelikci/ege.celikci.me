@@ -11,171 +11,135 @@ hide_title: true
 <div class="max-w-4xl mx-auto">
   <div class="flex flex-col md:flex-row gap-12 items-start">
     {{# 1. CONTROLS #}}
-    <div class="w-full md:w-80 shrink-0 flex flex-col gap-8">
-      <div
-        class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10 shadow-sm"
-      >
-        <div class="flex flex-col gap-2">
-          <label
-            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-          >Data Source</label>
-          <div
-            class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10"
-          >
-            <button
-              id="source-lb"
-              class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-primary text-white shadow-sm transition-all active:scale-95"
-            >
-              ListenBrainz
-            </button>
-            <button
-              id="source-lfm"
-              class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg text-text-muted/40 hover:text-text-muted/70 transition-all active:scale-95"
-            >
-              Last.fm
-            </button>
+    <div class="w-full md:w-80 shrink-0 flex flex-col gap-6">
+      <div class="flex flex-col gap-8 p-8 rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/10 shadow-2xl relative overflow-hidden">
+        {{# Subtle background accent #}}
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+        {{# A. SOURCE & IDENTITY #}}
+        <div class="flex flex-col gap-6 relative z-10">
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+              {{ comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-primary/60" }) }}
+              <label class="{{ theme.typography.label }} opacity-40">Network</label>
+            </div>
+            <div class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10">
+              <button id="source-lb" class="py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer">ListenBrainz</button>
+              <button id="source-lfm" class="py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer">Last.fm</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+              {{ comp.ui.Icon({ name: "user", classes: "w-3 h-3 text-primary/60" }) }}
+              <label for="username" class="{{ theme.typography.label }} opacity-40">Identity</label>
+            </div>
+            <input 
+              type="text" 
+              id="username" 
+              placeholder="username" 
+              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20" 
+              value="{{ author.username }}" 
+            />
           </div>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label
-            for="username"
-            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-          >Username</label>
-          <input
-            type="text"
-            id="username"
-            placeholder="username"
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-3 !px-4"
-            value="{{ author.username }}"
-          />
-        </div>
+        <div class="h-px bg-border/5"></div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div class="flex flex-col gap-2">
-            <label
-              for="period"
-              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-            >Period</label>
-            <select
-              id="period"
-              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
-            >
-            </select>
+        {{# B. CONFIGURATION #}}
+        <div class="grid grid-cols-1 gap-6 relative z-10">
+          <div class="grid grid-cols-2 gap-4">
+             <div class="flex flex-col gap-3">
+                <label for="period" class="{{ theme.typography.label }} opacity-40">Period</label>
+                <select id="period" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20"></select>
+             </div>
+             <div class="flex flex-col gap-3">
+                <label for="bg-mode" class="{{ theme.typography.label }} opacity-40">Aesthetic</label>
+                <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20">
+                  <option value="aura" selected>Aura</option>
+                  <option value="silver">Silver</option>
+                  <option value="velvet">Velvet</option>
+                  <option value="terminal">Terminal</option>
+                  <option value="thermal">Thermal</option>
+                  <option value="dark">Dark</option>
+                </select>
+             </div>
           </div>
 
-          <div class="flex flex-col gap-2">
-            <label
-              for="bg-mode"
-              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-            >Style</label>
-            <select
-              id="bg-mode"
-              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
-            >
-              <option value="aura" selected>Aura (Vibrant)</option>
-              <option value="silver">Silver Screen</option>
-              <option value="velvet">Deep Velvet</option>
-              <option value="terminal">Retro Terminal</option>
-              <option value="thermal">Thermal Scan</option>
-              <option value="dark">Minimal Dark</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div class="flex flex-col gap-2">
-            <label
-              for="grid-size"
-              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-            >Grid Size</label>
-            <select
-              id="grid-size"
-              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
-            >
-              <option value="3x3" selected>3 x 3</option>
-              <option value="4x4">4 x 4</option>
-              <option value="5x5">5 x 5</option>
-            </select>
-          </div>
-          <div class="flex flex-col gap-2">
-             <label class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Options</label>
-             <div class="flex items-center gap-3 h-[42px]">
-               <label class="flex items-center gap-2 cursor-pointer" title="Grain">
-                 <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary">
-                 <span class="text-[9px] font-bold uppercase opacity-60">Grain</span>
-               </label>
+          <div class="grid grid-cols-2 gap-4">
+             <div class="flex flex-col gap-3">
+                <label for="grid-size" class="{{ theme.typography.label }} opacity-40">Grid</label>
+                <select id="grid-size" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20">
+                  <option value="3x3" selected>3x3</option>
+                  <option value="4x4">4x4</option>
+                  <option value="5x5">5x5</option>
+                </select>
+             </div>
+             <div class="flex flex-col gap-3">
+                <label class="{{ theme.typography.label }} opacity-40">Texture</label>
+                <label class="flex items-center gap-3 h-[42px] px-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-colors">
+                  <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary">
+                  <span class="text-[10px] font-bold uppercase opacity-60 group-hover:opacity-100 transition-opacity">Grain</span>
+                </label>
              </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 py-2 border-y border-border/5">
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              type="checkbox"
-              id="skip-missing"
-              checked
-              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all"
-            />
-            <span
-              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors"
-            >Skip Missing Covers</span>
+        <div class="h-px bg-border/5"></div>
+
+        {{# C. BEHAVIOR #}}
+        <div class="flex flex-col gap-4 relative z-10">
+          <label class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all">
+             <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text">Skip Missing</span>
+             <input type="checkbox" id="skip-missing" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
           </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input
-              type="checkbox"
-              id="show-counts"
-              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all"
-            />
-            <span
-              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors"
-            >Listen Counts</span>
+          <label class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all">
+             <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text">Show Counts</span>
+             <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary" />
           </label>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <label
-            for="aliases"
-            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
-          >Artist Aliases</label>
-          <textarea
-            id="aliases"
-            placeholder="Artist A -> Artist B"
-            rows="2"
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-3 px-4"
+        {{# D. ADVANCED #}}
+        <div class="flex flex-col gap-3 relative z-10">
+          <label for="aliases" class="{{ theme.typography.label }} opacity-40">Artist Aliases</label>
+          <textarea 
+            id="aliases" 
+            placeholder="Artist A -> Artist B" 
+            rows="2" 
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
           ></textarea>
         </div>
       </div>
 
       <div
         id="status-msg"
-        class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex flex-col gap-3 p-4 bg-surface/20 rounded-2xl border border-border/5"
+        class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex flex-col gap-3 p-5 bg-primary/5 rounded-3xl border border-primary/10 shadow-lg"
       >
         <div class="flex items-center gap-3">
-          <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-          <span id="status-text" class="text-text-muted">Ready</span>
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.5)]"></span>
+          <span id="status-text" class="text-primary font-bold">Ready</span>
         </div>
-        <div id="status-history" class="text-[8px] opacity-30 flex flex-col-reverse gap-1 h-12 overflow-hidden italic lowercase"></div>
+        <div id="status-history" class="text-[9px] opacity-40 flex flex-col-reverse gap-1 h-12 overflow-hidden italic lowercase"></div>
       </div>
 
-      <div id="result-actions" class="grid grid-cols-2 gap-3 hidden">
+      <div id="result-actions" class="grid grid-cols-2 gap-4 hidden">
         <button
           id="download-btn"
-          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 !text-[10px] !py-3"
+          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-2xl justify-center active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/40 backdrop-blur-md"
         >
           {{
-            comp.ui.Icon({ name: "download", classes: "w-3.5 h-3.5 opacity-50" })
+            comp.ui.Icon({ name: "download", classes: "w-4 h-4 opacity-70" })
           }}
-          <span>JPG</span>
+          <span class="font-bold tracking-widest">JPG</span>
         </button>
         <button
           id="share-btn"
-          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 border-primary/20 text-primary/80 !text-[10px] !py-3"
+          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-2xl justify-center active:scale-95 border-primary/20 text-primary !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-md"
         >
           {{
-            comp.ui.Icon({ name: "share-2", classes: "w-3.5 h-3.5 opacity-50" })
+            comp.ui.Icon({ name: "share-2", classes: "w-4 h-4 opacity-70" })
           }}
-          <span>Share</span>
+          <span class="font-bold tracking-widest uppercase">Share</span>
         </button>
       </div>
     </div>
@@ -184,13 +148,13 @@ hide_title: true
     <div class="grow flex justify-center w-full">
       <div
         id="canvas-container"
-        class="relative group shadow-elevated rounded-2xl overflow-hidden border border-border/10 max-w-full bg-[#09090b]"
+        class="relative group shadow-elevated rounded-[2.5rem] overflow-hidden border border-border/10 max-w-full bg-[#09090b]"
       >
         <canvas
           id="collage-canvas"
           width="1080"
           height="1920"
-          class="w-full h-auto max-h-[80vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"
+          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"
         ></canvas>
 
         <div
@@ -203,15 +167,15 @@ hide_title: true
 
         <div
           id="canvas-loader"
-          class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md pointer-events-none transition-opacity duration-300 opacity-0 group-[.is-loading]:opacity-100"
+          class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]:opacity-100"
         >
-          <div class="flex flex-col items-center gap-4">
-            <div
-              class="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"
-            >
+          <div class="flex flex-col items-center gap-6">
+            <div class="relative w-12 h-12">
+               <div class="absolute inset-0 border-2 border-primary/10 rounded-full"></div>
+               <div class="absolute inset-0 border-t-2 border-primary rounded-full animate-spin"></div>
             </div>
             <span
-              class="text-[9px] font-mono uppercase tracking-[0.3em] text-white/60"
+              class="text-[10px] font-mono uppercase tracking-[0.4em] text-white/80"
             >Rendering</span>
           </div>
         </div>
@@ -252,7 +216,7 @@ hide_title: true
   let latestBlob = null;
   let debounceTimeout = null;
 
-  const STORAGE_KEY = "collage-settings-v4";
+  const STORAGE_KEY = "collage-settings-v5";
 
   function updateStatus(text) {
     if (statusText.innerText === text) return;
@@ -284,18 +248,7 @@ hide_title: true
       const settings = JSON.parse(saved);
       currentSource = settings.source || "lb";
       usernameInput.value = settings.user || "";
-      sourceLb.className =
-        `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${
-          currentSource === "lb"
-            ? "bg-primary text-white shadow-sm"
-            : "text-text-muted/40 hover:text-text-muted/70"
-        }`;
-      sourceLfm.className =
-        `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${
-          currentSource === "lfm"
-            ? "bg-primary text-white shadow-sm"
-            : "text-text-muted/40 hover:text-text-muted/70"
-        }`;
+      applySourceStyles();
       updatePeriods();
       if (settings.period) periodSelect.value = settings.period;
       if (settings.gridSize) gridSizeSelect.value = settings.gridSize;
@@ -352,12 +305,11 @@ hide_title: true
   }
 
   function applySourceStyles() {
-    const base = "py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all";
-    const active = "bg-primary text-white shadow-sm";
+    const active = "bg-primary text-white shadow-md";
     const inactive = "text-text-muted/40 hover:text-text-muted/70";
 
-    sourceLb.className = `${base} ${currentSource === "lb" ? active : inactive}`;
-    sourceLfm.className = `${base} ${currentSource === "lfm" ? active : inactive}`;
+    sourceLb.className = `py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer ${currentSource === "lb" ? active : inactive}`;
+    sourceLfm.className = `py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer ${currentSource === "lfm" ? active : inactive}`;
   }
 
   sourceLb.onclick = () => setSource("lb");

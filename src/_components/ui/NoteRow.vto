@@ -10,9 +10,9 @@
 
 <article class="group relative flex flex-col gap-3 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline w-full">
   {{# 1. HEADER (Time + Tags) #}}
-  <header class="flex items-center gap-4 relative z-20">
+  <header class="flex items-center gap-4 relative z-10">
     <time class="{{ theme.typography.label }} opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
-      {{ it.note.date |> date("HH:mm") }}
+      {{ if it.showDate }}{{ it.note.date |> date("MMM dd HH:mm") }}{{ else }}{{ it.note.date |> date("HH:mm") }}{{ /if }}
     </time>
 
     {{ if it.note.tags }}
@@ -32,7 +32,7 @@
   </header>
 
   {{# 2. CONTENT #}}
-  <div class="flex flex-col gap-4 relative z-20">
+  <div class="flex flex-col gap-4 relative z-10">
     {{ if it.note.title }}
       <h3 class="text-lg font-bold tracking-tight text-text leading-tight">
         {{ it.note.title }}
@@ -50,10 +50,10 @@
     {{ /if }}
   </div>
 
-  {{# Overlay link (z-10) #}}
+  {{# Overlay link (z-20) #}}
   <a
     href="{{ it.note.url |> url }}"
-    class="absolute inset-0 z-10 pointer-events-auto"
+    class="absolute inset-0 z-20 pointer-events-auto"
     aria-label="View Note"
   ></a>
 </article>

@@ -1,7 +1,6 @@
 {{#
   Note Component (Artsy Journal)
   Visual-first flow with rich typographic thoughts.
-  Handles both Full View and Listing View.
   
   Props:
   - note: {
@@ -13,80 +12,52 @@
       content: string
       stats: { replies: number, reposts: number, likes: number }
     }
-  - variant: "full" | "listing" (default: "full")
   - hideHeader: boolean (default: false)
 #}}
 
 {{ set vtoContext = { ...it.note, author, site, comp, theme } }}
 {{ set hasImages = it.note.images && it.note.images.length > 0 }}
-{{ set isListing = it.variant === "listing" }}
 
-{{# --- 1. LISTING VARIANT (Unified Primitive) --- #}}
-{{ if isListing }}
-  {{# Prepare Slots #}}
-  {{ set noteDate = it.note.date |> date("dd MMM yyyy · HH:mm") }}
-  {{ set noteVisuals }}
-    {{ if hasImages }}
-       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
-    {{ /if }}
-  {{ /set }}
-  {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
-  {{ set noteFooterLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
-
-  {{ comp.ui.ListingItem({
-    url: it.note.url,
-    title: it.note.title,
-    date: noteDate,
-    tags: it.note.tags,
-    visuals: noteVisuals,
-    content: noteContent,
-    footerLeft: noteFooterLeft,
-    footerText: "note"
-  }) }}
-
-{{# --- 2. FULL VIEW VARIANT --- #}}
-{{ else }}
-  <article class="h-entry py-8 transition-all duration-500">
-    {{# Header #}}
-    {{ if !it.hideHeader }}
-      <header class="{{ theme.components.listing.metaRow }}">
-        <time class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}">
-          {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
-        </time>
-        <div class="h-px grow bg-border/10"></div>
-        {{ if it.note.tags }}
-          <div class="flex gap-4">
-            {{ for tag of it.note.tags |> slice(0, 3) }}
-              <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
-            {{ /for }}
-          </div>
-        {{ /if }}
-      </header>
-    {{ /if }}
-
-    {{# Visuals #}}
-    {{ if hasImages }}
-       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
-    {{ /if }}
-
-    {{# Textual Content #}}
-    <div class="relative z-20 flex flex-col gap-6">
-      {{ if it.note.title && !it.hideHeader }}
-        <h2 class="p-name {{ theme.components.listing.title }}">
-          {{ it.note.title }}
-        </h2>
+<article class="h-entry py-8 transition-all duration-500">
+  {{# Header #}}
+  {{ if !it.hideHeader }}
+    <header class="{{ theme.components.listing.metaRow }}">
+      <time class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+        {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
+      </time>
+      <div class="h-px grow bg-border/10"></div>
+      {{ if it.note.tags }}
+        <div class="flex gap-4">
+          {{ for tag of it.note.tags |> slice(0, 3) }}
+            <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
+          {{ /for }}
+        </div>
       {{ /if }}
+    </header>
+  {{ /if }}
 
-      <div class="e-content markdown">
-        {{ it.note.content |> vto(vtoContext) |> md |> safe }}
-      </div>
+  {{# Visuals #}}
+  {{ if hasImages }}
+      {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
+  {{ /if }}
+
+  {{# Textual Content #}}
+  <div class="relative z-20 flex flex-col gap-6">
+    {{ if it.note.title && !it.hideHeader }}
+      <h2 class="p-name {{ theme.components.listing.title }}">
+        {{ it.note.title }}
+      </h2>
+    {{ /if }}
+
+    <div class="e-content markdown">
+      {{ it.note.content |> vto(vtoContext) |> md |> safe }}
     </div>
+  </div>
 
-    {{# Footer #}}
-    {{ set footerLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
-    {{ comp.ui.ListingFooter({ 
-      leftContent: footerLeft, 
-      text: "note" 
-    }) }}
-  </article>
-{{ /if }}
+  {{# Footer #}}
+  {{ set footerLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
+  {{ comp.ui.ListingFooter({ 
+    leftContent: footerLeft, 
+    text: "note" 
+  }) }}
+</article>
