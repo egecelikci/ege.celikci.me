@@ -71,3 +71,7 @@
   url: "https://kagi.com/smallweb"
   img: "/assets/images/88x31/kagi-small-web.gif"
   category: "tool"
+- title: "Austin Huang"
+  url: "https://austinhuang.me"
+  img: "/assets/images/88x31/austinhuang.png"
+  category: "person"
