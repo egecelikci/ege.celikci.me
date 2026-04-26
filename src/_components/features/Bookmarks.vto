@@ -43,9 +43,9 @@
                 </a>
                 
                 {{ if item.desc }}
-                  <p class="p-content p-note text-sm {{ theme.typography.colors.muted }} leading-relaxed m-0 max-w-sm">
-                    {{ item.desc }}
-                  </p>
+                  <div class="p-content p-note text-sm {{ theme.typography.colors.muted }} max-w-sm markdown markdown-inline">
+                    {{ item.desc |> md |> safe }}
+                  </div>
                 {{ /if }}
 
                 {{ if item.feed }}
@@ -53,6 +53,16 @@
                     <span class="w-1 h-1 rounded-full bg-current opacity-40"></span>
                     RSS Feed
                   </a>
+                {{ /if }}
+
+                {{ if item.mirrors }}
+                  <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1">
+                    {{ for mirror of item.mirrors }}
+                      <a href="{{ mirror }}" target="_blank" rel="noopener noreferrer" class="text-[9px] font-mono uppercase tracking-widest text-text-muted/40 hover:text-primary transition-colors no-underline">
+                        {{ mirror |> replace("https://", "") }}
+                      </a>
+                    {{ /for }}
+                  </div>
                 {{ /if }}
               </div>
 
