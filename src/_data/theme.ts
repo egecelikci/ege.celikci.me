@@ -91,19 +91,19 @@ export const components = {
 
   media: {
     container:
-      "grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-2 bg-surface/20",
+      "grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20",
     item:
-      "media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media",
+      "media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media [&_picture]:contents",
     image:
-      "w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95 block",
+      "absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95",
     grids: {
-      eq1: "grid-cols-1",
+      eq1: "grid-cols-1 aspect-video md:aspect-[16/10]",
       eq2: "grid-cols-2 aspect-[2/1]",
       eq3: "grid-cols-2 grid-rows-2 aspect-[2/1]",
       eq4: "grid-cols-2 grid-rows-2 aspect-[2/1]",
     },
     altBadge:
-      "alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none",
+      "alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none z-20",
   },
 
   litebox: {
