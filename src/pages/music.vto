@@ -1,11 +1,9 @@
 ---
 title: music
-description: "curated collection of favorite albums."
-menu_label: atlas
-menu_order: 2
+description: "curated collection of favorite albums"
+label: favorite albums
 searchable: false
 prose: false
-label: favorite albums
 headerExtension:
   comp: "ui.SourceMeta"
   props:
@@ -14,7 +12,9 @@ headerExtension:
 ---
 
 <div class="mt-10">
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-12">
+  <div
+    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-12"
+  >
     {{ for i, album of favorite.albums }}
       {{
         comp.ui.Album({

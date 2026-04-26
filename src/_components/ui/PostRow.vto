@@ -1,0 +1,28 @@
+{{#
+  Component: PostRow
+  A lean, typographic row for blog archives.
+  
+  Props:
+    - post: { url: string, title: string, date: Date, tags?: string[] }
+#}}
+
+<a href="{{ it.post.url |> url }}" class="{{ theme.components.listing.row }}">
+  {{# 1. DATE #}}
+  <time class="shrink-0 w-24 md:w-32 {{ theme.typography.label }} opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
+    {{ it.post.date |> date("MMM dd") }}
+  </time>
+
+  {{# 2. TITLE #}}
+  <span class="grow text-xl md:text-2xl font-bold tracking-tight text-text group-hover:text-primary transition-colors">
+    {{ it.post.title }}
+  </span>
+
+  {{# 3. TAGS (Desktop only) #}}
+  {{ if it.post.tags }}
+    <div class="hidden md:flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+      {{ for tag of it.post.tags |> slice(0, 2) }}
+        <span class="{{ theme.typography.label }} text-text-muted/40 italic">#{{ tag }}</span>
+      {{ /for }}
+    </div>
+  {{ /if }}
+</a>

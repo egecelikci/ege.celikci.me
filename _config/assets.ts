@@ -58,12 +58,7 @@ export default function(options: AssetOptions = {},) {
       .use(picture(),)
       .use(transformImages(),)
       // Static copies
-      .copy("assets/fonts",)
       .copy("assets/images",)
-      .remote(
-        "assets/styles/vendor/photoswipe.css",
-        "https://unpkg.com/photoswipe/dist/photoswipe.css",
-      )
       // Main entry points
       .add("assets/scripts/main.ts",)
       .add("assets/scripts/collage-worker.ts",)

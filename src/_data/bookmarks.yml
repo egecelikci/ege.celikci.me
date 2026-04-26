@@ -31,4 +31,12 @@
   url: "https://boo.kim"
   img: "/assets/images/88x31/bookim.gif"
   category: "person"
-  desc: "Irure nostrud est aute sint id officia veniam exercitation enim commodo nulla sunt sit deserunt."
+- title: Daudix
+  url: "https://daudix.one"
+  feed: "https://daudix.one/blog/atom.xml"
+  img: "/assets/images/88x31/daudix.gif"
+  category: "person"
+- title: Princess
+  url: "https://princss.online"
+  img: "/assets/images/88x31/princss.png"
+  category: "person"

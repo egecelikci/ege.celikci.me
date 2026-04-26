@@ -79,7 +79,7 @@ layout: layouts/base.vto
 
   {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
   <article 
-    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown text-lg leading-relaxed' : '' }} {{ it.article_classes }}" 
+    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }}" 
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
     {{# Hidden IndieWeb Author Identity #}}

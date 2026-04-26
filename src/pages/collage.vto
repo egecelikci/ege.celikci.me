@@ -2,8 +2,6 @@
 title: collage
 description: "generate album collages from ListenBrainz or Last.fm"
 prose: false
-menu_label: atlas
-menu_order: 4
 label: for 9:16 stories
 container_width: wide
 hide_title: true
@@ -14,22 +12,40 @@ hide_title: true
   <div class="flex flex-col md:flex-row gap-12 items-start">
     {{# 1. CONTROLS #}}
     <div class="w-full md:w-80 shrink-0 flex flex-col gap-8">
-      <div class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10 shadow-sm">
-        
+      <div
+        class="flex flex-col gap-6 p-6 rounded-2xl bg-surface/30 border border-border/10 shadow-sm"
+      >
         <div class="flex flex-col gap-2">
-          <label class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Data Source</label>
-          <div class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10">
-             <button id="source-lb" class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-primary text-white shadow-sm transition-all active:scale-95">ListenBrainz</button>
-             <button id="source-lfm" class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg text-text-muted/40 hover:text-text-muted/70 transition-all active:scale-95">Last.fm</button>
+          <label
+            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+          >Data Source</label>
+          <div
+            class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10"
+          >
+            <button
+              id="source-lb"
+              class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-primary text-white shadow-sm transition-all active:scale-95"
+            >
+              ListenBrainz
+            </button>
+            <button
+              id="source-lfm"
+              class="py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg text-text-muted/40 hover:text-text-muted/70 transition-all active:scale-95"
+            >
+              Last.fm
+            </button>
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="username" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Username</label>
-          <input 
-            type="text" 
-            id="username" 
-            placeholder="username" 
+          <label
+            for="username"
+            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+          >Username</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="username"
             class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-3 !px-4"
             value="{{ author.username }}"
           />
@@ -37,60 +53,128 @@ hide_title: true
 
         <div class="grid grid-cols-2 gap-4">
           <div class="flex flex-col gap-2">
-            <label for="period" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Period</label>
-            <select id="period" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"></select>
+            <label
+              for="period"
+              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+            >Period</label>
+            <select
+              id="period"
+              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
+            >
+            </select>
           </div>
 
           <div class="flex flex-col gap-2">
-            <label for="bg-mode" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Style</label>
-            <select id="bg-mode" class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]">
-              <option value="aura" selected>Aura (Subtle)</option>
-              <option value="chromatic">Chromatic (Vivid)</option>
-              <option value="velvet">Deep Velvet</option>
+            <label
+              for="bg-mode"
+              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+            >Style</label>
+            <select
+              id="bg-mode"
+              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
+            >
+              <option value="aura" selected>Aura (Vibrant)</option>
               <option value="silver">Silver Screen</option>
-              <option value="dark">True Dark</option>
+              <option value="velvet">Deep Velvet</option>
+              <option value="terminal">Retro Terminal</option>
+              <option value="thermal">Thermal Scan</option>
+              <option value="dark">Minimal Dark</option>
             </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label
+              for="grid-size"
+              class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+            >Grid Size</label>
+            <select
+              id="grid-size"
+              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !text-[11px]"
+            >
+              <option value="3x3" selected>3 x 3</option>
+              <option value="4x4">4 x 4</option>
+              <option value="5x5">5 x 5</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-2">
+             <label class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Options</label>
+             <div class="flex items-center gap-3 h-[42px]">
+               <label class="flex items-center gap-2 cursor-pointer" title="Grain">
+                 <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary">
+                 <span class="text-[9px] font-bold uppercase opacity-60">Grain</span>
+               </label>
+             </div>
           </div>
         </div>
 
         <div class="flex flex-col gap-3 py-2 border-y border-border/5">
           <label class="flex items-center gap-3 cursor-pointer group">
-            <input type="checkbox" id="grain" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
-            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Film Grain</span>
+            <input
+              type="checkbox"
+              id="skip-missing"
+              checked
+              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all"
+            />
+            <span
+              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors"
+            >Skip Missing Covers</span>
           </label>
           <label class="flex items-center gap-3 cursor-pointer group">
-            <input type="checkbox" id="skip-missing" checked class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
-            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Skip Missing Covers</span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer group">
-            <input type="checkbox" id="show-counts" class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all" />
-            <span class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors">Listen Counts</span>
+            <input
+              type="checkbox"
+              id="show-counts"
+              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary transition-all"
+            />
+            <span
+              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text transition-colors"
+            >Listen Counts</span>
           </label>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="aliases" class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]">Artist Aliases</label>
-          <textarea 
-            id="aliases" 
-            placeholder="Artist A -> Artist B" 
+          <label
+            for="aliases"
+            class="{{ theme.typography.label }} !text-[9px] opacity-40 uppercase tracking-[0.2em]"
+          >Artist Aliases</label>
+          <textarea
+            id="aliases"
+            placeholder="Artist A -> Artist B"
             rows="2"
             class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-3 px-4"
           ></textarea>
         </div>
       </div>
 
-      <div id="status-msg" class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex items-center justify-center gap-3 py-2 bg-surface/20 rounded-full border border-border/5">
-        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-        <span id="status-text" class="text-text-muted">Ready</span>
+      <div
+        id="status-msg"
+        class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex flex-col gap-3 p-4 bg-surface/20 rounded-2xl border border-border/5"
+      >
+        <div class="flex items-center gap-3">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          <span id="status-text" class="text-text-muted">Ready</span>
+        </div>
+        <div id="status-history" class="text-[8px] opacity-30 flex flex-col-reverse gap-1 h-12 overflow-hidden italic lowercase"></div>
       </div>
 
       <div id="result-actions" class="grid grid-cols-2 gap-3 hidden">
-        <button id="download-btn" class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 !text-[10px] !py-3">
-          {{ comp.ui.Icon({ name: "download", classes: "w-3.5 h-3.5 opacity-50" }) }}
+        <button
+          id="download-btn"
+          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 !text-[10px] !py-3"
+        >
+          {{
+            comp.ui.Icon({ name: "download", classes: "w-3.5 h-3.5 opacity-50" })
+          }}
           <span>JPG</span>
         </button>
-        <button id="share-btn" class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 border-primary/20 text-primary/80 !text-[10px] !py-3">
-          {{ comp.ui.Icon({ name: "share-2", classes: "w-3.5 h-3.5 opacity-50" }) }}
+        <button
+          id="share-btn"
+          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-full justify-center active:scale-95 border-primary/20 text-primary/80 !text-[10px] !py-3"
+        >
+          {{
+            comp.ui.Icon({ name: "share-2", classes: "w-3.5 h-3.5 opacity-50" })
+          }}
           <span>Share</span>
         </button>
       </div>
@@ -98,18 +182,38 @@ hide_title: true
 
     {{# 2. PREVIEW #}}
     <div class="grow flex justify-center w-full">
-      <div id="canvas-container" class="relative group shadow-elevated rounded-2xl overflow-hidden border border-border/10 max-w-full bg-[#09090b]">
-        <canvas id="collage-canvas" width="1080" height="1920" class="w-full h-auto max-h-[80vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"></canvas>
-        
-        <div class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-[.is-ready]:group-hover:opacity-100 transition-opacity pointer-events-none">
-           <span class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm text-text">1080 x 1920 (9:16)</span>
+      <div
+        id="canvas-container"
+        class="relative group shadow-elevated rounded-2xl overflow-hidden border border-border/10 max-w-full bg-[#09090b]"
+      >
+        <canvas
+          id="collage-canvas"
+          width="1080"
+          height="1920"
+          class="w-full h-auto max-h-[80vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"
+        ></canvas>
+
+        <div
+          class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-[.is-ready]:group-hover:opacity-100 transition-opacity pointer-events-none"
+        >
+          <span
+            class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm text-text"
+          >1080 x 1920 (9:16)</span>
         </div>
 
-        <div id="canvas-loader" class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md pointer-events-none transition-opacity duration-300 opacity-0 group-[.is-loading]:opacity-100">
-           <div class="flex flex-col items-center gap-4">
-             <div class="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-             <span class="text-[9px] font-mono uppercase tracking-[0.3em] text-white/60">Rendering</span>
-           </div>
+        <div
+          id="canvas-loader"
+          class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-md pointer-events-none transition-opacity duration-300 opacity-0 group-[.is-loading]:opacity-100"
+        >
+          <div class="flex flex-col items-center gap-4">
+            <div
+              class="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin"
+            >
+            </div>
+            <span
+              class="text-[9px] font-mono uppercase tracking-[0.3em] text-white/60"
+            >Rendering</span>
+          </div>
         </div>
       </div>
     </div>
@@ -117,46 +221,58 @@ hide_title: true
 </div>
 
 <script type="module">
-  let canvas = document.getElementById("collage-canvas",);
+  let canvas = document.getElementById("collage-canvas");
   const canvasContainer = document.getElementById("canvas-container");
-  const downloadBtn = document.getElementById("download-btn",);
+  const downloadBtn = document.getElementById("download-btn");
   const shareBtn = document.getElementById("share-btn");
   const resultActions = document.getElementById("result-actions");
-  const statusMsg = document.getElementById("status-msg",);
-  const statusText = document.getElementById("status-text",);
-  const usernameInput = document.getElementById("username",);
+  const statusMsg = document.getElementById("status-msg");
+  const statusText = document.getElementById("status-text");
+  const statusHistory = document.getElementById("status-history");
+  const usernameInput = document.getElementById("username");
   const periodSelect = document.getElementById("period");
-  
+  const gridSizeSelect = document.getElementById("grid-size");
+
   const inputs = [
     usernameInput,
     periodSelect,
+    gridSizeSelect,
     document.getElementById("bg-mode"),
     document.getElementById("grain"),
     document.getElementById("skip-missing"),
     document.getElementById("show-counts"),
-    document.getElementById("aliases")
+    document.getElementById("aliases"),
   ];
 
-  const sourceLb = document.getElementById("source-lb",);
-  const sourceLfm = document.getElementById("source-lfm",);
+  const sourceLb = document.getElementById("source-lb");
+  const sourceLfm = document.getElementById("source-lfm");
 
   let currentSource = "lb";
   let currentWorker = null;
   let latestBlob = null;
   let debounceTimeout = null;
 
-  const STORAGE_KEY = "collage-settings-v1";
+  const STORAGE_KEY = "collage-settings-v4";
+
+  function updateStatus(text) {
+    if (statusText.innerText === text) return;
+    statusText.innerText = text;
+    const log = document.createElement("div");
+    log.innerText = text;
+    statusHistory.prepend(log);
+  }
 
   function saveSettings() {
     const settings = {
       source: currentSource,
       user: usernameInput.value,
       period: periodSelect.value,
+      gridSize: gridSizeSelect.value,
       bgMode: document.getElementById("bg-mode").value,
       grain: document.getElementById("grain").checked,
       skipMissing: document.getElementById("skip-missing").checked,
       showCounts: document.getElementById("show-counts").checked,
-      aliases: document.getElementById("aliases").value
+      aliases: document.getElementById("aliases").value,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }
@@ -168,14 +284,31 @@ hide_title: true
       const settings = JSON.parse(saved);
       currentSource = settings.source || "lb";
       usernameInput.value = settings.user || "";
-      sourceLb.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${currentSource === "lb" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
-      sourceLfm.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${currentSource === "lfm" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+      sourceLb.className =
+        `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${
+          currentSource === "lb"
+            ? "bg-primary text-white shadow-sm"
+            : "text-text-muted/40 hover:text-text-muted/70"
+        }`;
+      sourceLfm.className =
+        `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${
+          currentSource === "lfm"
+            ? "bg-primary text-white shadow-sm"
+            : "text-text-muted/40 hover:text-text-muted/70"
+        }`;
       updatePeriods();
       if (settings.period) periodSelect.value = settings.period;
-      if (settings.bgMode) document.getElementById("bg-mode").value = settings.bgMode;
-      document.getElementById("grain").checked = settings.grain !== undefined ? settings.grain : true;
-      document.getElementById("skip-missing").checked = settings.skipMissing !== undefined ? settings.skipMissing : true;
-      document.getElementById("show-counts").checked = settings.showCounts !== undefined ? settings.showCounts : false;
+      if (settings.gridSize) gridSizeSelect.value = settings.gridSize;
+      if (settings.bgMode) {
+        document.getElementById("bg-mode").value = settings.bgMode;
+      }
+      document.getElementById("grain").checked = settings.grain !== undefined
+        ? settings.grain
+        : true;
+      document.getElementById("skip-missing").checked =
+        settings.skipMissing !== undefined ? settings.skipMissing : true;
+      document.getElementById("show-counts").checked =
+        settings.showCounts !== undefined ? settings.showCounts : false;
       document.getElementById("aliases").value = settings.aliases || "";
     } catch (e) {
       console.error("Failed to load settings:", e);
@@ -190,7 +323,7 @@ hide_title: true
       { v: "week", l: "Last Week" },
       { v: "month", l: "Last Month" },
       { v: "year", l: "Last Year" },
-      { v: "all_time", l: "All Time" }
+      { v: "all_time", l: "All Time" },
     ],
     lfm: [
       { v: "week", l: "7 Days" },
@@ -198,29 +331,39 @@ hide_title: true
       { v: "quarter", l: "3 Months" },
       { v: "half_year", l: "6 Months" },
       { v: "year", l: "12 Months" },
-      { v: "all_time", l: "Overall" }
-    ]
+      { v: "all_time", l: "Overall" },
+    ],
   };
 
   function updatePeriods() {
     const list = PERIODS[currentSource];
-    periodSelect.innerHTML = list.map(p => `<option value="${p.v}">${p.l}</option>`).join("");
+    periodSelect.innerHTML = list.map((p) =>
+      `<option value="${p.v}">${p.l}</option>`
+    ).join("");
   }
 
-  function setSource(src,) {
+  function setSource(src) {
     if (currentSource === src) return;
     currentSource = src;
-    sourceLb.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lb" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
-    sourceLfm.className = `py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all ${src === "lfm" ? "bg-primary text-white shadow-sm" : "text-text-muted/40 hover:text-text-muted/70"}`;
+    applySourceStyles();
     updatePeriods();
     saveSettings();
     generate();
   }
 
+  function applySourceStyles() {
+    const base = "py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all";
+    const active = "bg-primary text-white shadow-sm";
+    const inactive = "text-text-muted/40 hover:text-text-muted/70";
+
+    sourceLb.className = `${base} ${currentSource === "lb" ? active : inactive}`;
+    sourceLfm.className = `${base} ${currentSource === "lfm" ? active : inactive}`;
+  }
+
   sourceLb.onclick = () => setSource("lb");
   sourceLfm.onclick = () => setSource("lfm");
 
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     input.oninput = () => {
       saveSettings();
       clearTimeout(debounceTimeout);
@@ -232,36 +375,48 @@ hide_title: true
     const user = usernameInput.value.trim();
     if (!user) return;
 
-    statusText.innerText = "Synchronizing...";
     statusMsg.style.opacity = "1";
+    statusHistory.innerHTML = "";
+    updateStatus("Synchronizing Data...");
     canvasContainer.classList.add("is-loading");
     canvasContainer.classList.remove("is-ready");
     resultActions.classList.add("hidden");
 
     try {
-      const proxyUrl = `/api/collage-proxy?source=${currentSource}&user=${user}&period=${periodSelect.value}`;
+      const proxyUrl =
+        `/api/collage-proxy?source=${currentSource}&user=${user}&period=${periodSelect.value}`;
       const res = await fetch(proxyUrl);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      
+
       let albums = data.albums;
       if (!albums?.length) throw new Error("No data found");
 
       const aliasesRaw = document.getElementById("aliases").value;
       if (aliasesRaw.trim()) {
         const aliasMap = new Map();
-        aliasesRaw.split("\n").forEach(line => {
-          const [from, to] = line.split("->").map(s => s.trim());
+        aliasesRaw.split("\n").forEach((line) => {
+          const [from, to] = line.split("->").map((s) => s.trim());
           if (from && to) aliasMap.set(from.toUpperCase(), to.toUpperCase());
         });
         const merged = new Map();
-        albums.forEach(album => {
-          const artist = aliasMap.get(album.artist.toUpperCase()) || album.artist.toUpperCase();
-          const name = aliasMap.get(album.name.toUpperCase()) || album.name.toUpperCase();
+        albums.forEach((album) => {
+          const artist = aliasMap.get(album.artist.toUpperCase()) ||
+            album.artist.toUpperCase();
+          const name = aliasMap.get(album.name.toUpperCase()) ||
+            album.name.toUpperCase();
           const key = `${artist}|${name}`;
-          if (merged.has(key)) merged.get(key).count += parseInt(album.count);
-          else merged.set(key, { ...album, artist, name });
+          const count = parseInt(album.count) || 0;
+
+          if (merged.has(key)) {
+            const existing = merged.get(key);
+            existing.count += count;
+            if (!existing.mbid && album.mbid) existing.mbid = album.mbid;
+            if (!existing.img && album.img) existing.img = album.img;
+          } else {
+            merged.set(key, { ...album, artist, name, count });
+          }
         });
         albums = Array.from(merged.values()).sort((a, b) => b.count - a.count);
       }
@@ -271,40 +426,45 @@ hide_title: true
       canvas.replaceWith(newCanvas);
       canvas = newCanvas;
 
-      currentWorker = new Worker("/assets/scripts/collage-worker.js", { type: "module" });
+      currentWorker = new Worker("/assets/scripts/collage-worker.js", {
+        type: "module",
+      });
       const offscreen = canvas.transferControlToOffscreen();
 
       currentWorker.onmessage = (e) => {
         const { type, text, blob, message } = e.data;
-        if (type === "status") statusText.innerText = text;
+        if (type === "status") updateStatus(text);
         else if (type === "done") {
           latestBlob = blob;
-          statusText.innerText = "Ready";
+          updateStatus("Complete");
           canvasContainer.classList.remove("is-loading");
           canvasContainer.classList.add("is-ready");
           resultActions.classList.remove("hidden");
         } else if (type === "error") {
-          statusText.innerText = `Error: ${message}`;
+          updateStatus(`Error: ${message}`);
           canvasContainer.classList.remove("is-loading");
         }
       };
+
+      const [cols, rows] = gridSizeSelect.value.split("x").map(Number);
 
       currentWorker.postMessage({
         type: "generate",
         canvas: offscreen,
         albums,
-        options: { 
-          bgMode: document.getElementById("bg-mode").value, 
-          applyGrain: document.getElementById("grain").checked, 
+        options: {
+          bgMode: document.getElementById("bg-mode").value,
+          applyGrain: document.getElementById("grain").checked,
           skipMissing: document.getElementById("skip-missing").checked,
-          showCounts: document.getElementById("show-counts").checked, 
-          user, 
-          period: periodSelect.value 
-        }
+          showCounts: document.getElementById("show-counts").checked,
+          user,
+          period: periodSelect.value,
+          cols,
+          rows
+        },
       }, [offscreen]);
-
     } catch (err) {
-      statusText.innerText = `Error: ${err.message}`;
+      updateStatus(`Error: ${err.message}`);
       canvasContainer.classList.remove("is-loading");
     }
   }
@@ -320,12 +480,14 @@ hide_title: true
 
   shareBtn.onclick = async () => {
     if (!latestBlob || !navigator.share) return;
-    const file = new File([latestBlob], `collage-${usernameInput.value}.jpg`, { type: "image/jpeg" });
+    const file = new File([latestBlob], `collage-${usernameInput.value}.jpg`, {
+      type: "image/jpeg",
+    });
     try {
       await navigator.share({
         files: [file],
-        title: 'My Music Collage',
-        text: 'Generated on ege.celikci.me'
+        title: "My Music Collage",
+        text: "Generated on ege.celikci.me",
       });
     } catch (err) {
       console.error("Share failed:", err);

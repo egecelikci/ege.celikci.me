@@ -1,30 +1,28 @@
 ---
 title: "Miniflux Rules"
-date: 2025-11-26
-updated: 2025-12-23
 description: "rules for filtering, rewriting and scraping content"
 tags: ["feeds", "software", "setup"]
-menu_label: atlas
-menu_order: 9
 label: feed rules
 prose: false
 ---
 
 {{ set intro }}
-custom [Miniflux rules](https://miniflux.app/docs/rules.html) I made and use
-everyday for filtering, rewriting and scraping the content of the websites.
-these include [Scraper
-Rules](https://miniflux.app/docs/rules.html#scraper-rules) to fetch full text
-content from partial feeds, effectively bypassing truncated articles. I use
-[Content Rewrite Rules](https://miniflux.app/docs/rules.html#rewrite-rules) to
-strip away intrusive elements like ads, social media buttons, breadcrumbs etc.
-creating a distraction free "content only reader mode" for every site I
-follow.
+  custom [Miniflux rules](https://miniflux.app/docs/rules.html) I made and use
+  everyday for filtering, rewriting and scraping the content of the websites.
+  these include [Scraper
+  Rules](https://miniflux.app/docs/rules.html#scraper-rules) to fetch full text
+  content from partial feeds, effectively bypassing truncated articles. I use
+  [Content Rewrite Rules](https://miniflux.app/docs/rules.html#rewrite-rules) to
+  strip away intrusive elements like ads, social media buttons, breadcrumbs etc.
+  creating a distraction free "content only reader mode" for every site I
+  follow.
 {{ /set }}
 
 {{ intro |> md }}
 
-<div class="columns-1 md:columns-2 gap-12 [column-rule:1px_solid_var(--color-border)] mt-12">
+<div
+  class="columns-1 md:columns-2 gap-12 [column-rule:1px_solid_var(--color-border)] mt-12"
+>
   {{ for index, item of miniflux }}
     {{ comp.ui.MinifluxItem({ index, item }) }}
   {{ /for }}

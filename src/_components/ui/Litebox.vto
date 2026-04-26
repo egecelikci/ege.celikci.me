@@ -1,0 +1,152 @@
+{{#
+  Component: Litebox (Templates for PhotoSwipe)
+  Provides UI blueprints for PhotoSwipe using existing design tokens.
+#}}
+<div id="pswp-templates" class="hidden" aria-hidden="true">
+
+  {{# 1. TOP CONTROLS TEMPLATE #}}
+  <template id="pswp-template-controls">
+    <div class="{{ theme.components.litebox.controls |> safe }}">
+      {{# Close #}}
+      <span>
+        <button
+          type="button"
+          class="{{ theme.components.litebox.button |> safe }} pswp-close-btn"
+          aria-label="Close media viewer"
+        >
+          {{ comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
+        </button>
+      </span>
+
+      {{# Dots & Counter #}}
+      <div class="{{ theme.components.litebox.indicator |> safe }} pswp-indicator">
+        <span class="{{ theme.components.litebox.dots |> safe }} flex pswp-dots">
+          {{# dots injected by JS #}}
+        </span>
+        <span class="{{ theme.components.litebox.counter |> safe }} hidden pswp-counter">
+          {{# counter injected by JS #}}
+        </span>
+      </div>
+
+      {{# More menu #}}
+      <span class="flex items-center gap-2 pointer-events-auto">
+        <div class="relative">
+          <button
+            type="button"
+            class="{{ theme.components.litebox.button |> safe }} pswp-more-btn"
+            aria-label="More options"
+            aria-haspopup="true"
+          >
+            {{ comp.ui.Icon({ name: "more-horizontal", classes: "w-5 h-5" }) }}
+          </button>
+
+          <div
+            class="{{ theme.components.litebox.menu.container |> safe }} opacity-0 pointer-events-none scale-95 pswp-more-menu"
+            role="menu"
+          >
+            <a
+              href="#"
+              class="{{ theme.components.litebox.menu.item |> safe }} hidden pswp-view-post"
+              role="menuitem"
+            >
+              {{ comp.ui.Icon({ name: "message-square", classes: "w-4 h-4" }) }}
+              <span>View post</span>
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="{{ theme.components.litebox.menu.item |> safe }} pswp-open-original"
+              role="menuitem"
+            >
+              {{ comp.ui.Icon({ name: "external-link", classes: "w-4 h-4" }) }}
+              <span>Open original</span>
+            </a>
+            <button
+              type="button"
+              class="{{ theme.components.litebox.menu.item |> safe }} pswp-download"
+              role="menuitem"
+            >
+              {{ comp.ui.Icon({ name: "download", classes: "w-4 h-4" }) }}
+              <span>Download</span>
+            </button>
+          </div>
+        </div>
+      </span>
+    </div>
+  </template>
+
+  {{# 2. ALT TRIGGER TEMPLATE #}}
+  <template id="pswp-template-alt">
+    <div class="{{ theme.components.litebox.alt |> safe }} pswp-alt-trigger opacity-0 pointer-events-none">
+      <button type="button" class="flex items-center gap-2 group/alt" aria-label="Read media description">
+        <span class="alt-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded group-hover/alt:bg-white/30 transition-colors">
+          ALT
+        </span>
+        <span
+          class="pswp-caption-preview truncate max-w-[200px] md:max-w-[400px] text-white/80 text-left text-sm"
+        ></span>
+      </button>
+    </div>
+  </template>
+
+  {{# 3. ALT SHEET TEMPLATE #}}
+  <template id="pswp-template-sheet">
+    <div>
+      <div
+        class="{{ theme.components.litebox.sheet.backdrop |> safe }} opacity-0 pointer-events-none pswp-sheet-backdrop"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="{{ theme.components.litebox.sheet.container |> safe }} translate-y-full pswp-sheet"
+        role="dialog"
+        aria-labelledby="pswp-sheet-title"
+        aria-modal="false"
+      >
+        <header class="{{ theme.components.litebox.sheet.header |> safe }}">
+          <h2 id="pswp-sheet-title" class="{{ theme.components.litebox.sheet.title |> safe }}">
+            Media description
+          </h2>
+          <button
+            type="button"
+            class="{{ theme.components.litebox.sheet.close |> safe }} pswp-sheet-close"
+            aria-label="Close description"
+          >
+            {{ comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
+          </button>
+        </header>
+        <main class="{{ theme.components.litebox.sheet.content |> safe }} pswp-sheet-content">
+          {{# Alt text injected here by JS #}}
+        </main>
+      </div>
+    </div>
+  </template>
+
+  {{# 4. DOT TEMPLATE #}}
+  <template id="pswp-template-dot">
+    <button
+      class="{{ theme.components.litebox.dot |> safe }} pswp-dot"
+      aria-label="Go to slide"
+    >•</button>
+  </template>
+
+  {{# 5. NAVIGATION ARROWS #}}
+  <template id="pswp-template-nav">
+    <div class="pswp-nav" aria-hidden="true">
+      <button
+        type="button"
+        class="{{ theme.components.litebox.button |> safe }} absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
+        aria-label="Previous image"
+      >
+        {{ comp.ui.Icon({ name: "chevron-left", classes: "w-6 h-6" }) }}
+      </button>
+      <button
+        type="button"
+        class="{{ theme.components.litebox.button |> safe }} absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
+        aria-label="Next image"
+      >
+        {{ comp.ui.Icon({ name: "chevron-right", classes: "w-6 h-6" }) }}
+      </button>
+    </div>
+  </template>
+</div>
