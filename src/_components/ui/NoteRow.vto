@@ -8,17 +8,17 @@
 
 {{ set vtoContext = { ...it.note, author, site, comp } }}
 
-<article class="group relative flex flex-col gap-3 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline w-full">
+<article class="h-entry group relative flex flex-col gap-3 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline w-full">
   {{# 1. HEADER (Time + Tags) #}}
   <header class="flex items-center gap-4 relative z-10">
-    <time class="{{ theme.typography.label }} opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
+    <time class="dt-published {{ theme.typography.label }} opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all">
       {{ if it.showDate }}{{ it.note.date |> date("MMM dd HH:mm") }}{{ else }}{{ it.note.date |> date("HH:mm") }}{{ /if }}
     </time>
 
     {{ if it.note.tags }}
       <div class="flex gap-3">
         {{ for tag of it.note.tags |> slice(0, 2) }}
-          <span class="{{ theme.typography.label }} text-text-muted/30 italic">#{{ tag }}</span>
+          <span class="p-category {{ theme.typography.label }} text-text-muted/30 italic">#{{ tag }}</span>
         {{ /for }}
       </div>
     {{ /if }}
@@ -34,26 +34,31 @@
   {{# 2. CONTENT #}}
   <div class="flex flex-col gap-4 relative z-10">
     {{ if it.note.title }}
-      <h3 class="text-lg font-bold tracking-tight text-text leading-tight">
+      <h3 class="p-name text-lg font-bold tracking-tight text-text leading-tight">
         {{ it.note.title }}
       </h3>
     {{ /if }}
 
-    <div class="markdown text-sm md:text-base leading-relaxed text-text/80 line-clamp-6">
+    <div class="e-content markdown text-sm md:text-base leading-relaxed text-text/80 line-clamp-6">
        {{ it.note.content |> vto(vtoContext) |> md |> safe }}
     </div>
 
-    {{ if it.note.images && it.note.images.length > 0 }}
-      <div class="max-w-xl w-full min-w-0 relative z-30">
-        {{ await comp.ui.Media({ images: it.note.images, static: false, postUrl: it.note.url }) }}
-      </div>
-    {{ /if }}
+    {{# Hidden Author for IndieWeb #}}
+    <div class="p-author h-card hidden">
+      <a href="/" class="u-url p-name">{{ author.name }}</a>
+    </div>
   </div>
+
+  {{ if it.note.images && it.note.images.length > 0 }}
+    <div class="max-w-xl w-full min-w-0 relative z-30">
+      {{ await comp.ui.Media({ images: it.note.images, static: false, postUrl: it.note.url }) }}
+    </div>
+  {{ /if }}
 
   {{# Overlay link (z-20) #}}
   <a
     href="{{ it.note.url |> url }}"
-    class="absolute inset-0 z-20 pointer-events-auto"
+    class="u-url absolute inset-0 z-20 pointer-events-auto"
     aria-label="View Note"
   ></a>
 </article>
