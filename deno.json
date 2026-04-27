@@ -12,6 +12,7 @@
     "photoswipe": "npm:photoswipe@^5.4.3",
     "instant.page": "npm:instant.page@^5.2.0",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
+    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.0/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
     "make-fetch-happen": "npm:make-fetch-happen@^15.0.5",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
@@ -28,7 +29,7 @@
   "tasks": {
     "lume": {
       "description": "Run Lume command",
-      "command": "deno run -A lume/cli.ts"
+      "command": "echo \"import 'lume/cli.ts'\" | deno run -A -"
     },
     "build": {
       "description": "Build the site for production",
