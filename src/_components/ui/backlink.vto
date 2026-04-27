@@ -3,14 +3,28 @@
   A subtle, "fresh" typographic link for navigation.
   
   Props:
-    - href: string (required)
-    - text: string (required)
+    - href?: string
+    - text?: string
+    - url?: string (current URL to derive parent from)
     - classes?: string
 #}}
+{{ set backHref = it.href }}
+{{ set backText = it.text }}
+
+{{ if !backHref && it.url }}
+  {{ set parent = nav.menu(it.url)?.parent }}
+  {{ if parent && parent.data.url !== "/" }}
+    {{ set backHref = parent.data.url }}
+    {{ set backText = parent.data.title || parent.slug }}
+  {{ /if }}
+{{ /if }}
+
+{{ if backHref }}
 <a 
-  href="{{ href }}" 
+  href="{{ backHref }}" 
   class="group inline-flex items-center gap-2 font-mono text-[10px] lowercase tracking-[0.2em] text-text-muted/70 hover:text-primary transition-colors no-underline {{ classes }}"
 >
   <span class="text-xs transition-transform group-hover:-translate-x-0.5">&larr;</span>
-  <span>{{ text }}</span>
+  <span>{{ backText }}</span>
 </a>
+{{ /if }}

@@ -19,11 +19,14 @@
   <div class="grow min-w-0">
     {{# 1. NAVIGATION / BREADCRUMB #}}
     <div class="mb-8 h-4">
-      {{ if it.backlink }}
+      {{ if it.breadcrumbs }}
+        {{ comp.ui.breadcrumbs({ url: it.url }) }}
+      {{ else if it.backlink }}
         {{
           comp.ui.backlink({
             href: it.backlink.href,
             text: it.backlink.text,
+            url: it.url
           })
         }}
       {{ else }}

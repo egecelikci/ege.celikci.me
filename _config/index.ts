@@ -11,6 +11,7 @@ import favicon from "lume/plugins/favicon.ts";
 import imageSize from "lume/plugins/image_size.ts";
 import metas from "lume/plugins/metas.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
+import nav from "lume/plugins/nav.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import paginate from "lume/plugins/paginate.ts";
 import robots from "lume/plugins/robots.ts";
@@ -35,6 +36,7 @@ export default function() {
       .use(paginate(),)
       .use(sitemap(),)
       .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt", },], },),)
+      .use(nav(),)
       .use(minifyHTML(),)
       .use(favicon({
         input: "/assets/images/favicon/favicon.svg",
