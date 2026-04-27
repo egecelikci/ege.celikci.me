@@ -29,7 +29,7 @@
   "tasks": {
     "lume": {
       "description": "Run Lume command",
-      "command": "echo \"import 'lume/cli.ts'\" | deno run -A -"
+      "command": "deno run -A _lume.ts"
     },
     "build": {
       "description": "Build the site for production",
