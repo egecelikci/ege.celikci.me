@@ -75,3 +75,9 @@
   url: "https://austinhuang.me"
   img: "/assets/images/88x31/austinhuang.png"
   category: "person"
+- title: "cadence"
+  url: "https://cadence.moe"
+  feed: "https://cadence.moe/blog/atom.xml"
+  img: "/assets/images/88x31/cadence_now.png"
+  category: "person"
+
