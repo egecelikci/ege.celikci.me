@@ -45,7 +45,8 @@
     "fmt": "deno task dprint fmt",
     "fmt:check": "deno task dprint check",
     "dprint": "deno run -A npm:dprint",
-    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib"
+    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
+    "fetch-music": "deno run --allow-net --allow-read --allow-write --allow-env scripts/fetch-music.ts"
   },
   "compilerOptions": {
     "types": [
