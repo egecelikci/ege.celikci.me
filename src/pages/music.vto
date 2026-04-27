@@ -15,7 +15,7 @@ headerExtension:
   <div
     class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-12"
   >
-    {{ for i, album of favorite.albums }}
+    {{ for i, album of music.albums }}
       {{
         comp.ui.Album({
           album: album,

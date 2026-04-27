@@ -1,6 +1,4 @@
 /**
- * src/_data/favorite.ts
- *
  * Favorite Music Data Fetcher
  * Sorted by "Liked Date" (CritiqueBrainz review date)
  */
@@ -8,14 +6,14 @@
 import "@std/dotenv/load";
 import { ensureDir, } from "@std/fs/ensure-dir";
 import { join, } from "@std/path";
-import { createCache, objectValidator, } from "../../utils/cache.ts";
-import { ditherWithSharp, saveColorVersion, } from "../../utils/images.ts";
 import type {
   Album,
   CritiqueBrainzResponse,
   CritiqueBrainzReview,
   ProcessedAlbum,
-} from "../types/index.ts";
+} from "../src/types/index.ts";
+import { createCache, objectValidator, } from "./cache.ts";
+import { ditherWithSharp, saveColorVersion, } from "./images.ts";
 
 // ============================================================================
 // CONFIGURATION
@@ -33,7 +31,7 @@ const CONFIG = {
 
   paths: {
     cache: join(Deno.cwd(), "_cache",),
-    cacheFile: join(Deno.cwd(), "_cache", "music_store.json",),
+    cacheFile: join(Deno.cwd(), "src", "_data", "music.json",),
     httpCache: join(Deno.cwd(), "_cache", "http-cache",),
     coverColor: "src/assets/images/covers/colored",
     coverMono: "src/assets/images/covers/monochrome",
@@ -390,4 +388,4 @@ async function getMusicData() {
   return { albums: processed, };
 }
 
-export default await getMusicData();
+await getMusicData();
