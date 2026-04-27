@@ -7,39 +7,27 @@
     - classes: additional classes
 #}}
 
-{{>
-  const parts = url.split("/").filter((p) => p);
-  let currentPath = "/";
-  const items = [];
+{{ set items = nav.breadcrumb(url) }}
 
-  parts.forEach((part, index) => {
-    currentPath += part + "/";
-    items.push({
-      label: part.replace(/-/g, " "),
-      url: currentPath,
-      isLast: index === parts.length - 1
-    });
-  });
-}}
-
-{{ if items.length > 0 }}
+{{ if items.length > 1 }}
 <nav
   aria-label="Breadcrumb"
   class="relative z-20 flex items-center {{ classes }}"
 >
   <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
     {{ for index, item of items }}
+      {{ if item.data.url === "/" }}{{ continue }}{{ /if }}
       <li class="flex items-center gap-2 py-1">
-        {{ if item.isLast }}
+        {{ if index === items.length - 1 }}
           <span class="font-bold text-text-muted/80">
-            {{ item.label }}
+            {{ item.data.title || item.slug }}
           </span>
         {{ else }}
           <a
-            href="{{ item.url }}"
+            href="{{ item.data.url }}"
             class="hover:text-primary transition-colors no-underline text-text-muted/70"
           >
-            {{ item.label }}
+            {{ item.data.title || item.slug }}
           </a>
         {{ /if }}
 
