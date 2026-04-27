@@ -28,6 +28,9 @@
     path = "/api/webmentions"
     function = "webmentions"
 
+[[plugins]]
+    package = "./plugins/cache"
+
 # Netlify subdomain
 [[redirects]]
     from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
