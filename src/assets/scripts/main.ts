@@ -1,4 +1,4 @@
-import { initLazyLoad, } from "./common/lazyload.ts";
+import { initLazyLoad } from "./common/lazyload.ts";
 
 async function init() {
   initLazyLoad();
@@ -12,26 +12,26 @@ async function init() {
     ".album-item, .collage-item, .h-entry",
   );
   if (albumItems && !document.body.dataset.disableAnimation) {
-    const { animateGridItems, } = await import("./common/grid.ts");
-    animateGridItems(".album-item",);
+    const { animateGridItems } = await import("./common/grid.ts");
+    animateGridItems(".album-item");
 
-    const { initTouchReveal, } = await import("./common/touch.ts");
-    initTouchReveal(".album-item, .collage-item, .h-entry",);
+    const { initTouchReveal } = await import("./common/touch.ts");
+    initTouchReveal(".album-item, .collage-item, .h-entry");
   }
 
   // PhotoSwipe Lightbox
-  const { initLightbox, } = await import("./common/lightbox.ts");
+  const { initLightbox } = await import("./common/lightbox.ts");
   initLightbox();
 
-  if (document.querySelector(".status-dashboard",)) {
-    const { loadStatus, } = await import("./status.ts");
+  if (document.querySelector(".status-dashboard")) {
+    const { loadStatus } = await import("./status.ts");
     loadStatus();
   }
 }
 
 // Global execution check
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init,);
+  document.addEventListener("DOMContentLoaded", init);
 } else {
   init();
 }

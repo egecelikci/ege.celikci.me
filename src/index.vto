@@ -13,12 +13,11 @@ prose: false
 
 <div class="flex flex-col gap-16 pb-12">
   {{# 1. THE SEARCH (Promoted to Top) #}}
-  <div class="opacity-60 focus-within:opacity-100 transition-opacity">
+  <div class="opacity-80 focus-within:opacity-100 transition-opacity">
     <div class="flex items-center gap-4 mb-8">
       <span
-        class="text-[9px] font-mono uppercase tracking-[0.4em] text-text-muted/40 whitespace-nowrap"
+        class="text-[9px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted/30 whitespace-nowrap"
       >search index</span>
-      <span class="h-px grow bg-border/10"></span>
     </div>
     {{
       comp.features.Search({
@@ -31,37 +30,46 @@ prose: false
   <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
     {{# THE INDEX (Unified Component) #}}
     <div class="md:col-span-7">
-      {{# Prepare items: Navigation + Music #}}
-      {{ set indexItems = [] }}
+      {{>
+        // ─── THE ONLY THING YOU EVER EDIT: group display order ───────────────────
+        const NAV_GROUPS = ["entries", "collections", "tools", "meta"];
 
-      {{# A. Add Primary Navigation (Numbered) #}}
-      {{ for i, item of navigation.primary }}
-        {{ set page = search.page("url=" + item.href) }}
-        {{ set marker = (i + 1 < 10 ? "0" : "") + (i + 1) + "." }}
-        {{
-          set indexItems = indexItems.concat([{
-            title: item.title,
-            href: item.href,
-            desc: page?.label || "",
-            marker: marker,
-          }])
-        }}
-      {{ /for }}
+        // Every page that declared a menu gets picked up automatically
+        const menuPages = search.pages("menu!=undefined")
+          .filter((p) => p.menu?.group)
+          .sort((a, b) => (a.menu?.order ?? 99) - (b.menu?.order ?? 99));
 
-      {{# B. Add Secondary Pages (Dotted) #}}
-      {{ for item of navigation.secondary }}
-        {{ set page = search.page("url=" + item.href) }}
-        {{
-          set indexItems = indexItems.concat([{
-            title: item.title,
-            href: item.href,
-            desc: page?.label || "",
-            marker: "··",
-          }])
-        }}
-      {{ /for }}
+        // Group by menu.group
+        const grouped = {};
+        for (const page of menuPages) {
+          const g = page.menu.group;
+          (grouped[g] ??= []).push({
+            title: page.menu.title || page.title,
+            href: page.url,
+            desc: page.menu.label || "",
+            children: page.menu.children || [],
+          });
+        }
 
-      {{ comp.ui.IndexList({ title: "index", items: indexItems }) }}
+        // Build the flat item list IndexList already understands
+        const indexItems = [];
+        let n = 1;
+        for (const g of NAV_GROUPS) {
+          const items = grouped[g];
+          if (!items?.length) continue;
+          indexItems.push({ type: "section", title: g });
+          for (const item of items) {
+            indexItems.push({
+              ...item,
+              marker: String(n++).padStart(2, "0") + ".",
+            });
+          }
+        }
+
+        it.indexItems = indexItems
+      }}
+
+      {{ comp.ui.IndexList({ items: it.indexItems }) }}
     </div>
 
     {{# 3. VISUAL (Sidebar) #}}

@@ -6,12 +6,19 @@
 {{ if images && images.length > 0 }}
   {{ set count = Math.min(images.length, 4) }}
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
-  {{ set gridClass = theme.components.media.grids['eq' + count] }}
-  <div class="{{ theme.components.media.container }} {{ gridClass }}" data-litebox-group="{{ gid }}">
+  {{ set gridClass = theme.components.media.grids["eq" + count] }}
+  <div
+    class="{{ theme.components.media.container }} {{ gridClass }}"
+    data-litebox-group="{{ gid }}"
+  >
     {{ for i, image of images |> slice(0, 4) }}
-      {{ set isPanoramic = image.width && image.height && (image.width / image.height > 2) }}
+      {{
+        set isPanoramic = image.width && image.height && (image.width / image.height > 2)
+      }}
       {{ set itemClass = "" }}
-      {{ if isPanoramic }}{{ set itemClass = "col-span-full" }}{{ else if count === 3 && i === 0 }}{{ set itemClass = "row-span-2" }}{{ /if }}
+      {{ if isPanoramic }}{{ set itemClass = "col-span-full" }}{{
+        else if count === 3 && i === 0
+      }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
         class="litebox-trigger {{ theme.components.media.item }} {{ itemClass }}"
@@ -21,7 +28,8 @@
         data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
         data-media-type="{{ image.type || 'image' }}"
         {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}
-      ><img
+      >
+        <img
           src="{{ image.src |> url }}"
           alt="{{ image.alt }}"
           image-size
@@ -29,7 +37,31 @@
           loading="lazy"
           decoding="async"
           class="{{ theme.components.media.image }}"
-        />{{ if image.alt }}<div class="{{ theme.components.media.altBadge }}">ALT</div>{{ /if }}{{ if i === 3 && images.length > 4 }}<div class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"><span class="text-white font-bold text-xl">+{{ images.length - 4 }}</span></div>{{ /if }}</a>
+        />
+
+        {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}
+        {{ if image.alt }}
+          <span class="sr-only">{{ image.alt }}</span>
+
+          {{# 2. VISUAL BADGE (Ignored by Search) #}}
+          <div
+            class="{{ theme.components.media.altBadge }}"
+            data-pagefind-ignore
+          >
+            ALT
+          </div>
+        {{ /if }}
+
+        {{ if i === 3 && images.length > 4 }}
+          <div
+            class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"
+          >
+            <span class="text-white font-bold text-xl">+{{
+                images.length - 4
+              }}</span>
+          </div>
+        {{ /if }}
+      </a>
     {{ /for }}
   </div>
 {{ /if }}

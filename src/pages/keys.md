@@ -1,20 +1,21 @@
 ---
 title: "keys"
-tags: ["meta"]
 templateEngine: [vto, md]
-label: cryptograpic keys
+menu:
+  group: meta
+  label: cryptographic keys
+  order: 2
 ---
 
 ## SSH
 
 I don’t use PGP, but you might want to check [age-encryption](https://age-encryption.org/#encrypting-to-a-github-user) as an encryption method for sensitive information you might send me over insecure channels.
 
-<!-- dprint-ignore-start -->
+<!-- deno-fmt-ignore -->
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
 - [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
 - [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
-<!-- dprint-ignore-end -->
 
 ### authentication
 

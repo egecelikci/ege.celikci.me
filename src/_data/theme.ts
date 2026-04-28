@@ -70,15 +70,15 @@ export const components = {
   // Shared patterns for EntryCard, Note, etc.
   listing: {
     container:
-      "group relative flex flex-col gap-8 md:gap-12 px-4 -mx-4 py-16 md:py-24 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5",
+      "group relative flex flex-col gap-8 md:gap-12 py-16 md:py-24 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8",
     containerCompact:
-      "group relative flex flex-col gap-4 md:gap-6 px-4 -mx-4 py-8 md:py-12 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5",
+      "group relative flex flex-col gap-4 md:gap-6 py-8 md:py-12 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8",
     row:
-      "group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline",
+      "group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline pl-4 md:pl-8",
     accentBar:
-      "absolute -left-[1px] top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
+      "absolute left-0 top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
     accentBarCompact:
-      "absolute -left-[1px] top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
+      "absolute left-0 top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
     metaRow:
       "relative z-20 flex items-center gap-4 opacity-80 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity",
     title:
@@ -259,7 +259,7 @@ export const utilities = {
 
 // Helper function to merge classes
 export function cx(...classes: (string | false | undefined | null)[]) {
-  return classes.filter(Boolean,).join(" ",);
+  return classes.filter(Boolean).join(" ");
 }
 
 export default {

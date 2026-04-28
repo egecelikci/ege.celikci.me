@@ -1,41 +1,107 @@
 {{#
   Component: IndexList
-  A clean, typographic list for site-wide navigation or page directories.
+  A clean, typographic ledger for site-wide navigation.
   
   Props:
-    - title?: string (Section header text)
-    - items: Array<{ title: string, href: string, desc: string, marker?: string }>
-    - classes?: string
+    - items: Array<{ 
+        title: string, 
+        href?: string, 
+        desc?: string, 
+        marker?: string,
+        type?: "section" | "item",
+        children?: Array<{ title: string, href: string, desc: string }>
+      }>
 #}}
 
-<div class="flex flex-col gap-8 {{ it.classes || '' }}">
-  {{ if it.title }}
-    <div class="flex items-center gap-4 opacity-20">
-      <h2 class="text-[9px] font-mono uppercase tracking-[0.4em]">
-        {{ it.title }}
-      </h2>
-      <span class="h-px grow bg-text"></span>
-    </div>
-  {{ /if }}
-
-  <nav
-    aria-label="{{ it.title || 'Index' }}"
-    class="flex flex-col gap-1 font-mono text-xs md:text-sm"
-  >
+<div class="flex flex-col {{ it.classes || '' }}">
+  <nav class="flex flex-col font-mono text-xs md:text-sm">
     {{ for item of it.items }}
-      <a
-        href="{{ item.href }}"
-        class="group flex items-baseline gap-4 no-underline text-text/80 hover:text-primary transition-colors py-2"
-      >
-        <span
-          class="shrink-0 text-primary-offset/40 group-hover:text-primary transition-colors w-6"
-        >{{ item.marker || "··" }}</span>
-        <span
-          class="font-bold underline decoration-border/20 underline-offset-4 group-hover:decoration-primary/40"
-        >{{ item.title }}</span>
-        <span class="h-px grow border-t border-dashed border-border/10"></span>
-        <span class="text-text-muted/30 italic">{{ item.desc }}</span>
-      </a>
+      {{ if item.type === "section" }}
+        {{# --- SECTION HEADER --- #}}
+        <div
+          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border/5 first:border-t-0 first:pt-0"
+        >
+          <span
+            class="{{ theme.typography.label }} opacity-20 uppercase tracking-[0.4em]"
+          >
+            {{ item.title }}
+          </span>
+        </div>
+      {{ else }}
+        {{# --- LEDGER ENTRY --- #}}
+        <div class="group flex flex-col">
+          <a
+            href="{{ item.href }}"
+            class="
+              flex items-baseline no-underline text-text/80 hover:text-primary transition-all py-1 px-2 -mx-2 rounded-lg
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:bg-primary/5
+            "
+          >
+            {{# Marker #}}
+            <span
+              class="shrink-0 w-8 {{ theme.typography.colors.dim }} group-hover:text-primary/60 transition-colors"
+            >
+              {{ item.marker || "··" }}
+            </span>
+
+            {{# Title #}}
+            <span
+              class="font-bold border-b border-border/10 group-hover:border-primary/30 transition-colors pb-0.5"
+            >
+              {{ item.title }}
+            </span>
+
+            {{# Connector #}}
+            <span
+              class="h-px grow border-t border-dashed border-border/5 ml-4 mr-4"
+            ></span>
+
+            {{# Description #}}
+            <span
+              class="{{ theme.typography.colors.dim }} italic group-hover:text-text-muted transition-colors text-right"
+            >
+              {{ item.desc }}
+            </span>
+          </a>
+
+          {{# CHILDREN #}}
+          {{ if item.children && item.children.length > 0 }}
+            <div class="flex flex-col ml-8 mb-1">
+              {{ for child of item.children }}
+                <a
+                  href="{{ child.href }}"
+                  class="
+                    relative flex items-baseline no-underline py-1 pl-6 pr-2 -mr-2 rounded-lg transition-all
+                    before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border/10
+                    last:before:h-1/2 group/child
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:bg-primary/5
+                  "
+                >
+                  {{# Horizontal L-part #}}
+                  <div class="absolute left-0 top-1/2 w-4 h-px bg-border/10">
+                  </div>
+
+                  <span
+                    class="font-bold text-text/60 group-hover/child:text-primary transition-colors"
+                  >
+                    {{ child.title }}
+                  </span>
+
+                  <span
+                    class="h-px grow border-t border-dotted border-border/5 mx-4"
+                  ></span>
+
+                  <span
+                    class="{{ theme.typography.colors.dim }} italic group-hover/child:text-text-muted transition-colors text-right"
+                  >
+                    {{ child.desc }}
+                  </span>
+                </a>
+              {{ /for }}
+            </div>
+          {{ /if }}
+        </div>
+      {{ /if }}
     {{ /for }}
   </nav>
 </div>

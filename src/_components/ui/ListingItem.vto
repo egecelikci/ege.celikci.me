@@ -18,8 +18,16 @@
     - compact?: boolean (reduces vertical padding and gaps)
 #}}
 
-{{ set containerClass = it.compact ? theme.components.listing.containerCompact : theme.components.listing.container }}
-{{ set accentBarClass = it.compact ? theme.components.listing.accentBarCompact : theme.components.listing.accentBar }}
+{{
+  set containerClass = it.compact
+  ? theme.components.listing.containerCompact
+  : theme.components.listing.container
+}}
+{{
+  set accentBarClass = it.compact
+  ? theme.components.listing.accentBarCompact
+  : theme.components.listing.accentBar
+}}
 
 <article class="{{ containerClass }} {{ it.classes || '' }}">
   {{# 0. CINEMATIC ACCENT #}}
@@ -35,17 +43,24 @@
   {{# 1. HEADER (Meta Row) #}}
   <header class="{{ theme.components.listing.metaRow }} relative z-10">
     {{ if it.date }}
-      <time class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
-        {{ if typeof it.date === 'string' }}{{ it.date }}{{ else }}{{ it.date |> date("dd MMM yyyy") }}{{ /if }}
+      <time
+        class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+      >
+        {{ if typeof it.date === "string" }}{{ it.date }}{{ else }}{{
+            it.date
+            |> date("dd MMM yyyy")
+          }}{{ /if }}
       </time>
     {{ /if }}
-    
+
     <div class="h-px grow bg-border/10"></div>
-    
+
     {{ if it.tags && it.tags.length > 0 }}
       <div class="flex gap-4 relative z-40">
         {{ for tag of it.tags |> slice(0, 3) }}
-          <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
+          <span
+            class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}"
+          >#{{ tag }}</span>
         {{ /for }}
       </div>
     {{ /if }}
@@ -67,12 +82,14 @@
 
         {{# Main Thumbnail #}}
         {{ set firstImage = it.images |> slice(0, 1) }}
-        {{ comp.ui.Gallery({ 
-          images: firstImage, 
-          static: true,
-          aspect: "aspect-video md:aspect-[16/10]",
-          classes: "m-0 relative z-10"
-        }) }}
+        {{
+          comp.ui.Gallery({
+            images: firstImage,
+            static: true,
+            aspect: "aspect-video md:aspect-[16/10]",
+            classes: "m-0 relative z-10",
+          })
+        }}
       </div>
     {{ /if }}
   </div>
@@ -80,7 +97,7 @@
   {{# 3. TEXTUAL CONTENT #}}
   <div class="relative z-10 flex flex-col gap-6">
     {{ if it.title }}
-      {{ if typeof it.title === 'string' }}
+      {{ if typeof it.title === "string" }}
         <h3 class="{{ theme.components.listing.title }}">
           {{ it.title }}
         </h3>
@@ -89,16 +106,20 @@
       {{ /if }}
     {{ /if }}
 
-    <div class="e-content markdown {{ theme.components.listing.description }} {{ it.bodyClasses || '' }}">
+    <div
+      class="e-content markdown {{ theme.components.listing.description }} {{ it.bodyClasses || '' }}"
+    >
       {{ it.content |> safe }}
     </div>
   </div>
 
   {{# 4. FOOTER #}}
   <div class="relative z-40">
-    {{ comp.ui.ListingFooter({ 
-      leftContent: it.footerLeft, 
-      text: it.footerText 
-    }) }}
+    {{
+      comp.ui.ListingFooter({
+        leftContent: it.footerLeft,
+        text: it.footerText,
+      })
+    }}
   </div>
 </article>

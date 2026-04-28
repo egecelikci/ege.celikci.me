@@ -12,10 +12,12 @@
 {{ set tag = href ? "a" : "span" }}
 
 <{{ tag }}
-  {{ if href }}href="{{ href }}"{{ /if }}
-  class="inline-flex items-center text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-text-muted/70 hover:text-primary no-underline transition-colors not-prose [box-shadow:none!important] {{ classes }}"
-  {{ attributes |> attr |> safe }}
+{{ if href }}href="{{ href }}"{{ /if }}
+class="inline-flex items-center text-[10px] font-mono font-bold uppercase
+tracking-[0.2em] text-text-muted/70 hover:text-primary no-underline
+transition-colors not-prose [box-shadow:none!important] {{ classes }}"
+{{ attributes |> attr |> safe }}
 >
-  <span class="opacity-60 mr-1 font-mono">#</span>
-  <span>{{ content |> safe }}</span>
+<span class="opacity-60 mr-1 font-mono">#</span>
+<span>{{ content |> safe }}</span>
 </{{ tag }}>

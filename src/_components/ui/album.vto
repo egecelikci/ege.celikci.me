@@ -11,7 +11,7 @@
 #}}
 
 {{>
-  const artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ");
+  const artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ")
 }}
 
 <a
@@ -22,7 +22,6 @@
 >
   {{# Cover Wrapper #}}
   <div class="{{ theme.components.album.coverWrapper }}">
-    
     {{# COLORED IMAGE (Reveals on Hover/Active) #}}
     <img
       class="absolute inset-0 z-20 w-full h-full object-cover block opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-[.is-active]:opacity-100"

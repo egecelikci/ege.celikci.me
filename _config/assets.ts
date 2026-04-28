@@ -3,7 +3,7 @@
  * Scripts, styles, and images pipeline.
  */
 
-import esbuild, { Options as EsbuildOptions, } from "lume/plugins/esbuild.ts";
+import esbuild, { Options as EsbuildOptions } from "lume/plugins/esbuild.ts";
 import icons from "lume/plugins/icons.ts";
 import inline from "lume/plugins/inline.ts";
 import picture from "lume/plugins/picture.ts";
@@ -16,17 +16,17 @@ export interface AssetOptions {
   esbuild?: Partial<EsbuildOptions>;
 }
 
-export default function(options: AssetOptions = {},) {
-  const isDev = Deno.env.get("MODE",) !== "production";
+export default function (options: AssetOptions = {}) {
+  const isDev = Deno.env.get("MODE") !== "production";
 
-  return (site: Lume.Site,) => {
+  return (site: Lume.Site) => {
     site
-      .use(tailwindcss(),)
+      .use(tailwindcss())
       .use(postcss({
-        plugins: !isDev ? [cssnano(),] : [],
-      },),)
+        plugins: !isDev ? [cssnano()] : [],
+      }))
       .use(esbuild({
-        extensions: [".ts",],
+        extensions: [".ts"],
         options: {
           plugins: [],
           bundle: true,
@@ -38,13 +38,13 @@ export default function(options: AssetOptions = {},) {
           chunkNames: "assets/scripts/chunks/[name]-[hash]",
           define: {
             "process.env.MODE": JSON.stringify(
-              Deno.env.get("MODE",) || "development",
+              Deno.env.get("MODE") || "development",
             ),
           },
           ...options.esbuild?.options,
         },
         ...options.esbuild,
-      },),)
+      }))
       .use(icons({
         catalogs: [
           {
@@ -56,15 +56,15 @@ export default function(options: AssetOptions = {},) {
             src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
           },
         ],
-      },),)
-      .use(inline(),)
-      .use(picture(),)
-      .use(transformImages(),)
+      }))
+      .use(inline())
+      .use(picture())
+      .use(transformImages())
       // Static copies
-      .copy("assets/images",)
+      .copy("assets/images")
       // Main entry points
-      .add("assets/scripts/main.ts",)
-      .add("assets/scripts/collage-worker.ts",)
-      .add("assets/styles/main.css",);
+      .add("assets/scripts/main.ts")
+      .add("assets/scripts/collage-worker.ts")
+      .add("assets/styles/main.css");
   };
 }

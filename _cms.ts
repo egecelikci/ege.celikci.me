@@ -1,21 +1,21 @@
 import lumeCMS from "lume/cms/mod.ts";
 
 const cms = lumeCMS({
-  basePath: Deno.env.get("CMS_BASE_PATH",) || "/admin",
+  basePath: Deno.env.get("CMS_BASE_PATH") || "/admin",
   site: {
     name: "ege.celikci.me CMS",
     url: "https://ege.celikci.me",
   },
-},);
+});
 
 // Auth configuration
-const user = Deno.env.get("CMS_USER",) || "admin";
-const password = Deno.env.get("CMS_PASSWORD",);
+const user = Deno.env.get("CMS_USER") || "admin";
+const password = Deno.env.get("CMS_PASSWORD");
 
 if (password) {
   cms.auth({
     [user]: password,
-  },);
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -30,20 +30,20 @@ cms.collection({
     {
       name: "date",
       type: "datetime",
-      transform: (value,) => (value ? value : undefined),
+      transform: (value) => (value ? value : undefined),
     },
     "content: markdown",
   ],
-  documentName(data,) {
+  documentName(data) {
     // If a date is provided, prepend it (e.g., 2024-05-12-my-title.md)
     if (data.date) {
-      const d = new Date(data.date as string,).toISOString().split("T",)[0];
+      const d = new Date(data.date as string).toISOString().split("T")[0];
       return `${d}-${data.title}.md`;
     }
     // Fallback: Just use the title if no date is set
     return `${data.title}.md`;
   },
-},);
+});
 
 cms.collection({
   name: "Notes",
@@ -52,21 +52,21 @@ cms.collection({
     {
       name: "tags",
       type: "list",
-      transform: (value,) => (value?.length > 0 ? value : undefined),
+      transform: (value) => (value?.length > 0 ? value : undefined),
     },
     "content: markdown",
   ],
   documentName() {
     // Creates a unique timestamp filename (e.g. 2026-04-28-14-30-00.md)
     const now = new Date();
-    const d = now.toISOString().split("T",)[0];
-    const t = now.toTimeString().split(" ",)[0].replace(/:/g, "-",);
+    const d = now.toISOString().split("T")[0];
+    const t = now.toTimeString().split(" ")[0].replace(/:/g, "-");
     return `${d}-${t}.md`;
   },
-  documentLabel(name,) {
-    return name.replace(".md", "",);
+  documentLabel(name) {
+    return name.replace(".md", "");
   },
-},);
+});
 
 cms.collection({
   name: "Pages",
@@ -76,16 +76,16 @@ cms.collection({
     {
       name: "label",
       type: "text",
-      transform: (value,) => (value?.trim() ? value : undefined),
+      transform: (value) => (value?.trim() ? value : undefined),
     },
     {
       name: "templateEngine",
       type: "hidden",
-      value: ["vto", "md",],
+      value: ["vto", "md"],
     },
     "content: markdown",
   ],
-},);
+});
 
 // ----------------------------------------------------------------------------
 // Data Documents (Single Files)
@@ -98,15 +98,15 @@ cms.document({
     {
       name: "primary",
       type: "object-list",
-      fields: ["title: text!", "href: text!",],
+      fields: ["title: text!", "href: text!"],
     },
     {
       name: "secondary",
       type: "object-list",
-      fields: ["title: text!", "href: text!",],
+      fields: ["title: text!", "href: text!"],
     },
   ],
-},);
+});
 
 // ----------------------------------------------------------------------------
 // Data Collections (YAML Arrays)
@@ -129,7 +129,7 @@ cms.collection({
     "category: text",
     "mirrors: list",
   ],
-},);
+});
 
 cms.collection({
   name: "Miniflux",
@@ -142,7 +142,7 @@ cms.collection({
     "scraper_rules: text",
     "content_rewrite_rules: text",
   ],
-},);
+});
 
 cms.collection({
   name: "Uses",
@@ -160,7 +160,7 @@ cms.collection({
       ],
     },
   ],
-},);
+});
 
 cms.collection({
   name: "Themes",
@@ -184,7 +184,7 @@ cms.collection({
       ],
     },
   ],
-},);
+});
 
 cms.collection({
   name: "Webrings",
@@ -196,15 +196,15 @@ cms.collection({
     "prev: url",
     "next: url",
   ],
-},);
+});
 
 // ----------------------------------------------------------------------------
 // Uploads
 // ----------------------------------------------------------------------------
 
-cms.upload("Gallery", "src:assets/images/gallery",);
-cms.upload("Badges", "src:assets/images/88x31",);
-cms.upload("Images", "src:assets/images",);
+cms.upload("Gallery", "src:assets/images/gallery");
+cms.upload("Badges", "src:assets/images/88x31");
+cms.upload("Images", "src:assets/images");
 
 // ----------------------------------------------------------------------------
 // Git Integration
@@ -212,6 +212,6 @@ cms.upload("Images", "src:assets/images",);
 
 cms.git({
   prodBranch: "main",
-},);
+});
 
 export default cms;

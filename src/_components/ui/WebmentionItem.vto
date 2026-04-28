@@ -18,7 +18,9 @@
   <header class="flex items-center justify-between gap-4">
     <div class="p-author h-card flex items-center gap-3">
       {{# Author Image #}}
-      <div class="w-8 h-8 rounded-full overflow-hidden border border-border/10 bg-surface shadow-sm">
+      <div
+        class="w-8 h-8 rounded-full overflow-hidden border border-border/10 bg-surface shadow-sm"
+      >
         {{ if webmention.author.photo }}
           <img
             class="u-photo h-full w-full object-cover"
@@ -29,7 +31,9 @@
             loading="lazy"
           />
         {{ else }}
-          <div class="flex w-full h-full items-center justify-center text-text-muted/60">
+          <div
+            class="flex w-full h-full items-center justify-center text-text-muted/60"
+          >
             {{ comp.ui.Icon({ name: "user", classes: "w-4 h-4" }) }}
           </div>
         {{ /if }}
@@ -39,16 +43,20 @@
       <div class="flex flex-col">
         <a
           class="p-name u-url font-bold text-sm text-text no-underline hover:text-primary transition-colors"
-          {{ if webmention.author.url }}href="{{ webmention.author.url }}"{{ /if }}
+          {{ if webmention.author.url }}href="{{ webmention.author.url }}"{{
+            /if
+          }}
           target="_blank"
           rel="ugc nofollow"
         >
           {{ webmention.author.name }}
         </a>
-        <div class="text-[10px] text-text-muted/70 font-mono uppercase tracking-widest">
-          {{ if webmention['wm-property'] === 'in-reply-to' }}
+        <div
+          class="text-[10px] text-text-muted/70 font-mono uppercase tracking-widest"
+        >
+          {{ if webmention["wm-property"] === "in-reply-to" }}
             replied
-          {{ else if webmention['wm-property'] === 'mention-of' }}
+          {{ else if webmention["wm-property"] === "mention-of" }}
             mentioned
           {{ else }}
             interacted
@@ -59,14 +67,19 @@
 
     {{# Date #}}
     {{ if webmention.published }}
-      <time class="dt-published text-[10px] font-mono text-text-muted/60 uppercase tracking-widest" datetime="{{ webmention.published }}">
+      <time
+        class="dt-published text-[10px] font-mono text-text-muted/60 uppercase tracking-widest"
+        datetime="{{ webmention.published }}"
+      >
         {{ webmention.published |> date("dd MMM yyyy") }}
       </time>
     {{ /if }}
   </header>
 
   {{# Content #}}
-  <div class="e-content markdown text-base leading-relaxed text-text-muted/80 pl-11">
+  <div
+    class="e-content markdown text-base leading-relaxed text-text-muted/80 pl-11"
+  >
     {{ webmention.content.value |> safe }}
   </div>
 </div>

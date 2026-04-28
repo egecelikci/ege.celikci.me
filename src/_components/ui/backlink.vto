@@ -20,11 +20,12 @@
 {{ /if }}
 
 {{ if backHref }}
-<a 
-  href="{{ backHref }}" 
-  class="group inline-flex items-center gap-2 font-mono text-[10px] lowercase tracking-[0.2em] text-text-muted/70 hover:text-primary transition-colors no-underline {{ classes }}"
->
-  <span class="text-xs transition-transform group-hover:-translate-x-0.5">&larr;</span>
-  <span>{{ backText }}</span>
-</a>
+  <a
+    href="{{ backHref }}"
+    class="group inline-flex items-center gap-2 font-mono text-[10px] lowercase tracking-[0.2em] text-text-muted/70 hover:text-primary transition-colors no-underline {{ classes }}"
+  >
+    <span class="text-xs transition-transform group-hover:-translate-x-0.5"
+    >&larr;</span>
+    <span>{{ backText }}</span>
+  </a>
 {{ /if }}

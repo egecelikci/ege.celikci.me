@@ -1,7 +1,10 @@
 ---
 title: contact
-label: reach me out
 templateEngine: [vto, md]
+menu:
+  group: meta
+  label: reach me out
+  order: 1
 ---
 
 Don't hesitate to reach me out on any of these!

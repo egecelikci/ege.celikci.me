@@ -26,7 +26,7 @@
           comp.ui.backlink({
             href: it.backlink.href,
             text: it.backlink.text,
-            url: it.url
+            url: it.url,
           })
         }}
       {{ else }}
@@ -64,7 +64,7 @@
   </div>
 
   {{ if it.rightContent }}
-    <div class="shrink-0 flex items-end w-full md:w-auto overflow">
+    <div class="shrink-0 flex items-end w-full md:w-auto">
       {{ it.rightContent |> safe }}
     </div>
   {{ /if }}

@@ -8,6 +8,9 @@
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: var(--header-height);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
   }
 
   @media (min-width: 768px) {
@@ -22,6 +25,17 @@
     transition: background-color 0.3s ease, color 0.3s ease;
     font-size: var(--size-step-0);
     line-height: 1.7;
+  }
+
+  /* Prevent background scroll when PhotoSwipe is open */
+  html.pswp-open {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+
+  html.pswp-open body {
+    overflow: hidden !important;
+    overscroll-behavior: none;
   }
 }
 
@@ -122,6 +136,7 @@
 
   .markdown {
     @apply prose max-w-none text-text;
+    overflow-wrap: break-word;
 
     /* Variables for Prose mapping */
     --tw-prose-body: var(--color-text);
@@ -264,6 +279,14 @@
 
   --pswp-preloader-color: rgba(255, 255, 255, 0.4);
   --pswp-preloader-color-secondary: rgba(0, 0, 0, 0.2);
+
+  /* Force viewport constraints to prevent horizontal overflow/zoom on mobile */
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  overscroll-behavior: none;
 
   /* Aggressively hide all default UI elements */
   .pswp__top-bar,

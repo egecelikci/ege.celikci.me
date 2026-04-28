@@ -4,7 +4,9 @@
 #}}
 
 {{ set headerContent }}
-  <div class="flex items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-[0.2em]">
+  <div
+    class="flex items-center justify-between gap-3 py-4 text-[10px] font-mono uppercase tracking-[0.2em]"
+  >
     <div class="flex items-center gap-3">
       {{# 1. SITE LOGO / BRAND #}}
       <a
@@ -18,7 +20,9 @@
       {{# 2. BREADCRUMBS (Contextual navigation) #}}
       {{ if url !== "/" }}
         <span class="text-text-muted/30 select-none">/</span>
-        <div class="relative z-10 pointer-events-auto opacity-60 hover:opacity-100 transition-opacity duration-500">
+        <div
+          class="relative z-10 pointer-events-auto opacity-60 hover:opacity-100 transition-opacity duration-500"
+        >
           {{ comp.ui.Breadcrumbs({ url: url }) }}
         </div>
       {{ /if }}
@@ -28,7 +32,7 @@
 
 <header
   id="site-header"
-  class="w-full bg-bg/80 backdrop-blur-md border-b border-border/10 py-4 px-4 mb-0 print:hidden sticky top-0 z-50"
+  class="w-full bg-bg/80 backdrop-blur-md border-b border-border/10 px-4 mb-0 print:hidden sticky top-0 z-50"
   role="banner"
 >
   {{

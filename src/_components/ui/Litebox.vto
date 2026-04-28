@@ -3,7 +3,6 @@
   Provides UI blueprints for PhotoSwipe using existing design tokens.
 #}}
 <div id="pswp-templates" class="hidden" aria-hidden="true">
-
   {{# 1. TOP CONTROLS TEMPLATE #}}
   <template id="pswp-template-controls">
     <div class="{{ theme.components.litebox.controls |> safe }}">
@@ -19,11 +18,17 @@
       </span>
 
       {{# Dots & Counter #}}
-      <div class="{{ theme.components.litebox.indicator |> safe }} pswp-indicator">
-        <span class="{{ theme.components.litebox.dots |> safe }} flex pswp-dots">
+      <div
+        class="{{ theme.components.litebox.indicator |> safe }} pswp-indicator"
+      >
+        <span
+          class="{{ theme.components.litebox.dots |> safe }} flex pswp-dots"
+        >
           {{# dots injected by JS #}}
         </span>
-        <span class="{{ theme.components.litebox.counter |> safe }} hidden pswp-counter">
+        <span
+          class="{{ theme.components.litebox.counter |> safe }} hidden pswp-counter"
+        >
           {{# counter injected by JS #}}
         </span>
       </div>
@@ -78,9 +83,17 @@
 
   {{# 2. ALT TRIGGER TEMPLATE #}}
   <template id="pswp-template-alt">
-    <div class="{{ theme.components.litebox.alt |> safe }} pswp-alt-trigger opacity-0 pointer-events-none">
-      <button type="button" class="flex items-center gap-2 group/alt" aria-label="Read media description">
-        <span class="alt-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded group-hover/alt:bg-white/30 transition-colors">
+    <div
+      class="{{ theme.components.litebox.alt |> safe }} pswp-alt-trigger opacity-0 pointer-events-none"
+    >
+      <button
+        type="button"
+        class="flex items-center gap-2 group/alt"
+        aria-label="Read media description"
+      >
+        <span
+          class="alt-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded group-hover/alt:bg-white/30 transition-colors"
+        >
           ALT
         </span>
         <span
@@ -96,7 +109,8 @@
       <div
         class="{{ theme.components.litebox.sheet.backdrop |> safe }} opacity-0 pointer-events-none pswp-sheet-backdrop"
         aria-hidden="true"
-      ></div>
+      >
+      </div>
       <div
         class="{{ theme.components.litebox.sheet.container |> safe }} translate-y-full pswp-sheet"
         role="dialog"
@@ -104,7 +118,10 @@
         aria-modal="false"
       >
         <header class="{{ theme.components.litebox.sheet.header |> safe }}">
-          <h2 id="pswp-sheet-title" class="{{ theme.components.litebox.sheet.title |> safe }}">
+          <h2
+            id="pswp-sheet-title"
+            class="{{ theme.components.litebox.sheet.title |> safe }}"
+          >
             Media description
           </h2>
           <button
@@ -115,7 +132,9 @@
             {{ comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
           </button>
         </header>
-        <main class="{{ theme.components.litebox.sheet.content |> safe }} pswp-sheet-content">
+        <main
+          class="{{ theme.components.litebox.sheet.content |> safe }} pswp-sheet-content"
+        >
           {{# Alt text injected here by JS #}}
         </main>
       </div>
@@ -127,7 +146,9 @@
     <button
       class="{{ theme.components.litebox.dot |> safe }} pswp-dot"
       aria-label="Go to slide"
-    >•</button>
+    >
+      •
+    </button>
   </template>
 
   {{# 5. NAVIGATION ARROWS #}}

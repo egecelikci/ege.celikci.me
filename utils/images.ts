@@ -1,4 +1,4 @@
-import { Buffer, } from "node:buffer";
+import { Buffer } from "node:buffer";
 import sharp from "sharp";
 /**
  * Saves a resized, color DITHERED version of the cover.
@@ -10,22 +10,22 @@ export async function saveColorVersion(
   width = 290,
 ) {
   try {
-    const ditheredBuffer = await sharp(inputPath,)
-      .resize(width, width, { fit: "cover", },)
+    const ditheredBuffer = await sharp(inputPath)
+      .resize(width, width, { fit: "cover" })
       .png({
         palette: true,
         colors: 16,
         dither: 1.0,
-      },)
+      })
       .toBuffer();
 
-    await sharp(ditheredBuffer,)
+    await sharp(ditheredBuffer)
       .webp({
         lossless: true,
         effort: 6,
         quality: 100,
-      },)
-      .toFile(outputPath,);
+      })
+      .toFile(outputPath);
   } catch (e: unknown) {
     console.error(
       `[utils/images.ts] Failed to save color cover: ${(e as Error).message}`,
@@ -42,17 +42,17 @@ export async function ditherWithSharp(
   outputPath: string,
   width = 290,
 ) {
-  const { data, info, } = await sharp(inputPath,)
-    .resize(width, width, { fit: "cover", },)
+  const { data, info } = await sharp(inputPath)
+    .resize(width, width, { fit: "cover" })
     .greyscale()
     .raw()
-    .toBuffer({ resolveWithObject: true, },);
+    .toBuffer({ resolveWithObject: true });
 
   const w = info.width;
   const h = info.height;
-  const inputPixels = new Uint8Array(data,);
+  const inputPixels = new Uint8Array(data);
 
-  const outputPixels = new Uint8Array(w * h * 4,);
+  const outputPixels = new Uint8Array(w * h * 4);
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -85,17 +85,17 @@ export async function ditherWithSharp(
     }
   }
 
-  await sharp(Buffer.from(outputPixels,), {
+  await sharp(Buffer.from(outputPixels), {
     raw: {
       width: w,
       height: h,
       channels: 4,
     },
-  },)
+  })
     .png({
       palette: true,
       colors: 2,
       effort: 10,
-    },)
-    .toFile(outputPath,);
+    })
+    .toFile(outputPath);
 }

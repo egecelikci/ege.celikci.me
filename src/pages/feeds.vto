@@ -6,35 +6,40 @@ prose: false
 tags: ["meta", "feeds"]
 label: Atom & JSON feeds
 searchable: false
-primary_feeds:
-  - title: Atom Feed
-    label: XML Standard
-    file: feed.atom
-    url: /feed.atom
-  - title: JSON Feed
-    label: Modern API
-    file: feed.json
-    url: /feed.json
-filtered_feeds:
-  - title: Notes
-    desc: Short-form only
-    feeds:
-      - title: Atom
-        file: notes.atom
-        url: /notes.atom
-      - title: JSON
-        file: notes.json
-        url: /notes.json
-  - title: Writing
-    desc: Long-form only
-    feeds:
-      - title: Atom
-        file: blog.atom
-        url: /blog.atom
-      - title: JSON
-        file: blog.json
-        url: /blog.json
 ---
+
+{{# 
+  AUTOMATIC FEED GENERATION
+  We pull the configurations defined in src/_data/feeds.ts which Lume auto-loads into it.feeds.
+#}}
+
+{{>
+  // Group the discovered feeds for the component
+  // 1. Extract Primary (Main Site Feed)
+  const feedList = it.feeds || [];
+  const mainConfig = feedList.find((f) => f.id === "main");
+  const primary_feeds = mainConfig
+    ? mainConfig.output.map((file) => ({
+      title: file.endsWith(".atom") ? "Atom Feed" : "JSON Feed",
+      label: file.endsWith(".atom") ? "Global Standard" : "Modern API",
+      file: file.substring(1),
+      url: file,
+    }))
+    : [];
+
+  // 2. Extract Categories (Notes, Writing, etc.)
+  const filtered_feeds = feedList
+    .filter((f) => f.id !== "main")
+    .map((config) => ({
+      title: config.title,
+      desc: config.description,
+      feeds: config.output.map((file) => ({
+        title: file.endsWith(".atom") ? "Atom" : "JSON",
+        file: file.substring(1),
+        url: file,
+      })),
+    }))
+}}
 
 {{
   comp.features.Feeds({
