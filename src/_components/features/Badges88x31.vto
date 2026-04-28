@@ -27,7 +27,10 @@
           />
         </a>
       {{ else }}
-        <span class="block flex-none transition-all duration-150 ease-out hover:scale-110 hover:brightness-110" title="{{ item.title }}">
+        <span
+          class="block flex-none transition-all duration-150 ease-out hover:scale-110 hover:brightness-110"
+          title="{{ item.title }}"
+        >
           <img
             src="{{ item.img |> url }}"
             alt="{{ item.title }}"

@@ -4,7 +4,7 @@
  */
 
 import rehypeShiki from "@shikijs/rehype";
-import remark, { Options as RemarkOptions, } from "lume/plugins/remark.ts";
+import remark, { Options as RemarkOptions } from "lume/plugins/remark.ts";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
@@ -17,15 +17,15 @@ import {
   transformerFilename,
 } from "../src/_includes/alistral-shiki.ts";
 
-export default function(options: RemarkOptions = {},) {
-  return async (site: Lume.Site,) => {
-    const lotusTheme = await loadAlistralTheme("kanagawa-lotus",);
-    const waveTheme = await loadAlistralTheme("kanagawa-wave",);
+export default function (options: RemarkOptions = {}) {
+  return async (site: Lume.Site) => {
+    const lotusTheme = await loadAlistralTheme("kanagawa-lotus");
+    const waveTheme = await loadAlistralTheme("kanagawa-wave");
 
     site.use(remark({
       ...options,
       remarkPlugins: [
-        [remarkToc, { tight: true, },],
+        [remarkToc, { tight: true }],
         remarkGfm,
         remarkSmartypants,
         ...(options.remarkPlugins || []),
@@ -34,13 +34,13 @@ export default function(options: RemarkOptions = {},) {
         rehypeSlug,
         [rehypeAutolinkHeadings, {
           behavior: "prepend",
-          content: { type: "text", value: "#", },
+          content: { type: "text", value: "#" },
           properties: {
-            className: ["heading-anchor",],
+            className: ["heading-anchor"],
             ariaHidden: true,
             tabIndex: -1,
           },
-        },],
+        }],
         [rehypeShiki, {
           langs: [
             "bash",
@@ -52,12 +52,12 @@ export default function(options: RemarkOptions = {},) {
             "typescript",
             ...alistralLangs,
           ],
-          themes: { light: lotusTheme, dark: waveTheme, },
+          themes: { light: lotusTheme, dark: waveTheme },
           defaultColor: "light-dark()",
-          transformers: [transformerFilename(),],
-        },],
+          transformers: [transformerFilename()],
+        }],
         ...(options.rehypePlugins || []),
       ],
-    },),);
+    }));
   };
 }

@@ -1,6 +1,6 @@
 ---
 title: iced filter coffee
-tags: ["coffee", "recipes"]
+tags: ["recipes", "coffee"]
 templateEngine: [vto, md]
 ---
 

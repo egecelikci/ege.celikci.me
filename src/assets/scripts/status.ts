@@ -8,9 +8,9 @@ import {
 } from "./admin.ts";
 
 try {
-  gsap.registerPlugin(ScrambleTextPlugin,);
+  gsap.registerPlugin(ScrambleTextPlugin);
 } catch (e) {
-  console.warn("GSAP ScrambleTextPlugin failed to register:", e,);
+  console.warn("GSAP ScrambleTextPlugin failed to register:", e);
 }
 
 const CONFIG = {
@@ -31,7 +31,7 @@ let hasPeeked = false;
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
     initAuthModal();
-  },);
+  });
 } else {
   initAuthModal();
 }
@@ -44,10 +44,10 @@ function setStatusState(
   container?: HTMLElement,
 ) {
   const targetItems = container
-    ? [container,]
-    : document.querySelectorAll(".status-dashboard > div",);
+    ? [container]
+    : document.querySelectorAll(".status-dashboard > div");
 
-  targetItems.forEach((item,) => {
+  targetItems.forEach((item) => {
     if (!item) return;
     item.classList.remove(
       "is-loading",
@@ -57,12 +57,12 @@ function setStatusState(
       "is-changing",
     );
     if (type !== "clear") {
-      item.classList.add(`is-${type}`,);
+      item.classList.add(`is-${type}`);
     }
-  },);
+  });
 }
 
-function createMarqueeAnimation(element: HTMLElement,) {
+function createMarqueeAnimation(element: HTMLElement) {
   const container = element.parentElement;
   if (!container) return;
 
@@ -86,11 +86,11 @@ function createMarqueeAnimation(element: HTMLElement,) {
       ease: "none",
       repeat: -1,
       paused: false,
-    },);
+    });
 
     container.onmouseenter = () => tl.pause();
     container.onmouseleave = () => tl.play();
-  },);
+  });
 }
 
 /**
@@ -104,10 +104,10 @@ function updateLikeUI(
   const likeBtn = container.querySelector(
     ".status-like-button",
   ) as HTMLElement;
-  const heartIcon = likeBtn?.querySelector("svg",);
+  const heartIcon = likeBtn?.querySelector("svg");
   if (!heartIcon) return;
 
-  const elements = [heartIcon, ...heartIcon.querySelectorAll("path",),];
+  const elements = [heartIcon, ...heartIcon.querySelectorAll("path")];
 
   if (animate) {
     const tl = gsap.timeline();
@@ -117,35 +117,35 @@ function updateLikeUI(
       scale: 1.4,
       duration: 0.15,
       ease: "power2.out",
-    },);
+    });
 
     tl.add(() => {
       if (liked) {
-        heartIcon.classList.add("fill-primary",);
-        heartIcon.classList.remove("fill-none",);
-        elements.forEach(el => el.setAttribute("fill", "currentColor",));
+        heartIcon.classList.add("fill-primary");
+        heartIcon.classList.remove("fill-none");
+        elements.forEach((el) => el.setAttribute("fill", "currentColor"));
       } else {
-        heartIcon.classList.add("fill-none",);
-        heartIcon.classList.remove("fill-primary",);
-        elements.forEach(el => el.setAttribute("fill", "none",));
+        heartIcon.classList.add("fill-none");
+        heartIcon.classList.remove("fill-primary");
+        elements.forEach((el) => el.setAttribute("fill", "none"));
       }
-    },);
+    });
 
     tl.to(likeBtn, {
       scale: 1,
       duration: 0.4,
       ease: "back.out(3)",
-    },);
+    });
   } else {
     // Immediate state set
     if (liked) {
-      heartIcon.classList.add("fill-primary",);
-      heartIcon.classList.remove("fill-none",);
-      elements.forEach(el => el.setAttribute("fill", "currentColor",));
+      heartIcon.classList.add("fill-primary");
+      heartIcon.classList.remove("fill-none");
+      elements.forEach((el) => el.setAttribute("fill", "currentColor"));
     } else {
-      heartIcon.classList.add("fill-none",);
-      heartIcon.classList.remove("fill-primary",);
-      elements.forEach(el => el.setAttribute("fill", "none",));
+      heartIcon.classList.add("fill-none");
+      heartIcon.classList.remove("fill-primary");
+      elements.forEach((el) => el.setAttribute("fill", "none"));
     }
   }
 }
@@ -154,11 +154,11 @@ function updateLikeUI(
  * --- EVENT DELEGATION (Reliable interaction) ---
  */
 function initGlobalInteractions() {
-  document.addEventListener("click", async (e,) => {
+  document.addEventListener("click", async (e) => {
     const target = e.target as HTMLElement;
 
     // 2. Like Button -> Handle Like
-    const likeBtn = target.closest(".status-like-button",) as HTMLElement;
+    const likeBtn = target.closest(".status-like-button") as HTMLElement;
     if (likeBtn) {
       e.preventDefault();
       e.stopPropagation();
@@ -166,22 +166,22 @@ function initGlobalInteractions() {
       const container = likeBtn.closest(
         "[id$='-status-container']",
       ) as HTMLElement;
-      const dataSpan = container?.querySelector("span[data-status]",);
+      const dataSpan = container?.querySelector("span[data-status]");
       if (!container || !dataSpan) return;
 
-      const mbid = dataSpan.getAttribute("data-mbid",);
-      const isMsid = dataSpan.getAttribute("data-is-msid",) === "true";
-      const currentLiked = dataSpan.getAttribute("data-liked",) === "true";
+      const mbid = dataSpan.getAttribute("data-mbid");
+      const isMsid = dataSpan.getAttribute("data-is-msid") === "true";
+      const currentLiked = dataSpan.getAttribute("data-liked") === "true";
 
       if (!mbid) return;
 
       const performLike = async () => {
         // UX: Visual feedback - "Panic" while loading
-        container.classList.add("is-changing",);
-        likeBtn.classList.add("animate-pulse",);
+        container.classList.add("is-changing");
+        likeBtn.classList.add("animate-pulse");
 
         try {
-          const token = localStorage.getItem("status_owner_token",);
+          const token = localStorage.getItem("status_owner_token");
           const headers: Record<string, string> = {
             "Content-Type": "application/json",
           };
@@ -195,13 +195,13 @@ function initGlobalInteractions() {
                 "authorize-like-" + mbid,
               );
               if (assertion) {
-                headers["X-Passkey-Assertion"] = JSON.stringify(assertion,);
+                headers["X-Passkey-Assertion"] = JSON.stringify(assertion);
               }
             } catch (err: any) {
-              console.warn("[auth] Passkey assertion failed", err,);
-              container.classList.remove("is-changing",);
+              console.warn("[auth] Passkey assertion failed", err);
+              container.classList.remove("is-changing");
               if (err.name !== "NotAllowedError") {
-                openAuthModal(performLike,);
+                openAuthModal(performLike);
               }
               return;
             }
@@ -210,63 +210,63 @@ function initGlobalInteractions() {
           const res = await fetch("/api/like", {
             method: "POST",
             headers,
-            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid, },),
-          },);
+            body: JSON.stringify({ mbid, liked: !currentLiked, isMsid }),
+          });
 
           if (res.ok) {
             loadStatus();
           } else if (res.status === 401) {
-            localStorage.removeItem("status_owner_verified",);
-            localStorage.removeItem("status_session_expiry",);
-            container.classList.remove("is-changing",);
-            openAuthModal(performLike,);
+            localStorage.removeItem("status_owner_verified");
+            localStorage.removeItem("status_session_expiry");
+            container.classList.remove("is-changing");
+            openAuthModal(performLike);
           } else {
-            container.classList.remove("is-changing",);
+            container.classList.remove("is-changing");
           }
         } catch (err) {
-          console.error("[Status] Like failed:", err,);
-          container.classList.remove("is-changing",);
+          console.error("[Status] Like failed:", err);
+          container.classList.remove("is-changing");
         } finally {
-          likeBtn.classList.remove("animate-pulse",);
+          likeBtn.classList.remove("animate-pulse");
         }
       };
 
       // Identity Recognition Check
       if (!isSessionValid()) {
-        openAuthModal(performLike,);
+        openAuthModal(performLike);
         return;
       }
 
       // If already verified, perform immediately
       performLike();
     }
-  },);
+  });
 }
 
 function initScrollInteractions() {
-  const container = document.getElementById("status-scroll-container",);
-  const dots = document.querySelectorAll(".status-dot",);
+  const container = document.getElementById("status-scroll-container");
+  const dots = document.querySelectorAll(".status-dot");
   if (!container || dots.length === 0) return;
 
   container.addEventListener("scroll", () => {
     const scrollLeft = container.scrollLeft;
     const width = container.offsetWidth;
-    const index = Math.round(scrollLeft / width,);
+    const index = Math.round(scrollLeft / width);
 
-    dots.forEach((dot, i,) => {
-      dot.setAttribute("aria-current", i === index ? "true" : "false",);
-    },);
-  }, { passive: true, },);
+    dots.forEach((dot, i) => {
+      dot.setAttribute("aria-current", i === index ? "true" : "false");
+    });
+  }, { passive: true });
 
-  dots.forEach((dot, i,) => {
+  dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
       const width = container.offsetWidth;
       container.scrollTo({
         left: width * i,
         behavior: "smooth",
-      },);
-    },);
-  },);
+      });
+    });
+  });
 
   if (!hasPeeked && globalThis.innerWidth < 768) {
     hasPeeked = true;
@@ -278,8 +278,8 @@ function initScrollInteractions() {
         yoyo: true,
         repeat: 1,
         delay: 1,
-      },);
-    }, 1000,);
+      });
+    }, 1000);
   }
 }
 
@@ -290,8 +290,8 @@ async function loadStatus() {
   try {
     const res = await fetch("/api/status", {
       signal: abortController.signal,
-    },);
-    if (!res.ok) throw new Error(`Server responded with ${res.status}`,);
+    });
+    if (!res.ok) throw new Error(`Server responded with ${res.status}`);
 
     currentInterval = CONFIG.baseInterval;
     const reader = res.body?.getReader();
@@ -301,32 +301,32 @@ async function loadStatus() {
     let buffer = "";
 
     while (true) {
-      const { done, value, } = await reader.read();
+      const { done, value } = await reader.read();
       if (done) break;
-      buffer += decoder.decode(value, { stream: true, },);
-      const parts = buffer.split("\n",);
+      buffer += decoder.decode(value, { stream: true });
+      const parts = buffer.split("\n");
       buffer = parts.pop() || "";
-      for (const part of parts) if (part.trim()) processChunk(part,);
+      for (const part of parts) if (part.trim()) processChunk(part);
     }
-    if (buffer.trim()) processChunk(buffer,);
+    if (buffer.trim()) processChunk(buffer);
   } catch (err: any) {
     if (err.name === "AbortError") return;
-    console.error("Status Load Error:", err,);
-    setStatusState("error",);
+    console.error("Status Load Error:", err);
+    setStatusState("error");
     currentInterval = Math.min(
       currentInterval * CONFIG.backoffFactor,
       CONFIG.maxInterval,
     );
   } finally {
     if (document.visibilityState === "visible") {
-      if (pollTimeout) clearTimeout(pollTimeout,);
-      pollTimeout = setTimeout(loadStatus, currentInterval,);
+      if (pollTimeout) clearTimeout(pollTimeout);
+      pollTimeout = setTimeout(loadStatus, currentInterval);
     }
   }
 }
 
-function processChunk(htmlString: string,) {
-  const temp = document.createElement("div",);
+function processChunk(htmlString: string) {
+  const temp = document.createElement("div");
   temp.innerHTML = htmlString;
   const newData = temp.firstElementChild as HTMLElement;
 
@@ -340,110 +340,110 @@ function processChunk(htmlString: string,) {
 
   if (!targetId) return;
 
-  const container = document.querySelector(targetId,) as HTMLElement;
+  const container = document.querySelector(targetId) as HTMLElement;
   if (container) {
-    updateSingleUI(container, newData,);
+    updateSingleUI(container, newData);
   }
 }
 
-function updateSingleUI(container: HTMLElement, newData: HTMLElement,) {
+function updateSingleUI(container: HTMLElement, newData: HTMLElement) {
   container.hidden = false;
 
-  const getTxt = (el: Element | null,) => {
+  const getTxt = (el: Element | null) => {
     if (!el) return "";
-    const s = el.querySelector("span[data-status]",)
-      || el.querySelector(".text-text",);
-    return s?.getAttribute("data-status",) || s?.textContent?.trim() || "";
+    const s = el.querySelector("span[data-status]") ||
+      el.querySelector(".text-text");
+    return s?.getAttribute("data-status") || s?.textContent?.trim() || "";
   };
 
-  const getActiveState = (el: Element | null,) => {
-    const s = el?.querySelector("span[data-status]",)
-      || el?.querySelector(".text-text",);
-    return s?.getAttribute("data-active",) === "true";
+  const getActiveState = (el: Element | null) => {
+    const s = el?.querySelector("span[data-status]") ||
+      el?.querySelector(".text-text");
+    return s?.getAttribute("data-active") === "true";
   };
 
-  const getLikedState = (el: Element | null,) => {
-    const s = el?.querySelector("span[data-status]",)
-      || el?.querySelector(".text-text",);
-    return s?.getAttribute("data-liked",) === "true";
+  const getLikedState = (el: Element | null) => {
+    const s = el?.querySelector("span[data-status]") ||
+      el?.querySelector(".text-text");
+    return s?.getAttribute("data-liked") === "true";
   };
 
-  const getMbid = (el: Element | null,) => {
-    const s = el?.querySelector("span[data-status]",)
-      || el?.querySelector(".text-text",);
-    return s?.getAttribute("data-mbid",) || "";
+  const getMbid = (el: Element | null) => {
+    const s = el?.querySelector("span[data-status]") ||
+      el?.querySelector(".text-text");
+    return s?.getAttribute("data-mbid") || "";
   };
 
-  const getIsMsid = (el: Element | null,) => {
-    const s = el?.querySelector("span[data-status]",)
-      || el?.querySelector(".text-text",);
-    return s?.getAttribute("data-is-msid",) === "true";
+  const getIsMsid = (el: Element | null) => {
+    const s = el?.querySelector("span[data-status]") ||
+      el?.querySelector(".text-text");
+    return s?.getAttribute("data-is-msid") === "true";
   };
 
-  const newTxt = getTxt(newData,);
-  const curTxt = getTxt(container,);
+  const newTxt = getTxt(newData);
+  const curTxt = getTxt(container);
 
-  const newState = getActiveState(newData,);
-  const curState = container.classList.contains("is-active",);
+  const newState = getActiveState(newData);
+  const curState = container.classList.contains("is-active");
 
-  const newLiked = getLikedState(newData,);
-  const curLiked = getLikedState(container,);
+  const newLiked = getLikedState(newData);
+  const curLiked = getLikedState(container);
 
-  const newMbid = getMbid(newData,);
-  const curMbid = getMbid(container,);
+  const newMbid = getMbid(newData);
+  const curMbid = getMbid(container);
 
-  const newIsMsid = getIsMsid(newData,);
-  const curIsMsid = getIsMsid(container,);
+  const newIsMsid = getIsMsid(newData);
+  const curIsMsid = getIsMsid(container);
 
   // Detect if only liked status changed for the SAME song
-  const likedChangedOnly = newTxt === curTxt
-    && newState === curState
-    && newMbid === curMbid
-    && newIsMsid === curIsMsid
-    && newLiked !== curLiked;
+  const likedChangedOnly = newTxt === curTxt &&
+    newState === curState &&
+    newMbid === curMbid &&
+    newIsMsid === curIsMsid &&
+    newLiked !== curLiked;
 
   if (likedChangedOnly) {
     // Clear loading/panic state
-    setStatusState(newState ? "active" : "inactive", container,);
-    updateLikeUI(container, newLiked, true,);
+    setStatusState(newState ? "active" : "inactive", container);
+    updateLikeUI(container, newLiked, true);
 
     // Sync the local data-liked attribute
-    const dataSpan = container.querySelector("span[data-status]",);
-    if (dataSpan) dataSpan.setAttribute("data-liked", String(newLiked,),);
+    const dataSpan = container.querySelector("span[data-status]");
+    if (dataSpan) dataSpan.setAttribute("data-liked", String(newLiked));
     return;
   }
 
   if (
-    newTxt === curTxt
-    && newState === curState
-    && newLiked === curLiked
-    && newMbid === curMbid
-    && newIsMsid === curIsMsid
-    && curTxt !== ""
+    newTxt === curTxt &&
+    newState === curState &&
+    newLiked === curLiked &&
+    newMbid === curMbid &&
+    newIsMsid === curIsMsid &&
+    curTxt !== ""
   ) {
     // Even if no data changed, ensure we clear any lingering panic state from interaction
-    if (container.classList.contains("is-changing",)) {
-      setStatusState(curState ? "active" : "inactive", container,);
+    if (container.classList.contains("is-changing")) {
+      setStatusState(curState ? "active" : "inactive", container);
     }
     return;
   }
 
-  if (curTxt && curTxt !== "" && !pendingTransitions.has(container,)) {
-    container.classList.add("is-changing",);
+  if (curTxt && curTxt !== "" && !pendingTransitions.has(container)) {
+    container.classList.add("is-changing");
 
     const timeoutId = window.setTimeout(() => {
-      container.classList.remove("is-changing",);
-      pendingTransitions.delete(container,);
-      performUpdate(container, newData, newTxt, curTxt,);
-    }, 1000,);
+      container.classList.remove("is-changing");
+      pendingTransitions.delete(container);
+      performUpdate(container, newData, newTxt, curTxt);
+    }, 1000);
 
-    pendingTransitions.set(container, timeoutId,);
+    pendingTransitions.set(container, timeoutId);
     return;
   }
 
-  if (pendingTransitions.has(container,)) return;
+  if (pendingTransitions.has(container)) return;
 
-  performUpdate(container, newData, newTxt, curTxt,);
+  performUpdate(container, newData, newTxt, curTxt);
 }
 
 function performUpdate(
@@ -452,15 +452,15 @@ function performUpdate(
   newTxt: string,
   curTxt: string,
 ) {
-  const newSpan = newData.querySelector("span",);
-  const isActive = newSpan?.getAttribute("data-active",) === "true";
-  const mbid = newSpan?.getAttribute("data-mbid",);
-  const isLiked = newSpan?.getAttribute("data-liked",) === "true";
+  const newSpan = newData.querySelector("span");
+  const isActive = newSpan?.getAttribute("data-active") === "true";
+  const mbid = newSpan?.getAttribute("data-mbid");
+  const isLiked = newSpan?.getAttribute("data-liked") === "true";
 
-  setStatusState(isActive ? "active" : "inactive", container,);
+  setStatusState(isActive ? "active" : "inactive", container);
 
-  if (activeContexts.has(container,)) {
-    activeContexts.get(container,)?.revert();
+  if (activeContexts.has(container)) {
+    activeContexts.get(container)?.revert();
   }
 
   const richHTML = newSpan?.innerHTML || "";
@@ -468,9 +468,9 @@ function performUpdate(
   const scrambleNoise = placeholderChar;
   const scrambleDuration = 1 + newTxt.length * 0.03;
 
-  container.setAttribute("aria-label", newTxt,);
+  container.setAttribute("aria-label", newTxt);
 
-  const textWrapper = container.querySelector(".status-content-wrapper",);
+  const textWrapper = container.querySelector(".status-content-wrapper");
   const actionWrapper = container.querySelector(
     ".status-action-wrapper",
   ) as HTMLElement;
@@ -480,17 +480,17 @@ function performUpdate(
 
   if (textWrapper && newSpan) {
     textWrapper.innerHTML = "";
-    newSpan.classList.add("inline-block", "whitespace-nowrap",);
-    textWrapper.appendChild(newSpan,);
+    newSpan.classList.add("inline-block", "whitespace-nowrap");
+    textWrapper.appendChild(newSpan);
   }
 
   if (actionWrapper && likeBtn) {
     if (mbid) {
       // Set initial like state without animation
-      updateLikeUI(container, isLiked, false,);
+      updateLikeUI(container, isLiked, false);
 
-      if (actionWrapper.classList.contains("hidden",)) {
-        actionWrapper.classList.remove("hidden",);
+      if (actionWrapper.classList.contains("hidden")) {
+        actionWrapper.classList.remove("hidden");
         gsap.fromTo(actionWrapper, {
           opacity: 0,
           scale: 0.5,
@@ -502,16 +502,16 @@ function performUpdate(
           duration: 0.8,
           delay: scrambleDuration,
           ease: "back.out(2)",
-        },);
+        });
       }
     } else {
-      if (!actionWrapper.classList.contains("hidden",)) {
+      if (!actionWrapper.classList.contains("hidden")) {
         gsap.to(actionWrapper, {
           opacity: 0,
           scale: 0.5,
           duration: 0.4,
-          onComplete: () => actionWrapper.classList.add("hidden",),
-        },);
+          onComplete: () => actionWrapper.classList.add("hidden"),
+        });
       }
     }
   }
@@ -525,18 +525,18 @@ function performUpdate(
       whiteSpace: "nowrap",
       display: "inline-block",
       maxWidth: "100%",
-    },);
+    });
 
     const tl = gsap.timeline({
       onComplete: () => {
         ctx.add(() => {
           targetSpan.dataset.unscrambled = "true";
-          gsap.set(targetSpan, { maxWidth: "none", },);
+          gsap.set(targetSpan, { maxWidth: "none" });
           targetSpan.innerHTML = richHTML;
-          createMarqueeAnimation(targetSpan,);
-        },);
+          createMarqueeAnimation(targetSpan);
+        });
       },
-    },);
+    });
 
     if (curTxt && gsap.plugins?.scrambleText) {
       tl.to(targetSpan, {
@@ -548,7 +548,7 @@ function performUpdate(
           speed: 0.2,
           tweenLength: true,
         },
-      },);
+      });
     } else {
       tl.to(targetSpan, {
         opacity: 1,
@@ -557,10 +557,10 @@ function performUpdate(
         onStart: () => {
           targetSpan.textContent = newTxt;
         },
-      },);
+      });
     }
-  }, container,);
-  activeContexts.set(container, ctx,);
+  }, container);
+  activeContexts.set(container, ctx);
 }
 
 // Global start
@@ -572,13 +572,13 @@ if (document.visibilityState === "visible") {
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
-    if (pollTimeout) clearTimeout(pollTimeout,);
+    if (pollTimeout) clearTimeout(pollTimeout);
     currentInterval = CONFIG.baseInterval;
     loadStatus();
   } else {
-    if (pollTimeout) clearTimeout(pollTimeout,);
+    if (pollTimeout) clearTimeout(pollTimeout);
     if (abortController) abortController.abort();
   }
-},);
+});
 
-export { loadStatus, };
+export { loadStatus };

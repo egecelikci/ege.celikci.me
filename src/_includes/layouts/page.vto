@@ -6,7 +6,7 @@ layout: layouts/base.vto
 {{ set extensionContent }}
   {{ if it.headerExtension }}
     {{ if it.headerExtension.comp }}
-      {{ set compParts = it.headerExtension.comp.split('.') }}
+      {{ set compParts = it.headerExtension.comp.split(".") }}
       {{ set resolvedComp = comp }}
       {{ for part of compParts }}
         {{ set resolvedComp = resolvedComp[part] }}
@@ -43,7 +43,9 @@ layout: layouts/base.vto
 
 {{# 3. Tag-style subtitle (Item Count) #}}
 {{ if it.type === "tag" }}
-  {{ set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc") }}
+  {{
+    set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc")
+  }}
   {{ set count = matchingEntries.length }}
   {{ set displaySubtitle = count + (count === 1 ? " item" : " items") }}
 {{ /if }}
@@ -63,58 +65,70 @@ layout: layouts/base.vto
         title: displayTitle,
         subtitle: displaySubtitle,
         backlink: it.backlink ?? (
-          it.type === "post" ? { href: "/blog/", text: "writing" } : 
-          it.type === "note" ? { href: "/notes/", text: "notes" } : 
-          it.type === "tag" ? { href: "/tags/", text: "topics" } :
-          false
+          it.type === "post"
+            ? { href: "/blog/", text: "writing" }
+            : it.type === "note"
+            ? { href: "/notes/", text: "notes" }
+            : it.type === "tag"
+            ? { href: "/tags/", text: "topics" }
+            : false
         ),
         breadcrumbs: breadcrumbs === true,
         url: url,
         centered: centered || false,
         metadata: { tags: tags },
-        rightContent: extensionContent
+        rightContent: extensionContent,
       })
     }}
   {{ /if }}
 
   {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
-  <article 
-    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }}" 
+  <article
+    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }}"
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
-    {{# Hidden IndieWeb Author Identity #}}
-    <div class="p-author h-card hidden" aria-hidden="true">
-      <a href="/" class="u-url p-name">{{ author.name }}</a>
-      <img src="{{ author.avatar }}" class="u-photo">
-    </div>
-
     {{ if it.type === "note" }}
       {{# Handle missing titles for search results #}}
       {{ if !it.title }}
-        <span data-pagefind-meta="title:Note from {{ it.date |> date('dd MMM yyyy HH:mm') }}" class="sr-only"></span>
+        <span
+          data-pagefind-meta="title:Note from {{ it.date |> date('dd MMM yyyy HH:mm') }}"
+          class="sr-only"
+        ></span>
       {{ /if }}
 
-      {{ comp.ui.Note({ 
-        note: {
-          url: url,
-          date: date,
-          title: it.title,
-          tags: tags,
-          images: images,
-          content: content,
-          stats: stats,
-          syndication: syndication
-        },
-        variant: "full",
-        hideHeader: true
-      }) }}
+      {{
+        comp.ui.Note({
+          note: {
+            url: url,
+            date: date,
+            title: it.title,
+            tags: tags,
+            images: images,
+            content: content,
+            stats: stats,
+            syndication: syndication,
+          },
+          variant: "full",
+          hideHeader: true,
+        })
+      }}
     {{ else if it.type === "tag" }}
-       {{ comp.ui.TagDetail({ tag: it.tag }) }}
+      {{ comp.ui.TagDetail({ tag: it.tag }) }}
     {{ else }}
       <div class="e-content">
         {{ content |> safe }}
       </div>
     {{ /if }}
+
+    {{# Hidden IndieWeb Author Identity (Ignored by Search) #}}
+    <div
+      class="p-author h-card hidden"
+      aria-hidden="true"
+      data-pagefind-ignore
+    >
+      <a href="/" class="u-url p-name">{{ author.name }}</a>
+      <img src="{{ author.avatar }}" class="u-photo" />
+    </div>
   </article>
 
   {{# 3. Supplemental UI #}}
@@ -128,7 +142,11 @@ layout: layouts/base.vto
 
     {{ if show_webmentions }}
       <div class="mt-24">
-        <h3 class="text-xs font-mono uppercase tracking-[0.3em] text-text-muted/60 mb-10">Interactions</h3>
+        <h3
+          class="text-xs font-mono uppercase tracking-[0.3em] text-text-muted/60 mb-10"
+        >
+          Interactions
+        </h3>
         {{ set mentionsData = [] }}
         {{ if webmentions }}
           {{ set mentionsData = webmentions.children |> webmentionsByUrl(url) }}

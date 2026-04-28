@@ -43,11 +43,32 @@
       "description": "Build locally and publish to Netlify",
       "command": "deno task build && netlify deploy --prod"
     },
-    "fmt": "deno task dprint fmt",
-    "fmt:check": "deno task dprint check",
-    "dprint": "deno run -A npm:dprint",
+    "fmt": "deno fmt",
+    "fmt:check": "deno fmt --check",
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "fetch-music": "deno run --allow-net --allow-read --allow-write --allow-env scripts/fetch-music.ts"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 80,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": false,
+    "proseWrap": "preserve",
+    "include": [
+      "src/",
+      "_config/",
+      "utils/",
+      "netlify/",
+      "*.ts",
+      "*.json",
+      "*.md",
+      "*.yml",
+      "*.css"
+    ],
+    "exclude": [
+      "src/site.webmanifest.vto"
+    ]
   },
   "compilerOptions": {
     "types": [
@@ -99,7 +120,6 @@
     }
   },
   "allowScripts": [
-    "npm:dprint",
     "npm:sharp"
   ]
 }

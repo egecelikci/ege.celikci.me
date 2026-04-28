@@ -24,71 +24,76 @@ import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
 
-export default function() {
-  return (site: Lume.Site,) => {
+export default function () {
+  return (site: Lume.Site) => {
     site
-      .use(attributes(),)
-      .use(imageSize(),)
-      .use(slugifyPlugin(),)
-      .use(metas(),)
-      .use(extractDate(),)
-      .use(date({ formats: { "URL": "yyyyMMddHHmmss", }, },),)
-      .use(paginate(),)
-      .use(sitemap(),)
-      .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt", },], },),)
-      .use(nav(),)
-      .use(minifyHTML(),)
+      .use(attributes())
+      .use(imageSize())
+      .use(slugifyPlugin())
+      .use(metas())
+      .use(extractDate())
+      .use(date({ formats: { "URL": "yyyyMMddHHmmss" } }))
+      .use(paginate())
+      .use(sitemap())
+      .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt" }] }))
+      .use(nav())
+      .use(minifyHTML())
       .use(favicon({
         input: "/assets/images/favicon/favicon.svg",
         favicons: [
           {
             url: "/assets/images/favicon/favicon.ico",
-            size: [32,],
+            size: [32],
             rel: "icon",
             format: "ico",
           },
           {
             url: "/assets/images/favicon/apple-touch-icon.png",
-            size: [180,],
+            size: [180],
             rel: "apple-touch-icon",
             format: "png",
           },
           {
             url: "/assets/images/favicon/android-chrome-192x192.png",
-            size: [192,],
+            size: [192],
             rel: "icon",
             format: "png",
           },
           {
             url: "/assets/images/favicon/android-chrome-512x512.png",
-            size: [512,],
+            size: [512],
             rel: "icon",
             format: "png",
           },
         ],
-      },),)
+      }))
       .use(pagefind({
         outputPath: "/pagefind",
+        indexing: {
+          rootSelector: "html",
+          verbose: false,
+        },
         ui: {
           containerId: "#search",
           showImages: false,
           showEmptyFilters: true,
+          resetStyles: true,
         },
-      },),)
+      }))
       // Modularized configs
       .use(googleFonts({
         fonts:
           "https://fonts.google.com/share?selection.family=Inconsolata:wght@200..900|Josefin+Sans:ital,wght@0,100..700;1,100..700",
         fontsFolder: "/assets/fonts",
         cssFile: "/assets/styles/main.css",
-        subsets: ["latin", "latin-ext",],
-      },),)
-      .use(assets(),)
-      .use(feeds(),)
-      .use(filters(),)
-      .use(markdown(),);
+        subsets: ["latin", "latin-ext"],
+      }))
+      .use(assets())
+      .use(feeds())
+      .use(filters())
+      .use(markdown());
 
     // Global default for all Markdown files: Vento then Markdown
-    site.data("templateEngine", ["vto", "md",], ".md",);
+    site.data("templateEngine", ["vto", "md"], ".md");
   };
 }

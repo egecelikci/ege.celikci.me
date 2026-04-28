@@ -30,12 +30,12 @@ export interface SiteData {
       priority?: number;
     }>;
     social: {
-      mastodon: { name: string; url: string; };
-      signal: { url: string; };
+      mastodon: { name: string; url: string };
+      signal: { url: string };
       matrix: {
         username: string;
         homeserver: string;
-        devices: Array<{ name: string; id: string; }>;
+        devices: Array<{ name: string; id: string }>;
       };
     };
   };

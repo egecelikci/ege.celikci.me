@@ -38,42 +38,42 @@ const FONT_MONO = "'Inconsolata', monospace";
 
 async function fetchCover(
   album: Album,
-): Promise<{ album: Album; bitmap: ImageBitmap | null; }> {
+): Promise<{ album: Album; bitmap: ImageBitmap | null }> {
   let res;
   if (album.img) {
     try {
-      res = await fetch(album.img,);
+      res = await fetch(album.img);
     } catch (_e) {}
   }
   if ((!res || !res.ok) && album.mbid) {
     try {
-      res = await fetch(`/api/collage-proxy?source=cover&mbid=${album.mbid}`,);
+      res = await fetch(`/api/collage-proxy?source=cover&mbid=${album.mbid}`);
     } catch (_e) {}
   }
   let bitmap: ImageBitmap | null = null;
   if (res && res.ok) {
     try {
       const blob = await res.blob();
-      bitmap = await createImageBitmap(blob,);
+      bitmap = await createImageBitmap(blob);
     } catch (_e) {}
   }
-  return { album, bitmap, };
+  return { album, bitmap };
 }
 
-async function getVibrantColor(img: ImageBitmap | null,) {
-  if (!img) return { r: 30, g: 27, b: 75, };
-  const mini = new OffscreenCanvas(20, 20,);
-  const mctx = mini.getContext("2d",);
-  if (!mctx) return { r: 30, g: 27, b: 75, };
-  mctx.drawImage(img, 0, 0, 20, 20,);
-  const color = get_vibrant_color(mctx.getImageData(0, 0, 20, 20,).data,);
-  return { r: color.r, g: color.g, b: color.b, };
+async function getVibrantColor(img: ImageBitmap | null) {
+  if (!img) return { r: 30, g: 27, b: 75 };
+  const mini = new OffscreenCanvas(20, 20);
+  const mctx = mini.getContext("2d");
+  if (!mctx) return { r: 30, g: 27, b: 75 };
+  mctx.drawImage(img, 0, 0, 20, 20);
+  const color = get_vibrant_color(mctx.getImageData(0, 0, 20, 20).data);
+  return { r: color.r, g: color.g, b: color.b };
 }
 
-self.onmessage = async (e: MessageEvent,) => {
-  const { type, canvas, albums, options, } = e.data;
+self.onmessage = async (e: MessageEvent) => {
+  const { type, canvas, albums, options } = e.data;
   if (type !== "generate") return;
-  const ctx = (canvas as OffscreenCanvas).getContext("2d", { alpha: false, },);
+  const ctx = (canvas as OffscreenCanvas).getContext("2d", { alpha: false });
   if (!ctx) return;
   const {
     bgMode,
@@ -87,15 +87,15 @@ self.onmessage = async (e: MessageEvent,) => {
   } = options as Options;
 
   try {
-    const layout = calculate_layout(cols, rows,);
-    const gridCoords = get_grid_coordinates(cols, rows,);
+    const layout = calculate_layout(cols, rows);
+    const gridCoords = get_grid_coordinates(cols, rows);
     const targetCount = cols * rows;
 
     const finalAlbums: Album[] = [];
     const finalImages: (ImageBitmap | null)[] = [];
     let sourceIndex = 0;
 
-    self.postMessage({ type: "status", text: "Acquiring Art...", },);
+    self.postMessage({ type: "status", text: "Acquiring Art..." });
     while (finalAlbums.length < targetCount && sourceIndex < albums.length) {
       const needed = targetCount - finalAlbums.length;
       const batch = albums.slice(
@@ -104,12 +104,12 @@ self.onmessage = async (e: MessageEvent,) => {
       );
       sourceIndex += batch.length;
       const results = await Promise.all(
-        batch.map((a: Album,) => fetchCover(a,)),
+        batch.map((a: Album) => fetchCover(a)),
       );
       for (const res of results) {
         if (res.bitmap || !skipMissing) {
-          finalAlbums.push(res.album,);
-          finalImages.push(res.bitmap,);
+          finalAlbums.push(res.album);
+          finalImages.push(res.bitmap);
         }
         if (finalAlbums.length >= targetCount) break;
       }
@@ -117,19 +117,19 @@ self.onmessage = async (e: MessageEvent,) => {
         self.postMessage({
           type: "status",
           text: `Searching... (${finalAlbums.length}/${targetCount})`,
-        },);
+        });
       }
     }
     while (finalAlbums.length < targetCount) {
-      finalAlbums.push({ name: "", artist: "", count: 0, },);
-      finalImages.push(null,);
+      finalAlbums.push({ name: "", artist: "", count: 0 });
+      finalImages.push(null);
     }
 
     // --- 2. RENDER BACKGROUND (WASM) ---
-    self.postMessage({ type: "status", text: "Analyzing Palette...", },);
-    const gridColors = new Uint8Array(targetCount * 3,);
+    self.postMessage({ type: "status", text: "Analyzing Palette..." });
+    const gridColors = new Uint8Array(targetCount * 3);
     const colors = await Promise.all(
-      finalImages.map((img,) => getVibrantColor(img,)),
+      finalImages.map((img) => getVibrantColor(img)),
     );
     for (let i = 0; i < targetCount; i++) {
       gridColors[i * 3] = colors[i].r;
@@ -156,8 +156,8 @@ self.onmessage = async (e: MessageEvent,) => {
       }
     }
 
-    self.postMessage({ type: "status", text: "Computing Pixels...", },);
-    const imageData = ctx.createImageData(W, H,);
+    self.postMessage({ type: "status", text: "Computing Pixels..." });
+    const imageData = ctx.createImageData(W, H);
     render_background(
       imageData.data,
       W,
@@ -169,39 +169,39 @@ self.onmessage = async (e: MessageEvent,) => {
       cols,
       rows,
     );
-    ctx.putImageData(imageData, 0, 0,);
+    ctx.putImageData(imageData, 0, 0);
 
     // Style Overlays
     if (bgMode === "velvet") {
-      const grad = ctx.createLinearGradient(0, 0, 0, H,);
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
       grad.addColorStop(
         0,
         `rgb(${gridColors[0]},${gridColors[1]},${gridColors[2]})`,
       );
-      grad.addColorStop(0.7, "#09090b",);
+      grad.addColorStop(0.7, "#09090b");
       ctx.save();
       ctx.globalAlpha = 0.5;
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H,);
+      ctx.fillRect(0, 0, W, H);
       ctx.restore();
     } else if (bgMode === "silver") {
       // High contrast B&W / Silver overlay
       ctx.save();
       ctx.globalCompositeOperation = "saturation";
       ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, W, H,);
-      const grad = ctx.createLinearGradient(0, 0, W, H,);
-      grad.addColorStop(0, "rgba(255,255,255,0.1)",);
-      grad.addColorStop(0.5, "rgba(0,0,0,0.2)",);
-      grad.addColorStop(1, "rgba(255,255,255,0.1)",);
+      ctx.fillRect(0, 0, W, H);
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, "rgba(255,255,255,0.1)");
+      grad.addColorStop(0.5, "rgba(0,0,0,0.2)");
+      grad.addColorStop(1, "rgba(255,255,255,0.1)");
       ctx.globalCompositeOperation = "overlay";
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H,);
+      ctx.fillRect(0, 0, W, H);
       ctx.restore();
     } else if (bgMode === "terminal") {
       ctx.save();
       ctx.fillStyle = "rgba(0, 255, 80, 0.15)";
-      ctx.fillRect(0, 0, W, H,);
+      ctx.fillRect(0, 0, W, H);
       ctx.restore();
     }
 
@@ -215,14 +215,14 @@ self.onmessage = async (e: MessageEvent,) => {
         H / 2,
         H * 0.8,
       );
-      vig.addColorStop(0, "transparent",);
-      vig.addColorStop(1, "rgba(0,0,0,0.7)",);
+      vig.addColorStop(0, "transparent");
+      vig.addColorStop(1, "rgba(0,0,0,0.7)");
       ctx.fillStyle = vig;
-      ctx.fillRect(0, 0, W, H,);
+      ctx.fillRect(0, 0, W, H);
     }
 
     // --- 3. THE GRID ---
-    self.postMessage({ type: "status", text: "Assembling Grid...", },);
+    self.postMessage({ type: "status", text: "Assembling Grid..." });
     for (let i = 0; i < targetCount; i++) {
       const x = gridCoords[i * 2], y = gridCoords[i * 2 + 1];
       ctx.save();
@@ -246,11 +246,11 @@ self.onmessage = async (e: MessageEvent,) => {
         if (bgMode === "silver") {
           ctx.globalCompositeOperation = "luminosity";
           ctx.fillStyle = "rgba(255,255,255,0.1)";
-          ctx.fillRect(x, y, layout.item_size, layout.item_size,);
+          ctx.fillRect(x, y, layout.item_size, layout.item_size);
         }
       } else {
         ctx.fillStyle = "#18181b";
-        ctx.fillRect(x, y, layout.item_size, layout.item_size,);
+        ctx.fillRect(x, y, layout.item_size, layout.item_size);
       }
       ctx.restore();
 
@@ -271,7 +271,7 @@ self.onmessage = async (e: MessageEvent,) => {
     }
 
     // --- 4. THE LIST ---
-    const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9,);
+    const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9);
     for (let i = 0; i < listLimit; i++) {
       const y = layout.list_base_y + (i * layout.list_row_height);
       ctx.textAlign = "left";
@@ -279,12 +279,12 @@ self.onmessage = async (e: MessageEvent,) => {
         ? "rgba(0,255,80,0.5)"
         : "rgba(255,255,255,0.4)";
       ctx.font = `bold 24px ${FONT_MONO}`;
-      ctx.fillText(`${i + 1}. `, MARGIN, y,);
+      ctx.fillText(`${i + 1}. `, MARGIN, y);
 
       ctx.fillStyle = bgMode === "terminal" ? "#00ff50" : "#f4f4f5";
       ctx.font = `900 ${rows > 4 ? 20 : 24}px ${FONT_SANS}`;
       ctx.fillText(
-        finalAlbums[i].name.toUpperCase().substring(0, 40,),
+        finalAlbums[i].name.toUpperCase().substring(0, 40),
         MARGIN + 40,
         y,
       );
@@ -294,7 +294,7 @@ self.onmessage = async (e: MessageEvent,) => {
         : "rgba(255,255,255,0.35)";
       ctx.font = `500 ${rows > 4 ? 14 : 18}px ${FONT_SANS}`;
       ctx.fillText(
-        finalAlbums[i].artist.toUpperCase().substring(0, 50,),
+        finalAlbums[i].artist.toUpperCase().substring(0, 50),
         MARGIN + 40,
         y + (rows > 4 ? 22 : 28),
       );
@@ -321,19 +321,19 @@ self.onmessage = async (e: MessageEvent,) => {
     ctx.font = `bold 16px ${FONT_MONO}`;
     ctx.letterSpacing = "8px";
     ctx.fillText(
-      `TOP ALBUMS • ${period.replace("_", " ",)} • ${user}`.toUpperCase(),
+      `TOP ALBUMS • ${period.replace("_", " ")} • ${user}`.toUpperCase(),
       W / 2,
       H - 100,
     );
     ctx.letterSpacing = "2px";
-    ctx.fillText("EGE.CELIKCI.ME", W / 2, H - 72,);
+    ctx.fillText("EGE.CELIKCI.ME", W / 2, H - 72);
 
     const blob = await (canvas as OffscreenCanvas).convertToBlob({
       type: "image/jpeg",
       quality: 0.92,
-    },);
-    self.postMessage({ type: "done", blob, },);
+    });
+    self.postMessage({ type: "done", blob });
   } catch (err: unknown) {
-    self.postMessage({ type: "error", message: String(err,), },);
+    self.postMessage({ type: "error", message: String(err) });
   }
 };

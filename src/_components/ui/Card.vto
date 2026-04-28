@@ -3,4 +3,8 @@
   A container for content with consistent styling.
 #}}
 {{- set tag = href ? "a" : "div" -}}
-<{{ tag }} {{ if href }}href="{{ href }}"{{ /if }} class="{{ theme.components.card.base }} {{ classes }}" {{ attributes |> attr |> safe }}>{{ content |> safe }}</{{ tag }}>
+<{{ tag }} {{ if href }}href="{{ href }}"{{ /if }} class="{{
+  theme.components.card.base
+}} {{ classes }}" {{ attributes |> attr |> safe }}>{{ content |> safe }}</{{
+  tag
+}}>

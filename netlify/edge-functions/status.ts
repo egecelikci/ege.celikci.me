@@ -1,11 +1,11 @@
 // deno-lint-ignore-file no-explicit-any
-import { ListenBrainzClient, } from "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2";
+import { ListenBrainzClient } from "https://esm.sh/jsr/@kellnerd/listenbrainz@0.9.2";
 
-const LISTENBRAINZ_USERNAME = Deno.env.get("LISTENBRAINZ_USERNAME",);
-const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN",);
-const STEAM_API_KEY = Deno.env.get("STEAM_API_KEY",);
-const STEAM_ID = Deno.env.get("STEAM_ID",);
-const ANILIST_ID = Deno.env.get("ANILIST_ID",);
+const LISTENBRAINZ_USERNAME = Deno.env.get("LISTENBRAINZ_USERNAME");
+const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN");
+const STEAM_API_KEY = Deno.env.get("STEAM_API_KEY");
+const STEAM_ID = Deno.env.get("STEAM_ID");
+const ANILIST_ID = Deno.env.get("ANILIST_ID");
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
 function createStatusHtml(
@@ -13,7 +13,7 @@ function createStatusHtml(
   plainText: string,
   richContent: string,
   isActive: boolean,
-  meta: { isLiked?: boolean; mbid?: string; isMsid?: boolean; } = {},
+  meta: { isLiked?: boolean; mbid?: string; isMsid?: boolean } = {},
 ) {
   const timestamp = Date.now();
   const span =
@@ -25,13 +25,13 @@ function createStatusHtml(
   return `<div id="${id}">${span}</div>`;
 }
 
-const withTimeout = <T,>(promise: Promise<T>, ms = 4000,): Promise<T> =>
+const withTimeout = <T>(promise: Promise<T>, ms = 4000): Promise<T> =>
   Promise.race([
     promise,
-    new Promise<T>((_, reject,) =>
-      setTimeout(() => reject(new Error("Timeout",),), ms,)
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), ms)
     ),
-  ],);
+  ]);
 
 async function getMusicStatus(): Promise<string | null> {
   if (!LISTENBRAINZ_USERNAME) return null;
@@ -39,17 +39,17 @@ async function getMusicStatus(): Promise<string | null> {
   try {
     const client = new ListenBrainzClient({
       userToken: LISTENBRAINZ_TOKEN || "00000000-0000-4000-8000-000000000000",
-    },);
+    });
 
     let listen: any = null;
     let isActive = false;
 
     try {
-      const playingData = await client.getPlayingNow(LISTENBRAINZ_USERNAME,);
+      const playingData = await client.getPlayingNow(LISTENBRAINZ_USERNAME);
       if (
-        playingData.count > 0
-        && playingData.playing_now
-        && playingData.listens.length > 0
+        playingData.count > 0 &&
+        playingData.playing_now &&
+        playingData.listens.length > 0
       ) {
         listen = playingData.listens[0];
         isActive = true;
@@ -63,7 +63,7 @@ async function getMusicStatus(): Promise<string | null> {
       try {
         const recentData = await client.getListens(LISTENBRAINZ_USERNAME, {
           count: 1,
-        },);
+        });
         if (recentData.count > 0 && recentData.listens.length > 0) {
           listen = recentData.listens[0];
           isActive = false;
@@ -83,7 +83,7 @@ async function getMusicStatus(): Promise<string | null> {
     const idToUse = recordingMbid || recordingMsid;
     const isMsid = !recordingMbid;
 
-    const artistNames = additionalInfo.artist_names || [track.artist_name,];
+    const artistNames = additionalInfo.artist_names || [track.artist_name];
     const artistMbids = additionalInfo.artist_mbids || [];
 
     // Fetch Feedback Status (Is it liked?)
@@ -93,28 +93,28 @@ async function getMusicStatus(): Promise<string | null> {
         const paramName = isMsid ? "recording_msids" : "recording_mbids";
         const feedbackData: any = await client.get(
           `1/feedback/user/${LISTENBRAINZ_USERNAME}/get-feedback-for-recordings`,
-          { [paramName]: idToUse, },
+          { [paramName]: idToUse },
         );
 
         // Extract array from payload or root
-        const feedbackList = feedbackData.payload?.feedback
-          || feedbackData.feedback || [];
+        const feedbackList = feedbackData.payload?.feedback ||
+          feedbackData.feedback || [];
 
         // Find item by matching against ALL possible ID combinations
-        const item = feedbackList.find((f: any,) => {
-          const matchMbid = recordingMbid
-            && (f.recording_mbid === recordingMbid
-              || f.recording_msid === recordingMbid);
-          const matchMsid = recordingMsid
-            && (f.recording_mbid === recordingMsid
-              || f.recording_msid === recordingMsid);
+        const item = feedbackList.find((f: any) => {
+          const matchMbid = recordingMbid &&
+            (f.recording_mbid === recordingMbid ||
+              f.recording_msid === recordingMbid);
+          const matchMsid = recordingMsid &&
+            (f.recording_mbid === recordingMsid ||
+              f.recording_msid === recordingMsid);
           return matchMbid || matchMsid;
-        },);
+        });
 
         // score 1 = love, 0 = neutral, -1 = hate
         isLiked = item?.score === 1;
       } catch (err) {
-        console.error("Error fetching feedback:", err,);
+        console.error("Error fetching feedback:", err);
       }
     }
 
@@ -125,15 +125,15 @@ async function getMusicStatus(): Promise<string | null> {
       : `<cite>${trackName}</cite>`;
 
     const artistLinks = artistNames
-      .map((name: string, i: number,) => {
+      .map((name: string, i: number) => {
         const mbid = artistMbids[i];
         return mbid
           ? `<a href="https://listenbrainz.org/artist/${mbid}" target="_blank" rel="noopener noreferrer">${name}</a>`
           : name;
-      },)
-      .join(" · ",);
+      })
+      .join(" · ");
 
-    const plainText = `${trackName} by ${artistNames.join(" · ",)}`;
+    const plainText = `${trackName} by ${artistNames.join(" · ")}`;
 
     // Pass isLiked and idToUse to createStatusHtml
     return createStatusHtml(
@@ -141,10 +141,10 @@ async function getMusicStatus(): Promise<string | null> {
       plainText,
       `${trackLink} by ${artistLinks}`,
       isActive,
-      { isLiked, mbid: idToUse, isMsid, },
+      { isLiked, mbid: idToUse, isMsid },
     );
   } catch (err) {
-    console.error("Error fetching music:", err,);
+    console.error("Error fetching music:", err);
     return null;
   }
 }
@@ -158,17 +158,17 @@ async function getGameStatus(): Promise<string | null> {
     const recentGamesUrl =
       `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${STEAM_API_KEY}&steamid=${STEAM_ID}&count=1`;
 
-    const [summaryRes, recentRes,] = await Promise.all([
-      fetch(steamUrl, { headers: { "User-Agent": USER_AGENT, }, },),
-      fetch(recentGamesUrl, { headers: { "User-Agent": USER_AGENT, }, },),
-    ],);
+    const [summaryRes, recentRes] = await Promise.all([
+      fetch(steamUrl, { headers: { "User-Agent": USER_AGENT } }),
+      fetch(recentGamesUrl, { headers: { "User-Agent": USER_AGENT } }),
+    ]);
 
     if (!summaryRes.ok || !recentRes.ok) return null;
 
-    const [summaryData, recentData,] = await Promise.all([
+    const [summaryData, recentData] = await Promise.all([
       summaryRes.json(),
       recentRes.json(),
-    ],);
+    ]);
 
     const player = summaryData.response?.players?.[0];
     if (player?.gameextrainfo) {
@@ -176,7 +176,7 @@ async function getGameStatus(): Promise<string | null> {
       const gameLink = player.gameid
         ? `<a href="https://store.steampowered.com/app/${player.gameid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`
         : `<cite>${gameName}</cite>`;
-      return createStatusHtml("game-status", gameName, gameLink, true,);
+      return createStatusHtml("game-status", gameName, gameLink, true);
     }
 
     const recentGame = recentData.response?.games?.[0];
@@ -184,12 +184,12 @@ async function getGameStatus(): Promise<string | null> {
       const gameName = recentGame.name;
       const gameLink =
         `<a href="https://store.steampowered.com/app/${recentGame.appid}" target="_blank" rel="noopener noreferrer"><cite>${gameName}</cite></a>`;
-      return createStatusHtml("game-status", gameName, gameLink, false,);
+      return createStatusHtml("game-status", gameName, gameLink, false);
     }
 
     return null;
   } catch (err) {
-    console.error("Error fetching Steam:", err,);
+    console.error("Error fetching Steam:", err);
     return null;
   }
 }
@@ -223,9 +223,9 @@ async function getMangaStatus(): Promise<string | null> {
       },
       body: JSON.stringify({
         query,
-        variables: { userId: Number(ANILIST_ID,), },
-      },),
-    },);
+        variables: { userId: Number(ANILIST_ID) },
+      }),
+    });
 
     if (!response.ok) return null;
 
@@ -241,56 +241,56 @@ async function getMangaStatus(): Promise<string | null> {
     const richLink =
       `<a href="${url}" target="_blank" rel="noopener noreferrer"><cite>${title}</cite></a>`;
 
-    return createStatusHtml("manga-status", plainText, richLink, false,);
+    return createStatusHtml("manga-status", plainText, richLink, false);
   } catch (err) {
-    console.error("Error fetching AniList:", err,);
+    console.error("Error fetching AniList:", err);
     return null;
   }
 }
 
 async function* generateStatuses(): AsyncGenerator<string | null> {
   const tasks = [
-    withTimeout(getMusicStatus(), 4500,).catch(() => null),
-    withTimeout(getGameStatus(), 4500,).catch(() => null),
-    withTimeout(getMangaStatus(), 4500,).catch(() => null),
+    withTimeout(getMusicStatus(), 4500).catch(() => null),
+    withTimeout(getGameStatus(), 4500).catch(() => null),
+    withTimeout(getMangaStatus(), 4500).catch(() => null),
   ];
 
   const pending = new Map<
     number,
-    Promise<{ index: number; res: string | null; }>
+    Promise<{ index: number; res: string | null }>
   >();
-  tasks.forEach((task, index,) => {
-    const wrapped = task.then((res,) => ({ index, res, }));
-    pending.set(index, wrapped,);
-  },);
+  tasks.forEach((task, index) => {
+    const wrapped = task.then((res) => ({ index, res }));
+    pending.set(index, wrapped);
+  });
 
   while (pending.size > 0) {
-    const { index, res, } = await Promise.race(pending.values(),);
-    pending.delete(index,);
+    const { index, res } = await Promise.race(pending.values());
+    pending.delete(index);
     if (res) yield res;
   }
 }
 
-export default (_req: Request, _context: any,) => {
+export default (_req: Request, _context: any) => {
   const cacheHeader = "public, s-maxage=15, stale-while-revalidate=60";
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
-    async start(controller,) {
+    async start(controller) {
       try {
         for await (const chunk of generateStatuses()) {
           if (chunk) {
-            controller.enqueue(encoder.encode(chunk + "\n",),);
+            controller.enqueue(encoder.encode(chunk + "\n"));
           }
         }
       } catch (e) {
-        console.error("Streaming error", e,);
-        controller.error(e,);
+        console.error("Streaming error", e);
+        controller.error(e);
       } finally {
         controller.close();
       }
     },
-  },);
+  });
 
   return new Response(stream, {
     headers: {
@@ -298,5 +298,5 @@ export default (_req: Request, _context: any,) => {
       "Cache-Control": cacheHeader,
       "Netlify-CDN-Cache-Control": cacheHeader,
     },
-  },);
+  });
 };

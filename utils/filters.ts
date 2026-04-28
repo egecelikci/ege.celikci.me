@@ -1,6 +1,6 @@
 import * as path from "@std/path";
 import sanitizeHTML from "sanitize-html";
-import { site as siteData, } from "../_config/metadata.ts";
+import { site as siteData } from "../_config/metadata.ts";
 
 const SITE_URL = siteData.url;
 
@@ -17,28 +17,28 @@ export interface NoteGridData {
 const TIMEZONE = "Europe/Istanbul";
 
 // Native date helpers
-function formatDate(date: Date, format: string,): string {
-  const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE, };
+function formatDate(date: Date, format: string): string {
+  const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE };
 
-  if (format.includes("yyyy",)) {
+  if (format.includes("yyyy")) {
     opts.year = "numeric";
     opts.month = "2-digit";
     opts.day = "2-digit";
   }
-  if (format.includes("HH",)) {
+  if (format.includes("HH")) {
     opts.hour = "2-digit";
     opts.minute = "2-digit";
   }
 
-  return new Intl.DateTimeFormat("en-US", opts,).format(date,);
+  return new Intl.DateTimeFormat("en-US", opts).format(date);
 }
 
-function dateToISOString(date: Date,): string {
-  return new Date(date,).toISOString().replace(/\.\d{3}Z$/, "Z",);
+function dateToISOString(date: Date): string {
+  return new Date(date).toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
-function dateFromISOString(iso: string,): Date {
-  return new Date(iso,);
+function dateFromISOString(iso: string): Date {
+  return new Date(iso);
 }
 
 // Helper interfaces
@@ -73,84 +73,84 @@ interface Webmention {
 }
 
 export const filters = {
-  dirname: function(filePath: string,): string {
-    return path.dirname(filePath,);
+  dirname: function (filePath: string): string {
+    return path.dirname(filePath);
   },
 
-  dateToFormat: function(date: Date, format: string,): string {
-    return formatDate(date, String(format,),);
+  dateToFormat: function (date: Date, format: string): string {
+    return formatDate(date, String(format));
   },
 
-  dateToISO: function(date: Date,): string | null {
-    return dateToISOString(date,);
+  dateToISO: function (date: Date): string | null {
+    return dateToISOString(date);
   },
 
-  dateFromISO: function(timestamp: string,): Date {
-    return dateFromISOString(timestamp,);
+  dateFromISO: function (timestamp: string): Date {
+    return dateFromISOString(timestamp);
   },
 
-  humanizeNumber: function(num: number,): string | number {
+  humanizeNumber: function (num: number): string | number {
     if (num > 999) {
-      return (num / 1000).toFixed(1,).replace(/\.0$/, "",) + "K";
+      return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
     }
     return num;
   },
-  extractImages: (content: string,) => {
+  extractImages: (content: string) => {
     if (!content) return [];
 
     const imgRegex = /<img[^>]+src="([^">]+)"[^>]*(?:alt="([^">]*)")?[^>]*>/gi;
     const images = [];
     let match;
 
-    while ((match = imgRegex.exec(content,)) !== null) {
+    while ((match = imgRegex.exec(content)) !== null) {
       images.push({
         src: match[1],
         alt: match[2] || "",
-      },);
+      });
     }
 
     return images;
   },
 
   // Get first image from content (for cover)
-  getCoverImage: (content: string,) => {
-    const images = filters.extractImages(content,);
+  getCoverImage: (content: string) => {
+    const images = filters.extractImages(content);
     return images.length > 0 ? images[0] : null;
   },
 
   // Check if content has images
-  hasImages: (content: string,) => {
-    return filters.extractImages(content,).length > 0;
+  hasImages: (content: string) => {
+    return filters.extractImages(content).length > 0;
   },
 
   // Count images in content
-  imageCount: (content: string,) => {
-    return filters.extractImages(content,).length;
+  imageCount: (content: string) => {
+    return filters.extractImages(content).length;
   },
 
-  obfuscate: function(str: string,): string {
+  obfuscate: function (str: string): string {
     const chars: string[] = [];
     for (let i = str.length - 1; i >= 0; i--) {
-      chars.unshift(["&#", str[i].charCodeAt(0,).toString(), ";",].join("",),);
+      chars.unshift(["&#", str[i].charCodeAt(0).toString(), ";"].join(""));
     }
-    return chars.join("",);
+    return chars.join("");
   },
 
-  slice: function<T,>(array: T[], start: number, end?: number,): T[] {
-    return end ? array.slice(start, end,) : array.slice(start,);
+  slice: function <T>(array: T[], start: number, end?: number): T[] {
+    return end ? array.slice(start, end) : array.slice(start);
   },
 
-  stringify: function(json: unknown,): string {
-    return JSON.stringify(json,);
+  stringify: function (json: unknown): string {
+    return JSON.stringify(json);
   },
 
-  excludePost: function(allPosts: Post[], currentPost: Post,): Post[] {
-    return allPosts.filter((post,) => post.src.path !== currentPost.src.path);
+  excludePost: function (allPosts: Post[], currentPost: Post): Post[] {
+    return allPosts.filter((post) => post.src.path !== currentPost.src.path);
   },
 
-  currentPage: function(allPages: Post[], currentPage: Post,): Post | null {
+  currentPage: function (allPages: Post[], currentPage: Post): Post | null {
     const matches = allPages.filter(
-      (page,) => page.src.path === currentPage.src.path,
+      (page) => page.src.path === currentPage.src.path,
     );
     if (matches && matches.length) {
       return matches[0];
@@ -158,19 +158,19 @@ export const filters = {
     return null;
   },
 
-  randomItem: function<T,>(arr: T[],): T {
-    return arr[Math.floor(Math.random() * arr.length,)];
+  randomItem: function <T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
   },
 
-  shuffle: function<T,>(arr: T[] | null | undefined,): T[] {
+  shuffle: function <T>(arr: T[] | null | undefined): T[] {
     if (!arr) return [];
-    const newArr = [...arr,];
+    const newArr = [...arr];
     let m = newArr.length,
       t,
       i;
 
     while (m) {
-      i = Math.floor(Math.random() * m--,);
+      i = Math.floor(Math.random() * m--);
       t = newArr[m];
       newArr[m] = newArr[i];
       newArr[i] = t;
@@ -179,67 +179,65 @@ export const filters = {
     return newArr;
   },
 
-  findById: function<T extends { id: unknown; },>(
+  findById: function <T extends { id: unknown }>(
     array: T[],
     id: unknown,
   ): T | undefined {
-    return array.find((i,) => i.id === id);
+    return array.find((i) => i.id === id);
   },
 
-  decodeBase64: function(string: string,): string {
-    return atob(string,);
+  decodeBase64: function (string: string): string {
+    return atob(string);
   },
 
-  getKeys: function(target: object,): string[] {
-    return Object.keys(target,);
+  getKeys: function (target: object): string[] {
+    return Object.keys(target);
   },
 
-  filterTagList: function(tags: string[] | undefined,): string[] {
-    return (tags || []).filter((tag,) =>
-      ["all", "posts",].indexOf(tag,) === -1
-    );
+  filterTagList: function (tags: string[] | undefined): string[] {
+    return (tags || []).filter((tag) => ["all", "posts"].indexOf(tag) === -1);
   },
 
-  sortAlphabetically: function(array: string[],): string[] {
-    return (array || []).sort((b, a,) => b.localeCompare(a,));
+  sortAlphabetically: function (array: string[]): string[] {
+    return (array || []).sort((b, a) => b.localeCompare(a));
   },
 
-  isOwnWebmention: function(webmention: Webmention,): boolean {
-    const urls = [SITE_URL,];
+  isOwnWebmention: function (webmention: Webmention): boolean {
+    const urls = [SITE_URL];
     const authorUrl = webmention && webmention.author
       ? webmention.author.url
       : undefined;
-    return !!(authorUrl && urls.includes(authorUrl,));
+    return !!(authorUrl && urls.includes(authorUrl));
   },
 
-  webmentionsByUrl: function(
+  webmentionsByUrl: function (
     webmentions: Webmention[] | undefined,
     url: string,
   ): Webmention[] {
     if (!webmentions) return [];
-    const absoluteUrl = url.startsWith("http",) ? url : SITE_URL + url;
-    const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
-    const targetUrl = cleanUrl(absoluteUrl,);
-    const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of",];
+    const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
+    const cleanUrl = (u: string) => u.replace(/\/+$/, "");
+    const targetUrl = cleanUrl(absoluteUrl);
+    const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of"];
     const allowedHTML = {
-      allowedTags: ["b", "i", "em", "strong", "a",],
+      allowedTags: ["b", "i", "em", "strong", "a"],
       allowedAttributes: {
-        a: ["href",],
+        a: ["href"],
       },
     };
 
-    const orderByDate = (a: Webmention, b: Webmention,) =>
-      new Date(a.published || a["wm-received"] || "",).getTime()
-      - new Date(b.published || b["wm-received"] || "",).getTime();
+    const orderByDate = (a: Webmention, b: Webmention) =>
+      new Date(a.published || a["wm-received"] || "").getTime() -
+      new Date(b.published || b["wm-received"] || "").getTime();
 
-    const checkRequiredFields = (entry: Webmention,) => {
-      const { author, } = entry;
+    const checkRequiredFields = (entry: Webmention) => {
+      const { author } = entry;
       return !!author && !!author.name;
     };
 
-    const clean = (entry: Webmention,) => {
+    const clean = (entry: Webmention) => {
       if (entry.content) {
-        const { html, text, } = entry.content;
+        const { html, text } = entry.content;
 
         if (html) {
           if (html.length > 2000) {
@@ -247,77 +245,77 @@ export const filters = {
               entry["wm-source"]
             }">${entry["wm-source"]}</a>`;
           } else {
-            entry.content.value = sanitizeHTML(html, allowedHTML,);
+            entry.content.value = sanitizeHTML(html, allowedHTML);
           }
         } else {
-          entry.content.value = sanitizeHTML(text || "", allowedHTML,);
+          entry.content.value = sanitizeHTML(text || "", allowedHTML);
         }
       } else {
-        entry.content = { value: "", };
+        entry.content = { value: "" };
       }
 
       return entry;
     };
 
     return webmentions
-      .filter((entry,) => cleanUrl(entry["wm-target"] || "",) === targetUrl)
-      .filter((entry,) => allowedTypes.includes(entry["wm-property"] || "",))
-      .filter(checkRequiredFields,)
-      .map(clean,)
-      .sort(orderByDate,);
+      .filter((entry) => cleanUrl(entry["wm-target"] || "") === targetUrl)
+      .filter((entry) => allowedTypes.includes(entry["wm-property"] || ""))
+      .filter(checkRequiredFields)
+      .map(clean)
+      .sort(orderByDate);
   },
 
-  truncate: function(str: unknown, length: number, suffix = "…",): string {
-    const s = String(str || "",);
+  truncate: function (str: unknown, length: number, suffix = "…"): string {
+    const s = String(str || "");
     if (s.length <= length) return s;
-    return s.substring(0, length,).trim() + suffix;
+    return s.substring(0, length).trim() + suffix;
   },
 
-  teaser: function(content: unknown, length = 160,): string {
-    let text = String(content || "",);
+  teaser: function (content: unknown, length = 160): string {
+    let text = String(content || "");
     // 1. Remove HTML tags
-    text = text.replace(/<[^>]*>?/gm, "",);
+    text = text.replace(/<[^>]*>?/gm, "");
     // 2. Remove Markdown links [text](url) -> text
-    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1",);
+    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
     // 3. Remove other Markdown artifacts (backticks, etc.)
-    text = text.replace(/[`*#_]/g, "",);
+    text = text.replace(/[`*#_]/g, "");
     // 4. Normalize whitespace
-    text = text.replace(/\s+/g, " ",).trim();
+    text = text.replace(/\s+/g, " ").trim();
 
     if (text.length <= length) return text;
-    return text.substring(0, length,).trim() + "…";
+    return text.substring(0, length).trim() + "…";
   },
 
   // Specialized teaser for notes that preserves some formatting/components
-  renderNoteTeaser: function(content: string, length = 400,): string {
+  renderNoteTeaser: function (content: string, length = 400): string {
     if (!content) return "";
     let text = content;
 
     // Remove images from teaser
-    text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "",);
+    text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "");
 
     if (text.length <= length) return text;
-    return text.substring(0, length,).trim() + "…";
+    return text.substring(0, length).trim() + "…";
   },
 
-  webmentionCountByType: function(
+  webmentionCountByType: function (
     webmentions: Webmention[] | undefined,
     url: string,
     ...types: string[]
   ): string {
     if (!webmentions) return "0";
 
-    const absoluteUrl = url.startsWith("http",) ? url : SITE_URL + url;
-    const cleanUrl = (u: string,) => u.replace(/\/+$/, "",);
-    const targetUrl = cleanUrl(absoluteUrl,);
+    const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
+    const cleanUrl = (u: string) => u.replace(/\/+$/, "");
+    const targetUrl = cleanUrl(absoluteUrl);
 
-    const isUrlMatch = (entry: Webmention,) =>
-      cleanUrl(entry["wm-target"] || "",) === targetUrl;
+    const isUrlMatch = (entry: Webmention) =>
+      cleanUrl(entry["wm-target"] || "") === targetUrl;
 
     return String(
       webmentions
-        .filter(isUrlMatch,)
-        .filter((entry,) => types.includes(entry["wm-property"] || "",)).length,
+        .filter(isUrlMatch)
+        .filter((entry) => types.includes(entry["wm-property"] || "")).length,
     );
   },
 };

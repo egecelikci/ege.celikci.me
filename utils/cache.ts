@@ -5,7 +5,7 @@
  * Handles JSON file caching with validation and error handling.
  */
 
-import { ensureDir, } from "@std/fs/ensure-dir";
+import { ensureDir } from "@std/fs/ensure-dir";
 
 // ============================================================================
 // TYPES
@@ -19,34 +19,34 @@ export interface CacheOptions {
   name: string;
 
   /** Optional validator function */
-  validator?: (data: unknown,) => boolean;
+  validator?: (data: unknown) => boolean;
 }
 
 // ============================================================================
 // CACHE MANAGER
 // ============================================================================
 
-export class CacheManager<T,> {
+export class CacheManager<T> {
   private data: T | null = null;
   private loaded = false;
 
-  constructor(private options: CacheOptions,) {}
+  constructor(private options: CacheOptions) {}
 
   /**
    * Load data from cache file
    */
-  async load(defaultValue: T,): Promise<T> {
+  async load(defaultValue: T): Promise<T> {
     if (this.loaded) {
       return this.data ?? defaultValue;
     }
 
     try {
-      const text = await Deno.readTextFile(this.options.filePath,);
-      const parsed = JSON.parse(text,) as T;
+      const text = await Deno.readTextFile(this.options.filePath);
+      const parsed = JSON.parse(text) as T;
 
       // Validate if validator provided
-      if (this.options.validator && !this.options.validator(parsed,)) {
-        this.log("warn", "Invalid cache structure, using default",);
+      if (this.options.validator && !this.options.validator(parsed)) {
+        this.log("warn", "Invalid cache structure, using default");
         this.data = defaultValue;
         this.loaded = true;
         return defaultValue;
@@ -54,13 +54,13 @@ export class CacheManager<T,> {
 
       this.data = parsed;
       this.loaded = true;
-      this.log("info", `Loaded cache successfully`,);
+      this.log("info", `Loaded cache successfully`);
       return parsed;
     } catch (error) {
       if (error instanceof Deno.errors.NotFound) {
-        this.log("info", "No cache found, starting fresh",);
+        this.log("info", "No cache found, starting fresh");
       } else {
-        this.log("warn", `Failed to load cache: ${(error as Error).message}`,);
+        this.log("warn", `Failed to load cache: ${(error as Error).message}`);
       }
 
       this.data = defaultValue;
@@ -72,25 +72,25 @@ export class CacheManager<T,> {
   /**
    * Save data to cache file
    */
-  async save(data: T,): Promise<void> {
+  async save(data: T): Promise<void> {
     try {
       // Ensure directory exists
       const dir = this.options.filePath.substring(
         0,
-        this.options.filePath.lastIndexOf("/",),
+        this.options.filePath.lastIndexOf("/"),
       );
-      await ensureDir(dir,);
+      await ensureDir(dir);
 
       // Write to file
       await Deno.writeTextFile(
         this.options.filePath,
-        JSON.stringify(data, null, 2,),
+        JSON.stringify(data, null, 2),
       );
 
       this.data = data;
-      this.log("info", "Saved cache successfully",);
+      this.log("info", "Saved cache successfully");
     } catch (error) {
-      this.log("error", `Failed to save cache: ${(error as Error).message}`,);
+      this.log("error", `Failed to save cache: ${(error as Error).message}`);
     }
   }
 
@@ -121,10 +121,10 @@ export class CacheManager<T,> {
    */
   async delete(): Promise<void> {
     try {
-      await Deno.remove(this.options.filePath,);
+      await Deno.remove(this.options.filePath);
       this.data = null;
       this.loaded = false;
-      this.log("info", "Cache file deleted",);
+      this.log("info", "Cache file deleted");
     } catch (error) {
       if (!(error instanceof Deno.errors.NotFound)) {
         this.log(
@@ -135,7 +135,7 @@ export class CacheManager<T,> {
     }
   }
 
-  private log(level: "info" | "warn" | "error", message: string,): void {
+  private log(level: "info" | "warn" | "error", message: string): void {
     const prefix = `[${this.options.name}]`;
     const icons = {
       info: "💾",
@@ -148,13 +148,13 @@ export class CacheManager<T,> {
 
     switch (level) {
       case "info":
-        console.log(fullMessage,);
+        console.log(fullMessage);
         break;
       case "warn":
-        console.warn(fullMessage,);
+        console.warn(fullMessage);
         break;
       case "error":
-        console.error(fullMessage,);
+        console.error(fullMessage);
         break;
     }
   }
@@ -167,15 +167,15 @@ export class CacheManager<T,> {
 /**
  * Create a cache manager with typed data
  */
-export function createCache<T,>(options: CacheOptions,): CacheManager<T> {
-  return new CacheManager<T>(options,);
+export function createCache<T>(options: CacheOptions): CacheManager<T> {
+  return new CacheManager<T>(options);
 }
 
 /**
  * Validator for array-based cache data
  */
-export function arrayValidator(data: unknown,): boolean {
-  return Array.isArray(data,);
+export function arrayValidator(data: unknown): boolean {
+  return Array.isArray(data);
 }
 
 /**
@@ -183,13 +183,13 @@ export function arrayValidator(data: unknown,): boolean {
  */
 export function objectValidator(
   requiredKeys: string[],
-): (data: unknown,) => boolean {
-  return (data: unknown,): boolean => {
+): (data: unknown) => boolean {
+  return (data: unknown): boolean => {
     if (typeof data !== "object" || data === null) {
       return false;
     }
 
     const obj = data as Record<string, unknown>;
-    return requiredKeys.every((key,) => key in obj);
+    return requiredKeys.every((key) => key in obj);
   };
 }

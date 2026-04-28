@@ -52,23 +52,23 @@
 
   <script>
     (function () {
-    const input = document.getElementById("coffee-input");
-    const outCoffee = document.getElementById("out-coffee");
-    const outIce = document.getElementById("out-ice");
-    const outHot = document.getElementById("out-hot");
-    const outBloom = document.getElementById("out-bloom");
+      const input = document.getElementById("coffee-input");
+      const outCoffee = document.getElementById("out-coffee");
+      const outIce = document.getElementById("out-ice");
+      const outHot = document.getElementById("out-hot");
+      const outBloom = document.getElementById("out-bloom");
 
-    function calculate() {
-      const vol = parseFloat(input.value) || 0;
-      const coffee = vol * (65 / 1000);
+      function calculate() {
+        const vol = parseFloat(input.value) || 0;
+        const coffee = vol * (65 / 1000);
 
-      outCoffee.textContent = coffee.toFixed(1);
-      outIce.textContent = Math.round(vol * 0.4);
-      outHot.textContent = Math.round(vol * 0.6);
-      outBloom.textContent = Math.round(coffee * 3);
-    }
+        outCoffee.textContent = coffee.toFixed(1);
+        outIce.textContent = Math.round(vol * 0.4);
+        outHot.textContent = Math.round(vol * 0.6);
+        outBloom.textContent = Math.round(coffee * 3);
+      }
 
-    input.addEventListener("input", calculate);
-  })();
+      input.addEventListener("input", calculate);
+    })();
   </script>
 </div>

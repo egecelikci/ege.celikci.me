@@ -7,10 +7,17 @@
     - page: { url: string, title: string, date?: Date, label?: string, description?: string, tags?: string[] }
 #}}
 
-<a href="{{ it.page.url |> url }}" class="{{ theme.components.listing.row }} group/pagerow">
+<a
+  href="{{ it.page.url |> url }}"
+  class="{{ theme.components.listing.row }} group/pagerow"
+>
   {{# 1. ICON/META #}}
-  <div class="shrink-0 w-24 md:w-32 flex flex-col gap-1 opacity-40 group-hover/pagerow:opacity-100 transition-all">
-    <span class="{{ theme.typography.label }} text-primary font-bold uppercase tracking-widest">
+  <div
+    class="shrink-0 w-24 md:w-32 flex flex-col gap-1 opacity-40 group-hover/pagerow:opacity-100 transition-all"
+  >
+    <span
+      class="{{ theme.typography.label }} text-primary font-bold uppercase tracking-widest"
+    >
       {{ it.page.label || "page" }}
     </span>
     {{ if it.page.date }}
@@ -22,11 +29,15 @@
 
   {{# 2. TITLE & DESCRIPTION #}}
   <div class="grow flex flex-col gap-2">
-    <span class="text-xl md:text-2xl font-bold tracking-tight text-text group-hover/pagerow:text-primary transition-colors">
+    <span
+      class="text-xl md:text-2xl font-bold tracking-tight text-text group-hover/pagerow:text-primary transition-colors"
+    >
       {{ it.page.title }}
     </span>
     {{ if it.page.description }}
-      <p class="text-sm text-text-muted/60 line-clamp-1 group-hover/pagerow:text-text-muted transition-colors">
+      <p
+        class="text-sm text-text-muted/60 line-clamp-1 group-hover/pagerow:text-text-muted transition-colors"
+      >
         {{ it.page.description }}
       </p>
     {{ /if }}
@@ -34,9 +45,13 @@
 
   {{# 3. TAGS #}}
   {{ if it.page.tags }}
-    <div class="hidden md:flex items-center gap-3 opacity-0 group-hover/pagerow:opacity-100 transition-opacity">
+    <div
+      class="hidden md:flex items-center gap-3 opacity-0 group-hover/pagerow:opacity-100 transition-opacity"
+    >
       {{ for tag of it.page.tags |> slice(0, 2) }}
-        <span class="{{ theme.typography.label }} text-text-muted/40 italic">#{{ tag }}</span>
+        <span class="{{ theme.typography.label }} text-text-muted/40 italic">#{{
+            tag
+          }}</span>
       {{ /for }}
     </div>
   {{ /if }}

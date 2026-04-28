@@ -2,14 +2,26 @@
   Component: TagFeeds
   Subtle subscription links for tag pages.
 #}}
-{{ set tagSlug = it.tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-") }}
+{{
+  set tagSlug = it.tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
+}}
 
-<div class="flex items-center gap-4 p-3 bg-surface border border-border/10 rounded-xl shadow-sm select-none">
+<div
+  class="flex items-center gap-4 p-3 bg-surface border border-border/10 rounded-xl shadow-sm select-none"
+>
   {{ comp.ui.Icon({ name: "rss", classes: "w-3.5 h-3.5 text-primary/40" }) }}
-  <span class="text-[9px] font-mono text-text-muted/50 uppercase tracking-widest">Subscribe</span>
+  <span
+    class="text-[9px] font-mono text-text-muted/50 uppercase tracking-widest"
+  >Subscribe</span>
   <div class="flex items-center gap-3">
-    <a href="/tags/{{ tagSlug }}.atom" class="text-[9px] font-bold text-text-muted/60 hover:text-primary transition-colors uppercase tracking-widest no-underline">Atom</a>
+    <a
+      href="/tags/{{ tagSlug }}.atom"
+      class="text-[9px] font-bold text-text-muted/60 hover:text-primary transition-colors uppercase tracking-widest no-underline"
+    >Atom</a>
     <span class="text-text-muted/20">|</span>
-    <a href="/tags/{{ tagSlug }}.json" class="text-[9px] font-bold text-text-muted/60 hover:text-primary transition-colors uppercase tracking-widest no-underline">JSON</a>
+    <a
+      href="/tags/{{ tagSlug }}.json"
+      class="text-[9px] font-bold text-text-muted/60 hover:text-primary transition-colors uppercase tracking-widest no-underline"
+    >JSON</a>
   </div>
 </div>

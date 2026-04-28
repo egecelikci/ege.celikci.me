@@ -12,12 +12,16 @@
   {{ set count = 0 }}
   {{ for item of it.items }}
     {{ if item.images?.length > 0 && count < (it.maxItems || 9) }}
-      <a href="{{ item.url }}" class="collage-item group/collage block aspect-square overflow-hidden rounded-sm transition-all duration-700 active:scale-95" title="view note">
-        <img 
-          src="{{ item.images[0].src }}" 
-          alt="{{ item.images[0].alt || 'collage image' }}" 
-          class="w-full h-full object-cover grayscale opacity-60 md:opacity-40 transition-all duration-700 group-hover/collage:grayscale-0 group-hover/collage:opacity-100 group-[.is-active]/collage:grayscale-[0.5] group-[.is-active]/collage:opacity-80" 
-          loading="lazy" 
+      <a
+        href="{{ item.url }}"
+        class="collage-item group/collage block aspect-square overflow-hidden rounded-sm transition-all duration-700 active:scale-95"
+        title="view note"
+      >
+        <img
+          src="{{ item.images[0].src }}"
+          alt="{{ item.images[0].alt || 'collage image' }}"
+          class="w-full h-full object-cover grayscale opacity-60 md:opacity-40 transition-all duration-700 group-hover/collage:grayscale-0 group-hover/collage:opacity-100 group-[.is-active]/collage:grayscale-[0.5] group-[.is-active]/collage:opacity-80"
+          loading="lazy"
           transform-images="avif webp jpg 200"
         />
       </a>

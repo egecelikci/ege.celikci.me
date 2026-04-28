@@ -12,10 +12,12 @@
   {{ else }}
     <div class="grow"></div>
   {{ /if }}
-  
+
   <div class="flex items-center gap-4">
-     <span class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}">
-        {{ it.text || 'view details &rarr;' }}
-     </span>
+    <span
+      class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+    >
+      {{ it.text || "view details &rarr;" }}
+    </span>
   </div>
 </footer>

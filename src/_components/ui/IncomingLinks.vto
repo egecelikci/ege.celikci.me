@@ -10,10 +10,12 @@
 {{ if backlinks && backlinks.length > 0 }}
   <div class="mt-24 pt-8 border-t border-border/10 print:hidden {{ classes }}">
     <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
-      <h3 class="text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted/50 whitespace-nowrap">
+      <h3
+        class="text-[10px] uppercase tracking-[0.3em] font-bold text-text-muted/50 whitespace-nowrap"
+      >
         Linked from
       </h3>
-      
+
       <ul class="flex flex-wrap gap-x-6 gap-y-2 list-none p-0 m-0">
         {{ for link of backlinks }}
           <li>
@@ -21,10 +23,14 @@
               href="{{ link.url }}"
               class="group inline-flex items-baseline gap-2 no-underline"
             >
-              <span class="text-xs font-bold text-text-muted/60 group-hover:text-primary transition-colors">
+              <span
+                class="text-xs font-bold text-text-muted/60 group-hover:text-primary transition-colors"
+              >
                 {{ link.title || "Untitled" }}
               </span>
-              <time class="text-[9px] font-mono text-text-muted/50 uppercase tracking-widest">
+              <time
+                class="text-[9px] font-mono text-text-muted/50 uppercase tracking-widest"
+              >
                 {{ link.date |> date("dd MMM") }}
               </time>
             </a>

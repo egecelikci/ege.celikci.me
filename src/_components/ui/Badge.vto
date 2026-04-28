@@ -13,12 +13,12 @@
 {{ set tag = href ? "a" : "span" }}
 
 <{{ tag }}
-  {{ if href }}href="{{ href }}"{{ /if }}
-  class="{{ theme.components.badge.base }} {{ classes }}"
-  {{ attributes |> attr |> safe }}
+{{ if href }}href="{{ href }}"{{ /if }}
+class="{{ theme.components.badge.base }} {{ classes }}"
+{{ attributes |> attr |> safe }}
 >
-  {{ if icon }}
-    {{ comp.ui.Icon({ name: icon, catalog: "lucide", classes: "w-3 h-3" }) }}
-  {{ /if }}
-  <span>{{ content |> safe }}</span>
+{{ if icon }}
+  {{ comp.ui.Icon({ name: icon, catalog: "lucide", classes: "w-3 h-3" }) }}
+{{ /if }}
+<span>{{ content |> safe }}</span>
 </{{ tag }}>

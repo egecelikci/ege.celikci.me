@@ -1,21 +1,27 @@
 ---
 title: notes
 description: "ephemeral updates, logs & short form of content"
-label: "posts"
 prose: false
 searchable: false
+menu:
+  group: entries
+  label: posts
+  order: 2
 ---
 
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
   {{>
-    const groupedNotes = results.reduce((groups, note) => {
-      const dateKey = note.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-      if (!groups[dateKey]) groups[dateKey] = [];
-      groups[dateKey].push(note);
-      return groups;
-    }, {});
-    const dateKeys = Object.keys(groupedNotes);
+    const groupedNotes = Object.groupBy(
+      results,
+      (note) =>
+        note.date.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+    );
+    const dateKeys = Object.keys(groupedNotes)
   }}
 
   <div class="h-feed flex flex-col gap-20">
@@ -23,11 +29,16 @@ searchable: false
       <section class="flex flex-col gap-4">
         {{# Date Marker #}}
         <div class="flex items-center gap-4">
-           <div class="shrink-0 w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/5"></div>
-           <h2 class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted/60 font-bold">
-             {{ dateKey }}
-           </h2>
-           <div class="h-px grow bg-border/5"></div>
+          <div
+            class="shrink-0 w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/5"
+          >
+          </div>
+          <h2
+            class="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted/60 font-bold"
+          >
+            {{ dateKey }}
+          </h2>
+          <div class="h-px grow bg-border/5"></div>
         </div>
 
         {{# Timeline Wrapper #}}
@@ -39,7 +50,9 @@ searchable: false
           </div>
         {{ /set }}
 
-        {{ await comp.ui.Timeline({ content: timelineContent, classes: "ml-1" }) }}
+        {{
+          await comp.ui.Timeline({ content: timelineContent, classes: "ml-1" })
+        }}
       </section>
     {{ /for }}
   </div>

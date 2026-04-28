@@ -18,7 +18,7 @@ const EMAIL = "ege@celikci.me";
 const MATRIX_USER = "eg";
 const MATRIX_HOST = "metropolis.nexus";
 const SIGNAL_URL =
-  "aHR0cHM6Ly9zaWduYWwubWUvI2V1L2owYXBhQThUZVNRLUJjUlE1RkhhWnZ1b2Y5X05XME9sY2VqYTFLUGg2NkdwWjZxYUxxcExoN0M2UTFVM2J6eTM=";
+  "aHR0cHM6Ly9zaWduYWwubWUvI2V1L3owc1ZpZzFYYzFtMWdNU0RwRnFWMDF1Qk5wSXZBV3d5X1k4aFVJNlhBckczcXBKNnVmcExsNVNSRlB4a3NzYWM=";
 
 export const author = {
   name: "Ege Çelikçi",
@@ -37,7 +37,7 @@ export const author = {
       username: MATRIX_USER,
       homeserver: MATRIX_HOST,
       devices: [
-        { name: "Element Desktop", id: "F0xxKVPj64", },
+        { name: "Element Desktop", id: "F0xxKVPj64" },
         {
           name: "Element X Android",
           id: "+Zzdv2gXqVcZWldRyG+jamEeQG5aj0NB/0eUtgzCICA",
@@ -49,7 +49,7 @@ export const author = {
     {
       id: "signal",
       name: "Signal",
-      url: atob(SIGNAL_URL,),
+      url: atob(SIGNAL_URL),
       icon: "message-circle-dashed",
       label: "Preferred",
       priority: 1,

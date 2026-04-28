@@ -3,17 +3,17 @@ title: writing
 description: "a blog I don't use very often"
 prose: false
 searchable: false
+menu:
+  group: entries
+  title: writing
+  label: "blog & essays"
+  order: 1
 ---
 
 {{>
   const posts = search.pages("type=post", "date=desc");
-  const groupedPosts = posts.reduce((groups, post) => {
-    const year = post.date.getFullYear();
-    if (!groups[year]) groups[year] = [];
-    groups[year].push(post);
-    return groups;
-  }, {});
-  const years = Object.keys(groupedPosts).sort((a, b) => b - a);
+  const groupedPosts = Object.groupBy(posts, (post) => post.date.getFullYear());
+  const years = Object.keys(groupedPosts).sort((a, b) => b - a)
 }}
 
 <div class="flex flex-col gap-16 md:gap-24">
@@ -21,7 +21,9 @@ searchable: false
     <section class="flex flex-col gap-6 md:gap-8">
       {{# Year Header #}}
       <div class="flex items-center gap-6 opacity-30">
-        <h2 class="text-4xl md:text-5xl font-bold tracking-tighter">{{ year }}</h2>
+        <h2 class="text-4xl md:text-5xl font-bold tracking-tighter">
+          {{ year }}
+        </h2>
         <div class="h-px grow bg-current"></div>
       </div>
 

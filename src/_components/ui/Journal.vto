@@ -10,9 +10,14 @@
     - attributes: object
 #}}
 
-<article class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}" {{ attributes |> attr |> safe }}>
+<article
+  class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}"
+  {{ attributes |> attr |> safe }}
+>
   <header class="{{ theme.components.listing.metaRow }}">
-    <time class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+    <time
+      class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+    >
       {{ date |> date("dd MMM yyyy") }}
     </time>
     <div class="h-px grow bg-border/10"></div>

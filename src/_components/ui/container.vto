@@ -18,14 +18,13 @@
 
 {{
   set paddingClass = padding === false
-    ? ""
-    : (typeof padding === "string" ? padding : theme.spacing.container)
+  ? ""
+  : (typeof padding === "string" ? padding : theme.spacing.container)
 }}
 
 {{
   set containerClasses = [
     "w-full",
-    "overflow-x-hidden",
     paddingClass,
     centered !== false ? "mx-auto" : "",
     widthClass,

@@ -7,6 +7,3 @@ node_modules/
 
 # Rust
 src/_rust/**/target/
-
-!/.docs/
-!/.docs/**

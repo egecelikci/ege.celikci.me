@@ -27,37 +27,45 @@
   {{ set noteDate = it.note.date |> date("dd MMM yyyy · HH:mm") }}
   {{ set noteVisuals }}
     {{ if hasImages }}
-       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
+      {{
+        await comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
+      }}
     {{ /if }}
   {{ /set }}
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
   {{ set noteFooterLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
 
-  {{ comp.ui.ListingItem({
-    url: it.note.url,
-    title: it.note.title,
-    date: noteDate,
-    tags: it.note.tags,
-    visuals: noteVisuals,
-    content: noteContent,
-    footerLeft: noteFooterLeft,
-    footerText: "note"
-  }) }}
+  {{
+    comp.ui.ListingItem({
+      url: it.note.url,
+      title: it.note.title,
+      date: noteDate,
+      tags: it.note.tags,
+      visuals: noteVisuals,
+      content: noteContent,
+      footerLeft: noteFooterLeft,
+      footerText: "note",
+    })
+  }}
 
-{{# --- 2. FULL VIEW VARIANT --- #}}
+  {{# --- 2. FULL VIEW VARIANT --- #}}
 {{ else }}
   <article class="h-entry py-8 transition-all duration-500">
     {{# Header #}}
     {{ if !it.hideHeader }}
       <header class="{{ theme.components.listing.metaRow }}">
-        <time class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}">
+        <time
+          class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+        >
           {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
         </time>
         <div class="h-px grow bg-border/10"></div>
         {{ if it.note.tags }}
           <div class="flex gap-4">
             {{ for tag of it.note.tags |> slice(0, 3) }}
-              <span class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}">#{{ tag }}</span>
+              <span
+                class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}"
+              >#{{ tag }}</span>
             {{ /for }}
           </div>
         {{ /if }}
@@ -66,7 +74,9 @@
 
     {{# Visuals #}}
     {{ if hasImages }}
-       {{ await comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
+      {{
+        await comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
+      }}
     {{ /if }}
 
     {{# Textual Content #}}
@@ -84,9 +94,11 @@
 
     {{# Footer #}}
     {{ set footerLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
-    {{ comp.ui.ListingFooter({ 
-      leftContent: footerLeft, 
-      text: "note" 
-    }) }}
+    {{
+      comp.ui.ListingFooter({
+        leftContent: footerLeft,
+        text: "note",
+      })
+    }}
   </article>
 {{ /if }}

@@ -13,7 +13,7 @@
   const isNote = it.entry.type === "note" || it.entry.url.startsWith("/notes/");
   const vtoContext = { ...it.entry, author, site, comp, theme };
   const isCompact = it.compact ?? !isNote;
-  
+
   // 1. Content logic (Now encapsulated in filters/helpers where possible)
   let displayContent = "";
   if (isNote) {
@@ -25,7 +25,7 @@
   }
 
   // 2. Title logic
-  const displayTitle = (isNote && it.entry.isAutoTitle) ? "" : it.entry.title;
+  const displayTitle = (isNote && it.entry.isAutoTitle) ? "" : it.entry.title
 }}
 
 {{# Handle footer content with await #}}
@@ -34,17 +34,19 @@
   {{ set leftContent = await comp.ui.NoteStats({ stats: it.entry.stats }) }}
 {{ /if }}
 
-{{ comp.ui.ListingItem({
-  url: it.entry.url,
-  title: displayTitle,
-  date: it.entry.date,
-  tags: it.entry.tags,
-  images: it.entry.images,
-  content: displayContent,
-  footerLeft: leftContent,
-  footerText: "view details &rarr;",
-  bodyClasses: isNote ? "line-clamp-[12] md:line-clamp-6" : "line-clamp-3",
-  classes: it.classes,
-  isNote: isNote,
-  compact: isCompact
-}) }}
+{{
+  comp.ui.ListingItem({
+    url: it.entry.url,
+    title: displayTitle,
+    date: it.entry.date,
+    tags: it.entry.tags,
+    images: it.entry.images,
+    content: displayContent,
+    footerLeft: leftContent,
+    footerText: "view details &rarr;",
+    bodyClasses: isNote ? "line-clamp-[12] md:line-clamp-6" : "line-clamp-3",
+    classes: it.classes,
+    isNote: isNote,
+    compact: isCompact,
+  })
+}}
