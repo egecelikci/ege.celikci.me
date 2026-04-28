@@ -80,4 +80,8 @@
   feed: "https://cadence.moe/blog/atom.xml"
   img: "/assets/images/88x31/cadence_now.png"
   category: "person"
-
+- title: "Evie On-line"
+  url: "https://ewie.online"
+  feed: "https://ewie.online/feed/feed.xml"
+  img: "/assets/images/88x31/evie.png"
+  category: "person"
