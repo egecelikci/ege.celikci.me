@@ -1,7 +1,7 @@
 ---
 title: how did I make the music page
 date: 2025-11-25
-tags: code
+tags: ["code"]
 ---
 
 I’ve been wanting to write a blog post for a long time, but I couldn’t find a topic to write about. I decided to write about how I created my [favorite albums page](/music) because it’s something I’m very confident in and proud of.
