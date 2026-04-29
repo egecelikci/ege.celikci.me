@@ -46,7 +46,7 @@
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
-    "fetch-music": "deno run --allow-net --allow-read --allow-write --allow-env scripts/fetch-music.ts"
+    "fetch-music": "deno run --allow-net --allow-read --allow-write --allow-env utils/fetch-music.ts"
   },
   "fmt": {
     "useTabs": false,
