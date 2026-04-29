@@ -1,6 +1,764 @@
 {
   "albums": [
     {
+      "secondary-types": [],
+      "disambiguation": "",
+      "releases": [
+        {
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "packaging": null,
+          "date": "2016-09-16",
+          "country": "US",
+          "artist-credit": [
+            {
+              "name": "Mac Miller",
+              "joinphrase": "",
+              "artist": {
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "sort-name": "Miller, Mac",
+                "country": "US",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              }
+            }
+          ],
+          "barcode": "093624915133",
+          "title": "The Divine Feminine",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "area": {
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "name": "United States",
+                "disambiguation": "",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "sort-name": "United States",
+                "type-id": null,
+                "type": null
+              },
+              "date": "2016-09-16"
+            }
+          ],
+          "quality": "normal",
+          "status": "Official",
+          "id": "71a0d5ff-68ff-4a8e-b36e-630f00630306",
+          "disambiguation": "Urban Outfitters exclusive"
+        },
+        {
+          "disambiguation": "",
+          "id": "c57419d5-1777-4845-aea2-b62740da13d9",
+          "quality": "normal",
+          "status": "Official",
+          "title": "The Divine Feminine",
+          "barcode": "093624917199",
+          "release-events": [
+            {
+              "date": "2016-09-16",
+              "area": {
+                "type": null,
+                "type-id": null,
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98"
+              }
+            }
+          ],
+          "packaging-id": null,
+          "date": "2016-09-16",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "packaging": null,
+          "country": "US",
+          "artist-credit": [
+            {
+              "artist": {
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "country": "US",
+                "sort-name": "Miller, Mac"
+              },
+              "name": "Mac Miller",
+              "joinphrase": ""
+            }
+          ]
+        },
+        {
+          "status": "Official",
+          "quality": "normal",
+          "id": "a98fb1a5-6eb4-4ab8-a004-b446e8da4cfe",
+          "disambiguation": "apple digital master",
+          "artist-credit": [
+            {
+              "name": "Mac Miller",
+              "joinphrase": "",
+              "artist": {
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "sort-name": "Miller, Mac",
+                "country": "US"
+              }
+            }
+          ],
+          "country": "US",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "packaging": "None",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2016-09-16",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "sort-name": "United States"
+              },
+              "date": "2016-09-16"
+            }
+          ],
+          "barcode": "093624918844",
+          "title": "The Divine Feminine"
+        },
+        {
+          "quality": "normal",
+          "status": "Official",
+          "disambiguation": "explicit",
+          "id": "2d0bc546-9221-4415-a19d-e1ca44e0fd35",
+          "date": "2016-09-16",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": null,
+            "script": "Latn"
+          },
+          "packaging": "None",
+          "artist-credit": [
+            {
+              "joinphrase": "",
+              "name": "Mac Miller",
+              "artist": {
+                "sort-name": "Miller, Mac",
+                "country": "US",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "disambiguation": "American rapper",
+                "name": "Mac Miller"
+              }
+            }
+          ],
+          "country": "XW",
+          "title": "The Divine Feminine",
+          "barcode": "093624918851",
+          "release-events": [
+            {
+              "date": "2016-09-16",
+              "area": {
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]"
+              }
+            }
+          ],
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b"
+        },
+        {
+          "status": "Official",
+          "quality": "normal",
+          "id": "e81ea7ad-899a-417b-839d-6f74a6b66ede",
+          "disambiguation": "clean",
+          "artist-credit": [
+            {
+              "artist": {
+                "disambiguation": "American rapper",
+                "name": "Mac Miller",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "country": "US",
+                "sort-name": "Miller, Mac"
+              },
+              "name": "Mac Miller",
+              "joinphrase": ""
+            }
+          ],
+          "country": null,
+          "packaging": "None",
+          "text-representation": {
+            "language": null,
+            "script": "Latn"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2016-09-16",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "release-events": [
+            {
+              "date": "2016-09-16",
+              "area": null
+            }
+          ],
+          "barcode": "093624917168",
+          "title": "The Divine Feminine"
+        },
+        {
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "release-events": [
+            {
+              "area": null,
+              "date": "2016-09-16"
+            }
+          ],
+          "barcode": "093624917175",
+          "title": "The Divine Feminine",
+          "country": null,
+          "artist-credit": [
+            {
+              "artist": {
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "name": "Mac Miller",
+              "joinphrase": ""
+            }
+          ],
+          "text-representation": {
+            "language": null,
+            "script": "Latn"
+          },
+          "packaging": "None",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2016-09-16",
+          "id": "df3ec403-3492-4b1c-8a2d-0532ceba3c0b",
+          "disambiguation": "clean",
+          "status": "Official",
+          "quality": "normal"
+        },
+        {
+          "date": "2016-12-09",
+          "packaging": null,
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "country": "XE",
+          "artist-credit": [
+            {
+              "name": "Mac Miller",
+              "joinphrase": "",
+              "artist": {
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "disambiguation": "American rapper",
+                "name": "Mac Miller",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff"
+              }
+            }
+          ],
+          "title": "The Divine Feminine",
+          "barcode": "093624916031",
+          "release-events": [
+            {
+              "date": "2016-12-09",
+              "area": {
+                "disambiguation": "",
+                "name": "Europe",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "type": null,
+                "type-id": null,
+                "sort-name": "Europe",
+                "iso-3166-1-codes": [
+                  "XE"
+                ]
+              }
+            },
+            {
+              "date": "2016-12-09",
+              "area": {
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "sort-name": "United States",
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98"
+              }
+            }
+          ],
+          "packaging-id": null,
+          "quality": "normal",
+          "status": "Official",
+          "disambiguation": "",
+          "id": "86839c2e-41aa-4e68-a133-9d782ba1da6f"
+        },
+        {
+          "id": "e1c23574-b3ca-4987-9afa-a9d36d361978",
+          "disambiguation": "special clear vinyl",
+          "status": "Official",
+          "quality": "normal",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "date": "2016-12-09",
+              "area": {
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "type": null,
+                "type-id": null,
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ]
+              }
+            }
+          ],
+          "barcode": "093624916031",
+          "title": "The Divine Feminine",
+          "artist-credit": [
+            {
+              "joinphrase": "",
+              "name": "Mac Miller",
+              "artist": {
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "country": "US",
+                "sort-name": "Miller, Mac"
+              }
+            }
+          ],
+          "country": "US",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "packaging": null,
+          "date": "2016-12-09"
+        },
+        {
+          "quality": "normal",
+          "status": "Bootleg",
+          "id": "0f60398c-27fa-4f47-8164-a82114eab662",
+          "disambiguation": "",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "packaging": null,
+          "status-id": "1156806e-d06a-38bd-83f0-cf2284a808b9",
+          "date": "2019",
+          "artist-credit": [
+            {
+              "artist": {
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Mac Miller"
+            }
+          ],
+          "country": "NL",
+          "barcode": null,
+          "title": "The Divine Feminine",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "area": {
+                "sort-name": "Netherlands",
+                "iso-3166-1-codes": [
+                  "NL"
+                ],
+                "type": null,
+                "type-id": null,
+                "id": "ef1b7cc0-cd26-36f4-8ea0-04d9623786c7",
+                "disambiguation": "",
+                "name": "Netherlands"
+              },
+              "date": "2019"
+            }
+          ]
+        },
+        {
+          "disambiguation": "Urban Outfitters exclusive",
+          "id": "8601a480-8c55-47da-a932-469986219906",
+          "quality": "normal",
+          "status": "Official",
+          "title": "The Divine Feminine",
+          "barcode": "093624916031",
+          "release-events": [
+            {
+              "date": "2020-05",
+              "area": {
+                "type": null,
+                "type-id": null,
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98"
+              }
+            }
+          ],
+          "packaging-id": null,
+          "date": "2020-05",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "packaging": null,
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "country": "US",
+          "artist-credit": [
+            {
+              "joinphrase": "",
+              "name": "Mac Miller",
+              "artist": {
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper",
+                "sort-name": "Miller, Mac",
+                "country": "US",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              }
+            }
+          ]
+        },
+        {
+          "status": "Official",
+          "quality": "normal",
+          "id": "c2ec509a-58f7-4e1a-97dd-be26698dc5c4",
+          "disambiguation": "",
+          "country": "XE",
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper"
+              },
+              "name": "Mac Miller",
+              "joinphrase": ""
+            }
+          ],
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "packaging": null,
+          "date": "2020",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "date": "2020",
+              "area": {
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "sort-name": "Europe",
+                "disambiguation": "",
+                "name": "Europe",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a"
+              }
+            },
+            {
+              "date": "2020",
+              "area": {
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "disambiguation": "",
+                "name": "United States",
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "type": null,
+                "type-id": null
+              }
+            }
+          ],
+          "barcode": "093624916031",
+          "title": "The Divine Feminine"
+        },
+        {
+          "id": "6cad746d-f4eb-46f2-b047-bf4099c97efe",
+          "disambiguation": "",
+          "quality": "normal",
+          "status": "Official",
+          "barcode": "093624855637",
+          "title": "The Divine Feminine",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "date": "2023-10-06",
+              "area": {
+                "type": null,
+                "type-id": null,
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98"
+              }
+            }
+          ],
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "packaging": null,
+          "date": "2023-10-06",
+          "artist-credit": [
+            {
+              "name": "Mac Miller",
+              "joinphrase": "",
+              "artist": {
+                "sort-name": "Miller, Mac",
+                "country": "US",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper"
+              }
+            }
+          ],
+          "country": "US"
+        },
+        {
+          "title": "The Divine Feminine",
+          "barcode": "093624855637",
+          "release-events": [
+            {
+              "area": {
+                "type": null,
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              },
+              "date": "2023-10-06"
+            }
+          ],
+          "packaging-id": null,
+          "date": "2023-10-06",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "packaging": null,
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "country": "XW",
+          "artist-credit": [
+            {
+              "artist": {
+                "sort-name": "Miller, Mac",
+                "country": "US",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "disambiguation": "American rapper",
+                "name": "Mac Miller"
+              },
+              "name": "Mac Miller",
+              "joinphrase": ""
+            }
+          ],
+          "disambiguation": "",
+          "id": "0a37411d-2732-4be9-824c-a5fea1864865",
+          "quality": "normal",
+          "status": "Official"
+        },
+        {
+          "disambiguation": "",
+          "id": "2945263c-f83f-4632-8ecb-d72c19f7aee8",
+          "quality": "normal",
+          "status": "Official",
+          "title": "The Divine Feminine",
+          "barcode": "093624916031",
+          "release-events": [
+            {
+              "date": "2023",
+              "area": {
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "sort-name": "United States"
+              }
+            }
+          ],
+          "packaging-id": null,
+          "date": "2023",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "packaging": null,
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "name": "Mac Miller",
+                "disambiguation": "American rapper"
+              },
+              "joinphrase": "",
+              "name": "Mac Miller"
+            }
+          ],
+          "country": "US"
+        },
+        {
+          "disambiguation": "",
+          "id": "36a76b19-139d-4132-9f0d-1cacfa0b93dc",
+          "quality": "normal",
+          "status": "Official",
+          "title": "The Divine Feminine",
+          "barcode": null,
+          "release-events": [
+            {
+              "area": {
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]",
+                "type-id": null,
+                "type": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "name": "[Worldwide]",
+                "disambiguation": ""
+              },
+              "date": "2024"
+            }
+          ],
+          "packaging-id": null,
+          "date": "2024",
+          "packaging": null,
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "country": "XW",
+          "artist-credit": [
+            {
+              "name": "Mac Miller",
+              "joinphrase": "",
+              "artist": {
+                "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+                "disambiguation": "American rapper",
+                "name": "Mac Miller",
+                "country": "US",
+                "sort-name": "Miller, Mac",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "be55ffec-5312-4275-ab1f-d6504b19bd61",
+      "title": "The Divine Feminine",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "first-release-date": "2016-09-16",
+      "artist-credit": [
+        {
+          "name": "Mac Miller",
+          "joinphrase": "",
+          "artist": {
+            "name": "Mac Miller",
+            "disambiguation": "American rapper",
+            "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Miller, Mac",
+            "country": "US"
+          }
+        }
+      ],
+      "secondary-type-ids": [],
+      "primary-type": "Album",
+      "imagePath": "/assets/images/covers/colored/be55ffec-5312-4275-ab1f-d6504b19bd61.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/be55ffec-5312-4275-ab1f-d6504b19bd61.png",
+      "ratedAt": "Wed, 29 Apr 2026 06:51:45 GMT"
+    },
+    {
       "primary-type": "Album",
       "disambiguation": "",
       "releases": [
@@ -19627,228 +20385,6 @@
       "imagePath": "/assets/images/covers/colored/e0243657-01ef-3516-b9aa-03d417d6e944.webp",
       "imagePathMono": "/assets/images/covers/monochrome/e0243657-01ef-3516-b9aa-03d417d6e944.png",
       "ratedAt": "Thu, 02 Oct 2025 19:40:59 GMT"
-    },
-    {
-      "first-release-date": "2012-11-05",
-      "secondary-types": [],
-      "releases": [
-        {
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "barcode": "",
-          "artist-credit": [
-            {
-              "joinphrase": "",
-              "artist": {
-                "type": "Person",
-                "name": "Alex G",
-                "country": "US",
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
-                "sort-name": "G, Alex",
-                "disambiguation": "American indie singer‐songwriter",
-                "id": "7df4c4de-3181-4a69-bd36-9d663970cebb"
-              },
-              "name": "Alex G"
-            }
-          ],
-          "status": "Official",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "id": "9eb5d651-ebf5-438b-a025-65c621c50782",
-          "packaging": "None",
-          "title": "Trick",
-          "text-representation": {
-            "script": "Latn",
-            "language": "eng"
-          },
-          "disambiguation": "",
-          "quality": "normal",
-          "date": "2012-11-05",
-          "release-events": [
-            {
-              "date": "2012-11-05",
-              "area": {
-                "type-id": null,
-                "type": null,
-                "name": "[Worldwide]",
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "sort-name": "[Worldwide]"
-              }
-            }
-          ],
-          "country": "XW"
-        },
-        {
-          "country": "US",
-          "packaging": "Cassette Case",
-          "id": "558872ac-0a53-4a58-bcda-deaa925da161",
-          "title": "Trick",
-          "packaging-id": "c70b737a-0114-39a9-88f7-82843e54f906",
-          "disambiguation": "",
-          "quality": "normal",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "release-events": [
-            {
-              "date": "2012-11-06",
-              "area": {
-                "id": "489ce91b-6658-3307-9877-795b68554c98",
-                "disambiguation": "",
-                "sort-name": "United States",
-                "iso-3166-1-codes": [
-                  "US"
-                ],
-                "type-id": null,
-                "type": null,
-                "name": "United States"
-              }
-            }
-          ],
-          "date": "2012-11-06",
-          "barcode": null,
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "artist-credit": [
-            {
-              "artist": {
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
-                "name": "Alex G",
-                "country": "US",
-                "type": "Person",
-                "id": "7df4c4de-3181-4a69-bd36-9d663970cebb",
-                "disambiguation": "American indie singer‐songwriter",
-                "sort-name": "G, Alex"
-              },
-              "joinphrase": "",
-              "name": "Alex G"
-            }
-          ],
-          "status": "Official"
-        },
-        {
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "barcode": "689492159115",
-          "status": "Official",
-          "artist-credit": [
-            {
-              "artist": {
-                "id": "7df4c4de-3181-4a69-bd36-9d663970cebb",
-                "disambiguation": "American indie singer‐songwriter",
-                "sort-name": "G, Alex",
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
-                "name": "Alex G",
-                "type": "Person",
-                "country": "US"
-              },
-              "joinphrase": "",
-              "name": "Alex G"
-            }
-          ],
-          "packaging-id": null,
-          "title": "Trick",
-          "id": "141c833b-c3c4-4e12-8157-bf54356c264e",
-          "packaging": null,
-          "text-representation": {
-            "script": null,
-            "language": null
-          },
-          "quality": "normal",
-          "disambiguation": "",
-          "date": "2015-04-06",
-          "release-events": [
-            {
-              "date": "2015-04-06",
-              "area": {
-                "type": null,
-                "name": "United Kingdom",
-                "type-id": null,
-                "sort-name": "United Kingdom",
-                "iso-3166-1-codes": [
-                  "GB"
-                ],
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "disambiguation": ""
-              }
-            }
-          ],
-          "country": "GB"
-        },
-        {
-          "status": "Official",
-          "artist-credit": [
-            {
-              "name": "Alex G",
-              "artist": {
-                "id": "7df4c4de-3181-4a69-bd36-9d663970cebb",
-                "disambiguation": "American indie singer‐songwriter",
-                "sort-name": "G, Alex",
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
-                "name": "Alex G",
-                "type": "Person",
-                "country": "US"
-              },
-              "joinphrase": ""
-            }
-          ],
-          "barcode": "689492159382",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "release-events": [
-            {
-              "date": "2015-04-06",
-              "area": {
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "sort-name": "[Worldwide]",
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "name": "[Worldwide]",
-                "type": null,
-                "type-id": null
-              }
-            }
-          ],
-          "date": "2015-04-06",
-          "disambiguation": "",
-          "quality": "normal",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "title": "TRICK",
-          "id": "34324a4b-1a28-40a2-933e-310677743252",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "country": "XW"
-        }
-      ],
-      "primary-type": "Album",
-      "secondary-type-ids": [],
-      "disambiguation": "",
-      "title": "Trick",
-      "id": "a1851b11-5c14-497a-af7a-fa04c0946c78",
-      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
-      "artist-credit": [
-        {
-          "artist": {
-            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
-            "name": "Alex G",
-            "country": "US",
-            "type": "Person",
-            "disambiguation": "American indie singer‐songwriter",
-            "id": "7df4c4de-3181-4a69-bd36-9d663970cebb",
-            "sort-name": "G, Alex"
-          },
-          "joinphrase": "",
-          "name": "Alex G"
-        }
-      ],
-      "imagePath": "/assets/images/covers/colored/a1851b11-5c14-497a-af7a-fa04c0946c78.webp",
-      "imagePathMono": "/assets/images/covers/monochrome/a1851b11-5c14-497a-af7a-fa04c0946c78.png",
-      "ratedAt": "Thu, 02 Oct 2025 19:40:07 GMT"
     },
     {
       "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
