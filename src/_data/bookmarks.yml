@@ -85,3 +85,8 @@
   feed: "https://ewie.online/feed/feed.xml"
   img: "/assets/images/88x31/evie.png"
   category: "person"
+- title: "alexia’s space"
+  url: "https://cyrneko.eu"
+  feed: "https://cyrneko.eu/feed.atom"
+  img: "/assets/images/88x31/cyrneko.png"
+  category: "person"
