@@ -32,19 +32,55 @@ headerExtension:
           favorite app.
         </p>
       </div>
-      <a
-        href="/events.ics"
-        class="{{ theme.components.button.minimal }} shrink-0"
-      >
-        {{
-          comp.ui.Icon({
-            name: "calendar-sync",
-            catalog: "lucide",
-            classes: "w-3.5 h-3.5",
-          })
-        }}
-        Subscribe to Calendar
-      </a>
+      <div class="flex flex-col sm:flex-row gap-3 md:items-center shrink-0">
+        {{ set icsUrl = "/events.ics" |> url(true) }}
+        {{ set webcalUrl = icsUrl.replace(/^https?:\/\//, "webcal://") }}
+        <a
+          href="{{ webcalUrl }}"
+          class="{{ theme.components.button.minimal }}"
+          title="Subscribe in your default calendar app"
+        >
+          {{
+            comp.ui.Icon({
+              name: "calendar-sync",
+              catalog: "lucide",
+              classes: "w-3.5 h-3.5",
+            })
+          }}
+          Subscribe
+        </a>
+
+        <div class="flex items-center gap-2">
+          <a
+            href="https://www.google.com/calendar/render?cid={{ webcalUrl |> encodeURIComponent }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="{{ theme.components.button.minimal }} !px-3"
+            title="Add to Google Calendar"
+          >
+            {{
+              comp.ui.Icon({
+                name: "google",
+                catalog: "simpleicons",
+                classes: "w-3.5 h-3.5",
+              })
+            }}
+          </a>
+          <button
+            onclick='navigator.clipboard.writeText("{{ icsUrl }}")'
+            class="{{ theme.components.button.minimal }} !px-3"
+            title="Copy Calendar Link"
+          >
+            {{
+              comp.ui.Icon({
+                name: "copy",
+                catalog: "lucide",
+                classes: "w-3.5 h-3.5",
+              })
+            }}
+          </button>
+        </div>
+      </div>
     </div>
   {{ /set }}
 
