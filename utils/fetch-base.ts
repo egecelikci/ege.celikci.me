@@ -181,7 +181,7 @@ export class HttpClient {
           return null;
         }
         const data = await response.json() as T;
-        this.fileCache.setJson(url, data).catch((err) =>
+        await this.fileCache.setJson(url, data).catch((err) =>
           console.warn("[http-cache] write failed for", url, err)
         );
         return data;
@@ -197,9 +197,9 @@ export class HttpClient {
           return null;
         }
         const buffer = await response.arrayBuffer() as T;
-        this.fileCache.setBuffer(url, buffer as ArrayBuffer).catch((err) =>
-          console.warn("[http-cache] write failed for", url, err)
-        );
+        await this.fileCache.setBuffer(url, buffer as ArrayBuffer).catch((
+          err,
+        ) => console.warn("[http-cache] write failed for", url, err));
         return buffer;
       }
     } catch {
