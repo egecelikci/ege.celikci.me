@@ -360,8 +360,31 @@ layout: layouts/page.vto
             !r.url.resource.includes("instagram.com")
           )
         }}
-        {{ if urlRels.length > 0 }}
+        {{ if urlRels.length > 0 || event.local?.instagram_url }}
           <div class="flex flex-col gap-2">
+            {{# Local Instagram URLs #}}
+            {{ if event.local?.instagram_url }}
+              {{>
+                const igUrls = Array.isArray(event.local.instagram_url)
+                ? event.local.instagram_url
+                : [event.local.instagram_url]
+              }}
+              {{ for index, url of igUrls }}
+                <a
+                  href="{{ url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="{{ theme.components.button.minimal }} justify-center"
+                >
+                  {{ if igUrls.length > 1 }}
+                    Instagram Post #{{ index + 1 }}
+                  {{ else }}
+                    Instagram Post
+                  {{ /if }}
+                </a>
+              {{ /for }}
+            {{ /if }}
+
             {{ for rel of urlRels }}
               <a
                 href="{{ rel.url.resource }}"

@@ -64,11 +64,17 @@ export default async function* ({ mb_events, events }: any) {
       },
     ];
     if (local.instagram_url) {
-      headerSources.push({
-        label: "Instagram",
-        url: local.instagram_url,
-        icon: "instagram",
-        catalog: "simpleicons",
+      const igUrls = Array.isArray(local.instagram_url)
+        ? local.instagram_url
+        : [local.instagram_url];
+
+      igUrls.forEach((url: string, index: number) => {
+        headerSources.push({
+          label: igUrls.length > 1 ? `Instagram (${index + 1})` : "Instagram",
+          url: url,
+          icon: "instagram",
+          catalog: "simpleicons",
+        });
       });
     }
 
