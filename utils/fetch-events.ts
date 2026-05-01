@@ -176,7 +176,11 @@ async function fetchEventPosterInfo(
   eventId: string,
 ): Promise<{ url?: string; thumb?: string }> {
   const url = `${EAA_API}/event/${eventId}/`;
-  const data = await httpClient.fetch<any>(url, "json", "force-cache");
+
+  // Optimization: check cache first to avoid rate limit wait
+  const cached = await httpClient.getCachedJson<any>(url);
+  const data = cached ||
+    await httpClient.fetch<any>(url, "json", "force-cache");
 
   if (!data) return {};
   const frontImage = data.images?.find((img: any) => img.front);
@@ -235,6 +239,12 @@ async function syncEvents() {
 
     for (const event of raw) {
       // 1. Poster processing (Archival side effect)
+      const url = `${EAA_API}/event/${event.id}/`;
+      const cachedPosterInfo = await httpClient.getCachedJson<any>(url);
+      if (cachedPosterInfo) {
+        console.log(`[mb_events] ⚡️ Cache hit for poster info: ${event.id}`);
+      }
+
       const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
       let imagePath: string | undefined;
 
@@ -282,6 +292,7 @@ async function syncEvents() {
 
       if (cached !== null) {
         // Hot path: extract from cache immediately
+        console.log(`[mb_events] ⚡️ Cache hit for ${type}: ${id}`);
         const igRel = (cached.relations || []).find((r: any) =>
           (r.type === "social network" || r.type === "instagram") &&
           r.url?.resource?.includes("instagram.com")
@@ -291,6 +302,7 @@ async function syncEvents() {
         }
       } else {
         // Cold path: rate limited network call
+        console.log(`[mb_events] 🌐 Cache miss for ${type}: ${id}`);
         const details = await fetchEntityDetails(httpClient, id, type);
         if (details.instagram) {
           entities[id] = details;

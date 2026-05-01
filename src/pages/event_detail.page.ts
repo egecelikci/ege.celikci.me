@@ -92,6 +92,8 @@ export default async function* ({ mb_events, events }: any) {
           variant: "minimal",
         },
       },
+      coverImage: event.imagePath || event.posterThumb || event.posterUrl,
+      description: local.description || event.disambiguation,
     };
   }
 }
