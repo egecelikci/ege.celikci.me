@@ -76,7 +76,7 @@
       </div>
 
       <span
-        class="text-[9px] font-mono uppercase tracking-[0.2em] text-text-muted/50"
+        class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} font-normal"
       >
         {{ interactions.length }} {{
           interactions.length == 1 ? "interaction" : "interactions"
@@ -100,7 +100,7 @@
 
   {{ if interactions.length === 0 && comments.length === 0 }}
     <div
-      class="py-6 pl-4 border-l border-border/10 text-[10px] font-mono uppercase tracking-widest text-text-muted/50 italic"
+      class="py-6 pl-4 border-l border-border/10 {{ theme.typography.label }} {{ theme.typography.colors.dim }} font-normal italic"
     >
       No interactions recorded.
     </div>

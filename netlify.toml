@@ -9,6 +9,10 @@
     framework = "#custom"
 
 [[edge_functions]]
+    path = "/api/mb-events"
+    function = "mb-events-proxy"
+
+[[edge_functions]]
     path = "/api/collage-proxy"
     function = "collage-proxy"
 

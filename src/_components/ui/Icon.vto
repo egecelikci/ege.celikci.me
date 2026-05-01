@@ -7,6 +7,7 @@
 {{- set absolutePath = iconPath.startsWith("/") ? iconPath : "/" + iconPath -}}
 <img
   src="{{ absolutePath }}"
-  class="inline-block text-[1.5em] h-[1em] w-[1em] align-middle pointer-events-none {{ if it.filled }}fill-current{{ /if }} {{ it.classes || '' }}"
+  class="inline-block text-[1.2em] h-[1em] w-[1em] align-middle pointer-events-none {{ if it.filled || it.catalog === 'simpleicons' }}fill-current{{ /if }} {{ it.classes || '' }}"
+  data-catalog="{{ it.catalog || 'lucide' }}"
   inline
 />

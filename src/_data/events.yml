@@ -1,0 +1,20 @@
+# src/_data/events.yml
+# Enrich MusicBrainz events with local metadata
+# Key is the MusicBrainz Event MBID
+
+3a488e0b-ee8b-4599-9ad8-410f318ae32a:
+  instagram_url: "https://www.instagram.com/p/DXcEwVUimWJ/"
+  price: "350₺"
+  venue_name: "NØMADS-36"
+
+9724e4c1-1fe5-4ce8-9c12-3d8e3926319d:
+  instagram_url: "https://www.instagram.com/p/DXFDUfgCCv9/"
+  price: "250₺"
+  exclude_labels: ["2bfa1d83-63e4-433b-9b9a-17ef5dcc8964"]
+
+958b7ebf-163c-4d1b-a9bc-de394a2880be:
+  instagram_url: "https://www.instagram.com/p/DLKbGG6ISA6/"
+  # photographers:
+  #   seher:
+  #     name: "Seher Altıntaş"
+  #     url: "https://www.instagram.com/seheraaltintas"

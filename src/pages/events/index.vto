@@ -1,0 +1,130 @@
+---
+title: events in İzmir
+description: music events in İzmir
+searchable: false
+prose: false
+menu:
+  group: collections
+  order: 3
+  label: music events
+headerExtension:
+  comp: "ui.SourceMeta"
+  props:
+    sources:
+      - label: MusicBrainz
+        icon: calendar
+        url: "https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
+      - label: Event Art Archive
+        icon: image
+        url: "https://eventartarchive.org/"
+---
+
+{{# ── PROMINENT ACTIONS ──────────────────────────────────────────────── #}}
+<div class="mb-24">
+  {{ set calloutContent }}
+    <div
+      class="flex flex-col md:flex-row md:items-center justify-between gap-6"
+    >
+      <div class="space-y-1">
+        <p class="font-bold text-text m-0">Keep up with the scene.</p>
+        <p class="text-sm text-text-muted m-0">
+          Subscribe to the events calendar to get automatic updates in your
+          favorite app.
+        </p>
+      </div>
+      <a
+        href="/events.ics"
+        class="{{ theme.components.button.minimal }} shrink-0"
+      >
+        {{
+          comp.ui.Icon({
+            name: "calendar-sync",
+            catalog: "lucide",
+            classes: "w-3.5 h-3.5",
+          })
+        }}
+        Subscribe to Calendar
+      </a>
+    </div>
+  {{ /set }}
+
+  {{
+    comp.ui.Callout({
+      variant: "action",
+      icon: "calendar-plus",
+      content: calloutContent,
+    })
+  }}
+</div>
+
+{{# ── CALENDAR VIEW ──────────────────────────────────────────────────── #}}
+{{ if mb_events?.upcoming?.length > 0 }}
+  {{
+    await comp.ui.EventCalendar({ events: mb_events.upcoming, title: "Upcoming" })
+  }}
+{{ /if }}
+
+{{# ─── ARCHIVE LINK ────────────────────────────────────────────────────── #}}
+{{ if mb_events?.past?.length > 0 }}
+  <section class="mt-12 flex justify-center">
+    <a
+      href="/events/archive/"
+      class="{{ theme.components.button.minimal }} group/archive"
+    >
+      View Past Events Archive
+      <span class="group-hover/archive:translate-x-1 transition-transform"
+      >→</span>
+    </a>
+  </section>
+{{ /if }}
+
+{{# ─── EMPTY STATE ────────────────────────────────────────────────────── #}}
+{{ if mb_events?.upcoming?.length === 0 }}
+  <div class="mt-12">
+    {{
+      comp.ui.EmptyState({
+        icon: "calendar-x",
+        title: "No upcoming events found",
+        description:
+          'No upcoming events are currently listed for İzmir. Check back soon or <a href="https://musicbrainz.org/doc/How_to_Add_an_Event" class="underline">add one on MusicBrainz</a>.',
+      })
+    }}
+  </div>
+{{ /if }}
+
+{{# ─── FOOTER NOTE ─────────────────────────────────────────────────────── #}}
+<footer
+  class="mt-16 pt-8 border-t border-border/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+>
+  <p class="text-xs {{ theme.typography.colors.subtle }}">
+    Data from
+    <a
+      href="https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="{{ theme.utilities.link }}"
+    >MusicBrainz</a>
+    &
+    <a
+      href="https://eventartarchive.org/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="{{ theme.utilities.link }}"
+    >Event Art Archive</a>
+  </p>
+  <a
+    href="https://musicbrainz.org/doc/How_to_Add_an_Event"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="text-xs {{ theme.utilities.link }} {{ theme.typography.colors.subtle }} flex items-center gap-1.5 shrink-0"
+  >
+    {{
+      comp.ui.Icon({
+        name: "plus-circle",
+        catalog: "lucide",
+        classes: "w-3.5 h-3.5",
+      })
+    }}
+    Add an event on MusicBrainz
+  </a>
+</footer>

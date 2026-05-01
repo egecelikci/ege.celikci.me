@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "npm:photoswipe/dist/photoswipe.css";
+@import "npm:leaflet/dist/leaflet.css";
 @plugin "@tailwindcss/typography";
 
 @layer base {
@@ -269,13 +270,44 @@
       @apply my-0 inline;
     }
   }
+
+  /* SVG Icon Fixes */
+  svg[inline].fill-current path,
+  svg[inline].fill-current circle,
+  svg[inline].fill-current rect,
+  svg[inline].fill-current polygon,
+  svg[inline].fill-current ellipse {
+    fill: currentColor !important;
+  }
+
+  /* LEAFLET OVERRIDES */
+  .leaflet-container {
+    background: transparent !important;
+    font-family: inherit !important;
+  }
+
+  .venue-map {
+    @apply bg-surface/5 transition-opacity duration-1000 opacity-0;
+  }
+
+  .venue-map.map-ready {
+    @apply opacity-100;
+  }
+
+  .venue-map .leaflet-tile-pane {
+    @apply grayscale contrast-125 brightness-90 transition-all duration-700;
+  }
+
+  .venue-map:hover .leaflet-tile-pane {
+    @apply grayscale-0 contrast-100 brightness-100;
+  }
 }
 
 /* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */
 .pswp {
   --pswp-bg: rgba(0, 0, 0, 0.95);
   --pswp-placeholder-bg: #222;
-  --pswp-root-z-index: 1000;
+  --pswp-root-z-index: 5000;
 
   --pswp-preloader-color: rgba(255, 255, 255, 0.4);
   --pswp-preloader-color-secondary: rgba(0, 0, 0, 0.2);
@@ -346,6 +378,13 @@
 }
 
 @layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
   @keyframes panic {
     0% {
       opacity: 1;

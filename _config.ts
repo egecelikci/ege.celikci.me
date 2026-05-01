@@ -14,6 +14,61 @@ site.use(config());
 // Preprocessors
 registerPreprocessors(site);
 
+// Data fetching before build
+site.addEventListener("beforeBuild", async () => {
+  console.log("Fetching favorite albums…");
+
+  const command = new Deno.Command("deno", {
+    args: [
+      "run",
+      "--allow-net",
+      "--allow-read",
+      "--allow-write",
+      "--allow-env",
+      "--allow-ffi",
+      "--allow-run",
+      "utils/fetch-music.ts",
+    ],
+    env: { NODE_ENV: "production" },
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  const process = command.spawn();
+  const status = await process.status;
+  if (!status.success) {
+    console.warn(
+      `[music] fetch-music.ts exited with code ${status.code} — building with cached data.`,
+    );
+  }
+});
+
+site.addEventListener("beforeBuild", async () => {
+  console.log("Fetching events…");
+
+  const command = new Deno.Command("deno", {
+    args: [
+      "run",
+      "--allow-net",
+      "--allow-read",
+      "--allow-write",
+      "--allow-env",
+      "--allow-ffi",
+      "--allow-run",
+      "utils/fetch-events.ts",
+    ],
+    env: { NODE_ENV: "production" },
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  const process = command.spawn();
+  const status = await process.status;
+  if (!status.success) {
+    console.warn(
+      `[events] fetch-events.ts exited with code ${status.code} — building with cached data.`,
+    );
+  }
+});
+
 // Service Worker generation
 site.addEventListener("afterBuild", async () => {
   console.log("Generating Service Worker…");

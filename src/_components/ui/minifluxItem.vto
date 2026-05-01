@@ -1,6 +1,8 @@
 <article class="break-inside-avoid mb-12 group">
   <div class="border-b-4 border-text mb-4 pb-1">
-    <span class="text-[10px] font-bold uppercase tracking-tighter opacity-50">
+    <span
+      class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+    >
       Entry No. {{ index + 1 }}
     </span>
     <h3 class="text-2xl font-black leading-none uppercase tracking-tighter">
@@ -14,11 +16,13 @@
 
   <div class="flex items-center gap-2 mb-4">
     <span
-      class="text-[9px] font-mono bg-text text-bg px-1.5 py-0.5 font-bold uppercase"
+      class="{{ theme.typography.label }} bg-text text-bg px-1.5 py-0.5"
     >
       Source
     </span>
-    <code class="text-[10px] font-mono truncate opacity-75 italic">
+    <code
+      class="{{ theme.typography.label }} font-normal lowercase truncate {{ theme.typography.colors.muted }} italic"
+    >
       {{ item.feed }}
     </code>
   </div>

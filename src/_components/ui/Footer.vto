@@ -6,13 +6,13 @@
 
 {{ set footerContent }}
   <div
-    class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border/10 text-[10px] font-mono uppercase tracking-[0.2em]"
+    class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border/10 {{ theme.typography.label }} font-normal"
   >
     {{# LEFT: Site Info #}}
     <div
-      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted/60"
+      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 {{ theme.typography.colors.subtle }}"
     >
-      <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 whitespace-nowrap">
         <span aria-label="Copyright">&copy;</span>
         {{ build.timestamp |> date("yyyy") }}
         <a
@@ -24,13 +24,13 @@
       <span class="text-border/30 select-none">|</span>
       <a
         href="/colophon/"
-        class="hover:text-primary transition-colors no-underline"
+        class="hover:text-primary transition-colors no-underline whitespace-nowrap"
       >colophon</a>
 
       <span class="text-border/30 select-none">|</span>
       <a
         href="https://creativecommons.org/licenses/by-sa/4.0/"
-        class="hover:text-primary transition-colors no-underline"
+        class="hover:text-primary transition-colors no-underline whitespace-nowrap"
         rel="license"
       >
         CC BY-SA 4.0
@@ -40,7 +40,7 @@
         <span class="text-border/30 select-none">|</span>
         <a
           href="https://codeberg.org/{{ author.username }}/{{ site.host }}/commit/{{ build.git }}"
-          class="font-mono hover:text-primary transition-colors opacity-80"
+          class="font-mono hover:text-primary transition-colors text-text/80 whitespace-nowrap"
           aria-label="view latest commit"
         >
           {{ build.git.substring(0, 7) }}
@@ -51,9 +51,11 @@
       {{ if page.data.updated || page.data.date }}
         <span class="text-border/30 select-none">|</span>
         <div
-          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/5 text-[9px] uppercase tracking-[0.15em] text-text-muted/70"
+          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/10 {{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal whitespace-nowrap"
         >
-          <span class="mr-1.5 opacity-60 italic lowercase">rev.</span>
+          <span
+            class="mr-1.5 {{ theme.typography.colors.subtle }} italic lowercase"
+          >rev.</span>
           {{ page.data.updated || page.data.date |> date("dd MMM yyyy") }}
         </div>
       {{ /if }}
@@ -65,7 +67,7 @@
     >
       <a
         href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-        class="text-text-muted hover:text-primary transition-colors no-underline"
+        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
         title="edit this page"
       >
         edit
@@ -73,12 +75,12 @@
 
       <a
         href="/feeds/"
-        class="text-text-muted hover:text-primary transition-colors no-underline"
+        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
       >feeds</a>
 
       <a
         href="#"
-        class="text-text-muted hover:text-primary transition-colors no-underline"
+        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
       >top</a>
     </div>
   </div>
@@ -86,11 +88,11 @@
   {{# WEBRINGS (Minimal Accessory) #}}
   {{ if webrings && webrings.length > 0 }}
     <div
-      class="flex flex-col gap-3 items-center opacity-30 hover:opacity-100 transition-opacity duration-500 pt-8 border-t border-border/5"
+      class="flex flex-col gap-3 items-center opacity-70 hover:opacity-100 transition-opacity duration-500 pt-8 border-t border-border/5"
     >
       {{ for ring of webrings }}
         <div
-          class="flex items-center gap-1.5 text-[9px] font-mono uppercase tracking-[0.2em] text-text-muted/60"
+          class="flex items-center gap-1.5 {{ theme.typography.label }} {{ theme.typography.colors.subtle }} whitespace-nowrap"
         >
           <a
             href="{{ ring.prev }}"
@@ -99,7 +101,7 @@
           <span class="ml-1">An</span>
           <a
             href="{{ ring.url }}"
-            class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap lowercase font-bold"
+            class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap lowercase font-bold"
           >
             {{ ring.name }}
           </a>

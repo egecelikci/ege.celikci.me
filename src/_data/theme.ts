@@ -55,14 +55,15 @@ export const typography = {
 
   mono: "font-mono text-[length:var(--size-step-0)] tracking-tight",
   label: "text-[10px] font-mono uppercase tracking-[0.3em] font-bold",
+  sublabel: "text-[9px] font-mono uppercase tracking-[0.2em] font-bold",
 
   // Semantic Text Colors
   colors: {
     primary: "text-text",
-    muted: "text-text-muted/70",
-    subtle: "text-text-muted/60",
-    dim: "text-text-muted/40",
-    accent: "text-primary/70",
+    muted: "text-text-muted",
+    subtle: "text-text-muted/95",
+    dim: "text-text-muted/90",
+    accent: "text-primary",
   },
 };
 
@@ -76,17 +77,17 @@ export const components = {
     row:
       "group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline pl-4 md:pl-8",
     accentBar:
-      "absolute left-0 top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
+      "absolute left-0 top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20",
     accentBarCompact:
-      "absolute left-0 top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/40 transition-all duration-500 z-20",
+      "absolute left-0 top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20",
     metaRow:
-      "relative z-20 flex items-center gap-4 opacity-80 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity",
+      "relative z-20 flex items-center gap-4 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity",
     title:
       "text-3xl md:text-4xl font-bold tracking-tighter text-text group-hover:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20",
     description:
-      "text-lg md:text-xl text-text-muted/70 group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20",
+      "text-lg md:text-xl text-text-muted group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20",
     footer:
-      "relative z-10 flex items-center justify-between pt-8 border-t border-border/5 opacity-60 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
+      "relative z-10 flex items-center justify-between pt-8 border-t border-border/5 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
   },
 
   media: {
@@ -94,8 +95,12 @@ export const components = {
       "grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20",
     item:
       "media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media [&_picture]:contents",
+    itemUnconstrained:
+      "media relative block w-full h-auto overflow-hidden bg-surface/10 decoration-none color-inherit cursor-zoom-in group/media [&_picture]:contents",
     image:
       "absolute inset-0 w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95",
+    imageUnconstrained:
+      "block w-full h-auto object-contain transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95",
     grids: {
       eq1: "grid-cols-1 aspect-video md:aspect-[16/10]",
       eq2: "grid-cols-2 aspect-[2/1]",
@@ -108,7 +113,7 @@ export const components = {
 
   litebox: {
     modal:
-      "media-modal-container fixed inset-0 z-[1000] flex flex-col w-full h-full max-w-full max-h-full overflow-hidden bg-black",
+      "media-modal-container fixed inset-0 z-[5000] flex flex-col w-full h-full max-w-full max-h-full overflow-hidden bg-black",
     carousel:
       "carousel flex w-full h-full overflow-hidden select-none touch-pan-x",
     item:
@@ -120,21 +125,22 @@ export const components = {
     button:
       "carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0",
     dots:
-      "carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg mx-4 min-w-0 overflow-hidden",
+      "carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg min-w-0 max-w-[120px] sm:max-w-[200px] overflow-x-auto no-scrollbar",
     dot:
       "carousel-dot w-6 h-6 flex items-center justify-center text-white/30 text-lg transition-all data-[active=true]:text-white data-[active=true]:scale-125 disabled:pointer-events-none hover:text-white/60",
-    indicator: "carousel-indicator flex items-center gap-2",
+    indicator:
+      "carousel-indicator flex items-center justify-center gap-3 min-w-0 px-4",
     counter:
-      "carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg",
+      "carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap shrink-0",
 
     alt:
       "media-alt absolute bottom-[max(24px,env(safe-area-inset-bottom,24px))] left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-3 rounded-xl max-w-[min(600px,90vw)] text-sm leading-relaxed text-center z-10 border border-white/10 transition-all duration-300 pointer-events-auto shadow-2xl",
     altDesc: "media-alt-desc inline-block text-left",
     sheet: {
       backdrop:
-        "fixed inset-0 bg-black/40 backdrop-blur-sm z-[1100] transition-opacity duration-300",
+        "fixed inset-0 bg-black/40 backdrop-blur-sm z-[5100] transition-opacity duration-300",
       container:
-        "fixed bottom-0 left-0 right-0 z-[1200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border",
+        "fixed bottom-0 left-0 right-0 z-[5200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border",
       header: "flex items-center justify-between gap-4",
       title: "text-xl font-bold tracking-tight text-text",
       close: "p-2 rounded-full hover:bg-black/5 transition-colors",
@@ -143,7 +149,7 @@ export const components = {
     },
     menu: {
       container:
-        "absolute top-full right-0 mt-2 min-w-[200px] bg-surface border border-border rounded-xl shadow-xl z-[1300] overflow-hidden transform origin-top-right transition-all",
+        "absolute top-full right-0 mt-2 min-w-[200px] bg-surface border border-border rounded-xl shadow-xl z-[5300] overflow-hidden transform origin-top-right transition-all",
       item:
         "flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left",
     },
@@ -153,10 +159,12 @@ export const components = {
     container: "mb-4",
     item:
       "note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents",
+    itemStatic:
+      "note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 transition-all duration-700 [&_picture]:contents",
     image:
       "absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105 group-[.is-active]/img:scale-105",
     overlay:
-      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/80 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted/60 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20",
+      "absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20",
   },
 
   album: {
@@ -165,10 +173,10 @@ export const components = {
     coverWrapper:
       "w-full aspect-square block relative z-10 rounded-xl overflow-hidden bg-white/80 dark:bg-white/5 transition-all duration-700 ease-out group-hover:scale-105 group-[.is-active]:scale-105",
     meta:
-      "flex flex-col gap-0.5 opacity-60 md:opacity-40 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
+      "flex flex-col gap-0.5 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500",
     title: "block text-[11px] font-bold text-text truncate tracking-tight",
     artist:
-      "block text-[9px] font-mono uppercase tracking-[0.1em] text-text-muted/60 truncate",
+      "block text-[9px] font-mono uppercase tracking-[0.1em] text-text-muted truncate",
   },
 
   card: {
@@ -182,6 +190,8 @@ export const components = {
       "inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all",
     primary: "bg-primary text-white hover:bg-primary-offset",
     secondary: "border border-border hover:border-primary",
+    minimal:
+      "inline-flex items-center gap-2 px-5 py-2 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[10px] font-mono uppercase tracking-[0.2em] text-text/80 transition-all duration-300 no-underline",
   },
 
   badge: {
@@ -211,7 +221,7 @@ export const components = {
     base:
       "inline-flex items-center justify-center px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-full transition-all duration-300 border",
     default:
-      "bg-primary/5 text-primary/70 border-primary/10 hover:bg-primary/10 hover:text-primary hover:border-primary/20",
+      "bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 hover:text-primary hover:border-primary/20",
     active: "bg-primary text-white border-primary",
   },
 

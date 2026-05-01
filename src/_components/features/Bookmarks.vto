@@ -21,7 +21,7 @@
         {{ if section.blogroll }}
           <a
             href="/blogroll.xml"
-            class="text-[9px] font-mono uppercase tracking-[0.25em] text-primary/70 hover:text-primary transition-colors no-underline"
+            class="{{ theme.typography.label }} {{ theme.typography.colors.accent }} hover:text-primary transition-colors no-underline"
           >
             Subscribe to blogroll &rarr;
           </a>
@@ -86,7 +86,7 @@
                   {{ if item.feed }}
                     <a
                       href="{{ item.feed }}"
-                      class="inline-flex items-center gap-1.5 text-[9px] font-mono uppercase tracking-widest text-text-muted/40 hover:text-primary transition-colors no-underline"
+                      class="inline-flex items-center gap-1.5 {{ theme.typography.label }} {{ theme.typography.colors.dim }} hover:text-primary transition-colors no-underline"
                     >
                       <span
                         class="w-1 h-1 rounded-full bg-current opacity-40"
@@ -102,7 +102,7 @@
                           href="{{ mirror }}"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="text-[9px] font-mono uppercase tracking-widest text-text-muted/40 hover:text-primary transition-colors no-underline"
+                          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} hover:text-primary transition-colors no-underline"
                         >
                           {{ mirror |> replace("https://", "") }}
                         </a>
