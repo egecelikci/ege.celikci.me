@@ -14,9 +14,9 @@
       media="(prefers-color-scheme: dark)"
     />
     <title>
-      {{ if title }}{{ title }} | {{ site.title }}{{ else }}{{ site.title }}{{
-        /if
-      }}
+      {{ if title && title !== site.title }}{{ title }} | {{ site.title }}{{
+        else
+      }}{{ site.title }}{{ /if }}
     </title>
     <link rel="preconnect" href="https://ege.celikci.me" />
     <link rel="preconnect" href="https://webmention.io" />
