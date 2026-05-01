@@ -1,7 +1,8 @@
 module.exports = {
   globDirectory: "dist/",
   globPatterns: [
-    "**/*.{html,css,js,mjs,json,xml,ico,svg,woff2,woff,png,jpg,jpeg,webp,avif}",
+    "**/*.{css,js,mjs,json,xml,ico,svg,woff2,woff,png,jpg,jpeg,webp,avif}",
+    "offline/index.html",
   ],
   globIgnores: [
     "assets/images/gallery/**/*",
@@ -56,9 +57,13 @@ module.exports = {
         request.destination === "style" ||
         request.destination === "script" ||
         request.destination === "worker",
-      handler: "StaleWhileRevalidate",
+      handler: "NetworkFirst",
       options: {
         cacheName: "assets",
+        expiration: {
+          maxEntries: 50,
+          maxAgeSeconds: 24 * 60 * 60, // 1 Day for assets
+        },
       },
     },
     {
