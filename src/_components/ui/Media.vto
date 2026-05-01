@@ -6,7 +6,13 @@
 {{ if images && images.length > 0 }}
   {{ set count = Math.min(images.length, 4) }}
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
-  {{ set gridClass = theme.components.media.grids["eq" + count] }}
+  {{ set isAuto = it.aspect === "auto" }}
+  {{
+    set gridClass = isAuto
+    ? "grid-cols-1"
+    : (it.aspect || theme.components.media.grids["eq" + count])
+  }}
+
   <div
     class="{{ theme.components.media.container }} {{ gridClass }}"
     data-litebox-group="{{ gid }}"
@@ -16,12 +22,12 @@
         set isPanoramic = image.width && image.height && (image.width / image.height > 2)
       }}
       {{ set itemClass = "" }}
-      {{ if isPanoramic }}{{ set itemClass = "col-span-full" }}{{
-        else if count === 3 && i === 0
+      {{ if isPanoramic && !isAuto }}{{ set itemClass = "col-span-full" }}{{
+        else if count === 3 && i === 0 && !isAuto
       }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
-        class="litebox-trigger {{ theme.components.media.item }} {{ itemClass }}"
+        class="litebox-trigger {{ if isAuto }}{{ theme.components.media.itemUnconstrained }}{{ else }}{{ theme.components.media.item }}{{ /if }} {{ itemClass }}"
         target="_blank"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
         {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
@@ -36,7 +42,7 @@
           transform-images="avif webp jpg 640 1280 1920"
           loading="lazy"
           decoding="async"
-          class="{{ theme.components.media.image }}"
+          class="{{ if isAuto }}{{ theme.components.media.imageUnconstrained }}{{ else }}{{ theme.components.media.image }}{{ /if }}"
         />
 
         {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}

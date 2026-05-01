@@ -39,11 +39,11 @@
               class="text-sm font-bold text-text group-hover:text-primary transition-colors"
             >{{ feed.title }}</span>
             <span
-              class="text-[10px] font-mono {{ theme.typography.colors.muted }} uppercase tracking-widest"
+              class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
             >{{ feed.label }}</span>
           </div>
           <span
-            class="text-[10px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors tracking-tighter"
+            class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors"
           >{{ feed.file }}</span>
         </a>
       {{ /for }}
@@ -73,7 +73,7 @@
             {{ cat.title }}
             <span class="w-1 h-1 rounded-full bg-primary/20"></span>
             <span
-              class="text-[9px] font-mono font-normal uppercase tracking-widest {{ theme.typography.colors.muted }}"
+              class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
             >{{ cat.desc }}</span>
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
@@ -86,7 +86,7 @@
                   class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                 >{{ feed.title }}</span>
                 <span
-                  class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors tracking-tighter"
+                  class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors"
                 >{{ feed.file }}</span>
               </a>
             {{ /for }}
@@ -130,7 +130,7 @@
                 comp.ui.Tag({ content: tag, href: "/tags/" + slug + "/", classes: "text-sm" })
               }}
               <span
-                class="text-[9px] font-mono {{ theme.typography.colors.muted }} uppercase tracking-widest"
+                class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
               >{{ search.pages("'" + tag + "'").length }} entries</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 pl-4">
@@ -142,7 +142,7 @@
                   class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors"
                 >Atom Feed</span>
                 <span
-                  class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.muted }} transition-colors"
+                  class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
                 >.atom</span>
               </a>
               <a
@@ -153,7 +153,7 @@
                   class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors"
                 >JSON Feed</span>
                 <span
-                  class="text-[9px] font-mono {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.muted }} transition-colors"
+                  class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
                 >.json</span>
               </a>
             </div>

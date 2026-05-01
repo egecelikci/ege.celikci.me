@@ -28,7 +28,8 @@ menu:
               {{
                 comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-primary/60" })
               }}
-              <label class="{{ theme.typography.label }} opacity-40"
+              <label
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Network</label>
             </div>
             <div
@@ -36,13 +37,13 @@ menu:
             >
               <button
                 id="source-lb"
-                class="py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="py-2.5 {{ theme.typography.label }} rounded-lg transition-all active:scale-95 cursor-pointer"
               >
                 ListenBrainz
               </button>
               <button
                 id="source-lfm"
-                class="py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="py-2.5 {{ theme.typography.label }} rounded-lg transition-all active:scale-95 cursor-pointer"
               >
                 Last.fm
               </button>
@@ -56,7 +57,7 @@ menu:
               }}
               <label
                 for="username"
-                class="{{ theme.typography.label }} opacity-40"
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Identity</label>
             </div>
             <input
@@ -77,22 +78,22 @@ menu:
             <div class="flex flex-col gap-3">
               <label
                 for="period"
-                class="{{ theme.typography.label }} opacity-40"
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Period</label>
               <select
                 id="period"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20"
+                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
               </select>
             </div>
             <div class="flex flex-col gap-3">
               <label
                 for="bg-mode"
-                class="{{ theme.typography.label }} opacity-40"
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Aesthetic</label>
               <select
                 id="bg-mode"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20"
+                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
                 <option value="aura" selected>Aura</option>
                 <option value="silver">Silver</option>
@@ -108,11 +109,11 @@ menu:
             <div class="flex flex-col gap-3">
               <label
                 for="grid-size"
-                class="{{ theme.typography.label }} opacity-40"
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Grid</label>
               <select
                 id="grid-size"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 !text-[11px] !rounded-xl font-bold cursor-pointer bg-surface/20"
+                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
                 <option value="3x3" selected>3x3</option>
                 <option value="4x4">4x4</option>
@@ -120,7 +121,8 @@ menu:
               </select>
             </div>
             <div class="flex flex-col gap-3">
-              <label class="{{ theme.typography.label }} opacity-40"
+              <label
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
               >Texture</label>
               <label
                 class="flex items-center gap-3 h-[42px] px-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-colors"
@@ -132,7 +134,7 @@ menu:
                   class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary"
                 >
                 <span
-                  class="text-[10px] font-bold uppercase opacity-60 group-hover:opacity-100 transition-opacity"
+                  class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:opacity-100 transition-opacity"
                 >Grain</span>
               </label>
             </div>
@@ -147,7 +149,7 @@ menu:
             class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
           >
             <span
-              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text"
+              class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:text-text"
             >Skip Missing</span>
             <input
               type="checkbox"
@@ -160,7 +162,7 @@ menu:
             class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
           >
             <span
-              class="text-[10px] font-bold uppercase tracking-wider text-text-muted/60 group-hover:text-text"
+              class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:text-text"
             >Show Counts</span>
             <input
               type="checkbox"
@@ -169,16 +171,17 @@ menu:
             />
           </label>
         </div>
-
         {{# D. ADVANCED #}}
         <div class="flex flex-col gap-3 relative z-10">
-          <label for="aliases" class="{{ theme.typography.label }} opacity-40"
+          <label
+            for="aliases"
+            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
           >Artist Aliases</label>
           <textarea
             id="aliases"
             placeholder="Artist A -> Artist B"
             rows="2"
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} text-[10px] leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
+            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} {{ theme.typography.label }} font-normal leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
           ></textarea>
         </div>
       </div>

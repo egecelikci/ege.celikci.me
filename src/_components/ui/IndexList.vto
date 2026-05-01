@@ -19,10 +19,10 @@
       {{ if item.type === "section" }}
         {{# --- SECTION HEADER --- #}}
         <div
-          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border/5 first:border-t-0 first:pt-0"
+          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border/10 first:border-t-0 first:pt-0"
         >
           <span
-            class="{{ theme.typography.label }} opacity-20 uppercase tracking-[0.4em]"
+            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} uppercase tracking-[0.4em]"
           >
             {{ item.title }}
           </span>
@@ -33,13 +33,13 @@
           <a
             href="{{ item.href }}"
             class="
-              flex items-baseline no-underline text-text/80 hover:text-primary transition-all py-1 px-2 -mx-2 rounded-lg
+              flex items-baseline no-underline text-text hover:text-primary transition-all py-1 px-2 -mx-2 rounded-lg
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:bg-primary/5
             "
           >
             {{# Marker #}}
             <span
-              class="shrink-0 w-8 {{ theme.typography.colors.dim }} group-hover:text-primary/60 transition-colors"
+              class="shrink-0 w-8 {{ theme.typography.colors.dim }} group-hover:text-primary transition-colors"
             >
               {{ item.marker || "··" }}
             </span>
@@ -53,12 +53,12 @@
 
             {{# Connector #}}
             <span
-              class="h-px grow border-t border-dashed border-border/5 ml-4 mr-4"
+              class="h-px grow border-t border-dashed border-border/10 ml-4 mr-4"
             ></span>
 
             {{# Description #}}
             <span
-              class="{{ theme.typography.colors.dim }} italic group-hover:text-text-muted transition-colors text-right"
+              class="{{ theme.typography.colors.dim }} italic group-hover:text-text transition-colors text-right"
             >
               {{ item.desc }}
             </span>
@@ -82,17 +82,17 @@
                   </div>
 
                   <span
-                    class="font-bold text-text/60 group-hover/child:text-primary transition-colors"
+                    class="font-bold text-text/80 group-hover/child:text-primary transition-colors"
                   >
                     {{ child.title }}
                   </span>
 
                   <span
-                    class="h-px grow border-t border-dotted border-border/5 mx-4"
+                    class="h-px grow border-t border-dotted border-border/10 mx-4"
                   ></span>
 
                   <span
-                    class="{{ theme.typography.colors.dim }} italic group-hover/child:text-text-muted transition-colors text-right"
+                    class="{{ theme.typography.colors.dim }} italic group-hover/child:text-text transition-colors text-right"
                   >
                     {{ child.desc }}
                   </span>

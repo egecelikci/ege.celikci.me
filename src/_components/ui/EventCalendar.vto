@@ -1,0 +1,74 @@
+{{#
+  Component: EventCalendar
+  A calendar view showing events by month, similar to demo.gancio.org
+
+  Props:
+    - events: Array of MBEvent objects
+    - title: Section title (default: "Calendar")
+#}}
+
+{{>
+  const events = it.events || [];
+  const title = it.title || "Calendar";
+
+  // Group events by month
+  const eventsByMonth = new Map();
+  for (const event of events) {
+    if (!event.beginDate) continue;
+
+    const d = new Date(event.beginDate);
+    if (isNaN(d.getTime())) continue;
+
+    const monthKey = `${d.getFullYear()}-${
+      String(d.getMonth() + 1).padStart(2, "0")
+    }`;
+    const monthLabel = d.toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    });
+
+    if (!eventsByMonth.has(monthKey)) {
+      eventsByMonth.set(monthKey, {
+        label: monthLabel,
+        events: [],
+      });
+    }
+
+    eventsByMonth.get(monthKey).events.push(event);
+  }
+
+  // Sort months chronologically
+  const sortedMonths = Array.from(eventsByMonth.entries())
+    .sort((a, b) => a[0].localeCompare(b[0]))
+}}
+
+{{ if sortedMonths.length > 0 }}
+  <section class="mb-12">
+    <div class="flex items-center gap-4 mb-6">
+      <h2
+        class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} uppercase tracking-[0.4em]"
+      >
+        {{ title }}
+      </h2>
+      <div class="h-px grow bg-border/10"></div>
+    </div>
+
+    <div class="space-y-12">
+      {{ for [monthKey, monthData] of sortedMonths }}
+        <div class="space-y-6">
+          <h3
+            class="{{ theme.typography.heading.h4 }} sticky top-0 bg-bg/95 backdrop-blur-sm py-2 z-10"
+          >
+            {{ monthData.label }}
+          </h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {{ for event of monthData.events }}
+              {{ await comp.ui.EventCard({ event }) }}
+            {{ /for }}
+          </div>
+        </div>
+      {{ /for }}
+    </div>
+  </section>
+{{ /if }}

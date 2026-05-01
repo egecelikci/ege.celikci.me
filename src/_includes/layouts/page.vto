@@ -15,7 +15,7 @@ layout: layouts/base.vto
         {{ await resolvedComp({ ...it.headerExtension.props, ...author }) }}
       {{ /if }}
     {{ else }}
-      {{ it.headerExtension }}
+      {{ it.headerExtension |> safe }}
     {{ /if }}
   {{ else if it.type === "tag" }}
     {{ comp.features.TagFeeds({ tag: it.tag }) }}
@@ -143,7 +143,7 @@ layout: layouts/base.vto
     {{ if show_webmentions }}
       <div class="mt-24">
         <h3
-          class="text-xs font-mono uppercase tracking-[0.3em] text-text-muted/60 mb-10"
+          class="text-xs font-mono uppercase tracking-[0.3em] {{ theme.typography.colors.dim }} mb-10"
         >
           Interactions
         </h3>

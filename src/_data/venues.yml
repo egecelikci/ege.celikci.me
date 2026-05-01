@@ -1,0 +1,7 @@
+# src/_data/venues.yml
+# Manual overrides for venues (keyed by Venue MBID)
+
+6e81cc99-3132-448c-888d-6f6930e04b2d:
+  coordinates:
+    latitude: 38.437533
+    longitude: 27.143239

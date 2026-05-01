@@ -1,0 +1,392 @@
+---
+layout: layouts/page.vto
+---
+
+{{>
+  // 1. Poster Setup: Prepare for Media component (unconstrained)
+  const posterImages = it.event.imagePath
+    ? [{ src: it.event.imagePath, alt: it.event.name }]
+    : (it.event.posterUrl
+      ? [{ src: it.event.posterUrl, alt: it.event.name }]
+      : [])
+}}
+
+<div class="flex flex-col gap-16 pb-16">
+  <div
+    class="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-12 md:gap-20 items-start"
+  >
+    {{# MAIN CONTENT #}}
+    <div class="space-y-16">
+      {{# HEADER META (Price, Date) #}}
+      <section class="space-y-10">
+        {{ if event.isCustomTitle && event.name }}
+          <h1 class="{{ theme.typography.heading.h2 }}">{{ event.name }}</h1>
+        {{ /if }}
+
+        {{ if event.disambiguation }}
+          <p
+            class="text-xl {{ theme.typography.colors.muted }} italic border-l-2 border-primary/20 pl-6 py-1"
+          >
+            {{ event.disambiguation }}
+          </p>
+        {{ /if }}
+
+        {{# ORGANIZERS (Promoted) #}}
+        {{ if event.labels?.length > 0 }}
+          <div class="flex flex-wrap gap-x-8 gap-y-3">
+            {{ for labelRel of event.labels }}
+              <div
+                class="text-base font-bold text-text/80 inline"
+              >
+                <span
+                  class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} mr-2 inline-block translate-y-[-1px]"
+                >Presented by</span>
+
+                {{ if labelRel.label.externalLinks?.instagram }}
+                  <a
+                    href="{{ labelRel.label.externalLinks.instagram }}"
+                    target="_blank"
+                    class="inline group/label no-underline"
+                  >
+                    <span
+                      class="group-hover/label:text-primary transition-colors"
+                    >{{
+                      labelRel["target-credit"] || labelRel.label.name
+                    }}</span><span
+                      class="ml-1 text-primary/20 group-hover/label:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
+                    >
+                      {{
+                        comp.ui.Icon({
+                          name: "instagram",
+                          catalog: "simpleicons",
+                          classes: "w-[12px] h-[12px]",
+                        })
+                      }}
+                    </span>
+                  </a>
+                {{ else }}
+                  {{ labelRel["target-credit"] || labelRel.label.name }}
+                {{ /if }}
+              </div>
+            {{ /for }}
+          </div>
+        {{ /if }}
+
+        <div class="flex flex-wrap items-center gap-x-12 gap-y-6">
+          <div class="flex flex-col gap-1.5">
+            <span
+              class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+            >Date & Time</span>
+            <div class="text-xl font-bold font-mono text-text">
+              {{ if it.event.beginDate }}
+                {{ it.event.beginDate |> date("EEE, MMM dd") }}
+                {{ if it.event.time }}
+                  <span class="ml-2 {{ theme.typography.colors.subtle }}">{{
+                    it.event.time
+                  }}</span>
+                {{ /if }}
+              {{ else }}
+                TBA
+              {{ /if }}
+            </div>
+          </div>
+
+          {{ if event.local?.price }}
+            <div class="flex flex-col gap-1.5">
+              <span
+                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+              >Entry Fee</span>
+              <div class="text-xl font-bold font-mono text-primary">
+                {{ event.local.price }}
+              </div>
+            </div>
+          {{ /if }}
+        </div>
+
+        {{ if event.local?.description }}
+          <div
+            class="prose prose-invert max-w-none prose-p:text-lg prose-p:leading-relaxed pt-4 border-t border-border/10"
+          >
+            {{ event.local.description }}
+          </div>
+        {{ /if }}
+      </section>
+
+      {{# LINEUP SECTION #}}
+      <div
+        class="flex flex-col gap-16 pt-12 border-t border-border/10"
+      >
+        <section class="flex flex-col gap-8">
+          <h2
+            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+          >
+            Lineup
+          </h2>
+          {{
+            set artistRels = (event.relations || []).filter((r) => r["target-type"] === "artist")
+          }}
+          {{ if artistRels.length > 0 }}
+            <ul class="flex flex-col gap-6">
+              {{ for rel of artistRels }}
+                <li class="flex flex-col gap-1">
+                  <div
+                    class="text-xl md:text-2xl font-bold text-text leading-tight"
+                  >
+                    {{ if rel.artist.externalLinks?.instagram }}
+                      <a
+                        href="{{ rel.artist.externalLinks.instagram }}"
+                        target="_blank"
+                        class="inline group/artist no-underline"
+                      >
+                        <span class="hover:text-primary transition-colors">{{
+                          rel["target-credit"] || rel.artist.name
+                        }}</span><span
+                          class="ml-1 text-primary/20 group-hover/artist:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
+                        >
+                          {{
+                            comp.ui.Icon({
+                              name: "instagram",
+                              catalog: "simpleicons",
+                              classes: "w-[12px] h-[12px]",
+                            })
+                          }}
+                        </span>
+                      </a>
+                    {{ else }}
+                      <span class="inline">{{
+                        rel["target-credit"] || rel.artist.name
+                      }}</span>
+                    {{ /if }}
+                  </div>
+                  <span
+                    class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.dim }}"
+                  >
+                    {{ rel.type }}
+                  </span>
+                </li>
+              {{ /for }}
+            </ul>
+          {{ else }}
+            <p class="{{ theme.typography.colors.dim }} italic">Lineup TBA</p>
+          {{ /if }}
+        </section>
+      </div>
+    </div>
+
+    {{# SIDEBAR #}}
+    <aside class="space-y-12 md:sticky md:top-24">
+      {{# POSTER #}}
+      {{ if posterImages.length > 0 }}
+        <div class="w-full">
+          {{ await comp.ui.Media({ images: posterImages, aspect: "auto" }) }}
+        </div>
+      {{ /if }}
+
+      {{# VENUE SECTION (Moved to sidebar for desktop) #}}
+      <section class="flex flex-col gap-8">
+        <h2
+          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+        >
+          Venue
+        </h2>
+        {{
+          set venueRel = (event.relations || []).find((r) => r["target-type"] === "place")
+        }}
+        {{ if venueRel }}
+          <div class="space-y-8">
+            <div class="flex flex-col gap-2">
+              <div class="text-xl font-bold text-text">
+                {{ if venueRel.place.externalLinks?.instagram }}
+                  <a
+                    href="{{ venueRel.place.externalLinks.instagram }}"
+                    target="_blank"
+                    class="inline group/venue no-underline"
+                  >
+                    <span
+                      class="group-hover/venue:text-primary transition-colors"
+                    >{{ event.venueName }}</span><span
+                      class="ml-2 text-primary/20 group-hover/venue:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
+                    >
+                      {{
+                        comp.ui.Icon({
+                          name: "instagram",
+                          catalog: "simpleicons",
+                          classes: "w-[12px] h-[12px]",
+                        })
+                      }}
+                    </span>
+                  </a>
+                {{ else }}
+                  <p class="inline">
+                    {{ event.venueName }}
+                  </p>
+                {{ /if }}
+              </div>
+              {{ if venueRel.place.address }}
+                <p
+                  class="text-sm {{ theme.typography.colors.subtle }} leading-relaxed"
+                >
+                  {{ venueRel.place.address }}
+                </p>
+              {{ /if }}
+            </div>
+
+            {{# MAP VIEW #}}
+            {{ if venueRel.place.coordinates }}
+              <div
+                class="relative group/map shadow-xl rounded-2xl overflow-hidden border border-border/10 bg-surface/5"
+              >
+                {{# 1. The Map #}}
+                <div
+                  class="w-full aspect-square"
+                >
+                  <div
+                    class="venue-map w-full h-full"
+                    data-lat="{{ venueRel.place.coordinates.latitude }}"
+                    data-lng="{{ venueRel.place.coordinates.longitude }}"
+                    data-name="{{ event.venueName }}"
+                  >
+                  </div>
+                  {{# Glass Overlay #}}
+                  <div
+                    class="absolute inset-0 pointer-events-none border border-inset border-white/5 rounded-2xl z-[10]"
+                  >
+                  </div>
+                </div>
+
+                {{# 2. Navigation UI #}}
+                <div
+                  class="absolute bottom-4 right-4 flex flex-col items-end group/nav z-[1000] pointer-events-none"
+                >
+                  {{# THE POPUP MENU #}}
+                  <div
+                    class="mb-3 w-44 bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
+                    role="menu"
+                  >
+                    {{# Option 1: Native #}}
+                    <a
+                      href='geo:{{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}({{ (venueRel["target-credit"] || venueRel.place.name) |> encodeURIComponent }})'
+                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline border-b border-white/5"
+                      role="menuitem"
+                    >
+                      {{
+                        comp.ui.Icon({
+                          name: "navigation",
+                          catalog: "lucide",
+                          classes: "w-4 h-4 opacity-60",
+                        })
+                      }}
+                      <span class="{{ theme.typography.sublabel }}"
+                      >Native App</span>
+                    </a>
+
+                    {{# Option 2: OSM #}}
+                    <a
+                      href="https://www.openstreetmap.org/?mlat={{ venueRel.place.coordinates.latitude }}&mlon={{ venueRel.place.coordinates.longitude }}"
+                      target="_blank"
+                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline border-b border-white/5"
+                      role="menuitem"
+                    >
+                      {{
+                        comp.ui.Icon({ name: "map", catalog: "lucide", classes: "w-4 h-4 opacity-60" })
+                      }}
+                      <span class="{{ theme.typography.sublabel }}"
+                      >OpenStreetMap</span>
+                    </a>
+
+                    {{# Option 3: Google Maps #}}
+                    <a
+                      href="https://maps.google.com/maps?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}"
+                      target="_blank"
+                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline"
+                      role="menuitem"
+                    >
+                      {{
+                        comp.ui.Icon({
+                          name: "map-pin",
+                          catalog: "lucide",
+                          classes: "w-4 h-4 opacity-60",
+                        })
+                      }}
+                      <span class="{{ theme.typography.sublabel }}"
+                      >Google Maps</span>
+                    </a>
+                  </div>
+
+                  {{# THE TRIGGER BUTTON #}}
+                  <button
+                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black text-white border border-white/10 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
+                    aria-label="Get directions to {{ event.venueName }}"
+                    aria-haspopup="true"
+                  >
+                    {{
+                      comp.ui.Icon({
+                        name: "compass",
+                        catalog: "lucide",
+                        classes: "w-4 h-4 opacity-90",
+                      })
+                    }}
+                    <span class="{{ theme.typography.sublabel }} font-black"
+                    >Directions</span>
+                  </button>
+                </div>
+              </div>
+            {{ /if }}
+          </div>
+        {{ else }}
+          <p class="{{ theme.typography.colors.dim }} italic">Venue TBA</p>
+        {{ /if }}
+      </section>
+
+      {{# ACTIONS & LINKS #}}
+      <div class="flex flex-col gap-4">
+        {{ if event.local?.tickets_url }}
+          <a
+            href="{{ event.local.tickets_url }}"
+            target="_blank"
+            class="{{ theme.components.button.base }} {{ theme.components.button.primary }} w-full justify-center shadow-xl shadow-primary/10"
+          >
+            {{
+              comp.ui.Icon({ name: "ticket", catalog: "lucide", classes: "w-4 h-4" })
+            }}
+            Get Tickets
+          </a>
+        {{ /if }}
+
+        {{# URL RELATIONS (Ticket links, streams, etc. from MB) #}}
+        {{
+          set urlRels = (event.relations || []).filter((r) =>
+            r["target-type"] === "url" &&
+            !r.url.resource.includes("instagram.com")
+          )
+        }}
+        {{ if urlRels.length > 0 }}
+          <div class="flex flex-col gap-2">
+            {{ for rel of urlRels }}
+              <a
+                href="{{ rel.url.resource }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="{{ theme.components.button.minimal }} justify-center"
+              >
+                {{ rel.type }}
+              </a>
+            {{ /for }}
+          </div>
+        {{ /if }}
+      </div>
+    </aside>
+  </div>
+
+  {{# GALLERY #}}
+  {{ if gallery && gallery.length > 0 }}
+    <section class="flex flex-col gap-8 pt-12 border-t border-border/10">
+      <h2
+        class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+      >
+        Photographs
+      </h2>
+      {{ await comp.ui.Gallery({ images: gallery }) }}
+    </section>
+  {{ /if }}
+</div>

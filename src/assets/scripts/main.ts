@@ -23,6 +23,12 @@ async function init() {
   const { initLightbox } = await import("./common/lightbox.ts");
   initLightbox();
 
+  // Venue Maps (Leaflet)
+  if (document.querySelector(".venue-map")) {
+    const { initVenueMaps } = await import("./common/map.ts");
+    initVenueMaps();
+  }
+
   if (document.querySelector(".status-dashboard")) {
     const { loadStatus } = await import("./status.ts");
     loadStatus();

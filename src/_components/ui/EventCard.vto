@@ -1,0 +1,114 @@
+{{#
+  Component: EventCard (UI Primitive)
+  A card-based event display with poster, matching demo.gancio.org style.
+
+  Props:
+    - event: MBEvent (id, name, type, beginDate, isUpcoming, relations, posterUrl, posterThumb, displayTitle, artists)
+#}}
+
+{{>
+  const detailUrl = `/event/${it.event.id}/`;
+  const isPast = !it.event.isUpcoming;
+  const posterUrl = it.event.imagePath || it.event.posterThumb ||
+    it.event.posterUrl;
+  const posterMonoUrl = it.event.imagePathMono;
+  const isCustomTitle = it.event.isCustomTitle ?? false;
+
+  // Fallback if preprocessor didn't run or object is unexpected
+  const displayTitle = it.event.displayTitle || it.event.name || "Event";
+  const artists = it.event.artists || []
+}}
+
+<a
+  href="{{ detailUrl }}"
+  class="group flex flex-col h-full rounded-xl overflow-hidden border border-border/10 bg-surface/5 hover:border-primary/30 transition-all duration-300 {{ if isPast }}opacity-60 grayscale hover:grayscale-0{{ /if }}"
+>
+  {{# POSTER IMAGE OR PLACEHOLDER #}}
+  <div
+    class="relative aspect-[3/4] bg-muted/10 overflow-hidden"
+  >
+    {{ if posterUrl }}
+      <img
+        src="{{ if isPast && posterMonoUrl }}{{ posterMonoUrl }}{{ else }}{{ posterUrl }}{{ /if }}"
+        alt="{{ displayTitle }}"
+        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+        data-litebox-ignore
+      />
+      {{ if !isPast && posterMonoUrl }}
+        <img
+          src="{{ posterMonoUrl }}"
+          alt="{{ displayTitle }} (monochrome)"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          loading="lazy"
+          data-litebox-ignore
+        />
+      {{ /if }}
+    {{ else }}
+      <div
+        class="absolute inset-0 flex flex-col items-center justify-center text-text-muted/20"
+      >
+        {{
+          comp.ui.Icon({
+            name: "file-not-found",
+            catalog: "iconoir",
+            classes: "w-12 h-12 opacity-50",
+          })
+        }}
+        <span
+          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} mt-2"
+        >No Poster</span>
+      </div>
+    {{ /if }}
+  </div>
+
+  {{# CONTENT #}}
+  <div class="flex-1 p-5 flex flex-col justify-between min-w-0">
+    <div class="space-y-3">
+      {{# DATE #}}
+      <time
+        class="{{ theme.typography.label }} {{ if isPast }}{{ theme.typography.colors.dim }}{{ else }}text-primary/70{{ /if }}"
+      >
+        {{ if it.event.beginDate }}
+          {{ it.event.beginDate |> date("EEE, MMM dd") }}
+          {{ if it.event.time }}
+            <span class="ml-1 opacity-60">{{ it.event.time }}</span>
+          {{ /if }}
+        {{ else }}
+          TBA
+        {{ /if }}
+      </time>
+
+      {{# TITLE OR LINEUP ANCHOR #}}
+      {{ if isCustomTitle }}
+        <h3
+          class="text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors line-clamp-2 leading-snug"
+        >
+          {{ it.event.name }}
+        </h3>
+      {{ /if }}
+
+      {{# LINEUP: Flowing list with separators #}}
+      {{ if artists.length > 0 }}
+        <div
+          class="inline {{ if isCustomTitle }}text-xs {{ theme.typography.colors.muted }}{{ else }}text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors{{ /if }} leading-snug"
+        >
+          {{ if artists.length === 1 }}
+            {{ artists[0] }}
+          {{ else if artists.length === 2 }}
+            {{ artists[0] }} & {{ artists[1] }}
+          {{ else }}
+            {{ artists |> slice(0, -1) |> join(", ") }} & {{ artists.at(-1) }}
+          {{ /if }}
+        </div>
+      {{ /if }}
+    </div>
+
+    {{# ACTION #}}
+    <div
+      class="mt-6 flex items-center gap-2 {{ theme.typography.label }} {{ theme.typography.colors.subtle }} opacity-0 group-hover:opacity-100 transition-opacity"
+    >
+      Details →
+    </div>
+  </div>
+</a>

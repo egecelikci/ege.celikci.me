@@ -14,7 +14,7 @@
   {{# 1. HEADER (Time + Tags) #}}
   <header class="flex items-center gap-4 relative z-10">
     <time
-      class="dt-published {{ theme.typography.label }} opacity-40 group-hover:opacity-100 group-hover:text-primary transition-all"
+      class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:opacity-100 group-hover:text-primary transition-all"
     >
       {{ if it.showDate }}{{ it.note.date |> date("MMM dd HH:mm") }}{{ else }}{{
           it.note.date
@@ -26,7 +26,7 @@
       <div class="flex gap-3">
         {{ for tag of it.note.tags |> slice(0, 2) }}
           <span
-            class="p-category {{ theme.typography.label }} text-text-muted/30 italic"
+            class="p-category {{ theme.typography.label }} {{ theme.typography.colors.dim }} italic"
           >#{{ tag }}</span>
         {{ /for }}
       </div>

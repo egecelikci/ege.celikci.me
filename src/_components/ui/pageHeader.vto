@@ -43,7 +43,7 @@
 
     {{# 3. SUBTITLE / DESCRIPTION #}}
     <div
-      class="text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted/60 max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}"
+      class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}"
     >
       {{ it.subtitle || "placeholder" }}
     </div>

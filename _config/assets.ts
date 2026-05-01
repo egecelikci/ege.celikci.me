@@ -55,6 +55,15 @@ export default function (options: AssetOptions = {}) {
             id: "simpleicons",
             src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
           },
+          {
+            id: "iconoir",
+            src:
+              "https://cdn.jsdelivr.net/npm/iconoir@7.11.0/icons/regular/{name}.svg",
+          },
+          {
+            id: "material-symbols",
+            src: "https://api.iconify.design/material-symbols:{name}.svg",
+          },
         ],
       }))
       .use(inline())
