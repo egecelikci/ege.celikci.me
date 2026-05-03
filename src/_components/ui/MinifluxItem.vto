@@ -1,15 +1,15 @@
 <article class="break-inside-avoid mb-12 group">
   <div class="border-b-4 border-text mb-4 pb-1">
     <span
-      class="typography-label text-text-muted"
+      class="typography-label text-text-muted/95"
     >
-      Entry No. {{ index + 1 }}
+      Entry No. {{ it.index + 1 }}
     </span>
     <h3 class="text-2xl font-black leading-none uppercase tracking-tighter">
       <a
-        href="{{ item.url }}"
+        href="{{ it.item.url }}"
       >
-        {{ item.title }}
+        {{ it.item.title }}
       </a>
     </h3>
   </div>
@@ -23,25 +23,25 @@
     <code
       class="typography-label font-normal lowercase truncate text-text-muted italic"
     >
-      {{ item.feed }}
+      {{ it.item.feed }}
     </code>
   </div>
 
   <div class="space-y-6">
-    {{ if item.scraper_rules }}
+    {{ if it.item.scraper_rules }}
       <div>
         <p
           class="text-xs font-mono bg-surface/50 p-3 border border-border border-dashed"
         >
-          {{ item.scraper_rules }}
+          {{ it.item.scraper_rules }}
         </p>
       </div>
     {{ /if }}
 
-    {{ if item.content_rewrite_rules }}
+    {{ if it.item.content_rewrite_rules }}
       <div>
         <p class="text-xs font-mono p-3 border-l-2 border-text italic">
-          {{ item.content_rewrite_rules }}
+          {{ it.item.content_rewrite_rules }}
         </p>
       </div>
     {{ /if }}

@@ -7,12 +7,12 @@
     - classes: additional classes
 #}}
 
-{{ set items = nav.breadcrumb(url) }}
+{{ set items = it.nav.breadcrumb(it.url) }}
 
 {{ if items.length > 1 }}
   <nav
     aria-label="Breadcrumb"
-    class="relative z-20 flex items-center {{ classes }}"
+    class="relative z-20 flex items-center {{ it.classes }}"
   >
     <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
       {{ for index, item of items }}

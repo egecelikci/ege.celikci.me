@@ -7,7 +7,7 @@
   const ids = it.ids || [];
 
   // Robust data resolution
-  let links = it.links || author?.links || [];
+  let links = it.links || it.author?.links || [];
 
   if (ids.length > 0) {
     links = links.filter((link) => ids.includes(link.id));

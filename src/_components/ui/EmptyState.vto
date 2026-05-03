@@ -14,18 +14,18 @@
   <div class="p-4 rounded-full bg-surface mb-4 text-text-muted/50">
     {{
       comp.ui.Icon({
-        name: icon,
+        name: it.icon,
         catalog: "lucide",
         classes: "w-8 h-8 md:w-10 md:h-10",
       })
     }}
   </div>
-  {{ if title }}
-    <h3 class="text-lg font-bold text-text mb-2">{{ title }}</h3>
+  {{ if it.title }}
+    <h3 class="text-lg font-bold text-text mb-2">{{ it.title }}</h3>
   {{ /if }}
-  {{ if description }}
+  {{ if it.description }}
     <p class="text-text-muted max-w-sm mx-auto leading-relaxed">
-      {{ description |> safe }}
+      {{ it.description |> safe }}
     </p>
   {{ /if }}
 </div>

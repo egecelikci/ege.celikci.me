@@ -10,15 +10,15 @@
     - attributes: object
 #}}
 
-{{ set tag = href ? "a" : "span" }}
+{{ set tag = it.href ? "a" : "span" }}
 
 <{{ tag }}
-{{ if href }}href="{{ href }}"{{ /if }}
-class="badge-base {{ classes }}"
-{{ attributes |> attr |> safe }}
+{{ if it.href }}href="{{ it.href }}"{{ /if }}
+class="badge-base {{ it.classes }}"
+{{ it.attributes |> attr |> safe }}
 >
-{{ if icon }}
-  {{ comp.ui.Icon({ name: icon, catalog: "lucide", classes: "w-3 h-3" }) }}
+{{ if it.icon }}
+  {{ comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-3 h-3" }) }}
 {{ /if }}
-<span>{{ content |> safe }}</span>
+<span>{{ it.content |> safe }}</span>
 </{{ tag }}>

@@ -3,8 +3,8 @@
   A flexible grid for 1-4 images with hover zoom and Litebox integration.
   Whitespace-tight to prevent text-node offsets in note opener.
 #}}
-{{ if images && images.length > 0 }}
-  {{ set count = Math.min(images.length, 4) }}
+{{ if it.images && it.images.length > 0 }}
+  {{ set count = Math.min(it.images.length, 4) }}
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
   {{ set isAuto = it.aspect === "auto" }}
   {{
@@ -20,7 +20,7 @@
     class="grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20 {{ gridClass }}"
     data-litebox-group="{{ gid }}"
   >
-    {{ for i, image of images |> slice(0, 4) }}
+    {{ for i, image of it.images |> slice(0, 4) }}
       {{
         set isPanoramic = image.width && image.height && (image.width / image.height > 2)
       }}
@@ -61,12 +61,12 @@
           </div>
         {{ /if }}
 
-        {{ if i === 3 && images.length > 4 }}
+        {{ if i === 3 && it.images.length > 4 }}
           <div
             class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"
           >
             <span class="text-white font-bold text-xl">+{{
-                images.length - 4
+                it.images.length - 4
               }}</span>
           </div>
         {{ /if }}

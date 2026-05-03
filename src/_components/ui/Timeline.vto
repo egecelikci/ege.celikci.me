@@ -8,7 +8,7 @@
     - attributes: object
 #}}
 
-<div class="relative {{ classes }}" {{ attributes |> attr |> safe }}>
+<div class="relative {{ it.classes }}" {{ it.attributes |> attr |> safe }}>
   {{# 1. THE SPINE #}}
   <div class="absolute left-0 top-0 bottom-0 w-px bg-border/10">
     {{# Subtle Gradient Overlay for the line #}}

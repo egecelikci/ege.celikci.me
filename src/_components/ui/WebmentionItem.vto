@@ -8,12 +8,12 @@
     - attributes: object
 #}}
 
-{{ set isOwn = webmention |> isOwnWebmention }}
+{{ set isOwn = it.webmention |> isOwnWebmention }}
 
 <div
-  id="webmention-{{ webmention['wm-id'] }}"
-  class="u-comment h-cite relative flex flex-col gap-3 py-6 last:border-b-0 {{ isOwn ? 'bg-surface/10 rounded-2xl p-6 -mx-6' : 'border-b border-border/10' }} {{ classes }}"
-  {{ attributes |> attr |> safe }}
+  id="webmention-{{ it.webmention['wm-id'] }}"
+  class="u-comment h-cite relative flex flex-col gap-3 py-6 last:border-b-0 {{ isOwn ? 'bg-surface/10 rounded-2xl p-6 -mx-6' : 'border-b border-border/10' }} {{ it.classes }}"
+  {{ it.attributes |> attr |> safe }}
 >
   <header class="flex items-center justify-between gap-4">
     <div class="p-author h-card flex items-center gap-3">
@@ -21,11 +21,11 @@
       <div
         class="w-8 h-8 rounded-full overflow-hidden border border-border/10 bg-surface shadow-sm"
       >
-        {{ if webmention.author.photo }}
+        {{ if it.webmention.author.photo }}
           <img
             class="u-photo h-full w-full object-cover"
-            src="{{ webmention.author.photo }}"
-            alt="{{ webmention.author.name }}"
+            src="{{ it.webmention.author.photo }}"
+            alt="{{ it.webmention.author.name }}"
             width="32"
             height="32"
             loading="lazy"
@@ -43,20 +43,20 @@
       <div class="flex flex-col">
         <a
           class="p-name u-url font-bold text-sm text-text no-underline hover:text-primary transition-colors"
-          {{ if webmention.author.url }}href="{{ webmention.author.url }}"{{
-            /if
-          }}
+          {{ if it.webmention.author.url }}href="{{
+              it.webmention.author.url
+            }}"{{ /if }}
           target="_blank"
           rel="ugc nofollow"
         >
-          {{ webmention.author.name }}
+          {{ it.webmention.author.name }}
         </a>
         <div
           class="typography-label text-text-muted font-normal"
         >
-          {{ if webmention["wm-property"] === "in-reply-to" }}
+          {{ if it.webmention["wm-property"] === "in-reply-to" }}
             replied
-          {{ else if webmention["wm-property"] === "mention-of" }}
+          {{ else if it.webmention["wm-property"] === "mention-of" }}
             mentioned
           {{ else }}
             interacted
@@ -66,12 +66,12 @@
     </div>
 
     {{# Date #}}
-    {{ if webmention.published }}
+    {{ if it.webmention.published }}
       <time
         class="dt-published typography-label text-text-muted font-normal"
-        datetime="{{ webmention.published }}"
+        datetime="{{ it.webmention.published }}"
       >
-        {{ webmention.published |> date("dd MMM yyyy") }}
+        {{ it.webmention.published |> date("dd MMM yyyy") }}
       </time>
     {{ /if }}
   </header>
@@ -80,6 +80,6 @@
   <div
     class="e-content markdown text-base leading-relaxed text-text-muted/80 pl-11"
   >
-    {{ webmention.content.value |> safe }}
+    {{ it.webmention.content.value |> safe }}
   </div>
 </div>

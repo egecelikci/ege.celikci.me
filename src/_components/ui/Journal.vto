@@ -12,7 +12,7 @@
 
 <article
   class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}"
-  {{ attributes |> attr |> safe }}
+  {{ it.attributes |> attr |> safe }}
 >
   <header
     class="relative z-20 flex items-center gap-4 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity"
