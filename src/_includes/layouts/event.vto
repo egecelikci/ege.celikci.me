@@ -43,7 +43,7 @@ layout: layouts/page.vto
                 class="text-base font-bold text-text/80 inline"
               >
                 <span
-                  class="typography-label text-text-muted/90 mr-2 inline-block translate-y-[-1px]"
+                  class="typography-label text-text-muted mr-2 inline-block translate-y-[-1px]"
                 >Presented by</span>
 
                 {{ if labelRel.label.externalLinks?.instagram }}
@@ -79,15 +79,13 @@ layout: layouts/page.vto
         <div class="flex flex-wrap items-center gap-x-12 gap-y-6">
           <div class="flex flex-col gap-1.5">
             <span
-              class="typography-label text-text-muted/90"
+              class="typography-label text-text-muted"
             >Date & Time</span>
             <div class="text-xl font-bold font-mono text-text">
               {{ if it.event.beginDate }}
                 {{ it.event.beginDate |> date("EEE, MMM dd") }}
                 {{ if it.event.time }}
-                  <span class="ml-2 text-text-muted/90">{{
-                    it.event.time
-                  }}</span>
+                  <span class="ml-2 text-text-muted">{{ it.event.time }}</span>
                 {{ /if }}
               {{ else }}
                 TBA
@@ -98,7 +96,7 @@ layout: layouts/page.vto
           {{ if event.local?.price }}
             <div class="flex flex-col gap-1.5">
               <span
-                class="typography-label text-text-muted/90"
+                class="typography-label text-text-muted"
               >Entry Fee</span>
               <div class="text-xl font-bold font-mono text-primary">
                 {{ event.local.price }}
@@ -134,7 +132,7 @@ layout: layouts/page.vto
       >
         <section class="flex flex-col gap-8">
           <h2
-            class="typography-label text-text-muted/90"
+            class="typography-label text-text-muted"
           >
             Lineup
           </h2>
@@ -180,7 +178,7 @@ layout: layouts/page.vto
                     {{ /if }}
                   </div>
                   <span
-                    class="typography-label font-normal text-text-muted/90"
+                    class="typography-label font-normal text-text-muted"
                   >
                     {{ rel.type }}
                   </span>
@@ -188,7 +186,7 @@ layout: layouts/page.vto
               {{ /for }}
             </ul>
           {{ else }}
-            <p class="text-text-muted/90 italic">Lineup TBA</p>
+            <p class="text-text-muted italic">Lineup TBA</p>
           {{ /if }}
         </section>
       </div>
@@ -230,7 +228,7 @@ layout: layouts/page.vto
       {{# VENUE SECTION (Moved to sidebar for desktop) #}}
       <section class="flex flex-col gap-8">
         <h2
-          class="typography-label text-text-muted/90"
+          class="typography-label text-text-muted"
         >
           Venue
         </h2>
@@ -269,7 +267,7 @@ layout: layouts/page.vto
               </div>
               {{ if venueRel.place.address }}
                 <p
-                  class="text-sm text-text-muted/95 leading-relaxed"
+                  class="text-sm text-text-muted leading-relaxed"
                 >
                   {{ venueRel.place.address }}
                 </p>
@@ -376,7 +374,7 @@ layout: layouts/page.vto
             {{ /if }}
           </div>
         {{ else }}
-          <p class="text-text-muted/90 italic">Venue TBA</p>
+          <p class="text-text-muted italic">Venue TBA</p>
         {{ /if }}
       </section>
 
@@ -447,7 +445,7 @@ layout: layouts/page.vto
   {{ if gallery && gallery.length > 0 }}
     <section class="flex flex-col gap-8 pt-12 border-t border-border/10">
       <h2
-        class="typography-label text-text-muted/90"
+        class="typography-label text-text-muted"
       >
         Photographs
       </h2>

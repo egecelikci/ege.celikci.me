@@ -307,7 +307,7 @@
   /* Code block header */
   .markdown figure.code-block figcaption.code-header {
     @apply flex items-center justify-start border-b border-border/10 bg-bg/50
-      px-5 py-2.5 font-mono text-[10px] font-bold text-text-muted/60 uppercase
+      px-5 py-2.5 font-mono text-[10px] font-bold text-text-muted uppercase
       tracking-widest not-italic;
   }
 

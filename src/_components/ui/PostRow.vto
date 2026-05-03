@@ -12,7 +12,7 @@
 >
   {{# 1. DATE #}}
   <time
-    class="shrink-0 w-24 md:w-32 text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted/95 group-hover:opacity-100 group-hover:text-primary transition-all"
+    class="shrink-0 w-24 md:w-32 text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted group-hover:opacity-100 group-hover:text-primary transition-all"
   >
     {{ it.post.date |> date("dd MMM yyyy") }}
   </time>
@@ -30,7 +30,7 @@
     >
       {{ for tag of it.post.tags |> slice(0, 2) }}
         <span
-          class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted/90 italic"
+          class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted italic"
         >#{{ tag }}</span>
       {{ /for }}
     </div>
