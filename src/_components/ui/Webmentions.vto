@@ -7,15 +7,15 @@
     - classes: additional classes
 #}}
 
-<div class="webmentions-list {{ classes }}">
+<div class="webmentions-list {{ it.classes }}">
   {{# Split mentions by type #}}
   {{
-    set interactions = mentions.filter((m) =>
+    set interactions = it.mentions.filter((m) =>
       m["wm-property"] === "like-of" || m["wm-property"] === "repost-of"
     )
   }}
   {{
-    set comments = mentions.filter((m) =>
+    set comments = it.mentions.filter((m) =>
       m["wm-property"] !== "like-of" && m["wm-property"] !== "repost-of"
     )
   }}

@@ -7,8 +7,10 @@
     - classes: additional classes
 #}}
 
-{{ if backlinks && backlinks.length > 0 }}
-  <div class="mt-24 pt-8 border-t border-border/10 print:hidden {{ classes }}">
+{{ if it.backlinks && it.backlinks.length > 0 }}
+  <div
+    class="mt-24 pt-8 border-t border-border/10 print:hidden {{ it.classes }}"
+  >
     <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
       <h3
         class="typography-label text-text-muted whitespace-nowrap"
@@ -17,7 +19,7 @@
       </h3>
 
       <ul class="flex flex-wrap gap-x-6 gap-y-2 list-none p-0 m-0">
-        {{ for link of backlinks }}
+        {{ for link of it.backlinks }}
           <li>
             <a
               href="{{ link.url }}"

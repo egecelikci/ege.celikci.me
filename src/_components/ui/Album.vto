@@ -11,14 +11,16 @@
 #}}
 
 {{>
-  const artistNames = album["artist-credit"].map((ac) => ac.name).join(" · ")
+  const artistNames = it.album["artist-credit"].map((ac) => ac.name).join(
+    " · ",
+  )
 }}
 
 <a
-  href="https://listenbrainz.org/album/{{ album.id }}"
-  class="album-item group flex flex-col gap-3 relative no-underline {{ classes }}"
-  title="{{ album.title }} by {{ artistNames }}"
-  {{ attributes |> attr |> safe }}
+  href="https://listenbrainz.org/album/{{ it.album.id }}"
+  class="album-item group flex flex-col gap-3 relative no-underline {{ it.classes }}"
+  title="{{ it.album.title }} by {{ artistNames }}"
+  {{ it.attributes |> attr |> safe }}
 >
   {{# Cover Wrapper (No overflow-hidden to fix scroll animations) #}}
   <div
@@ -29,11 +31,11 @@
       {{# COLORED IMAGE (Reveals on Hover/Active) #}}
       <img
         class="absolute inset-0 z-20 w-full h-full object-cover block opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-[.is-active]:opacity-100"
-        src="{{ album.imagePath }}"
+        src="{{ it.album.imagePath }}"
         alt=""
         aria-hidden="true"
-        loading="{{ priority ? 'eager' : 'lazy' }}"
-        {{ if priority }}fetchpriority="high"{{ /if }}
+        loading="{{ it.priority ? 'eager' : 'lazy' }}"
+        {{ if it.priority }}fetchpriority="high"{{ /if }}
         width="290"
         height="290"
       />
@@ -41,11 +43,11 @@
       {{# MONOCHROME IMAGE (Base State) #}}
       <img
         class="absolute inset-0 z-10 w-full h-full object-cover block transition-opacity duration-700 [filter:invert(var(--album-mono-invert))_brightness(var(--album-mono-brightness))_contrast(var(--album-mono-contrast))] opacity-[var(--album-mono-opacity)] group-hover:opacity-0 group-[.is-active]:opacity-0"
-        src="{{ album.imagePathMono }}"
+        src="{{ it.album.imagePathMono }}"
         alt=""
         aria-hidden="true"
-        loading="{{ priority ? 'eager' : 'lazy' }}"
-        {{ if priority }}fetchpriority="high"{{ /if }}
+        loading="{{ it.priority ? 'eager' : 'lazy' }}"
+        {{ if it.priority }}fetchpriority="high"{{ /if }}
         width="290"
         height="290"
       />
@@ -60,7 +62,7 @@
       <span
         class="block text-[11px] font-bold text-text truncate tracking-tight"
       >
-        {{ album.title }}
+        {{ it.album.title }}
       </span>
       <span
         class="block text-[9px] font-mono uppercase tracking-[0.1em] text-text-muted truncate"

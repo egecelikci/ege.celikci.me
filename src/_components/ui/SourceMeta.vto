@@ -36,13 +36,13 @@
     };
   });
 
-  const variant = it.variant || "full";
+  const variantVal = it.variant || "full";
   const feeds = processed.filter((s) => s.type === "feed");
   const nonFeeds = processed.filter((s) => s.type === "source")
 }}
 
 <div
-  class="flex {{ if variant === 'minimal' }}flex-row gap-2{{ else }}flex-col gap-3{{ /if }}"
+  class="flex {{ if variantVal === 'minimal' }}flex-row gap-2{{ else }}flex-col gap-3{{ /if }}"
 >
   {{# 1. DATA SOURCES (Synced from...) #}}
   {{ for source of nonFeeds }}
@@ -53,7 +53,7 @@
       }
     }}
 
-    {{ if variant === "minimal" }}
+    {{ if variantVal === "minimal" }}
       {{ if targetUrl }}
         <a
           href="{{ targetUrl }}"
@@ -108,7 +108,7 @@
 
   {{# 2. SUBSCRIPTION FEEDS (Subscribe via...) #}}
   {{ if feeds.length > 0 }}
-    {{ if variant === "minimal" }}
+    {{ if variantVal === "minimal" }}
       <div class="flex gap-2">
         {{ for feed of feeds }}
           <a

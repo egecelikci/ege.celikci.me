@@ -9,15 +9,15 @@
     - attributes: object
 #}}
 
-{{ set tag = href ? "a" : "span" }}
+{{ set tag = it.href ? "a" : "span" }}
 
 <{{ tag }}
-{{ if href }}href="{{ href }}"{{ /if }}
+{{ if it.href }}href="{{ it.href }}"{{ /if }}
 class="inline-flex items-center typography-label text-text-muted/70
 hover:text-primary no-underline transition-colors not-prose
-[box-shadow:none!important] {{ classes }}"
-{{ attributes |> attr |> safe }}
+[box-shadow:none!important] {{ it.classes }}"
+{{ it.attributes |> attr |> safe }}
 >
 <span class="opacity-60 mr-1 font-mono">#</span>
-<span>{{ content |> safe }}</span>
+<span>{{ it.content |> safe }}</span>
 </{{ tag }}>

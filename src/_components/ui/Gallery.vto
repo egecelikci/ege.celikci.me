@@ -9,21 +9,21 @@
     - aspect: string (default: "aspect-square")
 #}}
 
-{{ if images && images.length > 0 }}
-  {{ set isSingle = images.length == 1 }}
+{{ if it.images && it.images.length > 0 }}
+  {{ set isSingle = it.images.length == 1 }}
   {{
     set gridClasses = isSingle ? "block" : "grid grid-cols-1 sm:grid-cols-2 gap-4"
   }}
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
 
   <div
-    class="{{ gridClasses }} mb-4 {{ classes }}"
-    {{ if !static }}data-litebox-group="{{ gid }}"{{ /if }}
+    class="{{ gridClasses }} mb-4 {{ it.classes }}"
+    {{ if !it.static }}data-litebox-group="{{ gid }}"{{ /if }}
   >
-    {{ for i, image of images }}
+    {{ for i, image of it.images }}
       <div class="relative group/img h-full">
         {{# 1. WRAPPER ELEMENT #}}
-        {{ if !static }}
+        {{ if !it.static }}
           <a
             href="{{ image.src |> url }}"
             {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
@@ -70,14 +70,14 @@
         {{ /if }}
 
         {{# 3. MINIMALIST OVERLAY #}}
-        {{ if images.length > 1 || image.photographer }}
+        {{ if it.images.length > 1 || image.photographer }}
           <div
             class="absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20 flex flex-col items-end gap-1 group-hover/img:opacity-100"
           >
-            {{ if images.length > 1 }}
+            {{ if it.images.length > 1 }}
               <div class="flex items-center gap-1.5">
                 {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
-                <span>{{ i + 1 }} / {{ images.length }}</span>
+                <span>{{ i + 1 }} / {{ it.images.length }}</span>
               </div>
             {{ /if }}
             {{ if image.photographer }}

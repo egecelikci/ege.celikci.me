@@ -10,7 +10,7 @@
     - content: string (body)
 #}}
 
-{{ set tag = as || "div" }}
+{{ set tag = it.as || "div" }}
 
 {{
   set widthClass = {
@@ -18,22 +18,22 @@
     "default": "max-w-6xl",
     "wide": "max-w-screen-2xl",
     "full": "max-w-full",
-  }[width] || width || "max-w-6xl"
+  }[it.width] || it.width || "max-w-6xl"
 }}
 
 {{
-  set paddingClass = padding === false
+  set paddingClass = it.padding === false
   ? ""
-  : (typeof padding === "string" ? padding : "px-4 md:px-0")
+  : (typeof it.padding === "string" ? it.padding : "px-4 md:px-0")
 }}
 
 {{
   set containerClasses = [
     "w-full",
     paddingClass,
-    centered !== false ? "mx-auto" : "",
+    it.centered !== false ? "mx-auto" : "",
     widthClass,
-    classes,
+    it.classes,
   ]
   |> join(" ")
   |> trim
@@ -41,7 +41,7 @@
 
 <{{ tag }}
 class="{{ containerClasses }}"
-{{ if attributes }}{{ attributes |> attr |> safe }}{{ /if }}
+{{ if it.attributes }}{{ it.attributes |> attr |> safe }}{{ /if }}
 >
-{{ content |> safe }}
+{{ it.content |> safe }}
 </{{ tag }}>

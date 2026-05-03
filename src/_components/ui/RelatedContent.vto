@@ -7,7 +7,7 @@
     - tags: string[] (current page tags, for highlighting)
 #}}
 
-{{ if related.posts.length > 0 || related.pages.length > 0 }}
+{{ if it.related.posts.length > 0 || it.related.pages.length > 0 }}
   <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
     <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
       {{
@@ -22,7 +22,7 @@
 
     <div class="space-y-6">
       {{# --- BLOG POSTS LIST --- #}}
-      {{ if related.posts.length > 0 }}
+      {{ if it.related.posts.length > 0 }}
         <div>
           <h4
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
@@ -34,10 +34,10 @@
                 classes: "w-4 h-4",
               })
             }}
-            Blog Posts ({{ related.posts.length }})
+            Blog Posts ({{ it.related.posts.length }})
           </h4>
           <div class="space-y-2">
-            {{ for post of related.posts.slice(0, 5) }}
+            {{ for post of it.related.posts.slice(0, 5) }}
               <a
                 href="{{ post.url }}"
                 class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
@@ -54,7 +54,7 @@
                     </time>
                     <div class="flex gap-1 ml-auto">
                       {{ for tag of post.tags }}
-                        {{ if tags.includes(tag) }}
+                        {{ if it.tags.includes(tag) }}
                           <span class="text-primary opacity-80">#{{
                               tag
                             }}</span>
@@ -78,7 +78,7 @@
       {{ /if }}
 
       {{# --- PAGES LIST --- #}}
-      {{ if related.pages.length > 0 }}
+      {{ if it.related.pages.length > 0 }}
         <div>
           <h4
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
@@ -90,10 +90,10 @@
                 classes: "w-4 h-4",
               })
             }}
-            Pages ({{ related.pages.length }})
+            Pages ({{ it.related.pages.length }})
           </h4>
           <div class="space-y-2">
-            {{ for page of related.pages.slice(0, 5) }}
+            {{ for page of it.related.pages.slice(0, 5) }}
               <a
                 href="{{ page.url }}"
                 class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
