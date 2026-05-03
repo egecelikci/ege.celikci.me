@@ -6,10 +6,13 @@
     - post: { url: string, title: string, date: Date, tags?: string[] }
 #}}
 
-<a href="{{ it.post.url |> url }}" class="{{ theme.components.listing.row }}">
+<a
+  href="{{ it.post.url |> url }}"
+  class="group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline pl-4 md:pl-8"
+>
   {{# 1. DATE #}}
   <time
-    class="shrink-0 w-24 md:w-32 {{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:opacity-100 group-hover:text-primary transition-all"
+    class="shrink-0 w-24 md:w-32 text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted/95 group-hover:opacity-100 group-hover:text-primary transition-all"
   >
     {{ it.post.date |> date("dd MMM yyyy") }}
   </time>
@@ -27,7 +30,7 @@
     >
       {{ for tag of it.post.tags |> slice(0, 2) }}
         <span
-          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} italic"
+          class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted/90 italic"
         >#{{ tag }}</span>
       {{ /for }}
     </div>

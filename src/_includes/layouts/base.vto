@@ -3,14 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {{ set defaultTheme = themes.find((t) => t.id === "default") }}
-    {{ set darkTheme = themes.find((t) => t.id === "dark") }}
-
-    <meta name="theme-color" content="{{ defaultTheme.colors.background }}" />
+    <meta name="theme-color" content="#fef6e4" />
 
     <meta
       name="theme-color"
-      content="{{ darkTheme.colors.background }}"
+      content="#463366"
       media="(prefers-color-scheme: dark)"
     />
     <title>
@@ -26,7 +23,7 @@
     {{ include "meta.vto" }}
   </head>
   <body
-    class="overflow-x-hidden print:bg-white print:text-black flex flex-col min-h-screen"
+    class="overflow-x-clip print:bg-white print:text-black flex flex-col min-h-screen"
     {{ if it.disable_animation }}data-disable-animation="true"{{ /if }}
     {{ if it.searchable === false }}data-pagefind-ignore="all"{{ /if }}
   >

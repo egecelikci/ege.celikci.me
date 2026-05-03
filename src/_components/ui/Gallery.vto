@@ -17,7 +17,7 @@
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
 
   <div
-    class="{{ gridClasses }} {{ theme.components.gallery.container }} {{ classes }}"
+    class="{{ gridClasses }} mb-4 {{ classes }}"
     {{ if !static }}data-litebox-group="{{ gid }}"{{ /if }}
   >
     {{ for i, image of images }}
@@ -31,7 +31,7 @@
             target="_blank"
             aria-label="View larger image: {{ image.alt }}"
             class='
-              litebox-trigger {{ theme.components.gallery.item }} {{
+              litebox-trigger note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents {{
               it.aspect || "aspect-square"
               }}
             '
@@ -42,7 +42,7 @@
               alt="{{ image.alt }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
-              class="{{ theme.components.gallery.image }}"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105 group-[.is-active]/img:scale-105"
               loading="lazy"
               decoding="async"
             />
@@ -54,7 +54,7 @@
           </a>
         {{ else }}
           <div
-            class='{{ theme.components.gallery.itemStatic }} {{ it.aspect || "aspect-square" }}'
+            class='note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 transition-all duration-700 [&_picture]:contents {{ it.aspect || "aspect-square" }}'
           >
             {{# 2. THE IMAGE #}}
             <img
@@ -62,7 +62,7 @@
               alt="{{ image.alt }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
-              class="{{ theme.components.gallery.image }}"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover/img:scale-105 group-[.is-active]/img:scale-105"
               loading="lazy"
               decoding="async"
             />
@@ -72,7 +72,7 @@
         {{# 3. MINIMALIST OVERLAY #}}
         {{ if images.length > 1 || image.photographer }}
           <div
-            class="{{ theme.components.gallery.overlay }} flex flex-col items-end gap-1 group-hover/img:opacity-100"
+            class="absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20 flex flex-col items-end gap-1 group-hover/img:opacity-100"
           >
             {{ if images.length > 1 }}
               <div class="flex items-center gap-1.5">

@@ -1,10 +1,11 @@
-{{# 
+{{#
   Component: Card (Primitive)
   A container for content with consistent styling.
 #}}
 {{- set tag = href ? "a" : "div" -}}
-<{{ tag }} {{ if href }}href="{{ href }}"{{ /if }} class="{{
-  theme.components.card.base
-}} {{ classes }}" {{ attributes |> attr |> safe }}>{{ content |> safe }}</{{
-  tag
-}}>
+<{{ tag }} {{ if href }}href="{{ href }}"{{ /if }} class="rounded-xl border
+border-border bg-surface/30 transition-all {{ classes }}" {{
+  attributes
+  |> attr
+  |> safe
+}}>{{ content |> safe }}</{{ tag }}>

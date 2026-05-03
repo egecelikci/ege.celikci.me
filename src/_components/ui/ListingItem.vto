@@ -20,13 +20,13 @@
 
 {{
   set containerClass = it.compact
-  ? theme.components.listing.containerCompact
-  : theme.components.listing.container
+  ? "group relative flex flex-col gap-4 md:gap-6 py-8 md:py-12 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8"
+  : "group relative flex flex-col gap-8 md:gap-12 py-16 md:py-24 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8"
 }}
 {{
   set accentBarClass = it.compact
-  ? theme.components.listing.accentBarCompact
-  : theme.components.listing.accentBar
+  ? "absolute left-0 top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20"
+  : "absolute left-0 top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20"
 }}
 
 <article class="{{ containerClass }} {{ it.classes || '' }}">
@@ -41,10 +41,10 @@
   ></a>
 
   {{# 1. HEADER (Meta Row) #}}
-  <header class="{{ theme.components.listing.metaRow }} relative z-10">
+  <header class="listing-meta-row">
     {{ if it.date }}
       <time
-        class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+        class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
       >
         {{ if typeof it.date === "string" }}{{ it.date }}{{ else }}{{
             it.date
@@ -59,7 +59,7 @@
       <div class="flex gap-4 relative z-40">
         {{ for tag of it.tags |> slice(0, 3) }}
           <span
-            class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}"
+            class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-primary"
           >#{{ tag }}</span>
         {{ /for }}
       </div>
@@ -74,7 +74,7 @@
       <div class="relative">
         {{# Multi-image Indicator #}}
         {{ if it.images.length > 1 }}
-          <div class="{{ theme.components.gallery.overlay }}">
+          <div class="gallery-overlay">
             {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
             <span>1 / {{ it.images.length }}</span>
           </div>
@@ -98,7 +98,7 @@
   <div class="relative z-10 flex flex-col gap-6">
     {{ if it.title }}
       {{ if typeof it.title === "string" }}
-        <h3 class="{{ theme.components.listing.title }}">
+        <h3 class="listing-title">
           {{ it.title }}
         </h3>
       {{ else }}
@@ -107,7 +107,7 @@
     {{ /if }}
 
     <div
-      class="e-content markdown {{ theme.components.listing.description }} {{ it.bodyClasses || '' }}"
+      class="e-content markdown text-lg md:text-xl text-text-muted group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20 {{ it.bodyClasses || '' }}"
     >
       {{ it.content |> safe }}
     </div>

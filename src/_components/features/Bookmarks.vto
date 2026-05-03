@@ -14,14 +14,14 @@
     >
       <div class="flex items-baseline justify-between mb-12">
         <h2
-          class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+          class="typography-label text-text-muted"
         >
           {{ section.title }}
         </h2>
         {{ if section.blogroll }}
           <a
             href="/blogroll.xml"
-            class="{{ theme.typography.label }} {{ theme.typography.colors.accent }} hover:text-primary transition-colors no-underline"
+            class="typography-label text-primary hover:text-primary-offset transition-colors no-underline"
           >
             Subscribe to blogroll &rarr;
           </a>
@@ -77,7 +77,7 @@
 
                   {{ if item.desc }}
                     <div
-                      class="p-content p-note text-sm {{ theme.typography.colors.muted }} max-w-sm markdown markdown-inline"
+                      class="p-content p-note text-sm text-text-muted max-w-sm markdown markdown-inline"
                     >
                       {{ item.desc |> md |> safe }}
                     </div>
@@ -86,7 +86,7 @@
                   {{ if item.feed }}
                     <a
                       href="{{ item.feed }}"
-                      class="inline-flex items-center gap-1.5 {{ theme.typography.label }} {{ theme.typography.colors.dim }} hover:text-primary transition-colors no-underline"
+                      class="inline-flex items-center gap-1.5 typography-label text-text-muted/90 hover:text-primary transition-colors no-underline"
                     >
                       <span
                         class="w-1 h-1 rounded-full bg-current opacity-40"
@@ -102,7 +102,7 @@
                           href="{{ mirror }}"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} hover:text-primary transition-colors no-underline"
+                          class="typography-label text-text-muted/90 hover:text-primary transition-colors no-underline"
                         >
                           {{ mirror |> replace("https://", "") }}
                         </a>

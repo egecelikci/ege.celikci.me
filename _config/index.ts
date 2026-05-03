@@ -3,8 +3,11 @@
  * Main configuration orchestrator.
  */
 
+Deno.env.set("TZ", "Europe/Istanbul");
+
 import "./types.ts";
 import attributes from "lume/plugins/attributes.ts";
+import checkUrls from "lume/plugins/check_urls.ts";
 import date from "lume/plugins/date.ts";
 import extractDate from "lume/plugins/extract_date.ts";
 import favicon from "lume/plugins/favicon.ts";
@@ -15,8 +18,11 @@ import nav from "lume/plugins/nav.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import paginate from "lume/plugins/paginate.ts";
 import robots from "lume/plugins/robots.ts";
+import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
+import terser from "lume/plugins/terser.ts";
+import validateHTML from "lume/plugins/validate_html.ts";
 
 import googleFonts from "lume/plugins/google_fonts.ts";
 import assets from "./assets.ts";
@@ -25,6 +31,8 @@ import filters from "./filters.ts";
 import markdown from "./markdown.ts";
 
 export default function () {
+  const isDev = Deno.env.get("MODE") !== "production";
+
   return (site: Lume.Site) => {
     site
       .use(attributes())
@@ -32,12 +40,13 @@ export default function () {
       .use(slugifyPlugin())
       .use(metas())
       .use(extractDate())
-      .use(date({ formats: { "URL": "yyyyMMddHHmmss" } }))
+      .use(date({
+        formats: { "URL": "yyyyMMddHHmmss" },
+      }))
       .use(paginate())
       .use(sitemap())
       .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt" }] }))
       .use(nav())
-      .use(minifyHTML())
       .use(favicon({
         input: "/assets/images/favicon/favicon.svg",
         favicons: [
@@ -92,6 +101,16 @@ export default function () {
       .use(feeds())
       .use(filters())
       .use(markdown());
+
+    // Production-only optimizations and checks
+    if (!isDev) {
+      site
+        .use(minifyHTML())
+        .use(terser())
+        .use(checkUrls())
+        .use(seo())
+        .use(validateHTML());
+    }
 
     // Global default for all Markdown files: Vento then Markdown
     site.data("templateEngine", ["vto", "md"], ".md");

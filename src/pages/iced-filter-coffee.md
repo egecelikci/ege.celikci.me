@@ -6,7 +6,7 @@ templateEngine: [vto, md]
 
 this is the recipe from James Hoffmann
 
-{{ await comp.ui.YouTube({
+{{ await comp.ui.Video({
 id: "PApBycDrPo0",
 title: "How to Make Iced Filter Coffee by James Hoffmann"
 }) }}

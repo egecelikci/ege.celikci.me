@@ -1,6 +1,372 @@
 {
   "albums": [
     {
+      "title": "She Reaches Out to She Reaches Out to She",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "secondary-types": [],
+      "disambiguation": "",
+      "id": "7a2e8e09-aa9c-4c39-8f2d-50577d0b4669",
+      "releases": [
+        {
+          "packaging": null,
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2024-02-09",
+          "country": "XE",
+          "artist-credit": [
+            {
+              "name": "Chelsea Wolfe",
+              "joinphrase": "",
+              "artist": {
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+                "name": "Chelsea Wolfe",
+                "disambiguation": "",
+                "sort-name": "Wolfe, Chelsea",
+                "country": "US",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person"
+              }
+            }
+          ],
+          "barcode": "00888072581616",
+          "title": "She Reaches Out to She Reaches Out to She",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "name": "Europe",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "type": null,
+                "type-id": null,
+                "sort-name": "Europe",
+                "iso-3166-1-codes": [
+                  "XE"
+                ]
+              },
+              "date": "2024-02-09"
+            }
+          ],
+          "quality": "normal",
+          "status": "Official",
+          "id": "65c08740-f1b3-429b-b2ae-80fd74f024ef",
+          "disambiguation": ""
+        },
+        {
+          "disambiguation": "",
+          "id": "7864da73-8817-4512-9892-be1a464e2a3b",
+          "quality": "normal",
+          "status": "Official",
+          "title": "She Reaches Out to She Reaches Out to She",
+          "barcode": "888072551831",
+          "release-events": [
+            {
+              "date": "2024-02-09",
+              "area": {
+                "name": "Europe",
+                "disambiguation": "",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "sort-name": "Europe"
+              }
+            }
+          ],
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "date": "2024-02-09",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "packaging": "Digipak",
+          "country": "XE",
+          "artist-credit": [
+            {
+              "name": "Chelsea Wolfe",
+              "joinphrase": "",
+              "artist": {
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "country": "US",
+                "sort-name": "Wolfe, Chelsea",
+                "disambiguation": "",
+                "name": "Chelsea Wolfe",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d"
+              }
+            }
+          ]
+        },
+        {
+          "status": "Official",
+          "quality": "normal",
+          "id": "6907047a-be49-4e95-8693-c445692af8fc",
+          "disambiguation": "",
+          "artist-credit": [
+            {
+              "artist": {
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "country": "US",
+                "sort-name": "Wolfe, Chelsea",
+                "name": "Chelsea Wolfe",
+                "disambiguation": "",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d"
+              },
+              "name": "Chelsea Wolfe",
+              "joinphrase": ""
+            }
+          ],
+          "country": "US",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "packaging": "Digipak",
+          "date": "2024-02-09",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "release-events": [
+            {
+              "area": {
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "type": null,
+                "type-id": null,
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "name": "United States",
+                "disambiguation": ""
+              },
+              "date": "2024-02-09"
+            }
+          ],
+          "barcode": "888072551831",
+          "title": "She Reaches Out to She Reaches Out to She"
+        },
+        {
+          "id": "73e95b40-7b4e-4eed-9640-66e00911df00",
+          "disambiguation": "",
+          "status": "Official",
+          "quality": "normal",
+          "packaging-id": null,
+          "release-events": [
+            {
+              "area": {
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "sort-name": "United States",
+                "disambiguation": "",
+                "name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98"
+              },
+              "date": "2024-02-09"
+            }
+          ],
+          "barcode": "888072551848",
+          "title": "She Reaches Out to She Reaches Out to She",
+          "country": "US",
+          "artist-credit": [
+            {
+              "artist": {
+                "disambiguation": "",
+                "name": "Chelsea Wolfe",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "country": "US",
+                "sort-name": "Wolfe, Chelsea"
+              },
+              "joinphrase": "",
+              "name": "Chelsea Wolfe"
+            }
+          ],
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "packaging": null,
+          "date": "2024-02-09"
+        },
+        {
+          "artist-credit": [
+            {
+              "joinphrase": "",
+              "name": "Chelsea Wolfe",
+              "artist": {
+                "sort-name": "Wolfe, Chelsea",
+                "country": "US",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+                "disambiguation": "",
+                "name": "Chelsea Wolfe"
+              }
+            }
+          ],
+          "country": "XW",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "packaging": "Cassette Case",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2024-02-09",
+          "packaging-id": "c70b737a-0114-39a9-88f7-82843e54f906",
+          "release-events": [
+            {
+              "date": "2024-02-09",
+              "area": {
+                "type-id": null,
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]",
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              }
+            }
+          ],
+          "barcode": "8807257531",
+          "title": "She Reaches Out to She Reaches Out to She",
+          "status": "Official",
+          "quality": "normal",
+          "id": "75b49252-41b2-488e-a287-1cab43791320",
+          "disambiguation": ""
+        },
+        {
+          "release-events": [
+            {
+              "date": "2024-02-09",
+              "area": {
+                "type": null,
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              }
+            }
+          ],
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "title": "She Reaches Out to She Reaches Out to She",
+          "barcode": "888072569652",
+          "artist-credit": [
+            {
+              "artist": {
+                "sort-name": "Wolfe, Chelsea",
+                "country": "US",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+                "disambiguation": "",
+                "name": "Chelsea Wolfe"
+              },
+              "joinphrase": "",
+              "name": "Chelsea Wolfe"
+            }
+          ],
+          "country": "XW",
+          "date": "2024-02-09",
+          "packaging": "None",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "disambiguation": "",
+          "id": "18e073af-2933-4f0c-8cfa-b2e1f1cf985a",
+          "status": "Official",
+          "quality": "normal"
+        },
+        {
+          "status": "Official",
+          "quality": "normal",
+          "id": "33922aab-40f8-4d43-8d1c-7693562f784e",
+          "disambiguation": "",
+          "artist-credit": [
+            {
+              "artist": {
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "type": "Person",
+                "sort-name": "Wolfe, Chelsea",
+                "country": "US",
+                "disambiguation": "",
+                "name": "Chelsea Wolfe",
+                "id": "60e8e938-365e-4429-a141-4c79eb49588d"
+              },
+              "joinphrase": "",
+              "name": "Chelsea Wolfe"
+            }
+          ],
+          "country": "XW",
+          "packaging": "None",
+          "text-representation": {
+            "script": "Latn",
+            "language": "eng"
+          },
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2024-02-09",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type": null,
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ]
+              },
+              "date": "2024-02-09"
+            }
+          ],
+          "barcode": "888072569669",
+          "title": "She Reaches Out to She Reaches Out to She"
+        }
+      ],
+      "primary-type": "Album",
+      "first-release-date": "2024-02-09",
+      "artist-credit": [
+        {
+          "joinphrase": "",
+          "name": "Chelsea Wolfe",
+          "artist": {
+            "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+            "disambiguation": "",
+            "name": "Chelsea Wolfe",
+            "country": "US",
+            "sort-name": "Wolfe, Chelsea",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          }
+        }
+      ],
+      "secondary-type-ids": [],
+      "imagePath": "/assets/images/covers/colored/7a2e8e09-aa9c-4c39-8f2d-50577d0b4669.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/7a2e8e09-aa9c-4c39-8f2d-50577d0b4669.png",
+      "ratedAt": "Sat, 02 May 2026 11:35:16 GMT"
+    },
+    {
       "secondary-types": [],
       "disambiguation": "",
       "releases": [
@@ -19875,516 +20241,6 @@
       "imagePath": "/assets/images/covers/colored/17d74d52-c92b-3b8d-9f87-218ab2d1c4a0.webp",
       "imagePathMono": "/assets/images/covers/monochrome/17d74d52-c92b-3b8d-9f87-218ab2d1c4a0.png",
       "ratedAt": "Thu, 02 Oct 2025 19:41:00 GMT"
-    },
-    {
-      "artist-credit": [
-        {
-          "artist": {
-            "country": "GB",
-            "name": "Boards of Canada",
-            "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-            "disambiguation": "Scottish electronic duo",
-            "sort-name": "Boards of Canada",
-            "type": "Group",
-            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-          },
-          "joinphrase": "",
-          "name": "Boards of Canada"
-        }
-      ],
-      "title": "Twoism",
-      "first-release-date": "1995-08-15",
-      "primary-type": "EP",
-      "disambiguation": "",
-      "secondary-types": [],
-      "releases": [
-        {
-          "disambiguation": "",
-          "date": "1995-08-15",
-          "quality": "high",
-          "packaging-id": null,
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "release-events": [
-            {
-              "date": "1995-08-15",
-              "area": {
-                "disambiguation": "",
-                "name": "United Kingdom",
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "iso-3166-1-codes": [
-                  "GB"
-                ],
-                "sort-name": "United Kingdom",
-                "type-id": null,
-                "type": null
-              }
-            }
-          ],
-          "country": "GB",
-          "id": "3248af25-96a4-4296-912a-7569c1921358",
-          "barcode": null,
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "artist-credit": [
-            {
-              "name": "Boards of Canada",
-              "joinphrase": "",
-              "artist": {
-                "sort-name": "Boards of Canada",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "type": "Group",
-                "disambiguation": "Scottish electronic duo",
-                "country": "GB",
-                "name": "Boards of Canada",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e"
-              }
-            }
-          ],
-          "title": "Twoism",
-          "packaging": null
-        },
-        {
-          "disambiguation": "",
-          "date": "1995",
-          "quality": "high",
-          "packaging-id": null,
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "country": "GB",
-          "id": "1444739a-40fc-3ba9-b22b-e175c1939198",
-          "release-events": [
-            {
-              "date": "1995",
-              "area": {
-                "iso-3166-1-codes": [
-                  "GB"
-                ],
-                "sort-name": "United Kingdom",
-                "type-id": null,
-                "type": null,
-                "disambiguation": "",
-                "name": "United Kingdom",
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed"
-              }
-            }
-          ],
-          "barcode": null,
-          "text-representation": {
-            "script": "Latn",
-            "language": "eng"
-          },
-          "artist-credit": [
-            {
-              "joinphrase": "",
-              "name": "Boards of Canada",
-              "artist": {
-                "sort-name": "Boards of Canada",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "type": "Group",
-                "disambiguation": "Scottish electronic duo",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e"
-              }
-            }
-          ],
-          "title": "Twoism",
-          "packaging": null
-        },
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "type": "Group",
-                "sort-name": "Boards of Canada",
-                "disambiguation": "Scottish electronic duo",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e"
-              },
-              "name": "Boards of Canada",
-              "joinphrase": ""
-            }
-          ],
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "packaging": null,
-          "title": "Twoism",
-          "release-events": [
-            {
-              "area": {
-                "name": "Japan",
-                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
-                "disambiguation": "",
-                "sort-name": "Japan",
-                "iso-3166-1-codes": [
-                  "JP"
-                ],
-                "type": null,
-                "type-id": null
-              },
-              "date": "2002-11-23"
-            }
-          ],
-          "id": "7447f9a9-6111-38a3-95a3-9bee16f25ca3",
-          "country": "JP",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "barcode": "4523132112657",
-          "quality": "high",
-          "packaging-id": null,
-          "date": "2002-11-23",
-          "disambiguation": ""
-        },
-        {
-          "date": "2002-11-25",
-          "disambiguation": "black disc",
-          "packaging-id": null,
-          "quality": "normal",
-          "barcode": "801061007027",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "name": "Europe",
-                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
-                "type-id": null,
-                "type": null,
-                "iso-3166-1-codes": [
-                  "XE"
-                ],
-                "sort-name": "Europe"
-              },
-              "date": "2002-11-25"
-            }
-          ],
-          "id": "3ef29f31-487f-46a5-b76d-8a3aa6ec7445",
-          "country": "XE",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "packaging": null,
-          "title": "Twoism",
-          "artist-credit": [
-            {
-              "artist": {
-                "sort-name": "Boards of Canada",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "disambiguation": "Scottish electronic duo",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "country": "GB",
-                "name": "Boards of Canada"
-              },
-              "name": "Boards of Canada",
-              "joinphrase": ""
-            }
-          ],
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          }
-        },
-        {
-          "packaging-id": null,
-          "quality": "normal",
-          "disambiguation": "",
-          "date": "2002-11-25",
-          "title": "Twoism",
-          "packaging": null,
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "artist-credit": [
-            {
-              "joinphrase": "",
-              "name": "Boards of Canada",
-              "artist": {
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "disambiguation": "Scottish electronic duo",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "sort-name": "Boards of Canada"
-              }
-            }
-          ],
-          "barcode": "801061007010",
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "id": "f0469689-21d3-4956-a7c4-7db575645b43",
-          "country": "GB",
-          "release-events": [
-            {
-              "date": "2002-11-25",
-              "area": {
-                "name": "United Kingdom",
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "disambiguation": "",
-                "type": null,
-                "type-id": null,
-                "sort-name": "United Kingdom",
-                "iso-3166-1-codes": [
-                  "GB"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "date": "2002-11-25",
-          "disambiguation": "",
-          "packaging-id": null,
-          "quality": "high",
-          "barcode": "801061007010",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "name": "United Kingdom",
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "iso-3166-1-codes": [
-                  "GB"
-                ],
-                "sort-name": "United Kingdom",
-                "type-id": null,
-                "type": null
-              },
-              "date": "2002-11-25"
-            }
-          ],
-          "id": "9a8ddc8a-b468-3f27-bb02-2ddc74fc509c",
-          "country": "GB",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "packaging": null,
-          "title": "Twoism",
-          "artist-credit": [
-            {
-              "joinphrase": "",
-              "name": "Boards of Canada",
-              "artist": {
-                "disambiguation": "Scottish electronic duo",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "sort-name": "Boards of Canada",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-              }
-            }
-          ],
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          }
-        },
-        {
-          "disambiguation": "",
-          "date": "2002-11-25",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "barcode": "0801061007034",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "release-events": [
-            {
-              "area": {
-                "type-id": null,
-                "type": null,
-                "sort-name": "[Worldwide]",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "name": "[Worldwide]",
-                "disambiguation": ""
-              },
-              "date": "2002-11-25"
-            }
-          ],
-          "country": "XW",
-          "id": "ee482171-4b18-495e-86eb-af07e18fb23c",
-          "title": "Twoism",
-          "packaging": "None",
-          "text-representation": {
-            "script": "Latn",
-            "language": "eng"
-          },
-          "artist-credit": [
-            {
-              "artist": {
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "type": "Group",
-                "sort-name": "Boards of Canada",
-                "disambiguation": "Scottish electronic duo",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "name": "Boards of Canada"
-              },
-              "joinphrase": "",
-              "name": "Boards of Canada"
-            }
-          ]
-        },
-        {
-          "packaging": "Digipak",
-          "title": "Twoism",
-          "artist-credit": [
-            {
-              "joinphrase": "",
-              "name": "Boards of Canada",
-              "artist": {
-                "disambiguation": "Scottish electronic duo",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "sort-name": "Boards of Canada",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-              }
-            }
-          ],
-          "text-representation": {
-            "script": "Latn",
-            "language": "eng"
-          },
-          "barcode": "801061007027",
-          "release-events": [
-            {
-              "date": "2002-11",
-              "area": {
-                "disambiguation": "",
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "name": "United Kingdom",
-                "type-id": null,
-                "type": null,
-                "sort-name": "United Kingdom",
-                "iso-3166-1-codes": [
-                  "GB"
-                ]
-              }
-            }
-          ],
-          "id": "6a479ef4-aa8b-43e6-9d40-ac02c56da4b8",
-          "country": "GB",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
-          "quality": "normal",
-          "date": "2002-11",
-          "disambiguation": "black disc with sticker"
-        },
-        {
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "id": "6007d593-4090-39ac-b1ce-00f43009f392",
-          "country": "FR",
-          "release-events": [
-            {
-              "date": "2004-10-04",
-              "area": {
-                "disambiguation": "",
-                "id": "08310658-51eb-3801-80de-5a0739207115",
-                "name": "France",
-                "type-id": null,
-                "type": null,
-                "iso-3166-1-codes": [
-                  "FR"
-                ],
-                "sort-name": "France"
-              }
-            }
-          ],
-          "barcode": "5413356672923",
-          "text-representation": {
-            "script": "Latn",
-            "language": "eng"
-          },
-          "artist-credit": [
-            {
-              "artist": {
-                "sort-name": "Boards of Canada",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "disambiguation": "Scottish electronic duo"
-              },
-              "joinphrase": "",
-              "name": "Boards of Canada"
-            }
-          ],
-          "title": "Twoism",
-          "packaging": null,
-          "disambiguation": "",
-          "date": "2004-10-04",
-          "quality": "high",
-          "packaging-id": null
-        },
-        {
-          "quality": "high",
-          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
-          "date": "2005",
-          "disambiguation": "",
-          "artist-credit": [
-            {
-              "artist": {
-                "sort-name": "Boards of Canada",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
-                "disambiguation": "Scottish electronic duo",
-                "name": "Boards of Canada",
-                "country": "GB",
-                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e"
-              },
-              "joinphrase": "",
-              "name": "Boards of Canada"
-            }
-          ],
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "packaging": "Digipak",
-          "title": "Twoism",
-          "release-events": [
-            {
-              "date": "2005",
-              "area": {
-                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
-                "name": "United Kingdom",
-                "disambiguation": "",
-                "type-id": null,
-                "type": null,
-                "sort-name": "United Kingdom",
-                "iso-3166-1-codes": [
-                  "GB"
-                ]
-              }
-            }
-          ],
-          "id": "a95dbc6e-3066-46ea-91ed-cfb9539f0c7c",
-          "country": "GB",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "status": "Official",
-          "barcode": "801061007027"
-        }
-      ],
-      "secondary-type-ids": [],
-      "id": "e0243657-01ef-3516-b9aa-03d417d6e944",
-      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
-      "imagePath": "/assets/images/covers/colored/e0243657-01ef-3516-b9aa-03d417d6e944.webp",
-      "imagePathMono": "/assets/images/covers/monochrome/e0243657-01ef-3516-b9aa-03d417d6e944.png",
-      "ratedAt": "Thu, 02 Oct 2025 19:40:59 GMT"
     },
     {
       "primary-type": "Album",

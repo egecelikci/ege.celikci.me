@@ -8,30 +8,41 @@ async function init() {
     await import("./common/register-serviceworker.ts");
   }
 
-  const albumItems = document.querySelector(
+  const revealItems = document.querySelector(
     ".album-item, .collage-item, .h-entry",
   );
-  if (albumItems && !document.body.dataset.disableAnimation) {
-    const { animateGridItems } = await import("./common/grid.ts");
-    animateGridItems(".album-item");
-
+  if (revealItems && !document.body.dataset.disableAnimation) {
     const { initTouchReveal } = await import("./common/touch.ts");
     initTouchReveal(".album-item, .collage-item, .h-entry");
   }
 
-  // PhotoSwipe Lightbox
-  const { initLightbox } = await import("./common/lightbox.ts");
-  initLightbox();
+  // Lazy-load PhotoSwipe Lightbox
+
+  const lightboxTriggers = document.querySelector(
+    "[data-litebox-group], .litebox-trigger, .markdown img",
+  );
+  if (lightboxTriggers) {
+    // Only import and init when user is likely to interact
+    const loadLightbox = async () => {
+      const { initLightbox } = await import("./common/lightbox.ts");
+      initLightbox();
+    };
+
+    // Use interaction hints to pre-load
+    window.addEventListener("mouseover", loadLightbox, {
+      once: true,
+      passive: true,
+    });
+    window.addEventListener("touchstart", loadLightbox, {
+      once: true,
+      passive: true,
+    });
+  }
 
   // Venue Maps (Leaflet)
   if (document.querySelector(".venue-map")) {
     const { initVenueMaps } = await import("./common/map.ts");
     initVenueMaps();
-  }
-
-  if (document.querySelector(".status-dashboard")) {
-    const { loadStatus } = await import("./status.ts");
-    loadStatus();
   }
 }
 

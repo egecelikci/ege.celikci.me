@@ -22,7 +22,7 @@
           class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border/10 first:border-t-0 first:pt-0"
         >
           <span
-            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} uppercase tracking-[0.4em]"
+            class="typography-label text-text-muted/95 uppercase tracking-[0.4em]"
           >
             {{ item.title }}
           </span>
@@ -39,7 +39,7 @@
           >
             {{# Marker #}}
             <span
-              class="shrink-0 w-8 {{ theme.typography.colors.dim }} group-hover:text-primary transition-colors"
+              class="shrink-0 w-8 text-text-muted/95 group-hover:text-primary transition-colors"
             >
               {{ item.marker || "··" }}
             </span>
@@ -58,7 +58,7 @@
 
             {{# Description #}}
             <span
-              class="{{ theme.typography.colors.dim }} italic group-hover:text-text transition-colors text-right"
+              class="text-text-muted/95 italic group-hover:text-text transition-colors text-right"
             >
               {{ item.desc }}
             </span>
@@ -92,7 +92,7 @@
                   ></span>
 
                   <span
-                    class="{{ theme.typography.colors.dim }} italic group-hover/child:text-text transition-colors text-right"
+                    class="text-text-muted/95 italic group-hover/child:text-text transition-colors text-right"
                   >
                     {{ child.desc }}
                   </span>

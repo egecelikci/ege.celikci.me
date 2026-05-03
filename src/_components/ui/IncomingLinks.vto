@@ -11,7 +11,7 @@
   <div class="mt-24 pt-8 border-t border-border/10 print:hidden {{ classes }}">
     <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
       <h3
-        class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} whitespace-nowrap"
+        class="typography-label text-text-muted/95 whitespace-nowrap"
       >
         Linked from
       </h3>
@@ -29,7 +29,7 @@
                 {{ link.title || "Untitled" }}
               </span>
               <time
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/95"
               >
                 {{ link.date |> date("dd MMM") }}
               </time>

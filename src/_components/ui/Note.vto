@@ -17,7 +17,7 @@
   - hideHeader: boolean (default: false)
 #}}
 
-{{ set vtoContext = { ...it.note, author, site, comp, theme } }}
+{{ set vtoContext = { ...it.note, author, site, comp } }}
 {{ set hasImages = it.note.images && it.note.images.length > 0 }}
 {{ set isListing = it.variant === "listing" }}
 
@@ -53,9 +53,9 @@
   <article class="h-entry py-8 transition-all duration-500">
     {{# Header #}}
     {{ if !it.hideHeader }}
-      <header class="{{ theme.components.listing.metaRow }}">
+      <header class="listing-meta-row">
         <time
-          class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+          class="dt-published text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
         >
           {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
         </time>
@@ -64,7 +64,7 @@
           <div class="flex gap-4">
             {{ for tag of it.note.tags |> slice(0, 3) }}
               <span
-                class="{{ theme.typography.label }} {{ theme.typography.colors.accent }}"
+                class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-primary"
               >#{{ tag }}</span>
             {{ /for }}
           </div>
@@ -82,7 +82,7 @@
     {{# Textual Content #}}
     <div class="relative z-20 flex flex-col gap-6">
       {{ if it.note.title && !it.hideHeader }}
-        <h2 class="p-name {{ theme.components.listing.title }}">
+        <h2 class="p-name listing-title">
           {{ it.note.title }}
         </h2>
       {{ /if }}

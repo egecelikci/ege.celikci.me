@@ -25,7 +25,7 @@
 >
   {{# POSTER IMAGE OR PLACEHOLDER #}}
   <div
-    class="relative aspect-[3/4] bg-muted/10 overflow-hidden"
+    class="relative aspect-[3/4] bg-surface/20 overflow-hidden"
   >
     {{ if posterUrl }}
       <img
@@ -56,7 +56,7 @@
           })
         }}
         <span
-          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} mt-2"
+          class="typography-label text-text-muted/95 mt-2"
         >No Poster</span>
       </div>
     {{ /if }}
@@ -67,7 +67,7 @@
     <div class="space-y-3">
       {{# DATE #}}
       <time
-        class="{{ theme.typography.label }} {{ if isPast }}{{ theme.typography.colors.dim }}{{ else }}text-primary/70{{ /if }}"
+        class="typography-label {{ if isPast }}text-text-muted/95{{ else }}text-primary/70{{ /if }}"
       >
         {{ if it.event.beginDate }}
           {{ it.event.beginDate |> date("EEE, MMM dd") }}
@@ -91,7 +91,7 @@
       {{# LINEUP: Flowing list with separators #}}
       {{ if artists.length > 0 }}
         <div
-          class="inline {{ if isCustomTitle }}text-xs {{ theme.typography.colors.muted }}{{ else }}text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors{{ /if }} leading-snug"
+          class="inline {{ if isCustomTitle }}text-xs text-text-muted{{ else }}text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors{{ /if }} leading-snug"
         >
           {{ if artists.length === 1 }}
             {{ artists[0] }}
@@ -106,7 +106,7 @@
 
     {{# ACTION #}}
     <div
-      class="mt-6 flex items-center gap-2 {{ theme.typography.label }} {{ theme.typography.colors.subtle }} opacity-0 group-hover:opacity-100 transition-opacity"
+      class="mt-6 flex items-center gap-2 typography-label text-text-muted/90 opacity-0 group-hover:opacity-100 transition-opacity"
     >
       Details →
     </div>

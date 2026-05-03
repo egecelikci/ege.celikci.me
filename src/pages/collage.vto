@@ -29,7 +29,7 @@ menu:
                 comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-primary/60" })
               }}
               <label
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Network</label>
             </div>
             <div
@@ -37,13 +37,13 @@ menu:
             >
               <button
                 id="source-lb"
-                class="py-2.5 {{ theme.typography.label }} rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="py-2.5 typography-label rounded-lg transition-all active:scale-95 cursor-pointer"
               >
                 ListenBrainz
               </button>
               <button
                 id="source-lfm"
-                class="py-2.5 {{ theme.typography.label }} rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="py-2.5 typography-label rounded-lg transition-all active:scale-95 cursor-pointer"
               >
                 Last.fm
               </button>
@@ -57,14 +57,14 @@ menu:
               }}
               <label
                 for="username"
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Identity</label>
             </div>
             <input
               type="text"
               id="username"
               placeholder="username"
-              class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20"
+              class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20"
               value="{{ author.username }}"
             />
           </div>
@@ -78,22 +78,22 @@ menu:
             <div class="flex flex-col gap-3">
               <label
                 for="period"
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Period</label>
               <select
                 id="period"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
+                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
               </select>
             </div>
             <div class="flex flex-col gap-3">
               <label
                 for="bg-mode"
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Aesthetic</label>
               <select
                 id="bg-mode"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
+                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
                 <option value="aura" selected>Aura</option>
                 <option value="silver">Silver</option>
@@ -109,11 +109,11 @@ menu:
             <div class="flex flex-col gap-3">
               <label
                 for="grid-size"
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Grid</label>
               <select
                 id="grid-size"
-                class="{{ theme.components.input.base }} {{ theme.components.input.focus }} !py-2.5 !px-3 {{ theme.typography.label }} font-normal !rounded-xl cursor-pointer bg-surface/20"
+                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
               >
                 <option value="3x3" selected>3x3</option>
                 <option value="4x4">4x4</option>
@@ -122,7 +122,7 @@ menu:
             </div>
             <div class="flex flex-col gap-3">
               <label
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Texture</label>
               <label
                 class="flex items-center gap-3 h-[42px] px-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-colors"
@@ -134,7 +134,7 @@ menu:
                   class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary"
                 >
                 <span
-                  class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:opacity-100 transition-opacity"
+                  class="typography-label text-text-muted/90 group-hover:opacity-100 transition-opacity"
                 >Grain</span>
               </label>
             </div>
@@ -149,7 +149,7 @@ menu:
             class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
           >
             <span
-              class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:text-text"
+              class="typography-label text-text-muted/90 group-hover:text-text"
             >Skip Missing</span>
             <input
               type="checkbox"
@@ -162,7 +162,7 @@ menu:
             class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
           >
             <span
-              class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} group-hover:text-text"
+              class="typography-label text-text-muted/90 group-hover:text-text"
             >Show Counts</span>
             <input
               type="checkbox"
@@ -175,13 +175,13 @@ menu:
         <div class="flex flex-col gap-3 relative z-10">
           <label
             for="aliases"
-            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+            class="typography-label text-text-muted/90"
           >Artist Aliases</label>
           <textarea
             id="aliases"
             placeholder="Artist A -> Artist B"
             rows="2"
-            class="{{ theme.components.input.base }} {{ theme.components.input.focus }} {{ theme.typography.label }} font-normal leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
+            class="input-base input-focus typography-label font-normal leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
           ></textarea>
         </div>
       </div>
@@ -206,7 +206,7 @@ menu:
       <div id="result-actions" class="grid grid-cols-2 gap-4 hidden">
         <button
           id="download-btn"
-          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-2xl justify-center active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/40 backdrop-blur-md"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all border border-border hover:border-primary !rounded-2xl justify-center active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/40 backdrop-blur-md"
         >
           {{
             comp.ui.Icon({ name: "download", classes: "w-4 h-4 opacity-70" })
@@ -215,7 +215,7 @@ menu:
         </button>
         <button
           id="share-btn"
-          class="{{ theme.components.button.base }} {{ theme.components.button.secondary }} !rounded-2xl justify-center active:scale-95 border-primary/20 text-primary !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-md"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all border border-border hover:border-primary !rounded-2xl justify-center active:scale-95 border-primary/20 text-primary !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-md"
         >
           {{ comp.ui.Icon({ name: "share-2", classes: "w-4 h-4 opacity-70" }) }}
           <span class="font-bold tracking-widest uppercase">Share</span>

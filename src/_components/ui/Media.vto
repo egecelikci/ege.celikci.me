@@ -8,13 +8,16 @@
   {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
   {{ set isAuto = it.aspect === "auto" }}
   {{
-    set gridClass = isAuto
-    ? "grid-cols-1"
-    : (it.aspect || theme.components.media.grids["eq" + count])
+    set gridClass = isAuto ? "grid-cols-1" : (it.aspect || {
+      "eq1": "grid-cols-1 aspect-video md:aspect-[16/10]",
+      "eq2": "grid-cols-2 aspect-[2/1]",
+      "eq3": "grid-cols-2 grid-rows-2 aspect-[2/1]",
+      "eq4": "grid-cols-2 grid-rows-2 aspect-[2/1]",
+    }["eq" + count])
   }}
 
   <div
-    class="{{ theme.components.media.container }} {{ gridClass }}"
+    class="grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20 {{ gridClass }}"
     data-litebox-group="{{ gid }}"
   >
     {{ for i, image of images |> slice(0, 4) }}
@@ -27,7 +30,7 @@
       }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
-        class="litebox-trigger {{ if isAuto }}{{ theme.components.media.itemUnconstrained }}{{ else }}{{ theme.components.media.item }}{{ /if }} {{ itemClass }}"
+        class="litebox-trigger media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
         target="_blank"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
         {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
@@ -42,7 +45,7 @@
           transform-images="avif webp jpg 640 1280 1920"
           loading="lazy"
           decoding="async"
-          class="{{ if isAuto }}{{ theme.components.media.imageUnconstrained }}{{ else }}{{ theme.components.media.image }}{{ /if }}"
+          class="{{ if isAuto }}block w-full h-auto object-contain{{ else }}absolute inset-0 w-full h-full object-cover{{ /if }} transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95"
         />
 
         {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}
@@ -51,7 +54,7 @@
 
           {{# 2. VISUAL BADGE (Ignored by Search) #}}
           <div
-            class="{{ theme.components.media.altBadge }}"
+            class="alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none z-20"
             data-pagefind-ignore
           >
             ALT

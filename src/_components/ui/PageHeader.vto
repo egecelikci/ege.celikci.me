@@ -43,7 +43,7 @@
 
     {{# 3. SUBTITLE / DESCRIPTION #}}
     <div
-      class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}"
+      class="typography-label text-text-muted font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} {{ if !it.subtitle }}min-h-[1.5em] opacity-0 select-none{{ /if }}"
     >
       {{ it.subtitle || "placeholder" }}
     </div>
@@ -54,9 +54,7 @@
         class="flex flex-wrap gap-6 mt-12 {{ if isCentered }}justify-center{{ /if }}"
       >
         {{ for tag of it.metadata.tags }}
-          {{
-            set tagSlug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
-          }}
+          {{ set tagSlug = tag |> slugify }}
           {{ comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) }}
         {{ /for }}
       </div>

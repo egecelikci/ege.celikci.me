@@ -14,7 +14,7 @@ export default function (options: FeedOptions = {}) {
       title: "=title",
       description: "=excerpt || =description",
       content: (data: any) => {
-        let html = data.content as string;
+        let html = (data.content || data.description || "") as string;
 
         // If the page has extracted images (e.g. from the preprocessor), prepend them to the feed content
         if (
@@ -59,6 +59,7 @@ export default function (options: FeedOptions = {}) {
         ...options,
         output: config.output,
         query: config.query,
+        limit: config.limit,
         info: {
           ...commonInfo,
           ...config.info,
@@ -70,13 +71,20 @@ export default function (options: FeedOptions = {}) {
     // 2. Per-tag feeds
     site.use(feed(() => {
       const tags = site.search.values("tags");
-      return tags.map((tag) => {
-        const slug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(
-          /-+/g,
-          "-",
+      const slugifyHelper = (site as any).renderer.helpers.get("slugify");
+      const slugify = slugifyHelper ? slugifyHelper[0] : null;
+
+      if (!slugify) {
+        throw new Error(
+          `[feeds] 'slugify' helper missing. Is 'slugify_urls' plugin enabled?`,
         );
+      }
+
+      return tags.map((tag) => {
+        const slug = slugify(tag);
         return {
           output: [`/tags/${slug}.atom`, `/tags/${slug}.json`],
+
           query: `'${tag}'`,
           info: {
             ...commonInfo,

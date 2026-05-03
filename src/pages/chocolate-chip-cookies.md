@@ -6,7 +6,7 @@ templateEngine: [vto, md]
 
 this is the recipe from Burcu Eminoğlu
 
-{{ comp.ui.YouTube({
+{{ comp.ui.Video({
 id: "WsiffU4Ww1o",
 title: "Chocolate Chip Cookies recipe by Burcu Eminoğlu"
 }) }}

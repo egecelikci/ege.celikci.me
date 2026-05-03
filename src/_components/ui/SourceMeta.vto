@@ -1,27 +1,51 @@
 {{#
   Component: SourceMeta
-  Standardized indicator for data provenance (where data is synced from).
+  Standardized indicator for data provenance and subscription feeds.
   Designed to be used as a PageHeader extension.
   
   Props:
-  - sources: Array of { label, url, icon, catalog? }
+  - sources: Array of { label, url, icon, catalog?, type? }
   - variant: 'minimal' (icons only) | 'full' (default, with text)
 #}}
 
 {{>
-  const sources = it.sources || [{
-    label: it.label,
-    url: it.url || it.targetUrl,
-    icon: it.icon || "database",
-    catalog: it.catalog,
-  }];
-  const variant = it.variant || "full"
+  // Normalize sources: convert single source shorthand to array
+  const rawSources = it.sources || (it.label
+    ? [{
+      label: it.label,
+      url: it.url || it.targetUrl,
+      icon: it.icon || "database",
+      catalog: it.catalog,
+      type: it.type,
+    }]
+    : []);
+
+  // Process and group sources
+  const processed = rawSources.map((s) => {
+    // Inference: if label has 'Feed' or URL ends with common feed extensions, it's a feed
+    const isFeed = s.type === "feed" ||
+      s.label?.toLowerCase().includes("feed") ||
+      s.url?.endsWith(".atom") ||
+      s.url?.endsWith(".json");
+
+    return {
+      ...s,
+      type: isFeed ? "feed" : "source",
+      label: s.label || (isFeed ? "Feed" : "Source"),
+      icon: s.icon || (isFeed ? "rss" : "database"),
+    };
+  });
+
+  const variant = it.variant || "full";
+  const feeds = processed.filter((s) => s.type === "feed");
+  const nonFeeds = processed.filter((s) => s.type === "source")
 }}
 
 <div
-  class="flex {{ if variant === 'minimal' }}flex-row gap-2{{ else }}flex-col gap-4{{ /if }}"
+  class="flex {{ if variant === 'minimal' }}flex-row gap-2{{ else }}flex-col gap-3{{ /if }}"
 >
-  {{ for source of sources }}
+  {{# 1. DATA SOURCES (Synced from...) #}}
+  {{ for source of nonFeeds }}
     {{>
       let targetUrl = source.url;
       if (!targetUrl && source.label === "critiquebrainz" && source.username) {
@@ -34,12 +58,12 @@
         <a
           href="{{ targetUrl }}"
           target="_blank"
-          class="{{ theme.components.button.minimal }} !px-3 !py-2 justify-center"
+          class="btn-minimal !px-3 !py-2 justify-center"
           title="{{ source.label }}"
         >
           {{
             comp.ui.Icon({
-              name: source.icon || "database",
+              name: source.icon,
               catalog: source.catalog ||
                 (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
                   ? "simpleicons"
@@ -52,31 +76,86 @@
       {{ /if }}
     {{ else }}
       <div
-        class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 max-w-[240px]"
+        class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 group/source"
       >
         <div
-          class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10"
+          class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/source:bg-primary/10 group-hover/source:border-primary/20 transition-all"
         >
           {{
             comp.ui.Icon({
-              name: source.icon || "database",
-              classes: "w-2.5 h-2.5 text-primary/60",
+              name: source.icon,
+              classes:
+                "w-2.5 h-2.5 text-primary/60 group-hover/source:text-primary transition-colors",
             })
           }}
         </div>
         <p
-          class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal tracking-tight leading-tight m-0"
+          class="typography-label text-text-muted font-normal tracking-tight leading-tight m-0"
         >
           {{ if targetUrl }}
-            Synced from <a
+            {{ source.prefix || "Synced from" }} <a
               href="{{ targetUrl }}"
-              class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary"
+              target="_blank"
+              class="text-text-muted hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary"
             >{{ source.label }}</a>
           {{ else }}
-            Source: {{ source.label }}
+            {{ source.prefix || "Source:" }} {{ source.label }}
           {{ /if }}
         </p>
       </div>
     {{ /if }}
   {{ /for }}
+
+  {{# 2. SUBSCRIPTION FEEDS (Subscribe via...) #}}
+  {{ if feeds.length > 0 }}
+    {{ if variant === "minimal" }}
+      <div class="flex gap-2">
+        {{ for feed of feeds }}
+          <a
+            href="{{ feed.url }}"
+            target="_blank"
+            class="btn-minimal !px-3 !py-2 justify-center"
+            title="Subscribe via {{ feed.label }}"
+          >
+            {{
+              comp.ui.Icon({
+                name: feed.icon,
+                classes: "w-3.5 h-3.5 opacity-70",
+              })
+            }}
+            <span class="sr-only">Subscribe via {{ feed.label }}</span>
+          </a>
+        {{ /for }}
+      </div>
+    {{ else }}
+      <div
+        class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 group/feed"
+      >
+        <div
+          class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/feed:bg-primary/10 group-hover/feed:border-primary/20 transition-all"
+        >
+          {{
+            comp.ui.Icon({
+              name: feeds[0].icon,
+              classes:
+                "w-2.5 h-2.5 text-primary/60 group-hover/feed:text-primary transition-colors",
+            })
+          }}
+        </div>
+        <p
+          class="typography-label text-text-muted font-normal tracking-tight leading-tight m-0"
+        >
+          Subscribe via
+          {{ for i, feed of feeds }}
+            {{ if i > 0 }}<span class="mx-1 opacity-30">|</span>{{ /if }}
+            <a
+              href="{{ feed.url }}"
+              target="_blank"
+              class="text-text-muted hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary"
+            >{{ feed.label.replace(/ feed/i, "") }}</a>
+          {{ /for }}
+        </p>
+      </div>
+    {{ /if }}
+  {{ /if }}
 </div>

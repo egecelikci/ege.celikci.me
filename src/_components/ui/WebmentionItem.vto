@@ -52,7 +52,7 @@
           {{ webmention.author.name }}
         </a>
         <div
-          class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal"
+          class="typography-label text-text-muted font-normal"
         >
           {{ if webmention["wm-property"] === "in-reply-to" }}
             replied
@@ -68,7 +68,7 @@
     {{# Date #}}
     {{ if webmention.published }}
       <time
-        class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.subtle }} font-normal"
+        class="dt-published typography-label text-text-muted/90 font-normal"
         datetime="{{ webmention.published }}"
       >
         {{ webmention.published |> date("dd MMM yyyy") }}

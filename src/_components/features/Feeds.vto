@@ -19,7 +19,7 @@
 
     <header class="mb-10">
       <h2
-        class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4"
+        class="typography-label text-text-muted mb-4"
       >
         Site Feed
       </h2>
@@ -39,11 +39,11 @@
               class="text-sm font-bold text-text group-hover:text-primary transition-colors"
             >{{ feed.title }}</span>
             <span
-              class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+              class="typography-label"
             >{{ feed.label }}</span>
           </div>
           <span
-            class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors"
+            class="typography-label font-normal text-text-muted group-hover:text-text-muted/95 transition-colors"
           >{{ feed.file }}</span>
         </a>
       {{ /for }}
@@ -60,7 +60,7 @@
 
     <header class="mb-12">
       <h2
-        class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4"
+        class="typography-label text-text-muted mb-4"
       >
         Filtered Feeds
       </h2>
@@ -73,7 +73,7 @@
             {{ cat.title }}
             <span class="w-1 h-1 rounded-full bg-primary/20"></span>
             <span
-              class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+              class="typography-label"
             >{{ cat.desc }}</span>
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
@@ -86,7 +86,7 @@
                   class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                 >{{ feed.title }}</span>
                 <span
-                  class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.muted }} group-hover:{{ theme.typography.colors.subtle }} transition-colors"
+                  class="typography-label font-normal text-text-muted group-hover:text-text-muted/95 transition-colors"
                 >{{ feed.file }}</span>
               </a>
             {{ /for }}
@@ -106,12 +106,12 @@
 
     <header class="mb-12">
       <h2
-        class="{{ theme.typography.label }} {{ theme.typography.colors.muted }} mb-4"
+        class="typography-label text-text-muted mb-4"
       >
         Topic Feeds
       </h2>
       <p
-        class="text-sm {{ theme.typography.colors.subtle }} leading-relaxed max-w-lg"
+        class="text-sm text-text-muted/95 leading-relaxed max-w-lg"
       >
         Subscribe to specific topics. Each tag has its own Atom and JSON feed.
       </p>
@@ -121,16 +121,14 @@
       {{ set allTags = search.values("tags") }}
       {{ if allTags.length > 0 }}
         {{ for tag of allTags |> sort }}
-          {{
-            set slug = tag.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
-          }}
+          {{ set slug = tag |> slugify }}
           <div class="flex flex-col gap-3">
             <div class="flex items-center gap-3 mb-2">
               {{
                 comp.ui.Tag({ content: tag, href: "/tags/" + slug + "/", classes: "text-sm" })
               }}
               <span
-                class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+                class="typography-label"
               >{{ search.pages("'" + tag + "'").length }} entries</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 pl-4">
@@ -139,10 +137,10 @@
                 class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose"
               >
                 <span
-                  class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors"
+                  class="text-xs font-medium text-text-muted/95 group-hover:text-primary transition-colors"
                 >Atom Feed</span>
                 <span
-                  class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+                  class="typography-label"
                 >.atom</span>
               </a>
               <a
@@ -150,10 +148,10 @@
                 class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose"
               >
                 <span
-                  class="text-xs font-medium {{ theme.typography.colors.subtle }} group-hover:text-primary transition-colors"
+                  class="text-xs font-medium text-text-muted/95 group-hover:text-primary transition-colors"
                 >JSON Feed</span>
                 <span
-                  class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+                  class="typography-label"
                 >.json</span>
               </a>
             </div>
