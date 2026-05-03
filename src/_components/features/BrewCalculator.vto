@@ -12,23 +12,20 @@
   </div>
   <div class="flex flex-col gap-6">
     <label class="flex flex-col gap-2">
-      <span class="{{ theme.typography.label }} text-text-muted"
-      >Target Volume (ml)</span>
+      <span class="typography-label text-text-muted">Target Volume (ml)</span>
       <input
         type="number"
         id="coffee-input"
         value="500"
         step="50"
-        class="{{ theme.components.input.base }} {{ theme.components.input.focus }} font-mono text-lg"
+        class="input-base input-focus font-mono text-lg"
       >
     </label>
     <div class="grid grid-cols-2 gap-3 text-sm">
       {{
         set blockClass = "p-4 bg-bg/50 rounded-lg border border-border/50 flex flex-col justify-between gap-1"
       }}
-      {{
-        set labelClass = theme.typography.label + " text-text-muted opacity-70"
-      }}
+      {{ set labelClass = "typography-label text-text-muted opacity-70" }}
       {{ set valueClass = "font-mono font-bold text-xl" }}
       <div class="{{ blockClass }}">
         <span class="{{ labelClass }}">Coffee</span>

@@ -48,37 +48,21 @@ export default function ({ mb_events }: any) {
     if (isNaN(startDate.getTime())) continue;
 
     const startStr = formatDate(startDate, event.time);
-    let endStr = "";
-    if (event.time) {
-      // Estimate end time as +3 hours for concerts
-      const [h, m] = event.time.split(":").map(Number);
-      const endDate = new Date(startDate);
-      endDate.setUTCHours(h + 3, m);
-      endStr = formatDate(
-        endDate,
-        `${String(endDate.getUTCHours()).padStart(2, "0")}:${
-          String(endDate.getUTCMinutes()).padStart(2, "0")
-        }`,
-      );
-    } else {
-      // Next day for all-day events
-      const nextDay = new Date(startDate);
-      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
-      endStr = formatDate(nextDay);
-    }
 
     icsLines.push("BEGIN:VEVENT");
     icsLines.push(`UID:${event.id}@ege.celikci.me`);
     icsLines.push(`DTSTAMP:${dtstamp}`);
 
     if (event.time) {
-      // Use floating time with TZID for local time accuracy
+      // Use duration for timed events to avoid midnight rollover rendering issues
       icsLines.push(`DTSTART;TZID=Europe/Istanbul:${startStr}`);
-      icsLines.push(`DTEND;TZID=Europe/Istanbul:${endStr}`);
+      icsLines.push("DURATION:PT3H");
     } else {
-      // All day events use VALUE=DATE
+      // All day events use VALUE=DATE with DTEND
+      const nextDay = new Date(startDate);
+      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
       icsLines.push(`DTSTART;VALUE=DATE:${startStr}`);
-      icsLines.push(`DTEND;VALUE=DATE:${endStr}`);
+      icsLines.push(`DTEND;VALUE=DATE:${formatDate(nextDay)}`);
     }
 
     const displayTitle = event.displayTitle || event.name || "Event";
@@ -94,9 +78,7 @@ export default function ({ mb_events }: any) {
         )
       }`,
     );
-    const venueName = event.relations?.find((r: any) =>
-      r["target-type"] === "place"
-    )?.place?.name || "TBA";
+    const venueName = event.venueName || "TBA";
 
     icsLines.push(`LOCATION:${escape(venueName)}`);
     icsLines.push(`URL:https://ege.celikci.me/event/${event.id}/`);

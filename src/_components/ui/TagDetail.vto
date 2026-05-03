@@ -44,16 +44,14 @@
   {{ if relatedTags.length > 0 }}
     <div class="mt-24 pt-12 border-t border-border/10">
       <h3
-        class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} mb-8 flex items-center gap-2"
+        class="typography-label text-text-muted/90 mb-8 flex items-center gap-2"
       >
         {{ comp.ui.Icon({ name: "hash", classes: "w-3 h-3" }) }}
         Related Topics
       </h3>
       <div class="flex flex-wrap gap-4">
         {{ for t of relatedTags }}
-          {{
-            set tagSlug = t.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-")
-          }}
+          {{ set tagSlug = t |> slugify }}
           {{ comp.ui.Tag({ content: t, href: "/tags/" + tagSlug + "/" }) }}
         {{ /for }}
       </div>

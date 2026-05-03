@@ -10,6 +10,7 @@ import { join } from "@std/path";
 import { ensureDir } from "@std/fs/ensure-dir";
 import { createCache } from "./cache.ts";
 import { HttpClient } from "./fetch-base.ts";
+import { exists } from "@std/fs/exists";
 
 // ============================================================================
 // CONFIGURATION
@@ -91,6 +92,23 @@ export interface EnrichedIzmirEvents extends RawIzmirEvents {
 // ============================================================================
 
 class PosterDownloader {
+  private existingPosters = new Set<string>();
+
+  async inventory() {
+    this.existingPosters.clear();
+    if (await exists(CONFIG.paths.posters)) {
+      for await (const entry of Deno.readDir(CONFIG.paths.posters)) {
+        if (entry.isFile) {
+          this.existingPosters.add(entry.name);
+        }
+      }
+    }
+  }
+
+  hasPoster(fileName: string): boolean {
+    return this.existingPosters.has(fileName);
+  }
+
   async download(
     httpClient: HttpClient,
     eventId: string,
@@ -104,23 +122,23 @@ class PosterDownloader {
     try {
       await ensureDir(CONFIG.paths.posters);
 
-      // Check if already exists
-      try {
-        await Deno.stat(localPath);
+      // Check if already exists in inventory
+      if (this.existingPosters.has(fileName)) {
         return publicPath;
-      } catch {
-        // Not found, continue to download
       }
 
       console.log(`[mb_events] 📥 Downloading poster: ${eventId}`);
+      // Image downloads are NOT rate limited by MusicBrainz
       const buffer = await httpClient.fetch<ArrayBuffer>(
         remoteUrl,
         "buffer",
         "force-cache",
+        true,
       );
 
       if (buffer) {
         await Deno.writeFile(localPath, new Uint8Array(buffer));
+        this.existingPosters.add(fileName);
         return publicPath;
       }
     } catch (err) {
@@ -139,33 +157,45 @@ class PosterDownloader {
 
 async function fetchAllEvents(httpClient: HttpClient): Promise<any[]> {
   const events: any[] = [];
-  let offset = 0;
-  let totalCount = Infinity;
+  const firstUrl = new URL(`${MB_API}/event`);
+  firstUrl.searchParams.set("area", IZMIR_AREA_MBID);
+  firstUrl.searchParams.set(
+    "inc",
+    "artist-rels+place-rels+url-rels+label-rels",
+  );
+  firstUrl.searchParams.set("fmt", "json");
+  firstUrl.searchParams.set("limit", String(CONFIG.fetchLimit));
+  firstUrl.searchParams.set("offset", "0");
 
-  while (events.length < totalCount) {
-    const url = new URL(`${MB_API}/event`);
-    url.searchParams.set("area", IZMIR_AREA_MBID);
-    url.searchParams.set("inc", "artist-rels+place-rels+url-rels+label-rels");
-    url.searchParams.set("fmt", "json");
-    url.searchParams.set("limit", String(CONFIG.fetchLimit));
-    url.searchParams.set("offset", String(offset));
+  console.log(`[mb_events] 🌐 Fetching initial events...`);
+  const firstData = await httpClient.fetch<any>(
+    firstUrl.toString(),
+    "json",
+    "no-cache",
+    true, // Bypassing rate limit for the main area browse (usually 1-2 pages)
+  );
 
-    console.log(`[mb_events] 🌐 Fetching offset ${offset}...`);
-    const data = await httpClient.fetch<any>(
-      url.toString(),
-      "json",
-      "no-cache",
-      true,
-    );
+  if (!firstData) return [];
+  events.push(...(firstData.events ?? []));
+  const totalCount = firstData["event-count"] ?? 0;
 
-    if (!data) break;
-    totalCount = data["event-count"] ?? 0;
-
-    const page: any[] = data.events ?? [];
-    if (page.length === 0) break;
-
-    events.push(...page);
-    offset += page.length;
+  if (totalCount > events.length) {
+    const pages = [];
+    for (
+      let offset = events.length;
+      offset < totalCount;
+      offset += CONFIG.fetchLimit
+    ) {
+      const url = new URL(firstUrl.toString());
+      url.searchParams.set("offset", String(offset));
+      pages.push(
+        httpClient.fetch<any>(url.toString(), "json", "no-cache", true),
+      );
+    }
+    const results = await Promise.all(pages);
+    results.forEach((data) => {
+      if (data?.events) events.push(...data.events);
+    });
   }
 
   return events;
@@ -177,10 +207,8 @@ async function fetchEventPosterInfo(
 ): Promise<{ url?: string; thumb?: string }> {
   const url = `${EAA_API}/event/${eventId}/`;
 
-  // Optimization: check cache first to avoid rate limit wait
-  const cached = await httpClient.getCachedJson<any>(url);
-  const data = cached ||
-    await httpClient.fetch<any>(url, "json", "force-cache");
+  // EAA API calls are NOT rate limited like MusicBrainz
+  const data = await httpClient.fetch<any>(url, "json", "force-cache", true);
 
   if (!data) return {};
   const frontImage = data.images?.find((img: any) => img.front);
@@ -200,7 +228,8 @@ async function fetchEntityDetails(
   type: "artist" | "place" | "label",
 ): Promise<{ instagram?: string }> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
-  const data = await httpClient.fetch<any>(url, "json", "force-cache");
+  // These MUST be rate limited as they hit MusicBrainz
+  const data = await httpClient.fetch<any>(url, "json", "force-cache", false);
 
   if (!data) return {};
 
@@ -222,11 +251,19 @@ async function syncEvents() {
   });
 
   const posterDownloader = new PosterDownloader();
+  await posterDownloader.inventory();
 
   const cache = createCache<RawIzmirEvents>({
     filePath: CONFIG.paths.cacheFile,
     name: "mb_events",
   });
+
+  const cachedData = await cache.load({
+    events: [],
+    entities: {},
+    fetchedAt: "",
+  });
+  const eventsMap = new Map(cachedData.events.map((e) => [e.id, e]));
 
   console.log("[mb_events] ℹ️ Starting MusicBrainz sync...");
 
@@ -234,33 +271,14 @@ async function syncEvents() {
     const raw = await fetchAllEvents(httpClient);
     const now = new Date();
 
-    const events: any[] = [];
     const entityIds = new Map<string, "artist" | "place" | "label">();
 
-    for (const event of raw) {
-      // 1. Poster processing (Archival side effect)
-      const url = `${EAA_API}/event/${event.id}/`;
-      const cachedPosterInfo = await httpClient.getCachedJson<any>(url);
-      if (cachedPosterInfo) {
-        console.log(`[mb_events] ⚡️ Cache hit for poster info: ${event.id}`);
-      }
+    console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters...`);
 
-      const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
-      let imagePath: string | undefined;
+    const events = await Promise.all(raw.map(async (event) => {
+      const cachedEvent = eventsMap.get(event.id);
 
-      if (posterInfo.url || posterInfo.thumb) {
-        const imageUrl = posterInfo.thumb || posterInfo.url;
-        if (imageUrl) {
-          const localUrl = await posterDownloader.download(
-            httpClient,
-            event.id,
-            imageUrl,
-          );
-          if (localUrl) imagePath = localUrl;
-        }
-      }
-
-      // 2. Collect entity IDs for enrichment
+      // Collect entity IDs for enrichment (always do this to ensure entities map is fresh)
       (event.relations || []).forEach((rel: any) => {
         if (rel["target-type"] === "artist" && rel.artist?.id) {
           entityIds.set(rel.artist.id, "artist");
@@ -271,14 +289,41 @@ async function syncEvents() {
         }
       });
 
-      // 3. Attach metadata to raw object
-      events.push({
+      // If we have it in cache AND the local image exists, skip expensive info fetch
+      if (
+        cachedEvent?.imagePath &&
+        posterDownloader.hasPoster(cachedEvent.imagePath.split("/").pop() || "")
+      ) {
+        return {
+          ...event,
+          posterUrl: cachedEvent.posterUrl,
+          posterThumb: cachedEvent.posterThumb,
+          imagePath: cachedEvent.imagePath,
+        };
+      }
+
+      // Otherwise, fetch fresh poster info
+      const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
+      let imagePath: string | undefined;
+
+      if (posterInfo.url || posterInfo.thumb) {
+        const imageUrl = posterInfo.thumb || posterInfo.url;
+        if (imageUrl) {
+          imagePath = await posterDownloader.download(
+            httpClient,
+            event.id,
+            imageUrl,
+          ) || undefined;
+        }
+      }
+
+      return {
         ...event,
         posterUrl: posterInfo.url,
         posterThumb: posterInfo.thumb,
         imagePath,
-      });
-    }
+      };
+    }));
 
     // 4. Enrich entities (IG links)
     const entities: Record<string, { instagram?: string }> = {};
@@ -286,28 +331,34 @@ async function syncEvents() {
       `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities...`,
     );
 
-    for (const [id, type] of entityIds) {
-      const mbUrl = `${MB_API}/${type}/${id}?inc=url-rels&fmt=json`;
-      const cached = await httpClient.getCachedJson<any>(mbUrl);
+    const harvestResults = await Promise.all(
+      Array.from(entityIds.entries()).map(async ([id, type]) => {
+        // If already in entities cache, skip
+        if (cachedData.entities[id]) {
+          return [id, cachedData.entities[id]] as const;
+        }
 
-      if (cached !== null) {
-        // Hot path: extract from cache immediately
-        console.log(`[mb_events] ⚡️ Cache hit for ${type}: ${id}`);
-        const igRel = (cached.relations || []).find((r: any) =>
-          (r.type === "social network" || r.type === "instagram") &&
-          r.url?.resource?.includes("instagram.com")
-        );
-        if (igRel?.url?.resource) {
-          entities[id] = { instagram: igRel.url.resource };
+        const mbUrl = `${MB_API}/${type}/${id}?inc=url-rels&fmt=json`;
+        const cached = await httpClient.getCachedJson<any>(mbUrl);
+
+        if (cached !== null) {
+          const igRel = (cached.relations || []).find((r: any) =>
+            (r.type === "social network" || r.type === "instagram") &&
+            r.url?.resource?.includes("instagram.com")
+          );
+          return [
+            id,
+            igRel?.url?.resource ? { instagram: igRel.url.resource } : null,
+          ] as const;
+        } else {
+          const details = await fetchEntityDetails(httpClient, id, type);
+          return [id, details.instagram ? details : null] as const;
         }
-      } else {
-        // Cold path: rate limited network call
-        console.log(`[mb_events] 🌐 Cache miss for ${type}: ${id}`);
-        const details = await fetchEntityDetails(httpClient, id, type);
-        if (details.instagram) {
-          entities[id] = details;
-        }
-      }
+      }),
+    );
+
+    for (const [id, data] of harvestResults) {
+      if (data) entities[id] = data;
     }
 
     const finalData: RawIzmirEvents = {

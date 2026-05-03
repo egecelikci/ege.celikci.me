@@ -6,11 +6,11 @@
 
 {{ set footerContent }}
   <div
-    class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border/10 {{ theme.typography.label }} font-normal"
+    class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border/10 typography-label font-normal"
   >
     {{# LEFT: Site Info #}}
     <div
-      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 {{ theme.typography.colors.subtle }}"
+      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted/90"
     >
       <div class="flex items-center gap-1.5 whitespace-nowrap">
         <span aria-label="Copyright">&copy;</span>
@@ -51,10 +51,10 @@
       {{ if page.data.updated || page.data.date }}
         <span class="text-border/30 select-none">|</span>
         <div
-          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/10 {{ theme.typography.label }} {{ theme.typography.colors.muted }} font-normal whitespace-nowrap"
+          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/10 typography-label text-text-muted font-normal whitespace-nowrap"
         >
           <span
-            class="mr-1.5 {{ theme.typography.colors.subtle }} italic lowercase"
+            class="mr-1.5 text-text-muted/90 italic lowercase"
           >rev.</span>
           {{ page.data.updated || page.data.date |> date("dd MMM yyyy") }}
         </div>
@@ -67,7 +67,7 @@
     >
       <a
         href="https://codeberg.org/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}"
-        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap"
         title="edit this page"
       >
         edit
@@ -75,12 +75,12 @@
 
       <a
         href="/feeds/"
-        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap"
       >feeds</a>
 
       <a
         href="#"
-        class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap"
       >top</a>
     </div>
   </div>
@@ -92,7 +92,7 @@
     >
       {{ for ring of webrings }}
         <div
-          class="flex items-center gap-1.5 {{ theme.typography.label }} {{ theme.typography.colors.subtle }} whitespace-nowrap"
+          class="flex items-center gap-1.5 typography-label text-text-muted/90 whitespace-nowrap"
         >
           <a
             href="{{ ring.prev }}"
@@ -101,7 +101,7 @@
           <span class="ml-1">An</span>
           <a
             href="{{ ring.url }}"
-            class="{{ theme.typography.colors.muted }} hover:text-primary transition-colors no-underline whitespace-nowrap lowercase font-bold"
+            class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap lowercase font-bold"
           >
             {{ ring.name }}
           </a>

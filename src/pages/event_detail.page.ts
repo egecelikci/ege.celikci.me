@@ -63,6 +63,55 @@ export default async function* ({ mb_events, events }: any) {
         catalog: "simpleicons",
       },
     ];
+
+    // Gather all credits from MB relations
+    const allCredits = (event.relations || []).filter((rel: any) =>
+      ["illustration", "graphic design", "artwork", "design", "engineer"]
+        .includes(rel.type)
+    ).map((rel: any) => {
+      const artistId = rel.artist?.id;
+      const igUrl = mb_events.entities?.[artistId]?.instagram;
+      const artistName = rel["target-credit"] || rel.artist?.name;
+
+      let role = "Artwork";
+      if (rel.type === "illustration") role = "Illustration";
+      if (rel.type === "graphic design" || rel.type === "design") {
+        role = "Design";
+      }
+      if (rel.type === "engineer") {
+        role = rel["attribute-values"]?.task
+          ? rel["attribute-values"].task.split(" ").map((w: string) =>
+            w.charAt(0).toUpperCase() + w.slice(1)
+          ).join(" ")
+          : "Sound";
+      }
+
+      return {
+        name: artistName,
+        url: igUrl || `https://musicbrainz.org/artist/${artistId}`,
+        role,
+        type: rel.type,
+        icon: igUrl ? "instagram" : "person",
+        catalog: igUrl ? "simpleicons" : "lucide",
+      };
+    });
+
+    // Split credits by logic:
+    // 1. Static visual roles -> Poster
+    // 2. Technical/Motion roles -> Video
+    let posterCredits = allCredits.filter((c) =>
+      ["illustration", "graphic design", "artwork"].includes(c.type)
+    );
+    let videoCredits = allCredits.filter((c) =>
+      ["design", "engineer"].includes(c.type)
+    );
+
+    // Robustness: If no video is present, default all credits back to the poster
+    if (!local.video) {
+      posterCredits = allCredits;
+      videoCredits = [];
+    }
+
     if (local.instagram_url) {
       const igUrls = Array.isArray(local.instagram_url)
         ? local.instagram_url
@@ -85,9 +134,12 @@ export default async function* ({ mb_events, events }: any) {
     // this is redundant but harmless; both read from the same events.yml data.
     yield {
       url: `/event/${event.id}/`,
+      type: "event",
       title: event.displayTitle || event.name,
       event: { ...event, local },
       gallery,
+      posterCredits,
+      videoCredits,
       layout: "layouts/event.vto",
       backlink: { href: "/events/", text: "events" },
       prose: false,

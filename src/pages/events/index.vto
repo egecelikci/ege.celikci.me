@@ -28,8 +28,7 @@ headerExtension:
       <div class="space-y-1">
         <p class="font-bold text-text m-0">Keep up with the scene.</p>
         <p class="text-sm text-text-muted m-0">
-          Subscribe to the events calendar to get automatic updates in your
-          favorite app.
+          Subscribe to the events calendar or feeds to get automatic updates.
         </p>
       </div>
       <div class="flex flex-row flex-wrap items-center gap-3 shrink-0">
@@ -37,7 +36,7 @@ headerExtension:
         {{ set webcalUrl = icsUrl.replace(/^https?:\/\//, "webcal://") }}
         <a
           href="{{ webcalUrl }}"
-          class="{{ theme.components.button.minimal }}"
+          class="btn-minimal"
           title="Subscribe in your default calendar app"
         >
           {{
@@ -55,7 +54,7 @@ headerExtension:
             href="https://www.google.com/calendar/render?cid={{ webcalUrl |> encodeURIComponent }}"
             target="_blank"
             rel="noopener noreferrer"
-            class="{{ theme.components.button.minimal }} !px-3"
+            class="btn-minimal !px-3"
             title="Add to Google Calendar"
           >
             {{
@@ -68,7 +67,7 @@ headerExtension:
           </a>
           <button
             onclick='navigator.clipboard.writeText("{{ icsUrl }}")'
-            class="{{ theme.components.button.minimal }} !px-3"
+            class="btn-minimal !px-3"
             title="Copy Calendar Link"
           >
             {{
@@ -79,6 +78,37 @@ headerExtension:
               })
             }}
           </button>
+        </div>
+
+        <div class="w-px h-4 bg-border/20 hidden md:block"></div>
+
+        <div class="flex items-center gap-2">
+          <a
+            href="/events.atom"
+            class="btn-minimal !px-3"
+            title="RSS/Atom Feed"
+          >
+            {{
+              comp.ui.Icon({
+                name: "rss",
+                catalog: "lucide",
+                classes: "w-3.5 h-3.5",
+              })
+            }}
+          </a>
+          <a
+            href="/events.json"
+            class="btn-minimal !px-3"
+            title="JSON Feed"
+          >
+            {{
+              comp.ui.Icon({
+                name: "code",
+                catalog: "lucide",
+                classes: "w-3.5 h-3.5",
+              })
+            }}
+          </a>
         </div>
       </div>
     </div>
@@ -105,7 +135,7 @@ headerExtension:
   <section class="mt-12 flex justify-center">
     <a
       href="/events/archive/"
-      class="{{ theme.components.button.minimal }} group/archive"
+      class="btn-minimal group/archive"
     >
       View Past Events Archive
       <span class="group-hover/archive:translate-x-1 transition-transform"
@@ -132,27 +162,27 @@ headerExtension:
 <footer
   class="mt-16 pt-8 border-t border-border/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
 >
-  <p class="text-xs {{ theme.typography.colors.subtle }}">
+  <p class="text-xs text-text-muted/95">
     Data from
     <a
       href="https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
       target="_blank"
       rel="noopener noreferrer"
-      class="{{ theme.utilities.link }}"
+      class="link-hover"
     >MusicBrainz</a>
     &
     <a
       href="https://eventartarchive.org/"
       target="_blank"
       rel="noopener noreferrer"
-      class="{{ theme.utilities.link }}"
+      class="link-hover"
     >Event Art Archive</a>
   </p>
   <a
     href="https://musicbrainz.org/doc/How_to_Add_an_Event"
     target="_blank"
     rel="noopener noreferrer"
-    class="text-xs {{ theme.utilities.link }} {{ theme.typography.colors.subtle }} flex items-center gap-1.5 shrink-0"
+    class="text-xs link-hover text-text-muted/95 flex items-center gap-1.5 shrink-0"
   >
     {{
       comp.ui.Icon({

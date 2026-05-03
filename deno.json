@@ -9,14 +9,11 @@
     "@std/encoding": "jsr:@std/encoding@^1.0.10",
     "@std/fs": "jsr:@std/fs@^1.0.23",
     "@std/path": "jsr:@std/path@^1.1.4",
-    "cssnano": "npm:cssnano@^7.1.7",
-    "gsap": "npm:gsap@^3.15.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "@types/leaflet": "npm:@types/leaflet@^1.9.21",
     "photoswipe": "npm:photoswipe@^5.4.4",
     "instant.page": "npm:instant.page@^5.2.0",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
-    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.0/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
     "make-fetch-happen": "npm:make-fetch-happen@^15.0.5",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
@@ -33,7 +30,7 @@
   "tasks": {
     "lume": {
       "description": "Run Lume command",
-      "command": "deno run -A _lume.ts"
+      "command": "deno run -A lume/cli.ts"
     },
     "build": {
       "description": "Build the site for production",
@@ -49,9 +46,7 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
-    "fetch-music": "deno run --allow-net --allow-read --allow-write --allow-env --allow-ffi --allow-run utils/fetch-music.ts",
-    "fetch-events": "deno run --allow-net --allow-read --allow-write --allow-env --allow-ffi --allow-run utils/fetch-events.ts"
+    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib"
   },
   "fmt": {
     "useTabs": false,

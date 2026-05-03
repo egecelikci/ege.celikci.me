@@ -46,7 +46,7 @@
   <section class="mb-12">
     <div class="flex items-center gap-4 mb-6">
       <h2
-        class="{{ theme.typography.label }} {{ theme.typography.colors.subtle }} uppercase tracking-[0.4em]"
+        class="typography-label text-text-muted/95 uppercase tracking-[0.4em]"
       >
         {{ title }}
       </h2>
@@ -57,7 +57,7 @@
       {{ for [monthKey, monthData] of sortedMonths }}
         <div class="space-y-6">
           <h3
-            class="{{ theme.typography.heading.h4 }} sticky top-0 bg-bg/95 backdrop-blur-sm py-2 z-10"
+            class="text-[length:var(--size-step-1)] font-semibold tracking-tight text-text leading-[1.2] sticky top-0 bg-bg/95 backdrop-blur-sm py-2 z-10"
           >
             {{ monthData.label }}
           </h3>

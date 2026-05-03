@@ -4,6 +4,8 @@
  * Shared utilities for data fetching scripts (music, events, etc.)
  */
 
+Deno.env.set("TZ", "Europe/Istanbul");
+
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs/ensure-dir";
 import { encodeHex } from "@std/encoding/hex";
@@ -76,6 +78,7 @@ export class HttpClient {
   private rateLimitMs: number;
   private lastFetch: number = 0;
   private fileCache: FileCache;
+  private queue: Promise<void> = Promise.resolve();
 
   constructor(options: HttpClientOptions) {
     this.userAgent = options.userAgent;
@@ -152,16 +155,27 @@ export class HttpClient {
       if (cached) return cached;
     }
 
-    // 2. Rate limit
+    // 2. Queue for rate limiting
     if (!bypassRateLimit && this.rateLimitMs > 0) {
-      const now = Date.now();
-      const elapsed = now - this.lastFetch;
-      if (elapsed < this.rateLimitMs) {
-        await new Promise((r) => setTimeout(r, this.rateLimitMs - elapsed));
-      }
+      const result = this.queue.then(async () => {
+        const now = Date.now();
+        const elapsed = now - this.lastFetch;
+        if (elapsed < this.rateLimitMs) {
+          await new Promise((r) => setTimeout(r, this.rateLimitMs - elapsed));
+        }
+        return await this.performFetch<T>(url, type);
+      });
+      this.queue = result.then(() => {}).catch(() => {});
+      return result;
     }
 
-    // 3. Network Fetch
+    return await this.performFetch<T>(url, type);
+  }
+
+  private async performFetch<T>(
+    url: string,
+    type: "json" | "buffer",
+  ): Promise<T | null> {
     try {
       const response = await this.robustFetch(url, {
         headers: { "User-Agent": this.userAgent },
@@ -186,7 +200,6 @@ export class HttpClient {
         );
         return data;
       } else {
-        // For buffers (images/binaries), we want to be more careful
         if (
           contentType.includes("text/html") ||
           contentType.includes("application/json")

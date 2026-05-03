@@ -13,13 +13,18 @@
 {{ set tag = as || "div" }}
 
 {{
-  set widthClass = theme.layout.container[width] || width || theme.layout.container.default
+  set widthClass = {
+    "narrow": "max-w-3xl",
+    "default": "max-w-6xl",
+    "wide": "max-w-screen-2xl",
+    "full": "max-w-full",
+  }[width] || width || "max-w-6xl"
 }}
 
 {{
   set paddingClass = padding === false
   ? ""
-  : (typeof padding === "string" ? padding : theme.spacing.container)
+  : (typeof padding === "string" ? padding : "px-4 md:px-0")
 }}
 
 {{

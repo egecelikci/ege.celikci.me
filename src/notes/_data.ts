@@ -4,12 +4,11 @@ export const type = "note";
 export const show_webmentions = true;
 
 /**
- * High-precision URL generator for notes.
- * Derives the slug directly from the filename numbers to ensure seconds
- * are preserved regardless of Lume's date extraction precision.
+ * URL generator for notes.
+ * Extracts all digits from the filename (YYYY-MM-DD-HH-mm-ss)
+ * to ensure high-precision, unique URLs like /notes/20250605141506/.
  */
 export const url = (page) => {
-  const filename = page.src.path.split("/").pop() || "";
-  const slug = filename.replace(/[^0-9]/g, "");
+  const slug = page.src.path.split("/").pop().replace(/\D/g, "");
   return `/notes/${slug}/`;
 };

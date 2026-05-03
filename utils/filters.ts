@@ -271,6 +271,10 @@ export const filters = {
     return s.substring(0, length).trim() + suffix;
   },
 
+  cx: function (...classes: (string | false | undefined | null)[]): string {
+    return classes.filter(Boolean).join(" ");
+  },
+
   teaser: function (content: unknown, length = 160): string {
     let text = String(content || "");
     // 1. Remove HTML tags

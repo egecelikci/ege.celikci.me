@@ -6,11 +6,11 @@
 import esbuild, { Options as EsbuildOptions } from "lume/plugins/esbuild.ts";
 import icons from "lume/plugins/icons.ts";
 import inline from "lume/plugins/inline.ts";
+import lightningcss from "lume/plugins/lightningcss.ts";
 import picture from "lume/plugins/picture.ts";
-import postcss from "lume/plugins/postcss.ts";
+import svgo from "lume/plugins/svgo.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
-import cssnano from "npm:cssnano";
 
 export interface AssetOptions {
   esbuild?: Partial<EsbuildOptions>;
@@ -22,9 +22,8 @@ export default function (options: AssetOptions = {}) {
   return (site: Lume.Site) => {
     site
       .use(tailwindcss())
-      .use(postcss({
-        plugins: !isDev ? [cssnano()] : [],
-      }))
+      .use(lightningcss())
+      .use(svgo())
       .use(esbuild({
         extensions: [".ts"],
         options: {

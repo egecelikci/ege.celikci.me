@@ -5,12 +5,14 @@
 <div id="pswp-templates" class="hidden" aria-hidden="true">
   {{# 1. TOP CONTROLS TEMPLATE #}}
   <template id="pswp-template-controls">
-    <div class="{{ theme.components.litebox.controls |> safe }}">
+    <div
+      class="carousel-top-controls absolute top-0 left-0 right-0 p-6 md:p-10 flex justify-between items-center z-10 pointer-events-auto pt-[max(1.5rem,env(safe-area-inset-top))] px-[max(1.5rem,env(safe-area-inset-right,1.5rem))] pl-[max(1.5rem,env(safe-area-inset-left,1.5rem))] transition-opacity duration-500"
+    >
       {{# Close #}}
       <span>
         <button
           type="button"
-          class="{{ theme.components.litebox.button |> safe }} pswp-close-btn"
+          class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 pswp-close-btn"
           aria-label="Close media viewer"
         >
           {{ comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
@@ -19,15 +21,15 @@
 
       {{# Dots & Counter #}}
       <div
-        class="{{ theme.components.litebox.indicator |> safe }} pswp-indicator"
+        class="carousel-indicator flex items-center justify-center gap-3 min-w-0 px-4 pswp-indicator"
       >
         <span
-          class="{{ theme.components.litebox.dots |> safe }} flex pswp-dots"
+          class="carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg min-w-0 max-w-[120px] sm:max-w-[200px] overflow-x-auto no-scrollbar flex pswp-dots"
         >
           {{# dots injected by JS #}}
         </span>
         <span
-          class="{{ theme.components.litebox.counter |> safe }} hidden pswp-counter"
+          class="carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap shrink-0 hidden pswp-counter"
         >
           {{# counter injected by JS #}}
         </span>
@@ -38,7 +40,7 @@
         <div class="relative">
           <button
             type="button"
-            class="{{ theme.components.litebox.button |> safe }} pswp-more-btn"
+            class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 pswp-more-btn"
             aria-label="More options"
             aria-haspopup="true"
           >
@@ -46,12 +48,12 @@
           </button>
 
           <div
-            class="{{ theme.components.litebox.menu.container |> safe }} opacity-0 pointer-events-none scale-95 pswp-more-menu"
+            class="carousel-menu absolute top-full right-0 mt-2 min-w-[200px] bg-surface border border-border rounded-xl shadow-xl z-[5300] overflow-hidden transform origin-top-right transition-all opacity-0 pointer-events-none scale-95 pswp-more-menu"
             role="menu"
           >
             <a
               href="#"
-              class="{{ theme.components.litebox.menu.item |> safe }} hidden pswp-view-post"
+              class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left hidden pswp-view-post"
               role="menuitem"
             >
               {{ comp.ui.Icon({ name: "message-square", classes: "w-4 h-4" }) }}
@@ -61,7 +63,7 @@
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              class="{{ theme.components.litebox.menu.item |> safe }} pswp-open-original"
+              class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left pswp-open-original"
               role="menuitem"
             >
               {{ comp.ui.Icon({ name: "external-link", classes: "w-4 h-4" }) }}
@@ -69,7 +71,7 @@
             </a>
             <button
               type="button"
-              class="{{ theme.components.litebox.menu.item |> safe }} pswp-download"
+              class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left pswp-download"
               role="menuitem"
             >
               {{ comp.ui.Icon({ name: "download", classes: "w-4 h-4" }) }}
@@ -84,7 +86,7 @@
   {{# 2. ALT TRIGGER TEMPLATE #}}
   <template id="pswp-template-alt">
     <div
-      class="{{ theme.components.litebox.alt |> safe }} pswp-alt-trigger opacity-0 pointer-events-none"
+      class="media-alt absolute bottom-[max(24px,env(safe-area-inset-bottom,24px))] left-1/2 -translate-x-1/2 bg-black/80 text-white px-5 py-3 rounded-xl max-w-[min(600px,90vw)] text-sm leading-relaxed text-center z-10 border border-white/10 transition-all duration-300 pointer-events-auto shadow-2xl pswp-alt-trigger opacity-0 pointer-events-none"
     >
       <button
         type="button"
@@ -107,33 +109,33 @@
   <template id="pswp-template-sheet">
     <div>
       <div
-        class="{{ theme.components.litebox.sheet.backdrop |> safe }} opacity-0 pointer-events-none pswp-sheet-backdrop"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[5100] transition-opacity duration-300 opacity-0 pointer-events-none pswp-sheet-backdrop"
         aria-hidden="true"
       >
       </div>
       <div
-        class="{{ theme.components.litebox.sheet.container |> safe }} translate-y-full pswp-sheet"
+        class="fixed bottom-0 left-0 right-0 z-[5200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border translate-y-full pswp-sheet"
         role="dialog"
         aria-labelledby="pswp-sheet-title"
         aria-modal="false"
       >
-        <header class="{{ theme.components.litebox.sheet.header |> safe }}">
+        <header class="flex items-center justify-between gap-4">
           <h2
             id="pswp-sheet-title"
-            class="{{ theme.components.litebox.sheet.title |> safe }}"
+            class="text-xl font-bold tracking-tight text-text"
           >
             Media description
           </h2>
           <button
             type="button"
-            class="{{ theme.components.litebox.sheet.close |> safe }} pswp-sheet-close"
+            class="p-2 rounded-full hover:bg-black/5 transition-colors pswp-sheet-close"
             aria-label="Close description"
           >
             {{ comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
           </button>
         </header>
         <main
-          class="{{ theme.components.litebox.sheet.content |> safe }} pswp-sheet-content"
+          class="text-base leading-relaxed text-text/90 whitespace-pre-wrap text-pretty pswp-sheet-content"
         >
           {{# Alt text injected here by JS #}}
         </main>
@@ -144,7 +146,7 @@
   {{# 4. DOT TEMPLATE #}}
   <template id="pswp-template-dot">
     <button
-      class="{{ theme.components.litebox.dot |> safe }} pswp-dot"
+      class="carousel-dot w-6 h-6 flex items-center justify-center text-white/30 text-lg transition-all data-[active=true]:text-white data-[active=true]:scale-125 disabled:pointer-events-none hover:text-white/60 pswp-dot"
       aria-label="Go to slide"
     >
       •
@@ -156,14 +158,14 @@
     <div class="pswp-nav" aria-hidden="true">
       <button
         type="button"
-        class="{{ theme.components.litebox.button |> safe }} absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
+        class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
         aria-label="Previous image"
       >
         {{ comp.ui.Icon({ name: "chevron-left", classes: "w-6 h-6" }) }}
       </button>
       <button
         type="button"
-        class="{{ theme.components.litebox.button |> safe }} absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
+        class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
         aria-label="Next image"
       >
         {{ comp.ui.Icon({ name: "chevron-right", classes: "w-6 h-6" }) }}

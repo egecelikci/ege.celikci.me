@@ -14,6 +14,7 @@ import type {
 import { createCache, objectValidator } from "./cache.ts";
 import { ditherWithSharp, saveColorVersion } from "./images.ts";
 import { HttpClient } from "./fetch-base.ts";
+import { exists } from "@std/fs/exists";
 
 // ============================================================================
 // CONFIGURATION
@@ -66,19 +67,25 @@ class AlbumFetcher {
       (CONFIG.syncMode === "mirror" || forceFullSync) &&
       firstData.count > CONFIG.fetchLimit
     ) {
+      // Optimization: If we already have the count and we're just checking for updates,
+      // we could stop here if the first page matches. But for simplicity, we'll fetch all.
+      const pages = [];
       for (
         let offset = CONFIG.fetchLimit;
         offset < firstData.count;
         offset += CONFIG.fetchLimit
       ) {
-        const data = await this.httpClient.fetch<CritiqueBrainzResponse>(
+        pages.push(this.httpClient.fetch<CritiqueBrainzResponse>(
           this.buildReviewUrl(offset),
           "json",
           "force-cache",
           true,
-        );
-        if (data?.reviews) allReviews.push(...data.reviews);
+        ));
       }
+      const results = await Promise.all(pages);
+      results.forEach((data) => {
+        if (data?.reviews) allReviews.push(...data.reviews);
+      });
     }
     return new Map(
       allReviews
@@ -114,14 +121,23 @@ class AlbumFetcher {
 }
 
 class ImageProcessor {
-  async checkExists(rgid: string): Promise<boolean> {
-    try {
-      await Deno.stat(join(CONFIG.paths.coverColor, `${rgid}.webp`));
-      return true;
-    } catch {
-      return false;
+  private existingCovers = new Set<string>();
+
+  async inventory() {
+    this.existingCovers.clear();
+    if (await exists(CONFIG.paths.coverColor)) {
+      for await (const entry of Deno.readDir(CONFIG.paths.coverColor)) {
+        if (entry.isFile && entry.name.endsWith(".webp")) {
+          this.existingCovers.add(entry.name.replace(".webp", ""));
+        }
+      }
     }
   }
+
+  checkExists(rgid: string): boolean {
+    return this.existingCovers.has(rgid);
+  }
+
   async process(rgid: string, imageBuffer: ArrayBuffer): Promise<void> {
     const colorPath = join(CONFIG.paths.coverColor, `${rgid}.webp`);
     const monoPath = join(CONFIG.paths.coverMono, `${rgid}.png`);
@@ -131,6 +147,7 @@ class ImageProcessor {
       ditherWithSharp(uint8, monoPath),
     ]);
   }
+
   buildPaths(rgid: string) {
     return {
       color: `/assets/images/covers/colored/${rgid}.webp`,
@@ -148,6 +165,8 @@ async function getMusicData() {
 
   const fetcher = new AlbumFetcher(httpClient);
   const imageProcessor = new ImageProcessor();
+  await imageProcessor.inventory();
+
   const cache = createCache<{ albums: ProcessedAlbum[] }>({
     filePath: CONFIG.paths.cacheFile,
     name: "music",
@@ -156,39 +175,48 @@ async function getMusicData() {
 
   const cachedData = await cache.load({ albums: [] });
   const albumsMap = new Map(cachedData.albums.map((a) => [a.id, a]));
+
+  console.log("[music] ℹ️ Syncing favorite albums...");
   const favorites = await fetcher.getFavoriteReviews(albumsMap.size === 0);
-  const processed: ProcessedAlbum[] = [];
 
-  for (const [id, ratedAt] of favorites) {
-    let album = albumsMap.get(id);
-    const imagesExist = await imageProcessor.checkExists(id);
+  console.log(`[music] 🔍 Processing ${favorites.size} albums...`);
 
-    if (!album || !imagesExist) {
-      const metadata = await fetcher.fetchMetadata(id);
-      if (metadata) {
-        if (!imagesExist) {
-          const buf = await fetcher.fetchCoverImage(id);
-          if (buf) await imageProcessor.process(id, buf);
+  const results = await Promise.all(
+    Array.from(favorites.entries()).map(async ([id, ratedAt]) => {
+      let album = albumsMap.get(id);
+      const imagesExist = imageProcessor.checkExists(id);
+
+      if (!album || !imagesExist) {
+        const metadata = await fetcher.fetchMetadata(id);
+        if (metadata) {
+          if (!imagesExist) {
+            console.log(`[music] 📥 Fetching cover for: ${metadata.title}`);
+            const buf = await fetcher.fetchCoverImage(id);
+            if (buf) await imageProcessor.process(id, buf);
+          }
+          const paths = imageProcessor.buildPaths(id);
+          album = {
+            ...metadata,
+            imagePath: paths.color,
+            imagePathMono: paths.mono,
+            ratedAt,
+          } as ProcessedAlbum;
         }
-        const paths = imageProcessor.buildPaths(id);
-        album = {
-          ...metadata,
-          imagePath: paths.color,
-          imagePathMono: paths.mono,
-          ratedAt,
-        } as ProcessedAlbum;
+      } else {
+        album.ratedAt = ratedAt;
       }
-    } else {
-      album.ratedAt = ratedAt;
-    }
-    if (album) processed.push(album);
-  }
+      return album;
+    }),
+  );
+
+  const processed = results.filter((a): a is ProcessedAlbum => !!a);
 
   processed.sort((a, b) =>
     new Date(b.ratedAt || 0).getTime() - new Date(a.ratedAt || 0).getTime()
   );
 
   await cache.save({ albums: processed });
+  console.log(`[music] ✅ Synced ${processed.length} albums.`);
   return { albums: processed };
 }
 

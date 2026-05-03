@@ -6,7 +6,7 @@
     - leftContent: html/string (Optional content for the left side)
     - text: string (default: "view details &rarr;")
 #}}
-<footer class="{{ theme.components.listing.footer }}">
+<footer class="listing-footer">
   {{ if it.leftContent }}
     {{ it.leftContent |> safe }}
   {{ else }}
@@ -15,7 +15,7 @@
 
   <div class="flex items-center gap-4">
     <span
-      class="{{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+      class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
     >
       {{ it.text || "view details &rarr;" }}
     </span>

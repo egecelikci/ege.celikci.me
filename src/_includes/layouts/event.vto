@@ -20,12 +20,16 @@ layout: layouts/page.vto
       {{# HEADER META (Price, Date) #}}
       <section class="space-y-10">
         {{ if event.isCustomTitle && event.name }}
-          <h1 class="{{ theme.typography.heading.h2 }}">{{ event.name }}</h1>
+          <h1
+            class="text-[length:var(--size-step-3)] font-display font-bold tracking-tight text-text leading-[1.1] text-balance"
+          >
+            {{ event.name }}
+          </h1>
         {{ /if }}
 
         {{ if event.disambiguation }}
           <p
-            class="text-xl {{ theme.typography.colors.muted }} italic border-l-2 border-primary/20 pl-6 py-1"
+            class="text-xl text-text-muted italic border-l-2 border-primary/20 pl-6 py-1"
           >
             {{ event.disambiguation }}
           </p>
@@ -39,7 +43,7 @@ layout: layouts/page.vto
                 class="text-base font-bold text-text/80 inline"
               >
                 <span
-                  class="{{ theme.typography.label }} {{ theme.typography.colors.dim }} mr-2 inline-block translate-y-[-1px]"
+                  class="typography-label text-text-muted/90 mr-2 inline-block translate-y-[-1px]"
                 >Presented by</span>
 
                 {{ if labelRel.label.externalLinks?.instagram }}
@@ -75,13 +79,13 @@ layout: layouts/page.vto
         <div class="flex flex-wrap items-center gap-x-12 gap-y-6">
           <div class="flex flex-col gap-1.5">
             <span
-              class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+              class="typography-label text-text-muted/90"
             >Date & Time</span>
             <div class="text-xl font-bold font-mono text-text">
               {{ if it.event.beginDate }}
                 {{ it.event.beginDate |> date("EEE, MMM dd") }}
                 {{ if it.event.time }}
-                  <span class="ml-2 {{ theme.typography.colors.subtle }}">{{
+                  <span class="ml-2 text-text-muted/90">{{
                     it.event.time
                   }}</span>
                 {{ /if }}
@@ -94,7 +98,7 @@ layout: layouts/page.vto
           {{ if event.local?.price }}
             <div class="flex flex-col gap-1.5">
               <span
-                class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+                class="typography-label text-text-muted/90"
               >Entry Fee</span>
               <div class="text-xl font-bold font-mono text-primary">
                 {{ event.local.price }}
@@ -110,6 +114,18 @@ layout: layouts/page.vto
             {{ event.local.description }}
           </div>
         {{ /if }}
+
+        {{ if event.local?.video }}
+          <div class="pt-8 border-t border-border/10">
+            {{
+              comp.ui.Video({
+                src: event.local.video.src,
+                title: event.local.video.title,
+                credits: videoCredits,
+              })
+            }}
+          </div>
+        {{ /if }}
       </section>
 
       {{# LINEUP SECTION #}}
@@ -118,12 +134,17 @@ layout: layouts/page.vto
       >
         <section class="flex flex-col gap-8">
           <h2
-            class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+            class="typography-label text-text-muted/90"
           >
             Lineup
           </h2>
           {{
-            set artistRels = (event.relations || []).filter((r) => r["target-type"] === "artist")
+            set artistRels = (event.relations || []).filter((r) =>
+              r["target-type"] === "artist" &&
+              !["illustration", "graphic design", "artwork", "design", "engineer"].includes(
+                r.type,
+              )
+            )
           }}
           {{ if artistRels.length > 0 }}
             <ul class="flex flex-col gap-6">
@@ -159,7 +180,7 @@ layout: layouts/page.vto
                     {{ /if }}
                   </div>
                   <span
-                    class="{{ theme.typography.label }} font-normal {{ theme.typography.colors.dim }}"
+                    class="typography-label font-normal text-text-muted/90"
                   >
                     {{ rel.type }}
                   </span>
@@ -167,7 +188,7 @@ layout: layouts/page.vto
               {{ /for }}
             </ul>
           {{ else }}
-            <p class="{{ theme.typography.colors.dim }} italic">Lineup TBA</p>
+            <p class="text-text-muted/90 italic">Lineup TBA</p>
           {{ /if }}
         </section>
       </div>
@@ -177,15 +198,39 @@ layout: layouts/page.vto
     <aside class="space-y-12 md:sticky md:top-24">
       {{# POSTER #}}
       {{ if posterImages.length > 0 }}
-        <div class="w-full">
+        <div class="w-full relative group/poster">
           {{ await comp.ui.Media({ images: posterImages, aspect: "auto" }) }}
+
+          {{# POSTER CREDITS OVERLAY #}}
+          {{ if posterCredits?.length > 0 }}
+            <div
+              class="gallery-overlay flex flex-col items-end gap-1 group-hover/poster:opacity-100"
+            >
+              {{ for credit of posterCredits }}
+                <a
+                  href="{{ credit.url }}"
+                  target="_blank"
+                  class="flex items-center gap-1.5 hover:text-primary transition-colors pointer-events-auto"
+                >
+                  {{
+                    comp.ui.Icon({
+                      name: credit.icon,
+                      catalog: credit.catalog,
+                      classes: "w-3 h-3",
+                    })
+                  }}
+                  <span>{{ credit.role }}: {{ credit.name }}</span>
+                </a>
+              {{ /for }}
+            </div>
+          {{ /if }}
         </div>
       {{ /if }}
 
       {{# VENUE SECTION (Moved to sidebar for desktop) #}}
       <section class="flex flex-col gap-8">
         <h2
-          class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+          class="typography-label text-text-muted/90"
         >
           Venue
         </h2>
@@ -224,7 +269,7 @@ layout: layouts/page.vto
               </div>
               {{ if venueRel.place.address }}
                 <p
-                  class="text-sm {{ theme.typography.colors.subtle }} leading-relaxed"
+                  class="text-sm text-text-muted/95 leading-relaxed"
                 >
                   {{ venueRel.place.address }}
                 </p>
@@ -276,8 +321,7 @@ layout: layouts/page.vto
                           classes: "w-4 h-4 opacity-60",
                         })
                       }}
-                      <span class="{{ theme.typography.sublabel }}"
-                      >Native App</span>
+                      <span class="typography-sublabel">Native App</span>
                     </a>
 
                     {{# Option 2: OSM #}}
@@ -290,8 +334,7 @@ layout: layouts/page.vto
                       {{
                         comp.ui.Icon({ name: "map", catalog: "lucide", classes: "w-4 h-4 opacity-60" })
                       }}
-                      <span class="{{ theme.typography.sublabel }}"
-                      >OpenStreetMap</span>
+                      <span class="typography-sublabel">OpenStreetMap</span>
                     </a>
 
                     {{# Option 3: Google Maps #}}
@@ -308,8 +351,7 @@ layout: layouts/page.vto
                           classes: "w-4 h-4 opacity-60",
                         })
                       }}
-                      <span class="{{ theme.typography.sublabel }}"
-                      >Google Maps</span>
+                      <span class="typography-sublabel">Google Maps</span>
                     </a>
                   </div>
 
@@ -326,7 +368,7 @@ layout: layouts/page.vto
                         classes: "w-4 h-4 opacity-90",
                       })
                     }}
-                    <span class="{{ theme.typography.sublabel }} font-black"
+                    <span class="typography-sublabel font-black"
                     >Directions</span>
                   </button>
                 </div>
@@ -334,7 +376,7 @@ layout: layouts/page.vto
             {{ /if }}
           </div>
         {{ else }}
-          <p class="{{ theme.typography.colors.dim }} italic">Venue TBA</p>
+          <p class="text-text-muted/90 italic">Venue TBA</p>
         {{ /if }}
       </section>
 
@@ -344,7 +386,7 @@ layout: layouts/page.vto
           <a
             href="{{ event.local.tickets_url }}"
             target="_blank"
-            class="{{ theme.components.button.base }} {{ theme.components.button.primary }} w-full justify-center shadow-xl shadow-primary/10"
+            class="btn-primary w-full justify-center shadow-xl shadow-primary/10"
           >
             {{
               comp.ui.Icon({ name: "ticket", catalog: "lucide", classes: "w-4 h-4" })
@@ -374,7 +416,7 @@ layout: layouts/page.vto
                   href="{{ url }}"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="{{ theme.components.button.minimal }} justify-center"
+                  class="btn-minimal justify-center"
                 >
                   {{ if igUrls.length > 1 }}
                     Instagram Post #{{ index + 1 }}
@@ -390,7 +432,7 @@ layout: layouts/page.vto
                 href="{{ rel.url.resource }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="{{ theme.components.button.minimal }} justify-center"
+                class="btn-minimal justify-center"
               >
                 {{ rel.type }}
               </a>
@@ -405,7 +447,7 @@ layout: layouts/page.vto
   {{ if gallery && gallery.length > 0 }}
     <section class="flex flex-col gap-8 pt-12 border-t border-border/10">
       <h2
-        class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+        class="typography-label text-text-muted/90"
       >
         Photographs
       </h2>

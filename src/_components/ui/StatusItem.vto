@@ -31,7 +31,7 @@
   <div class="flex-1 min-w-0">
     {{ if it.label }}
       <div
-        class="{{ it.labelSize || theme.typography.label }} {{ theme.typography.colors.dim }} font-normal mb-0.5 tracking-[0.2em] leading-tight"
+        class='{{ it.labelSize || "text-[10px]" }} text-text-muted/95 font-normal mb-0.5 tracking-[0.2em] leading-tight'
       >
         {{ it.label }}
       </div>

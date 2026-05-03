@@ -3,7 +3,6 @@
  * Central filter registration.
  */
 
-import theme from "../src/_data/theme.ts";
 import { filters } from "../utils/filters.ts";
 
 export default function () {
@@ -13,8 +12,5 @@ export default function () {
       console.log(`[config] Registering filter: ${name}`);
       site.filter(name, fn as (value: unknown, ...args: unknown[]) => unknown);
     }
-
-    // 2. Register theme-specific class merger
-    site.filter("cx", theme.cx);
   };
 }

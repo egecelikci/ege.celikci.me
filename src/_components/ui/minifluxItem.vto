@@ -1,7 +1,7 @@
 <article class="break-inside-avoid mb-12 group">
   <div class="border-b-4 border-text mb-4 pb-1">
     <span
-      class="{{ theme.typography.label }} {{ theme.typography.colors.dim }}"
+      class="typography-label text-text-muted/95"
     >
       Entry No. {{ index + 1 }}
     </span>
@@ -16,12 +16,12 @@
 
   <div class="flex items-center gap-2 mb-4">
     <span
-      class="{{ theme.typography.label }} bg-text text-bg px-1.5 py-0.5"
+      class="typography-label bg-text text-bg px-1.5 py-0.5"
     >
       Source
     </span>
     <code
-      class="{{ theme.typography.label }} font-normal lowercase truncate {{ theme.typography.colors.muted }} italic"
+      class="typography-label font-normal lowercase truncate text-text-muted italic"
     >
       {{ item.feed }}
     </code>
@@ -31,7 +31,7 @@
     {{ if item.scraper_rules }}
       <div>
         <p
-          class="text-xs font-mono bg-bg-offset p-3 border border-border border-dashed"
+          class="text-xs font-mono bg-surface/50 p-3 border border-border border-dashed"
         >
           {{ item.scraper_rules }}
         </p>

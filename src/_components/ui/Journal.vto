@@ -14,16 +14,20 @@
   class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}"
   {{ attributes |> attr |> safe }}
 >
-  <header class="{{ theme.components.listing.metaRow }}">
+  <header
+    class="relative z-20 flex items-center gap-4 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity"
+  >
     <time
-      class="dt-published {{ theme.typography.label }} {{ theme.typography.colors.muted }}"
+      class="dt-published text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
     >
       {{ date |> date("dd MMM yyyy") }}
     </time>
     <div class="h-px grow bg-border/10"></div>
   </header>
 
-  <div class="e-content markdown {{ theme.components.listing.description }}">
+  <div
+    class="e-content markdown text-lg md:text-xl text-text-muted group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20"
+  >
     {{ content |> safe }}
   </div>
 </article>

@@ -1,7 +1,7 @@
 {{#
   Component: Badge (Primitive)
   A small label component for status, categories, etc.
-  
+
   Props:
     - content: string | html (required)
     - icon: string (optional icon name)
@@ -14,7 +14,7 @@
 
 <{{ tag }}
 {{ if href }}href="{{ href }}"{{ /if }}
-class="{{ theme.components.badge.base }} {{ classes }}"
+class="badge-base {{ classes }}"
 {{ attributes |> attr |> safe }}
 >
 {{ if icon }}
