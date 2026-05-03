@@ -38,7 +38,7 @@
     {{ safeTitle }}
   </div>
   <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-text-muted group-hover:text-primary group-hover:border-primary/50 transition-colors">
-  {{ comp.ui.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) }}
+  {{ await it.comp.ui.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) }}
   <span class="text-sm font-medium">Click to load video from {{ providerName }}</span>
   </div>
 </div>
@@ -63,7 +63,7 @@
 {{- /set -}}
 
 {{-
-  comp.ui.Card({
+  await it.comp.ui.Card({
     classes: "my-6 p-0 overflow-hidden " + (classes || ""),
     attributes: attributes,
     content: cardContent,

@@ -75,7 +75,7 @@
         {{# Multi-image Indicator #}}
         {{ if it.images.length > 1 }}
           <div class="gallery-overlay">
-            {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+            {{ await it.comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
             <span>1 / {{ it.images.length }}</span>
           </div>
         {{ /if }}
@@ -83,7 +83,7 @@
         {{# Main Thumbnail #}}
         {{ set firstImage = it.images |> slice(0, 1) }}
         {{
-          comp.ui.Gallery({
+          await it.comp.ui.Gallery({
             images: firstImage,
             static: true,
             aspect: "aspect-video md:aspect-[16/10]",
@@ -116,7 +116,7 @@
   {{# 4. FOOTER #}}
   <div class="relative z-40">
     {{
-      comp.ui.ListingFooter({
+      await it.comp.ui.ListingFooter({
         leftContent: it.footerLeft,
         text: it.footerText,
       })

@@ -62,7 +62,7 @@
           title="{{ source.label }}"
         >
           {{
-            comp.ui.Icon({
+            await it.comp.ui.Icon({
               name: source.icon,
               catalog: source.catalog ||
                 (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
@@ -82,7 +82,7 @@
           class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/source:bg-primary/10 group-hover/source:border-primary/20 transition-all"
         >
           {{
-            comp.ui.Icon({
+            await it.comp.ui.Icon({
               name: source.icon,
               classes:
                 "w-2.5 h-2.5 text-primary/60 group-hover/source:text-primary transition-colors",
@@ -118,7 +118,7 @@
             title="Subscribe via {{ feed.label }}"
           >
             {{
-              comp.ui.Icon({
+              await it.comp.ui.Icon({
                 name: feed.icon,
                 classes: "w-3.5 h-3.5 opacity-70",
               })
@@ -135,7 +135,7 @@
           class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/feed:bg-primary/10 group-hover/feed:border-primary/20 transition-all"
         >
           {{
-            comp.ui.Icon({
+            await it.comp.ui.Icon({
               name: feeds[0].icon,
               classes:
                 "w-2.5 h-2.5 text-primary/60 group-hover/feed:text-primary transition-colors",
