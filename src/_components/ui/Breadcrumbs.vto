@@ -19,13 +19,13 @@
         {{ if item.data.url === "/" }}{{ continue }}{{ /if }}
         <li class="flex items-center gap-2">
           {{ if index === items.length - 1 }}
-            <span class="font-bold text-text-muted/80">
+            <span class="font-bold text-text-muted">
               {{ item.data.title || item.slug }}
             </span>
           {{ else }}
             <a
               href="{{ item.data.url }}"
-              class="hover:text-primary transition-colors no-underline text-text-muted/70"
+              class="hover:text-primary transition-colors no-underline text-text-muted"
             >
               {{ item.data.title || item.slug }}
             </a>

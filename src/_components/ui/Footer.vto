@@ -10,7 +10,7 @@
   >
     {{# LEFT: Site Info #}}
     <div
-      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted/90"
+      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted"
     >
       <div class="flex items-center gap-1.5 whitespace-nowrap">
         <span aria-label="Copyright">&copy;</span>
@@ -54,7 +54,7 @@
           class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-text-muted/5 border border-border/10 typography-label text-text-muted font-normal whitespace-nowrap"
         >
           <span
-            class="mr-1.5 text-text-muted/90 italic lowercase"
+            class="mr-1.5 text-text-muted italic lowercase"
           >rev.</span>
           {{ page.data.updated || page.data.date |> date("dd MMM yyyy") }}
         </div>
@@ -92,7 +92,7 @@
     >
       {{ for ring of webrings }}
         <div
-          class="flex items-center gap-1.5 typography-label text-text-muted/90 whitespace-nowrap"
+          class="flex items-center gap-1.5 typography-label text-text-muted whitespace-nowrap"
         >
           <a
             href="{{ ring.prev }}"

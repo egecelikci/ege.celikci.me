@@ -56,7 +56,7 @@
           })
         }}
         <span
-          class="typography-label text-text-muted/95 mt-2"
+          class="typography-label text-text-muted mt-2"
         >No Poster</span>
       </div>
     {{ /if }}
@@ -67,7 +67,7 @@
     <div class="space-y-3">
       {{# DATE #}}
       <time
-        class="typography-label {{ if isPast }}text-text-muted/95{{ else }}text-primary/70{{ /if }}"
+        class="typography-label {{ if isPast }}text-text-muted{{ else }}text-primary/70{{ /if }}"
       >
         {{ if it.event.beginDate }}
           {{ it.event.beginDate |> date("EEE, MMM dd") }}
@@ -106,7 +106,7 @@
 
     {{# ACTION #}}
     <div
-      class="mt-6 flex items-center gap-2 typography-label text-text-muted/90 opacity-0 group-hover:opacity-100 transition-opacity"
+      class="mt-6 flex items-center gap-2 typography-label text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
     >
       Details →
     </div>

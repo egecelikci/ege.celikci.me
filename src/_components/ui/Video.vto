@@ -48,7 +48,7 @@
   <div class="px-6 py-4 bg-surface/40 border-t border-border/10 flex flex-wrap gap-x-6 gap-y-2">
     {{ for credit of credits }}
       <div class="flex items-center gap-1.5">
-        <span class="typography-label text-text-muted/95">{{ credit.role }}</span>
+        <span class="typography-label text-text-muted">{{ credit.role }}</span>
         {{ if credit.url }}
           <a href="{{ credit.url }}" target="_blank" class="text-xs font-bold hover:text-primary transition-colors">
             {{ credit.name }}
