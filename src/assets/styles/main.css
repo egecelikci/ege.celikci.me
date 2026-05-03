@@ -120,10 +120,63 @@
     /* overflow-x: clip handled in base.vto body class */
   }
 
-  /* Prevent background scroll when PhotoSwipe is open */
-  html.pswp-open {
+  #site-header {
+    transition: opacity 0.25s ease, transform 0.25s ease, padding-right 0s;
+  }
+
+  /* Robust Scrollbar Compensation (Phanpy-style) */
+  html.pswp-open, html.pswp-closing {
     overflow: hidden !important;
     overscroll-behavior: none;
+    background-color: #000 !important;
+    color-scheme: dark !important;
+
+    /* Disable all page transitions during Litebox states to prevent flickers/tilts */
+    transition: none !important;
+
+    /* Global variables override when Litebox is active */
+    --color-bg: #000;
+    --color-surface: #111;
+    --color-text: #fff;
+    --color-text-muted: #aaa;
+    --color-border: #222;
+    --bg-color: #000;
+    --header-height: 0;
+  }
+
+  html.pswp-open body, html.pswp-closing body {
+    background-color: #000 !important;
+    padding-right: var(--pswp-sw, 0px) !important;
+    transition: none !important;
+  }
+
+  html.pswp-open #site-header, html.pswp-closing #site-header {
+    padding-right: var(--pswp-sw, 0px) !important;
+    background-color: #000 !important;
+    border-bottom-color: #222 !important;
+    opacity: 0 !important;
+    transform: translateY(-4px) !important;
+    visibility: hidden;
+    pointer-events: none !important;
+    transition: opacity 0.25s ease, transform 0.25s ease !important;
+  }
+
+  /* The Scrollbar Shield: covers the gutter with pure black */
+  html.pswp-open::after, html.pswp-closing::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--pswp-sw, 0px);
+    background: #000;
+    z-index: 99999; /* Top of everything */
+    pointer-events: none;
+  }
+
+  /* Smoothly transition background when opening/closing Litebox */
+  html {
+    transition: background-color 0.3s ease;
   }
 }
 
@@ -366,7 +419,7 @@
 /* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */
 .pswp {
   --pswp-bg: rgba(0, 0, 0, 0.95);
-  --pswp-placeholder-bg: #222;
+  --pswp-placeholder-bg: transparent;
   --pswp-root-z-index: 5000;
 
   --pswp-preloader-color: rgba(255, 255, 255, 0.4);
@@ -379,6 +432,20 @@
   max-height: 100vh !important;
   overflow: hidden !important;
   overscroll-behavior: none;
+
+  /* Smoother transitions */
+  will-change: opacity, transform;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+
+  .pswp__img, .pswp__img--placeholder {
+    will-change: transform, opacity;
+    border-radius: 0.75rem; /* Match site's rounded-xl during animation */
+    transition: border-radius 0.3s ease;
+  }
+
+  &.pswp--open .pswp__img, &.pswp--open .pswp__img--placeholder {
+    border-radius: 0; /* Go to square/native as it opens fully */
+  }
 
   /* Aggressively hide all default UI elements */
   .pswp__top-bar,

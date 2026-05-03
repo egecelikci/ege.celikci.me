@@ -38,7 +38,7 @@
       {{ content |> safe }}
     </main>
 
-    {{ comp.ui.Footer({ page: page }) }}
+    {{ await it.comp.ui.Footer({ page: page }) }}
 
     {{# Representative h-card (IndieWeb Identity Consolidation) #}}
     <div class="h-card hidden" aria-hidden="true">
@@ -49,13 +49,10 @@
     </div>
 
     {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}
-    {{ comp.features.SocialLinks({ variant: "hidden" }) }}
-
-    {{# Authentication Modal (Shared Identity Portal) #}}
-    {{ comp.features.StatusAuth() }}
+    {{ await it.comp.features.SocialLinks({ variant: "hidden" }) }}
 
     {{# Media Modal (Phanpy-style) #}}
-    {{ comp.ui.Litebox() }}
+    {{ await it.comp.ui.Litebox() }}
 
     <script type="module" src="/assets/scripts/main.js"></script>
   </body>

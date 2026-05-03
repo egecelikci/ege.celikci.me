@@ -34,6 +34,7 @@
         target="_blank"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
         {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
+        data-cropped="true"
         data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
         data-media-type="{{ image.type || 'image' }}"
         {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}

@@ -1,7 +1,7 @@
 /**
  * lightbox.ts
  * PhotoSwipe 5 implementation with custom Phanpy-inspired UI.
- * Refined for PhotoSwipe 5 registerElement API, fixed null-checks, and added trackpad gestures.
+ * Refined for PhotoSwipe 5 registerElement API and fixed null-checks.
  */
 
 import PhotoSwipe from "photoswipe";
@@ -12,11 +12,13 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 interface PswpItem {
   src?: string;
   msrc?: string;
+  srcset?: string;
   width?: number;
   height?: number;
   alt?: string;
   type?: string;
   postUrl?: string | null;
+  mediaType?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -41,7 +43,7 @@ const downloadMedia = async (src: string) => {
     const url = URL.createObjectURL(blob);
     const a = Object.assign(document.createElement("a"), {
       href: url,
-      download: src.split("/").pop() || "download",
+      download: src.split("/").pop()?.split("?")[0] || "download",
     });
     document.body.appendChild(a);
     a.click();
@@ -56,9 +58,13 @@ const downloadMedia = async (src: string) => {
 
 let isInitialized = false;
 
+// Calculate scrollbar width once to prevent layout shift
+const getScrollbarWidth = () => {
+  return window.innerWidth - document.documentElement.clientWidth;
+};
+
 export function initLightbox() {
   if (isInitialized) return;
-  console.log("[Lightbox] Initializing PhotoSwipe...");
   isInitialized = true;
 
   const lightbox = new PhotoSwipeLightbox({
@@ -73,12 +79,21 @@ export function initLightbox() {
     arrowPrev: false,
     arrowNext: false,
 
+    // Performance
+    preload: [1, 2],
+
     // Gestures
     closeOnVerticalDrag: true,
     mouseMovePan: true,
 
+    // Animation & Transitions (Sturdy & Robust)
+    showHideAnimationType: "zoom",
+    showAnimationDuration: 300,
+    hideAnimationDuration: 250,
+    easing: "cubic-bezier(0.1, 0, 0, 1)", // Phanpy-style dramatic initial pop
+
     // Spacing to keep image between custom UI elements
-    padding: { top: 120, bottom: 100, left: 20, right: 20 },
+    padding: { top: 60, bottom: 60, left: 10, right: 10 },
   });
 
   // 1. Data Parsing
@@ -91,6 +106,7 @@ export function initLightbox() {
       const img = anchor.querySelector("img");
       itemData.src = anchor.href;
       itemData.msrc = img?.src;
+      itemData.srcset = img?.getAttribute("srcset") || undefined;
       itemData.alt = img?.alt || anchor.getAttribute("data-alt") || "";
 
       const w = anchor.getAttribute("data-pswp-width") ||
@@ -108,6 +124,7 @@ export function initLightbox() {
       const img = el as HTMLImageElement;
       itemData.src = img.src;
       itemData.msrc = img.src;
+      itemData.srcset = img.getAttribute("srcset") || undefined;
       itemData.alt = img.alt || "";
       itemData.width = parseInt(img.getAttribute("width") || "0", 10) ||
         img.naturalWidth || 0;
@@ -116,6 +133,27 @@ export function initLightbox() {
     }
 
     return itemData;
+  });
+
+  // 1b. Correct Thumbnail Bounds for object-fit: cover
+  lightbox.addFilter("thumbEl", (thumbnail, itemData) => {
+    return (itemData.element?.querySelector("img") as HTMLElement) || thumbnail;
+  });
+
+  lightbox.addFilter("thumbBounds", (thumbBounds, itemData) => {
+    const el = itemData.element?.querySelector("img");
+    if (!el) return thumbBounds;
+
+    const rect = el.getBoundingClientRect();
+    return {
+      x: rect.left,
+      y: rect.top,
+      w: rect.width,
+    };
+  });
+
+  lightbox.addFilter("placeholderSrc", (placeholderSrc, content) => {
+    return (content.data as any).msrc || placeholderSrc;
   });
 
   // 2. Video/Gifv Support
@@ -131,9 +169,9 @@ export function initLightbox() {
       content.element.className =
         "pswp__content-video flex items-center justify-center w-full h-full p-4 md:p-12";
       content.element.innerHTML =
-        `<video class="max-w-full max-h-full object-contain" src="${
-          escapeAttr(data.src)
-        }" ${videoAttrs}></video>`;
+        `<video class="max-w-full max-h-full object-contain" aria-label="${
+          escapeAttr(data.alt || "Video")
+        }" src="${escapeAttr(data.src)}" ${videoAttrs}></video>`;
       content.state = "loaded";
     }
   });
@@ -144,7 +182,7 @@ export function initLightbox() {
     if (!pswp) return;
 
     // A. Main Controls
-    pswp.ui.registerElement({
+    pswp.ui?.registerElement({
       name: "custom-controls",
       appendTo: "root",
       onInit: (el) => {
@@ -152,7 +190,9 @@ export function initLightbox() {
         if (!controls) return;
 
         const closeBtn = controls.querySelector(".pswp-close-btn");
-        const moreBtn = controls.querySelector(".pswp-more-btn");
+        const moreBtn = controls.querySelector(
+          ".pswp-more-btn",
+        ) as HTMLButtonElement;
         const moreMenu = controls.querySelector(
           ".pswp-more-menu",
         ) as HTMLElement;
@@ -164,15 +204,44 @@ export function initLightbox() {
         ) as HTMLAnchorElement;
         const download = controls.querySelector(".pswp-download");
 
+        // Click-outside-to-close for more menu
+        const closeMoreMenu = () => {
+          moreMenu?.classList.add(
+            "opacity-0",
+            "pointer-events-none",
+            "scale-95",
+          );
+          moreBtn?.setAttribute("aria-expanded", "false");
+        };
+
+        const handleOutsideClick = (e: MouseEvent) => {
+          if (
+            !moreBtn?.contains(e.target as Node) &&
+            !moreMenu?.contains(e.target as Node)
+          ) {
+            closeMoreMenu();
+          }
+        };
+
         closeBtn?.addEventListener("click", (e) => {
           e.stopPropagation();
           pswp.close();
         });
+
         moreBtn?.addEventListener("click", (e) => {
           e.stopPropagation();
-          moreMenu?.classList.toggle("opacity-0");
-          moreMenu?.classList.toggle("pointer-events-none");
-          moreMenu?.classList.toggle("scale-95");
+          const isOpening = moreMenu?.classList.toggle("opacity-0") === false;
+          moreMenu?.classList.toggle("pointer-events-none", !isOpening);
+          moreMenu?.classList.toggle("scale-95", !isOpening);
+          moreBtn.setAttribute("aria-expanded", String(isOpening));
+
+          if (isOpening) {
+            document.addEventListener("click", handleOutsideClick, {
+              once: true,
+            });
+          } else {
+            document.removeEventListener("click", handleOutsideClick);
+          }
         });
 
         download?.addEventListener("click", () => {
@@ -180,9 +249,59 @@ export function initLightbox() {
           if (data?.src) downloadMedia(data.src);
         });
 
+        // Controls auto-hide on idle (Phanpy-style)
+        let idleTimer: ReturnType<typeof setTimeout> | null = null;
+        const showControls = () => {
+          controls.style.opacity = "1";
+          controls.style.pointerEvents = "auto";
+          if (idleTimer) clearTimeout(idleTimer);
+          idleTimer = setTimeout(hideControls, 3000);
+        };
+        const hideControls = () => {
+          if (moreMenu && !moreMenu.classList.contains("opacity-0")) return;
+          controls.style.opacity = "0";
+          controls.style.pointerEvents = "none";
+        };
+        pswp.element?.addEventListener("pointermove", showControls);
+        pswp.element?.addEventListener("touchstart", showControls);
+
+        pswp.on("destroy", () => {
+          if (idleTimer) clearTimeout(idleTimer);
+        });
+
+        // Build dots once
+        const dots: HTMLButtonElement[] = [];
+        const dotsContainer = controls.querySelector(
+          ".pswp-dots",
+        ) as HTMLElement;
+        if (dotsContainer) {
+          const total = pswp.getNumItems();
+          for (let i = 0; i < total; i++) {
+            const dot = getTemplate("pswp-template-dot") as HTMLButtonElement;
+            if (dot) {
+              dot.addEventListener("click", (e) => {
+                e.stopPropagation();
+                pswp.goTo(i);
+              });
+              dotsContainer.appendChild(dot);
+              dots.push(dot);
+            }
+          }
+        }
+
         pswp.on("change", () => {
           const data = pswp.currSlide?.data as PswpItem;
           if (!data) return;
+
+          // Close menu on slide change
+          closeMoreMenu();
+          document.removeEventListener("click", handleOutsideClick);
+
+          // Pause any rogue videos from adjacent slides
+          pswp.element?.querySelectorAll("video").forEach((v) => v.pause());
+
+          // Show controls briefly on change
+          showControls();
 
           if (viewPost) {
             viewPost.classList.toggle("hidden", !data.postUrl);
@@ -190,36 +309,32 @@ export function initLightbox() {
           }
           if (openOrig && data.src) openOrig.href = data.src;
 
-          const dotsContainer = controls.querySelector(".pswp-dots");
+          const total = pswp.getNumItems();
+          const DOTS_THRESHOLD = 5;
+          const useCounter = total > DOTS_THRESHOLD;
+
           if (dotsContainer) {
-            const total = pswp.getNumItems();
-            dotsContainer.classList.toggle("hidden", total <= 1);
-            if (total > 1) {
-              dotsContainer.innerHTML = "";
-              for (let i = 0; i < total; i++) {
-                const dot = getTemplate(
-                  "pswp-template-dot",
-                ) as HTMLButtonElement;
-                if (dot) {
-                  if (i === pswp.currIndex) {
-                    dot.setAttribute("data-active", "true");
-                    dot.disabled = true;
-                  }
-                  dot.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    pswp.goTo(i);
+            dotsContainer.classList.toggle("hidden", useCounter || total <= 1);
+            if (!useCounter && total > 1) {
+              dots.forEach((dot, i) => {
+                const active = i === pswp.currIndex;
+                dot.setAttribute("data-active", String(active));
+                dot.disabled = active;
+                if (active) {
+                  dot.scrollIntoView({
+                    block: "nearest",
+                    inline: "center",
+                    behavior: "smooth",
                   });
-                  dotsContainer.appendChild(dot);
                 }
-              }
+              });
             }
           }
 
           const counter = controls.querySelector(".pswp-counter");
           if (counter) {
-            const total = pswp.getNumItems();
-            counter.classList.toggle("hidden", total <= 1);
-            if (total > 1) {
+            counter.classList.toggle("hidden", !useCounter || total <= 1);
+            if (useCounter && total > 1) {
               counter.textContent = `${pswp.currIndex + 1} / ${total}`;
             }
           }
@@ -230,12 +345,12 @@ export function initLightbox() {
     });
 
     // B. Alt Sheet
-    pswp.ui.registerElement({
+    pswp.ui?.registerElement({
       name: "custom-alt",
       appendTo: "root",
       onInit: (el) => {
-        const altTrigger = getTemplate("pswp-template-alt");
-        const sheetWrapper = getTemplate("pswp-template-sheet");
+        const altTrigger = getTemplate("pswp-template-alt") as HTMLElement;
+        const sheetWrapper = getTemplate("pswp-template-sheet") as HTMLElement;
         if (!altTrigger || !sheetWrapper) return;
 
         const captionPreview = altTrigger.querySelector(
@@ -246,22 +361,33 @@ export function initLightbox() {
         ) as HTMLElement;
         const sheet = sheetWrapper.querySelector(".pswp-sheet") as HTMLElement;
         const content = sheetWrapper.querySelector(".pswp-sheet-content");
-        const closeSheet = sheetWrapper.querySelector(".pswp-sheet-close");
+        const closeSheet = sheetWrapper.querySelector(
+          ".pswp-sheet-close",
+        ) as HTMLButtonElement;
+
+        let isSheetOpen = false;
 
         const openAlt = (e: Event) => {
           e.stopPropagation();
           const data = pswp.currSlide?.data as PswpItem;
           if (!data?.alt || !content) return;
           content.textContent = data.alt;
+          isSheetOpen = true;
           backdrop.classList.remove("opacity-0", "pointer-events-none");
           sheet.classList.remove("translate-y-full");
-          sheet.style.transform = ""; // Reset any manual transform from swipe
+          sheet.style.transform = "";
+          closeSheet?.focus({ preventScroll: true }); // Move focus into dialog
         };
 
         const closeAlt = () => {
+          if (!isSheetOpen) return;
+          isSheetOpen = false;
           backdrop.classList.add("opacity-0", "pointer-events-none");
           sheet.classList.add("translate-y-full");
           sheet.style.transform = "";
+          (altTrigger.querySelector("button") as HTMLButtonElement)?.focus({
+            preventScroll: true,
+          }); // Restore focus
         };
 
         altTrigger.addEventListener("click", openAlt);
@@ -270,42 +396,40 @@ export function initLightbox() {
 
         // Swipe to close functionality
         let startY = 0;
-        let currentY = 0;
         let isDragging = false;
 
         sheet.addEventListener("touchstart", (e) => {
           startY = e.touches[0].clientY;
           isDragging = true;
           sheet.style.transition = "none";
-          // Prevent PhotoSwipe from handling this touch
           e.stopPropagation();
         }, { passive: true });
 
         sheet.addEventListener("touchmove", (e) => {
           if (!isDragging) return;
-          currentY = e.touches[0].clientY;
-          const diff = currentY - startY;
+          const diff = e.touches[0].clientY - startY;
 
-          // Only allow swiping down
-          if (diff > 0) {
+          // Only allow dismiss swipe when at top of scroll
+          if (diff > 0 && sheet.scrollTop === 0) {
             sheet.style.transform = `translateY(${diff}px)`;
-            // Fade backdrop based on distance
             const opacity = Math.max(0, 1 - (diff / 300));
             backdrop.style.opacity = opacity.toString();
+          } else if (sheet.scrollTop > 0) {
+            // Reset drag origin if they scrolled
+            startY = e.touches[0].clientY;
           }
 
-          // Stop propagation to prevent background scroll/swipe
           e.stopPropagation();
         }, { passive: true });
 
-        sheet.addEventListener("touchend", () => {
+        sheet.addEventListener("touchend", (e) => {
           if (!isDragging) return;
           isDragging = false;
           sheet.style.transition = "";
           backdrop.style.opacity = "";
 
-          const diff = currentY - startY;
-          if (diff > 100) {
+          const diff = e.changedTouches[0].clientY - startY;
+          if (diff > 100 && sheet.scrollTop === 0) {
             closeAlt();
           } else {
             sheet.style.transform = "";
@@ -332,15 +456,21 @@ export function initLightbox() {
     });
 
     // C. Navigation
-    pswp.ui.registerElement({
+    pswp.ui?.registerElement({
       name: "custom-nav",
       appendTo: "root",
       onInit: (el) => {
         const nav = getTemplate("pswp-template-nav");
         if (!nav) return;
 
-        const prev = nav.querySelector(".pswp-prev");
-        const next = nav.querySelector(".pswp-next");
+        const prev = nav.querySelector(".pswp-prev") as HTMLButtonElement;
+        const next = nav.querySelector(".pswp-next") as HTMLButtonElement;
+
+        // Set correct initial visibility immediately
+        const total = pswp.getNumItems();
+        if (prev) prev.hidden = pswp.currIndex === 0;
+        if (next) next.hidden = pswp.currIndex === total - 1;
+
         prev?.addEventListener("click", (e) => {
           e.stopPropagation();
           pswp.prev();
@@ -352,56 +482,30 @@ export function initLightbox() {
 
         pswp.on("change", () => {
           const total = pswp.getNumItems();
-          if (prev) {
-            (prev as HTMLElement).style.visibility = pswp.currIndex === 0
-              ? "hidden"
-              : "visible";
-          }
-          if (next) {
-            (next as HTMLElement).style.visibility =
-              pswp.currIndex === total - 1 ? "hidden" : "visible";
-          }
+          if (prev) prev.hidden = pswp.currIndex === 0;
+          if (next) next.hidden = pswp.currIndex === total - 1;
         });
 
         el.appendChild(nav);
       },
     });
-
-    // D. Trackpad Gestures (Discrete for Native Animations)
-    let wheelTimeout: any;
-    pswp.on("bindEvents", () => {
-      pswp.container.addEventListener("wheel", (e: WheelEvent) => {
-        if (wheelTimeout) return;
-
-        const threshX = 50;
-        const threshY = 80;
-
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-          // Horizontal Navigation
-          if (Math.abs(e.deltaX) > threshX) {
-            if (e.deltaX > 0) pswp.next();
-            else pswp.prev();
-            wheelTimeout = setTimeout(() => {
-              wheelTimeout = null;
-            }, 600);
-          }
-        } else if (Math.abs(e.deltaY) > threshY) {
-          // Vertical Close
-          pswp.close();
-          wheelTimeout = setTimeout(() => {
-            wheelTimeout = null;
-          }, 600);
-        }
-      }, { passive: true });
-    });
   });
 
-  lightbox.on("openingAnimationStart", () => {
+  lightbox.on("beforeOpen", () => {
+    // Set scrollbar width variable for CSS compensation
+    document.documentElement.style.setProperty(
+      "--pswp-sw",
+      `${getScrollbarWidth()}px`,
+    );
     document.documentElement.classList.add("pswp-open");
   });
 
+  lightbox.on("closingAnimationStart", () => {
+    document.documentElement.classList.add("pswp-closing");
+  });
+
   lightbox.on("destroy", () => {
-    document.documentElement.classList.remove("pswp-open");
+    document.documentElement.classList.remove("pswp-open", "pswp-closing");
   });
 
   lightbox.init();
