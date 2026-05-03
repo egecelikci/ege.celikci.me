@@ -76,7 +76,9 @@
           >
             {{ if it.images.length > 1 }}
               <div class="flex items-center gap-1.5">
-                {{ comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+                {{
+                  await it.comp.ui.Icon({ name: "layers", classes: "w-3 h-3" })
+                }}
                 <span>{{ i + 1 }} / {{ it.images.length }}</span>
               </div>
             {{ /if }}
@@ -88,14 +90,22 @@
                   class="flex items-center gap-1.5 hover:text-primary transition-colors pointer-events-auto"
                 >
                   {{
-                    comp.ui.Icon({ name: "camera", catalog: "lucide", classes: "w-3 h-3" })
+                    await it.comp.ui.Icon({
+                      name: "camera",
+                      catalog: "lucide",
+                      classes: "w-3 h-3",
+                    })
                   }}
                   <span>{{ image.photographer.name }}</span>
                 </a>
               {{ else }}
                 <div class="flex items-center gap-1.5">
                   {{
-                    comp.ui.Icon({ name: "camera", catalog: "lucide", classes: "w-3 h-3" })
+                    await it.comp.ui.Icon({
+                      name: "camera",
+                      catalog: "lucide",
+                      classes: "w-3 h-3",
+                    })
                   }}
                   <span>{{ image.photographer.name }}</span>
                 </div>

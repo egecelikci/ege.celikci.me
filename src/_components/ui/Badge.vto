@@ -18,7 +18,9 @@ class="badge-base {{ it.classes }}"
 {{ it.attributes |> attr |> safe }}
 >
 {{ if it.icon }}
-  {{ comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-3 h-3" }) }}
+  {{
+    await it.comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-3 h-3" })
+  }}
 {{ /if }}
 <span>{{ it.content |> safe }}</span>
 </{{ tag }}>

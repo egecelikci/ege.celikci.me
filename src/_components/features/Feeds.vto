@@ -31,7 +31,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6">
       {{ for feed of it.primary_feeds }}
         <a
-          href="{{ site.url }}{{ feed.url }}"
+          href="{{ it.site.url }}{{ feed.url }}"
           class="group flex items-center justify-between no-underline border-b border-border/5 pb-6 not-prose"
         >
           <div class="flex flex-col gap-1">
@@ -79,7 +79,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
             {{ for feed of cat.feeds }}
               <a
-                href="{{ site.url }}{{ feed.url }}"
+                href="{{ it.site.url }}{{ feed.url }}"
                 class="group flex items-center justify-between no-underline border-b border-border/5 pb-4 opacity-60 hover:opacity-100 transition-opacity not-prose"
               >
                 <span
@@ -118,22 +118,26 @@
     </header>
 
     <div class="flex flex-col gap-8">
-      {{ set allTags = search.values("tags") }}
+      {{ set allTags = it.search.values("tags") }}
       {{ if allTags.length > 0 }}
         {{ for tag of allTags |> sort }}
           {{ set slug = tag |> slugify }}
           <div class="flex flex-col gap-3">
             <div class="flex items-center gap-3 mb-2">
               {{
-                comp.ui.Tag({ content: tag, href: "/tags/" + slug + "/", classes: "text-sm" })
+                await it.comp.ui.Tag({
+                  content: tag,
+                  href: "/tags/" + slug + "/",
+                  classes: "text-sm",
+                })
               }}
               <span
                 class="typography-label"
-              >{{ search.pages("'" + tag + "'").length }} entries</span>
+              >{{ it.search.pages("'" + tag + "'").length }} entries</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 pl-4">
               <a
-                href="{{ site.url }}/tags/{{ slug }}.atom"
+                href="{{ it.site.url }}/tags/{{ slug }}.atom"
                 class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose"
               >
                 <span
@@ -144,7 +148,7 @@
                 >.atom</span>
               </a>
               <a
-                href="{{ site.url }}/tags/{{ slug }}.json"
+                href="{{ it.site.url }}/tags/{{ slug }}.json"
                 class="group flex items-center justify-between no-underline border-b border-border/3 pb-2 not-prose"
               >
                 <span
@@ -160,7 +164,7 @@
       {{ else }}
         <div class="pl-4">
           {{
-            comp.ui.EmptyState({
+            await it.comp.ui.EmptyState({
               icon: "tag",
               title: "No topics yet",
               description: "Tags will appear here once you add them to your content.",

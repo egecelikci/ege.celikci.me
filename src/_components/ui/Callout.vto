@@ -34,7 +34,7 @@ Props:
   <!-- deno-fmt-ignore -->
   {{ if it.icon }}
   <div class="shrink-0 mt-0.5 [&>img]:inline-block [&>img]:align-middle">
-    {{ comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-5 h-5" }) }}
+    {{ await it.comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-5 h-5" }) }}
   </div>
   {{ /if }}
 

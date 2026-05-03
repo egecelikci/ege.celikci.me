@@ -11,7 +11,13 @@
 
 {{>
   const isNote = it.entry.type === "note" || it.entry.url.startsWith("/notes/");
-  const vtoContext = { ...it.entry, author, site, comp, theme };
+  const vtoContext = {
+    ...it.entry,
+    author: it.author,
+    site: it.site,
+    comp: it.comp,
+    theme: it.theme,
+  };
   const isCompact = it.compact ?? !isNote;
 
   // 1. Content logic (Now encapsulated in filters/helpers where possible)
@@ -31,11 +37,11 @@
 {{# Handle footer content with await #}}
 {{ set leftContent = "" }}
 {{ if isNote && it.entry.stats }}
-  {{ set leftContent = await comp.ui.NoteStats({ stats: it.entry.stats }) }}
+  {{ set leftContent = await it.comp.ui.NoteStats({ stats: it.entry.stats }) }}
 {{ /if }}
 
 {{
-  comp.ui.ListingItem({
+  await it.comp.ui.ListingItem({
     url: it.entry.url,
     title: displayTitle,
     date: it.entry.date,

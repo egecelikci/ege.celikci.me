@@ -9,7 +9,7 @@
 
 <div
   class="search-container group relative w-full"
-  id="search-root-{{ it.compId || 'main' }}"
+  id="search-root-{{ await it.compId || 'main' }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="relative flex items-center">
@@ -17,12 +17,12 @@
     <div
       class="absolute left-4 flex items-center justify-center pointer-events-none text-text-muted/40 group-focus-within:text-primary transition-all duration-300 z-20"
     >
-      {{ comp.ui.Icon({ name: "search", classes: "w-5 h-5" }) }}
+      {{ await it.comp.ui.Icon({ name: "search", classes: "w-5 h-5" }) }}
     </div>
 
     <input
       type="text"
-      id="site-search-input-{{ it.compId || 'main' }}"
+      id="site-search-input-{{ await it.compId || 'main' }}"
       placeholder="{{ it.placeholder || 'search…' }}"
       class="
         w-full bg-surface/30 dark:bg-surface/10 backdrop-blur-md border border-border/10 rounded-2xl py-4 pl-12 pr-14 text-lg text-text
@@ -35,11 +35,11 @@
     <div class="absolute inset-y-0 right-0 flex items-center pr-4 gap-2 z-20">
       {{# Loading Spinner #}}
       <div
-        id="search-spinner-{{ it.compId || 'main' }}"
+        id="search-spinner-{{ await it.compId || 'main' }}"
         class="hidden items-center justify-center"
       >
         {{
-          comp.ui.Icon({
+          await it.comp.ui.Icon({
             name: "loader-2",
             classes: "w-5 h-5 animate-spin text-primary/60",
           })
@@ -48,18 +48,18 @@
 
       {{# Clear Button #}}
       <button
-        id="search-clear-{{ it.compId || 'main' }}"
+        id="search-clear-{{ await it.compId || 'main' }}"
         class="hidden flex items-center justify-center w-8 h-8 rounded-full bg-text-muted/10 hover:bg-text-muted/20 text-text-muted/80 hover:text-primary transition-all active:scale-90"
         aria-label="Clear search"
       >
-        {{ comp.ui.Icon({ name: "x", classes: "w-4 h-4" }) }}
+        {{ await it.comp.ui.Icon({ name: "x", classes: "w-4 h-4" }) }}
       </button>
     </div>
   </div>
 
   {{# --- 2. THE RESULTS --- #}}
   <div
-    id="search-results-{{ it.compId || 'main' }}"
+    id="search-results-{{ await it.compId || 'main' }}"
     class="mt-6 space-y-4 opacity-0 -translate-y-2 pointer-events-none transition-all duration-300"
   >
   </div>
@@ -91,7 +91,7 @@
   }
 
   // 2. State & Elements
-  const compId = "{{ it.compId || 'main' }}".trim();
+  const compId = "{{ await it.compId || 'main' }}".trim();
   const root = document.getElementById(`search-root-${compId}`);
   const input = document.getElementById(`site-search-input-${compId}`);
   const resultsContainer = document.getElementById(`search-results-${compId}`);
@@ -115,7 +115,7 @@
 
     const search = await pagefind.search(term);
     const results = await Promise.all(
-      search.results.slice(0, 5).map((r) => r.data()),
+      it.search.results.slice(0, 5).map((r) => r.data()),
     );
 
     spinner.classList.add("hidden");

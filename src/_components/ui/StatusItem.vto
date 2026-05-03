@@ -19,7 +19,7 @@
   {{ if it.icon }}
     <div class="shrink-0 flex items-center justify-center w-5 h-5">
       {{
-        comp.ui.Icon({
+        await it.comp.ui.Icon({
           name: it.icon,
           catalog: "lucide",
           classes: "w-4 h-4 transition-all duration-500 " + (it.iconClasses || ""),
@@ -60,7 +60,7 @@
       title="Like on ListenBrainz"
     >
       {{
-        comp.ui.Icon({
+        await it.comp.ui.Icon({
           name: "heart",
           classes: "w-3.5 h-3.5 text-primary transition-all duration-300 fill-none",
         })

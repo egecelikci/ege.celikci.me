@@ -12,7 +12,7 @@
 {{ set backText = it.text }}
 
 {{ if !backHref && it.url }}
-  {{ set parent = nav.menu(it.url)?.parent }}
+  {{ set parent = it.nav.menu(it.url)?.parent }}
   {{ if parent && parent.data.url !== "/" }}
     {{ set backHref = parent.data.url }}
     {{ set backText = parent.data.title || parent.slug }}

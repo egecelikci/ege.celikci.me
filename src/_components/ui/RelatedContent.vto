@@ -11,7 +11,7 @@
   <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
     <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
       {{
-        comp.ui.Icon({
+        await it.comp.ui.Icon({
           name: "book-open",
           catalog: "lucide",
           classes: "w-5 h-5",
@@ -28,7 +28,7 @@
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
           >
             {{
-              comp.ui.Icon({
+              await it.comp.ui.Icon({
                 name: "file-text",
                 catalog: "lucide",
                 classes: "w-4 h-4",
@@ -64,7 +64,7 @@
                   </div>
                 </div>
                 {{
-                  comp.ui.Icon({
+                  await it.comp.ui.Icon({
                     name: "arrow-right",
                     catalog: "lucide",
                     classes:
@@ -84,7 +84,7 @@
             class="text-sm font-bold text-text-muted mb-3 flex items-center gap-2"
           >
             {{
-              comp.ui.Icon({
+              await it.comp.ui.Icon({
                 name: "file",
                 catalog: "lucide",
                 classes: "w-4 h-4",
@@ -111,7 +111,7 @@
                   {{ /if }}
                 </div>
                 {{
-                  comp.ui.Icon({
+                  await it.comp.ui.Icon({
                     name: "arrow-right",
                     catalog: "lucide",
                     classes:

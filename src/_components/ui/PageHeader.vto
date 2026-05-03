@@ -20,10 +20,10 @@
     {{# 1. NAVIGATION / BREADCRUMB #}}
     <div class="mb-8 h-4">
       {{ if it.breadcrumbs }}
-        {{ comp.ui.breadcrumbs({ url: it.url }) }}
+        {{ await it.comp.ui.breadcrumbs({ url: it.url }) }}
       {{ else if it.backlink }}
         {{
-          comp.ui.backlink({
+          await it.comp.ui.backlink({
             href: it.backlink.href,
             text: it.backlink.text,
             url: it.url,
@@ -55,7 +55,9 @@
       >
         {{ for tag of it.metadata.tags }}
           {{ set tagSlug = tag |> slugify }}
-          {{ comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) }}
+          {{
+            await it.comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" })
+          }}
         {{ /for }}
       </div>
     {{ /if }}

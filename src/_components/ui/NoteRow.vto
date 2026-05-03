@@ -6,7 +6,9 @@
     - note: { url: string, date: Date, content: string, title?: string, images?: any[], stats: any }
 #}}
 
-{{ set vtoContext = { ...it.note, author, site, comp } }}
+{{
+  set vtoContext = { ...it.note, author: it.author, site: it.site, comp: it.comp }
+}}
 
 <article
   class="h-entry group relative flex flex-col gap-3 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline w-full"
@@ -36,7 +38,7 @@
 
     {{# Stats Snippet #}}
     <div class="opacity-0 group-hover:opacity-60 transition-opacity">
-      {{ await comp.ui.NoteStats({ stats: it.note.stats }) }}
+      {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
     </div>
   </header>
 
@@ -58,14 +60,14 @@
 
     {{# Hidden Author for IndieWeb (Ignored by Search) #}}
     <div class="p-author h-card hidden" data-pagefind-ignore>
-      <a href="/" class="u-url p-name">{{ author.name }}</a>
+      <a href="/" class="u-url p-name">{{ it.author.name }}</a>
     </div>
   </div>
 
   {{ if it.note.images && it.note.images.length > 0 }}
     <div class="max-w-xl w-full min-w-0 relative z-30">
       {{
-        await comp.ui.Media({
+        await it.comp.ui.Media({
           images: it.note.images,
           static: false,
           postUrl: it.note.url,

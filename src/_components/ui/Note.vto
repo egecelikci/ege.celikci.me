@@ -17,7 +17,9 @@
   - hideHeader: boolean (default: false)
 #}}
 
-{{ set vtoContext = { ...it.note, author, site, comp } }}
+{{
+  set vtoContext = { ...it.note, author: it.author, site: it.site, comp: it.comp }
+}}
 {{ set hasImages = it.note.images && it.note.images.length > 0 }}
 {{ set isListing = it.variant === "listing" }}
 
@@ -28,15 +30,17 @@
   {{ set noteVisuals }}
     {{ if hasImages }}
       {{
-        await comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
+        await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
       }}
     {{ /if }}
   {{ /set }}
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
-  {{ set noteFooterLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
+  {{
+    set noteFooterLeft = await it.comp.ui.NoteStats({ stats: it.note.stats })
+  }}
 
   {{
-    comp.ui.ListingItem({
+    await it.comp.ui.ListingItem({
       url: it.note.url,
       title: it.note.title,
       date: noteDate,
@@ -75,7 +79,7 @@
     {{# Visuals #}}
     {{ if hasImages }}
       {{
-        await comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
+        await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
       }}
     {{ /if }}
 
@@ -93,9 +97,9 @@
     </div>
 
     {{# Footer #}}
-    {{ set footerLeft = await comp.ui.NoteStats({ stats: it.note.stats }) }}
+    {{ set footerLeft = await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
     {{
-      comp.ui.ListingFooter({
+      await it.comp.ui.ListingFooter({
         leftContent: footerLeft,
         text: "note",
       })
