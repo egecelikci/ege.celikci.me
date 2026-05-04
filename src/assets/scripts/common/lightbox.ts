@@ -56,7 +56,7 @@ const downloadMedia = async (src: string) => {
 
 // ─── Main Init ───────────────────────────────────────────────────────────────
 
-let isInitialized = false;
+export let isLightboxInitialized = false;
 
 // Calculate scrollbar width once to prevent layout shift
 const getScrollbarWidth = () => {
@@ -64,8 +64,8 @@ const getScrollbarWidth = () => {
 };
 
 export function initLightbox() {
-  if (isInitialized) return;
-  isInitialized = true;
+  if (isLightboxInitialized) return;
+  isLightboxInitialized = true;
 
   const lightbox = new PhotoSwipeLightbox({
     gallery: "[data-litebox-group], .markdown",
