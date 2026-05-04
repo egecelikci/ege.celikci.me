@@ -4,35 +4,61 @@
   
   Props:
     - post: { url: string, title: string, date: Date, tags?: string[] }
+    - showDate?: boolean (default: true)
 #}}
 
 <a
   href="{{ it.post.url |> url }}"
-  class="group relative flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline pl-4 md:pl-8"
+  class="h-entry group relative flex flex-col gap-3 py-6 border-b border-border/10 last:border-b-0 transition-all hover:bg-surface/2 no-underline w-full"
 >
-  {{# 1. DATE #}}
-  <time
-    class="shrink-0 w-24 md:w-32 text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted group-hover:opacity-100 group-hover:text-primary transition-all"
-  >
-    {{ it.post.date |> date("dd MMM yyyy") }}
-  </time>
+  {{# 1. HEADER (Time/Date + Tags) #}}
+  <header class="flex items-center gap-4 relative z-10">
+    {{ if it.showDate !== false }}
+      <time
+        class="dt-published typography-label text-text-muted group-hover:opacity-100 group-hover:text-primary transition-all"
+      >
+        {{ it.post.date |> date("dd MMM yyyy") }}
+      </time>
+    {{ else }}
+      {{# Type Badge/Icon when date is hidden by timeline header #}}
+      <span
+        class="typography-label text-primary/40 group-hover:text-primary transition-colors flex items-center gap-2"
+      >
+        {{
+          await it.comp.ui.Icon({
+            name: it.post.type === "post" ? "pencil" : "file-text",
+            classes: "w-3 h-3",
+          })
+        }}
+        {{ it.post.type || "entry" }}
+      </span>
+    {{ /if }}
 
-  <h3
-    class="grow text-xl md:text-2xl font-bold tracking-tight text-text group-hover:text-primary transition-colors"
-  >
-    {{ it.post.title }}
-  </h3>
+    {{ if it.post.tags }}
+      <div class="flex gap-3">
+        {{ for tag of it.post.tags |> slice(0, 2) }}
+          <span
+            class="p-category typography-label text-text-muted italic"
+          >#{{ tag }}</span>
+        {{ /for }}
+      </div>
+    {{ /if }}
 
-  {{# TAGS (Desktop Only) #}}
-  {{ if it.post.tags }}
-    <div
-      class="hidden md:flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity"
+    <div class="h-px grow bg-border/5"></div>
+  </header>
+
+  {{# 2. CONTENT #}}
+  <div class="flex flex-col gap-2 relative z-10">
+    <h3
+      class="p-name text-xl md:text-2xl font-bold tracking-tight text-text group-hover:text-primary transition-colors leading-tight"
     >
-      {{ for tag of it.post.tags |> slice(0, 2) }}
-        <span
-          class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted italic"
-        >#{{ tag }}</span>
-      {{ /for }}
-    </div>
-  {{ /if }}
+      {{ it.post.title }}
+    </h3>
+
+    {{ if it.post.description }}
+      <p class="p-summary text-text-muted text-sm md:text-base line-clamp-2">
+        {{ it.post.description }}
+      </p>
+    {{ /if }}
+  </div>
 </a>

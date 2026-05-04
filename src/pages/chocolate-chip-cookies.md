@@ -2,14 +2,20 @@
 title: chocolate chip cookies
 tags: ["recipes", "dessert"]
 templateEngine: [vto, md]
+date: 2025-12-26
 ---
 
-this is the recipe from Burcu Eminoğlu
-
-{{ comp.ui.Video({
+{{
+await comp.ui.Video({
 id: "WsiffU4Ww1o",
-title: "Chocolate Chip Cookies recipe by Burcu Eminoğlu"
-}) }}
+title: "Chocolate Chip Cookies recipe",
+credits: [{
+name: "Burcu Eminoğlu",
+role: "Author",
+url: "https://www.youtube.com/channel/UCFyBxypd4vKjD4gzeykyz1w"
+}]
+})
+}}
 
 ## ingredients
 

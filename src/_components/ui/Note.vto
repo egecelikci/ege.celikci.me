@@ -12,6 +12,7 @@
       images?: Array<{ src: string, alt: string }>
       content: string
       stats: { replies: number, reposts: number, likes: number }
+      syndication?: { bluesky?: string, mastodon?: string }
     }
   - variant: "full" | "listing" (default: "full")
   - hideHeader: boolean (default: false)
@@ -35,9 +36,16 @@
     {{ /if }}
   {{ /set }}
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
-  {{
-    set noteFooterLeft = await it.comp.ui.NoteStats({ stats: it.note.stats })
-  }}
+  {{# footerLeft with stats + syndication #}}
+  {{ set noteFooterLeft }}
+    <div class="flex items-center gap-6">
+      {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
+      {{ if it.note.syndication }}
+        <div class="h-3 w-px bg-border/20"></div>
+        {{ await it.comp.ui.Syndication({ syndication: it.note.syndication }) }}
+      {{ /if }}
+    </div>
+  {{ /set }}
 
   {{
     await it.comp.ui.ListingItem({
@@ -97,7 +105,19 @@
     </div>
 
     {{# Footer #}}
-    {{ set footerLeft = await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
+    {{# footerLeft with stats + syndication #}}
+    {{ set footerLeft }}
+      <div class="flex items-center gap-6">
+        {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
+        {{ if it.note.syndication }}
+          <div class="h-3 w-px bg-border/20"></div>
+          {{
+            await it.comp.ui.Syndication({ syndication: it.note.syndication })
+          }}
+        {{ /if }}
+      </div>
+    {{ /set }}
+
     {{
       await it.comp.ui.ListingFooter({
         leftContent: footerLeft,

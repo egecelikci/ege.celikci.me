@@ -3,7 +3,16 @@
   A lean, high-density variant for the notes timeline.
 
   Props:
-    - note: { url: string, date: Date, content: string, title?: string, images?: any[], stats: any }
+    - note: { 
+        url: string, 
+        date: Date, 
+        content: string, 
+        title?: string, 
+        tags?: string[], 
+        images?: any[], 
+        stats: any,
+        syndication?: { bluesky?: string, mastodon?: string }
+      }
 #}}
 
 {{
@@ -36,9 +45,16 @@
 
     <div class="h-px grow bg-border/5"></div>
 
-    {{# Stats Snippet #}}
-    <div class="opacity-0 group-hover:opacity-60 transition-opacity">
+    {{# Stats + Syndication Snippet #}}
+    <div
+      class="opacity-0 group-hover:opacity-80 transition-opacity flex items-center gap-6"
+    >
       {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
+
+      {{ if it.note.syndication }}
+        <div class="h-3 w-px bg-border/20"></div>
+        {{ await it.comp.ui.Syndication({ syndication: it.note.syndication }) }}
+      {{ /if }}
     </div>
   </header>
 

@@ -9,16 +9,8 @@
 <div class="flex flex-col gap-12">
   {{# 1. ENTRIES #}}
   {{ if matchingEntries.length > 0 }}
-    <div class="flex flex-col gap-2">
-      {{ for item of matchingEntries }}
-        <div class="not-prose">
-          {{ if item.type === "note" }}
-            {{ await it.comp.ui.Note({ note: item, variant: "listing" }) }}
-          {{ else }}
-            {{ await it.comp.ui.EntryCard({ entry: item }) }}
-          {{ /if }}
-        </div>
-      {{ /for }}
+    <div class="not-prose">
+      {{ await it.comp.ui.EntryTimeline({ entries: matchingEntries }) }}
     </div>
   {{ else }}
     {{

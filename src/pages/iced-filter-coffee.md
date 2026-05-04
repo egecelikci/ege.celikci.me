@@ -2,14 +2,22 @@
 title: iced filter coffee
 tags: ["recipes", "coffee"]
 templateEngine: [vto, md]
+date: 2025-11-23
 ---
 
 this is the recipe from James Hoffmann
 
-{{ await comp.ui.Video({
+{{
+await comp.ui.Video({
 id: "PApBycDrPo0",
-title: "How to Make Iced Filter Coffee by James Hoffmann"
-}) }}
+title: "How to Make Iced Filter Coffee",
+credits: [{
+name: "James Hoffmann",
+role: "Author",
+url: "https://www.youtube.com/channel/UCMb0O2CdPBNi-QqPk5T3gsQ"
+}]
+})
+}}
 
 ## ingredients
 

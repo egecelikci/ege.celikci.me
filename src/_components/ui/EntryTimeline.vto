@@ -1,0 +1,56 @@
+{{#
+  Component: EntryTimeline
+  Groups entries by date and renders them with a timeline spine.
+  Provides a unified, robust solution for date-based listings.
+  
+  Props:
+    - entries: Page[] (required)
+#}}
+
+{{ if it.entries && it.entries.length > 0 }}
+  {{>
+    const grouped = Object.groupBy(
+      it.entries,
+      (item) =>
+        item.date.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+    );
+    const dateKeys = Object.keys(grouped)
+  }}
+
+  <div class="h-feed flex flex-col gap-20">
+    {{ for dateKey of dateKeys }}
+      <section class="flex flex-col gap-4">
+        {{# Date Marker #}}
+        <div class="flex items-center gap-4">
+          <div
+            class="shrink-0 w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/5"
+          >
+          </div>
+          <h2
+            class="typography-label text-text-muted font-normal"
+          >
+            {{ dateKey }}
+          </h2>
+          <div class="h-px grow bg-border/5"></div>
+        </div>
+
+        {{# Timeline Wrapper #}}
+        {{ set timelineContent }}
+          <div class="flex flex-col">
+            {{ for item of grouped[dateKey] }}
+              {{ await comp.ui.EntryRow({ entry: item, showDate: false }) }}
+            {{ /for }}
+          </div>
+        {{ /set }}
+
+        {{
+          await comp.ui.Timeline({ content: timelineContent, classes: "ml-1" })
+        }}
+      </section>
+    {{ /for }}
+  </div>
+{{ /if }}
