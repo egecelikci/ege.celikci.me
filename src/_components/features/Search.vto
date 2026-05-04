@@ -7,9 +7,11 @@
     - placeholder: string (default: "search")
 #}}
 
+{{ set id = it.compId || "main" }}
+
 <div
   class="search-container group relative w-full"
-  id="search-root-{{ await it.compId || 'main' }}"
+  id="search-root-{{ id }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="relative flex items-center">
@@ -22,7 +24,7 @@
 
     <input
       type="text"
-      id="site-search-input-{{ await it.compId || 'main' }}"
+      id="site-search-input-{{ id }}"
       placeholder="{{ it.placeholder || 'search…' }}"
       class="
         w-full bg-surface/30 dark:bg-surface/10 backdrop-blur-md border border-border/10 rounded-2xl py-4 pl-12 pr-14 text-lg text-text
@@ -35,7 +37,7 @@
     <div class="absolute inset-y-0 right-0 flex items-center pr-4 gap-2 z-20">
       {{# Loading Spinner #}}
       <div
-        id="search-spinner-{{ await it.compId || 'main' }}"
+        id="search-spinner-{{ id }}"
         class="hidden items-center justify-center"
       >
         {{
@@ -48,7 +50,7 @@
 
       {{# Clear Button #}}
       <button
-        id="search-clear-{{ await it.compId || 'main' }}"
+        id="search-clear-{{ id }}"
         class="hidden flex items-center justify-center w-8 h-8 rounded-full bg-text-muted/10 hover:bg-text-muted/20 text-text-muted/80 hover:text-primary transition-all active:scale-90"
         aria-label="Clear search"
       >
@@ -59,7 +61,7 @@
 
   {{# --- 2. THE RESULTS --- #}}
   <div
-    id="search-results-{{ await it.compId || 'main' }}"
+    id="search-results-{{ id }}"
     class="mt-6 space-y-4 opacity-0 -translate-y-2 pointer-events-none transition-all duration-300"
   >
   </div>
@@ -68,7 +70,7 @@
 <style>
   /* Styling Pagefind highlights */
   .search-result-item mark {
-    background-color: #fde047; /* Yellow highlight like screenshot */
+    background-color: #fde047; /* Yellow highlight */
     color: #000;
     padding: 0 2px;
     border-radius: 2px;
@@ -84,14 +86,15 @@
     if (pagefind) return;
     try {
       pagefind = await import(pagefindPath);
-      await pagefind.init();
+      // Suppress deprecation warning by passing an empty config object
+      await pagefind.init({});
     } catch (e) {
       console.error("Pagefind failed to load:", e);
     }
   }
 
   // 2. State & Elements
-  const compId = "{{ await it.compId || 'main' }}".trim();
+  const compId = "{{ id }}";
   const root = document.getElementById(`search-root-${compId}`);
   const input = document.getElementById(`site-search-input-${compId}`);
   const resultsContainer = document.getElementById(`search-results-${compId}`);
@@ -113,9 +116,17 @@
     clearBtn.classList.add("hidden");
     spinner.classList.remove("hidden");
 
-    const search = await pagefind.search(term);
+    // Preload while typing to speed up the actual search
+    pagefind.preload(term);
+
+    // Use debouncedSearch for state-of-the-art performance
+    const search = await pagefind.debouncedSearch(term, {}, 150);
+
+    // If search is null, a more recent search has been triggered
+    if (search === null) return;
+
     const results = await Promise.all(
-      it.search.results.slice(0, 5).map((r) => r.data()),
+      search.results.slice(0, 5).map((r) => r.data()),
     );
 
     spinner.classList.add("hidden");
@@ -151,9 +162,16 @@
                   hover:bg-surface/60 hover:border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/20"
            data-index="${index}">
           <div class="flex flex-col gap-3">
-            <h3 class="text-xl md:text-2xl font-bold text-primary-offset/90 group-hover:text-primary transition-colors m-0 tracking-tight">
-              ${item.meta.title || "Untitled"}
-            </h3>
+            <div class="flex justify-between items-baseline gap-4">
+              <h3 class="text-xl md:text-2xl font-bold text-primary-offset/90 group-hover:text-primary transition-colors m-0 tracking-tight">
+                ${item.meta.title || "Untitled"}
+              </h3>
+              ${
+          item.meta.date
+            ? `<time class="typography-label text-[10px] text-text-muted/50">${item.meta.date}</time>`
+            : ""
+        }
+            </div>
             <p class="text-xs md:text-sm text-text-muted leading-relaxed m-0 font-mono italic line-clamp-2">
               ${item.excerpt || ""}
             </p>
@@ -172,10 +190,8 @@
   }
 
   // 4. Events
-  let timeout = null;
   input.addEventListener("input", (e) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => handleSearch(e.target.value), 200);
+    handleSearch(e.target.value);
   });
 
   clearBtn.addEventListener("click", clearSearch);
