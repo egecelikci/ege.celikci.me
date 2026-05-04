@@ -211,12 +211,22 @@ async function getMusicData() {
 
   const processed = results.filter((a): a is ProcessedAlbum => !!a);
 
-  processed.sort((a, b) =>
-    new Date(b.ratedAt || 0).getTime() - new Date(a.ratedAt || 0).getTime()
-  );
+  processed.sort((a, b) => {
+    const dateA = new Date(a.ratedAt || 0).getTime();
+    const dateB = new Date(b.ratedAt || 0).getTime();
+    if (dateA !== dateB) return dateB - dateA;
+    return a.id.localeCompare(b.id); // Stable tie-breaker
+  });
 
-  await cache.save({ albums: processed });
-  console.log(`[music] ✅ Synced ${processed.length} albums.`);
+  const hasChanged = JSON.stringify(cache.sortObjectKeys(processed)) !==
+    JSON.stringify(cache.sortObjectKeys(cachedData.albums));
+
+  if (hasChanged) {
+    await cache.save({ albums: processed });
+    console.log(`[music] ✅ Synced ${processed.length} albums.`);
+  } else {
+    console.log("[music] ℹ️ No changes detected, skipping save.");
+  }
   return { albums: processed };
 }
 
