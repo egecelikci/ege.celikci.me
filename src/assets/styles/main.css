@@ -638,7 +638,6 @@
   @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest border shadow-sm;
 }
 
-/* Additional typography refinements */
 .markdown > p {
   @apply my-0;
 }
@@ -650,4 +649,8 @@
 }
 .markdown li > code, .markdown a:not(.btn, .heading-anchor) > code {
   @apply bg-transparent border-0 px-0 py-0 shadow-none;
+}
+
+@view-transition {
+  navigation: auto;
 }
