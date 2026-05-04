@@ -361,16 +361,30 @@ async function syncEvents() {
       if (data) entities[id] = data;
     }
 
-    const finalData: RawIzmirEvents = {
-      events,
+    const newData = {
+      events: events.sort((a, b) => a.id.localeCompare(b.id)),
       entities,
-      fetchedAt: now.toISOString(),
     };
 
-    await cache.save(finalData);
-    console.log(
-      `[mb_events] ✅ Synced ${events.length} raw events.`,
-    );
+    // Deep compare core data (excluding fetchedAt) to avoid unnecessary writes
+    // CacheManager.save will handle key sorting for the final file
+    const hasChanged = JSON.stringify(cache.sortObjectKeys(newData)) !==
+      JSON.stringify(
+        cache.sortObjectKeys({
+          events: cachedData.events,
+          entities: cachedData.entities,
+        }),
+      );
+
+    if (hasChanged) {
+      await cache.save({
+        ...newData,
+        fetchedAt: now.toISOString(),
+      });
+      console.log(`[mb_events] ✅ Synced ${events.length} raw events.`);
+    } else {
+      console.log("[mb_events] ℹ️ No changes detected, skipping save.");
+    }
   } catch (err) {
     console.error("[mb_events] ❌ Sync failed, using existing cache:", err);
   }

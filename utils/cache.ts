@@ -81,10 +81,10 @@ export class CacheManager<T> {
       );
       await ensureDir(dir);
 
-      // Write to file
+      // Write to file with sorted keys for stability
       await Deno.writeTextFile(
         this.options.filePath,
-        JSON.stringify(data, null, 2),
+        JSON.stringify(this.sortObjectKeys(data), null, 2),
       );
 
       this.data = data;
@@ -92,6 +92,25 @@ export class CacheManager<T> {
     } catch (error) {
       this.log("error", `Failed to save cache: ${(error as Error).message}`);
     }
+  }
+
+  /**
+   * Recursively sort object keys for stable JSON output
+   */
+  public sortObjectKeys(obj: any): any {
+    if (obj === null || typeof obj !== "object" || Array.isArray(obj)) {
+      if (Array.isArray(obj)) {
+        return obj.map((item) => this.sortObjectKeys(item));
+      }
+      return obj;
+    }
+
+    const sortedKeys = Object.keys(obj).sort();
+    const sortedObj: any = {};
+    for (const key of sortedKeys) {
+      sortedObj[key] = this.sortObjectKeys(obj[key]);
+    }
+    return sortedObj;
   }
 
   /**
