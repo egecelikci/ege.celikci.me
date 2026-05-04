@@ -299,17 +299,17 @@ layout: layouts/page.vto
 
                 {{# 2. Navigation UI #}}
                 <div
-                  class="absolute bottom-4 right-4 flex flex-col items-end group/nav z-[1000] pointer-events-none"
+                  class="absolute bottom-4 right-4 flex flex-col items-end group/nav z-[1010] pointer-events-none"
                 >
                   {{# THE POPUP MENU #}}
                   <div
-                    class="mb-3 w-44 bg-black/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
+                    class="mb-3 w-44 bg-surface/95 backdrop-blur-xl border border-border/20 rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
                     role="menu"
                   >
                     {{# Option 1: Native #}}
                     <a
                       href='geo:{{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}({{ (venueRel["target-credit"] || venueRel.place.name) |> encodeURIComponent }})'
-                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline border-b border-white/5"
+                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline border-b border-border/5"
                       role="menuitem"
                     >
                       {{
@@ -326,7 +326,7 @@ layout: layouts/page.vto
                     <a
                       href="https://www.openstreetmap.org/?mlat={{ venueRel.place.coordinates.latitude }}&mlon={{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
-                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline border-b border-white/5"
+                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline border-b border-border/5"
                       role="menuitem"
                     >
                       {{
@@ -339,7 +339,7 @@ layout: layouts/page.vto
                     <a
                       href="https://maps.google.com/maps?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
-                      class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-all no-underline"
+                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline"
                       role="menuitem"
                     >
                       {{
@@ -355,7 +355,7 @@ layout: layouts/page.vto
 
                   {{# THE TRIGGER BUTTON #}}
                   <button
-                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-black text-white border border-white/10 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
+                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-bg/90 backdrop-blur-md text-text border border-border/20 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto group-hover/nav:border-primary/40 group-hover/nav:text-primary"
                     aria-label="Get directions to {{ event.venueName }}"
                     aria-haspopup="true"
                   >
