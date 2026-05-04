@@ -47,10 +47,10 @@
   --color-bg: #fef6e4;
   --color-surface: #f3e1d8;
   --color-text: #172c66;
-  --color-text-muted: #005a70;
+  --color-text-muted: #5b6a9a;
   --color-border: #f3d2c1;
   --color-primary: #a60c49;
-  --color-primary-offset: #ff3d6a;
+  --color-primary-offset: #8a0a3d;
   --color-secondary: #65cafe;
   --color-mastodon: #595aff;
   --color-bluesky: #3471f6;
@@ -198,12 +198,12 @@
   :root:not(.theme-light) {
     color-scheme: dark;
     --color-bg: #463366;
-    --color-surface: #5c3c4c;
+    --color-surface: #544474;
     --color-text: #c9bae2;
-    --color-text-muted: #cbcdf1;
-    --color-border: #cabae2;
+    --color-text-muted: #9d8ec2;
+    --color-border: #5e4d7a;
     --color-primary: #ff6e6c;
-    --color-primary-offset: #72a194;
+    --color-primary-offset: #ef5a58;
     --color-secondary: #abd1c6;
 
     /* Album mono dark overrides */
@@ -217,12 +217,12 @@
 :root.theme-dark {
   color-scheme: dark;
   --color-bg: #463366;
-  --color-surface: #5c3c4c;
+  --color-surface: #544474;
   --color-text: #c9bae2;
-  --color-text-muted: #cbcdf1;
-  --color-border: #cabae2;
+  --color-text-muted: #9d8ec2;
+  --color-border: #5e4d7a;
   --color-primary: #ff6e6c;
-  --color-primary-offset: #72a194;
+  --color-primary-offset: #ef5a58;
   --color-secondary: #abd1c6;
 
   /* Album mono dark overrides */
@@ -412,7 +412,24 @@
   }
 
   .venue-map:hover .leaflet-tile-pane {
-    @apply grayscale-0 contrast-100 brightness-100;
+    @apply opacity-100;
+  }
+
+  /* LEAFLET ATTRIBUTION OVERRIDES */
+  .leaflet-control-attribution {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
+    @apply !typography-sublabel !text-text-muted/80 !transition-opacity !duration-500;
+    @apply !mt-4 !mr-4; /* Proper breathing room in top-right */
+  }
+
+  .leaflet-control-attribution:hover {
+    @apply !text-text-muted/80 !opacity-100;
+  }
+
+  .leaflet-control-attribution a {
+    @apply !text-inherit hover:!text-primary !transition-colors;
   }
 }
 

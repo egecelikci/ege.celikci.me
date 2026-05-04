@@ -26,11 +26,19 @@ export function initVenueMaps() {
         attributionControl: false,
       });
 
-      // Dark-mode friendly tiles
+      // Customized Attribution (Moved to top-right to avoid any collision with bottom controls)
+      L.control.attribution({
+        position: "topright",
+        prefix: false,
+      }).addTo(map);
+
+      // CARTO Voyager (Clean, elegant tiles with subtle colors)
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
         {
           maxZoom: 19,
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
         },
       ).addTo(map);
 
