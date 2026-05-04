@@ -3,8 +3,10 @@
   A container for content with consistent styling.
 #}}
 {{- set tag = it.href ? "a" : "div" -}}
-<{{ tag }} {{ if it.href }}href="{{ it.href }}"{{ /if }} class="rounded-xl
-border border-border bg-surface/30 transition-all {{ it.classes }}" {{
+<!-- deno-fmt-ignore -->
+<{{ tag }}{{ if it.href }}
+  href="{{ it.href }}"{{ /if }} class="rounded-xl border border-border
+bg-surface/30 transition-all {{ it.classes || "" }}"{{
   it.attributes
   |> attr
   |> safe

@@ -1,0 +1,24 @@
+{{#
+  Component: EntryRow
+  A unified, high-density row for any entry type (Note, Post, Recipe, etc.)
+  Used in archive listings (tags, blog, notes) to ensure visual consistency.
+  
+  Props:
+    - entry: page object (required)
+    - showDate?: boolean (default: true)
+#}}
+
+{{ if it.entry.type === "note" }}
+  {{
+    await it.comp.ui.NoteRow({ note: it.entry, showDate: it.showDate ?? true })
+  }}
+{{ else if it.entry.type === "post" }}
+  {{
+    await it.comp.ui.PostRow({ post: it.entry, showDate: it.showDate ?? true })
+  }}
+{{ else }}
+  {{# Fallback for other types like recipes, bookmarks etc. #}}
+  {{
+    await it.comp.ui.PostRow({ post: it.entry, showDate: it.showDate ?? true })
+  }}
+{{ /if }}

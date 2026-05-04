@@ -34,38 +34,32 @@
 <!-- deno-fmt-ignore -->
 {{- set cardContent -}}
 <div class="relative w-full aspect-video flex flex-col items-center justify-center text-center gap-4 cursor-pointer group" data-embed="{{ iframe |> escape }}" onclick="this.innerHTML = this.dataset.embed">
-  <div class="font-bold text-lg text-text group-hover:text-primary transition-colors px-4">
-    {{ safeTitle }}
-  </div>
+  <div class="font-bold text-lg text-text group-hover:text-primary transition-colors px-4">{{ safeTitle }}</div>
   <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-border text-text-muted group-hover:text-primary group-hover:border-primary/50 transition-colors">
   {{ await it.comp.ui.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) }}
   <span class="text-sm font-medium">Click to load video from {{ providerName }}</span>
   </div>
 </div>
-
-{{# VIDEO CREDITS #}}
-{{ if credits?.length > 0 }}
+{{- if credits?.length > 0 -}}
   <div class="px-6 py-4 bg-surface/40 border-t border-border/10 flex flex-wrap gap-x-6 gap-y-2">
-    {{ for credit of credits }}
+    {{- for credit of credits -}}
       <div class="flex items-center gap-1.5">
         <span class="typography-label text-text-muted">{{ credit.role }}</span>
-        {{ if credit.url }}
-          <a href="{{ credit.url }}" target="_blank" class="text-xs font-bold hover:text-primary transition-colors">
-            {{ credit.name }}
-          </a>
-        {{ else }}
+        {{- if credit.url -}}
+          <a href="{{ credit.url }}" target="_blank" class="text-xs font-bold hover:text-primary transition-colors">{{ credit.name }}</a>
+        {{- else -}}
           <span class="text-xs font-bold">{{ credit.name }}</span>
-        {{ /if }}
+        {{- /if -}}
       </div>
-    {{ /for }}
+    {{- /for -}}
   </div>
-{{ /if }}
+{{- /if -}}
 {{- /set -}}
 
 {{-
   await it.comp.ui.Card({
-    classes: "my-6 p-0 overflow-hidden " + (classes || ""),
-    attributes: attributes,
+    classes: "my-6 p-0 overflow-hidden " + (it.classes || ""),
+    attributes: it.attributes,
     content: cardContent,
   })
 -}}
