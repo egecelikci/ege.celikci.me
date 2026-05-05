@@ -46,17 +46,17 @@
       {{ /if }}
     {{ else }}
       <div
-        class="absolute inset-0 flex flex-col items-center justify-center text-text-muted/20"
+        class="absolute inset-0 flex flex-col items-center justify-center text-text-muted"
       >
         {{
           await it.comp.ui.Icon({
             name: "file-not-found",
             catalog: "iconoir",
-            classes: "w-12 h-12 opacity-50",
+            classes: "w-20 h-20",
           })
         }}
         <span
-          class="typography-label text-text-muted mt-2"
+          class="typography-label text-text font-bold mt-4"
         >No Poster</span>
       </div>
     {{ /if }}
