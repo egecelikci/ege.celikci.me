@@ -5,6 +5,7 @@
 
 import type { Page, Site } from "lume/core.ts";
 import { site as settings } from "../../_config/metadata.ts";
+import { filters } from "../filters.ts";
 
 function normalizeUrl(url: string) {
   if (!url) return "";
@@ -28,7 +29,8 @@ export default function () {
 
           const relevantMentions = webmentions.children.filter(
             (entry: any) =>
-              normalizeUrl(entry["wm-target"] || "") === absPageUrl,
+              normalizeUrl(entry["wm-target"] || "") === absPageUrl &&
+              !filters.isOwnWebmention(entry),
           );
 
           stats.likes = relevantMentions.filter((m: any) =>
