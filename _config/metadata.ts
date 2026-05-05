@@ -30,6 +30,10 @@ export const author = {
       name: "@eg@ieji.de",
       url: "https://ieji.de/@eg",
     },
+    bluesky: {
+      name: "@ege.celikci.me",
+      url: "https://bsky.app/profile/did:plc:ecyojzioziuposnh6utazpu6",
+    },
     signal: {
       url: SIGNAL_URL,
     },
