@@ -1,8 +1,15 @@
 import * as path from "@std/path";
 import sanitizeHTML from "sanitize-html";
-import { site as siteData } from "../_config/metadata.ts";
+import authorData from "../src/_data/author.ts";
+import siteData from "../src/_data/site.ts";
 
 const SITE_URL = siteData.url;
+const OWN_URLS = [
+  SITE_URL,
+  authorData.social.mastodon.url,
+  authorData.social.bluesky.url,
+  ...authorData.links.map((l) => l.url),
+].map((u) => u.replace(/\/+$/, ""));
 
 export interface NoteGridData {
   hasImage: boolean;
@@ -69,6 +76,8 @@ interface Webmention {
   "wm-target"?: string;
   "wm-property"?: string;
   "wm-source"?: string;
+  url?: string | string[];
+  photo?: string | string[];
   [key: string]: unknown;
 }
 
@@ -203,16 +212,16 @@ export const filters = {
   },
 
   isOwnWebmention: function (webmention: Webmention): boolean {
-    const urls = [SITE_URL];
     const authorUrl = webmention && webmention.author
-      ? webmention.author.url
+      ? webmention.author.url?.replace(/\/+$/, "")
       : undefined;
-    return !!(authorUrl && urls.includes(authorUrl));
+    return !!(authorUrl && OWN_URLS.includes(authorUrl));
   },
 
   webmentionsByUrl: function (
     webmentions: Webmention[] | undefined,
     url: string,
+    syndication?: Record<string, string>,
   ): Webmention[] {
     if (!webmentions) return [];
     const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
@@ -226,6 +235,10 @@ export const filters = {
       },
     };
 
+    const syndicationUrls = syndication
+      ? Object.values(syndication).map(cleanUrl)
+      : [];
+
     const orderByDate = (a: Webmention, b: Webmention) =>
       new Date(a.published || a["wm-received"] || "").getTime() -
       new Date(b.published || b["wm-received"] || "").getTime();
@@ -233,6 +246,15 @@ export const filters = {
     const checkRequiredFields = (entry: Webmention) => {
       const { author } = entry;
       return !!author && !!author.name;
+    };
+
+    const isSyndicated = (entry: Webmention) => {
+      const source = cleanUrl(entry["wm-source"] || "");
+      const entryUrl = Array.isArray(entry.url)
+        ? (entry.url[0] || "")
+        : (entry.url || "");
+      const url = cleanUrl(entryUrl);
+      return syndicationUrls.includes(source) || syndicationUrls.includes(url);
     };
 
     const clean = (entry: Webmention) => {
@@ -260,6 +282,8 @@ export const filters = {
     return webmentions
       .filter((entry) => cleanUrl(entry["wm-target"] || "") === targetUrl)
       .filter((entry) => allowedTypes.includes(entry["wm-property"] || ""))
+      .filter((entry) => !isSyndicated(entry))
+      .filter((entry) => !filters.isOwnWebmention(entry))
       .filter(checkRequiredFields)
       .map(clean)
       .sort(orderByDate);
@@ -319,7 +343,8 @@ export const filters = {
     return String(
       webmentions
         .filter(isUrlMatch)
-        .filter((entry) => types.includes(entry["wm-property"] || "")).length,
+        .filter((entry) => types.includes(entry["wm-property"] || ""))
+        .filter((entry) => !filters.isOwnWebmention(entry)).length,
     );
   },
 };
