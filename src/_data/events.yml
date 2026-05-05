@@ -16,6 +16,10 @@
   instagram_url: "https://www.instagram.com/p/DXFDUfgCCv9/"
   price: "250₺"
   exclude_labels: ["2bfa1d83-63e4-433b-9b9a-17ef5dcc8964"]
+  photographers:
+    efekaraboga:
+      name: "Efe Karaboğa"
+      url: "https://www.instagram.com/personwitha_camera/"
 
 958b7ebf-163c-4d1b-a9bc-de394a2880be:
   instagram_url: "https://www.instagram.com/p/DLKbGG6ISA6/"
