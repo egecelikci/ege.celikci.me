@@ -147,7 +147,10 @@ layout: layouts/base.vto
         </h3>
         {{ set mentionsData = [] }}
         {{ if webmentions }}
-          {{ set mentionsData = webmentions.children |> webmentionsByUrl(url) }}
+          {{
+            set mentionsData = webmentions.children
+            |> webmentionsByUrl(url, syndication)
+          }}
         {{ /if }}
         {{ comp.ui.Webmentions({ mentions: mentionsData }) }}
       </div>
