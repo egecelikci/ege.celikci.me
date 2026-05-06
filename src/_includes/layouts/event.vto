@@ -40,37 +40,24 @@ layout: layouts/page.vto
           <div class="flex flex-wrap gap-x-8 gap-y-3">
             {{ for labelRel of event.labels }}
               <div
-                class="text-base font-bold text-text/80 inline"
+                class="text-base font-bold text-text/80 inline-flex items-center"
               >
                 <span
                   class="typography-label text-text-muted mr-2 inline-block translate-y-[-1px]"
                 >Presented by</span>
 
-                {{ if labelRel.label.externalLinks?.instagram }}
-                  <a
-                    href="{{ labelRel.label.externalLinks.instagram }}"
-                    target="_blank"
-                    class="inline group/label no-underline"
-                  >
-                    <span
-                      class="group-hover/label:text-primary transition-colors"
-                    >{{
-                      labelRel["target-credit"] || labelRel.label.name
-                    }}</span><span
-                      class="ml-1 text-primary/20 group-hover/label:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
-                    >
-                      {{
-                        comp.ui.Icon({
-                          name: "instagram",
-                          catalog: "simpleicons",
-                          classes: "w-[12px] h-[12px]",
-                        })
-                      }}
-                    </span>
-                  </a>
-                {{ else }}
-                  {{ labelRel["target-credit"] || labelRel.label.name }}
-                {{ /if }}
+                <span class="inline-block">{{
+                  labelRel["target-credit"] || labelRel.label.name
+                }}</span>
+
+                <div class="ml-1.5 inline-block">
+                  {{
+                    comp.ui.ExternalLinks({
+                      links: labelRel.label.externalLinks,
+                      showFallbacks: false,
+                    })
+                  }}
+                </div>
               </div>
             {{ /for }}
           </div>
@@ -149,33 +136,20 @@ layout: layouts/page.vto
               {{ for rel of artistRels }}
                 <li class="flex flex-col gap-1">
                   <div
-                    class="text-xl md:text-2xl font-bold text-text leading-tight"
+                    class="text-xl md:text-2xl font-bold text-text leading-tight flex items-center"
                   >
-                    {{ if rel.artist.externalLinks?.instagram }}
-                      <a
-                        href="{{ rel.artist.externalLinks.instagram }}"
-                        target="_blank"
-                        class="inline group/artist no-underline"
-                      >
-                        <span class="hover:text-primary transition-colors">{{
-                          rel["target-credit"] || rel.artist.name
-                        }}</span><span
-                          class="ml-1 text-primary/20 group-hover/artist:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
-                        >
-                          {{
-                            comp.ui.Icon({
-                              name: "instagram",
-                              catalog: "simpleicons",
-                              classes: "w-[12px] h-[12px]",
-                            })
-                          }}
-                        </span>
-                      </a>
-                    {{ else }}
-                      <span class="inline">{{
-                        rel["target-credit"] || rel.artist.name
-                      }}</span>
-                    {{ /if }}
+                    <span class="inline-block">{{
+                      rel["target-credit"] || rel.artist.name
+                    }}</span>
+
+                    <div class="ml-2 inline-block">
+                      {{
+                        comp.ui.ExternalLinks({
+                          links: rel.artist.externalLinks,
+                          showFallbacks: false,
+                        })
+                      }}
+                    </div>
                   </div>
                   <span
                     class="typography-label font-normal text-text-muted"
@@ -238,32 +212,17 @@ layout: layouts/page.vto
         {{ if venueRel }}
           <div class="space-y-8">
             <div class="flex flex-col gap-2">
-              <div class="text-xl font-bold text-text">
-                {{ if venueRel.place.externalLinks?.instagram }}
-                  <a
-                    href="{{ venueRel.place.externalLinks.instagram }}"
-                    target="_blank"
-                    class="inline group/venue no-underline"
-                  >
-                    <span
-                      class="group-hover/venue:text-primary transition-colors"
-                    >{{ event.venueName }}</span><span
-                      class="ml-2 text-primary/20 group-hover/venue:text-primary transition-colors inline-block align-middle translate-y-[-1px]"
-                    >
-                      {{
-                        comp.ui.Icon({
-                          name: "instagram",
-                          catalog: "simpleicons",
-                          classes: "w-[12px] h-[12px]",
-                        })
-                      }}
-                    </span>
-                  </a>
-                {{ else }}
-                  <p class="inline">
-                    {{ event.venueName }}
-                  </p>
-                {{ /if }}
+              <div class="text-xl font-bold text-text flex items-center">
+                <span class="inline-block">{{ event.venueName }}</span>
+
+                <div class="ml-2 inline-block">
+                  {{
+                    comp.ui.ExternalLinks({
+                      links: venueRel.place.externalLinks,
+                      showFallbacks: false,
+                    })
+                  }}
+                </div>
               </div>
               {{ if venueRel.place.address }}
                 <p
@@ -380,63 +339,84 @@ layout: layouts/page.vto
 
       {{# ACTIONS & LINKS #}}
       <div class="flex flex-col gap-4">
-        {{ if event.local?.tickets_url }}
-          <a
-            href="{{ event.local.tickets_url }}"
-            target="_blank"
-            class="btn-primary w-full justify-center shadow-xl shadow-primary/10"
-          >
-            {{
-              comp.ui.Icon({ name: "ticket", catalog: "lucide", classes: "w-4 h-4" })
-            }}
-            Get Tickets
-          </a>
-        {{ /if }}
-
-        {{# URL RELATIONS (Ticket links, streams, etc. from MB) #}}
+        {{# URL RELATIONS (Ticket links, streams, homepages etc. from MB) #}}
         {{
           set urlRels = (event.relations || []).filter((r) =>
             r["target-type"] === "url" &&
             !r.url.resource.includes("instagram.com")
           )
         }}
-        {{ if urlRels.length > 0 || event.local?.instagram_url }}
-          <div class="flex flex-col gap-2">
-            {{# Local Instagram URLs #}}
-            {{ if event.local?.instagram_url }}
-              {{>
-                const igUrls = Array.isArray(event.local.instagram_url)
-                ? event.local.instagram_url
-                : [event.local.instagram_url]
-              }}
-              {{ for index, url of igUrls }}
-                <a
-                  href="{{ url }}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn-minimal justify-center"
-                >
-                  {{ if igUrls.length > 1 }}
-                    Instagram Post #{{ index + 1 }}
-                  {{ else }}
-                    Instagram Post
-                  {{ /if }}
-                </a>
-              {{ /for }}
-            {{ /if }}
 
-            {{ for rel of urlRels }}
+        <div class="flex flex-col gap-2">
+          {{# TICKETS (Manual Priority) #}}
+          {{ if event.local?.tickets_url }}
+            <a
+              href="{{ event.local.tickets_url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-minimal justify-center"
+            >
+              {{
+                comp.ui.Icon({
+                  name: "ticket",
+                  catalog: "lucide",
+                  classes: "w-4 h-4",
+                })
+              }}
+              Tickets
+            </a>
+          {{ /if }}
+
+          {{# Local Instagram URLs #}}
+          {{ if event.local?.instagram_url }}
+            {{>
+              const igUrls = Array.isArray(event.local.instagram_url)
+              ? event.local.instagram_url
+              : [event.local.instagram_url]
+            }}
+            {{ for index, url of igUrls }}
               <a
-                href="{{ rel.url.resource }}"
+                href="{{ url }}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="btn-minimal justify-center"
               >
-                {{ rel.type }}
+                {{
+                  comp.ui.Icon({
+                    name: "instagram",
+                    catalog: "simpleicons",
+                    classes: "w-4 h-4",
+                  })
+                }}
+                {{ if igUrls.length > 1 }}
+                  Instagram Post #{{ index + 1 }}
+                {{ else }}
+                  Instagram Post
+                {{ /if }}
               </a>
             {{ /for }}
-          </div>
-        {{ /if }}
+          {{ /if }}
+
+          {{# Other MB URL Relations #}}
+          {{ for rel of urlRels }}
+            {{ set info = rel.type |> getLinkInfo(rel.url.resource) }}
+            <a
+              href="{{ rel.url.resource }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-minimal justify-center"
+            >
+              {{
+                comp.ui.Icon({
+                  name: info.icon,
+                  catalog: info.catalog,
+                  classes: "w-4 h-4",
+                })
+              }}
+              {{ info.label }}
+            </a>
+          {{ /for }}
+        </div>
       </div>
     </aside>
   </div>
