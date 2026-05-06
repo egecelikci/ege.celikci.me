@@ -116,7 +116,10 @@
   {{ /if }}
 {{ /set }}
 
-<footer class="mt-32 pb-16 print:hidden" role="contentinfo">
+<footer
+  class="mt-32 pb-16 print:hidden [view-transition-name:site-footer]"
+  role="contentinfo"
+>
   {{
     await it.comp.ui.Container({
       width: "narrow",

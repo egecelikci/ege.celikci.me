@@ -1,0 +1,14 @@
+---
+layout: layouts/page.vto
+---
+<div class="[view-transition-name:bookmarks-layout]">
+  {{
+    await comp.features.Bookmarks({
+      filteredBookmarks: it.filteredBookmarks,
+      allCategoryIds: it.allCategoryIds,
+      categoryMetadata: it.categoryMetadata,
+      activeCategory: it.activeCategory,
+      totalCount: it.totalCount,
+    })
+  }}
+</div>

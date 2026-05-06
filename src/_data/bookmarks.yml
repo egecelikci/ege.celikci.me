@@ -1,106 +1,166 @@
-- title: "monocyte"
-  url: "https://monocyte.blog"
-  feed: "https://monocyte.bearblog.dev/feed"
-  img: "/assets/images/88x31/monocytosis.png"
-  category: "person"
-- title: "HTML Journal"
-  url: "https://journal.miso.town"
-  img: "/assets/images/88x31/banner-htmlj.png"
-  desc: "HTML Journal is a format to write journals in HTML. The format is described on [this page](https://m15o.ichi.city/site/subscribing-to-a-journal-page.html). When a journal is an HTML Journal, we can get an [Atom feed](https://m15o.ichi.city/site/feed.html#atom) automatically."
-  category: "tool"
-- title: "neko-scape ’98 nyan"
-  img: "/assets/images/88x31/neko.gif"
-  category: "tool"
-- title: "lucida"
-  url: "https://lucida.to"
-  img: "/assets/images/88x31/lucida.gif"
-  mirrors:
-    - "https://lucida.su"
-  desc: "download music from streaming services for free"
-  category: "tool"
-- title: "Seirdy"
-  url: "https://seirdy.one/meta"
-  feed: "https://seirdy.one/atom.xml"
-  img: "/assets/images/88x31/seirdy.png"
-  category: "person"
-- title: "crescentrose"
-  url: "https://crescentro.se"
-  feed: "https://crescentro.se/posts/atom.xml"
-  category: "person"
-- title: "マリウス"
-  url: "https://xn--gckvb8fzb.com"
-  feed: "https://xn--gckvb8fzb.com/index.xml"
-  category: "person"
-- title: "boo.kim"
-  url: "https://boo.kim"
-  img: "/assets/images/88x31/bookim.gif"
-  category: "person"
-- title: Daudix
-  url: "https://daudix.one"
-  feed: "https://daudix.one/blog/atom.xml"
-  img: "/assets/images/88x31/daudix.gif"
-  category: "person"
-- title: Princess
-  url: "https://princss.online"
-  img: "/assets/images/88x31/princss.png"
-  category: "person"
-- title: "Anna’s Archive"
-  url: "https://annas-archive.gl"
-  mirrors:
-    - "https://annas-archive.pk"
-    - "https://annas-archive.gd"
-  category: "tool"
-  desc: "the world’s largest shadow library"
-- title: "catcut"
-  url: "https://catcut.snaz.in"
-  category: "tool"
-  desc: "a web app that uses [ffmpeg.wasm](https://ffmpegwasm.netlify.app/) to trim and edit media without uploading your media to a server, with media only being processed in browser."
-- title: "cobalt"
-  url: "https://cobalt.tools"
-  img: "/assets/images/88x31/downloaded_with_cobalt.png"
-  mirrors:
-    - "https://cobalt.directory"
-  category: "tool"
-  desc: "cobalt helps you save anything from your favorite websites: video, audio, photos or gifs. just paste the link and you’re ready to rock!"
-- title: "GrapheneOS"
-  url: "https://grapheneos.org"
-  img: "/assets/images/88x31/grapheneos.png"
-  category: "tool"
-  desc: "he private and secure mobile operating system with Android app compatibility. Developed as a non-profit open source project."
-- title: "Kagi Small Web"
-  url: "https://kagi.com/smallweb"
-  img: "/assets/images/88x31/kagi-small-web.gif"
-  category: "tool"
-- title: "Austin Huang"
-  url: "https://austinhuang.me"
-  img: "/assets/images/88x31/austinhuang.png"
-  category: "person"
-- title: "cadence"
-  url: "https://cadence.moe"
-  feed: "https://cadence.moe/blog/atom.xml"
-  img: "/assets/images/88x31/cadence_now.png"
-  category: "person"
-- title: "Evie On-line"
-  url: "https://ewie.online"
-  feed: "https://ewie.online/feed/feed.xml"
-  img: "/assets/images/88x31/evie.png"
-  category: "person"
-- title: "alexia’s space"
-  url: "https://cyrneko.eu"
-  feed: "https://cyrneko.eu/feed.atom"
-  img: "/assets/images/88x31/cyrneko.png"
-  category: "person"
-- title: "The 512KB Club"
-  desc: "The 512KB Club is a collection of performance-focused web pages that stay under 512KB uncompressed. I’m currently near the bottom of the list; this *badge of shame* serves as a constant reminder to keep optimizing and make my site more performant."
-  url: "https://512kb.club"
-  feed: "https://512kb.club/feed.xml"
-  img: "/assets/images/88x31/512kb-club.gif"
-  category: "tool"
-- title: "Accrescent"
-  desc: "A novel Android app store focused on security, privacy, and usability."
-  url: "https://accrescent.app"
-  category: "tool"
-- title: "Logan’s Blog"
-  url: "https://lberrymage.dev"
-  feed: "https://lberrymage.dev/index.xml"
-  category: "person"
+categories:
+  - id: blogroll
+    title: "blogroll"
+    icon: rss
+  - id: 88x31
+    title: "88×31"
+    icon: image
+  - id: person
+    title: "people"
+    icon: user
+  - id: tool
+    title: "tools"
+    icon: tool-case
+  - id: writing
+  - id: music
+    title: "music"
+    icon: music
+  - id: downloader
+    title: "downloaders"
+    icon: download
+  - id: library
+    title: "libraries"
+    icon: library
+  - id: archive
+    title: "archives"
+    icon: archive
+  - id: search
+    title: "search"
+    icon: search
+  - id: android
+    title: "android"
+    icon: smartphone
+  - id: media
+    title: "media"
+    icon: file
+  - id: directory
+    title: "directories"
+    icon: folder
+  - id: format
+    title: "formats"
+    icon: file-type
+  - id: utility
+    title: "utilities"
+    icon: wrench
+links:
+  - title: "monocyte"
+    url: "https://monocyte.blog"
+    feed: "https://monocyte.bearblog.dev/feed"
+    img: "/assets/images/88x31/monocytosis.png"
+    categories: [person]
+  - title: "HTML Journal"
+    url: "https://journal.miso.town"
+    img: "/assets/images/88x31/banner-htmlj.png"
+    desc: "HTML Journal is a format to write journals in HTML. The format is described on [this page](https://m15o.ichi.city/site/subscribing-to-a-journal-page.html). When a journal is an HTML Journal, we can get an [Atom feed](https://m15o.ichi.city/site/feed.html#atom) automatically."
+    categories: [tool, format]
+  - title: "neko-scape ’98 nyan!"
+    img: "/assets/images/88x31/neko.gif"
+  - title: "lucida"
+    url: "https://lucida.to"
+    img: "/assets/images/88x31/lucida.gif"
+    mirrors:
+      - "https://lucida.su"
+    desc: "download music from streaming services for free"
+    categories: [tool, music, downloader]
+  - title: "Seirdy"
+    url: "https://seirdy.one/meta"
+    feed: "https://seirdy.one/atom.xml"
+    img: "/assets/images/88x31/seirdy.png"
+    categories: [person]
+  - title: "crescentrose"
+    url: "https://crescentro.se"
+    feed: "https://crescentro.se/posts/atom.xml"
+    categories: [person]
+  - title: "マリウス"
+    url: "https://xn--gckvb8fzb.com"
+    feed: "https://xn--gckvb8fzb.com/index.xml"
+    categories: [person]
+  - title: "boo.kim"
+    url: "https://boo.kim"
+    img: "/assets/images/88x31/bookim.gif"
+    categories: [person]
+  - title: "Daudix"
+    url: "https://daudix.one"
+    feed: "https://daudix.one/blog/atom.xml"
+    img: "/assets/images/88x31/daudix.gif"
+    categories: [person]
+  - title: "Princess"
+    url: "https://princss.online"
+    img: "/assets/images/88x31/princss.png"
+    categories: [person]
+  - title: "Anna's Archive"
+    url: "https://annas-archive.gl"
+    mirrors:
+      - "https://annas-archive.pk"
+      - "https://annas-archive.gd"
+    desc: "the world's largest shadow library"
+    categories: [tool, library, archive]
+  - title: "catcut"
+    url: "https://catcut.snaz.in"
+    desc: "a web app that uses [ffmpeg.wasm](https://ffmpegwasm.netlify.app/) to trim and edit media without uploading your media to a server, with media only being processed in browser."
+    categories: [tool, media, utility]
+  - title: "cobalt"
+    url: "https://cobalt.tools"
+    img: "/assets/images/88x31/downloaded_with_cobalt.png"
+    mirrors:
+      - "https://cobalt.directory"
+    desc: "cobalt helps you save anything from your favorite websites: video, audio, photos or gifs. just paste the link and you're ready to rock!"
+    categories: [tool, media, downloader, directory]
+  - title: "GrapheneOS"
+    url: "https://grapheneos.org"
+    img: "/assets/images/88x31/grapheneos.png"
+    desc: "the private and secure mobile operating system with Android app compatibility. Developed as a non-profit open source project."
+    categories: [tool, android]
+  - title: "Kagi Small Web"
+    url: "https://kagi.com/smallweb"
+    img: "/assets/images/88x31/kagi-small-web.gif"
+    categories: [tool, directory]
+  - title: "Austin Huang"
+    url: "https://austinhuang.me"
+    img: "/assets/images/88x31/austinhuang.png"
+    categories: [person]
+  - title: "cadence"
+    url: "https://cadence.moe"
+    feed: "https://cadence.moe/blog/atom.xml"
+    img: "/assets/images/88x31/cadence_now.png"
+    categories: [person]
+  - title: "Evie On-line"
+    url: "https://ewie.online"
+    feed: "https://ewie.online/feed/feed.xml"
+    img: "/assets/images/88x31/evie.png"
+    categories: [person]
+  - title: "alexia's space"
+    url: "https://cyrneko.eu"
+    feed: "https://cyrneko.eu/feed.atom"
+    img: "/assets/images/88x31/cyrneko.png"
+    categories: [person]
+  - title: "The 512KB Club"
+    url: "https://512kb.club"
+    feed: "https://512kb.club/feed.xml"
+    img: "/assets/images/88x31/512kb-club.gif"
+    desc: "The 512KB Club is a collection of performance-focused web pages that stay under 512KB uncompressed. I'm currently near the bottom of the list; this *badge of shame* serves as a constant reminder to keep optimizing and make my site more performant."
+    categories: [directory]
+  - title: "Accrescent"
+    url: "https://accrescent.app"
+    desc: "A novel Android app store focused on security, privacy, and usability."
+    categories: [tool, android]
+  - title: "Logan’s Blog"
+    url: "https://lberrymage.dev"
+    feed: "https://lberrymage.dev/index.xml"
+    categories: [person]
+  - title: "VERT"
+    url: "https://vert.sh"
+    desc: "VERT is a file conversion utility that uses WebAssembly to convert files on your device instead of a cloud."
+    categories: [tool, media, utility]
+  - title: "RSAF"
+    url: "https://github.com/chenxiaolong/RSAF"
+    desc: "An Android Storage Access Framework document provider for rclone"
+    categories: [tool, android]
+  - title: "BasicSync"
+    url: "https://github.com/chenxiaolong/BasicSync"
+    desc: "A simple app for running Syncthing on Android"
+    categories: [tool, android]
+  - title: "StrongPhrase.net"
+    desc: "Create strong, memorable passphrases"
+    url: "https://strongphrase.net"
+    tool: [tool, utility]
