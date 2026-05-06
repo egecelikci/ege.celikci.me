@@ -87,6 +87,10 @@ self.onmessage = async (e: MessageEvent) => {
   } = options as Options;
 
   try {
+    self.postMessage({
+      type: "status",
+      text: `computing ${cols}×${rows} grid layout`,
+    });
     const layout = calculate_layout(cols, rows);
     const gridCoords = get_grid_coordinates(cols, rows);
     const targetCount = cols * rows;
@@ -95,29 +99,30 @@ self.onmessage = async (e: MessageEvent) => {
     const finalImages: (ImageBitmap | null)[] = [];
     let sourceIndex = 0;
 
-    self.postMessage({ type: "status", text: "Acquiring Art..." });
+    self.postMessage({
+      type: "status",
+      text: "resolving artwork URLs",
+    });
     while (finalAlbums.length < targetCount && sourceIndex < albums.length) {
       const needed = targetCount - finalAlbums.length;
-      const batch = albums.slice(
-        sourceIndex,
-        sourceIndex + (sourceIndex === 0 ? targetCount : needed),
-      );
+      const batchSize = sourceIndex === 0 ? targetCount : needed;
+      const batch = albums.slice(sourceIndex, sourceIndex + batchSize);
       sourceIndex += batch.length;
       const results = await Promise.all(
         batch.map((a: Album) => fetchCover(a)),
       );
       for (const res of results) {
+        self.postMessage({
+          type: "status",
+          text: `fetching cover art ${
+            finalAlbums.length + 1
+          } of ${targetCount}`,
+        });
         if (res.bitmap || !skipMissing) {
           finalAlbums.push(res.album);
           finalImages.push(res.bitmap);
         }
         if (finalAlbums.length >= targetCount) break;
-      }
-      if (finalAlbums.length < targetCount) {
-        self.postMessage({
-          type: "status",
-          text: `Searching... (${finalAlbums.length}/${targetCount})`,
-        });
       }
     }
     while (finalAlbums.length < targetCount) {
@@ -126,7 +131,10 @@ self.onmessage = async (e: MessageEvent) => {
     }
 
     // --- 2. RENDER BACKGROUND (WASM) ---
-    self.postMessage({ type: "status", text: "Analyzing Palette..." });
+    self.postMessage({
+      type: "status",
+      text: "sampling dominant colors from covers",
+    });
     const gridColors = new Uint8Array(targetCount * 3);
     const colors = await Promise.all(
       finalImages.map((img) => getVibrantColor(img)),
@@ -156,7 +164,10 @@ self.onmessage = async (e: MessageEvent) => {
       }
     }
 
-    self.postMessage({ type: "status", text: "Computing Pixels..." });
+    self.postMessage({
+      type: "status",
+      text: "compositing background layer",
+    });
     const imageData = ctx.createImageData(W, H);
     render_background(
       imageData.data,
@@ -222,7 +233,10 @@ self.onmessage = async (e: MessageEvent) => {
     }
 
     // --- 3. THE GRID ---
-    self.postMessage({ type: "status", text: "Assembling Grid..." });
+    self.postMessage({
+      type: "status",
+      text: `drawing ${targetCount} grid tiles`,
+    });
     for (let i = 0; i < targetCount; i++) {
       const x = gridCoords[i * 2], y = gridCoords[i * 2 + 1];
       ctx.save();
@@ -272,6 +286,10 @@ self.onmessage = async (e: MessageEvent) => {
 
     // --- 4. THE LIST ---
     const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9);
+    self.postMessage({
+      type: "status",
+      text: `rendering album list of ${listLimit} entries`,
+    });
     for (let i = 0; i < listLimit; i++) {
       const y = layout.list_base_y + (i * layout.list_row_height);
       ctx.textAlign = "left";
@@ -328,6 +346,7 @@ self.onmessage = async (e: MessageEvent) => {
     ctx.letterSpacing = "2px";
     ctx.fillText("EGE.CELIKCI.ME", W / 2, H - 72);
 
+    self.postMessage({ type: "status", text: "encoding canvas to JPEG" });
     const blob = await (canvas as OffscreenCanvas).convertToBlob({
       type: "image/jpeg",
       quality: 0.92,
