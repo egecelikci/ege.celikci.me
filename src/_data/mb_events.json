@@ -1,239 +1,1725 @@
 {
   "entities": {
-    "07056e71-f1a4-432c-a613-6baf50042b55": {
-      "instagram": "https://www.instagram.com/asimptotstereo/"
-    },
-    "08d33bb8-dd4f-458d-9630-ef5dd51e9127": {
-      "instagram": "https://www.instagram.com/drunkhighjinks/"
-    },
-    "0b19fc6b-0ea0-4b62-877c-52acbe69b96e": {
-      "instagram": "https://www.instagram.com/idenyband/"
-    },
-    "10b8ff13-2067-4cf0-8ace-d92228ea6bb7": {
-      "instagram": "https://www.instagram.com/mevzurecords/"
-    },
-    "12ac7e00-1eec-4d0c-b717-f1ad40b0c010": {
-      "instagram": "https://www.instagram.com/che.izmir/"
-    },
-    "12cbee18-468b-4b84-bb64-3f2251f3afbb": {
-      "instagram": "https://www.instagram.com/byzantionrec/"
-    },
-    "1b69fc96-8c50-4201-bf5e-22b4fde21b11": {
-      "instagram": "https://www.instagram.com/depozitoband/"
-    },
-    "1dd8e72c-2e08-4ea1-9f4c-256f420db0ab": {
-      "instagram": "https://www.instagram.com/federicofellini.est/"
-    },
-    "24546f42-9354-47dd-8d63-416329ebf2ec": {
-      "instagram": "https://www.instagram.com/h8.collective/"
-    },
-    "25a3afd1-7bf0-48ff-8012-3409b86de1c6": {
-      "instagram": "https://www.instagram.com/histeri.mp3/"
-    },
-    "2a0f4c4a-247e-4a2e-ac4c-6e78ccf563e5": {
-      "instagram": "https://www.instagram.com/frame25band/"
-    },
-    "2bfa1d83-63e4-433b-9b9a-17ef5dcc8964": {
-      "instagram": "https://www.instagram.com/uncivilizationrecords/"
-    },
-    "2d5583be-aafd-41ec-addd-df85913855ef": {
-      "instagram": "https://www.instagram.com/vanillaiceofficial/"
-    },
-    "366e8c68-c9b2-4a32-a4f5-3af11a99df0d": {
-      "instagram": "https://www.instagram.com/cemiyettepisiyorum/"
-    },
-    "37689db2-d9d0-4097-8595-aa17f74955f1": {
-      "instagram": "https://www.instagram.com/s.emin.gok/"
-    },
-    "3b56b0ee-eeac-4630-b0c8-f5b357ede77c": {
-      "instagram": "https://www.instagram.com/i.e.d.34/"
-    },
-    "3c5fda9b-a115-46ce-8f0b-d298b63e2c05": {
-      "instagram": "https://www.instagram.com/rasenv1rus/"
-    },
-    "428d6343-233a-4395-a1fd-4713aabde7bb": {
-      "instagram": "https://www.instagram.com/duzmantikofficial/"
-    },
-    "486b26ec-505e-41a7-a1f1-753fd312aafc": {
-      "instagram": "https://www.instagram.com/hatemossband/"
-    },
-    "491a69b3-f2af-4009-9e25-fe7904cab4a8": {
-      "instagram": "https://www.instagram.com/moko_bot/"
-    },
-    "4a1aa5b4-b818-48cb-8dbc-17c614933f09": {
-      "instagram": "https://www.instagram.com/talking.rocks/"
-    },
-    "4a37fca2-fa35-44a6-9857-e9d684abb62e": {
-      "instagram": "https://www.instagram.com/exnunofficial/"
-    },
-    "4d86a02e-01d8-4abf-8169-570ccde8e63a": {
-      "instagram": "https://www.instagram.com/straygaze/"
-    },
-    "4dc53836-e124-46c1-a776-445f0d2bbd5a": {
-      "instagram": "https://www.instagram.com/kanvastereo/"
-    },
-    "4f320abe-318c-4a93-af3b-d2aec3463f4f": {
-      "instagram": "https://www.instagram.com/forthecrisis/"
-    },
-    "504873f8-1f9a-4909-b451-d4f63013d0db": {
-      "instagram": "https://www.instagram.com/devouredelysium/"
-    },
-    "563baa1a-a6a5-4f17-b54e-356160830ea6": {
-      "instagram": "https://www.instagram.com/sceneswehavemissed/"
-    },
-    "59289877-184f-4177-82d9-bdaf73354501": {
-      "instagram": "https://www.instagram.com/jazzgirlive/"
-    },
-    "5cc24ee3-c273-4e1e-8b6c-593eafbf558f": {
-      "instagram": "https://www.instagram.com/OculosOfficial/"
-    },
-    "641048e8-4183-406f-92f0-594a8b1e3252": {
-      "instagram": "https://www.instagram.com/hangout_psm/"
-    },
-    "654aa8ff-3c55-47de-a75c-e924e7e3917b": {
-      "instagram": "https://www.instagram.com/slavetrainingband/"
-    },
-    "67707af9-c767-427e-8c30-4c0d675b5a50": {
-      "instagram": "https://www.instagram.com/karmawhiff/"
-    },
-    "6bbb9ed3-bb91-452f-b801-5c9a511de165": {
-      "instagram": "https://www.instagram.com/shepastaway_official/"
-    },
-    "6e81cc99-3132-448c-888d-6f6930e04b2d": {
-      "instagram": "https://www.instagram.com/nomads.36/"
-    },
-    "6efd4397-4c4c-4d5a-a829-0d716739b7fe": {
-      "instagram": "https://www.instagram.com/puddinband/"
-    },
-    "6fe18184-086a-440f-9ed5-d91867514013": {
-      "instagram": "https://www.instagram.com/urbndivine/"
-    },
-    "70425123-6478-4c40-ba75-ef472343ae1e": {
-      "instagram": "https://www.instagram.com/hush.officiall/"
-    },
-    "71638fcf-212e-4f9d-9abc-2cab9278d697": {
-      "instagram": "https://www.instagram.com/can.abi.can/"
-    },
-    "835fbaf8-9fb6-4434-8b3e-9aedc5e3222d": {
-      "instagram": "https://www.instagram.com/bannerofresistance/"
-    },
-    "86e2da30-b31a-43a5-9a4d-ebe89853a9d4": {
-      "instagram": "https://www.instagram.com/renelokal/"
-    },
-    "88b80dac-3975-49da-be8e-9b7fc819687c": {
-      "instagram": "https://www.instagram.com/anhedoni.mp3/"
-    },
-    "89bbcfcb-8bc6-4d5f-bacd-219713954841": {
-      "instagram": "https://www.instagram.com/goblindaycare/"
-    },
-    "8d4c1e5c-9276-4961-a98d-039c375888f1": {
-      "instagram": "https://www.instagram.com/azure.krepboi/"
-    },
-    "8d76f84a-982e-485e-8a83-a98989947ed6": {
-      "instagram": "https://www.instagram.com/underthehorn/"
-    },
-    "98aa9825-6b28-4e2d-8bb4-070e7b8f9c94": {
-      "instagram": "https://www.instagram.com/marinapoison/"
-    },
-    "98dbeb42-4ab8-4fc8-a7c9-391eca4ab166": {
-      "instagram": "https://www.instagram.com/concrete.hc/"
-    },
-    "9c27db9d-890c-4c14-bf43-3d371380a8d4": {
-      "instagram": "https://www.instagram.com/spray.band/"
-    },
-    "9c7c04b9-6437-450a-891e-ec4dbe93a9a3": {
-      "instagram": "https://www.instagram.com/psychodramasband/"
-    },
-    "9c8ff321-b0ff-437b-a6da-6d0c8dd6e7ef": {
-      "instagram": "https://www.instagram.com/soldoutperformancehall/"
-    },
-    "9e449f51-7164-456c-bf5b-408e227e627a": {
-      "instagram": "https://www.instagram.com/audiodarizm/"
-    },
-    "a78bca44-6e49-42a9-8849-630a1dd74ad9": {
-      "instagram": "https://www.instagram.com/deligomlegi1999/"
-    },
-    "ae6826db-fc68-4cc5-8aac-b17a722af0bc": {
-      "instagram": "https://www.instagram.com/ufuksinkil/"
-    },
-    "aedd8552-370c-4db0-b0d4-e20d219ab16d": {
-      "instagram": "https://www.instagram.com/mvoofficial/"
-    },
-    "b2cfe3d5-9561-4c92-a7f9-cfee4e0ba878": {
-      "instagram": "https://www.instagram.com/tamarrecords/"
-    },
-    "b2f337d9-11d7-4f53-8d3f-572673a94dc7": {
-      "instagram": "https://www.instagram.com/rootlessrecords/"
-    },
-    "b440fce8-a13b-4f74-b7e9-849f565c726d": {
-      "instagram": "https://www.instagram.com/p0isonrat/"
-    },
-    "b80d13f4-e92f-4974-b879-e37f07c5ec4e": {
-      "instagram": "https://www.instagram.com/b.u.n.6/"
-    },
-    "b9bbbcaf-73f9-4352-bb58-215eb43a8b07": {
-      "instagram": "https://www.instagram.com/robinpolatt/"
-    },
-    "bc225ea1-4c12-4a8a-9997-0a79ac5f9875": {
-      "instagram": "https://www.instagram.com/fakefunpunk/"
-    },
-    "beb9c753-3f00-42c1-be32-94ee4706312f": {
-      "instagram": "https://www.instagram.com/konohaskramz/"
-    },
-    "c1d0c821-e88c-425e-89ba-e2848f5d9ab1": {
-      "instagram": "https://www.instagram.com/mouthpiece34hc/"
-    },
-    "c4e951f9-de18-459e-a940-928dcff2f637": {
-      "instagram": "https://www.instagram.com/netammusic/"
-    },
-    "c5216a5f-4701-4c75-9d55-2d5bc8a2b4a1": {
-      "instagram": "https://www.instagram.com/yamac.ozalp/"
-    },
-    "c663d22b-618b-43b2-b99b-1d912c6b4bfc": {
-      "instagram": "https://www.instagram.com/randominputx/"
-    },
-    "caf305a9-7961-404e-86fc-ea80be464ea4": {
-      "instagram": "https://www.instagram.com/tato.bar/"
-    },
-    "cf39f5ff-de49-4385-9406-4c0b9e2096d1": {
-      "instagram": "https://www.instagram.com/bahars_z/"
-    },
-    "d07f8639-5f20-443c-b03e-06e7aff9786f": {
-      "instagram": "https://www.instagram.com/whennightleavesagain/"
-    },
-    "d10760f4-c253-4345-a375-a8a4605ca3a7": {
-      "instagram": "https://www.instagram.com/ruffcrux/"
-    },
-    "d673fb77-9d2d-4f93-8e32-270958b40ea2": {
-      "instagram": "https://www.instagram.com/dinozorbar/"
-    },
-    "daf9d182-fcf3-453a-a278-bad6a1ed3f29": {
-      "instagram": "https://www.instagram.com/gurkan0zer/"
-    },
-    "de4b2785-a9a0-497f-b789-16cd023f978f": {
-      "instagram": "https://www.instagram.com/kaptankadavra/"
-    },
-    "e1c6eec7-8325-4458-b700-23b3d6263c96": {
-      "instagram": "https://www.instagram.com/topra.akk/"
-    },
-    "e37c7eb3-7387-40b7-9c43-134acfd17020": {
-      "instagram": "https://www.instagram.com/minuswastaken/"
-    },
-    "e3f3e3cd-35b1-4032-adee-8cd24dc32f16": {
-      "instagram": "https://www.instagram.com/hakantamar/"
-    },
-    "f16f8acd-bd38-4ab3-881c-a2da36acd649": {
-      "instagram": "https://www.instagram.com/maksutowski/"
-    },
-    "f43cf575-eaca-47be-b6de-be25f23201e5": {
-      "instagram": "https://www.instagram.com/thesharp4thofficial/"
-    },
-    "f6742cc5-42e3-49c3-aa3b-6e56781cb728": {
-      "instagram": "https://www.instagram.com/odeonpergamon/"
-    },
-    "fb212bf9-c95d-43b6-9139-c60310025609": {
-      "instagram": "https://www.instagram.com/mhmtdnzc/"
-    }
+    "07056e71-f1a4-432c-a613-6baf50042b55": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2O2aAFx3fTTbuQ4wTIOFjj"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/asimptotstereo/"
+      }
+    ],
+    "08d33bb8-dd4f-458d-9630-ef5dd51e9127": [
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/6792116"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/72Slh4pxTAFJFKIKoiyaCo"
+      },
+      {
+        "type": "image",
+        "url": "https://i.scdn.co/image/e3313b8f7a34e39ae9dadea3972b17abb608886e"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://itunes.apple.com/tr/artist/id1333578977"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/drunkhighjinks"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/drunkhighjinks"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/drunkhighjinks/"
+      },
+      {
+        "type": "songkick",
+        "url": "https://www.songkick.com/artists/9381349"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/drunkhighjinks"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCv7ENJ9JWJESOL4fW282BxQ"
+      }
+    ],
+    "0b19fc6b-0ea0-4b62-877c-52acbe69b96e": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0lWpcK1N6CmHnbgXUbHHl6"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/idenyband/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/@idenyband"
+      }
+    ],
+    "0bf28e2d-12c9-426a-a226-a5d7cb5c4067": [
+      {
+        "type": "bandcamp",
+        "url": "https://artdiktator.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/3092442"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/artdiktator"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/user/artdiktatorofficial"
+      }
+    ],
+    "10b8ff13-2067-4cf0-8ace-d92228ea6bb7": [
+      {
+        "type": "bandcamp",
+        "url": "https://mevzurecords.bandcamp.com/"
+      },
+      {
+        "type": "official site",
+        "url": "https://mevzurecords.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/mevzurecords/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCPZN_lgWUwnSmnVWaakcApg"
+      }
+    ],
+    "12ac7e00-1eec-4d0c-b717-f1ad40b0c010": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/che.izmir/"
+      }
+    ],
+    "12cbee18-468b-4b84-bb64-3f2251f3afbb": [
+      {
+        "type": "social network",
+        "url": "https://open.spotify.com/user/byzantionrecords"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/byzantionrecords"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/byzantionrec/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCY6mNbAjGU9NU3nYPKdQbtQ"
+      }
+    ],
+    "1b69fc96-8c50-4201-bf5e-22b4fde21b11": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/depozitoband/"
+      }
+    ],
+    "1dd8e72c-2e08-4ea1-9f4c-256f420db0ab": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/federicofellini.est/"
+      }
+    ],
+    "24546f42-9354-47dd-8d63-416329ebf2ec": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/h8.collective/"
+      }
+    ],
+    "25a3afd1-7bf0-48ff-8012-3409b86de1c6": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0E8mw8XdnVFX2VqJKXxyMo"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/histeri.mp3/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/@histeri.mp4"
+      }
+    ],
+    "2a0f4c4a-247e-4a2e-ac4c-6e78ccf563e5": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/frame25band/"
+      }
+    ],
+    "2b1b70da-25d4-43b8-b818-ea1fe60016cd": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/4NzRUpsWOXv82mj7jKtBwE"
+      }
+    ],
+    "2bfa1d83-63e4-433b-9b9a-17ef5dcc8964": [
+      {
+        "type": "official site",
+        "url": "https://uncvl.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/uncivilizationr"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/uncivilizationrecords/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/uncvl"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCPhMC6_4XWPYSPt6NBLAfAw"
+      }
+    ],
+    "2d5583be-aafd-41ec-addd-df85913855ef": [
+      {
+        "type": "allmusic",
+        "url": "https://www.allmusic.com/artist/mn0000262445"
+      },
+      {
+        "type": "bandcamp",
+        "url": "https://vanillaicebaby.bandcamp.com/"
+      },
+      {
+        "type": "bandsintown",
+        "url": "https://www.bandsintown.com/a/662"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/67435"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/723022"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/7GXXMm3DB1VswVcuGyInUd"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/3109"
+      },
+      {
+        "type": "image",
+        "url": "https://commons.wikimedia.org/wiki/File:Houston_Dash_90s_Bash,_2023-10-08_(53255837776)_(cropped).jpg"
+      },
+      {
+        "type": "image",
+        "url": "https://commons.wikimedia.org/wiki/File:Vanilla_Ice_2010_(cropped).jpg"
+      },
+      {
+        "type": "image",
+        "url": "https://commons.wikimedia.org/wiki/File:Vanilla_Ice_and_MC_Hammer.jpg"
+      },
+      {
+        "type": "IMDb",
+        "url": "https://www.imdb.com/name/nm0406678/"
+      },
+      {
+        "type": "last.fm",
+        "url": "https://www.last.fm/music/Vanilla+Ice"
+      },
+      {
+        "type": "lyrics",
+        "url": "http://muzikum.eu/en/122-6110/vanilla-ice/lyrics.html"
+      },
+      {
+        "type": "lyrics",
+        "url": "https://genius.com/artists/Vanilla-ice"
+      },
+      {
+        "type": "myspace",
+        "url": "https://myspace.com/officialvanillaice"
+      },
+      {
+        "type": "official homepage",
+        "url": "http://www.vanillaice.com/"
+      },
+      {
+        "type": "other databases",
+        "url": "http://id.loc.gov/authorities/names/n91048782"
+      },
+      {
+        "type": "other databases",
+        "url": "http://musicmoz.org/Bands_and_Artists/V/Vanilla_Ice/"
+      },
+      {
+        "type": "other databases",
+        "url": "https://catalogue.bnf.fr/ark:/12148/cb139357346"
+      },
+      {
+        "type": "other databases",
+        "url": "https://d-nb.info/gnd/11904496X"
+      },
+      {
+        "type": "other databases",
+        "url": "https://imvdb.com/n/vanilla-ice"
+      },
+      {
+        "type": "other databases",
+        "url": "https://rateyourmusic.com/artist/vanilla_ice"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.musik-sammler.de/artist/vanilla-ice/"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.worldcat.org/identities/lccn-n91048782"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://itunes.apple.com/us/artist/id100281"
+      },
+      {
+        "type": "secondhandsongs",
+        "url": "https://secondhandsongs.com/artist/2047"
+      },
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/setlists/vanilla-ice-63d68ec3.html"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/vanillaice"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/officialvanillaice"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/vanillaiceofficial/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.tiktok.com/@vanillaiceme"
+      },
+      {
+        "type": "songkick",
+        "url": "https://www.songkick.com/artists/231707"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/vanilla-ice-official"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.amazon.com/artists/B001R8KB1W"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/us/artist/100281"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/10974"
+      },
+      {
+        "type": "streaming",
+        "url": "https://us.napster.com/artist/vanilla-ice"
+      },
+      {
+        "type": "ticketing",
+        "url": "https://www.ticketmaster.com/artist/702531"
+      },
+      {
+        "type": "VIAF",
+        "url": "http://viaf.org/viaf/3272198"
+      },
+      {
+        "type": "wikidata",
+        "url": "https://www.wikidata.org/wiki/Q313578"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/user/officialvanillaice"
+      },
+      {
+        "type": "youtube music",
+        "url": "https://music.youtube.com/channel/UCaVc_T14Gu-l54VIGUf3WZA"
+      }
+    ],
+    "366e8c68-c9b2-4a32-a4f5-3af11a99df0d": [
+      {
+        "type": "bandcamp",
+        "url": "https://cemiyettepisiyorum.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/3780505"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2XmnmKZOUs81vZir5GrkfC"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/469987"
+      },
+      {
+        "type": "myspace",
+        "url": "https://myspace.com/cemiyettepisiyorum"
+      },
+      {
+        "type": "official homepage",
+        "url": "http://cemiyettepisiyorum.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/cemiyettepistim"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/cemiyettepistim"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/cemiyettepisiyorum/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/cemiyettepisiyorum"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/996914923"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/6945510"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/c/cemiyettv"
+      }
+    ],
+    "37689db2-d9d0-4097-8595-aa17f74955f1": [
+      {
+        "type": "blog",
+        "url": "https://medium.com/@eminsabangok"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0G6CKdqtwYDdGOgqw3GSNE"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/s.emin.gok/"
+      }
+    ],
+    "3b56b0ee-eeac-4630-b0c8-f5b357ede77c": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/34rJfxJ4UcVpz4XrXoqwgC"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/i.e.d.34/"
+      }
+    ],
+    "3c5fda9b-a115-46ce-8f0b-d298b63e2c05": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/rasenv1rus/"
+      }
+    ],
+    "428d6343-233a-4395-a1fd-4713aabde7bb": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/7ptt5bE4HdTqAPwaLTtz8B"
+      },
+      {
+        "type": "online community",
+        "url": "https://discord.gg/CxuhTD4T"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://music.apple.com/us/artist/1506110406"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/duzmantikofficial/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.tiktok.com/@duzmantikofficial"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/us/artist/1506110406"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/@duzmantk5342"
+      }
+    ],
+    "467c8637-f8bd-40ea-923e-e6931e7402ca": [
+      {
+        "type": "ticketing",
+        "url": "https://www.biletix.com/mekan/58/TURKIYE/tr"
+      }
+    ],
+    "486b26ec-505e-41a7-a1f1-753fd312aafc": [
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/6542243"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/70OdNVoUb2Pn8kG7gDDHGe"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/hatemoss"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/hatemossband/"
+      }
+    ],
+    "491a69b3-f2af-4009-9e25-fe7904cab4a8": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/7e6Dt4aj1RMGzJygMnVL0T"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/moko_bot/"
+      },
+      {
+        "type": "youtube music",
+        "url": "https://music.youtube.com/channel/UCFLguFuQwdt0pU4w2kpNQsQ"
+      }
+    ],
+    "4989032b-32af-4898-905b-3c39bc2cc314": [
+      {
+        "type": "bandcamp",
+        "url": "https://wrongchicken.bandcamp.com/"
+      }
+    ],
+    "4a1aa5b4-b818-48cb-8dbc-17c614933f09": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/4dtZP42cTa7KX9sbpz31dX"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/talking.rocks/"
+      }
+    ],
+    "4a37fca2-fa35-44a6-9857-e9d684abb62e": [
+      {
+        "type": "bandcamp",
+        "url": "https://exnun.bandcamp.com/"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.metal-archives.com/bands/Exnun/3540461452"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/exnunofficial/"
+      }
+    ],
+    "4d86a02e-01d8-4abf-8169-570ccde8e63a": [
+      {
+        "type": "bandcamp",
+        "url": "https://straygaze.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/5tBlQWKu3diCypEeqbEAPk"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/208693457"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/straygazeband"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/straygazeband"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/straygaze/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1681158786"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/38642421"
+      },
+      {
+        "type": "youtube music",
+        "url": "https://music.youtube.com/channel/UCX6Y93uMBaER0YltWvwABcA"
+      }
+    ],
+    "4dc53836-e124-46c1-a776-445f0d2bbd5a": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/3uNuQ2i7KBY08OJ6XDZyeR"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/85319992"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/kanvastereo/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/161200947"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/3716289"
+      }
+    ],
+    "4f320abe-318c-4a93-af3b-d2aec3463f4f": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/forthecrisis/"
+      }
+    ],
+    "504873f8-1f9a-4909-b451-d4f63013d0db": [
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/8058140"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0StR9GrLWsoDfnVEHvTbez"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/14799785"
+      },
+      {
+        "type": "other databases",
+        "url": "https://rateyourmusic.com/artist/devoured-elysium"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.metal-archives.com/bands/Devoured_Elysium/3540467567"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/DevouredElysiumofficial"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/devouredelysium/"
+      }
+    ],
+    "563baa1a-a6a5-4f17-b54e-356160830ea6": [
+      {
+        "type": "bandcamp",
+        "url": "https://sceneswehavemissed.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/6605585"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/6F9PB4Rcyy1IgZO8O7qxnV"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/15053405"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/sceneswehavemissed"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/sceneswehavemissed/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1339142865"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/21292796"
+      }
+    ],
+    "59289877-184f-4177-82d9-bdaf73354501": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/jazzgirlive/"
+      }
+    ],
+    "5cc24ee3-c273-4e1e-8b6c-593eafbf558f": [
+      {
+        "type": "bandcamp",
+        "url": "https://oculos.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/3OQQwMP6C0xm7h3JQpWfUk"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.metal-archives.com/bands/Oculos/3540453497"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/OculosOfficial"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/OculosOfficial/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCV3cq3YBQFvVz0nb_hYPKAQ"
+      }
+    ],
+    "641048e8-4183-406f-92f0-594a8b1e3252": [
+      {
+        "type": "official homepage",
+        "url": "https://www.hangout.com.tr/"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/hangout_psm"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/hangoutpsm"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/hangout_psm/"
+      }
+    ],
+    "654aa8ff-3c55-47de-a75c-e924e7e3917b": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/slavetrainingband/"
+      }
+    ],
+    "67707af9-c767-427e-8c30-4c0d675b5a50": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/414O3gPDAvBftGcLSqgtw5"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/karmawhiff/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/karmawhiff"
+      }
+    ],
+    "6bbb9ed3-bb91-452f-b801-5c9a511de165": [
+      {
+        "type": "bandcamp",
+        "url": "https://shepastawayofficial.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/1996712"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/6paE8ghTau4qwwNzVRSgjR"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/1289386"
+      },
+      {
+        "type": "last.fm",
+        "url": "https://www.last.fm/music/She+Past+Away"
+      },
+      {
+        "type": "myspace",
+        "url": "https://myspace.com/shepastaway"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://shepastaway.org/"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.spirit-of-rock.com/en/band/She_Past_Away"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://itunes.apple.com/artist/id347750887"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/shepastaway"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/shepastaway"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/shepastaway_official/"
+      },
+      {
+        "type": "songkick",
+        "url": "https://www.songkick.com/artists/664508"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/shepastaway"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/us/artist/347750887"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/4141040"
+      },
+      {
+        "type": "wikidata",
+        "url": "https://www.wikidata.org/wiki/Q20088184"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UC0K1T4gyFvRU2CPoygWuYJg"
+      }
+    ],
+    "6c06778b-bd50-4617-8370-a0d77dcb1701": [
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/gundodu-meydan-izmir-turkey-53d79fb5.html"
+      }
+    ],
+    "6e81cc99-3132-448c-888d-6f6930e04b2d": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/nomads.36/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/nomads.deck36/"
+      }
+    ],
+    "6ef45a19-e7ed-4b1d-b00c-24c1dad843be": [
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/8751988"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/114474542"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1540926202"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/22327666"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/kanakana"
+      }
+    ],
+    "6efd4397-4c4c-4d5a-a829-0d716739b7fe": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/1XP5JhvJ3qJJPqw9dqO7lB"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/puddinband/"
+      }
+    ],
+    "6fe18184-086a-440f-9ed5-d91867514013": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/urbndivine/"
+      }
+    ],
+    "70425123-6478-4c40-ba75-ef472343ae1e": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/hush.officiall/"
+      }
+    ],
+    "71638fcf-212e-4f9d-9abc-2cab9278d697": [
+      {
+        "type": "bandcamp",
+        "url": "https://abican.bandcamp.com/"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://abican.ch/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/abican.worldwide"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/can.abi.can/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCfP-Ntg1KWKkGhaQseVMqLQ"
+      }
+    ],
+    "768536de-640c-4eb8-bf14-5cfd3d2a9aeb": [
+      {
+        "type": "bandcamp",
+        "url": "https://rektaltuse.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2oeDJjqjuw7xH8lnqLvdYS"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/rektaltuse"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/rektaltuse/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/user/RxTxGrind"
+      }
+    ],
+    "835fbaf8-9fb6-4434-8b3e-9aedc5e3222d": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/bannerofresistance/"
+      }
+    ],
+    "86e2da30-b31a-43a5-9a4d-ebe89853a9d4": [
+      {
+        "type": "fanpage",
+        "url": "https://www.izmir.art/tr/rene-lokal"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/renelokal/"
+      },
+      {
+        "type": "ticketing",
+        "url": "https://www.bubilet.com.tr/mekan/rene-lokal"
+      }
+    ],
+    "88b80dac-3975-49da-be8e-9b7fc819687c": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/anhedoni.mp3/"
+      }
+    ],
+    "89bbcfcb-8bc6-4d5f-bacd-219713954841": [
+      {
+        "type": "bandcamp",
+        "url": "https://goblindaycare.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/68lxtccDDXzcAp6nifyWOC"
+      },
+      {
+        "type": "other databases",
+        "url": "https://rateyourmusic.com/artist/goblin-daycare"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/goblindaycare/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/goblindaycare"
+      }
+    ],
+    "8d4c1e5c-9276-4961-a98d-039c375888f1": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/4jkgIFWljOfnbcE1fkwcQX"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/121511302"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/azure.krepboi/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/azure-wrath"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1551003482"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1565758660"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/23257634"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/42329901"
+      }
+    ],
+    "8d76f84a-982e-485e-8a83-a98989947ed6": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/underthehorn/"
+      }
+    ],
+    "98aa9825-6b28-4e2d-8bb4-070e7b8f9c94": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/marinapoison/"
+      }
+    ],
+    "98dbeb42-4ab8-4fc8-a7c9-391eca4ab166": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/4u1gNDX4wBCkUcojw8sSHG"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/concrete.hc/"
+      }
+    ],
+    "9c27db9d-890c-4c14-bf43-3d371380a8d4": [
+      {
+        "type": "bandcamp",
+        "url": "https://sprayband.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2E5fEHMTWt7VAyiYgZGDW4"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/430971"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://spray.band/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/spray.band/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/spray-band"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/tr/artist/1628818142"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/44817947"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCQ0Rk2Gpb3k7DQvkRcv8jkg"
+      }
+    ],
+    "9c7c04b9-6437-450a-891e-ec4dbe93a9a3": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/psychodramasband/"
+      }
+    ],
+    "9c8ff321-b0ff-437b-a6da-6d0c8dd6e7ef": [
+      {
+        "type": "official homepage",
+        "url": "https://www.soldout.com.tr/"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/SoldOutPerfHall"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/soldoutmavibahce"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/soldoutperformancehall/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCaI-PH1z6hWMl_YyBT1cNTQ"
+      }
+    ],
+    "9e0aac15-2b18-4cf8-935b-66c0a4d80861": [
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/foca-ngiliz-burnu-izmir-turkey-33d67405.html"
+      }
+    ],
+    "9e449f51-7164-456c-bf5b-408e227e627a": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/audiodarizm/"
+      }
+    ],
+    "9f68dee0-e1ff-4733-8bff-b9f4f686aac6": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2J7c8sHC4bRxZYxtQHzmDh"
+      }
+    ],
+    "a524631b-4f6f-40a5-8fcf-be235f173f97": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/dogasulthan/"
+      }
+    ],
+    "a5374b71-c5ab-4d09-9e29-8e01d67ad1b2": [
+      {
+        "type": "official homepage",
+        "url": "https://www.aycan.dev/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/666boneless/"
+      }
+    ],
+    "a78bca44-6e49-42a9-8849-630a1dd74ad9": [
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/6594863"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/6gNgdxl7YIeei3xwqRnSWK"
+      },
+      {
+        "type": "myspace",
+        "url": "https://myspace.com/deligomlegi"
+      },
+      {
+        "type": "official homepage",
+        "url": "http://www.deligomlegi.com/"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://itunes.apple.com/tr/artist/id450427475"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/deligomlegi1999"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/deligomlegi"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/deligomlegi1999/"
+      },
+      {
+        "type": "wikidata",
+        "url": "https://www.wikidata.org/wiki/Q6101984"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/user/deligomlegideli"
+      }
+    ],
+    "ae6826db-fc68-4cc5-8aac-b17a722af0bc": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/ufuksinkil/"
+      }
+    ],
+    "aedd8552-370c-4db0-b0d4-e20d219ab16d": [
+      {
+        "type": "allmusic",
+        "url": "https://www.allmusic.com/artist/mn0002043382"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/1126869"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/5ixQSDvAMa5O758xG8MWXT"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/15049"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/261979061"
+      },
+      {
+        "type": "image",
+        "url": "https://cdn.bubilet.com.tr/files/Sanatci/mor-ve-otesi--35156.jpg"
+      },
+      {
+        "type": "IMDb",
+        "url": "https://www.imdb.com/name/nm1626773/"
+      },
+      {
+        "type": "last.fm",
+        "url": "https://www.last.fm/music/Mor+ve+%C3%96tesi"
+      },
+      {
+        "type": "lyrics",
+        "url": "https://genius.com/artists/Mor-ve-otesi"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://www.morveotesi.com/"
+      },
+      {
+        "type": "other databases",
+        "url": "http://id.loc.gov/authorities/names/n2012058141"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.worldcat.org/identities/lccn-n2012058141"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://itunes.apple.com/tr/artist/id256916427"
+      },
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/setlists/wd-33d6f85d.html"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/mvoofficial"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/6718168370"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/mvoofficial/"
+      },
+      {
+        "type": "songkick",
+        "url": "https://www.songkick.com/artists/137041"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.amazon.com/artists/B000VDT9XU"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/tr/artist/256916427"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/3533232"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/8372623"
+      },
+      {
+        "type": "streaming",
+        "url": "https://us.napster.com/artist/mor-ve-otesi"
+      },
+      {
+        "type": "streaming",
+        "url": "https://web.napster.com/artist/art.15448652"
+      },
+      {
+        "type": "VIAF",
+        "url": "http://viaf.org/viaf/221279344"
+      },
+      {
+        "type": "video channel",
+        "url": "https://vimeo.com/morveotesi"
+      },
+      {
+        "type": "wikidata",
+        "url": "https://www.wikidata.org/wiki/Q754092"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCqvzFW0qco9B_9rirRoRldg"
+      },
+      {
+        "type": "youtube music",
+        "url": "https://music.youtube.com/channel/UCNgorPVroeaCRpC8INDNcdg"
+      }
+    ],
+    "b2cfe3d5-9561-4c92-a7f9-cfee4e0ba878": [
+      {
+        "type": "bandcamp",
+        "url": "https://tamarrecords.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/label/493851"
+      },
+      {
+        "type": "official site",
+        "url": "https://www.tamarmuzik.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/TamarRecords/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/tamarrecords/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UC-yWoJ9m4MvvDT74TUh12gA"
+      }
+    ],
+    "b2f337d9-11d7-4f53-8d3f-572673a94dc7": [
+      {
+        "type": "official site",
+        "url": "https://www.rootless.com.tr/"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/RootlessRecords"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/rootlessrecords/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCW8Y6uEf5-iOMa0IoV11VZg"
+      }
+    ],
+    "b351580f-c267-4f2e-882d-a39b121dd2bf": [
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/izmir-arena-izmir-turkey-7bd7be6c.html"
+      }
+    ],
+    "b3fea910-b2d9-40ff-8b7b-cbfce82c6b9d": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/61FY7BIfZFT92tsF1CbDrh"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/vco2.music/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/vco2music"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/@vco2-music"
+      }
+    ],
+    "b440fce8-a13b-4f74-b7e9-849f565c726d": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/p0isonrat/"
+      }
+    ],
+    "b80d13f4-e92f-4974-b879-e37f07c5ec4e": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/b.u.n.6/"
+      }
+    ],
+    "b9bbbcaf-73f9-4352-bb58-215eb43a8b07": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0pGPEVS5RjTs0jE4egqtVW"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/127816862"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/robinpolatt/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/18220"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCxLM1VHAGLVlt6oBau15fPA"
+      }
+    ],
+    "bc225ea1-4c12-4a8a-9997-0a79ac5f9875": [
+      {
+        "type": "bandcamp",
+        "url": "https://fakefun.bandcamp.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/fakefunpunk/"
+      }
+    ],
+    "beb9c753-3f00-42c1-be32-94ee4706312f": [
+      {
+        "type": "bandcamp",
+        "url": "https://konohaskramz.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/2OXUpM91Q0lSSYBCCSmVqH"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/konohaskramz"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/konohaskramz/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCBN-Z-dnnmcrWbmsHIHJxXQ"
+      }
+    ],
+    "c1d0c821-e88c-425e-89ba-e2848f5d9ab1": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/1xzgvDQrXKLtFuRreoJFAo"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/mouthpiece34hc/"
+      }
+    ],
+    "c33ecbda-b075-4206-8055-2e882b1a8f53": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/taarruz.hc/"
+      }
+    ],
+    "c3d5327f-5fc4-4178-aa39-2f1d8714c8c9": [
+      {
+        "type": "bandcamp",
+        "url": "https://pembe.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/11241608"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0iYhedWlqLBNv2Y0Dh4Jpk"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/15256169"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1581434419"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/10010466"
+      }
+    ],
+    "c4e951f9-de18-459e-a940-928dcff2f637": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/netammusic/"
+      }
+    ],
+    "c5216a5f-4701-4c75-9d55-2d5bc8a2b4a1": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/1iOSy7uiSDdwbMtxog1qbv"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/yamac.ozalp/"
+      }
+    ],
+    "c663d22b-618b-43b2-b99b-1d912c6b4bfc": [
+      {
+        "type": "social network",
+        "url": "https://kolektiva.social/@ri"
+      },
+      {
+        "type": "social network",
+        "url": "https://mastodon.art/@randominput"
+      },
+      {
+        "type": "social network",
+        "url": "https://pixey.org/random"
+      },
+      {
+        "type": "social network",
+        "url": "https://ravenation.club/@randominput"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/randominputx/"
+      }
+    ],
+    "c882a74f-8eac-40b1-8b85-6883e6e29446": [
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/kronovoxarchives"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/kronovox-archives"
+      }
+    ],
+    "caf305a9-7961-404e-86fc-ea80be464ea4": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/tato.bar/"
+      }
+    ],
+    "cafe4d04-4064-4a00-ad5b-c59abc4d3b4d": [
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/ooze-izmir-turkey-4bd6639a.html"
+      },
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/ooze-venue-izmir-turkey-33d59481.html"
+      }
+    ],
+    "cf39f5ff-de49-4385-9406-4c0b9e2096d1": [
+      {
+        "type": "bandcamp",
+        "url": "https://baharsiz.bandcamp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/5Dbo4o4rGmyaiQDpgC2xsV"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/366891692"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://music.apple.com/gb/artist/1868190586"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/bahars_z/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1868190586"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/72922128"
+      }
+    ],
+    "d07f8639-5f20-443c-b03e-06e7aff9786f": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/04N0yIGe01uExTzIWzL73B"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/whennightleavesagain/"
+      }
+    ],
+    "d10760f4-c253-4345-a375-a8a4605ca3a7": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/29ATMndDDdw21ABoW2TiP6"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/212955727"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/ruffcrux/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/40854753"
+      }
+    ],
+    "d673fb77-9d2d-4f93-8e32-270958b40ea2": [
+      {
+        "type": "social network",
+        "url": "https://twitter.com/bar_dinozor"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/Dinozorbar"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/dinozorbar/"
+      }
+    ],
+    "daf9d182-fcf3-453a-a278-bad6a1ed3f29": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/gurkan0zer/"
+      }
+    ],
+    "dc922ab1-210f-4f62-bb87-b8af1e90a6b3": [
+      {
+        "type": "setlistfm",
+        "url": "https://www.setlist.fm/venue/ege-universitesi-izmir-turkey-4bd79fb6.html"
+      }
+    ],
+    "de4b2785-a9a0-497f-b789-16cd023f978f": [
+      {
+        "type": "bandcamp",
+        "url": "https://kaptankadavra.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/11999521"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/0iLRC287PtmOxbaLAiMbLU"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/115819412"
+      },
+      {
+        "type": "other databases",
+        "url": "https://www.metal-archives.com/bands/Kaptan_Kadavra/3540479901"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/kaptankadavra/"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1543572549"
+      }
+    ],
+    "e1c6eec7-8325-4458-b700-23b3d6263c96": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/topra.akk/"
+      }
+    ],
+    "e37c7eb3-7387-40b7-9c43-134acfd17020": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/46jvbH7J0hZ8BN3mvSf2Ti"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/minuswastaken/"
+      }
+    ],
+    "e3f3e3cd-35b1-4032-adee-8cd24dc32f16": [
+      {
+        "type": "social network",
+        "url": "https://twitter.com/hakantamar"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/hakantamar/"
+      }
+    ],
+    "f16f8acd-bd38-4ab3-881c-a2da36acd649": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/maksutowski/"
+      }
+    ],
+    "f2fff606-3fb6-4b09-8f79-c986ed5ab7d8": [
+      {
+        "type": "bandcamp",
+        "url": "https://krayat.bandcamp.com/"
+      }
+    ],
+    "f43cf575-eaca-47be-b6de-be25f23201e5": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/thesharp4thofficial/"
+      }
+    ],
+    "f6742cc5-42e3-49c3-aa3b-6e56781cb728": [
+      {
+        "type": "official homepage",
+        "url": "https://www.odeonpergamon.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/odeon.pergamon"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/odeonpergamon/"
+      }
+    ],
+    "fb212bf9-c95d-43b6-9139-c60310025609": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/mhmtdnzc/"
+      }
+    ],
+    "fb99e314-eda3-4a02-b440-d7d9e1096f6e": [
+      {
+        "type": "official site",
+        "url": "https://www.toyzwebzine.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/toyzwebzine/"
+      }
+    ]
   },
   "events": [
     {
@@ -628,6 +2114,172 @@
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]\r\n* Dünyaya Bedel\r\n* Aşk İçinde\r\n* Araf\r\n* Son Sabah\r\n* Gül Kendine\r\n* Küçük Sevgilim\r\n* Sultan-ı Yegâh\r\n* Kara Kutu\r\n* Sevda Çiçeği\r\n* Deli\r\n* Son Deneme\r\n* Re\r\n* Adamın Dibi\r\n* Yaz Yaz Yaz\r\n* Cambaz\r\n* Daha Mutlu Olamam\r\n* Oyunbozan\r\n* Güneşi Beklerken\r\n# (Snippet)\r\n* Bir Derdim Var",
       "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4",
+      "imagePath": "/assets/images/posters/12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4.jpg",
+      "life-span": {
+        "begin": "2026-06-06",
+        "end": "2026-06-06",
+        "ended": true
+      },
+      "name": "Rektal Tuşe, Primitive Call & Taarruz at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4/45049060725-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4/45049060725.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "a524631b-4f6f-40a5-8fcf-be235f173f97",
+            "name": "Doğa Sultan",
+            "sort-name": "Sultan, Doğa",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Alternative, Punk, Rock",
+            "id": "9f68dee0-e1ff-4733-8bff-b9f4f686aac6",
+            "name": "Primitive Call",
+            "sort-name": "Primitive Call",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "768536de-640c-4eb8-bf14-5cfd3d2a9aeb",
+            "name": "Rektal Tuşe",
+            "sort-name": "Rektal Tuşe",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "c33ecbda-b075-4206-8055-2e882b1a8f53",
+            "name": "Taarruz",
+            "sort-name": "Taarruz",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "label": {
+            "disambiguation": "",
+            "id": "fb99e314-eda3-4a02-b440-d7d9e1096f6e",
+            "label-code": null,
+            "name": "TOYZ Webzine",
+            "sort-name": "TOYZ Webzine",
+            "type": null,
+            "type-id": null
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "label",
+          "type": "presented",
+          "type-id": "09bd2cba-6160-408b-b191-afef7480ce54"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": null,
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "f.loki Social Club",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "NØMADS-36",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        }
+      ],
+      "setlist": "",
+      "time": "21:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
@@ -2962,6 +4614,167 @@
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]",
       "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "58f3365a-3aa2-40a6-8fa9-97805b1e913c",
+      "imagePath": "/assets/images/posters/58f3365a-3aa2-40a6-8fa9-97805b1e913c.jpg",
+      "life-span": {
+        "begin": "2026-04-18",
+        "end": "2026-04-18",
+        "ended": true
+      },
+      "name": "VCO2, Doğa Sultan & Boneless at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/58f3365a-3aa2-40a6-8fa9-97805b1e913c/45049157275-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/58f3365a-3aa2-40a6-8fa9-97805b1e913c/45049157275.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish hip-hop",
+            "id": "a5374b71-c5ab-4d09-9e29-8e01d67ad1b2",
+            "name": "Boneless",
+            "sort-name": "Boneless",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "a524631b-4f6f-40a5-8fcf-be235f173f97",
+            "name": "Doğa Sultan",
+            "sort-name": "Sultan, Doğa",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "b3fea910-b2d9-40ff-8b7b-cbfce82c6b9d",
+            "name": "VCO2",
+            "sort-name": "VCO2",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "label": {
+            "disambiguation": "",
+            "id": "fb99e314-eda3-4a02-b440-d7d9e1096f6e",
+            "label-code": null,
+            "name": "TOYZ Webzine",
+            "sort-name": "TOYZ Webzine",
+            "type": null,
+            "type-id": null
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "label",
+          "type": "presented",
+          "type-id": "09bd2cba-6160-408b-b191-afef7480ce54"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": null,
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "f.loki Social Club",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "NØMADS-36",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "url",
+          "type": "official homepage",
+          "type-id": "c26808b0-4e67-31a7-a587-913720dfb3f3",
+          "url": {
+            "id": "9eaa048b-b1d1-4b11-ad01-fb4ca54b0ab6",
+            "resource": "https://www.toyzwebzine.com/events/vco2-x-dogasultan-x-boneless"
+          }
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
@@ -6907,5 +8720,5 @@
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     }
   ],
-  "fetchedAt": "2026-05-05T21:48:46.219Z"
+  "fetchedAt": "2026-05-06T00:06:56.182Z"
 }
