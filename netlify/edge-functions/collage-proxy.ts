@@ -27,6 +27,7 @@ export default async (req: Request) => {
         `https://coverartarchive.org/release-group/${mbid}/front-500`;
       const res = await fetch(caaUrl, {
         headers: { "User-Agent": USER_AGENT },
+        signal: AbortSignal.timeout(8000),
       });
 
       if (!res.ok) {
