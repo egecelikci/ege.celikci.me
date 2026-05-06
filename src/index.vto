@@ -1,7 +1,6 @@
 ---
 layout: layouts/page.vto
 title: ege.celikci.me
-subtitle: personal index & ledger
 container_width: narrow
 searchable: false
 prose: false
@@ -13,7 +12,9 @@ prose: false
 
 <div class="flex flex-col gap-16 pb-12">
   {{# 1. THE SEARCH (Promoted to Top) #}}
-  <div class="focus-within:opacity-100 transition-opacity">
+  <div
+    class="focus-within:opacity-100 transition-opacity [view-transition-name:home-search]"
+  >
     <div class="flex items-center gap-4 mb-8">
       <span
         class="typography-label text-text-muted whitespace-nowrap"
@@ -27,7 +28,9 @@ prose: false
   </div>
 
   {{# 2. TWO-COLUMN GRID (Nav + Visual) #}}
-  <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+  <div
+    class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start [view-transition-name:home-grid]"
+  >
     {{# THE INDEX (Unified Component) #}}
     <div class="md:col-span-7">
       {{>

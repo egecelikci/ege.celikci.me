@@ -591,7 +591,7 @@
 
 /* Reusable Component Utilities (only for patterns used 2+ times) */
 @utility btn-minimal {
-  @apply inline-flex items-center gap-2 px-5 py-2 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[10px] font-mono uppercase tracking-[0.2em] text-text/80 transition-all duration-300 no-underline;
+  @apply inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[11px] font-mono uppercase tracking-[0.15em] text-text/80 transition-all duration-300 no-underline;
 }
 
 @utility btn-primary {
@@ -599,11 +599,11 @@
 }
 
 @utility typography-label {
-  @apply text-[10px] font-mono uppercase tracking-[0.3em] font-bold;
+  @apply text-xs font-mono uppercase tracking-[0.2em] font-bold;
 }
 
 @utility typography-sublabel {
-  @apply text-[9px] font-mono uppercase tracking-[0.2em] font-bold;
+  @apply text-[11px] font-mono uppercase tracking-[0.1em] font-bold;
 }
 
 @utility link-hover {
@@ -636,6 +636,42 @@
 
 @utility badge-base {
   @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest border shadow-sm;
+}
+
+@utility bookmark-pill {
+  @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[11px] font-mono uppercase tracking-[0.15em] text-text/70 transition-all duration-300 no-underline whitespace-nowrap shrink-0 cursor-pointer;
+}
+
+@utility bookmark-pill--active {
+  @apply !bg-primary !text-white !border-primary;
+}
+
+@utility bookmark-count {
+  @apply inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-current/15 text-[9px] font-mono tabular-nums leading-none;
+}
+
+@utility scroll-shadows-x {
+  background:
+    linear-gradient(to right, var(--color-bg) 30%, transparent),
+    linear-gradient(to right, transparent, var(--color-bg) 70%) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.12), transparent),
+    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.12), transparent)
+    100% 0;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@utility scrollbar-subtle {
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    @apply bg-border/40 rounded-full;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-text-muted rounded-full hover:bg-primary transition-colors;
+  }
 }
 
 .markdown > p {

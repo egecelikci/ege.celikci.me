@@ -82,7 +82,7 @@ layout: layouts/base.vto
 
   {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
   <article
-    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }}"
+    class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }} [view-transition-name:page-content]"
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
     {{ if it.type === "note" }}
@@ -130,7 +130,7 @@ layout: layouts/base.vto
   </article>
 
   {{# 3. Supplemental UI #}}
-  <div>
+  <div class="[view-transition-name:page-supplemental]">
     {{ if show_related && tags }}
       {{ set relatedData = utils.getRelatedContent(search, url, tags) }}
       {{ comp.ui.RelatedContent({ related: relatedData, tags: tags }) }}

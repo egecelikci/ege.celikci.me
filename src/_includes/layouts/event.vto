@@ -11,12 +11,12 @@ layout: layouts/page.vto
       : [])
 }}
 
-<div class="flex flex-col gap-16 pb-16">
+<div class="flex flex-col gap-16 pb-16 [view-transition-name:event-page]">
   <div
     class="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-12 md:gap-20 items-start"
   >
     {{# MAIN CONTENT #}}
-    <div class="space-y-16">
+    <div class="space-y-16 [view-transition-name:event-content]">
       {{# HEADER META (Price, Date) #}}
       <section class="space-y-10">
         {{ if event.isCustomTitle && event.name }}
@@ -167,7 +167,9 @@ layout: layouts/page.vto
     </div>
 
     {{# SIDEBAR #}}
-    <aside class="space-y-12 md:sticky md:top-24">
+    <aside
+      class="space-y-12 md:sticky md:top-24 [view-transition-name:event-sidebar]"
+    >
       {{# POSTER #}}
       {{ if posterImages.length > 0 }}
         <div class="w-full relative group/poster">
@@ -423,7 +425,9 @@ layout: layouts/page.vto
 
   {{# GALLERY #}}
   {{ if gallery && gallery.length > 0 }}
-    <section class="flex flex-col gap-8 pt-12 border-t border-border/10">
+    <section
+      class="flex flex-col gap-8 pt-12 border-t border-border/10 [view-transition-name:event-gallery]"
+    >
       <h2
         class="typography-label text-text-muted"
       >

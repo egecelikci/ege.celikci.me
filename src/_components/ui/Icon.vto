@@ -5,5 +5,9 @@
 #}}
 {{- set iconPath = it.name |> icon(it.catalog || 'lucide') -}}
 {{- set absolutePath = iconPath.startsWith("/") ? iconPath : "/" + iconPath -}}
+{{- set defaultClasses = "inline-block align-middle pointer-events-none" -}}
+{{- set hasWidth = it.classes?.includes("w-") || false -}}
+{{- set hasHeight = it.classes?.includes("h-") || false -}}
+{{- set sizeClasses = (hasWidth || hasHeight) ? "" : "h-[1em] w-[1em]" -}}
 <!-- deno-fmt-ignore -->
-<img src="{{ absolutePath }}" class="inline-block text-[1.2em] h-[1em] w-[1em] align-middle pointer-events-none {{ if it.filled || it.catalog === 'simpleicons' }}fill-current{{ /if }} {{ it.classes || '' }}" data-catalog="{{ it.catalog || 'lucide' }}" inline />
+<img src="{{ absolutePath }}" class="{{ defaultClasses }} {{ sizeClasses }} {{ if it.filled || it.catalog === 'simpleicons' }}fill-current{{ /if }} {{ it.classes || '' }}" data-catalog="{{ it.catalog || 'lucide' }}" inline />

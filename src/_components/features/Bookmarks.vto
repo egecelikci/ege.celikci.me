@@ -1,134 +1,346 @@
 {{#
   Component: Bookmarks (Feature)
-  A refined, data-driven directory for digital connections.
-  
+  A refined, data-driven directory of digital connections.
+
   Props:
-    - sections: Array of section objects { title, category, blogroll, retro }
-    - bookmarks: Array of bookmark objects (passed from global data)
+    - filteredBookmarks: Bookmark[]
+    - allCategoryIds: string[]
+    - categoryMetadata: CategoryMetadata[]  — enriched with .count at build time
+    - totalCount: number
+    - activeCategory: string | null
 #}}
 
-<div class="flex flex-col gap-24">
-  {{ for section of it.sections }}
-    <section
-      class="{{ if section.retro }}pt-16 border-t border-border/10{{ /if }}"
-    >
-      <div class="flex items-baseline justify-between mb-12">
-        <h2
-          class="typography-label text-text-muted"
+<div class="[view-transition-name:bookmarks-page] flow">
+  {{# ── Filter Bar ──────────────────────────────────────────────────────── #}}
+  <div class="py-2 mb-12 border-b border-border/10">
+    {{#
+      Horizontal-scroll single row. Uses JS-free scroll-shadows and 
+      a subtle scrollbar for desktop discovery.
+    #}}
+    <div class="relative scroll-shadows-x">
+      <nav
+        class="flex items-center gap-2 overflow-x-auto scrollbar-subtle py-2 pb-4 scroll-px-6"
+        aria-label="Filter bookmarks by category"
+      >
+        {{# "All" pill — count from totalCount (global) with filteredBookmarks.length fallback #}}
+        <a
+          id="group-all"
+          href="/bookmarks/#group-all"
+          class="bookmark-pill {{ if !it.activeCategory }}bookmark-pill--active{{ /if }}"
         >
-          {{ section.title }}
-        </h2>
-        {{ if section.blogroll }}
-          <a
-            href="/blogroll.xml"
-            class="typography-label text-primary hover:text-primary-offset transition-colors no-underline"
-          >
-            Subscribe to blogroll &rarr;
-          </a>
-        {{ /if }}
-      </div>
+          {{
+            await it.comp.ui.Icon({
+              name: "layout-grid",
+              catalog: "lucide",
+              classes: "w-3.5 h-3.5",
+            })
+          }}
+          All
+          <span class="bookmark-count">{{
+            it.totalCount ?? it.filteredBookmarks.length
+          }}</span>
+        </a>
 
-      {{ if section.retro }}
-        {{# 88x31 SECTION (The Retro Corner) #}}
-        <div
-          class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 opacity-70 hover:opacity-100 transition-opacity duration-700"
+        {{ for catId of it.allCategoryIds }}
+          {{> const meta = it.categoryMetadata.find((m) => m.id === catId) }}
+          <a
+            id="group-{{ catId }}"
+            href="/bookmarks/{{ catId }}/#group-{{ catId }}"
+            class="bookmark-pill {{ if it.activeCategory == catId }}bookmark-pill--active{{ /if }}"
+          >
+            {{ if meta?.icon }}
+              {{
+                await it.comp.ui.Icon({
+                  name: meta.icon,
+                  catalog: "lucide",
+                  classes: "w-3.5 h-3.5",
+                })
+              }}
+            {{ /if }}
+            {{ meta?.title || catId }}
+            <span class="bookmark-count">{{ meta?.count ?? 0 }}</span>
+          </a>
+        {{ /for }}
+      </nav>
+    </div>
+  </div>
+
+  {{# ── 88×31 Grid View ─────────────────────────────────────────────────── #}}
+  {{ if it.activeCategory == "88x31" }}
+    <section>
+      <div
+        class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-5"
+      >
+        {{ for item of it.filteredBookmarks |> shuffle }}
+          <a
+            href="{{ item.url || '#' }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block group/badge"
+            title="{{ item.title }}"
+          >
+            <div
+              class="aspect-[88/31] overflow-hidden border border-border/10 shadow-sm grayscale group-hover/badge:grayscale-0 group-hover/badge:scale-105 active:scale-95 transition-all duration-500"
+            >
+              <img
+                src="{{ item.img |> url }}"
+                alt="{{ item.title }}"
+                width="88"
+                height="31"
+                loading="lazy"
+                class="block w-full h-full object-cover [image-rendering:pixelated]"
+              />
+            </div>
+            <span
+              class="block mt-2 typography-sublabel text-text-muted group-hover/badge:text-primary transition-colors truncate"
+            >
+              {{ item.title }}
+            </span>
+          </a>
+        {{ /for }}
+      </div>
+    </section>
+
+    {{# ── Main Bookmark List ──────────────────────────────────────────────── #}}
+  {{ else }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-0 mt-4">
+      {{ for item of it.filteredBookmarks }}
+        {{#
+          Two-column grid on the article itself:
+            left  (1fr) — all text content
+            right (88px) — badge slot, always reserved so rows align whether
+                           or not this item has an img
+          This avoids positional differences between img and no-img cards.
+        #}}
+        <article
+          class="{{ if item.categories.includes('person') }}h-card{{ else }}h-entry{{ /if }} group py-9 border-b border-border/10 last:border-0 grid grid-cols-[1fr] sm:grid-cols-[1fr_92px] gap-x-4 items-start"
         >
-          {{ for item of it.bookmarks |> shuffle }}
+          {{# ── Text column ── #}}
+          <div class="flex flex-col gap-2.5 min-w-0">
+            {{# Title #}}
+            <a
+              href="{{ item.url || '#' }}"
+              target="_blank"
+              rel="noopener noreferrer {{ if item.categories.includes('person') }}u-url{{ else }}u-bookmark-of h-cite{{ /if }}"
+              class="no-underline"
+            >
+              <span
+                class="{{ if item.categories.includes('person') }}p-name{{ /if }} text-xl font-bold text-text group-hover:text-primary transition-colors tracking-tight block"
+              >
+                {{ item.title }}
+              </span>
+            </a>
+
+            {{# URLs (Origin + Mirrors) #}}
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-0.5">
+              {{ if item.url }}
+                <a
+                  href="{{ item.url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 no-underline group/url"
+                >
+                  {{
+                    await it.comp.ui.Icon({
+                      name: "link",
+                      catalog: "lucide",
+                      classes:
+                        "w-3.5 h-3.5 text-text-muted group-hover/url:text-primary transition-colors shrink-0",
+                    })
+                  }}
+                  <span
+                    class="typography-sublabel text-text-muted lowercase tracking-normal font-normal group-hover/url:text-primary transition-colors"
+                  >
+                    {{
+                      item.url
+                      |> replace("https://", "")
+                      |> replace("http://", "")
+                      |> replace(/\/$/, "")
+                    }}
+                  </span>
+                </a>
+              {{ /if }}
+
+              {{ if item.mirrors?.length }}
+                {{ for mirror of item.mirrors }}
+                  <a
+                    href="{{ mirror }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 no-underline group/mirror"
+                    title="Mirror"
+                  >
+                    {{
+                      await it.comp.ui.Icon({
+                        name: "copy",
+                        catalog: "lucide",
+                        classes:
+                          "w-3.5 h-3.5 text-text-muted group-hover/mirror:text-primary transition-colors shrink-0",
+                      })
+                    }}
+                    <span
+                      class="typography-sublabel text-text-muted lowercase tracking-normal font-normal group-hover/mirror:text-primary transition-colors"
+                    >
+                      <span class="opacity-50">mirror:</span>
+                      {{
+                        mirror
+                        |> replace("https://", "")
+                        |> replace("http://", "")
+                        |> replace(/\/.*$/, "")
+                      }}
+                    </span>
+                  </a>
+                {{ /for }}
+              {{ /if }}
+            </div>
+
+            {{# Description — full text, no clamping #}}
+            {{ if item.desc }}
+              <div
+                class="{{ if item.categories.includes('person') }}p-note{{ /if }} text-sm text-text-muted leading-relaxed markdown markdown-inline"
+              >
+                {{ item.desc |> md |> safe }}
+              </div>
+            {{ /if }}
+
+            {{# Category tags #}}
+            {{>
+              const visibleCats = item.categories.filter((c) =>
+                c !== "88x31" && c !== "blogroll" && c !== it.activeCategory
+              )
+            }}
+            {{ if visibleCats.length > 0 }}
+              <div class="flex flex-wrap gap-x-3 gap-y-1">
+                {{ for catId of visibleCats }}
+                  {{>
+                    const meta = it.categoryMetadata.find((m) => m.id === catId)
+                  }}
+                  <a
+                    href="/bookmarks/{{ catId }}/#group-{{ catId }}"
+                    class="inline-flex items-center gap-1.5 typography-sublabel text-text-muted hover:text-primary transition-colors no-underline"
+                  >
+                    {{ if meta?.icon }}
+                      {{
+                        await it.comp.ui.Icon({
+                          name: meta.icon,
+                          catalog: "lucide",
+                          classes: "w-3.5 h-3.5",
+                        })
+                      }}
+                    {{ else }}
+                      {{
+                        await it.comp.ui.Icon({
+                          name: "hash",
+                          catalog: "lucide",
+                          classes: "w-3.5 h-3.5",
+                        })
+                      }}
+                    {{ /if }}
+                    {{ meta?.title || catId }}
+                  </a>
+                {{ /for }}
+              </div>
+            {{ /if }}
+
+            {{# RSS Feed Row #}}
+            {{ if item.feed }}
+              <div class="mt-0.5">
+                <a
+                  href="{{ item.feed }}"
+                  class="inline-flex items-center gap-1.5 no-underline group/rss"
+                  title="Subscribe via RSS / Atom"
+                >
+                  {{
+                    await it.comp.ui.Icon({
+                      name: "rss",
+                      catalog: "lucide",
+                      classes:
+                        "w-3.5 h-3.5 text-orange-400 group-hover/rss:text-orange-500 transition-colors shrink-0",
+                    })
+                  }}
+                  <span
+                    class="typography-sublabel text-text-muted group-hover/rss:text-orange-500 transition-colors"
+                  >
+                    {{
+                      item.feed
+                      |> replace("https://", "")
+                      |> replace("http://", "")
+                      |> replace(/\/.*$/, "")
+                    }}
+                  </span>
+                </a>
+              </div>
+            {{ /if }}
+          </div>
+
+          {{# ── Badge column (always present, content conditional) ── #}}
+          <div class="hidden sm:flex justify-end items-start pt-1">
             {{ if item.img }}
               <a
                 href="{{ item.url || '#' }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="block grayscale hover:grayscale-0 transition-all duration-500 hover:scale-110 active:scale-95"
-                title="{{ item.title }}"
+                class="block opacity-25 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 hover:scale-105 active:scale-95"
+                tabindex="-1"
+                aria-hidden="true"
               >
                 <img
                   src="{{ item.img |> url }}"
-                  alt="{{ item.title }}"
+                  alt=""
                   width="88"
                   height="31"
                   loading="lazy"
-                  class="block w-full h-auto [image-rendering:pixelated] border-none shadow-none"
+                  class="w-[88px] h-[31px] [image-rendering:pixelated] object-contain"
                 />
               </a>
             {{ /if }}
-          {{ /for }}
-        </div>
-      {{ else }}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-0">
-          {{ for item of it.bookmarks |> shuffle }}
-            {{ if item.category == section.category && item.url }}
-              <div
-                class="{{ if item.category == 'person' }}h-card{{ else }}h-entry{{ /if }} group relative flex items-start justify-between gap-6 py-8 border-b border-border/10 hover:border-primary/30 transition-colors duration-500"
-              >
-                <div class="flex flex-col gap-2">
-                  <a
-                    href="{{ item.url }}"
-                    target="_blank"
-                    rel="noopener noreferrer u-bookmark-of h-cite"
-                    class="u-url no-underline"
-                  >
-                    <span
-                      class="p-name text-xl font-bold text-text group-hover:text-primary transition-colors tracking-tight"
-                    >
-                      {{ item.title }}
-                    </span>
-                  </a>
+          </div>
+        </article>
+      {{ /for }}
+    </div>
+  {{ /if }}
 
-                  {{ if item.desc }}
-                    <div
-                      class="p-content p-note text-sm text-text-muted max-w-sm markdown markdown-inline"
-                    >
-                      {{ item.desc |> md |> safe }}
-                    </div>
-                  {{ /if }}
+  {{# ── Empty State ─────────────────────────────────────────────────────── #}}
+  {{ if it.filteredBookmarks.length == 0 }}
+    <div class="py-32 text-center">
+      <p class="text-text-muted italic mb-6">Nothing in this category yet.</p>
+      <a href="/bookmarks/" class="btn-minimal">← All bookmarks</a>
+    </div>
+  {{ /if }}
 
-                  {{ if item.feed }}
-                    <a
-                      href="{{ item.feed }}"
-                      class="inline-flex items-center gap-1.5 typography-label text-text-muted hover:text-primary transition-colors no-underline"
-                    >
-                      <span
-                        class="w-1 h-1 rounded-full bg-current opacity-40"
-                      ></span>
-                      RSS Feed
-                    </a>
-                  {{ /if }}
-
-                  {{ if item.mirrors }}
-                    <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1">
-                      {{ for mirror of item.mirrors }}
-                        <a
-                          href="{{ mirror }}"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="typography-label text-text-muted hover:text-primary transition-colors no-underline"
-                        >
-                          {{ mirror |> replace("https://", "") }}
-                        </a>
-                      {{ /for }}
-                    </div>
-                  {{ /if }}
-                </div>
-
-                {{ if item.img }}
-                  <div
-                    class="shrink-0 pt-1.5 grayscale group-hover:grayscale-0 transition-all duration-500 opacity-40 group-hover:opacity-100 group-hover:scale-105"
-                  >
-                    <img
-                      src="{{ item.img |> url }}"
-                      alt=""
-                      width="88"
-                      height="31"
-                      class="w-[88px] h-[31px] [image-rendering:pixelated]"
-                    />
-                  </div>
-                {{ /if }}
-              </div>
-            {{ /if }}
-          {{ /for }}
-        </div>
-      {{ /if }}
+  {{# ── 88×31 Teaser on "All" page ─────────────────────────────────────── #}}
+  {{> const badgeItems = it.filteredBookmarks.filter((b) => b.img) }}
+  {{ if badgeItems.length > 0 && !it.activeCategory }}
+    <section class="mt-24 pt-16 border-t border-border/10">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="typography-label text-text-muted">88×31 badges</h2>
+        <a
+          href="/bookmarks/88x31/"
+          class="typography-sublabel text-primary hover:text-primary-offset no-underline transition-colors"
+        >View all →</a>
+      </div>
+      <div
+        class="flex flex-wrap gap-5 opacity-40 hover:opacity-100 transition-opacity duration-700"
+      >
+        {{ for item of badgeItems |> shuffle |> slice(0, 12) }}
+          <a
+            href="{{ item.url || '#' }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block grayscale hover:grayscale-0 hover:scale-105 active:scale-95 transition-all duration-500"
+            title="{{ item.title }}"
+          >
+            <img
+              src="{{ item.img |> url }}"
+              alt="{{ item.title }}"
+              width="88"
+              height="31"
+              loading="lazy"
+              class="w-[88px] h-[31px] [image-rendering:pixelated] object-contain"
+            />
+          </a>
+        {{ /for }}
+      </div>
     </section>
-  {{ /for }}
+  {{ /if }}
 </div>
