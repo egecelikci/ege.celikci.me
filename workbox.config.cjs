@@ -1,11 +1,16 @@
 module.exports = {
   globDirectory: "dist/",
   globPatterns: [
-    "**/*.{css,js,mjs,json,xml,ico,svg,woff2,woff,png,jpg,jpeg,webp,avif}",
+    "**/*.{css,js,mjs,json,xml,ico,svg,woff2,woff}",
+    "assets/images/favicon/*.png",
+    "assets/images/88x31/*.png",
     "offline/index.html",
   ],
   globIgnores: [
     "assets/images/gallery/**/*",
+    "assets/images/events/**/*",
+    "assets/images/covers/**/*",
+    "assets/images/posters/**/*",
   ],
   swDest: "dist/sw.js",
   skipWaiting: true,
