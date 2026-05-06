@@ -11,7 +11,9 @@ menu:
 <div class="max-w-4xl mx-auto">
   <div class="flex flex-col md:flex-row gap-12 items-start">
     {{# 1. CONTROLS #}}
-    <div class="w-full md:w-80 shrink-0 flex flex-col gap-6">
+    <div
+      class="w-full md:w-80 shrink-0 flex flex-col gap-6 [view-transition-name:collage-controls]"
+    >
       <div
         class="flex flex-col gap-8 p-8 rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/10 shadow-2xl relative overflow-hidden"
       >
@@ -30,7 +32,7 @@ menu:
               }}
               <label
                 class="typography-label text-text-muted"
-              >Network</label>
+              >Service</label>
             </div>
             <div
               class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10"
@@ -58,7 +60,7 @@ menu:
               <label
                 for="username"
                 class="typography-label text-text-muted"
-              >Identity</label>
+              >Username</label>
             </div>
             <input
               type="text"
@@ -186,23 +188,6 @@ menu:
         </div>
       </div>
 
-      <div
-        id="status-msg"
-        class="text-[10px] font-mono uppercase tracking-[0.2em] opacity-0 transition-opacity flex flex-col gap-3 p-5 bg-primary/5 rounded-3xl border border-primary/10 shadow-lg"
-      >
-        <div class="flex items-center gap-3">
-          <span
-            class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.5)]"
-          ></span>
-          <span id="status-text" class="text-primary font-bold">Ready</span>
-        </div>
-        <div
-          id="status-history"
-          class="text-[9px] opacity-40 flex flex-col-reverse gap-1 h-12 overflow-hidden italic lowercase"
-        >
-        </div>
-      </div>
-
       <div id="result-actions" class="grid grid-cols-2 gap-4 hidden">
         <button
           id="download-btn"
@@ -246,22 +231,17 @@ menu:
 
         <div
           id="canvas-loader"
-          class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]:opacity-100"
+          class="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]:opacity-100"
         >
           <div class="flex flex-col items-center gap-6">
-            <div class="relative w-12 h-12">
-              <div
-                class="absolute inset-0 border-2 border-primary/10 rounded-full"
-              >
-              </div>
-              <div
-                class="absolute inset-0 border-t-2 border-primary rounded-full animate-spin"
-              >
-              </div>
+            <div
+              class="w-10 h-10 border-2 border-white/5 border-t-primary/40 rounded-full animate-spin"
+            >
             </div>
             <span
-              class="text-[10px] font-mono uppercase tracking-[0.4em] text-white/80"
-            >Rendering</span>
+              id="status-text"
+              class="text-[11px] font-mono text-white/40 tracking-wider lowercase"
+            >initializing...</span>
           </div>
         </div>
       </div>
@@ -275,9 +255,7 @@ menu:
   const downloadBtn = document.getElementById("download-btn");
   const shareBtn = document.getElementById("share-btn");
   const resultActions = document.getElementById("result-actions");
-  const statusMsg = document.getElementById("status-msg");
   const statusText = document.getElementById("status-text");
-  const statusHistory = document.getElementById("status-history");
   const usernameInput = document.getElementById("username");
   const periodSelect = document.getElementById("period");
   const gridSizeSelect = document.getElementById("grid-size");
@@ -306,9 +284,7 @@ menu:
   function updateStatus(text) {
     if (statusText.innerText === text) return;
     statusText.innerText = text;
-    const log = document.createElement("div");
-    log.innerText = text;
-    statusHistory.prepend(log);
+    console.log(`[collage] ${text}`);
   }
 
   function saveSettings() {
@@ -418,9 +394,7 @@ menu:
     const user = usernameInput.value.trim();
     if (!user) return;
 
-    statusMsg.style.opacity = "1";
-    statusHistory.innerHTML = "";
-    updateStatus("Synchronizing Data...");
+    updateStatus("fetching stats from service");
     canvasContainer.classList.add("is-loading");
     canvasContainer.classList.remove("is-ready");
     resultActions.classList.add("hidden");
@@ -435,6 +409,8 @@ menu:
 
       let albums = data.albums;
       if (!albums?.length) throw new Error("No data found");
+
+      updateStatus(`Retrieved ${albums.length} albums from service`);
 
       const aliasesRaw = document.getElementById("aliases").value;
       if (aliasesRaw.trim()) {
