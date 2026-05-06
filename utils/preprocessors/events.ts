@@ -106,7 +106,7 @@ export default function () {
             r["target-type"] === "label" && !excludeLabels.includes(r.label?.id)
           );
 
-        // 8. Enrich relations with Instagram links from global entities map
+        // 8. Enrich relations with raw link data from global entities map
         (event.relations || []).forEach((rel: any) => {
           const entity = rel.artist || rel.place || rel.label;
           if (entity?.id && mbEntities[entity.id]) {
@@ -143,9 +143,6 @@ export default function () {
 
       // Crucially: Enrich page-level 'event' objects (for event_detail.page.ts)
       for (const page of pages) {
-        const pageUrl = page.data.url as string;
-        if (!pageUrl) continue;
-
         if (page.data.event) {
           enrichEvent(page.data.event);
           // Sync page title with enriched event title (filtering non-performers)

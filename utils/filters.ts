@@ -2,6 +2,7 @@ import * as path from "@std/path";
 import sanitizeHTML from "sanitize-html";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
+import { getLinkInfo } from "./links.ts";
 
 const SITE_URL = siteData.url;
 const OWN_URLS = [
@@ -121,20 +122,13 @@ export const filters = {
     return images;
   },
 
-  // Get first image from content (for cover)
-  getCoverImage: (content: string) => {
-    const images = filters.extractImages(content);
-    return images.length > 0 ? images[0] : null;
+  getLinkInfo: function (type: string, url: string) {
+    return getLinkInfo(type, url);
   },
 
   // Check if content has images
   hasImages: (content: string) => {
     return filters.extractImages(content).length > 0;
-  },
-
-  // Count images in content
-  imageCount: (content: string) => {
-    return filters.extractImages(content).length;
   },
 
   obfuscate: function (str: string): string {

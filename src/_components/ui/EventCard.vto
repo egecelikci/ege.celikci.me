@@ -89,17 +89,27 @@
       {{ /if }}
 
       {{# LINEUP: Flowing list with separators #}}
-      {{ if artists.length > 0 }}
+      {{ if it.event.relations?.length > 0 }}
         <div
           class="inline {{ if isCustomTitle }}text-xs text-text-muted{{ else }}text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors{{ /if }} leading-snug"
         >
-          {{ if artists.length === 1 }}
-            {{ artists[0] }}
-          {{ else if artists.length === 2 }}
-            {{ artists[0] }} & {{ artists[1] }}
-          {{ else }}
-            {{ artists |> slice(0, -1) |> join(", ") }} & {{ artists.at(-1) }}
-          {{ /if }}
+          {{
+            set artistRels = it.event.relations.filter((r) =>
+              r["target-type"] === "artist" &&
+              !["illustration", "graphic design", "artwork", "design", "engineer"].includes(
+                r.type,
+              )
+            )
+          }}
+          {{ for index, rel of artistRels }}
+            <span class="inline-block">{{
+              rel["target-credit"] || rel.artist.name
+            }}</span>
+            {{ if index < artistRels.length - 2 }},
+            {{ else if index === artistRels.length - 2 }}
+              &
+            {{ /if }}
+          {{ /for }}
         </div>
       {{ /if }}
     </div>

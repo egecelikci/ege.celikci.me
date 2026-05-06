@@ -1,4 +1,5 @@
 import { exists } from "@std/fs/exists";
+import { getLinkInfo } from "../../utils/links.ts";
 
 export const searchable = true;
 
@@ -55,7 +56,13 @@ export default async function* ({ mb_events, events }: any) {
     });
 
     // 2. Header Extension Setup (Sources)
-    const headerSources = [
+    // ONLY event-related links: MB Event Page and Local Instagram URLs
+    const headerSources: Array<{
+      label: string;
+      url: string;
+      icon: string;
+      catalog: string;
+    }> = [
       {
         label: "MusicBrainz",
         url: `https://musicbrainz.org/event/${event.id}`,
@@ -64,14 +71,61 @@ export default async function* ({ mb_events, events }: any) {
       },
     ];
 
+    // Add local Instagram URLs from events.yml
+    if (local.instagram_url) {
+      const igUrls = Array.isArray(local.instagram_url)
+        ? local.instagram_url
+        : [local.instagram_url];
+
+      igUrls.forEach((url: string, index: number) => {
+        headerSources.push({
+          label: igUrls.length > 1 ? `Instagram (${index + 1})` : "Instagram",
+          url: url,
+          icon: "instagram",
+          catalog: "simpleicons",
+        });
+      });
+    }
+
+    // Add all event-level URL relations from MusicBrainz (homepages, ticketing, etc.)
+    (event.relations || []).forEach((rel: any) => {
+      if (rel["target-type"] === "url" && rel.url?.resource) {
+        const info = getLinkInfo(rel.type, rel.url.resource);
+        // Exclude generic fallbacks from the header to keep it high-quality
+        if (!info.isFallback) {
+          headerSources.push({
+            label: info.label,
+            url: rel.url.resource,
+            icon: info.icon,
+            catalog: info.catalog,
+          });
+        }
+      }
+    });
+
     // Gather all credits from MB relations
     const allCredits = (event.relations || []).filter((rel: any) =>
       ["illustration", "graphic design", "artwork", "design", "engineer"]
         .includes(rel.type)
     ).map((rel: any) => {
       const artistId = rel.artist?.id;
-      const igUrl = mb_events.entities?.[artistId]?.instagram;
+      const entityLinks = mb_events.entities?.[artistId] || [];
       const artistName = rel["target-credit"] || rel.artist?.name;
+
+      // Find primary link for the credit (homepage > instagram > MB)
+      const homepage = entityLinks.find((l: any) =>
+        l.type.toLowerCase().includes("homepage") ||
+        l.type.toLowerCase().includes("site")
+      );
+      const instagram = entityLinks.find((l: any) =>
+        l.type.toLowerCase() === "instagram" ||
+        l.url.includes("instagram.com")
+      );
+
+      const primaryLink = homepage || instagram;
+      const info = primaryLink
+        ? getLinkInfo(primaryLink.type, primaryLink.url)
+        : { icon: "person", catalog: "lucide", label: "Artist" };
 
       let role = "Artwork";
       if (rel.type === "illustration") role = "Illustration";
@@ -88,21 +142,21 @@ export default async function* ({ mb_events, events }: any) {
 
       return {
         name: artistName,
-        url: igUrl || `https://musicbrainz.org/artist/${artistId}`,
+        url: primaryLink?.url || `https://musicbrainz.org/artist/${artistId}`,
         role,
         type: rel.type,
-        icon: igUrl ? "instagram" : "person",
-        catalog: igUrl ? "simpleicons" : "lucide",
+        icon: info.icon,
+        catalog: info.catalog,
       };
     });
 
     // Split credits by logic:
     // 1. Static visual roles -> Poster
     // 2. Technical/Motion roles -> Video
-    let posterCredits = allCredits.filter((c) =>
+    let posterCredits = allCredits.filter((c: any) =>
       ["illustration", "graphic design", "artwork"].includes(c.type)
     );
-    let videoCredits = allCredits.filter((c) =>
+    let videoCredits = allCredits.filter((c: any) =>
       ["design", "engineer"].includes(c.type)
     );
 
@@ -112,26 +166,6 @@ export default async function* ({ mb_events, events }: any) {
       videoCredits = [];
     }
 
-    if (local.instagram_url) {
-      const igUrls = Array.isArray(local.instagram_url)
-        ? local.instagram_url
-        : [local.instagram_url];
-
-      igUrls.forEach((url: string, index: number) => {
-        headerSources.push({
-          label: igUrls.length > 1 ? `Instagram (${index + 1})` : "Instagram",
-          url: url,
-          icon: "instagram",
-          catalog: "simpleicons",
-        });
-      });
-    }
-
-    // Note: `local` is spread here for two generator-time needs:
-    //   1. collectGalleryImages needs local.photographers
-    //   2. headerSources needs local.instagram_url
-    // The preprocessor will also set event.local from the same source —
-    // this is redundant but harmless; both read from the same events.yml data.
     yield {
       url: `/event/${event.id}/`,
       type: "event",

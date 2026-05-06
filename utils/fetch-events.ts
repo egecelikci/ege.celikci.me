@@ -76,7 +76,7 @@ export interface MBEvent {
 
 export interface RawIzmirEvents {
   events: MBEvent[];
-  entities: Record<string, { instagram?: string }>;
+  entities: Record<string, Array<{ type: string; url: string }>>;
   fetchedAt: string;
 }
 
@@ -226,21 +226,23 @@ async function fetchEntityDetails(
   httpClient: HttpClient,
   entityId: string,
   type: "artist" | "place" | "label",
-): Promise<{ instagram?: string }> {
+): Promise<Array<{ type: string; url: string }>> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
   // These MUST be rate limited as they hit MusicBrainz
   const data = await httpClient.fetch<any>(url, "json", "force-cache", false);
 
-  if (!data) return {};
+  if (!data || !data.relations) return [];
 
-  const igRel = data.relations?.find((r: any) =>
-    (r.type === "social network" || r.type === "instagram") &&
-    r.url?.resource?.includes("instagram.com")
-  );
+  const links: Array<{ type: string; url: string }> = [];
+  data.relations.forEach((rel: any) => {
+    if (
+      rel["target-type"] === "url" && rel.url?.resource && rel.ended !== true
+    ) {
+      links.push({ type: rel.type, url: rel.url.resource });
+    }
+  });
 
-  return {
-    instagram: igRel?.url?.resource,
-  };
+  return links;
 }
 
 async function syncEvents() {
@@ -325,8 +327,8 @@ async function syncEvents() {
       };
     }));
 
-    // 4. Enrich entities (IG links)
-    const entities: Record<string, { instagram?: string }> = {};
+    // 4. Enrich entities (All links)
+    const entities: Record<string, Array<{ type: string; url: string }>> = {};
     console.log(
       `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities...`,
     );
@@ -338,22 +340,8 @@ async function syncEvents() {
           return [id, cachedData.entities[id]] as const;
         }
 
-        const mbUrl = `${MB_API}/${type}/${id}?inc=url-rels&fmt=json`;
-        const cached = await httpClient.getCachedJson<any>(mbUrl);
-
-        if (cached !== null) {
-          const igRel = (cached.relations || []).find((r: any) =>
-            (r.type === "social network" || r.type === "instagram") &&
-            r.url?.resource?.includes("instagram.com")
-          );
-          return [
-            id,
-            igRel?.url?.resource ? { instagram: igRel.url.resource } : null,
-          ] as const;
-        } else {
-          const details = await fetchEntityDetails(httpClient, id, type);
-          return [id, details.instagram ? details : null] as const;
-        }
+        const details = await fetchEntityDetails(httpClient, id, type);
+        return [id, details.length > 0 ? details : null] as const;
       }),
     );
 
