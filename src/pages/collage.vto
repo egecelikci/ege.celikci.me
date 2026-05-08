@@ -8,268 +8,682 @@ menu:
   order: 1
 ---
 
-<div class="max-w-4xl mx-auto">
-  <div class="flex flex-col md:flex-row gap-12 items-start">
-    {{# 1. CONTROLS #}}
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="flex flex-col lg:flex-row gap-8 items-start">
+    {{# 1. CONTROLS PANEL #}}
     <div
-      class="w-full md:w-80 shrink-0 flex flex-col gap-6 [view-transition-name:collage-controls]"
+      class="w-full lg:w-96 shrink-0 flex flex-col gap-6 [view-transition-name:collage-controls]"
     >
+      {{# MAIN CONTROL CARD #}}
       <div
-        class="flex flex-col gap-8 p-8 rounded-3xl bg-surface/40 backdrop-blur-xl border border-border/10 shadow-2xl relative overflow-hidden"
+        class="flex flex-col gap-6 p-6 rounded-[2rem] bg-surface/10 backdrop-blur-2xl border border-white/5 shadow-2xl relative overflow-hidden"
       >
-        {{# Subtle background accent #}}
+        {{# Ambient background effect #}}
         <div
-          class="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"
+          class="absolute -top-32 -right-32 w-64 h-64 bg-primary/2 rounded-full blur-3xl pointer-events-none"
+        >
+        </div>
+        <div
+          class="absolute -bottom-32 -left-32 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"
         >
         </div>
 
-        {{# A. SOURCE & IDENTITY #}}
-        <div class="flex flex-col gap-6 relative z-10">
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center gap-2">
-              {{
-                comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-primary/60" })
-              }}
-              <label
-                class="typography-label text-text-muted"
-              >Service</label>
-            </div>
+        {{# SECTION: IDENTITY #}}
+        <div class="flex flex-col gap-4 relative z-10">
+          <div
+            class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70"
+          >
+            {{ comp.ui.Icon({ name: "database", classes: "w-3 h-3" }) }}
+            <span>Source</span>
+          </div>
+
+          {{# Service Selection #}}
+          <div class="flex flex-col gap-2">
+            <label for="service-select" class="text-sm font-medium text-text"
+            >Service</label>
             <div
-              class="grid grid-cols-2 p-1 bg-surface/50 rounded-xl border border-border/10"
+              class="grid grid-cols-2 gap-2 p-1 bg-surface/50 rounded-xl border border-border/10"
             >
               <button
                 id="source-lb"
-                class="py-2.5 typography-label rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer"
+                aria-label="Use ListenBrainz"
               >
-                ListenBrainz
+                {{
+                  comp.ui.Icon({ name: "brain-circuit", classes: "w-4 h-4" })
+                }}
+                <span>ListenBrainz</span>
               </button>
               <button
                 id="source-lfm"
-                class="py-2.5 typography-label rounded-lg transition-all active:scale-95 cursor-pointer"
+                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer"
+                aria-label="Use Last.fm"
               >
-                Last.fm
+                {{ comp.ui.Icon({ name: "music", classes: "w-4 h-4" }) }}
+                <span>Last.fm</span>
               </button>
             </div>
           </div>
 
-          <div class="flex flex-col gap-3">
-            <div class="flex items-center gap-2">
+          {{# Username Input #}}
+          <div class="flex flex-col gap-2">
+            <label for="username" class="text-sm font-medium text-text"
+            >Username</label>
+            <div class="relative">
+              <input
+                type="text"
+                id="username"
+                placeholder="Enter your username"
+                class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 pl-12"
+                value="{{ author.username }}"
+                aria-describedby="username-hint"
+              />
               {{
-                comp.ui.Icon({ name: "user", classes: "w-3 h-3 text-primary/60" })
+                comp.ui.Icon({
+                  name: "at-sign",
+                  classes:
+                    "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                })
               }}
-              <label
-                for="username"
-                class="typography-label text-text-muted"
-              >Username</label>
             </div>
-            <input
-              type="text"
-              id="username"
-              placeholder="username"
-              class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20"
-              value="{{ author.username }}"
-            />
+            <p id="username-hint" class="text-xs text-text-muted/60">
+              Your username on the selected service
+            </p>
           </div>
         </div>
 
-        <div class="h-px bg-border/5"></div>
+        <div class="h-px bg-border/10"></div>
 
-        {{# B. CONFIGURATION #}}
-        <div class="grid grid-cols-1 gap-6 relative z-10">
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-3">
-              <label
-                for="period"
-                class="typography-label text-text-muted"
-              >Period</label>
-              <select
-                id="period"
-                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
-              >
-              </select>
-            </div>
-            <div class="flex flex-col gap-3">
-              <label
-                for="bg-mode"
-                class="typography-label text-text-muted"
-              >Aesthetic</label>
-              <select
-                id="bg-mode"
-                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
-              >
-                <option value="aura" selected>Aura</option>
-                <option value="silver">Silver</option>
-                <option value="velvet">Velvet</option>
-                <option value="terminal">Terminal</option>
-                <option value="thermal">Thermal</option>
-                <option value="dark">Dark</option>
-              </select>
-            </div>
-          </div>
+        {{# SECTION: APPEARANCE #}}
+        <div class="flex flex-col gap-4 relative z-10">
+          <details class="group/section" open>
+            <summary
+              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+            >
+              {{ comp.ui.Icon({ name: "palette", classes: "w-3 h-3" }) }}
+              <span>Appearance</span>
+              {{
+                comp.ui.Icon({
+                  name: "chevron-down",
+                  classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
+                })
+              }}
+            </summary>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-3">
-              <label
-                for="grid-size"
-                class="typography-label text-text-muted"
-              >Grid</label>
-              <select
-                id="grid-size"
-                class="input-base input-focus !py-2.5 !px-3 typography-label font-normal !rounded-xl cursor-pointer bg-surface/20"
-              >
-                <option value="3x3" selected>3x3</option>
-                <option value="4x4">4x4</option>
-                <option value="5x5">5x5</option>
-              </select>
+            <div class="mt-4 flex flex-col gap-4">
+              <div class="grid grid-cols-2 gap-3">
+                {{# Period #}}
+                <div class="flex flex-col gap-2">
+                  <label for="period" class="text-sm font-medium text-text"
+                  >Time Period</label>
+                  <div class="relative">
+                    <select
+                      id="period"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      aria-label="Select time period"
+                    >
+                    </select>
+                    {{
+                      comp.ui.Icon({
+                        name: "chevron-down",
+                        classes:
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                      })
+                    }}
+                  </div>
+                </div>
+
+                {{# Aesthetic #}}
+                <div class="flex flex-col gap-2">
+                  <label for="bg-mode" class="text-sm font-medium text-text"
+                  >Style</label>
+                  <div class="relative">
+                    <select
+                      id="bg-mode"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      aria-label="Select visual style"
+                    >
+                      <option value="aura" selected>Aura</option>
+                      <option value="silver">Silver</option>
+                      <option value="velvet">Velvet</option>
+                      <option value="terminal">Terminal</option>
+                      <option value="thermal">Thermal</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                    {{
+                      comp.ui.Icon({
+                        name: "sparkles",
+                        classes:
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                      })
+                    }}
+                  </div>
+                </div>
+
+                {{# Grid Size #}}
+                <div class="flex flex-col gap-2">
+                  <label for="grid-size" class="text-sm font-medium text-text"
+                  >Grid Layout</label>
+                  <div class="relative">
+                    <select
+                      id="grid-size"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      aria-label="Select grid size"
+                    >
+                      <option value="3x3" selected>3×3</option>
+                      <option value="4x4">4×4</option>
+                      <option value="5x5">5×5</option>
+                    </select>
+                    {{
+                      comp.ui.Icon({
+                        name: "grid-3x3",
+                        classes:
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                      })
+                    }}
+                  </div>
+                </div>
+
+                {{# Text Casing #}}
+                <div class="flex flex-col gap-2">
+                  <label for="text-case" class="text-sm font-medium text-text"
+                  >Text Style</label>
+                  <div class="relative">
+                    <select
+                      id="text-case"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      aria-label="Select text casing"
+                    >
+                      <option value="none" selected>Original</option>
+                      <option value="upper">UPPERCASE</option>
+                      <option value="lower">lowercase</option>
+                    </select>
+                    {{
+                      comp.ui.Icon({
+                        name: "type",
+                        classes:
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                      })
+                    }}
+                  </div>
+                </div>
+              </div>
+
+              {{# Texture Toggles #}}
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-text">Effects</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <label
+                    class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                  >
+                    <input
+                      type="checkbox"
+                      id="grain"
+                      checked
+                      class="checkbox-base"
+                      aria-label="Enable film grain effect"
+                    >
+                    <div class="flex flex-col">
+                      <span
+                        class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                      >Grain</span>
+                      <span class="text-xs text-text-muted/60"
+                      >Film texture</span>
+                    </div>
+                  </label>
+                  <label
+                    class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                  >
+                    <input
+                      type="checkbox"
+                      id="glass"
+                      class="checkbox-base"
+                      aria-label="Enable glass effect"
+                    >
+                    <div class="flex flex-col">
+                      <span
+                        class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                      >Glass</span>
+                      <span class="text-xs text-text-muted/60"
+                      >Frosted overlay</span>
+                    </div>
+                  </label>
+                </div>
+                <label
+                  class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                >
+                  <input
+                    type="checkbox"
+                    id="darken-bottom"
+                    class="checkbox-base"
+                    aria-label="Darken bottom section"
+                  >
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                    >Dim Bottom</span>
+                    <span class="text-xs text-text-muted/60"
+                    >Darker album list area</span>
+                  </div>
+                </label>
+              </div>
             </div>
-            <div class="flex flex-col gap-3">
+          </details>
+        </div>
+
+        <div class="h-px bg-border/10"></div>
+
+        {{# SECTION: CONTENT #}}
+        <div class="flex flex-col gap-4 relative z-10">
+          <details class="group/section" open>
+            <summary
+              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+            >
+              {{ comp.ui.Icon({ name: "sliders", classes: "w-3 h-3" }) }}
+              <span>Content Options</span>
+              {{
+                comp.ui.Icon({
+                  name: "chevron-down",
+                  classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
+                })
+              }}
+            </summary>
+
+            <div class="mt-4 space-y-2">
               <label
-                class="typography-label text-text-muted"
-              >Texture</label>
-              <label
-                class="flex items-center gap-3 h-[42px] px-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-colors"
+                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
               >
+                <div class="flex items-center gap-3">
+                  {{
+                    comp.ui.Icon({
+                      name: "image-off",
+                      classes:
+                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                    })
+                  }}
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                    >Skip missing cover art</span>
+                    <span class="text-xs text-text-muted/60"
+                    >Hide albums without covers</span>
+                  </div>
+                </div>
                 <input
                   type="checkbox"
-                  id="grain"
+                  id="skip-missing"
                   checked
-                  class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary"
+                  class="checkbox-base"
+                  aria-label="Skip albums without cover art"
                 >
-                <span
-                  class="typography-label text-text-muted group-hover:opacity-100 transition-opacity"
-                >Grain</span>
+              </label>
+
+              <label
+                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
+              >
+                <div class="flex items-center gap-3">
+                  {{
+                    comp.ui.Icon({
+                      name: "hash",
+                      classes:
+                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                    })
+                  }}
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                    >Display listen counts</span>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="show-counts"
+                  class="checkbox-base"
+                  aria-label="Show play counts"
+                >
+              </label>
+
+              <label
+                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
+              >
+                <div class="flex items-center gap-3">
+                  {{
+                    comp.ui.Icon({
+                      name: "globe",
+                      classes:
+                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                    })
+                  }}
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                    >Show website name</span>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="show-site"
+                  checked
+                  class="checkbox-base"
+                  aria-label="Show site name in footer"
+                >
               </label>
             </div>
-          </div>
+          </details>
         </div>
+        <div class="h-px bg-border/10"></div>
 
-        <div class="h-px bg-border/5"></div>
-
-        {{# C. BEHAVIOR #}}
+        {{# SECTION: ADVANCED #}}
         <div class="flex flex-col gap-4 relative z-10">
-          <label
-            class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
-          >
-            <span
-              class="typography-label text-text-muted group-hover:text-text"
-            >Skip Missing</span>
-            <input
-              type="checkbox"
-              id="skip-missing"
-              checked
-              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary"
-            />
-          </label>
-          <label
-            class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer group hover:bg-surface/40 transition-all"
-          >
-            <span
-              class="typography-label text-text-muted group-hover:text-text"
-            >Show Counts</span>
-            <input
-              type="checkbox"
-              id="show-counts"
-              class="w-4 h-4 rounded border-border/20 bg-surface/50 text-primary focus:ring-primary"
-            />
-          </label>
-        </div>
-        {{# D. ADVANCED #}}
-        <div class="flex flex-col gap-3 relative z-10">
-          <label
-            for="aliases"
-            class="typography-label text-text-muted"
-          >Artist Aliases</label>
-          <textarea
-            id="aliases"
-            placeholder="Artist A -> Artist B"
-            rows="2"
-            class="input-base input-focus typography-label font-normal leading-tight resize-none py-3 px-4 !rounded-xl bg-surface/10 border-dashed"
-          ></textarea>
+          <details class="group">
+            <summary
+              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+            >
+              {{
+                comp.ui.Icon({
+                  name: "settings-2",
+                  classes: "w-3 h-3",
+                })
+              }}
+              <span>Advanced Options</span>
+              {{
+                comp.ui.Icon({
+                  name: "chevron-down",
+                  classes: "w-3 h-3 ml-auto transition-transform group-open:rotate-180",
+                })
+              }}
+            </summary>
+
+            <div class="mt-4 space-y-4">
+              {{# Font Family #}}
+              <div class="flex flex-col gap-2">
+                <label for="font-family" class="text-sm font-medium text-text"
+                >Custom Font</label>
+                <div class="relative">
+                  <input
+                    type="text"
+                    id="font-family"
+                    placeholder="Josefin Sans"
+                    class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 pl-12"
+                    aria-describedby="font-hint"
+                  />
+                </div>
+                {{
+                  set calloutText = "Enter a font name from [Google Fonts](https://fonts.google.com/)"
+                  |> md
+                }}
+
+                {{
+                  comp.ui.Callout({
+                    variant: "action",
+                    icon: "badge-info",
+                    content: calloutText,
+                  })
+                }}
+              </div>
+
+              {{# Footer Text #}}
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <label for="footer-text" class="text-sm font-medium text-text"
+                  >Footer Text</label>
+                  <label class="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      id="footer-auto"
+                      checked
+                      class="checkbox-base !w-4 !h-4"
+                      aria-label="Use automatic footer text"
+                    >
+                    <span
+                      class="text-xs font-medium text-text-muted/60 group-hover:text-text transition-colors"
+                    >Auto-generate</span>
+                  </label>
+                </div>
+                <input
+                  type="text"
+                  id="footer-text"
+                  placeholder="Custom footer text"
+                  class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                  disabled
+                  aria-describedby="footer-hint"
+                />
+                <p id="footer-hint" class="text-xs text-text-muted/60">
+                  Leave empty to use automatic text based on period
+                </p>
+              </div>
+
+              {{# Artist Aliases #}}
+              <div class="flex flex-col gap-2">
+                <label for="aliases" class="text-sm font-medium text-text"
+                >Artist Aliases</label>
+                <textarea
+                  id="aliases"
+                  placeholder="Ye -> Kanye West"
+                  rows="3"
+                  class="input-base input-focus !text-sm font-medium leading-relaxed resize-none !py-3 !px-4 !rounded-xl bg-surface/10 border-dashed"
+                  aria-describedby="aliases-hint"
+                ></textarea>
+                <p id="aliases-hint" class="text-xs text-text-muted/60">
+                  Merge artists with different names (one per line)
+                </p>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
-      <div id="result-actions" class="grid grid-cols-2 gap-4 hidden">
-        <button
-          id="download-btn"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all border border-border hover:border-primary !rounded-2xl justify-center active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/40 backdrop-blur-md"
-        >
-          {{
-            comp.ui.Icon({ name: "download", classes: "w-4 h-4 opacity-70" })
-          }}
-          <span class="font-bold tracking-widest">JPG</span>
-        </button>
-        <button
-          id="share-btn"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all border border-border hover:border-primary !rounded-2xl justify-center active:scale-95 border-primary/20 text-primary !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-md"
-        >
-          {{ comp.ui.Icon({ name: "share-2", classes: "w-4 h-4 opacity-70" }) }}
-          <span class="font-bold tracking-widest uppercase">Share</span>
-        </button>
-      </div>
+      {{# ACTION BUTTONS (Moved under canvas) #}}
     </div>
 
-    {{# 2. PREVIEW #}}
-    <div class="grow flex justify-center w-full">
+    {{# 2. PREVIEW AREA #}}
+    <div
+      id="preview-wrapper"
+      class="grow flex flex-col items-center justify-center w-full min-h-[50vh] group/preview"
+    >
       <div
         id="canvas-container"
-        class="relative group shadow-elevated rounded-[2.5rem] overflow-hidden border border-border/10 max-w-full bg-[#09090b]"
+        class="relative shadow-2xl rounded-[2.5rem] overflow-hidden border border-border/10 max-w-full bg-[#09090b] transition-all duration-500"
       >
         <canvas
           id="collage-canvas"
           width="1080"
           height="1920"
-          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 opacity-80 grayscale-[0.5] group-[.is-ready]:opacity-100 group-[.is-ready]:grayscale-0"
+          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 opacity-60 group-[.is-ready]/preview:opacity-100"
+          aria-label="Generated album collage preview"
         ></canvas>
 
+        {{# Dimensions overlay #}}
         <div
-          class="absolute inset-0 flex items-center justify-center bg-bg/20 backdrop-blur-sm opacity-0 group-[.is-ready]:group-hover:opacity-100 transition-opacity pointer-events-none"
+          class="absolute inset-0 flex items-center justify-center backdrop-blur-sm opacity-0 group-[.is-ready]/preview:hover:opacity-100 transition-opacity pointer-events-none"
         >
-          <span
-            class="text-[10px] font-mono uppercase tracking-[0.2em] bg-bg/80 px-4 py-2 rounded-full border border-border/10 shadow-sm text-text"
-          >1080 x 1920 (9:16)</span>
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-full bg-bg/90 border border-border/10 shadow-lg"
+          >
+            {{
+              comp.ui.Icon({ name: "maximize", classes: "w-3 h-3 text-text-muted" })
+            }}
+            <span class="text-xs font-mono uppercase tracking-wider text-text"
+            >1080 × 1920</span>
+          </div>
         </div>
 
+        {{# Loading overlay #}}
         <div
           id="canvas-loader"
-          class="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]:opacity-100"
+          class="absolute inset-0 flex items-center justify-center bg-black/90 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]/preview:opacity-100"
         >
           <div class="flex flex-col items-center gap-6">
-            <div
-              class="w-10 h-10 border-2 border-white/5 border-t-primary/40 rounded-full animate-spin"
-            >
+            <div class="relative">
+              <div class="w-12 h-12 border-2 border-white/10 rounded-full">
+              </div>
+              <div
+                class="absolute top-0 left-0 w-12 h-12 border-2 border-primary/60 border-t-transparent rounded-full animate-spin"
+              >
+              </div>
             </div>
-            <span
-              id="status-text"
-              class="text-[11px] font-mono text-white/40 tracking-wider lowercase"
-            >initializing...</span>
+            <div class="text-center">
+              <span
+                id="status-text"
+                class="text-sm font-mono text-white/60 tracking-wider lowercase block"
+              >initializing...</span>
+            </div>
           </div>
+        </div>
+
+        {{# Empty state #}}
+        <div
+          id="empty-state"
+          class="absolute inset-0 flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm transition-opacity duration-500"
+        >
+          <div class="text-center space-y-4">
+            <div
+              class="w-16 h-16 mx-auto rounded-2xl bg-surface/30 flex items-center justify-center"
+            >
+              {{
+                comp.ui.Icon({ name: "image", classes: "w-8 h-8 text-text-muted/40" })
+              }}
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-text mb-1">
+                Ready to Create
+              </h3>
+              <p class="text-sm text-text-muted/60">
+                Enter your username to generate your collage
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{# HELP AND ACTIONS #}}
+      <div class="w-full max-w-[1080px] mt-8 flex flex-col gap-6">
+        <div
+          id="result-actions"
+          class="grid grid-cols-2 gap-4 opacity-40 pointer-events-none transition-all duration-500 group-[.is-ready]/preview:opacity-100 group-[.is-ready]/preview:pointer-events-auto"
+        >
+          <button
+            id="download-btn"
+            class="btn-minimal !flex justify-center !rounded-2xl active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/10 backdrop-blur-xl border-white/5 !px-4 group/btn"
+            aria-label="Download collage as JPG"
+          >
+            {{
+              comp.ui.Icon({
+                name: "download",
+                classes: "w-4 h-4 opacity-70 group-hover/btn:text-primary transition-colors",
+              })
+            }}
+            <span class="font-bold">JPG</span>
+          </button>
+          <button
+            id="share-btn"
+            class="btn-minimal !flex justify-center !rounded-2xl active:scale-95 !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-xl border-primary/20 text-primary !px-4 group/btn"
+            aria-label="Share collage"
+          >
+            {{
+              comp.ui.Icon({
+                name: "share-2",
+                classes: "w-4 h-4 opacity-70 group-hover/btn:scale-110 transition-transform",
+              })
+            }}
+            <span class="font-bold uppercase">Share</span>
+          </button>
+        </div>
+
+        <div class="text-center">
+          <p class="text-sm text-text-muted/50">
+            {{ comp.ui.Icon({ name: "info", classes: "w-3 h-3 inline mr-1" }) }}
+            Changes auto-save and regenerate your collage
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<style>
+  .checkbox-base {
+    @apply w-5 h-5 rounded border-border/30 bg-surface/50 text-primary focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer transition-all;
+  }
+
+  .checkbox-base:checked {
+    @apply bg-primary border-primary;
+  }
+
+  .checkbox-base:focus-visible {
+    @apply ring-2 ring-primary/50 ring-offset-2 ring-offset-bg;
+  }
+
+  /* Custom scrollbar for selects */
+  select::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  select::-webkit-scrollbar-track {
+    @apply bg-border/20 rounded-full;
+  }
+
+  select::-webkit-scrollbar-thumb {
+    @apply bg-text-muted/30 rounded-full hover:bg-primary/50 transition-colors;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  button, input, select, textarea, label {
+    @apply transition-all duration-200;
+  }
+
+  /* Glassmorphism for inputs */
+  .input-base {
+    @apply backdrop-blur-md border border-white/5;
+  }
+
+  /* Focus visible styles for better accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary/50 ring-offset-2 ring-offset-bg;
+  }
+</style>
+
 <script type="module">
   let canvas = document.getElementById("collage-canvas");
   const canvasContainer = document.getElementById("canvas-container");
+  const previewWrapper = document.getElementById("preview-wrapper");
   const downloadBtn = document.getElementById("download-btn");
   const shareBtn = document.getElementById("share-btn");
   const resultActions = document.getElementById("result-actions");
   const statusText = document.getElementById("status-text");
+  const emptyState = document.getElementById("empty-state");
   const usernameInput = document.getElementById("username");
   const periodSelect = document.getElementById("period");
   const gridSizeSelect = document.getElementById("grid-size");
+  const footerAuto = document.getElementById("footer-auto");
+  const footerText = document.getElementById("footer-text");
+  const fontFamilyInput = document.getElementById("font-family");
 
   const inputs = [
     usernameInput,
     periodSelect,
     gridSizeSelect,
     document.getElementById("bg-mode"),
+    document.getElementById("text-case"),
     document.getElementById("grain"),
+    document.getElementById("glass"),
+    document.getElementById("darken-bottom"),
     document.getElementById("skip-missing"),
     document.getElementById("show-counts"),
+    document.getElementById("show-site"),
+    footerAuto,
+    footerText,
+    fontFamilyInput,
     document.getElementById("aliases"),
   ];
+
+  footerAuto.onchange = () => {
+    footerText.disabled = footerAuto.checked;
+    saveSettings();
+    generate();
+  };
 
   const sourceLb = document.getElementById("source-lb");
   const sourceLfm = document.getElementById("source-lfm");
@@ -279,7 +693,7 @@ menu:
   let latestBlob = null;
   let debounceTimeout = null;
 
-  const STORAGE_KEY = "collage-settings-v5";
+  const STORAGE_KEY = "collage-settings-v9";
 
   function updateStatus(text) {
     if (statusText.innerText === text) return;
@@ -294,9 +708,16 @@ menu:
       period: periodSelect.value,
       gridSize: gridSizeSelect.value,
       bgMode: document.getElementById("bg-mode").value,
+      textCase: document.getElementById("text-case").value,
       grain: document.getElementById("grain").checked,
+      glass: document.getElementById("glass").checked,
+      darkenBottom: document.getElementById("darken-bottom").checked,
       skipMissing: document.getElementById("skip-missing").checked,
       showCounts: document.getElementById("show-counts").checked,
+      showSite: document.getElementById("show-site").checked,
+      footerAuto: footerAuto.checked,
+      footer: footerText.value,
+      fontFamily: fontFamilyInput.value,
       aliases: document.getElementById("aliases").value,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
@@ -316,13 +737,26 @@ menu:
       if (settings.bgMode) {
         document.getElementById("bg-mode").value = settings.bgMode;
       }
+      if (settings.textCase) {
+        document.getElementById("text-case").value = settings.textCase;
+      }
       document.getElementById("grain").checked = settings.grain !== undefined
         ? settings.grain
         : true;
+      document.getElementById("glass").checked = !!settings.glass;
+      document.getElementById("darken-bottom").checked = !!settings
+        .darkenBottom;
       document.getElementById("skip-missing").checked =
         settings.skipMissing !== undefined ? settings.skipMissing : true;
-      document.getElementById("show-counts").checked =
-        settings.showCounts !== undefined ? settings.showCounts : false;
+      document.getElementById("show-counts").checked = !!settings.showCounts;
+      document.getElementById("show-site").checked =
+        settings.showSite !== undefined ? settings.showSite : true;
+      footerAuto.checked = settings.footerAuto !== undefined
+        ? settings.footerAuto
+        : true;
+      footerText.value = settings.footer || "";
+      footerText.disabled = footerAuto.checked;
+      fontFamilyInput.value = settings.fontFamily || "";
       document.getElementById("aliases").value = settings.aliases || "";
     } catch (e) {
       console.error("Failed to load settings:", e);
@@ -366,23 +800,44 @@ menu:
   }
 
   function applySourceStyles() {
-    const active = "bg-primary text-white shadow-md";
-    const inactive = "text-text-muted/40 hover:text-text-muted/70";
+    const activeClasses = "bg-primary text-white shadow-md";
+    const inactiveClasses =
+      "text-text-muted/60 hover:text-text-muted hover:bg-surface/40";
 
     sourceLb.className =
-      `py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer ${
-        currentSource === "lb" ? active : inactive
+      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer ${
+        currentSource === "lb" ? activeClasses : inactiveClasses
       }`;
     sourceLfm.className =
-      `py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all active:scale-95 cursor-pointer ${
-        currentSource === "lfm" ? active : inactive
+      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer ${
+        currentSource === "lfm" ? activeClasses : inactiveClasses
       }`;
   }
 
   sourceLb.onclick = () => setSource("lb");
   sourceLfm.onclick = () => setSource("lfm");
 
+  fontFamilyInput.oninput = () => {
+    if (fontFamilyInput.value.trim()) {
+      const linkId = "dynamic-google-font";
+      let link = document.getElementById(linkId);
+      if (!link) {
+        link = document.createElement("link");
+        link.id = linkId;
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
+      }
+      link.href = `https://fonts.googleapis.com/css2?family=${
+        fontFamilyInput.value.trim().replace(/ /g, "+")
+      }&display=swap`;
+    }
+    saveSettings();
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(generate, 1000);
+  };
+
   inputs.forEach((input) => {
+    if (input === fontFamilyInput) return;
     input.oninput = () => {
       saveSettings();
       clearTimeout(debounceTimeout);
@@ -392,12 +847,15 @@ menu:
 
   async function generate() {
     const user = usernameInput.value.trim();
-    if (!user) return;
+    if (!user) {
+      emptyState.style.opacity = "1";
+      return;
+    }
 
+    emptyState.style.opacity = "0";
     updateStatus("fetching stats from service");
-    canvasContainer.classList.add("is-loading");
-    canvasContainer.classList.remove("is-ready");
-    resultActions.classList.add("hidden");
+    previewWrapper.classList.add("is-loading");
+    previewWrapper.classList.remove("is-ready");
 
     try {
       const proxyUrl =
@@ -452,16 +910,16 @@ menu:
 
       currentWorker.onmessage = (e) => {
         const { type, text, blob, message } = e.data;
-        if (type === "status") updateStatus(text);
-        else if (type === "done") {
+        if (type === "status") {
+          updateStatus(text);
+        } else if (type === "done") {
           latestBlob = blob;
           updateStatus("Complete");
-          canvasContainer.classList.remove("is-loading");
-          canvasContainer.classList.add("is-ready");
-          resultActions.classList.remove("hidden");
+          previewWrapper.classList.remove("is-loading");
+          previewWrapper.classList.add("is-ready");
         } else if (type === "error") {
           updateStatus(`Error: ${message}`);
-          canvasContainer.classList.remove("is-loading");
+          previewWrapper.classList.remove("is-loading");
         }
       };
 
@@ -473,9 +931,15 @@ menu:
         albums,
         options: {
           bgMode: document.getElementById("bg-mode").value,
+          textCase: document.getElementById("text-case").value,
           applyGrain: document.getElementById("grain").checked,
+          applyGlass: document.getElementById("glass").checked,
+          darkenBottom: document.getElementById("darken-bottom").checked,
           skipMissing: document.getElementById("skip-missing").checked,
           showCounts: document.getElementById("show-counts").checked,
+          showSite: document.getElementById("show-site").checked,
+          footer: footerAuto.checked ? "" : footerText.value,
+          fontFamily: fontFamilyInput.value,
           user,
           period: periodSelect.value,
           cols,
@@ -515,7 +979,7 @@ menu:
 
   updatePeriods();
   loadSettings();
-  applySourceStyles(); // Ensure initial visual state is set
+  applySourceStyles();
   if (usernameInput.value) generate();
 
   const ctx = canvas.getContext("2d");

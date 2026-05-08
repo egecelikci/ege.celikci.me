@@ -63,6 +63,114 @@ export default async (req: Request) => {
     }
   }
 
+  // Task 2: Google Fonts proxy
+  if (source === "font") {
+    const family = url.searchParams.get("family");
+    const weight = url.searchParams.get("weight") || "400";
+
+    if (!family) {
+      return new Response(JSON.stringify({ error: "Font family required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    try {
+      // Use IE6 user agent to get TTF instead of WOFF2
+      const ua = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
+      const encoded = family.replace(/\s+/g, "+");
+      const apiUrl =
+        `https://fonts.googleapis.com/css2?family=${encoded}:wght@${weight}&display=swap`;
+
+      const cssRes = await fetch(apiUrl, {
+        headers: { "User-Agent": ua },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (!cssRes.ok) {
+        return new Response(
+          JSON.stringify({ error: `Google Fonts API error: ${cssRes.status}` }),
+          {
+            status: 502,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      const css = await cssRes.text();
+
+      // Extract font URLs from CSS
+      const urlRegex = /url\(([^)]+)\)/g;
+      const urls: string[] = [];
+      let match;
+
+      while ((match = urlRegex.exec(css)) !== null) {
+        urls.push(match[1]);
+      }
+
+      if (urls.length === 0) {
+        return new Response(
+          JSON.stringify({ error: "No font URLs found in CSS" }),
+          {
+            status: 502,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      // Get the last URL (base Latin subset)
+      const fontUrl = urls[urls.length - 1];
+
+      const fontRes = await fetch(fontUrl, {
+        headers: { "User-Agent": ua },
+        signal: AbortSignal.timeout(15000),
+      });
+
+      if (!fontRes.ok) {
+        return new Response(
+          JSON.stringify({ error: `Font download error: ${fontRes.status}` }),
+          {
+            status: 502,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      const fontBuffer = await fontRes.arrayBuffer();
+
+      // Validate it's a valid font file (check magic bytes)
+      const view = new DataView(fontBuffer);
+      const magic = view.getUint32(0, false); // Big-endian
+
+      // Valid font magic bytes: 0x00010000 (TrueType), 0x74727565 (true), 0x4F54544F (OTTO)
+      const isValidFont = magic === 0x00010000 || magic === 0x74727565 ||
+        magic === 0x4f54544f;
+
+      if (!isValidFont) {
+        return new Response(
+          JSON.stringify({ error: "Invalid font file format" }),
+          {
+            status: 502,
+            headers: { "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      return new Response(fontBuffer, {
+        headers: {
+          "Content-Type": "font/ttf",
+          "Cache-Control": "public, s-maxage=31536000, immutable",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    } catch (err: any) {
+      return new Response(JSON.stringify({ error: err.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  }
+
   if (!user) {
     return new Response(JSON.stringify({ error: "Username required" }), {
       status: 400,

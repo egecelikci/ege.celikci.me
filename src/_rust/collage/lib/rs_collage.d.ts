@@ -23,11 +23,11 @@ export class Layout {
   rows: number;
 }
 
-export function calculate_layout(cols: number, rows: number,): Layout;
+export function calculate_layout(cols: number, rows: number): Layout;
 
-export function get_grid_coordinates(cols: number, rows: number,): Float32Array;
+export function get_grid_coordinates(cols: number, rows: number): Float32Array;
 
-export function get_vibrant_color(data: Uint8Array,): Color;
+export function get_vibrant_color(data: Uint8Array): Color;
 
 export function render_background(
   data: Uint8Array,
