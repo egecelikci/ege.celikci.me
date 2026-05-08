@@ -41,6 +41,24 @@ const MARGIN = 80;
 const FONT_SANS =
   "'Josefin Sans', 'Inter', system-ui, -apple-system, sans-serif";
 const FONT_MONO = "'Inconsolata', monospace";
+const WORKER_DEFAULT_FONTS: { family: string; weight: string }[] = [
+  { family: "Josefin Sans", weight: "400" },
+  { family: "Josefin Sans", weight: "700" },
+  { family: "Josefin Sans", weight: "900" },
+  { family: "Inconsolata", weight: "400" },
+  { family: "Inconsolata", weight: "500" },
+  { family: "Inconsolata", weight: "700" },
+];
+
+let defaultFontsLoaded = false;
+
+async function ensureDefaultFonts() {
+  if (defaultFontsLoaded) return;
+  await Promise.all(
+    WORKER_DEFAULT_FONTS.map(({ family, weight }) => loadFont(family, weight))
+  );
+  defaultFontsLoaded = true;
+}
 
 async function fetchCover(
   album: Album,
@@ -82,22 +100,24 @@ function transformText(text: string, casing: Options["textCase"]): string {
   return text;
 }
 
-async function loadFont(family: string) {
-  if (!family || family === "Josefin Sans") return;
+async function loadFont(family: string, weight = "400") {
   try {
     const res = await fetch(
-      `/api/collage-proxy?source=font&family=${encodeURIComponent(family)}`,
+      `/api/collage-proxy?source=font&family=${encodeURIComponent(family)}&weight=${weight}`,
     );
-    if (!res.ok) return;
+    if (!res.ok) {
+      console.error(`[worker] font proxy error ${res.status}: ${family} w${weight}`);
+      return;
+    }
     const buffer = await res.arrayBuffer();
-    // @ts-ignore: FontFace might not be in the worker types yet
-    const font = new FontFace(family, buffer);
+    // @ts-ignore
+    const font = new FontFace(family, buffer, { weight });
     await font.load();
-    // @ts-ignore: self.fonts might not be in the worker types yet
+    // @ts-ignore
     self.fonts.add(font);
-    console.log(`[worker] font loaded: ${family}`);
+    console.log(`[worker] font loaded: ${family} w${weight}`);
   } catch (e) {
-    console.error(`[worker] font loading failed: ${family}`, e);
+    console.error(`[worker] font loading failed: ${family} w${weight}`, e);
   }
 }
 
@@ -124,11 +144,18 @@ self.onmessage = async (e: MessageEvent) => {
   } = options as Options;
 
   try {
-    // Load custom font if requested
-    if (fontFamily) {
+     self.postMessage({ type: "status", text: "loading fonts" });
+    await ensureDefaultFonts();
+
+    if (fontFamily && fontFamily !== "Josefin Sans") {
       self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
-      await loadFont(fontFamily);
+      await Promise.all(
+        ["400", "500", "700", "900"].map((w) => loadFont(fontFamily, w))
+      );
     }
+
+    // @ts-ignore
+    await self.fonts.ready;
 
     self.postMessage({
       type: "status",
