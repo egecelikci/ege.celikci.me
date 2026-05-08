@@ -41,21 +41,40 @@ const MARGIN = 80;
 const FONT_SANS =
   "'Josefin Sans', 'Inter', system-ui, -apple-system, sans-serif";
 const FONT_MONO = "'Inconsolata', monospace";
-const WORKER_DEFAULT_FONTS: { family: string; weight: string }[] = [
-  { family: "Josefin Sans", weight: "400" },
-  { family: "Josefin Sans", weight: "700" },
-  { family: "Josefin Sans", weight: "900" },
-  { family: "Inconsolata", weight: "400" },
-  { family: "Inconsolata", weight: "500" },
-  { family: "Inconsolata", weight: "700" },
-];
+const WORKER_DEFAULT_FONTS: { family: string; url: string; weight: string }[] =
+  [
+    {
+      family: "Josefin Sans",
+      url: "/assets/fonts/josefin-sans-normal-100-700-latin.woff2",
+      weight: "100 700",
+    },
+    {
+      family: "Inconsolata",
+      url: "/assets/fonts/inconsolata-100-normal-200-900-latin.woff2",
+      weight: "200 900",
+    },
+  ];
 
 let defaultFontsLoaded = false;
 
 async function ensureDefaultFonts() {
   if (defaultFontsLoaded) return;
   await Promise.all(
-    WORKER_DEFAULT_FONTS.map(({ family, weight }) => loadFont(family, weight))
+    WORKER_DEFAULT_FONTS.map(async ({ family, url, weight }) => {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Local font fetch failed: ${res.status}`);
+        const buffer = await res.arrayBuffer();
+        // @ts-ignore
+        const font = new FontFace(family, buffer, { weight });
+        await font.load();
+        // @ts-ignore
+        self.fonts.add(font);
+        console.log(`[worker] local font loaded: ${family}`);
+      } catch (e) {
+        console.error(`[worker] local font failed: ${family}`, e);
+      }
+    }),
   );
   defaultFontsLoaded = true;
 }
@@ -103,10 +122,14 @@ function transformText(text: string, casing: Options["textCase"]): string {
 async function loadFont(family: string, weight = "400") {
   try {
     const res = await fetch(
-      `/api/collage-proxy?source=font&family=${encodeURIComponent(family)}&weight=${weight}`,
+      `/api/collage-proxy?source=font&family=${encodeURIComponent(
+        family,
+      )}&weight=${weight}`,
     );
     if (!res.ok) {
-      console.error(`[worker] font proxy error ${res.status}: ${family} w${weight}`);
+      console.error(
+        `[worker] font proxy error ${res.status}: ${family} w${weight}`,
+      );
       return;
     }
     const buffer = await res.arrayBuffer();
@@ -144,18 +167,20 @@ self.onmessage = async (e: MessageEvent) => {
   } = options as Options;
 
   try {
-     self.postMessage({ type: "status", text: "loading fonts" });
-    await ensureDefaultFonts();
-
-    if (fontFamily && fontFamily !== "Josefin Sans") {
-      self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
-      await Promise.all(
-        ["400", "500", "700", "900"].map((w) => loadFont(fontFamily, w))
-      );
+    if (!defaultFontsLoaded) {
+      self.postMessage({ type: "status", text: "loading default fonts" });
+      await ensureDefaultFonts();
     }
 
-    // @ts-ignore
-    await self.fonts.ready;
+    if (
+      fontFamily &&
+      fontFamily !== "Josefin Sans" &&
+      fontFamily !== "Inconsolata"
+    ) {
+      self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
+      // Custom fonts often only have 400/700, and loading fewer weights is faster/more reliable
+      await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
+    }
 
     self.postMessage({
       type: "status",
@@ -371,9 +396,8 @@ self.onmessage = async (e: MessageEvent) => {
     for (let i = 0; i < listLimit; i++) {
       const y = layout.list_base_y + i * layout.list_row_height;
       ctx.textAlign = "left";
-      ctx.fillStyle = bgMode === "terminal"
-        ? "rgba(0,255,80,0.5)"
-        : "rgba(255,255,255,0.4)";
+      ctx.fillStyle =
+        bgMode === "terminal" ? "rgba(0,255,80,0.5)" : "rgba(255,255,255,0.4)";
       ctx.font = `bold 24px ${customMono}`;
       ctx.fillText(`${i + 1}. `, MARGIN, y);
 
@@ -385,9 +409,8 @@ self.onmessage = async (e: MessageEvent) => {
         y,
       );
 
-      ctx.fillStyle = bgMode === "terminal"
-        ? "rgba(0,255,80,0.4)"
-        : "rgba(255,255,255,0.35)";
+      ctx.fillStyle =
+        bgMode === "terminal" ? "rgba(0,255,80,0.4)" : "rgba(255,255,255,0.35)";
       ctx.font = `500 ${rows > 4 ? 14 : 18}px ${customFont}`;
       ctx.fillText(
         transformText(finalAlbums[i].artist.substring(0, 50), textCase),
@@ -397,9 +420,10 @@ self.onmessage = async (e: MessageEvent) => {
 
       if (showCounts && finalAlbums[i].count > 0) {
         ctx.textAlign = "right";
-        ctx.fillStyle = bgMode === "terminal"
-          ? "rgba(0,255,80,0.4)"
-          : "rgba(255,255,255,0.3)";
+        ctx.fillStyle =
+          bgMode === "terminal"
+            ? "rgba(0,255,80,0.4)"
+            : "rgba(255,255,255,0.3)";
         ctx.font = `bold ${rows > 4 ? 12 : 14}px ${customMono}`;
         ctx.fillText(
           `${finalAlbums[i].count} PLAYS`,
@@ -430,52 +454,40 @@ self.onmessage = async (e: MessageEvent) => {
     let footerText = footer || "";
     if (!footerText) {
       const periodMap: Record<string, string> = {
-        this_week: `top albums • week of ${
-          new Date().toLocaleDateString(
-            "en-US",
-            {
-              month: "numeric",
-              day: "numeric",
-            },
-          )
-        }`,
-        this_month: `top albums • ${
-          new Date().toLocaleDateString("en-US", {
-            month: "numeric",
-            year: "2-digit",
-          })
-        }`,
-        this_year: `top albums • ${new Date().getFullYear()}`,
-        week: `top albums • week of ${
-          new Date().toLocaleDateString("en-US", {
+        this_week: `top albums • week of ${new Date().toLocaleDateString(
+          "en-US",
+          {
             month: "numeric",
             day: "numeric",
-          })
-        }`,
-        month: `top albums • ${
-          new Date().toLocaleDateString("en-US", {
+          },
+        )}`,
+        this_month: `top albums • ${new Date().toLocaleDateString("en-US", {
+          month: "numeric",
+          year: "2-digit",
+        })}`,
+        this_year: `top albums • ${new Date().getFullYear()}`,
+        week: `top albums • week of ${new Date().toLocaleDateString("en-US", {
+          month: "numeric",
+          day: "numeric",
+        })}`,
+        month: `top albums • ${new Date().toLocaleDateString("en-US", {
+          month: "numeric",
+          year: "2-digit",
+        })}`,
+        quarter: `top albums • past quarter (${new Date().toLocaleDateString(
+          "en-US",
+          {
             month: "numeric",
             year: "2-digit",
-          })
-        }`,
-        quarter: `top albums • past quarter (${
-          new Date().toLocaleDateString(
-            "en-US",
-            {
-              month: "numeric",
-              year: "2-digit",
-            },
-          )
-        })`,
-        half_year: `top albums • past 6 months (${
-          new Date().toLocaleDateString(
-            "en-US",
-            {
-              month: "numeric",
-              year: "2-digit",
-            },
-          )
-        })`,
+          },
+        )})`,
+        half_year: `top albums • past 6 months (${new Date().toLocaleDateString(
+          "en-US",
+          {
+            month: "numeric",
+            year: "2-digit",
+          },
+        )})`,
         year: `top albums • ${new Date().getFullYear()}`,
         all_time: "top albums • all time",
       };
@@ -484,9 +496,8 @@ self.onmessage = async (e: MessageEvent) => {
 
     // Branding
     ctx.textAlign = "center";
-    ctx.fillStyle = bgMode === "terminal"
-      ? "rgba(0,255,80,0.2)"
-      : "rgba(255,255,255,0.2)";
+    ctx.fillStyle =
+      bgMode === "terminal" ? "rgba(0,255,80,0.2)" : "rgba(255,255,255,0.2)";
     ctx.font = `bold 16px ${customMono}`;
     ctx.letterSpacing = "8px";
     ctx.fillText(

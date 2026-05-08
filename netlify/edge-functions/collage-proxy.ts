@@ -23,8 +23,7 @@ export default async (req: Request) => {
     }
 
     try {
-      const caaUrl =
-        `https://coverartarchive.org/release-group/${mbid}/front-500`;
+      const caaUrl = `https://coverartarchive.org/release-group/${mbid}/front-500`;
       const res = await fetch(caaUrl, {
         headers: { "User-Agent": USER_AGENT },
         signal: AbortSignal.timeout(8000),
@@ -79,8 +78,8 @@ export default async (req: Request) => {
       // Use IE6 user agent to get TTF instead of WOFF2
       const ua = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)";
       const encoded = family.replace(/\s+/g, "+");
-      const apiUrl =
-        `https://fonts.googleapis.com/css2?family=${encoded}:wght@${weight}&display=swap`;
+      // Use older /css API for better compatibility with the IE6 UA trick
+      const apiUrl = `https://fonts.googleapis.com/css?family=${encoded}:${weight}`;
 
       const cssRes = await fetch(apiUrl, {
         headers: { "User-Agent": ua },
@@ -89,7 +88,10 @@ export default async (req: Request) => {
 
       if (!cssRes.ok) {
         return new Response(
-          JSON.stringify({ error: `Google Fonts API error: ${cssRes.status}` }),
+          JSON.stringify({
+            error: `Google Fonts API error: ${cssRes.status}`,
+            url: apiUrl,
+          }),
           {
             status: 502,
             headers: { "Content-Type": "application/json" },
@@ -99,8 +101,8 @@ export default async (req: Request) => {
 
       const css = await cssRes.text();
 
-      // Extract font URLs from CSS
-      const urlRegex = /url\(([^)]+)\)/g;
+      // Extract font URLs from CSS - more robust regex for both single and double quotes
+      const urlRegex = /url\(["']?([^"']+)["']?\)/g;
       const urls: string[] = [];
       let match;
 
@@ -110,7 +112,10 @@ export default async (req: Request) => {
 
       if (urls.length === 0) {
         return new Response(
-          JSON.stringify({ error: "No font URLs found in CSS" }),
+          JSON.stringify({
+            error: "No font URLs found in CSS",
+            css_preview: css.substring(0, 200),
+          }),
           {
             status: 502,
             headers: { "Content-Type": "application/json" },
@@ -118,7 +123,7 @@ export default async (req: Request) => {
         );
       }
 
-      // Get the last URL (base Latin subset)
+      // Get the last URL (base Latin subset usually)
       const fontUrl = urls[urls.length - 1];
 
       const fontRes = await fetch(fontUrl, {
@@ -140,15 +145,23 @@ export default async (req: Request) => {
 
       // Validate it's a valid font file (check magic bytes)
       const view = new DataView(fontBuffer);
+      if (fontBuffer.byteLength < 4) throw new Error("File too small");
       const magic = view.getUint32(0, false); // Big-endian
 
       // Valid font magic bytes: 0x00010000 (TrueType), 0x74727565 (true), 0x4F54544F (OTTO)
-      const isValidFont = magic === 0x00010000 || magic === 0x74727565 ||
-        magic === 0x4f54544f;
+      const isValidFont =
+        magic === 0x00010000 ||
+        magic === 0x74727565 ||
+        magic === 0x4f54544f ||
+        magic === 0x774f4646 ||
+        magic === 0x774f4632; // Added wOFF and wOF2 just in case
 
       if (!isValidFont) {
         return new Response(
-          JSON.stringify({ error: "Invalid font file format" }),
+          JSON.stringify({
+            error: "Invalid font file format",
+            magic: magic.toString(16),
+          }),
           {
             status: 502,
             headers: { "Content-Type": "application/json" },
@@ -183,8 +196,7 @@ export default async (req: Request) => {
 
     if (source === "lb") {
       // Increased count to 100 to allow for merging on the client side and skipping missing covers
-      const lbUrl =
-        `https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=100`;
+      const lbUrl = `https://api.listenbrainz.org/1/stats/user/${user}/release-groups?range=${period}&count=100`;
       const res = await fetch(lbUrl, {
         headers: { "User-Agent": USER_AGENT },
       });
@@ -220,10 +232,9 @@ export default async (req: Request) => {
       };
 
       // Increased limit to 100 to allow for merging and skipping missing covers
-      const lfmUrl =
-        `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${user}&api_key=${LASTFM_API_KEY}&period=${
-          lfmPeriods[period] || "7day"
-        }&limit=100&format=json`;
+      const lfmUrl = `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${user}&api_key=${LASTFM_API_KEY}&period=${
+        lfmPeriods[period] || "7day"
+      }&limit=100&format=json`;
       const res = await fetch(lfmUrl, {
         headers: { "User-Agent": USER_AGENT },
       });
