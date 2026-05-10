@@ -23,12 +23,14 @@ import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import terser from "lume/plugins/terser.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
+import jsonLd from "lume/plugins/json_ld.ts";
 
 import googleFonts from "lume/plugins/google_fonts.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
+import { jsonLd as jsonLdData } from "./metadata.ts";
 
 export default function () {
   const isDev = Deno.env.get("MODE") !== "production";
@@ -41,12 +43,13 @@ export default function () {
       .use(metas())
       .use(extractDate())
       .use(date({
-        formats: { "URL": "yyyyMMddHHmmss" },
+        formats: { URL: "yyyyMMddHHmmss" },
       }))
       .use(paginate())
       .use(sitemap())
       .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt" }] }))
       .use(nav())
+      .use(jsonLd())
       .use(favicon({
         input: "/assets/images/favicon/favicon.svg",
         favicons: [
@@ -114,5 +117,6 @@ export default function () {
 
     // Global default for all Markdown files: Vento then Markdown
     site.data("templateEngine", ["vto", "md"], ".md");
+    site.data("jsonLd", jsonLdData);
   };
 }

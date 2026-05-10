@@ -25,20 +25,3 @@
 {{# General Metadata #}}
 
 <link rel="canonical" href="{{ canonicalUrl || absolutePageUrl }}" />
-
-{{# JSON-LD Schema #}}
-<script type="application/ld+json">
-{
-  "name": "{{ author.name }}",
-  "description": "{{ site.description }}",
-  "author": {
-    "@type": "Person",
-    "name": "{{ author.name }}"
-  },
-  "@type": "WebSite",
-  "url": "{{ site.url }}",
-  "headline": "{{ site.title }}",
-  "sameAs": ["https://github.com/{{ author.username }}"],
-  "@context": "http://schema.org"
-}
-</script>

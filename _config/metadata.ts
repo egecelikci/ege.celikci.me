@@ -6,6 +6,7 @@
 export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",
+  description: "personal website",
   lang: "en",
   locale: "en_US",
   url: "https://ege.celikci.me",
@@ -21,7 +22,6 @@ const SIGNAL_URL =
 
 export const author = {
   name: "Ege Çelikçi",
-  nickname: "eg",
   email: EMAIL,
   username: USERNAME,
   social: {
@@ -113,4 +113,17 @@ export const author = {
       label: "Games",
     },
   ],
+};
+
+export const jsonLd = {
+  "@type": "WebSite",
+  url: site.url,
+  name: author.name,
+  description: "=description || " + site.description,
+  author: {
+    "@type": "Person",
+    name: author.name,
+  },
+  headline: "=title || " + site.title,
+  sameAs: author.links.filter((l) => l.relMe).map((l) => l.url),
 };

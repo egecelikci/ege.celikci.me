@@ -67,37 +67,28 @@
       "*.css"
     ],
     "exclude": [
-      "src/site.webmanifest.vto"
+      "src/site.webmanifest.vto",
+      "src/_data/music.json",
+      "src/_data/mb_events.json"
     ]
   },
   "compilerOptions": {
-    "types": [
-      "lume/types.ts"
-    ],
+    "types": ["lume/types.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "lume"
   },
-  "unstable": [
-    "temporal",
-    "fmt-component"
-  ],
+  "unstable": ["temporal", "fmt-component"],
   "lint": {
-    "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/lint.ts"
-    ],
+    "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/lint.ts"],
     "rules": {
-      "exclude": [
-        "no-import-prefix"
-      ]
+      "exclude": ["no-import-prefix"]
     }
   },
   "lock": false,
   "permissions": {
     "lume": {
       "read": true,
-      "write": [
-        "./"
-      ],
+      "write": ["./"],
       "import": [
         "cdn.jsdelivr.net:443",
         "jsr.io:443",
@@ -119,7 +110,5 @@
       "sys": true
     }
   },
-  "allowScripts": [
-    "npm:sharp"
-  ]
+  "allowScripts": ["npm:sharp"]
 }

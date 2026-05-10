@@ -12,8 +12,10 @@
     />
     <title>
       {{ if title && title !== site.title }}{{ title }} | {{ site.title }}{{
-        else
-      }}{{ site.title }}{{ /if }}
+        else if type === "note"
+      }}note from {{ it.date |> date("dd MMM yyyy HH:mm") }} | {{
+          site.title
+        }}{{ else }}{{ site.title }}{{ /if }}
     </title>
     <link rel="dns-prefetch" href="https://webmention.io" />
     <link
@@ -56,7 +58,7 @@
 
     {{ include "header.vto" }}
 
-    <main id="main" role="main" tabindex="-1" class="flex-grow">
+    <main id="main" tabindex="-1" class="flex-grow">
       {{ content |> safe }}
     </main>
 

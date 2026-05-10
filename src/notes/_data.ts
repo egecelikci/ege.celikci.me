@@ -3,6 +3,13 @@ export const templateEngine = ["vto", "md"];
 export const type = "note";
 export const show_webmentions = true;
 
+export const jsonLd = {
+  "@type": "CreativeWork",
+  headline: "=title || Note",
+  datePublished: "=date",
+  dateModified: "=updated || =date",
+};
+
 /**
  * URL generator for notes.
  * Extracts all digits from the filename (YYYY-MM-DD-HH-mm-ss)

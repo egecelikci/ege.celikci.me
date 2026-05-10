@@ -3,3 +3,9 @@ templateEngine: [vto, md]
 type: post
 show_webmentions: true
 show_related: true
+jsonLd:
+  "@type": BlogPosting
+  headline: "=title"
+  datePublished: "=date"
+  dateModified: "=updated || =date"
+  description: "=description || =excerpt"
