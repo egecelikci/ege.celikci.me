@@ -36,7 +36,9 @@ export function render_background(
   grid_colors: Uint8Array,
   aura_intensity: number,
   grain_amount: number,
-  noise_type: number,
+  bg_mode: number,
+  apply_glass: boolean,
+  darken_bottom: boolean,
   mesh_cols: number,
   mesh_rows: number,
 ): void;

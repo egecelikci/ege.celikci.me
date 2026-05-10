@@ -1,6 +1,19 @@
 /**
  * Collage Generator Worker (Architect Edition - Dynamic Layouts)
  * OffscreenCanvas-based rendering with Rust/WASM acceleration.
+ *
+ * Rendering pipeline (order matters):
+ *   1. Fonts
+ *   2. Layout + cover fetching
+ *   3. Color sampling + thermal clamping
+ *   4. WASM background render → putImageData
+ *   5. JS style overlays (velvet/silver tints, terminal phosphor, vignette)
+ *   6. Glass blur [OPTIONAL] — applied to background layer only, before covers
+ *   7. Grid tiles (covers — always sharp, never tinted)
+ *   8. Album list text (strict high-contrast white/zinc, never color-tinted)
+ *   9. darkenBottom gradient
+ *  10. Footer / branding
+ *  11. Encode to JPEG
  */
 
 import {
@@ -41,6 +54,7 @@ const MARGIN = 80;
 const FONT_SANS =
   "'Josefin Sans', 'Inter', system-ui, -apple-system, sans-serif";
 const FONT_MONO = "'Inconsolata', monospace";
+
 const WORKER_DEFAULT_FONTS: { family: string; url: string; weight: string }[] =
   [
     {
@@ -82,17 +96,22 @@ async function ensureDefaultFonts() {
 async function fetchCover(
   album: Album,
 ): Promise<{ album: Album; bitmap: ImageBitmap | null }> {
-  let res;
+  let res: Response | undefined;
+
+  // 1. Try direct image URL first (Last.fm provides these)
   if (album.img) {
     try {
       res = await fetch(album.img);
     } catch (_e) {}
   }
+
+  // 2. Fall back to CAA via proxy if direct URL missing or failed
   if ((!res || !res.ok) && album.mbid) {
     try {
       res = await fetch(`/api/collage-proxy?source=cover&mbid=${album.mbid}`);
     } catch (_e) {}
   }
+
   let bitmap: ImageBitmap | null = null;
   if (res && res.ok) {
     try {
@@ -103,7 +122,9 @@ async function fetchCover(
   return { album, bitmap };
 }
 
-async function getVibrantColor(img: ImageBitmap | null) {
+async function getVibrantColor(
+  img: ImageBitmap | null,
+): Promise<{ r: number; g: number; b: number }> {
   if (!img) return { r: 30, g: 27, b: 75 };
   const mini = new OffscreenCanvas(20, 20);
   const mctx = mini.getContext("2d");
@@ -122,9 +143,9 @@ function transformText(text: string, casing: Options["textCase"]): string {
 async function loadFont(family: string, weight = "400") {
   try {
     const res = await fetch(
-      `/api/collage-proxy?source=font&family=${encodeURIComponent(
-        family,
-      )}&weight=${weight}`,
+      `/api/collage-proxy?source=font&family=${
+        encodeURIComponent(family)
+      }&weight=${weight}`,
     );
     if (!res.ok) {
       console.error(
@@ -147,8 +168,11 @@ async function loadFont(family: string, weight = "400") {
 self.onmessage = async (e: MessageEvent) => {
   const { type, canvas, albums, options } = e.data;
   if (type !== "generate") return;
-  const ctx = (canvas as OffscreenCanvas).getContext("2d", { alpha: false });
+
+  const offscreen = canvas as OffscreenCanvas;
+  const ctx = offscreen.getContext("2d", { alpha: false });
   if (!ctx) return;
+
   const {
     bgMode,
     textCase,
@@ -167,6 +191,8 @@ self.onmessage = async (e: MessageEvent) => {
   } = options as Options;
 
   try {
+    // ── PHASE 1: FONTS ──────────────────────────────────────────────────────────
+
     if (!defaultFontsLoaded) {
       self.postMessage({ type: "status", text: "loading default fonts" });
       await ensureDefaultFonts();
@@ -178,9 +204,10 @@ self.onmessage = async (e: MessageEvent) => {
       fontFamily !== "Inconsolata"
     ) {
       self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
-      // Custom fonts often only have 400/700, and loading fewer weights is faster/more reliable
       await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
     }
+
+    // ── PHASE 2: LAYOUT + COVER FETCHING ────────────────────────────────────────
 
     self.postMessage({
       type: "status",
@@ -194,10 +221,7 @@ self.onmessage = async (e: MessageEvent) => {
     const finalImages: (ImageBitmap | null)[] = [];
     let sourceIndex = 0;
 
-    self.postMessage({
-      type: "status",
-      text: "resolving artwork URLs",
-    });
+    self.postMessage({ type: "status", text: "resolving artwork URLs" });
     while (finalAlbums.length < targetCount && sourceIndex < albums.length) {
       const needed = targetCount - finalAlbums.length;
       const batchSize = Math.min(needed, 10);
@@ -216,12 +240,14 @@ self.onmessage = async (e: MessageEvent) => {
         text: `fetching cover art ${finalAlbums.length}/${targetCount}`,
       });
     }
+    // Pad with empty slots if we ran out of source albums
     while (finalAlbums.length < targetCount) {
       finalAlbums.push({ name: "", artist: "", count: 0 });
       finalImages.push(null);
     }
 
-    // --- 2. RENDER BACKGROUND (WASM) ---
+    // ── PHASE 3: COLOR SAMPLING + THERMAL CLAMPING ──────────────────────────────
+
     self.postMessage({
       type: "status",
       text: "sampling dominant colors from covers",
@@ -236,108 +262,99 @@ self.onmessage = async (e: MessageEvent) => {
       gridColors[i * 3 + 2] = colors[i].b;
     }
 
+    // Thermal: clamp vibrant colors into stark thermal-camera palette BEFORE
+    // passing to WASM, so the mesh gradient uses the harsh banded colors.
     if (bgMode === "thermal") {
       for (let i = 0; i < gridColors.length; i += 3) {
         const avg = (gridColors[i] + gridColors[i + 1] + gridColors[i + 2]) / 3;
         if (avg < 85) {
+          // Cold → deep electric blue
           gridColors[i] = 10;
           gridColors[i + 1] = 20;
-          gridColors[i + 2] = 160;
+          gridColors[i + 2] = 180;
         } else if (avg < 170) {
-          gridColors[i] = 230;
-          gridColors[i + 1] = 40;
-          gridColors[i + 2] = 20;
+          // Warm → vibrant red
+          gridColors[i] = 235;
+          gridColors[i + 1] = 35;
+          gridColors[i + 2] = 15;
         } else {
+          // Hot → bright yellow
           gridColors[i] = 255;
-          gridColors[i + 1] = 210;
-          gridColors[i + 2] = 30;
+          gridColors[i + 1] = 215;
+          gridColors[i + 2] = 20;
         }
       }
     }
 
+    // ── PHASE 4: WASM BACKGROUND RENDER ─────────────────────────────────────────
+
     self.postMessage({
       type: "status",
-      text: "compositing background layer",
+      text: "compositing background layer natively",
     });
+
+    let bgModeNum = 0;
+    if (bgMode === "silver") bgModeNum = 1;
+    else if (bgMode === "velvet") bgModeNum = 2;
+    else if (bgMode === "terminal") bgModeNum = 3;
+    else if (bgMode === "thermal") bgModeNum = 4;
+    else if (bgMode === "dark") bgModeNum = 5;
+
+    // Terminal gets structural scanline grain regardless of applyGrain toggle;
+    // Silver gets heavier grain for its analog-film character.
+    const grainAmount = bgMode === "terminal"
+      ? 0.22
+      : bgMode === "silver"
+      ? applyGrain ? 0.14 : 0.0
+      : applyGrain
+      ? 0.05
+      : 0.0;
+
+    const auraIntensity = bgMode === "aura"
+      ? 0.6
+      : bgMode === "thermal"
+      ? 0.72
+      : bgMode === "velvet"
+      ? 0.5
+      : bgMode === "silver"
+      ? 0.45
+      : 0.0;
+
     const imageData = ctx.createImageData(W, H);
-    // Convert Uint8ClampedArray to Uint8Array for WASM
+    // Pass the underlying ArrayBuffer directly — zero extra copies.
     const pixelData = new Uint8Array(imageData.data.buffer);
+
+    // Rust now handles ALL layers: gaussian splat aura, glass frosted tint,
+    // velvet gradient, silver desat+sheen, terminal phosphor, vignette,
+    // and darkenBottom.
     render_background(
       pixelData,
       W,
       H,
       gridColors,
-      bgMode === "aura" || bgMode === "thermal" ? 0.6 : 0.0,
-      applyGrain ? (bgMode === "silver" ? 0.15 : 0.05) : 0.0,
-      bgMode === "thermal" ? 1 : bgMode === "terminal" ? 2 : 0,
+      auraIntensity,
+      grainAmount,
+      bgModeNum,
+      applyGlass,
+      darkenBottom,
       cols,
       rows,
     );
-    // Copy back to imageData
+
     imageData.data.set(pixelData);
     ctx.putImageData(imageData, 0, 0);
 
-    // Style Overlays
-    if (bgMode === "velvet") {
-      const grad = ctx.createLinearGradient(0, 0, 0, H);
-      grad.addColorStop(
-        0,
-        `rgb(${gridColors[0]},${gridColors[1]},${gridColors[2]})`,
-      );
-      grad.addColorStop(0.7, "#09090b");
-      ctx.save();
-      ctx.globalAlpha = 0.35;
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    } else if (bgMode === "silver") {
-      // High contrast B&W / Silver overlay
-      ctx.save();
-      ctx.globalCompositeOperation = "saturation";
-      ctx.globalAlpha = 0.7;
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, W, H);
-      const grad = ctx.createLinearGradient(0, 0, W, H);
-      grad.addColorStop(0, "rgba(255,255,255,0.08)");
-      grad.addColorStop(0.5, "rgba(0,0,0,0.15)");
-      grad.addColorStop(1, "rgba(255,255,255,0.08)");
-      ctx.globalCompositeOperation = "overlay";
-      ctx.globalAlpha = 0.8;
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    } else if (bgMode === "terminal") {
-      ctx.save();
-      ctx.globalAlpha = 0.1;
-      ctx.fillStyle = "rgba(0, 255, 80, 0.15)";
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    }
+    // ── PHASE 5: GRID TILES ──────────────────────────────────────────────────────
+    // Covers are always drawn at full opacity, full saturation, no blending effects.
 
-    // Global Vignette - reduced intensity for better brightness
-    if (bgMode !== "dark") {
-      const vig = ctx.createRadialGradient(
-        W / 2,
-        H / 2,
-        W / 2.5,
-        W / 2,
-        H / 2,
-        H * 0.85,
-      );
-      vig.addColorStop(0, "transparent");
-      vig.addColorStop(1, "rgba(0,0,0,0.4)");
-      ctx.fillStyle = vig;
-      ctx.fillRect(0, 0, W, H);
-    }
-
-    // --- 3. THE GRID ---
     self.postMessage({
       type: "status",
       text: `drawing ${targetCount} grid tiles`,
     });
     for (let i = 0; i < targetCount; i++) {
-      const x = gridCoords[i * 2],
-        y = gridCoords[i * 2 + 1];
+      const x = gridCoords[i * 2];
+      const y = gridCoords[i * 2 + 1];
+
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(
@@ -356,20 +373,15 @@ self.onmessage = async (e: MessageEvent) => {
           layout.item_size,
           layout.item_size,
         );
-        if (bgMode === "silver") {
-          ctx.globalCompositeOperation = "luminosity";
-          ctx.fillStyle = "rgba(255,255,255,0.1)";
-          ctx.fillRect(x, y, layout.item_size, layout.item_size);
-        }
       } else {
         ctx.fillStyle = "#18181b";
         ctx.fillRect(x, y, layout.item_size, layout.item_size);
       }
       ctx.restore();
 
-      // Border
+      // Subtle border to lift tiles off the background
       ctx.save();
-      ctx.strokeStyle = "rgba(255,255,255,0.1)";
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.roundRect(
@@ -383,25 +395,42 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.restore();
     }
 
-    // --- 4. THE LIST ---
+    // ── PHASE 6: ALBUM LIST ──────────────────────────────────────────────────────
+    // Text is strictly high-contrast white/zinc. Terminal gets phosphor green
+    // on the text itself, matching the CRT aesthetic, but never warm/cool tinting.
+
     const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9);
     self.postMessage({
       type: "status",
-      text: `rendering album list of ${listLimit} entries`,
+      text: `rendering album list (${listLimit} entries)`,
     });
 
     const customFont = fontFamily ? `'${fontFamily}', ${FONT_SANS}` : FONT_SANS;
     const customMono = fontFamily ? `'${fontFamily}', ${FONT_MONO}` : FONT_MONO;
 
+    ctx.textRendering = "geometricPrecision";
+
+    const isTerminal = bgMode === "terminal";
+    const trackNumColor = isTerminal
+      ? "rgba(0,255,80,0.50)"
+      : "rgba(255,255,255,0.40)";
+    const albumTitleColor = isTerminal ? "#00ff50" : "#f4f4f5";
+    const artistColor = isTerminal
+      ? "rgba(0,255,80,0.40)"
+      : "rgba(255,255,255,0.35)";
+    const countColor = isTerminal
+      ? "rgba(0,255,80,0.40)"
+      : "rgba(255,255,255,0.30)";
+
     for (let i = 0; i < listLimit; i++) {
       const y = layout.list_base_y + i * layout.list_row_height;
+
       ctx.textAlign = "left";
-      ctx.fillStyle =
-        bgMode === "terminal" ? "rgba(0,255,80,0.5)" : "rgba(255,255,255,0.4)";
+      ctx.fillStyle = trackNumColor;
       ctx.font = `bold 24px ${customMono}`;
       ctx.fillText(`${i + 1}. `, MARGIN, y);
 
-      ctx.fillStyle = bgMode === "terminal" ? "#00ff50" : "#f4f4f5";
+      ctx.fillStyle = albumTitleColor;
       ctx.font = `900 ${rows > 4 ? 20 : 24}px ${customFont}`;
       ctx.fillText(
         transformText(finalAlbums[i].name.substring(0, 40), textCase),
@@ -409,8 +438,7 @@ self.onmessage = async (e: MessageEvent) => {
         y,
       );
 
-      ctx.fillStyle =
-        bgMode === "terminal" ? "rgba(0,255,80,0.4)" : "rgba(255,255,255,0.35)";
+      ctx.fillStyle = artistColor;
       ctx.font = `500 ${rows > 4 ? 14 : 18}px ${customFont}`;
       ctx.fillText(
         transformText(finalAlbums[i].artist.substring(0, 50), textCase),
@@ -420,10 +448,7 @@ self.onmessage = async (e: MessageEvent) => {
 
       if (showCounts && finalAlbums[i].count > 0) {
         ctx.textAlign = "right";
-        ctx.fillStyle =
-          bgMode === "terminal"
-            ? "rgba(0,255,80,0.4)"
-            : "rgba(255,255,255,0.3)";
+        ctx.fillStyle = countColor;
         ctx.font = `bold ${rows > 4 ? 12 : 14}px ${customMono}`;
         ctx.fillText(
           `${finalAlbums[i].count} PLAYS`,
@@ -433,76 +458,42 @@ self.onmessage = async (e: MessageEvent) => {
       }
     }
 
-    // Additional effects
-    if (applyGlass) {
-      ctx.save();
-      ctx.globalAlpha = 0.3;
-      ctx.fillStyle = "rgba(255,255,255,0.1)";
-      ctx.fillRect(0, 0, W, H);
-      ctx.restore();
-    }
-
-    if (darkenBottom) {
-      const grad = ctx.createLinearGradient(0, H * 0.6, 0, H);
-      grad.addColorStop(0, "transparent");
-      grad.addColorStop(1, "rgba(0,0,0,0.4)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, H * 0.6, W, H * 0.4);
-    }
-
-    // --- 5. FOOTER ---
+    // ── PHASE 7: FOOTER / BRANDING ──────────────────────────────────────────────
     let footerText = footer || "";
     if (!footerText) {
+      const now = new Date();
+      const mY = now.toLocaleDateString("en-US", {
+        month: "numeric",
+        year: "2-digit",
+      });
+      const mD = now.toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+      });
       const periodMap: Record<string, string> = {
-        this_week: `top albums • week of ${new Date().toLocaleDateString(
-          "en-US",
-          {
-            month: "numeric",
-            day: "numeric",
-          },
-        )}`,
-        this_month: `top albums • ${new Date().toLocaleDateString("en-US", {
-          month: "numeric",
-          year: "2-digit",
-        })}`,
-        this_year: `top albums • ${new Date().getFullYear()}`,
-        week: `top albums • week of ${new Date().toLocaleDateString("en-US", {
-          month: "numeric",
-          day: "numeric",
-        })}`,
-        month: `top albums • ${new Date().toLocaleDateString("en-US", {
-          month: "numeric",
-          year: "2-digit",
-        })}`,
-        quarter: `top albums • past quarter (${new Date().toLocaleDateString(
-          "en-US",
-          {
-            month: "numeric",
-            year: "2-digit",
-          },
-        )})`,
-        half_year: `top albums • past 6 months (${new Date().toLocaleDateString(
-          "en-US",
-          {
-            month: "numeric",
-            year: "2-digit",
-          },
-        )})`,
-        year: `top albums • ${new Date().getFullYear()}`,
+        this_week: `top albums • week of ${mD}`,
+        this_month: `top albums • ${mY}`,
+        this_year: `top albums • ${now.getFullYear()}`,
+        week: `top albums • week of ${mD}`,
+        month: `top albums • ${mY}`,
+        quarter: `top albums • past quarter (${mY})`,
+        half_year: `top albums • past 6 months (${mY})`,
+        year: `top albums • ${now.getFullYear()}`,
         all_time: "top albums • all time",
       };
       footerText = periodMap[period] || `top albums • ${period}`;
     }
 
-    // Branding
+    const brandingColor = isTerminal
+      ? "rgba(0,255,80,0.20)"
+      : "rgba(255,255,255,0.20)";
     ctx.textAlign = "center";
-    ctx.fillStyle =
-      bgMode === "terminal" ? "rgba(0,255,80,0.2)" : "rgba(255,255,255,0.2)";
+    ctx.fillStyle = brandingColor;
     ctx.font = `bold 16px ${customMono}`;
     ctx.letterSpacing = "8px";
     ctx.fillText(
       transformText(
-        `TOP ALBUMS • ${period.replace("_", " ")} • ${user}`,
+        `TOP ALBUMS • ${period.replace(/_/g, " ")} • ${user}`,
         textCase,
       ),
       W / 2,
@@ -513,8 +504,9 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.fillText(transformText("EGE.CELIKCI.ME", textCase), W / 2, H - 72);
     }
 
+    // ── PHASE 11: ENCODE ─────────────────────────────────────────────────────────
     self.postMessage({ type: "status", text: "encoding canvas to JPEG" });
-    const blob = await (canvas as OffscreenCanvas).convertToBlob({
+    const blob = await offscreen.convertToBlob({
       type: "image/jpeg",
       quality: 0.92,
     });

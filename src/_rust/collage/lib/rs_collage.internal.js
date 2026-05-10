@@ -282,7 +282,9 @@ export function get_vibrant_color(data) {
  * @param {Uint8Array} grid_colors
  * @param {number} aura_intensity
  * @param {number} grain_amount
- * @param {number} noise_type
+ * @param {number} bg_mode
+ * @param {boolean} apply_glass
+ * @param {boolean} darken_bottom
  * @param {number} mesh_cols
  * @param {number} mesh_rows
  */
@@ -293,7 +295,9 @@ export function render_background(
   grid_colors,
   aura_intensity,
   grain_amount,
-  noise_type,
+  bg_mode,
+  apply_glass,
+  darken_bottom,
   mesh_cols,
   mesh_rows,
 ) {
@@ -311,7 +315,9 @@ export function render_background(
     len1,
     aura_intensity,
     grain_amount,
-    noise_type,
+    bg_mode,
+    apply_glass,
+    darken_bottom,
     mesh_cols,
     mesh_rows,
   );
