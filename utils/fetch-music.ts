@@ -75,12 +75,14 @@ class AlbumFetcher {
         offset < firstData.count;
         offset += CONFIG.fetchLimit
       ) {
-        pages.push(this.httpClient.fetch<CritiqueBrainzResponse>(
-          this.buildReviewUrl(offset),
-          "json",
-          "force-cache",
-          true,
-        ));
+        pages.push(
+          this.httpClient.fetch<CritiqueBrainzResponse>(
+            this.buildReviewUrl(offset),
+            "json",
+            "force-cache",
+            true,
+          ),
+        );
       }
       const results = await Promise.all(pages);
       results.forEach((data) => {
@@ -194,6 +196,12 @@ async function getMusicData() {
             const buf = await fetcher.fetchCoverImage(id);
             if (buf) await imageProcessor.process(id, buf);
           }
+
+          // Sort releases for determinism
+          if (metadata.releases) {
+            metadata.releases.sort((a, b) => a.id.localeCompare(b.id));
+          }
+
           const paths = imageProcessor.buildPaths(id);
           album = {
             ...metadata,
@@ -211,12 +219,8 @@ async function getMusicData() {
 
   const processed = results.filter((a): a is ProcessedAlbum => !!a);
 
-  processed.sort((a, b) => {
-    const dateA = new Date(a.ratedAt || 0).getTime();
-    const dateB = new Date(b.ratedAt || 0).getTime();
-    if (dateA !== dateB) return dateB - dateA;
-    return a.id.localeCompare(b.id); // Stable tie-breaker
-  });
+  // Sort by ID for maximum stability across devices and runs
+  processed.sort((a, b) => a.id.localeCompare(b.id));
 
   const hasChanged = JSON.stringify(cache.sortObjectKeys(processed)) !==
     JSON.stringify(cache.sortObjectKeys(cachedData.albums));

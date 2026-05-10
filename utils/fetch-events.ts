@@ -236,7 +236,9 @@ async function fetchEntityDetails(
   const links: Array<{ type: string; url: string }> = [];
   data.relations.forEach((rel: any) => {
     if (
-      rel["target-type"] === "url" && rel.url?.resource && rel.ended !== true
+      rel["target-type"] === "url" &&
+      rel.url?.resource &&
+      rel.ended !== true
     ) {
       links.push({ type: rel.type, url: rel.url.resource });
     }
@@ -277,55 +279,72 @@ async function syncEvents() {
 
     console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters...`);
 
-    const events = await Promise.all(raw.map(async (event) => {
-      const cachedEvent = eventsMap.get(event.id);
+    const events = await Promise.all(
+      raw.map(async (event) => {
+        const cachedEvent = eventsMap.get(event.id);
 
-      // Collect entity IDs for enrichment (always do this to ensure entities map is fresh)
-      (event.relations || []).forEach((rel: any) => {
-        if (rel["target-type"] === "artist" && rel.artist?.id) {
-          entityIds.set(rel.artist.id, "artist");
-        } else if (rel["target-type"] === "place" && rel.place?.id) {
-          entityIds.set(rel.place.id, "place");
-        } else if (rel["target-type"] === "label" && rel.label?.id) {
-          entityIds.set(rel.label.id, "label");
+        // Collect entity IDs for enrichment (always do this to ensure entities map is fresh)
+        (event.relations || []).forEach((rel: any) => {
+          if (rel["target-type"] === "artist" && rel.artist?.id) {
+            entityIds.set(rel.artist.id, "artist");
+          } else if (rel["target-type"] === "place" && rel.place?.id) {
+            entityIds.set(rel.place.id, "place");
+          } else if (rel["target-type"] === "url" && rel.url?.id) {
+            entityIds.set(rel.url.id, "url");
+          } else if (rel["target-type"] === "label" && rel.label?.id) {
+            entityIds.set(rel.label.id, "label");
+          }
+        });
+
+        // Sort relations for determinism
+        if (event.relations) {
+          event.relations.sort((a: any, b: any) => {
+            const idA = a.artist?.id || a.place?.id || a.url?.id ||
+              a.label?.id || "";
+            const idB = b.artist?.id || b.place?.id || b.url?.id ||
+              b.label?.id || "";
+            return idA.localeCompare(idB) || a.type.localeCompare(b.type);
+          });
         }
-      });
 
-      // If we have it in cache AND the local image exists, skip expensive info fetch
-      if (
-        cachedEvent?.imagePath &&
-        posterDownloader.hasPoster(cachedEvent.imagePath.split("/").pop() || "")
-      ) {
+        // If we have it in cache AND the local image exists, skip expensive info fetch
+        if (
+          cachedEvent?.imagePath &&
+          posterDownloader.hasPoster(
+            cachedEvent.imagePath.split("/").pop() || "",
+          )
+        ) {
+          return {
+            ...event,
+            posterUrl: cachedEvent.posterUrl,
+            posterThumb: cachedEvent.posterThumb,
+            imagePath: cachedEvent.imagePath,
+          };
+        }
+
+        // Otherwise, fetch fresh poster info
+        const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
+        let imagePath: string | undefined;
+
+        if (posterInfo.url || posterInfo.thumb) {
+          const imageUrl = posterInfo.thumb || posterInfo.url;
+          if (imageUrl) {
+            imagePath = (await posterDownloader.download(
+              httpClient,
+              event.id,
+              imageUrl,
+            )) || undefined;
+          }
+        }
+
         return {
           ...event,
-          posterUrl: cachedEvent.posterUrl,
-          posterThumb: cachedEvent.posterThumb,
-          imagePath: cachedEvent.imagePath,
+          posterUrl: posterInfo.url,
+          posterThumb: posterInfo.thumb,
+          imagePath,
         };
-      }
-
-      // Otherwise, fetch fresh poster info
-      const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
-      let imagePath: string | undefined;
-
-      if (posterInfo.url || posterInfo.thumb) {
-        const imageUrl = posterInfo.thumb || posterInfo.url;
-        if (imageUrl) {
-          imagePath = await posterDownloader.download(
-            httpClient,
-            event.id,
-            imageUrl,
-          ) || undefined;
-        }
-      }
-
-      return {
-        ...event,
-        posterUrl: posterInfo.url,
-        posterThumb: posterInfo.thumb,
-        imagePath,
-      };
-    }));
+      }),
+    );
 
     // 4. Enrich entities (All links)
     const entities: Record<string, Array<{ type: string; url: string }>> = {};
@@ -346,7 +365,10 @@ async function syncEvents() {
     );
 
     for (const [id, data] of harvestResults) {
-      if (data) entities[id] = data;
+      if (data) {
+        // Sort links by URL for stability
+        entities[id] = data.sort((a, b) => a.url.localeCompare(b.url));
+      }
     }
 
     const newData = {
