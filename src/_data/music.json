@@ -15304,6 +15304,804 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "GB",
+            "disambiguation": "Scottish electronic duo",
+            "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+            "name": "Boards of Canada",
+            "sort-name": "Boards of Canada",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Boards of Canada"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "1998-04-20",
+      "id": "17d74d52-c92b-3b8d-9f87-218ab2d1c4a0",
+      "imagePath": "/assets/images/covers/colored/17d74d52-c92b-3b8d-9f87-218ab2d1c4a0.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/17d74d52-c92b-3b8d-9f87-218ab2d1c4a0.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Thu, 02 Oct 2025 19:41:00 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": null,
+          "country": "US",
+          "date": "1998-09-22",
+          "disambiguation": "",
+          "id": "148a35c6-e53c-3790-a1ab-f6699bea96ad",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-09-22"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "0801061005535",
+          "country": "XW",
+          "date": "1998-04-20",
+          "disambiguation": "Bandcamp & YouTube",
+          "id": "1a8207d9-75fa-44d7-9a83-04801b0619f3",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-04-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "4523132112503",
+          "country": "JP",
+          "date": "2002-02-13",
+          "disambiguation": "",
+          "id": "2f018bb8-f299-3eb6-8cd4-ccb68bce8ebd",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
+                "iso-3166-1-codes": [
+                  "JP"
+                ],
+                "name": "Japan",
+                "sort-name": "Japan",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-02-13"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "5021603055117",
+          "country": "GB",
+          "date": "1998-04-20",
+          "disambiguation": "",
+          "id": "3fdcf49c-e297-4c21-880d-dba4c40d98dd",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-04-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805524",
+          "country": "GB",
+          "date": "2004-04-05",
+          "disambiguation": "",
+          "id": "4b20245e-c453-37b9-af91-e0a9230784cc",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2004-04-05"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "744861029922",
+          "country": "US",
+          "date": "1998-08-20",
+          "disambiguation": "",
+          "id": "6360f948-17d1-4135-a580-34dc200930d8",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-08-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805524",
+          "country": "GB",
+          "date": "2006",
+          "disambiguation": "",
+          "id": "63eef727-cf14-4a56-a839-e7383ae04a22",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2006"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061005535",
+          "country": "XW",
+          "date": "1998-04-20",
+          "disambiguation": "Bleep and streaming websites",
+          "id": "aa9286ad-59a3-4bd5-9cc0-545ae394720f",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-04-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805524",
+          "country": "GB",
+          "date": "2013",
+          "disambiguation": "remastered",
+          "id": "baae9470-932c-4043-b266-faea644483f3",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2013"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "5021603055124",
+          "country": "GB",
+          "date": "1998-04-20",
+          "disambiguation": "",
+          "id": "c77121b6-4552-3127-9f19-685a7f8f090f",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-04-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": null,
+          "country": "JP",
+          "date": "2002",
+          "disambiguation": "",
+          "id": "c8937df0-1859-34f6-a973-2c09331dbbf8",
+          "packaging": "Other",
+          "packaging-id": "815b7785-8284-3926-8f04-e48bc6c4d102",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
+                "iso-3166-1-codes": [
+                  "JP"
+                ],
+                "name": "Japan",
+                "sort-name": "Japan",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002"
+            }
+          ],
+          "status": "Promotion",
+          "status-id": "518ffc83-5cde-34df-8627-81bff5093d92",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "5021603055124",
+          "country": "DE",
+          "date": "1998-04-20",
+          "disambiguation": "",
+          "id": "cb4f8b4e-4eb7-3a4c-97ea-5f4a134b5248",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "85752fda-13c4-31a3-bee5-0e5cb1f51dad",
+                "iso-3166-1-codes": [
+                  "DE"
+                ],
+                "name": "Germany",
+                "sort-name": "Germany",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1998-04-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805524",
+          "country": "US",
+          "date": "2004-04-06",
+          "disambiguation": "",
+          "id": "d4d64445-c1e0-32e6-82c6-01d98d70ae9e",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2004-04-06"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805517",
+          "country": "GB",
+          "date": "2013-10-21",
+          "disambiguation": "2013 repress",
+          "id": "df884d73-6740-43d1-bca6-7840850f6db6",
+          "packaging": "Gatefold Cover",
+          "packaging-id": "e724a489-a7e8-30a1-a17c-30dfd6831202",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2013-10-21"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "5021603055117",
+          "country": "GB",
+          "date": "2004-04-05",
+          "disambiguation": "",
+          "id": "fb7bc777-d86c-4d4b-bd83-2615b5fdb443",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2004-04-05"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061805517",
+          "country": "XE",
+          "date": "2021",
+          "disambiguation": "",
+          "id": "fbac6ae1-ede5-498c-837a-631e9623835d",
+          "packaging": "Gatefold Cover",
+          "packaging-id": "e724a489-a7e8-30a1-a17c-30dfd6831202",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "name": "Europe",
+                "sort-name": "Europe",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2021"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Music Has the Right to Children"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Music Has the Right to Children"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "US",
             "disambiguation": "American rapper",
             "id": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
@@ -30908,6 +31706,372 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "GB",
+            "disambiguation": "Scottish electronic duo",
+            "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+            "name": "Boards of Canada",
+            "sort-name": "Boards of Canada",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Boards of Canada"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2005-10-12",
+      "id": "401bc572-414c-3cb2-b2b8-fbef17eb9ab0",
+      "imagePath": "/assets/images/covers/colored/401bc572-414c-3cb2-b2b8-fbef17eb9ab0.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/401bc572-414c-3cb2-b2b8-fbef17eb9ab0.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Thu, 02 Oct 2025 19:41:00 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "0801061012335",
+          "country": "GB",
+          "date": "2005-10-17",
+          "disambiguation": "",
+          "id": "21f8abb6-d3ce-4047-9b53-c3ccc4783eef",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005-10-17"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": null,
+          "country": "GB",
+          "date": "2005",
+          "disambiguation": "",
+          "id": "2b39d3d0-972f-46cd-846a-a8a7ea7f8d8a",
+          "packaging": "Other",
+          "packaging-id": "815b7785-8284-3926-8f04-e48bc6c4d102",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005"
+            }
+          ],
+          "status": "Promotion",
+          "status-id": "518ffc83-5cde-34df-8627-81bff5093d92",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061012328",
+          "country": "GB",
+          "date": "2005-10-17",
+          "disambiguation": "Digipak",
+          "id": "46448c2f-dbf1-49eb-a07a-ab9cb8d4ad4f",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005-10-17"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061012311",
+          "country": "GB",
+          "date": "2005-10-17",
+          "disambiguation": "",
+          "id": "4c7a7ca9-f7bd-420a-ba98-ba440a1a1dd3",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005-10-17"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061012328",
+          "country": "GB",
+          "date": "2005",
+          "disambiguation": "Jewel case",
+          "id": "c0ecd550-1990-4e49-9ebc-aa5f7881a652",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061812317",
+          "country": "GB",
+          "date": "2013-10-21",
+          "disambiguation": "",
+          "id": "ec2f14ba-1d8d-4243-b326-f97ebacb95b6",
+          "packaging": "Gatefold Cover",
+          "packaging-id": "e724a489-a7e8-30a1-a17c-30dfd6831202",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2013-10-21"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "4523132712390",
+          "country": "JP",
+          "date": "2005-10-12",
+          "disambiguation": "",
+          "id": "f5989ccc-19ce-46a8-b148-b0158a49d09d",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
+                "iso-3166-1-codes": [
+                  "JP"
+                ],
+                "name": "Japan",
+                "sort-name": "Japan",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005-10-12"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "The Campfire Headphase"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "The Campfire Headphase"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "TR",
             "disambiguation": "",
             "id": "6bbb9ed3-bb91-452f-b801-5c9a511de165",
@@ -38242,6 +39406,88 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "Wave Your Moonlight Hat for the Snowfall Train"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "MX",
+            "disambiguation": "",
+            "id": "aedb9b5e-81bd-438f-9345-fc715fb3bb0d",
+            "name": "Camaleónica",
+            "sort-name": "Camaleónica",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Camaleónica"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2024-08-20",
+      "id": "57471238-f420-4c98-8f63-dc8cc691b704",
+      "imagePath": "/assets/images/covers/colored/57471238-f420-4c98-8f63-dc8cc691b704.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/57471238-f420-4c98-8f63-dc8cc691b704.png",
+      "primary-type": "EP",
+      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+      "ratedAt": "Thu, 02 Oct 2025 19:41:42 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "MX",
+                "disambiguation": "",
+                "id": "aedb9b5e-81bd-438f-9345-fc715fb3bb0d",
+                "name": "Camaleónica",
+                "sort-name": "Camaleónica",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Camaleónica"
+            }
+          ],
+          "barcode": "5063585968443",
+          "country": "XW",
+          "date": "2024-08-20",
+          "disambiguation": "",
+          "id": "402aa027-f010-45d6-83b6-1b9737e1053e",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2024-08-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "demo"
+        }
+      ],
+      "secondary-type-ids": [
+        "81598169-0d6c-3bce-b4be-866fa658eda3"
+      ],
+      "secondary-types": [
+        "Demo"
+      ],
+      "title": "demo"
     },
     {
       "artist-credit": [
@@ -75972,6 +77218,516 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "Either/Or"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "GB",
+            "disambiguation": "Scottish electronic duo",
+            "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+            "name": "Boards of Canada",
+            "sort-name": "Boards of Canada",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Boards of Canada"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "1995-08-15",
+      "id": "e0243657-01ef-3516-b9aa-03d417d6e944",
+      "imagePath": "/assets/images/covers/colored/e0243657-01ef-3516-b9aa-03d417d6e944.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/e0243657-01ef-3516-b9aa-03d417d6e944.png",
+      "primary-type": "EP",
+      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+      "ratedAt": "Thu, 02 Oct 2025 19:40:59 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": null,
+          "country": "GB",
+          "date": "1995",
+          "disambiguation": "",
+          "id": "1444739a-40fc-3ba9-b22b-e175c1939198",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1995"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": null,
+          "country": "GB",
+          "date": "1995-08-15",
+          "disambiguation": "",
+          "id": "3248af25-96a4-4296-912a-7569c1921358",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "1995-08-15"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061007027",
+          "country": "XE",
+          "date": "2002-11-25",
+          "disambiguation": "black disc",
+          "id": "3ef29f31-487f-46a5-b76d-8a3aa6ec7445",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "name": "Europe",
+                "sort-name": "Europe",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11-25"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "5413356672923",
+          "country": "FR",
+          "date": "2004-10-04",
+          "disambiguation": "",
+          "id": "6007d593-4090-39ac-b1ce-00f43009f392",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "08310658-51eb-3801-80de-5a0739207115",
+                "iso-3166-1-codes": [
+                  "FR"
+                ],
+                "name": "France",
+                "sort-name": "France",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2004-10-04"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061007027",
+          "country": "GB",
+          "date": "2002-11",
+          "disambiguation": "black disc with sticker",
+          "id": "6a479ef4-aa8b-43e6-9d40-ac02c56da4b8",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "4523132112657",
+          "country": "JP",
+          "date": "2002-11-23",
+          "disambiguation": "",
+          "id": "7447f9a9-6111-38a3-95a3-9bee16f25ca3",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
+                "iso-3166-1-codes": [
+                  "JP"
+                ],
+                "name": "Japan",
+                "sort-name": "Japan",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11-23"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061007010",
+          "country": "GB",
+          "date": "2002-11-25",
+          "disambiguation": "",
+          "id": "9a8ddc8a-b468-3f27-bb02-2ddc74fc509c",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11-25"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061007027",
+          "country": "GB",
+          "date": "2005",
+          "disambiguation": "",
+          "id": "a95dbc6e-3066-46ea-91ed-cfb9539f0c7c",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "high",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2005"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "0801061007034",
+          "country": "XW",
+          "date": "2002-11-25",
+          "disambiguation": "",
+          "id": "ee482171-4b18-495e-86eb-af07e18fb23c",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11-25"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "GB",
+                "disambiguation": "Scottish electronic duo",
+                "id": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+                "name": "Boards of Canada",
+                "sort-name": "Boards of Canada",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Boards of Canada"
+            }
+          ],
+          "barcode": "801061007010",
+          "country": "GB",
+          "date": "2002-11-25",
+          "disambiguation": "",
+          "id": "f0469689-21d3-4956-a7c4-7db575645b43",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2002-11-25"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Twoism"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Twoism"
     },
     {
       "artist-credit": [

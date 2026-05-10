@@ -126,6 +126,12 @@
         "url": "https://www.youtube.com/channel/UCY6mNbAjGU9NU3nYPKdQbtQ"
       }
     ],
+    "157f6a02-53da-4237-97b1-e08643eaaf34": [
+      {
+        "type": "social network",
+        "url": "https://mastodon.social/@debuggedmyself"
+      }
+    ],
     "1b69fc96-8c50-4201-bf5e-22b4fde21b11": [
       {
         "type": "social network",
@@ -8718,5 +8724,5 @@
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     }
   ],
-  "fetchedAt": "2026-05-10T10:23:02.944Z"
+  "fetchedAt": "2026-05-10T11:18:01.354Z"
 }
