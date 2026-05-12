@@ -36,14 +36,14 @@
         CC BY-SA 4.0
       </a>
 
-      {{ if build.git }}
+      {{ if it.git.hash }}
         <span class="text-border/30 select-none">|</span>
         <a
-          href="https://codeberg.org/{{ it.author.username }}/{{ it.site.host }}/commit/{{ it.build.git }}"
+          href="https://codeberg.org/{{ it.author.username }}/{{ it.site.host }}/commit/{{ it.git.hash }}"
           class="font-mono hover:text-primary transition-colors text-text/80 whitespace-nowrap"
           aria-label="view latest commit"
         >
-          {{ it.build.git.substring(0, 7) }}
+          {{ it.git.hash }}
         </a>
       {{ /if }}
 

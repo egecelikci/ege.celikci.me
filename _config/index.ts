@@ -11,7 +11,11 @@ import checkUrls from "lume/plugins/check_urls.ts";
 import date from "lume/plugins/date.ts";
 import extractDate from "lume/plugins/extract_date.ts";
 import favicon from "lume/plugins/favicon.ts";
+import gitDate from "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@6f4b6eb74af9524b49170c858727319dd1c49780/git_date/mod.ts";
+import gitInfo from "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@6f4b6eb74af9524b49170c858727319dd1c49780/git_info/mod.ts";
+import googleFonts from "lume/plugins/google_fonts.ts";
 import imageSize from "lume/plugins/image_size.ts";
+import jsonLd from "lume/plugins/json_ld.ts";
 import metas from "lume/plugins/metas.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import nav from "lume/plugins/nav.ts";
@@ -23,9 +27,6 @@ import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import terser from "lume/plugins/terser.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
-import jsonLd from "lume/plugins/json_ld.ts";
-
-import googleFonts from "lume/plugins/google_fonts.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -103,7 +104,9 @@ export default function () {
       .use(assets())
       .use(feeds())
       .use(filters())
-      .use(markdown());
+      .use(markdown())
+      .use(gitDate())
+      .use(gitInfo());
 
     // Production-only optimizations and checks
     if (!isDev) {

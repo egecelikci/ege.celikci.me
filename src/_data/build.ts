@@ -1,21 +1,6 @@
 // src/_data/build.ts
 
 /**
- * Gets the current git commit hash synchronously.
- */
-function getGitHash(): string {
-  try {
-    const command = new Deno.Command("git", {
-      args: ["rev-parse", "HEAD"],
-    });
-    const { stdout } = command.outputSync();
-    return new TextDecoder().decode(stdout).trim();
-  } catch {
-    return "unknown";
-  }
-}
-
-/**
  * Checks if it is currently CSS Naked Day.
  */
 function isCSSNakedDay(): boolean {
@@ -40,5 +25,4 @@ export default {
   timestamp: timestamp,
   id: timestamp.valueOf(),
   naked: isCSSNakedDay(),
-  git: getGitHash(),
 };
