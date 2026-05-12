@@ -184,8 +184,6 @@ export interface WebmentionStats {
 // PAGE TYPES (Lume)
 // ============================================================================
 
-export type WikiStatus = "seedling" | "budding" | "evergreen";
-
 export interface PageImage {
   src: string;
   alt: string;
@@ -200,7 +198,6 @@ export interface PageData {
   updated?: Date;
   description?: string;
   tags?: string[];
-  status?: WikiStatus;
   type?: "post" | "note" | "entry" | "index";
   images?: PageImage[];
   content?: string;

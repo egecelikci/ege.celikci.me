@@ -21,7 +21,6 @@
     "remark-gfm": "npm:remark-gfm@^4.0.1",
     "remark-smartypants": "npm:remark-smartypants@^3.0.2",
     "remark-toc": "npm:remark-toc@^9.0.0",
-    "remark-wiki-link": "npm:remark-wiki-link@^2.0.1",
     "sanitize-html": "npm:sanitize-html@^2.17.3",
     "sharp": "npm:sharp@^0.34.5",
     "shiki": "npm:shiki@^4.0.2",
