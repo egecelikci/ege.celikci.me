@@ -2,93 +2,38 @@
  * utils/fetch-base.ts
  *
  * Shared utilities for data fetching scripts (music, events, etc.)
+ * Uses standard Web Cache API for HTTP caching.
  */
 
 Deno.env.set("TZ", "Europe/Istanbul");
-
-import { join } from "@std/path";
-import { ensureDir } from "@std/fs/ensure-dir";
-import { encodeHex } from "@std/encoding/hex";
-import { crypto } from "@std/crypto";
-
-// ============================================================================
-// FILE CACHE
-// ============================================================================
-
-export class FileCache {
-  private dir: string;
-
-  constructor(dir: string) {
-    this.dir = dir;
-  }
-
-  private async getPath(url: string): Promise<string> {
-    // Use SHA-256 hash to avoid collisions for long URLs
-    const urlUint8 = new TextEncoder().encode(url);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", urlUint8);
-    const hashHex = encodeHex(hashBuffer);
-    return join(this.dir, `${hashHex}.cache`);
-  }
-
-  async getJson<T>(url: string): Promise<T | null> {
-    try {
-      const path = await this.getPath(url);
-      const content = await Deno.readTextFile(path);
-      return JSON.parse(content);
-    } catch {
-      return null;
-    }
-  }
-
-  async setJson(url: string, data: any): Promise<void> {
-    await ensureDir(this.dir);
-    const path = await this.getPath(url);
-    await Deno.writeTextFile(path, JSON.stringify(data, null, 2));
-  }
-
-  async getBuffer(url: string): Promise<ArrayBuffer | null> {
-    try {
-      const path = await this.getPath(url);
-      const data = await Deno.readFile(path);
-      return data.buffer;
-    } catch {
-      return null;
-    }
-  }
-
-  async setBuffer(url: string, buffer: ArrayBuffer): Promise<void> {
-    await ensureDir(this.dir);
-    const path = await this.getPath(url);
-    await Deno.writeFile(path, new Uint8Array(buffer));
-  }
-}
 
 // ============================================================================
 // HTTP CLIENT
 // ============================================================================
 
+export type CachePolicy = "no-cache" | "force-cache" | "only-if-cached";
+
 interface HttpClientOptions {
   userAgent: string;
   rateLimitMs?: number;
-  httpCacheDir: string;
+  cacheName: string;
 }
 
 export class HttpClient {
   private userAgent: string;
   private rateLimitMs: number;
   private lastFetch: number = 0;
-  private fileCache: FileCache;
+  private cacheName: string;
   private queue: Promise<void> = Promise.resolve();
 
   constructor(options: HttpClientOptions) {
     this.userAgent = options.userAgent;
     this.rateLimitMs = options.rateLimitMs ?? 0;
-    this.fileCache = new FileCache(options.httpCacheDir);
+    this.cacheName = options.cacheName;
   }
 
   /**
    * Fetches a resource with retries, timeout, and custom User-Agent.
-   * Logic derived from robustFetch in previous iterations.
    */
   private async robustFetch(
     url: string,
@@ -135,24 +80,34 @@ export class HttpClient {
   }
 
   /**
-   * Main fetch method with rate-limiting and local caching support.
+   * Main fetch method with rate-limiting and Web Cache API support.
    */
-  async getCachedJson<T>(url: string): Promise<T | null> {
-    return await this.fileCache.getJson<T>(url);
-  }
-
   async fetch<T>(
     url: string,
     type: "json" | "buffer" = "json",
-    cacheStrategy: "no-cache" | "force-cache" = "force-cache",
+    cachePolicy: CachePolicy = "force-cache",
     bypassRateLimit = false,
   ): Promise<T | null> {
+    const cache = await caches.open(this.cacheName);
+    const request = new Request(url, {
+      headers: { "User-Agent": this.userAgent },
+    });
+
     // 1. Check cache
-    if (cacheStrategy === "force-cache") {
-      const cached = type === "json"
-        ? await this.fileCache.getJson<T>(url)
-        : await this.fileCache.getBuffer(url) as T;
-      if (cached) return cached;
+    if (cachePolicy !== "no-cache") {
+      const cachedResponse = await cache.match(request);
+      if (cachedResponse) {
+        if (type === "json") {
+          return await cachedResponse.json() as T;
+        } else {
+          const buffer = await cachedResponse.arrayBuffer();
+          return buffer as T;
+        }
+      }
+    }
+
+    if (cachePolicy === "only-if-cached") {
+      return null;
     }
 
     // 2. Queue for rate limiting
@@ -163,18 +118,20 @@ export class HttpClient {
         if (elapsed < this.rateLimitMs) {
           await new Promise((r) => setTimeout(r, this.rateLimitMs - elapsed));
         }
-        return await this.performFetch<T>(url, type);
+        return await this.performFetch<T>(url, type, cache, request);
       });
       this.queue = result.then(() => {}).catch(() => {});
       return result;
     }
 
-    return await this.performFetch<T>(url, type);
+    return await this.performFetch<T>(url, type, cache, request);
   }
 
   private async performFetch<T>(
     url: string,
     type: "json" | "buffer",
+    cache: Cache,
+    request: Request,
   ): Promise<T | null> {
     try {
       const response = await this.robustFetch(url, {
@@ -187,6 +144,9 @@ export class HttpClient {
 
       const contentType = response.headers.get("Content-Type") || "";
 
+      // Clone response before consuming it to store in cache
+      await cache.put(request, response.clone());
+
       if (type === "json") {
         if (!contentType.includes("application/json")) {
           console.warn(
@@ -194,28 +154,13 @@ export class HttpClient {
           );
           return null;
         }
-        const data = await response.json() as T;
-        await this.fileCache.setJson(url, data).catch((err) =>
-          console.warn("[http-cache] write failed for", url, err)
-        );
-        return data;
+        return await response.json() as T;
       } else {
-        if (
-          contentType.includes("text/html") ||
-          contentType.includes("application/json")
-        ) {
-          console.warn(
-            `[http] Expected binary/image but got ${contentType} for ${url}`,
-          );
-          return null;
-        }
-        const buffer = await response.arrayBuffer() as T;
-        await this.fileCache.setBuffer(url, buffer as ArrayBuffer).catch((
-          err,
-        ) => console.warn("[http-cache] write failed for", url, err));
-        return buffer;
+        const buffer = await response.arrayBuffer();
+        return buffer as T;
       }
-    } catch {
+    } catch (err) {
+      console.warn(`[http] Fetch failed for ${url}:`, (err as Error).message);
       return null;
     }
   }

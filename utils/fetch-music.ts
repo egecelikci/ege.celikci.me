@@ -11,7 +11,7 @@ import type {
   CritiqueBrainzReview,
   ProcessedAlbum,
 } from "../src/types/index.ts";
-import { createCache, objectValidator } from "./cache.ts";
+import { loadState, saveState, sortObjectKeys } from "./cache.ts";
 import { ditherWithSharp, saveColorVersion } from "./images.ts";
 import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
@@ -27,7 +27,6 @@ const CONFIG = {
 
   paths: {
     cacheFile: join(Deno.cwd(), "src", "_data", "music.json"),
-    httpCache: join(Deno.cwd(), "_cache", "http-cache"),
     coverColor: "src/assets/images/covers/colored",
     coverMono: "src/assets/images/covers/monochrome",
   },
@@ -67,8 +66,6 @@ class AlbumFetcher {
       (CONFIG.syncMode === "mirror" || forceFullSync) &&
       firstData.count > CONFIG.fetchLimit
     ) {
-      // Optimization: If we already have the count and we're just checking for updates,
-      // we could stop here if the first page matches. But for simplicity, we'll fetch all.
       const pages = [];
       for (
         let offset = CONFIG.fetchLimit;
@@ -162,20 +159,17 @@ async function getMusicData() {
   const httpClient = new HttpClient({
     userAgent: "ege.celikci.me/1.0",
     rateLimitMs: CONFIG.rateLimitDelayMs,
-    httpCacheDir: CONFIG.paths.httpCache,
+    cacheName: "music-api-cache",
   });
 
   const fetcher = new AlbumFetcher(httpClient);
   const imageProcessor = new ImageProcessor();
   await imageProcessor.inventory();
 
-  const cache = createCache<{ albums: ProcessedAlbum[] }>({
-    filePath: CONFIG.paths.cacheFile,
-    name: "music",
-    validator: objectValidator(["albums"]),
-  });
-
-  const cachedData = await cache.load({ albums: [] });
+  const cachedData = await loadState<{ albums: ProcessedAlbum[] }>(
+    CONFIG.paths.cacheFile,
+    { albums: [] },
+  );
   const albumsMap = new Map(cachedData.albums.map((a) => [a.id, a]));
 
   console.log("[music] ℹ️ Syncing favorite albums...");
@@ -222,11 +216,11 @@ async function getMusicData() {
   // Sort by ID for maximum stability across devices and runs
   processed.sort((a, b) => a.id.localeCompare(b.id));
 
-  const hasChanged = JSON.stringify(cache.sortObjectKeys(processed)) !==
-    JSON.stringify(cache.sortObjectKeys(cachedData.albums));
+  const hasChanged = JSON.stringify(sortObjectKeys(processed)) !==
+    JSON.stringify(sortObjectKeys(cachedData.albums));
 
   if (hasChanged) {
-    await cache.save({ albums: processed });
+    await saveState(CONFIG.paths.cacheFile, { albums: processed });
     console.log(`[music] ✅ Synced ${processed.length} albums.`);
   } else {
     console.log("[music] ℹ️ No changes detected, skipping save.");

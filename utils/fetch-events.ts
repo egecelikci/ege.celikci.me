@@ -8,7 +8,7 @@
 
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs/ensure-dir";
-import { createCache } from "./cache.ts";
+import { loadState, saveState, sortObjectKeys } from "./cache.ts";
 import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
 
@@ -27,7 +27,6 @@ const CONFIG = {
 
   paths: {
     cacheFile: join(Deno.cwd(), "src", "_data", "mb_events.json"),
-    httpCache: join(Deno.cwd(), "_cache", "http-cache"),
     posters: "src/assets/images/posters",
   },
 } as const;
@@ -251,18 +250,13 @@ async function syncEvents() {
   const httpClient = new HttpClient({
     userAgent: USER_AGENT,
     rateLimitMs: CONFIG.rateLimitDelayMs,
-    httpCacheDir: CONFIG.paths.httpCache,
+    cacheName: "mb-events-api-cache",
   });
 
   const posterDownloader = new PosterDownloader();
   await posterDownloader.inventory();
 
-  const cache = createCache<RawIzmirEvents>({
-    filePath: CONFIG.paths.cacheFile,
-    name: "mb_events",
-  });
-
-  const cachedData = await cache.load({
+  const cachedData = await loadState<RawIzmirEvents>(CONFIG.paths.cacheFile, {
     events: [],
     entities: {},
     fetchedAt: "",
@@ -377,17 +371,16 @@ async function syncEvents() {
     };
 
     // Deep compare core data (excluding fetchedAt) to avoid unnecessary writes
-    // CacheManager.save will handle key sorting for the final file
-    const hasChanged = JSON.stringify(cache.sortObjectKeys(newData)) !==
+    const hasChanged = JSON.stringify(sortObjectKeys(newData)) !==
       JSON.stringify(
-        cache.sortObjectKeys({
+        sortObjectKeys({
           events: cachedData.events,
           entities: cachedData.entities,
         }),
       );
 
     if (hasChanged) {
-      await cache.save({
+      await saveState(CONFIG.paths.cacheFile, {
         ...newData,
         fetchedAt: now.toISOString(),
       });
