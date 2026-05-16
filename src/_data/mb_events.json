@@ -452,6 +452,36 @@
         "url": "https://www.instagram.com/rasenv1rus/"
       }
     ],
+    "3e4be2b8-fa61-4803-bae0-a1fb3ca2420c": [
+      {
+        "type": "purchase for download",
+        "url": "https://music.apple.com/tr/artist/1753224300"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/tr/artist/1753224300"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/4ifJ0V3zP54Y09P1j1nsLd"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/voidspell"
+      },
+      {
+        "type": "bandcamp",
+        "url": "https://voidspell666.bandcamp.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/voidspelll/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/@voidspell666"
+      }
+    ],
     "428d6343-233a-4395-a1fd-4713aabde7bb": [
       {
         "type": "online community",
@@ -1116,6 +1146,16 @@
         "url": "https://open.spotify.com/artist/2J7c8sHC4bRxZYxtQHzmDh"
       }
     ],
+    "a1cedce1-f5cb-4d57-978c-ae3cfac813b2": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/dre4m.l0op/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/loopsoftheendlessdream/"
+      }
+    ],
     "a524631b-4f6f-40a5-8fcf-be235f173f97": [
       {
         "type": "social network",
@@ -1172,6 +1212,20 @@
       {
         "type": "youtube",
         "url": "https://www.youtube.com/user/deligomlegideli"
+      }
+    ],
+    "abab7daf-c631-4836-991b-1fed96a10250": [
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/user-657143626-940850564"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/lizrith_music/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/lizrith/"
       }
     ],
     "ae6826db-fc68-4cc5-8aac-b17a722af0bc": [
@@ -7394,6 +7448,175 @@
     {
       "cancelled": false,
       "disambiguation": "",
+      "id": "a349d0bf-f031-4ffa-9b25-07265407d389",
+      "imagePath": "/assets/images/posters/a349d0bf-f031-4ffa-9b25-07265407d389.jpg",
+      "life-span": {
+        "begin": "2026-05-22",
+        "end": "2026-05-22",
+        "ended": true
+      },
+      "name": "SPRAY, voidspell & Urban Divine at Dinozor Bar",
+      "posterThumb": "https://eventartarchive.org/event/a349d0bf-f031-4ffa-9b25-07265407d389/45140006958-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/a349d0bf-f031-4ffa-9b25-07265407d389/45140006958.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish hardcore",
+            "id": "3e4be2b8-fa61-4803-bae0-a1fb3ca2420c",
+            "name": "voidspell",
+            "sort-name": "voidspell",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "6fe18184-086a-440f-9ed5-d91867514013",
+            "name": "Urban Divine",
+            "sort-name": "Urban Divine",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish punk group",
+            "id": "9c27db9d-890c-4c14-bf43-3d371380a8d4",
+            "name": "SPRAY",
+            "sort-name": "SPRAY",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "a1cedce1-f5cb-4d57-978c-ae3cfac813b2",
+            "name": "dre4m",
+            "sort-name": "dre4m",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "abab7daf-c631-4836-991b-1fed96a10250",
+            "name": "Lizrith",
+            "sort-name": "Lizrith",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "supporting DJ",
+          "type-id": "2c5c92da-259c-42fc-ac1f-53d9dda2d6d0"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, 1469. Sk. No: 86, 35220 Konak/İzmir",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.439088,
+              "longitude": 27.145922
+            },
+            "disambiguation": "",
+            "id": "d673fb77-9d2d-4f93-8e32-270958b40ea2",
+            "name": "Dinozor Bar",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
       "id": "aa28e52e-6f1b-40c1-9c12-9abaf77ddf7e",
       "life-span": {
         "begin": "2020-09-23",
@@ -8724,5 +8947,5 @@
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     }
   ],
-  "fetchedAt": "2026-05-10T11:18:01.354Z"
+  "fetchedAt": "2026-05-16T11:00:30.702Z"
 }
