@@ -40,7 +40,7 @@ window.addEventListener(
     const target = e.target as HTMLElement;
     // Precisely match elements PhotoSwipe is configured to handle in lightbox.ts
     const trigger = target.closest(
-      "a.litebox-trigger, .markdown img, [data-litebox-group] img",
+      "a.lightbox-trigger, .markdown img, [data-lightbox-group] img",
     );
 
     if (trigger) {

@@ -1,11 +1,11 @@
 {{#
   Component: Media (Phanpy-inspired)
-  A flexible grid for 1-4 images with hover zoom and Litebox integration.
+  A flexible grid for 1-4 images with hover zoom and Lightbox integration.
   Whitespace-tight to prevent text-node offsets in note opener.
 #}}
 {{ if it.images && it.images.length > 0 }}
   {{ set count = Math.min(it.images.length, 4) }}
-  {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
+  {{ set gid = it.groupId || Math.random().toString(36).slice(2, 10) }}
   {{ set isAuto = it.aspect === "auto" }}
   {{
     set gridClass = isAuto ? "grid-cols-1" : (it.aspect || {
@@ -18,7 +18,7 @@
 
   <div
     class="grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20 {{ gridClass }}"
-    data-litebox-group="{{ gid }}"
+    data-lightbox-group="{{ gid }}"
   >
     {{ for i, image of it.images |> slice(0, 4) }}
       {{
@@ -30,8 +30,9 @@
       }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
-        class="litebox-trigger media relative block w-full h-full overflow-hidden bg-surface/20 decoration-none color-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
+        class="lightbox-trigger media relative block w-full h-full overflow-hidden bg-surface/20 no-underline text-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
         target="_blank"
+        rel="noopener noreferrer"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
         {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
         data-cropped="true"
@@ -50,7 +51,7 @@
         />
 
         {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}
-        {{ if image.alt }}
+        {{ if image.alt?.trim() }}
           <span class="sr-only">{{ image.alt }}</span>
 
           {{# 2. VISUAL BADGE (Ignored by Search) #}}

@@ -5,6 +5,10 @@
 
 import type { Page, Site } from "lume/core.ts";
 
+// Support standard ![alt](src) and ![alt](src =WxH)
+const IMG_REGEX =
+  /!\[([^\]]*)\]\(([^)\s=]+)(?:\s+=(\d+)?x(\d+)?)?(?:\s+"([^"]+)")?\)/g;
+
 export function extractImagesFromNote(content: string) {
   const images: Array<{
     src: string;
@@ -13,12 +17,10 @@ export function extractImagesFromNote(content: string) {
     height?: number;
   }> = [];
 
-  // Support standard ![alt](src) and ![alt](src =WxH)
-  const imgRegex =
-    /!\[([^\]]*)\]\(([^)\s=]+)(?:\s+=(\d+)?x(\d+)?)?(?:\s+"([^"]+)")?\)/g;
+  const regex = new RegExp(IMG_REGEX.source, "g");
   let match;
 
-  while ((match = imgRegex.exec(content)) !== null) {
+  while ((match = regex.exec(content)) !== null) {
     const src = match[2];
     const width = match[3] ? parseInt(match[3], 10) : undefined;
     const height = match[4] ? parseInt(match[4], 10) : undefined;
@@ -80,7 +82,7 @@ export default function () {
             // For notes, we traditionally strip images from the content for the feed/listing
             if (isNote) {
               page.data.content = rawContent.replace(
-                /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g,
+                new RegExp(IMG_REGEX.source, "g"),
                 "",
               ).trim();
             }

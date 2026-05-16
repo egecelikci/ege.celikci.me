@@ -125,16 +125,12 @@
   }
 
   /* Robust Scrollbar Compensation (Phanpy-style) */
-  html.pswp-open, html.pswp-closing {
+  html.pswp-open,
+  html.pswp-closing {
     overflow: hidden !important;
     overscroll-behavior: none;
-    background-color: #000 !important;
-    color-scheme: dark !important;
 
-    /* Disable all page transitions during Litebox states to prevent flickers/tilts */
-    transition: none !important;
-
-    /* Global variables override when Litebox is active */
+    /* Global variables override when Lightbox is active */
     --color-bg: #000;
     --color-surface: #111;
     --color-text: #fff;
@@ -144,13 +140,13 @@
     --header-height: 0;
   }
 
-  html.pswp-open body, html.pswp-closing body {
-    background-color: #000 !important;
+  html.pswp-open body,
+  html.pswp-closing body {
     padding-right: var(--pswp-sw, 0px) !important;
-    transition: none !important;
   }
 
-  html.pswp-open #site-header, html.pswp-closing #site-header {
+  html.pswp-open #site-header,
+  html.pswp-closing #site-header {
     padding-right: var(--pswp-sw, 0px) !important;
     background-color: #000 !important;
     border-bottom-color: #222 !important;
@@ -161,20 +157,7 @@
     transition: opacity 0.25s ease, transform 0.25s ease !important;
   }
 
-  /* The Scrollbar Shield: covers the gutter with pure black */
-  html.pswp-open::after, html.pswp-closing::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: var(--pswp-sw, 0px);
-    background: #000;
-    z-index: 99999; /* Top of everything */
-    pointer-events: none;
-  }
-
-  /* Smoothly transition background when opening/closing Litebox */
+  /* Smoothly transition background when opening/closing Lightbox */
   html {
     transition: background-color 0.3s ease;
   }
@@ -351,6 +334,11 @@
     }
   }
 
+  .lightbox-trigger {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
   /* Code block container */
   .markdown figure.code-block {
     @apply my-8 block w-full max-w-full rounded-xl border border-border/20
@@ -435,7 +423,7 @@
 
 /* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */
 .pswp {
-  --pswp-bg: rgba(0, 0, 0, 0.95);
+  --pswp-bg: rgba(0, 0, 0, 0.75);
   --pswp-placeholder-bg: transparent;
   --pswp-root-z-index: 5000;
 
@@ -454,33 +442,29 @@
   will-change: opacity, transform;
   transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 
-  .pswp__img, .pswp__img--placeholder {
-    will-change: transform, opacity;
-    border-radius: 0.75rem; /* Match site's rounded-xl during animation */
-    transition: border-radius 0.3s ease;
+  .pswp__bg {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 
-  &.pswp--open .pswp__img, &.pswp--open .pswp__img--placeholder {
-    border-radius: 0; /* Go to square/native as it opens fully */
+  .pswp__img,
+  .pswp__img--placeholder {
+    will-change: opacity;
+    /* Hardware acceleration to prevent flicker during opacity transition */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
   }
 
   /* Aggressively hide all default UI elements */
   .pswp__top-bar,
   .pswp__button--close,
   .pswp__button--zoom,
-  .pswp__button--arrow,
   .pswp__button--arrow--prev,
   .pswp__button--arrow--next,
   .pswp__counter,
-  .pswp__preloader,
-  .pswp__ui--one-button .pswp__button--arrow,
-  button[class*="pswp__button--"] {
+  .pswp__preloader {
     display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    position: absolute !important;
-    clip: rect(0, 0, 0, 0) !important;
   }
 }
 
@@ -654,9 +638,16 @@
   background:
     linear-gradient(to right, var(--color-bg) 30%, transparent),
     linear-gradient(to right, transparent, var(--color-bg) 70%) 100% 0,
-    radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.12), transparent),
-    radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.12), transparent)
-    100% 0;
+    radial-gradient(
+    farthest-side at 0 50%,
+    rgba(0, 0, 0, 0.12),
+    transparent
+  ),
+    radial-gradient(
+    farthest-side at 100% 50%,
+    rgba(0, 0, 0, 0.12),
+    transparent
+  ) 100% 0;
   background-repeat: no-repeat;
   background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
   background-attachment: local, local, scroll, scroll;
@@ -677,13 +668,15 @@
 .markdown > p {
   @apply my-0;
 }
-.markdown ul, .markdown ol {
+.markdown ul,
+.markdown ol {
   @apply space-y-2;
 }
 .markdown li {
   @apply my-0 leading-relaxed;
 }
-.markdown li > code, .markdown a:not(.btn, .heading-anchor) > code {
+.markdown li > code,
+.markdown a:not(.btn, .heading-anchor) > code {
   @apply bg-transparent border-0 px-0 py-0 shadow-none;
 }
 

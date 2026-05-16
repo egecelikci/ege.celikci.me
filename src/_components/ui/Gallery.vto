@@ -1,7 +1,7 @@
 {{#
   Component: Gallery (Content-aware wrapper)
   Reworked: Cinematic, accessible gallery for a "chill" visual diary.
-  
+
   Props:
     - images: Array of { src, alt, width, height }
     - static: boolean (default: false)
@@ -14,11 +14,11 @@
   {{
     set gridClasses = isSingle ? "block" : "grid grid-cols-1 sm:grid-cols-2 gap-4"
   }}
-  {{ set gid = it.groupId || Math.floor(Math.random() * 1000000) }}
+  {{ set gid = it.groupId || Math.random().toString(36).slice(2, 10) }}
 
   <div
     class="{{ gridClasses }} mb-4 {{ it.classes }}"
-    {{ if !it.static }}data-litebox-group="{{ gid }}"{{ /if }}
+    {{ if !it.static }}data-lightbox-group="{{ gid }}"{{ /if }}
   >
     {{ for i, image of it.images }}
       <div class="relative group/img h-full">
@@ -28,10 +28,12 @@
             href="{{ image.src |> url }}"
             {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
             {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
+            data-cropped="true"
             target="_blank"
-            aria-label="View larger image: {{ image.alt }}"
+            rel="noopener noreferrer"
+            aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
             class='
-              litebox-trigger note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents {{
+              lightbox-trigger note-gallery__link group/img relative block overflow-hidden rounded-2xl border border-border/10 bg-surface/10 cursor-zoom-in transition-all duration-700 [&_picture]:contents {{
               it.aspect || "aspect-square"
               }}
             '
@@ -48,7 +50,7 @@
             />
 
             {{# 4. CAPTION (Optional) #}}
-            {{ if image.alt }}
+            {{ if image.alt?.trim() }}
               <span class="sr-only">{{ image.alt }}</span>
             {{ /if }}
           </a>

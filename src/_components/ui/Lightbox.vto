@@ -1,5 +1,5 @@
 {{#
-  Component: Litebox (Templates for PhotoSwipe)
+  Component: Lightbox (Templates for PhotoSwipe)
   Provides UI blueprints for PhotoSwipe using existing design tokens.
 #}}
 {{# 1. TOP CONTROLS TEMPLATE #}}
@@ -23,12 +23,14 @@
       class="carousel-indicator flex items-center justify-center gap-3 min-w-0 px-4 pswp-indicator"
     >
       <span
-        class="carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg min-w-0 max-w-[120px] sm:max-w-[200px] overflow-x-auto no-scrollbar flex pswp-dots"
+        class="carousel-dots pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 rounded-full flex items-center gap-0.5 px-2 py-0.5 shadow-lg min-w-0 max-w-[120px] sm:max-w-[200px] overflow-x-auto no-scrollbar pswp-dots"
       >
         {{# dots injected by JS #}}
       </span>
       <span
         class="carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap shrink-0 hidden pswp-counter"
+        aria-live="polite"
+        aria-atomic="true"
       >
         {{# counter injected by JS #}}
       </span>
@@ -41,7 +43,7 @@
           type="button"
           class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 pswp-more-btn"
           aria-label="More options"
-          aria-haspopup="true"
+          aria-haspopup="menu"
         >
           {{
             await it.comp.ui.Icon({ name: "more-horizontal", classes: "w-5 h-5" })
@@ -121,7 +123,7 @@
     >
     </div>
     <div
-      class="fixed bottom-0 left-0 right-0 z-[5200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border translate-y-full pswp-sheet"
+      class="fixed bottom-0 left-0 right-0 z-[5200] bg-surface border-t border-border rounded-t-3xl p-6 md:p-8 transform transition-transform duration-300 flex flex-col gap-6 max-h-[80vh] overflow-y-auto shadow-2xl md:max-w-2xl md:mx-auto md:mb-8 md:rounded-3xl md:border translate-y-full opacity-0 pointer-events-none pswp-sheet"
       role="dialog"
       aria-labelledby="pswp-sheet-title"
       aria-modal="true"
@@ -162,7 +164,7 @@
 
 {{# 5. NAVIGATION ARROWS #}}
 <template id="pswp-template-nav">
-  <div class="pswp-nav" aria-hidden="true">
+  <div class="pswp-nav">
     <button
       type="button"
       class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"

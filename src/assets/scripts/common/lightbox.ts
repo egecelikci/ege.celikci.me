@@ -19,16 +19,10 @@ interface PswpItem {
   type?: string;
   postUrl?: string | null;
   mediaType?: string;
+  cropped?: boolean;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const escapeAttr = (s: string): string =>
-  s
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
 
 const getTemplate = (id: string): HTMLElement | null => {
   const template = document.getElementById(id) as HTMLTemplateElement | null;
@@ -56,20 +50,15 @@ const downloadMedia = async (src: string) => {
 
 // ─── Main Init ───────────────────────────────────────────────────────────────
 
-export let isLightboxInitialized = false;
-
-// Calculate scrollbar width once to prevent layout shift
-const getScrollbarWidth = () => {
-  return window.innerWidth - document.documentElement.clientWidth;
-};
+let isLightboxInitialized = false;
 
 export function initLightbox() {
   if (isLightboxInitialized) return;
   isLightboxInitialized = true;
 
   const lightbox = new PhotoSwipeLightbox({
-    gallery: "[data-litebox-group], .markdown",
-    children: "a.litebox-trigger, img:not(.litebox-trigger img)",
+    gallery: "[data-lightbox-group], .markdown",
+    children: "a.lightbox-trigger, img:not(.lightbox-trigger img)",
     pswpModule: PhotoSwipe,
 
     // Disable default UI
@@ -88,8 +77,8 @@ export function initLightbox() {
 
     // Animation & Transitions (Sturdy & Robust)
     showHideAnimationType: "zoom",
-    showAnimationDuration: 300,
-    hideAnimationDuration: 250,
+    showAnimationDuration: 200,
+    hideAnimationDuration: 200,
     easing: "cubic-bezier(0.1, 0, 0, 1)", // Phanpy-style dramatic initial pop
 
     // Spacing to keep image between custom UI elements
@@ -108,6 +97,7 @@ export function initLightbox() {
       itemData.msrc = img?.src;
       itemData.srcset = img?.getAttribute("srcset") || undefined;
       itemData.alt = img?.alt || anchor.getAttribute("data-alt") || "";
+      itemData.cropped = anchor.getAttribute("data-cropped") === "true";
 
       const w = anchor.getAttribute("data-pswp-width") ||
         img?.getAttribute("width");
@@ -117,9 +107,8 @@ export function initLightbox() {
       itemData.width = w ? parseInt(w, 10) : (img?.naturalWidth || 0);
       itemData.height = h ? parseInt(h, 10) : (img?.naturalHeight || 0);
 
-      (itemData as any).postUrl = anchor.getAttribute("data-post-url");
-      (itemData as any).mediaType = anchor.getAttribute("data-media-type") ||
-        "image";
+      itemData.postUrl = anchor.getAttribute("data-post-url");
+      itemData.mediaType = anchor.getAttribute("data-media-type") || "image";
     } else if (el.tagName === "IMG") {
       const img = el as HTMLImageElement;
       itemData.src = img.src;
@@ -137,41 +126,39 @@ export function initLightbox() {
 
   // 1b. Correct Thumbnail Bounds for object-fit: cover
   lightbox.addFilter("thumbEl", (thumbnail, itemData) => {
-    return (itemData.element?.querySelector("img") as HTMLElement) || thumbnail;
-  });
-
-  lightbox.addFilter("thumbBounds", (thumbBounds, itemData) => {
-    const el = itemData.element?.querySelector("img");
-    if (!el) return thumbBounds;
-
-    const rect = el.getBoundingClientRect();
-    return {
-      x: rect.left,
-      y: rect.top,
-      w: rect.width,
-    };
+    // Use the exact anchor container bounds, bypassing the scaled inner image
+    return (itemData.element as HTMLElement) || thumbnail;
   });
 
   lightbox.addFilter("placeholderSrc", (placeholderSrc, content) => {
-    return (content.data as any).msrc || placeholderSrc;
+    return (content.data as PswpItem).msrc || placeholderSrc;
   });
 
   // 2. Video/Gifv Support
   lightbox.on("contentLoad", (e) => {
     const { content } = e;
-    const data = content.data as any;
+    const data = content.data as PswpItem;
     if (data.mediaType === "video" || data.mediaType === "gifv") {
       e.preventDefault();
-      const videoAttrs = data.mediaType === "gifv"
-        ? "autoplay loop muted playsinline"
-        : "controls";
       content.element = document.createElement("div");
       content.element.className =
         "pswp__content-video flex items-center justify-center w-full h-full p-4 md:p-12";
-      content.element.innerHTML =
-        `<video class="max-w-full max-h-full object-contain" aria-label="${
-          escapeAttr(data.alt || "Video")
-        }" src="${escapeAttr(data.src)}" ${videoAttrs}></video>`;
+
+      const video = document.createElement("video");
+      video.className = "max-w-full max-h-full object-contain";
+      video.setAttribute("aria-label", data.alt || "Video");
+      video.src = data.src || "";
+
+      if (data.mediaType === "gifv") {
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+      } else {
+        video.controls = true;
+      }
+
+      content.element.appendChild(video);
       content.state = "loaded";
     }
   });
@@ -203,16 +190,9 @@ export function initLightbox() {
           ".pswp-open-original",
         ) as HTMLAnchorElement;
         const download = controls.querySelector(".pswp-download");
+        const counter = controls.querySelector(".pswp-counter") as HTMLElement;
 
-        // Click-outside-to-close for more menu
-        const closeMoreMenu = () => {
-          moreMenu?.classList.add(
-            "opacity-0",
-            "pointer-events-none",
-            "scale-95",
-          );
-          moreBtn?.setAttribute("aria-expanded", "false");
-        };
+        let isMenuOpen = false;
 
         const handleOutsideClick = (e: MouseEvent) => {
           if (
@@ -223,6 +203,32 @@ export function initLightbox() {
           }
         };
 
+        const closeMoreMenu = () => {
+          if (!isMenuOpen) return;
+          isMenuOpen = false;
+          moreMenu?.classList.add(
+            "opacity-0",
+            "pointer-events-none",
+            "scale-95",
+          );
+          moreBtn?.setAttribute("aria-expanded", "false");
+          document.removeEventListener("click", handleOutsideClick);
+        };
+
+        const openMoreMenu = () => {
+          isMenuOpen = true;
+          moreMenu?.classList.remove(
+            "opacity-0",
+            "pointer-events-none",
+            "scale-95",
+          );
+          moreBtn?.setAttribute("aria-expanded", "true");
+          // Defer to prevent this click from immediately closing
+          requestAnimationFrame(() => {
+            document.addEventListener("click", handleOutsideClick);
+          });
+        };
+
         closeBtn?.addEventListener("click", (e) => {
           e.stopPropagation();
           pswp.close();
@@ -230,18 +236,7 @@ export function initLightbox() {
 
         moreBtn?.addEventListener("click", (e) => {
           e.stopPropagation();
-          const isOpening = moreMenu?.classList.toggle("opacity-0") === false;
-          moreMenu?.classList.toggle("pointer-events-none", !isOpening);
-          moreMenu?.classList.toggle("scale-95", !isOpening);
-          moreBtn.setAttribute("aria-expanded", String(isOpening));
-
-          if (isOpening) {
-            document.addEventListener("click", handleOutsideClick, {
-              once: true,
-            });
-          } else {
-            document.removeEventListener("click", handleOutsideClick);
-          }
+          isMenuOpen ? closeMoreMenu() : openMoreMenu();
         });
 
         download?.addEventListener("click", () => {
@@ -262,11 +257,18 @@ export function initLightbox() {
           controls.style.opacity = "0";
           controls.style.pointerEvents = "none";
         };
-        pswp.element?.addEventListener("pointermove", showControls);
-        pswp.element?.addEventListener("touchstart", showControls);
+
+        const onPointerMove = showControls;
+        const onTouchStart = showControls;
+
+        pswp.element?.addEventListener("pointermove", onPointerMove);
+        pswp.element?.addEventListener("touchstart", onTouchStart);
 
         pswp.on("destroy", () => {
           if (idleTimer) clearTimeout(idleTimer);
+          pswp.element?.removeEventListener("pointermove", onPointerMove);
+          pswp.element?.removeEventListener("touchstart", onTouchStart);
+          document.removeEventListener("click", handleOutsideClick);
         });
 
         // Build dots once
@@ -279,6 +281,7 @@ export function initLightbox() {
           for (let i = 0; i < total; i++) {
             const dot = getTemplate("pswp-template-dot") as HTMLButtonElement;
             if (dot) {
+              dot.setAttribute("aria-label", `Go to slide ${i + 1}`);
               dot.addEventListener("click", (e) => {
                 e.stopPropagation();
                 pswp.goTo(i);
@@ -295,7 +298,6 @@ export function initLightbox() {
 
           // Close menu on slide change
           closeMoreMenu();
-          document.removeEventListener("click", handleOutsideClick);
 
           // Pause any rogue videos from adjacent slides
           pswp.element?.querySelectorAll("video").forEach((v) => v.pause());
@@ -320,6 +322,10 @@ export function initLightbox() {
                 const active = i === pswp.currIndex;
                 dot.setAttribute("data-active", String(active));
                 dot.disabled = active;
+                dot.setAttribute(
+                  "aria-label",
+                  `Go to slide ${i + 1}${active ? " (current)" : ""}`,
+                );
                 if (active) {
                   dot.scrollIntoView({
                     block: "nearest",
@@ -331,7 +337,6 @@ export function initLightbox() {
             }
           }
 
-          const counter = controls.querySelector(".pswp-counter");
           if (counter) {
             counter.classList.toggle("hidden", !useCounter || total <= 1);
             if (useCounter && total > 1) {
@@ -370,11 +375,16 @@ export function initLightbox() {
         const openAlt = (e: Event) => {
           e.stopPropagation();
           const data = pswp.currSlide?.data as PswpItem;
-          if (!data?.alt || !content) return;
-          content.textContent = data.alt;
+          const alt = data?.alt?.trim();
+          if (!alt || !content) return;
+          content.textContent = alt;
           isSheetOpen = true;
           backdrop.classList.remove("opacity-0", "pointer-events-none");
-          sheet.classList.remove("translate-y-full");
+          sheet.classList.remove(
+            "translate-y-full",
+            "opacity-0",
+            "pointer-events-none",
+          );
           sheet.style.transform = "";
           closeSheet?.focus({ preventScroll: true }); // Move focus into dialog
         };
@@ -383,16 +393,32 @@ export function initLightbox() {
           if (!isSheetOpen) return;
           isSheetOpen = false;
           backdrop.classList.add("opacity-0", "pointer-events-none");
-          sheet.classList.add("translate-y-full");
+          sheet.classList.add(
+            "translate-y-full",
+            "opacity-0",
+            "pointer-events-none",
+          );
           sheet.style.transform = "";
           (altTrigger.querySelector("button") as HTMLButtonElement)?.focus({
             preventScroll: true,
           }); // Restore focus
         };
 
+        const handleKeydown = (e: KeyboardEvent) => {
+          if (e.key === "Escape" && isSheetOpen) {
+            e.stopPropagation();
+            closeAlt();
+          }
+        };
+
         altTrigger.addEventListener("click", openAlt);
         backdrop.addEventListener("click", closeAlt);
         closeSheet?.addEventListener("click", closeAlt);
+        document.addEventListener("keydown", handleKeydown);
+
+        pswp.on("destroy", () => {
+          document.removeEventListener("keydown", handleKeydown);
+        });
 
         // Swipe to close functionality
         let startY = 0;
@@ -443,10 +469,16 @@ export function initLightbox() {
 
         pswp.on("change", () => {
           const data = pswp.currSlide?.data as PswpItem;
-          const hasAlt = Boolean(data?.alt);
+          const alt = data?.alt?.trim() || "";
+          const hasAlt = alt.length > 0;
+
           altTrigger.classList.toggle("opacity-0", !hasAlt);
           altTrigger.classList.toggle("pointer-events-none", !hasAlt);
-          if (captionPreview) captionPreview.textContent = data?.alt || "";
+
+          // Hide the entire sheet wrapper if no alt text
+          sheetWrapper.classList.toggle("hidden", !hasAlt);
+
+          if (captionPreview) captionPreview.textContent = alt;
           closeAlt();
         });
 
@@ -466,10 +498,24 @@ export function initLightbox() {
         const prev = nav.querySelector(".pswp-prev") as HTMLButtonElement;
         const next = nav.querySelector(".pswp-next") as HTMLButtonElement;
 
-        // Set correct initial visibility immediately
-        const total = pswp.getNumItems();
-        if (prev) prev.hidden = pswp.currIndex === 0;
-        if (next) next.hidden = pswp.currIndex === total - 1;
+        const updateNav = () => {
+          const total = pswp.getNumItems();
+          if (prev) {
+            prev.hidden = total <= 1;
+            prev.disabled = pswp.currIndex === 0;
+            prev.setAttribute("aria-disabled", String(pswp.currIndex === 0));
+          }
+          if (next) {
+            next.hidden = total <= 1;
+            next.disabled = pswp.currIndex === total - 1;
+            next.setAttribute(
+              "aria-disabled",
+              String(pswp.currIndex === total - 1),
+            );
+          }
+        };
+
+        updateNav();
 
         prev?.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -480,11 +526,7 @@ export function initLightbox() {
           pswp.next();
         });
 
-        pswp.on("change", () => {
-          const total = pswp.getNumItems();
-          if (prev) prev.hidden = pswp.currIndex === 0;
-          if (next) next.hidden = pswp.currIndex === total - 1;
-        });
+        pswp.on("change", updateNav);
 
         el.appendChild(nav);
       },
@@ -495,7 +537,7 @@ export function initLightbox() {
     // Set scrollbar width variable for CSS compensation
     document.documentElement.style.setProperty(
       "--pswp-sw",
-      `${getScrollbarWidth()}px`,
+      `${window.innerWidth - document.documentElement.clientWidth}px`,
     );
     document.documentElement.classList.add("pswp-open");
   });
