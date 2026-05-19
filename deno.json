@@ -1,8 +1,8 @@
 {
   "nodeModulesDir": "auto",
   "imports": {
-    "@shikijs/rehype": "npm:@shikijs/rehype@^4.0.2",
-    "@shikijs/themes": "npm:@shikijs/themes@^4.0.2",
+    "@shikijs/rehype": "npm:@shikijs/rehype@^4.1.0",
+    "@shikijs/themes": "npm:@shikijs/themes@^4.1.0",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
     "@std/fs": "jsr:@std/fs@^1.0.23",
     "@std/path": "jsr:@std/path@^1.1.4",
@@ -19,7 +19,7 @@
     "remark-toc": "npm:remark-toc@^9.0.0",
     "sanitize-html": "npm:sanitize-html@^2.17.4",
     "sharp": "npm:sharp@^0.34.5",
-    "shiki": "npm:shiki@^4.0.2",
+    "shiki": "npm:shiki@^4.1.0",
     "workbox-cli": "npm:workbox-cli@^7.4.1"
   },
   "tasks": {
