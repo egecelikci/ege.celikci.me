@@ -28733,6 +28733,228 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "US",
+            "disambiguation": "US hip hop group",
+            "id": "80b3cf5e-18fe-4c59-98c7-e5bb87210710",
+            "name": "The Roots",
+            "sort-name": "Roots, The",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "The Roots"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2011-12-05",
+      "id": "3d5c691e-61bd-4235-999b-31ebea927227",
+      "imagePath": "/assets/images/covers/colored/3d5c691e-61bd-4235-999b-31ebea927227.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/3d5c691e-61bd-4235-999b-31ebea927227.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 19 May 2026 15:10:44 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US hip hop group",
+                "id": "80b3cf5e-18fe-4c59-98c7-e5bb87210710",
+                "name": "The Roots",
+                "sort-name": "Roots, The",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "The Roots"
+            }
+          ],
+          "barcode": "602527869636",
+          "country": "US",
+          "date": "2011-12-06",
+          "disambiguation": "",
+          "id": "17105002-a6fd-4f92-9589-aa7f98073638",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2011-12-06"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "undun"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US hip hop group",
+                "id": "80b3cf5e-18fe-4c59-98c7-e5bb87210710",
+                "name": "The Roots",
+                "sort-name": "Roots, The",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "The Roots"
+            }
+          ],
+          "barcode": "4988005690593",
+          "country": "JP",
+          "date": "2011-12-14",
+          "disambiguation": "",
+          "id": "26300971-254d-4003-bffe-339507c30b62",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "2db42837-c832-3c27-b4a3-08198f75693c",
+                "iso-3166-1-codes": [
+                  "JP"
+                ],
+                "name": "Japan",
+                "sort-name": "Japan",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2011-12-14"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "undun"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US hip hop group",
+                "id": "80b3cf5e-18fe-4c59-98c7-e5bb87210710",
+                "name": "The Roots",
+                "sort-name": "Roots, The",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "The Roots"
+            }
+          ],
+          "barcode": "",
+          "country": "XW",
+          "date": "2011-12-05",
+          "disambiguation": "",
+          "id": "3e61b8c9-6678-4ef0-b151-1cdbf01dbfd6",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2011-12-05"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "undun"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US hip hop group",
+                "id": "80b3cf5e-18fe-4c59-98c7-e5bb87210710",
+                "name": "The Roots",
+                "sort-name": "Roots, The",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "The Roots"
+            }
+          ],
+          "barcode": "602527869636",
+          "country": "GB",
+          "date": "2011-12-05",
+          "disambiguation": "",
+          "id": "92b0d932-ecfb-403c-8e85-a45eafe4579a",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2011-12-05"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "undun"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "undun"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "CA",
             "disambiguation": "",
             "id": "b1570544-93ab-4b2b-8398-131735394202",
@@ -54425,132 +54647,6 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "Obi"
-    },
-    {
-      "artist-credit": [
-        {
-          "artist": {
-            "country": "US",
-            "disambiguation": "",
-            "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
-            "name": "Narrow Head",
-            "sort-name": "Narrow Head",
-            "type": "Group",
-            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-          },
-          "joinphrase": "",
-          "name": "Narrow Head"
-        }
-      ],
-      "disambiguation": "",
-      "first-release-date": "2014-03-19",
-      "id": "9a057b06-307c-4850-91a4-f2125b08cd8b",
-      "imagePath": "/assets/images/covers/colored/9a057b06-307c-4850-91a4-f2125b08cd8b.webp",
-      "imagePathMono": "/assets/images/covers/monochrome/9a057b06-307c-4850-91a4-f2125b08cd8b.png",
-      "primary-type": "EP",
-      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
-      "ratedAt": "Thu, 02 Oct 2025 19:42:18 GMT",
-      "releases": [
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "country": "US",
-                "disambiguation": "",
-                "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
-                "name": "Narrow Head",
-                "sort-name": "Narrow Head",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-              },
-              "joinphrase": "",
-              "name": "Narrow Head"
-            }
-          ],
-          "barcode": "5054316240068",
-          "country": "XW",
-          "date": "2020-08-14",
-          "disambiguation": "",
-          "id": "c1d5f5de-db35-4188-a88c-c3e74c6f8d7c",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "name": "[Worldwide]",
-                "sort-name": "[Worldwide]",
-                "type": null,
-                "type-id": null
-              },
-              "date": "2020-08-14"
-            }
-          ],
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "title": "Far Removed"
-        },
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "country": "US",
-                "disambiguation": "",
-                "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
-                "name": "Narrow Head",
-                "sort-name": "Narrow Head",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-              },
-              "joinphrase": "",
-              "name": "Narrow Head"
-            }
-          ],
-          "barcode": "",
-          "country": "XW",
-          "date": "2014-03-19",
-          "disambiguation": "",
-          "id": "ceccb528-2559-45ba-8fde-1a32438cd1df",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "name": "[Worldwide]",
-                "sort-name": "[Worldwide]",
-                "type": null,
-                "type-id": null
-              },
-              "date": "2014-03-19"
-            }
-          ],
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "title": "Far Removed"
-        }
-      ],
-      "secondary-type-ids": [],
-      "secondary-types": [],
-      "title": "Far Removed"
     },
     {
       "artist-credit": [
