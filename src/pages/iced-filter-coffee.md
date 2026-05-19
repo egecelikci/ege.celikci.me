@@ -5,8 +5,6 @@ templateEngine: [vto, md]
 date: 2025-11-23
 ---
 
-this is the recipe from James Hoffmann
-
 {{
 await comp.ui.Video({
 id: "PApBycDrPo0",
