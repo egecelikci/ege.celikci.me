@@ -1,9 +1,10 @@
-import { decode as base64Decode } from "https://deno.land/std@0.203.0/encoding/base64.ts";
-
 const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN");
 const OWNER_TOKEN = Deno.env.get("OWNER_TOKEN");
 const OWNER_PASSKEY_CONFIG = Deno.env.get("OWNER_PASSKEY_CONFIG"); // JSON: { id, publicKey }
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
+
+const base64Decode = (b64: string): Uint8Array =>
+  Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
 /**
  * Converts a DER-encoded ECDSA signature (WebAuthn default) to a raw 64-byte format (R + S).
