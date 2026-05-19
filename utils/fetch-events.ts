@@ -76,7 +76,6 @@ export interface MBEvent {
 export interface RawIzmirEvents {
   events: MBEvent[];
   entities: Record<string, Array<{ type: string; url: string }>>;
-  fetchedAt: string;
 }
 
 // Derived at build time by preprocessors.ts — never saved to disk
@@ -225,12 +224,13 @@ async function fetchEntityDetails(
   httpClient: HttpClient,
   entityId: string,
   type: "artist" | "place" | "label",
-): Promise<Array<{ type: string; url: string }>> {
+): Promise<Array<{ type: string; url: string }> | null> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
   // These MUST be rate limited as they hit MusicBrainz
   const data = await httpClient.fetch<any>(url, "json", "force-cache", false);
 
-  if (!data || !data.relations) return [];
+  if (data === null) return null;
+  if (!data.relations) return [];
 
   const links: Array<{ type: string; url: string }> = [];
   data.relations.forEach((rel: any) => {
@@ -259,7 +259,6 @@ async function syncEvents() {
   const cachedData = await loadState<RawIzmirEvents>(CONFIG.paths.cacheFile, {
     events: [],
     entities: {},
-    fetchedAt: "",
   });
   const eventsMap = new Map(cachedData.events.map((e) => [e.id, e]));
 
@@ -267,7 +266,6 @@ async function syncEvents() {
 
   try {
     const raw = await fetchAllEvents(httpClient);
-    const now = new Date();
 
     const entityIds = new Map<string, "artist" | "place" | "label">();
 
@@ -348,13 +346,12 @@ async function syncEvents() {
 
     const harvestResults = await Promise.all(
       Array.from(entityIds.entries()).map(async ([id, type]) => {
-        // If already in entities cache, skip
-        if (cachedData.entities[id]) {
+        if (id in cachedData.entities) {
           return [id, cachedData.entities[id]] as const;
         }
 
         const details = await fetchEntityDetails(httpClient, id, type);
-        return [id, details.length > 0 ? details : null] as const;
+        return [id, details] as const;
       }),
     );
 
@@ -370,20 +367,12 @@ async function syncEvents() {
       entities,
     };
 
-    // Deep compare core data (excluding fetchedAt) to avoid unnecessary writes
+    // Deep compare core data to avoid unnecessary writes
     const hasChanged = JSON.stringify(sortObjectKeys(newData)) !==
-      JSON.stringify(
-        sortObjectKeys({
-          events: cachedData.events,
-          entities: cachedData.entities,
-        }),
-      );
+      JSON.stringify(sortObjectKeys(cachedData));
 
     if (hasChanged) {
-      await saveState(CONFIG.paths.cacheFile, {
-        ...newData,
-        fetchedAt: now.toISOString(),
-      });
+      await saveState(CONFIG.paths.cacheFile, newData);
       console.log(`[mb_events] ✅ Synced ${events.length} raw events.`);
     } else {
       console.log("[mb_events] ℹ️ No changes detected, skipping save.");
