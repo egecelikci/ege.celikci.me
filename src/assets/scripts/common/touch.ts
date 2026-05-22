@@ -7,6 +7,18 @@ export function initTouchReveal(selector: string) {
   const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
   if (!isTouch) return;
 
+  document.addEventListener("touchstart", (e) => {
+    const group = (e.target as HTMLElement).closest(".group");
+    if (!group) return;
+    group.classList.add("is-active");
+  }, { passive: true });
+
+  document.addEventListener("touchend", () => {
+    document.querySelectorAll(".group.is-active").forEach((el) => {
+      el.classList.remove("is-active");
+    });
+  }, { passive: true });
+
   const items = document.querySelectorAll(selector);
   if (!items.length) return;
 

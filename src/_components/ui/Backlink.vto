@@ -1,7 +1,7 @@
 {{#
   Component: Backlink (Unified)
   A subtle, "fresh" typographic link for navigation.
-  
+
   Props:
     - href?: string
     - text?: string
@@ -22,7 +22,7 @@
 {{ if backHref }}
   <a
     href="{{ backHref }}"
-    class="group inline-flex items-center gap-2 typography-label lowercase text-text-muted/70 hover:text-primary transition-colors no-underline {{ it.classes }}"
+    class="group inline-flex items-center gap-2 typography-label lowercase text-text-muted reveal:text-primary transition-all duration-200 no-underline haptic {{ it.classes }}"
   >
     <span class="text-xs transition-transform group-hover:-translate-x-0.5"
     >&larr;</span>

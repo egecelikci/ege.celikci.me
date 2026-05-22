@@ -1,12 +1,12 @@
 {{#
   Component: IndexList
   A clean, typographic ledger for site-wide navigation.
-  
+
   Props:
-    - items: Array<{ 
-        title: string, 
-        href?: string, 
-        desc?: string, 
+    - items: Array<{
+        title: string,
+        href?: string,
+        desc?: string,
         marker?: string,
         type?: "section" | "item",
         children?: Array<{ title: string, href: string, desc: string }>
@@ -19,10 +19,10 @@
       {{ if item.type === "section" }}
         {{# --- SECTION HEADER --- #}}
         <div
-          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border/10 first:border-t-0 first:pt-0"
+          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border-subtle first:border-t-0 first:pt-0"
         >
           <span
-            class="typography-label text-text-muted uppercase tracking-[0.4em]"
+            class="typography-label text-text-muted"
           >
             {{ item.title }}
           </span>
@@ -34,31 +34,31 @@
             href="{{ item.href }}"
             class="
               flex items-baseline no-underline text-text hover:text-primary transition-all py-1 px-2 -mx-2 rounded-lg
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:bg-primary/5
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle
             "
           >
             {{# Marker #}}
             <span
-              class="shrink-0 w-8 text-text-muted group-hover:text-primary transition-colors"
+              class="shrink-0 w-8 text-text-muted group-reveal:text-primary group-[.is-active]:text-primary transition-colors"
             >
               {{ item.marker || "··" }}
             </span>
 
             {{# Title #}}
             <span
-              class="font-bold border-b border-border/10 group-hover:border-primary/30 transition-colors pb-0.5"
+              class="font-bold border-b border-border-subtle group-reveal:border-primary-muted group-[.is-active]:border-primary-muted transition-colors pb-0.5"
             >
               {{ item.title }}
             </span>
 
             {{# Connector #}}
             <span
-              class="h-px grow border-t border-dashed border-border/10 ml-4 mr-4"
+              class="h-px grow border-t border-dashed border-border-subtle ml-4 mr-4"
             ></span>
 
             {{# Description #}}
             <span
-              class="text-text-muted italic group-hover:text-text transition-colors text-right"
+              class="text-text-muted italic group-reveal:text-text group-[.is-active]:text-text transition-colors text-right"
             >
               {{ item.desc }}
             </span>
@@ -72,23 +72,25 @@
                   href="{{ child.href }}"
                   class="
                     relative flex items-baseline no-underline py-1 pl-6 pr-2 -mr-2 rounded-lg transition-all
-                    before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border/10
+                    before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border-subtle
                     last:before:h-1/2 group/child
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:bg-primary/5
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle
                   "
                 >
                   {{# Horizontal L-part #}}
-                  <div class="absolute left-0 top-1/2 w-4 h-px bg-border/10">
+                  <div
+                    class="absolute left-0 top-1/2 w-4 h-px bg-border-subtle"
+                  >
                   </div>
 
                   <span
-                    class="font-bold text-text/80 group-hover/child:text-primary transition-colors"
+                    class="font-bold text-text-dim group-hover/child:text-primary transition-colors"
                   >
                     {{ child.title }}
                   </span>
 
                   <span
-                    class="h-px grow border-t border-dotted border-border/10 mx-4"
+                    class="h-px grow border-t border-dotted border-border-subtle mx-4"
                   ></span>
 
                   <span

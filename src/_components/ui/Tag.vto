@@ -1,7 +1,7 @@
 {{#
   Component: Tag (Primitive)
   A clean typographic label for tags.
-  
+
   Props:
     - content: string (the tag name) (required)
     - href: optional link (turns component into <a>)
@@ -13,9 +13,9 @@
 
 <{{ tag }}
 {{ if it.href }}href="{{ it.href }}"{{ /if }}
-class="inline-flex items-center typography-label text-text-muted/70
-hover:text-primary no-underline transition-colors not-prose
-[box-shadow:none!important] {{ it.classes }}"
+class="inline-flex items-center typography-label text-text-dim
+reveal:text-secondary no-underline transition-all duration-200 not-prose
+[box-shadow:none!important] {{ it.classes }}
 {{ it.attributes |> attr |> safe }}
 >
 <span class="opacity-60 mr-1 font-mono">#</span>

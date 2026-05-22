@@ -1,7 +1,7 @@
 {{#
   Component: Timeline Wrapper (Primitive)
   A minimalist vertical line container for chronological items.
-  
+
   Props:
     - content: The items to render inside the timeline (required)
     - classes: additional classes
@@ -10,10 +10,10 @@
 
 <div class="relative {{ it.classes }}" {{ it.attributes |> attr |> safe }}>
   {{# 1. THE SPINE #}}
-  <div class="absolute left-0 top-0 bottom-0 w-px bg-border/10">
+  <div class="absolute left-0 top-0 bottom-0 w-px bg-border-subtle">
     {{# Subtle Gradient Overlay for the line #}}
     <div
-      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/20 to-transparent opacity-50"
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-muted to-transparent opacity-50"
     >
     </div>
   </div>

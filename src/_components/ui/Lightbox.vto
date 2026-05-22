@@ -11,7 +11,7 @@
     <span>
       <button
         type="button"
-        class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 pswp-close-btn"
+        class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 pswp-close-btn"
         aria-label="Close media viewer"
       >
         {{ await it.comp.ui.Icon({ name: "x", classes: "w-5 h-5" }) }}
@@ -28,7 +28,7 @@
         {{# dots injected by JS #}}
       </span>
       <span
-        class="carousel-counter text-white/80 text-[10px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap shrink-0 hidden pswp-counter"
+        class="carousel-counter text-white/80 text-[11px] font-mono font-bold bg-white/10 backdrop-blur-md border border-white/10 px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap shrink-0 hidden pswp-counter"
         aria-live="polite"
         aria-atomic="true"
       >
@@ -41,7 +41,7 @@
       <div class="relative">
         <button
           type="button"
-          class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 pswp-more-btn"
+          class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 pswp-more-btn"
           aria-label="More options"
           aria-haspopup="menu"
         >
@@ -103,7 +103,7 @@
       aria-label="Read media description"
     >
       <span
-        class="alt-badge bg-white/20 text-white text-[10px] font-bold px-1.5 py-0.5 rounded group-hover/alt:bg-white/30 transition-colors"
+        class="alt-badge bg-white/20 text-white text-[11px] font-bold px-1.5 py-0.5 rounded group-hover/alt:bg-white/30 transition-colors"
       >
         ALT
       </span>
@@ -144,7 +144,7 @@
         </button>
       </header>
       <main
-        class="text-base leading-relaxed text-text/90 whitespace-pre-wrap text-pretty pswp-sheet-content"
+        class="text-base leading-relaxed text-text-dim whitespace-pre-wrap text-pretty pswp-sheet-content"
       >
         {{# Alt text injected here by JS #}}
       </main>
@@ -167,14 +167,14 @@
   <div class="pswp-nav">
     <button
       type="button"
-      class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
+      class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
       aria-label="Previous image"
     >
       {{ await it.comp.ui.Icon({ name: "chevron-left", classes: "w-6 h-6" }) }}
     </button>
     <button
       type="button"
-      class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 active:scale-90 shadow-lg shrink-0 absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
+      class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
       aria-label="Next image"
     >
       {{ await it.comp.ui.Icon({ name: "chevron-right", classes: "w-6 h-6" }) }}

@@ -2,7 +2,7 @@
   Component: EntryTimeline
   Groups entries by date and renders them with a timeline spine.
   Provides a unified, robust solution for date-based listings.
-  
+
   Props:
     - entries: Page[] (required)
 #}}
@@ -27,15 +27,16 @@
         {{# Date Marker #}}
         <div class="flex items-center gap-4">
           <div
-            class="shrink-0 w-2.5 h-2.5 rounded-full bg-primary/40 ring-4 ring-primary/5"
+            class="shrink-0 w-2.5 h-2.5 rounded-full bg-secondary/60 ring-4 ring-secondary/5"
           >
           </div>
+
           <h2
             class="typography-label text-text-muted font-normal"
           >
             {{ dateKey }}
           </h2>
-          <div class="h-px grow bg-border/5"></div>
+          <div class="divider"></div>
         </div>
 
         {{# Timeline Wrapper #}}

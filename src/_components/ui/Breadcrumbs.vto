@@ -1,7 +1,7 @@
 {{#
   Component: Breadcrumbs (System Component)
   Minimalist text-only breadcrumbs.
-  
+
   Props:
     - url: string (required)
     - classes: additional classes
@@ -25,7 +25,7 @@
           {{ else }}
             <a
               href="{{ item.data.url }}"
-              class="hover:text-primary transition-colors no-underline text-text-muted"
+              class="reveal:text-secondary transition-all duration-200 no-underline text-text-muted"
             >
               {{ item.data.title || item.slug }}
             </a>

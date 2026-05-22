@@ -47,7 +47,7 @@ export function initVenueMaps() {
         className: "custom-venue-marker",
         html: `
           <div class="relative flex items-center justify-center">
-            <div class="absolute w-8 h-8 bg-primary/20 rounded-full animate-ping"></div>
+            <div class="absolute w-8 h-8 bg-primary-muted rounded-full animate-ping"></div>
             <div class="relative w-4 h-4 bg-primary border-2 border-white rounded-full shadow-lg"></div>
           </div>
         `,

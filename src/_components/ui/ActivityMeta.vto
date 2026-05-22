@@ -1,0 +1,29 @@
+{{#
+  Component: ActivityMeta
+  Unified display for interaction stats and syndication links.
+
+  Props:
+    - stats: { replies: number, reposts: number, likes: number }
+    - syndication: { bluesky?: string, mastodon?: string }
+    - classes: string (additional container classes)
+#}}
+
+<div class="flex items-center gap-4 {{ it.classes }}">
+  {{# 1. Stats #}}
+  {{ if it.stats }}
+    {{ await it.comp.ui.NoteStats({ stats: it.stats }) }}
+  {{ /if }}
+
+  {{# 2. Separator + Syndication #}}
+  {{ if it.syndication }}
+    {{
+      if 
+      it.stats &&
+      (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
+
+    }}
+      <div class="h-3 w-px bg-border-subtle"></div>
+    {{ /if }}
+    {{ await it.comp.ui.Syndication({ syndication: it.syndication }) }}
+  {{ /if }}
+</div>

@@ -2,7 +2,7 @@
   Component: SourceMeta
   Standardized indicator for data provenance and subscription feeds.
   Designed to be used as a PageHeader extension.
-  
+
   Props:
   - sources: Array of { label, url, icon, catalog?, type? }
   - variant: 'minimal' (icons only) | 'full' (default, with text)
@@ -46,19 +46,14 @@
 >
   {{# 1. DATA SOURCES (Synced from...) #}}
   {{ for source of nonFeeds }}
-    {{>
-      let targetUrl = source.url;
-      if (!targetUrl && source.label === "critiquebrainz" && source.username) {
-        targetUrl = `https://critiquebrainz.org/user/${source.username}`;
-      }
-    }}
+    {{> let targetUrl = source.url }}
 
     {{ if variantVal === "minimal" }}
       {{ if targetUrl }}
         <a
           href="{{ targetUrl }}"
           target="_blank"
-          class="btn-minimal !px-3 !py-2 justify-center"
+          class="btn-minimal !px-3 !py-2 justify-center group"
           title="{{ source.label }}"
         >
           {{
@@ -68,7 +63,8 @@
                 (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
                   ? "simpleicons"
                   : "lucide"),
-              classes: "w-3.5 h-3.5 opacity-70",
+              classes:
+                "w-3.5 h-3.5 text-text-muted group-reveal:text-primary group-reveal:scale-110 transition-all",
             })
           }}
           <span class="sr-only">{{ source.label }}</span>
@@ -76,16 +72,16 @@
       {{ /if }}
     {{ else }}
       <div
-        class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 group/source"
+        class="flex items-center gap-3 text-text-muted transition-colors duration-200 group"
       >
         <div
-          class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/source:bg-primary/10 group-hover/source:border-primary/20 transition-all"
+          class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-primary-muted group-reveal:border-primary-muted group-reveal:scale-110 transition-all"
         >
           {{
             await it.comp.ui.Icon({
               name: source.icon,
               classes:
-                "w-2.5 h-2.5 text-primary/60 group-hover/source:text-primary transition-colors",
+                "w-3 h-3 text-text-muted group-reveal:text-primary transition-colors",
             })
           }}
         </div>
@@ -96,7 +92,7 @@
             {{ source.prefix || "Synced from" }} <a
               href="{{ targetUrl }}"
               target="_blank"
-              class="text-text-muted hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary"
+              class="text-text-muted reveal:text-primary transition-colors no-underline border-b border-border-subtle reveal:border-primary inline-block"
             >{{ source.label }}</a>
           {{ else }}
             {{ source.prefix || "Source:" }} {{ source.label }}
@@ -114,13 +110,14 @@
           <a
             href="{{ feed.url }}"
             target="_blank"
-            class="btn-minimal !px-3 !py-2 justify-center"
+            class="btn-minimal !px-3 !py-2 justify-center group"
             title="Subscribe via {{ feed.label }}"
           >
             {{
               await it.comp.ui.Icon({
                 name: feed.icon,
-                classes: "w-3.5 h-3.5 opacity-70",
+                classes:
+                  "w-3.5 h-3.5 text-text-muted group-reveal:text-secondary group-reveal:scale-110 transition-all",
               })
             }}
             <span class="sr-only">Subscribe via {{ feed.label }}</span>
@@ -129,16 +126,16 @@
       </div>
     {{ else }}
       <div
-        class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity duration-500 group/feed"
+        class="flex items-center gap-3 text-text-muted transition-colors duration-200 group"
       >
         <div
-          class="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-primary/5 border border-primary/10 group-hover/feed:bg-primary/10 group-hover/feed:border-primary/20 transition-all"
+          class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-secondary-muted group-reveal:border-secondary-muted group-reveal:scale-110 transition-all"
         >
           {{
             await it.comp.ui.Icon({
               name: feeds[0].icon,
               classes:
-                "w-2.5 h-2.5 text-primary/60 group-hover/feed:text-primary transition-colors",
+                "w-3 h-3 text-text-muted group-reveal:text-secondary transition-colors",
             })
           }}
         </div>
@@ -147,11 +144,11 @@
         >
           Subscribe via
           {{ for i, feed of feeds }}
-            {{ if i > 0 }}<span class="mx-1 opacity-30">|</span>{{ /if }}
+            {{ if i > 0 }}<span class="mx-1 text-text-muted">|</span>{{ /if }}
             <a
               href="{{ feed.url }}"
               target="_blank"
-              class="text-text-muted hover:text-primary transition-colors no-underline border-b border-primary/10 hover:border-primary"
+              class="text-text-muted reveal:text-secondary transition-colors no-underline border-b border-border-subtle reveal:border-secondary inline-block"
             >{{ feed.label.replace(/ feed/i, "") }}</a>
           {{ /for }}
         </p>

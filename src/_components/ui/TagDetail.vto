@@ -34,19 +34,31 @@
   {{ /for }}
 
   {{ if relatedTags.length > 0 }}
-    <div class="mt-24 pt-12 border-t border-border/10">
+    <div class="mt-24 pt-12 border-t border-border-subtle">
       <h3
         class="typography-label text-text-muted mb-8 flex items-center gap-2"
       >
-        {{ await it.comp.ui.Icon({ name: "hash", classes: "w-3 h-3" }) }}
+        {{ await it.comp.ui.Icon({ name: "tags", classes: "w-3 h-3" }) }}
         Related Topics
       </h3>
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap gap-8">
         {{ for t of relatedTags }}
           {{ set tagSlug = t |> slugify }}
-          {{
-            await it.comp.ui.Tag({ content: t, href: "/tags/" + tagSlug + "/" })
-          }}
+          {{ set tagCount = it.search.pages("'" + t + "'").length }}
+          <div class="group flex items-baseline gap-2">
+            {{
+              await it.comp.ui.Tag({
+                content: t,
+                href: "/tags/" + tagSlug + "/",
+                classes: "text-base",
+              })
+            }}
+            <span
+              class="typography-label text-text-muted font-normal"
+            >
+              {{ tagCount }}
+            </span>
+          </div>
         {{ /for }}
       </div>
     </div>

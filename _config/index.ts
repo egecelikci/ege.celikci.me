@@ -25,7 +25,6 @@ import robots from "lume/plugins/robots.ts";
 import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
-import terser from "lume/plugins/terser.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
@@ -112,7 +111,6 @@ export default function () {
     if (!isDev) {
       site
         .use(minifyHTML())
-        .use(terser())
         .use(checkUrls())
         .use(seo())
         .use(validateHTML());

@@ -3,6 +3,38 @@
 @import "npm:leaflet/dist/leaflet.css";
 @plugin "@tailwindcss/typography";
 
+@variant reveal {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
+@variant group-reveal {
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover & {
+      @slot;
+    }
+  }
+}
+
+@variant group-reveal-collage {
+  @media (hover: hover) and (pointer: fine) {
+    .group\/collage:hover & {
+      @slot;
+    }
+  }
+}
+
+@variant group-reveal-pagerow {
+  @media (hover: hover) and (pointer: fine) {
+    .group\/pagerow:hover & {
+      @slot;
+    }
+  }
+}
+
 @variant dark {
   &:where(.theme-dark, .theme-dark *) {
     @slot;
@@ -51,9 +83,42 @@
   --color-border: #f3d2c1;
   --color-primary: #a60c49;
   --color-primary-offset: #8a0a3d;
-  --color-secondary: #65cafe;
+  --color-secondary: #2d6a7a;
   --color-mastodon: #595aff;
+
   --color-bluesky: #3471f6;
+
+  /* Semantic Alpha Colors */
+  --color-border-subtle: color-mix(
+    in srgb,
+    var(--color-border),
+    transparent 80%
+  );
+  --color-surface-subtle: color-mix(
+    in srgb,
+    var(--color-surface),
+    transparent 90%
+  );
+  --color-surface-hover: color-mix(
+    in srgb,
+    var(--color-surface),
+    transparent 70%
+  );
+  --color-primary-muted: color-mix(
+    in srgb,
+    var(--color-primary),
+    transparent 80%
+  );
+  --color-secondary-muted: color-mix(
+    in srgb,
+    var(--color-secondary),
+    transparent 80%
+  );
+  --color-text-dim: color-mix(
+    in srgb,
+    var(--color-text-muted),
+    transparent 40%
+  );
 
   --color-status-error: #dc2626;
   --color-status-active: var(--color-primary);
@@ -62,12 +127,9 @@
   --font-sans: "Josefin Sans", system-ui, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: "Inconsolata", monospace;
-  --font-display: var(--font-sans);
 
   --width-narrow: 65ch;
-  --max-width-narrow: 65ch;
   --width-max: 1440px;
-  --max-width-max: 1440px;
 
   /* Fluid Type Scale */
   --size-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
@@ -117,7 +179,6 @@
     transition: background-color 0.3s ease, color 0.3s ease;
     font-size: var(--size-step-0);
     line-height: 1.7;
-    /* overflow-x: clip handled in base.vto body class */
   }
 
   #site-header {
@@ -179,6 +240,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.theme-light) {
+    /* KEEP IN SYNC WITH :root.theme-dark below */
     color-scheme: dark;
     --color-bg: #463366;
     --color-surface: #544474;
@@ -198,6 +260,7 @@
 }
 
 :root.theme-dark {
+  /* KEEP IN SYNC WITH @media (prefers-color-scheme: dark) above */
   color-scheme: dark;
   --color-bg: #463366;
   --color-surface: #544474;
@@ -263,7 +326,7 @@
 
     /* Fix headings in markdown */
     :is(h1, h2, h3, h4, h5, h6) {
-      @apply font-display font-bold relative;
+      @apply font-sans font-bold relative;
       margin-bottom: 0.5em;
     }
 
@@ -281,7 +344,7 @@
   /* Inline code styling */
   .markdown :not(pre) > code {
     @apply inline font-mono text-[0.9em] px-[0.3em] py-[0.1em] rounded-sm
-      bg-surface border border-border/20 text-text break-all;
+      bg-surface border border-border-subtle text-text break-all;
   }
 
   /* Remove Typography plugin's pseudo-elements on inline code */
@@ -293,7 +356,7 @@
   /* Heading anchor links */
   .markdown .heading-anchor {
     @apply absolute top-0 -left-[1.25em] w-[1em] opacity-0 transition-opacity
-      duration-200 no-underline text-primary-offset/40;
+      duration-200 no-underline text-primary-muted;
     box-shadow: none !important;
   }
 
@@ -312,26 +375,13 @@
   /* Link styles */
   .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {
     @apply text-primary hover:text-primary-offset underline
-      decoration-primary/10 underline-offset-2 transition-colors;
+      decoration-primary-muted underline-offset-2 transition-colors;
     box-shadow: none !important;
   }
 
   /* Hover effect on code inside links */
   .markdown a:not(.btn, .heading-anchor):hover code {
-    @apply bg-primary/10 border-primary/30 text-primary;
-  }
-
-  /* MOBILE REVEAL REFINEMENTS (The Lens) */
-  @media (hover: none) {
-    .group.is-active .grayscale {
-      @apply grayscale-0;
-    }
-    .group.is-active .opacity-0 {
-      @apply opacity-100;
-    }
-    .group.is-active .group-hover\:opacity-100 {
-      @apply opacity-100;
-    }
+    @apply bg-primary-muted border-primary/30 text-primary;
   }
 
   .lightbox-trigger {
@@ -340,16 +390,15 @@
   }
 
   /* Code block container */
-  .markdown figure.code-block {
-    @apply my-8 block w-full max-w-full rounded-xl border border-border/20
-      bg-surface/50 text-left overflow-hidden shadow-sm;
+  .markdown figure {
+    @apply my-8 block w-full max-w-full rounded-xl border border-border-subtle
+      bg-surface-subtle text-left overflow-hidden shadow-sm;
   }
 
   /* Code block header */
   .markdown figure.code-block figcaption.code-header {
-    @apply flex items-center justify-start border-b border-border/10 bg-bg/50
-      px-5 py-2.5 font-mono text-[10px] font-bold text-text-muted uppercase
-      tracking-widest not-italic;
+    @apply flex items-center justify-start border-b border-border-subtle glassy
+      px-5 py-2.5 font-mono text-[11px] font-bold text-text-muted not-italic;
   }
 
   /* Shiki syntax highlighting blocks */
@@ -408,12 +457,12 @@
     background: transparent !important;
     box-shadow: none !important;
     text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
-    @apply !typography-sublabel !text-text-muted/80 !transition-opacity !duration-500;
+    @apply !typography-sublabel !text-text-dim !transition-opacity !duration-500;
     @apply !mt-4 !mr-4; /* Proper breathing room in top-right */
   }
 
   .leaflet-control-attribution:hover {
-    @apply !text-text-muted/80 !opacity-100;
+    @apply !text-text-dim !opacity-100;
   }
 
   .leaflet-control-attribution a {
@@ -574,20 +623,46 @@
 }
 
 /* Reusable Component Utilities (only for patterns used 2+ times) */
+@utility pill-base {
+  @apply inline-flex items-center gap-2 py-2.5 rounded-full border border-border-subtle bg-surface-subtle hover:bg-surface-hover hover:border-primary-muted text-[11px] font-mono transition-all no-underline haptic;
+}
+
 @utility btn-minimal {
-  @apply inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[11px] font-mono uppercase tracking-[0.15em] text-text/80 transition-all duration-300 no-underline;
+  @apply pill-base px-6 text-text/80 duration-200;
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all bg-primary text-white hover:bg-primary-offset;
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 bg-primary text-white hover:bg-primary-offset haptic;
+}
+
+@utility haptic {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  @apply [transition:transform_150ms_ease] active:scale-95;
+}
+
+@utility reveal-self {
+  @apply opacity-60 has-[.is-active]:opacity-100 reveal:opacity-100 transition-opacity duration-500;
+}
+
+@utility page-footer-block {
+  @apply w-full;
+}
+@utility divider {
+  @apply h-px grow bg-border-subtle;
+}
+
+@utility glassy {
+  @apply bg-bg/80 backdrop-blur-md;
 }
 
 @utility typography-label {
-  @apply text-xs font-mono uppercase tracking-[0.2em] font-bold;
+  @apply text-xs font-mono font-bold;
 }
 
 @utility typography-sublabel {
-  @apply text-[11px] font-mono uppercase tracking-[0.1em] font-bold;
+  @apply text-[11px] font-mono font-bold;
 }
 
 @utility link-hover {
@@ -595,19 +670,19 @@
 }
 
 @utility listing-meta-row {
-  @apply relative z-20 flex items-center gap-4 opacity-50 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity;
+  @apply relative z-20 flex items-center gap-4 text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors;
 }
 
 @utility listing-title {
-  @apply text-3xl md:text-4xl font-bold tracking-tighter text-text group-hover:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20;
+  @apply text-3xl md:text-4xl font-bold tracking-tighter text-text group-reveal:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20;
 }
 
 @utility listing-footer {
-  @apply relative z-10 flex items-center justify-between pt-8 border-t border-border/5 opacity-50 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-500;
+  @apply relative z-10 flex items-center justify-between pt-8 border-t border-border-subtle text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors duration-500;
 }
 
 @utility gallery-overlay {
-  @apply absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border/10 text-[9px] font-mono font-bold uppercase tracking-widest text-text-muted opacity-100 md:opacity-0 md:group-hover/img:opacity-100 md:group-[.is-active]/img:opacity-100 transition-all duration-500 pointer-events-none z-20;
+  @apply absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border-subtle text-[11px] font-mono font-bold text-text-muted opacity-100 md:opacity-0 md:group-reveal:opacity-100 md:group-[.is-active]:opacity-100 transition-all duration-500 pointer-events-none z-20;
 }
 
 @utility input-base {
@@ -619,11 +694,11 @@
 }
 
 @utility badge-base {
-  @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-widest border shadow-sm;
+  @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border shadow-sm;
 }
 
 @utility bookmark-pill {
-  @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border/10 bg-surface/5 hover:bg-surface/10 hover:border-primary/30 text-[11px] font-mono uppercase tracking-[0.15em] text-text/70 transition-all duration-300 no-underline whitespace-nowrap shrink-0 cursor-pointer;
+  @apply pill-base px-5 text-text/70 duration-300 whitespace-nowrap shrink-0 cursor-pointer;
 }
 
 @utility bookmark-pill--active {
@@ -631,7 +706,7 @@
 }
 
 @utility bookmark-count {
-  @apply inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-current/15 text-[9px] font-mono tabular-nums leading-none;
+  @apply inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-current/15 text-[11px] font-mono tabular-nums leading-none;
 }
 
 @utility scroll-shadows-x {
@@ -658,7 +733,7 @@
     height: 6px;
   }
   &::-webkit-scrollbar-track {
-    @apply bg-border/40 rounded-full;
+    @apply bg-border-subtle rounded-full;
   }
   &::-webkit-scrollbar-thumb {
     @apply bg-text-muted rounded-full hover:bg-primary transition-colors;

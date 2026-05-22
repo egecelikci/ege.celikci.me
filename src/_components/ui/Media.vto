@@ -17,7 +17,7 @@
   }}
 
   <div
-    class="grid gap-1 w-full rounded-xl overflow-hidden border border-border/10 my-4 bg-surface/20 {{ gridClass }}"
+    class="grid gap-1 w-full rounded-xl overflow-hidden border border-border-subtle my-4 bg-surface-subtle {{ gridClass }}"
     data-lightbox-group="{{ gid }}"
   >
     {{ for i, image of it.images |> slice(0, 4) }}
@@ -30,7 +30,7 @@
       }}{{ set itemClass = "row-span-2" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
-        class="lightbox-trigger media relative block w-full h-full overflow-hidden bg-surface/20 no-underline text-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
+        class="lightbox-trigger media relative block w-full h-full overflow-hidden bg-surface-subtle no-underline text-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
         target="_blank"
         rel="noopener noreferrer"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
@@ -56,7 +56,7 @@
 
           {{# 2. VISUAL BADGE (Ignored by Search) #}}
           <div
-            class="alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none z-20"
+            class="alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none z-20"
             data-pagefind-ignore
           >
             ALT

@@ -1,14 +1,14 @@
 {{#
   Component: RelatedContent (Content-aware wrapper)
   Displays related posts and pages based on shared tags.
-  
+
   Props:
     - related: { posts: [], pages: [] } (required)
     - tags: string[] (current page tags, for highlighting)
 #}}
 
 {{ if it.related.posts.length > 0 || it.related.pages.length > 0 }}
-  <aside class="mt-12 p-6 rounded-xl border border-border bg-surface/30">
+  <aside class="p-6 rounded-xl border border-border-subtle bg-surface-subtle">
     <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
       {{
         await it.comp.ui.Icon({
@@ -40,11 +40,11 @@
             {{ for post of it.related.posts.slice(0, 5) }}
               <a
                 href="{{ post.url }}"
-                class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
+                class="group flex items-start gap-3 p-3 rounded-lg border border-border-subtle bg-surface-subtle hover:bg-surface hover:border-primary-muted reveal:border-primary-muted transition-all no-underline"
               >
                 <div class="flex-1 min-w-0">
                   <div
-                    class="font-medium text-sm text-text group-hover:text-primary transition-colors mb-1"
+                    class="font-medium text-sm text-text group-reveal:text-primary transition-colors mb-1"
                   >
                     {{ post.title }}
                   </div>
@@ -68,7 +68,7 @@
                     name: "arrow-right",
                     catalog: "lucide",
                     classes:
-                      "w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0 mt-1",
+                      "w-4 h-4 text-text-muted group-reveal:text-primary transition-colors shrink-0 mt-1",
                   })
                 }}
               </a>
@@ -96,11 +96,11 @@
             {{ for page of it.related.pages.slice(0, 5) }}
               <a
                 href="{{ page.url }}"
-                class="group flex items-start gap-3 p-3 rounded-lg border border-border/40 bg-surface/20 hover:bg-surface hover:border-primary/30 transition-all no-underline"
+                class="group flex items-start gap-3 p-3 rounded-lg border border-border-subtle bg-surface-subtle hover:bg-surface hover:border-primary-muted reveal:border-primary-muted transition-all no-underline"
               >
                 <div class="flex-1 min-w-0">
                   <div
-                    class="font-medium text-sm text-text group-hover:text-primary transition-colors"
+                    class="font-medium text-sm text-text group-reveal:text-primary transition-colors"
                   >
                     {{ page.title }}
                   </div>
@@ -115,7 +115,7 @@
                     name: "arrow-right",
                     catalog: "lucide",
                     classes:
-                      "w-4 h-4 text-text-muted group-hover:text-primary transition-colors shrink-0 mt-1",
+                      "w-4 h-4 text-text-muted group-reveal:text-primary transition-colors shrink-0 mt-1",
                   })
                 }}
               </a>

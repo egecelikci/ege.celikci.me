@@ -2,7 +2,7 @@
   Universal Entry Card (Clean Ledger)
   A semantic, typographic entry adapter for posts, recipes, and notes.
   Consumes ListingItem primitive.
-  
+
   Props:
     - entry: page object (required)
     - classes: additional classes
@@ -43,7 +43,7 @@
         {{ await it.comp.ui.NoteStats({ stats: it.entry.stats }) }}
       {{ /if }}
       {{ if it.entry.syndication }}
-        <div class="h-3 w-px bg-border/20"></div>
+        <div class="h-3 w-px bg-border-subtle"></div>
         {{
           await it.comp.ui.Syndication({ syndication: it.entry.syndication })
         }}

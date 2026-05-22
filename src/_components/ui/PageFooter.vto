@@ -1,0 +1,134 @@
+{{#
+  Component: PageFooter
+  A unified, robust footer for content pages.
+
+  Props:
+    - interactions: Array of webmention objects
+    - stats: { replies: number, reposts: number, likes: number }
+    - syndication: { bluesky?: string, mastodon?: string }
+    - related: html (Related Content block)
+    - backlinks: html (IncomingLinks block)
+    - footerExtension: Object for custom footer meta content
+    - show_webmentions: boolean (default: false)
+#}}
+
+{{# Resolve footer extension if it's an object #}}
+{{ set extensionContent }}
+  {{ if it.footerExtension }}
+    {{ if it.footerExtension.comp }}
+      {{ set resolvedComp = it.footerExtension.comp |> resolveComp(comp) }}
+      {{ if resolvedComp }}
+        {{ await resolvedComp({ ...it.footerExtension.props, ...author }) }}
+      {{ /if }}
+    {{ else }}
+      {{ it.footerExtension |> safe }}
+    {{ /if }}
+  {{ /if }}
+{{ /set }}
+
+{{ set showInteractions = it.show_webmentions && it.interactions?.length > 0 }}
+{{
+  set showStats = it.show_webmentions && it.stats &&
+  (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
+}}
+
+{{
+  set hasExtension = extensionContent && String(extensionContent).trim() !== ""
+}}
+{{ set hasRelated = it.related && String(it.related).trim() !== "" }}
+{{ set hasBacklinks = it.backlinks && String(it.backlinks).trim() !== "" }}
+{{ set hasActivity = showInteractions || showStats }}
+{{ set hasMetaRow = hasExtension || hasActivity }}
+{{ set shouldRenderFooter = hasMetaRow || hasRelated || hasBacklinks }}
+
+{{ if shouldRenderFooter }}
+  <footer
+    class="mt-16 pt-8 border-t border-border-subtle flex flex-col gap-8 md:gap-12 print:hidden [view-transition-name:page-supplemental]"
+  >
+    {{# 1. Meta & Activity Row #}}
+    {{ if hasMetaRow }}
+      <div
+        class="flex flex-col gap-6 md:gap-8 {{ if hasRelated || hasBacklinks }}pb-8 border-b border-border-subtle{{ /if }}"
+      >
+        {{ if hasExtension }}
+          <div class="w-full">
+            {{ extensionContent |> safe }}
+          </div>
+        {{ /if }}
+
+        {{ if hasActivity }}
+          {{# Row 1: [N interactions] | [stats] [syndication icons] #}}
+          <div
+            class="flex items-center justify-between gap-4 flex-wrap"
+          >
+            <div
+              class="flex items-center gap-6 text-sm text-text-muted"
+            >
+              {{# Primary interactions jump link #}}
+              {{ if showInteractions }}
+                <a
+                  href="#interactions"
+                  class="link-hover flex items-center gap-2 font-bold text-text"
+                >
+                  {{
+                    await it.comp.ui.Icon({ name: "messages-square", classes: "w-4 h-4" })
+                  }}
+                  {{ it.interactions.length }} {{
+                    it.interactions.length == 1 ? "interaction" : "interactions"
+                  }}
+                </a>
+              {{ /if }}
+            </div>
+
+            <div class="shrink-0">
+              {{
+                await it.comp.ui.ActivityMeta({
+                  stats: it.stats,
+                  syndication: it.syndication,
+                })
+              }}
+            </div>
+          </div>
+
+          {{# Row 2: Faces #}}
+          {{ if showInteractions }}
+            <div id="interactions" class="-mt-2 md:-mt-4">
+              {{
+                await it.comp.ui.WebmentionFaces({ mentions: it.interactions })
+              }}
+            </div>
+          {{ /if }}
+
+          {{# Row 3: Comments #}}
+          {{ if showInteractions }}
+            <div>
+              {{
+                await it.comp.ui.WebmentionComments({
+                  mentions: it.interactions,
+                  classes: "mt-4",
+                })
+              }}
+            </div>
+          {{ /if }}
+        {{ /if }}
+      </div>
+    {{ /if }}
+
+    {{# 2. Supplemental Blocks #}}
+    {{ if hasRelated || hasBacklinks }}
+      <div class="flex flex-col gap-24">
+        {{ if hasRelated }}
+          <div id="related">
+            {{ it.related |> safe }}
+          </div>
+        {{ /if }}
+
+        {{ if hasBacklinks }}
+          <div id="backlinks">
+            {{ it.backlinks |> safe }}
+          </div>
+        {{ /if }}
+      </div>
+    {{ /if }}
+  </footer>
+{{ /if }}

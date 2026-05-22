@@ -2,7 +2,7 @@
   Note Component (Artsy Journal)
   Visual-first flow with rich typographic thoughts.
   Handles both Full View and Listing View.
-  
+
   Props:
   - note: {
       url: string
@@ -38,13 +38,12 @@
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
   {{# footerLeft with stats + syndication #}}
   {{ set noteFooterLeft }}
-    <div class="flex items-center gap-6">
-      {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
-      {{ if it.note.syndication }}
-        <div class="h-3 w-px bg-border/20"></div>
-        {{ await it.comp.ui.Syndication({ syndication: it.note.syndication }) }}
-      {{ /if }}
-    </div>
+    {{
+      await it.comp.ui.ActivityMeta({
+        stats: it.note.stats,
+        syndication: it.note.syndication,
+      })
+    }}
   {{ /set }}
 
   {{
@@ -67,16 +66,16 @@
     {{ if !it.hideHeader }}
       <header class="listing-meta-row">
         <time
-          class="dt-published text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
+          class="dt-published text-[11px] font-mono font-bold text-text-muted"
         >
           {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
         </time>
-        <div class="h-px grow bg-border/10"></div>
+        <div class="h-px grow bg-border-subtle"></div>
         {{ if it.note.tags }}
           <div class="flex gap-4">
             {{ for tag of it.note.tags |> slice(0, 3) }}
               <span
-                class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-primary"
+                class="text-[11px] font-mono font-bold text-primary"
               >#{{ tag }}</span>
             {{ /for }}
           </div>
@@ -103,26 +102,5 @@
         {{ it.note.content |> vto(vtoContext) |> md |> safe }}
       </div>
     </div>
-
-    {{# Footer #}}
-    {{# footerLeft with stats + syndication #}}
-    {{ set footerLeft }}
-      <div class="flex items-center gap-6">
-        {{ await it.comp.ui.NoteStats({ stats: it.note.stats }) }}
-        {{ if it.note.syndication }}
-          <div class="h-3 w-px bg-border/20"></div>
-          {{
-            await it.comp.ui.Syndication({ syndication: it.note.syndication })
-          }}
-        {{ /if }}
-      </div>
-    {{ /set }}
-
-    {{
-      await it.comp.ui.ListingFooter({
-        leftContent: footerLeft,
-        text: "note",
-      })
-    }}
   </article>
 {{ /if }}

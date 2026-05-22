@@ -1,6 +1,5 @@
 {{#
   Component: SocialLinks (Feature)
-  Adaptable "Chameleon" social coordinates.
 #}}
 {{>
   const variantVal = it.variant || "grid";
@@ -23,7 +22,7 @@
           href="{{ link.url }}"
           title="{{ link.name }}"
           aria-label="{{ link.name }}"
-          class="u-url flex items-center justify-center w-7 h-7 rounded-lg text-text-muted/70 hover:text-primary hover:bg-primary/5 transition-all duration-300 {{ resetStyles }}"
+          class="u-url flex items-center justify-center w-7 h-7 rounded-lg text-text-dim hover:text-primary hover:bg-primary-muted transition-all duration-300 {{ resetStyles }}"
           {{ if link.relMe }}rel="me"{{ /if }}
         >{{
             await it.comp.ui.Icon({ name: link.icon, classes: "w-3.5 h-3.5" })
@@ -37,7 +36,7 @@
     class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-0 {{ it.classes || '' }} {{ resetStyles }}"
   >
     {{- for link of links -}}<div
-        class="group flex items-center justify-between py-5 border-b border-border/10 transition-colors duration-300 hover:border-primary/20"
+        class="group flex items-center justify-between py-5 border-b border-border-subtle transition-colors duration-300 hover:border-primary-muted"
       >
         <a
           href="{{ link.url }}"
@@ -54,10 +53,10 @@
           >{{ link.name }}</span></a><div class="flex items-center gap-4">
           {{- if link.keyUrl -}}<a
               href="{{ link.keyUrl }}"
-              class="text-[9px] font-mono font-bold text-primary/60 hover:text-primary hover:border-primary/40 transition-colors uppercase tracking-tighter border border-primary/10 px-1.5 py-0.5 rounded-sm no-underline {{ resetStyles }}"
+              class="text-[11px] font-mono font-bold text-primary hover:text-primary hover:border-primary transition-colors border border-primary-muted px-1.5 py-0.5 rounded-sm no-underline {{ resetStyles }}"
               title="View verification key"
             >Key</a>{{- /if -}}<span
-            class="typography-label text-text-muted group-hover:text-text-muted/70 transition-colors duration-300"
+            class="typography-label text-text-muted group-hover:text-text-muted transition-colors duration-300"
           >{{ link.label }}</span>
         </div>
       </div>{{- /for -}}

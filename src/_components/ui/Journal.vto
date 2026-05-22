@@ -2,7 +2,7 @@
   Component: Journal (Primitive)
   Follows the HTML Journal spec: https://journal.miso.town/
   Structure: <article> <h2>Date</h2> content </article>
-  
+
   Props:
     - date: Date (required)
     - content: string | html (required)
@@ -11,22 +11,22 @@
 #}}
 
 <article
-  class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border/10 last:border-b-0 {{ it.classes || '' }}"
+  class="relative flex flex-col gap-8 py-16 md:py-24 border-b border-border-subtle last:border-b-0 {{ it.classes || '' }}"
   {{ it.attributes |> attr |> safe }}
 >
   <header
-    class="relative z-20 flex items-center gap-4 group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity"
+    class="listing-meta-row"
   >
     <time
-      class="dt-published text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
+      class="dt-published text-[11px] font-mono font-bold text-text-muted"
     >
       {{ date |> date("dd MMM yyyy") }}
     </time>
-    <div class="h-px grow bg-border/10"></div>
+    <div class="h-px grow bg-border-subtle"></div>
   </header>
 
   <div
-    class="e-content markdown text-lg md:text-xl text-text-muted group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20"
+    class="e-content markdown text-lg md:text-xl text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20"
   >
     {{ content |> safe }}
   </div>

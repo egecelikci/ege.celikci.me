@@ -21,24 +21,24 @@
 
 <a
   href="{{ detailUrl }}"
-  class="group flex flex-col h-full rounded-xl overflow-hidden border border-border/10 bg-surface/5 hover:border-primary/30 transition-all duration-300 {{ if isPast }}opacity-60 grayscale hover:grayscale-0{{ /if }}"
+  class="group flex flex-col h-full rounded-xl overflow-hidden border border-border-subtle bg-surface-subtle group-reveal:border-primary-muted transition-all duration-200 haptic {{ if isPast }}text-text-dim grayscale group-reveal:grayscale-0{{ /if }}"
 >
   {{# POSTER IMAGE OR PLACEHOLDER #}}
   <div
-    class="relative aspect-[3/4] bg-surface/20 overflow-hidden"
+    class="relative aspect-[3/4] bg-surface-subtle overflow-hidden"
   >
     {{ if posterUrl }}
       <img
         src="{{ if isPast && posterMonoUrl }}{{ posterMonoUrl }}{{ else }}{{ posterUrl }}{{ /if }}"
         alt="{{ displayTitle }}"
-        class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        class="absolute inset-0 w-full h-full object-cover group-reveal:scale-105 transition-transform duration-500"
         loading="lazy"
       />
       {{ if !isPast && posterMonoUrl }}
         <img
           src="{{ posterMonoUrl }}"
           alt="{{ displayTitle }} (monochrome)"
-          class="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 group-reveal:opacity-100 transition-opacity duration-500 pointer-events-none"
           loading="lazy"
         />
       {{ /if }}
@@ -65,12 +65,14 @@
     <div class="space-y-3">
       {{# DATE #}}
       <time
-        class="typography-label {{ if isPast }}text-text-muted{{ else }}text-primary/70{{ /if }}"
+        class="typography-label {{ if isPast }}text-text-muted{{ else }}text-primary{{ /if }}"
       >
         {{ if it.event.beginDate }}
           {{ it.event.beginDate |> date("EEE, MMM dd") }}
           {{ if it.event.time }}
-            <span class="ml-1 opacity-60">{{ it.event.time }}</span>
+            <span
+              class="ml-1 {{ if isPast }}text-text-dim{{ else }}text-text-muted{{ /if }} group-reveal:text-primary transition-colors"
+            >{{ it.event.time }}</span>
           {{ /if }}
         {{ else }}
           TBA
@@ -80,7 +82,7 @@
       {{# TITLE OR LINEUP ANCHOR #}}
       {{ if isCustomTitle }}
         <h3
-          class="text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors line-clamp-2 leading-snug"
+          class="text-base sm:text-lg font-bold text-text group-reveal:text-primary transition-colors line-clamp-2 leading-snug"
         >
           {{ it.event.name }}
         </h3>
@@ -89,7 +91,7 @@
       {{# LINEUP: Flowing list with separators #}}
       {{ if it.event.relations?.length > 0 }}
         <div
-          class="inline {{ if isCustomTitle }}text-xs text-text-muted{{ else }}text-base sm:text-lg font-bold text-text group-hover:text-primary transition-colors{{ /if }} leading-snug"
+          class="inline {{ if isCustomTitle }}text-xs text-text-muted{{ else }}text-base sm:text-lg font-bold text-text group-reveal:text-primary transition-colors{{ /if }} leading-snug"
         >
           {{
             set artistRels = it.event.relations.filter((r) =>
@@ -99,14 +101,14 @@
               )
             )
           }}
-          {{ for index, rel of artistRels }}
+          {{ for index, rel of artistRels -}}
             <span class="inline-block">{{
               rel["target-credit"] || rel.artist.name
             }}</span>
-            {{ if index < artistRels.length - 2 }},
+            {{- if index < artistRels.length - 2 }},
             {{ else if index === artistRels.length - 2 }}
               &
-            {{ /if }}
+            {{ /if -}}
           {{ /for }}
         </div>
       {{ /if }}
@@ -114,9 +116,9 @@
 
     {{# ACTION #}}
     <div
-      class="mt-6 flex items-center gap-2 typography-label text-text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+      class="mt-6 flex items-center justify-end gap-2 typography-label text-text-muted group-reveal:text-primary transition-colors"
     >
-      Details →
+      details →
     </div>
   </div>
 </a>

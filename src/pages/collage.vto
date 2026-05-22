@@ -16,11 +16,11 @@ menu:
     >
       {{# MAIN CONTROL CARD #}}
       <div
-        class="flex flex-col gap-6 p-6 rounded-[2rem] bg-surface/10 backdrop-blur-2xl border border-white/5 shadow-2xl relative overflow-hidden"
+        class="flex flex-col gap-6 p-6 rounded-[2rem] bg-surface-subtle backdrop-blur-2xl border border-border-subtle shadow-2xl relative overflow-hidden"
       >
         {{# Ambient background effect #}}
         <div
-          class="absolute -top-32 -right-32 w-64 h-64 bg-primary/2 rounded-full blur-3xl pointer-events-none"
+          class="absolute -top-32 -right-32 w-64 h-64 bg-primary-muted rounded-full blur-3xl pointer-events-none"
         >
         </div>
         <div
@@ -31,9 +31,11 @@ menu:
         {{# SECTION: IDENTITY #}}
         <div class="flex flex-col gap-4 relative z-10">
           <div
-            class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70"
+            class="flex items-center gap-2 text-[11px] font-mono text-text-muted"
           >
-            {{ comp.ui.Icon({ name: "database", classes: "w-3 h-3" }) }}
+            {{
+              comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-text-dim" })
+            }}
             <span>Source</span>
           </div>
 
@@ -42,11 +44,11 @@ menu:
             <label for="service-select" class="text-sm font-medium text-text"
             >Service</label>
             <div
-              class="grid grid-cols-2 gap-2 p-1 bg-surface/50 rounded-xl border border-border/10"
+              class="grid grid-cols-2 gap-2 p-1 bg-surface-subtle rounded-xl border border-border-subtle"
             >
               <button
                 id="source-lb"
-                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer"
+                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic"
                 aria-label="Use ListenBrainz"
               >
                 {{
@@ -56,7 +58,7 @@ menu:
               </button>
               <button
                 id="source-lfm"
-                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer"
+                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic"
                 aria-label="Use Last.fm"
               >
                 {{ comp.ui.Icon({ name: "music", classes: "w-4 h-4" }) }}
@@ -74,7 +76,7 @@ menu:
                 type="text"
                 id="username"
                 placeholder="Enter your username"
-                class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 pl-12"
+                class="input-base input-focus !py-3 !pl-11 !pr-4 !rounded-xl !text-sm font-medium bg-surface-subtle"
                 value="{{ author.username }}"
                 aria-describedby="username-hint"
               />
@@ -82,25 +84,27 @@ menu:
                 comp.ui.Icon({
                   name: "at-sign",
                   classes:
-                    "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                    "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
                 })
               }}
             </div>
-            <p id="username-hint" class="text-xs text-text-muted/60">
+            <p id="username-hint" class="text-xs text-text-muted">
               Your username on the selected service
             </p>
           </div>
         </div>
 
-        <div class="h-px bg-border/10"></div>
+        <div class="h-px bg-border-subtle"></div>
 
         {{# SECTION: APPEARANCE #}}
         <div class="flex flex-col gap-4 relative z-10">
           <details class="group/section" open>
             <summary
-              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
-              {{ comp.ui.Icon({ name: "palette", classes: "w-3 h-3" }) }}
+              {{
+                comp.ui.Icon({ name: "palette", classes: "w-3 h-3 text-text-dim" })
+              }}
               <span>Appearance</span>
               {{
                 comp.ui.Icon({
@@ -119,7 +123,7 @@ menu:
                   <div class="relative">
                     <select
                       id="period"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
                       aria-label="Select time period"
                     >
                     </select>
@@ -127,7 +131,7 @@ menu:
                       comp.ui.Icon({
                         name: "chevron-down",
                         classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
                       })
                     }}
                   </div>
@@ -140,7 +144,7 @@ menu:
                   <div class="relative">
                     <select
                       id="bg-mode"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
                       aria-label="Select visual style"
                     >
                       <option value="aura" selected>Aura</option>
@@ -154,7 +158,7 @@ menu:
                       comp.ui.Icon({
                         name: "sparkles",
                         classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
                       })
                     }}
                   </div>
@@ -167,7 +171,7 @@ menu:
                   <div class="relative">
                     <select
                       id="grid-size"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
                       aria-label="Select grid size"
                     >
                       <option value="3x3" selected>3×3</option>
@@ -178,7 +182,7 @@ menu:
                       comp.ui.Icon({
                         name: "grid-3x3",
                         classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
                       })
                     }}
                   </div>
@@ -191,7 +195,7 @@ menu:
                   <div class="relative">
                     <select
                       id="text-case"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface/20 appearance-none pr-8"
+                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
                       aria-label="Select text casing"
                     >
                       <option value="none" selected>Original</option>
@@ -202,7 +206,7 @@ menu:
                       comp.ui.Icon({
                         name: "type",
                         classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40 pointer-events-none",
+                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
                       })
                     }}
                   </div>
@@ -216,7 +220,7 @@ menu:
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <label
-                    class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                    class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
                   >
                     <input
                       type="checkbox"
@@ -229,12 +233,11 @@ menu:
                       <span
                         class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                       >Grain</span>
-                      <span class="text-xs text-text-muted/60"
-                      >Film texture</span>
+                      <span class="text-xs text-text-muted">Film texture</span>
                     </div>
                   </label>
                   <label
-                    class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                    class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
                   >
                     <input
                       type="checkbox"
@@ -246,13 +249,13 @@ menu:
                       <span
                         class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                       >Glass</span>
-                      <span class="text-xs text-text-muted/60"
+                      <span class="text-xs text-text-muted"
                       >Frosted overlay</span>
                     </div>
                   </label>
                 </div>
                 <label
-                  class="flex items-center gap-3 p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-colors group"
+                  class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
                 >
                   <input
                     type="checkbox"
@@ -264,7 +267,7 @@ menu:
                     <span
                       class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                     >Dim Bottom</span>
-                    <span class="text-xs text-text-muted/60"
+                    <span class="text-xs text-text-muted"
                     >Darker album list area</span>
                   </div>
                 </label>
@@ -273,15 +276,17 @@ menu:
           </details>
         </div>
 
-        <div class="h-px bg-border/10"></div>
+        <div class="h-px bg-border-subtle"></div>
 
         {{# SECTION: CONTENT #}}
         <div class="flex flex-col gap-4 relative z-10">
           <details class="group/section" open>
             <summary
-              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
-              {{ comp.ui.Icon({ name: "sliders", classes: "w-3 h-3" }) }}
+              {{
+                comp.ui.Icon({ name: "sliders", classes: "w-3 h-3 text-text-dim" })
+              }}
               <span>Content Options</span>
               {{
                 comp.ui.Icon({
@@ -293,21 +298,20 @@ menu:
 
             <div class="mt-4 space-y-2">
               <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
+                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
               >
                 <div class="flex items-center gap-3">
                   {{
                     comp.ui.Icon({
                       name: "image-off",
-                      classes:
-                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
                   }}
                   <div class="flex flex-col">
                     <span
                       class="text-sm font-medium text-text group-hover:text-primary transition-colors"
                     >Skip missing cover art</span>
-                    <span class="text-xs text-text-muted/60"
+                    <span class="text-xs text-text-muted"
                     >Hide albums without covers</span>
                   </div>
                 </div>
@@ -321,14 +325,13 @@ menu:
               </label>
 
               <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
+                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
               >
                 <div class="flex items-center gap-3">
                   {{
                     comp.ui.Icon({
                       name: "hash",
-                      classes:
-                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
                   }}
                   <div class="flex flex-col">
@@ -346,14 +349,13 @@ menu:
               </label>
 
               <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface/20 border border-border/5 cursor-pointer hover:bg-surface/30 transition-all group"
+                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
               >
                 <div class="flex items-center gap-3">
                   {{
                     comp.ui.Icon({
                       name: "globe",
-                      classes:
-                        "w-4 h-4 text-text-muted/40 group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
                   }}
                   <div class="flex flex-col">
@@ -373,18 +375,18 @@ menu:
             </div>
           </details>
         </div>
-        <div class="h-px bg-border/10"></div>
+        <div class="h-px bg-border-subtle"></div>
 
         {{# SECTION: ADVANCED #}}
         <div class="flex flex-col gap-4 relative z-10">
           <details class="group">
             <summary
-              class="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-text-muted/70 cursor-pointer hover:text-text transition-colors list-none"
+              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
               {{
                 comp.ui.Icon({
                   name: "settings-2",
-                  classes: "w-3 h-3",
+                  classes: "w-3 h-3 text-text-dim",
                 })
               }}
               <span>Advanced Options</span>
@@ -406,7 +408,7 @@ menu:
                     type="text"
                     id="font-family"
                     placeholder="Josefin Sans"
-                    class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 pl-12"
+                    class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface-subtle"
                     aria-describedby="font-hint"
                   />
                 </div>
@@ -438,7 +440,7 @@ menu:
                       aria-label="Use automatic footer text"
                     >
                     <span
-                      class="text-xs font-medium text-text-muted/60 group-hover:text-text transition-colors"
+                      class="text-xs font-medium text-text-muted group-hover:text-text transition-colors"
                     >Auto-generate</span>
                   </label>
                 </div>
@@ -446,11 +448,11 @@ menu:
                   type="text"
                   id="footer-text"
                   placeholder="Custom footer text"
-                  class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface/20 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                  class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface-subtle disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
                   disabled
                   aria-describedby="footer-hint"
                 />
-                <p id="footer-hint" class="text-xs text-text-muted/60">
+                <p id="footer-hint" class="text-xs text-text-muted">
                   Leave empty to use automatic text based on period
                 </p>
               </div>
@@ -463,10 +465,10 @@ menu:
                   id="aliases"
                   placeholder="Ye -> Kanye West"
                   rows="3"
-                  class="input-base input-focus !text-sm font-medium leading-relaxed resize-none !py-3 !px-4 !rounded-xl bg-surface/10 border-dashed"
+                  class="input-base input-focus !text-sm font-medium leading-relaxed resize-none !py-3 !px-4 !rounded-xl bg-surface-subtle border-dashed"
                   aria-describedby="aliases-hint"
                 ></textarea>
-                <p id="aliases-hint" class="text-xs text-text-muted/60">
+                <p id="aliases-hint" class="text-xs text-text-muted">
                   Merge artists with different names (one per line)
                 </p>
               </div>
@@ -485,13 +487,13 @@ menu:
     >
       <div
         id="canvas-container"
-        class="relative shadow-2xl rounded-[2.5rem] overflow-hidden border border-border/10 max-w-full bg-[#09090b] transition-all duration-500"
+        class="relative shadow-2xl rounded-[2.5rem] overflow-hidden border border-border-subtle max-w-full bg-[#09090b] transition-all duration-500"
       >
         <canvas
           id="collage-canvas"
           width="1080"
           height="1920"
-          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 opacity-60 group-[.is-ready]/preview:opacity-100"
+          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 text-text-muted group-[.is-ready]/preview:opacity-100"
           aria-label="Generated album collage preview"
         ></canvas>
 
@@ -500,13 +502,12 @@ menu:
           class="absolute inset-0 flex items-center justify-center backdrop-blur-sm opacity-0 group-[.is-ready]/preview:hover:opacity-100 transition-opacity pointer-events-none"
         >
           <div
-            class="flex items-center gap-2 px-4 py-2 rounded-full bg-bg/90 border border-border/10 shadow-lg"
+            class="flex items-center gap-2 px-4 py-2 rounded-full glassy border border-border-subtle shadow-lg"
           >
             {{
               comp.ui.Icon({ name: "maximize", classes: "w-3 h-3 text-text-muted" })
             }}
-            <span class="text-xs font-mono uppercase tracking-wider text-text"
-            >1080 × 1920</span>
+            <span class="text-xs font-mono text-text">1080 × 1920</span>
           </div>
         </div>
 
@@ -520,7 +521,7 @@ menu:
               <div class="w-12 h-12 border-2 border-white/10 rounded-full">
               </div>
               <div
-                class="absolute top-0 left-0 w-12 h-12 border-2 border-primary/60 border-t-transparent rounded-full animate-spin"
+                class="absolute top-0 left-0 w-12 h-12 border-2 border-primary-muted border-t-transparent rounded-full animate-spin"
               >
               </div>
             </div>
@@ -536,21 +537,21 @@ menu:
         {{# Empty state #}}
         <div
           id="empty-state"
-          class="absolute inset-0 flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm transition-opacity duration-500"
+          class="absolute inset-0 flex flex-col items-center justify-center glassy transition-opacity duration-500"
         >
           <div class="text-center space-y-4">
             <div
-              class="w-16 h-16 mx-auto rounded-2xl bg-surface/30 flex items-center justify-center"
+              class="w-16 h-16 mx-auto rounded-2xl bg-surface-hover flex items-center justify-center"
             >
               {{
-                comp.ui.Icon({ name: "image", classes: "w-8 h-8 text-text-muted/40" })
+                comp.ui.Icon({ name: "image", classes: "w-8 h-8 text-text-muted" })
               }}
             </div>
             <div>
               <h3 class="text-lg font-semibold text-text mb-1">
                 Ready to Create
               </h3>
-              <p class="text-sm text-text-muted/60">
+              <p class="text-sm text-text-muted">
                 Enter your username to generate your collage
               </p>
             </div>
@@ -562,39 +563,44 @@ menu:
       <div class="w-full max-w-[1080px] mt-8 flex flex-col gap-6">
         <div
           id="result-actions"
-          class="grid grid-cols-2 gap-4 opacity-40 pointer-events-none transition-all duration-500 group-[.is-ready]/preview:opacity-100 group-[.is-ready]/preview:pointer-events-auto"
+          class="grid grid-cols-2 gap-4 pointer-events-none transition-all duration-500 group-[.is-ready]/preview:opacity-100 group-[.is-ready]/preview:pointer-events-auto"
         >
           <button
             id="download-btn"
-            class="btn-minimal !flex justify-center !rounded-2xl active:scale-95 !text-[10px] !py-4 shadow-xl bg-surface/10 backdrop-blur-xl border-white/5 !px-4 group/btn"
+            class="haptic flex items-center justify-center gap-2 !rounded-2xl bg-surface-subtle backdrop-blur-xl border border-border-subtle !py-4 shadow-xl !px-6 group/btn"
             aria-label="Download collage as JPG"
           >
             {{
               comp.ui.Icon({
                 name: "download",
-                classes: "w-4 h-4 opacity-70 group-hover/btn:text-primary transition-colors",
+                classes:
+                  "w-4 h-4 text-text-muted group-hover/btn:text-primary transition-colors",
               })
             }}
-            <span class="font-bold">JPG</span>
+            <span
+              class="typography-label text-text-muted group-hover/btn:text-primary transition-colors"
+            >JPG</span>
           </button>
           <button
             id="share-btn"
-            class="btn-minimal !flex justify-center !rounded-2xl active:scale-95 !text-[10px] !py-4 shadow-xl bg-primary/5 backdrop-blur-xl border-primary/20 text-primary !px-4 group/btn"
+            class="btn-primary flex items-center justify-center !rounded-2xl haptic !py-4 shadow-xl !px-6 group/btn"
             aria-label="Share collage"
           >
             {{
               comp.ui.Icon({
                 name: "share-2",
-                classes: "w-4 h-4 opacity-70 group-hover/btn:scale-110 transition-transform",
+                classes: "w-4 h-4 text-white group-hover/btn:scale-110 transition-transform",
               })
             }}
-            <span class="font-bold uppercase">Share</span>
+            <span class="typography-label text-white">Share</span>
           </button>
         </div>
 
         <div class="text-center">
-          <p class="text-sm text-text-muted/50">
-            {{ comp.ui.Icon({ name: "info", classes: "w-3 h-3 inline mr-1" }) }}
+          <p class="text-sm text-text-muted">
+            {{
+              comp.ui.Icon({ name: "info", classes: "w-3 h-3 inline mr-1 text-text-dim" })
+            }}
             Changes auto-save and regenerate your collage
           </p>
         </div>
@@ -605,7 +611,7 @@ menu:
 
 <style>
   .checkbox-base {
-    @apply w-5 h-5 rounded border-border/30 bg-surface/50 text-primary focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer transition-all;
+    @apply w-5 h-5 rounded border-border-subtle bg-surface-subtle text-primary focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer transition-all;
   }
 
   .checkbox-base:checked {
@@ -626,7 +632,7 @@ menu:
   }
 
   select::-webkit-scrollbar-thumb {
-    @apply bg-text-muted/30 rounded-full hover:bg-primary/50 transition-colors;
+    @apply bg-text-muted/30 rounded-full hover:bg-primary-muted transition-colors;
   }
 
   /* Smooth transitions for all interactive elements */
@@ -802,14 +808,14 @@ menu:
   function applySourceStyles() {
     const activeClasses = "bg-primary text-white shadow-md";
     const inactiveClasses =
-      "text-text-muted/60 hover:text-text-muted hover:bg-surface/40";
+      "text-text-dim hover:text-text-muted hover:bg-surface-hover";
 
     sourceLb.className =
-      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer ${
+      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic ${
         currentSource === "lb" ? activeClasses : inactiveClasses
       }`;
     sourceLfm.className =
-      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all active:scale-95 cursor-pointer ${
+      `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic ${
         currentSource === "lfm" ? activeClasses : inactiveClasses
       }`;
   }

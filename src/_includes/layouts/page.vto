@@ -2,85 +2,14 @@
 layout: layouts/base.vto
 ---
 
-{{# Resolve header extension if it's an object #}}
-{{ set extensionContent }}
-  {{ if it.headerExtension }}
-    {{ if it.headerExtension.comp }}
-      {{ set compParts = it.headerExtension.comp.split(".") }}
-      {{ set resolvedComp = comp }}
-      {{ for part of compParts }}
-        {{ set resolvedComp = resolvedComp[part] }}
-      {{ /for }}
-      {{ if resolvedComp }}
-        {{ await resolvedComp({ ...it.headerExtension.props, ...author }) }}
-      {{ /if }}
-    {{ else }}
-      {{ it.headerExtension |> safe }}
-    {{ /if }}
-  {{ /if }}
-{{ /set }}
-
-{{# Support Subtitle Logic #}}
-{{ set displaySubtitle = it.subtitle || it.description }}
-
-{{# 1. Post-style subtitle (Date) #}}
-{{ if it.type === "post" && it.date }}
-  {{ set displaySubtitle = it.date |> date("dd MMMM yyyy") }}
-{{ /if }}
-
-{{# 2. Note-style subtitle (Precision Date + Updated) #}}
-{{ if it.type === "note" && it.date }}
-  {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
-  {{ set updatedStr = "" }}
-  {{ if it.updated }}
-    {{ set formattedUpdated = it.updated |> date("dd MMM yyyy") }}
-    {{ set updatedStr = " • edited " + formattedUpdated }}
-  {{ /if }}
-  {{ set displaySubtitle = dateStr + updatedStr }}
-{{ /if }}
-
-{{# 3. Tag-style subtitle (Item Count) #}}
-{{ if it.type === "tag" }}
-  {{
-    set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc")
-  }}
-  {{ set count = matchingEntries.length }}
-  {{ set displaySubtitle = count + (count === 1 ? " item" : " items") }}
-{{ /if }}
-
-{{# Title Logic for titleless notes #}}
-{{ set displayTitle = it.title }}
-{{ if it.type === "note" && !it.title }}
-  {{ set displayTitle = "note" }}
-{{ /if }}
-
 {{# Capture the entire page body #}}
 {{ set pageBody }}
   {{# 1. Page Header #}}
   {{ if it.hide_title !== true }}
-    {{
-      comp.ui.PageHeader({
-        title: displayTitle,
-        subtitle: displaySubtitle,
-        backlink: it.backlink ?? (
-          it.type === "post"
-            ? { href: "/blog/", text: "writing" }
-            : it.type === "note"
-            ? { href: "/notes/", text: "notes" }
-            : it.type === "tag"
-            ? { href: "/tags/", text: "topics" }
-            : false
-        ),
-        breadcrumbs: breadcrumbs === true,
-        url: url,
-        centered: centered || false,
-        metadata: { tags: tags },
-        rightContent: extensionContent,
-      })
-    }}
+    {{ await comp.ui.PageHeader(it) }}
   {{ /if }}
 
-  {{# 2. Main Content (The "Perfect Spot" for indexing) #}}
+  {{# 2. Main Content #}}
   <article
     class="h-entry {{ if it.hide_title !== true }}mt-12{{ else }}pt-24{{ /if }} {{ it.prose !== false ? 'markdown' : '' }} {{ it.article_classes }} [view-transition-name:page-content]"
     {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
@@ -130,32 +59,36 @@ layout: layouts/base.vto
   </article>
 
   {{# 3. Supplemental UI #}}
-  <div class="[view-transition-name:page-supplemental]">
-    {{ if show_related && tags }}
-      {{ set relatedData = utils.getRelatedContent(search, url, tags) }}
-      {{ comp.ui.RelatedContent({ related: relatedData, tags: tags }) }}
-    {{ /if }}
+  {{ set relatedBlock = "" }}
+  {{ if show_related && tags }}
+    {{ set relatedData = utils.getRelatedContent(search, url, tags) }}
+    {{
+      set relatedBlock = await comp.ui.RelatedContent({ related: relatedData, tags: tags })
+    }}
+  {{ /if }}
 
-    {{ comp.ui.IncomingLinks({ backlinks: backlinks }) }}
+  {{
+    set backlinksBlock = await comp.ui.IncomingLinks({ backlinks: backlinks })
+  }}
 
-    {{ if show_webmentions }}
-      <div class="mt-24">
-        <h2
-          class="typography-label text-text-muted mb-10"
-        >
-          Interactions
-        </h2>
-        {{ set mentionsData = [] }}
-        {{ if webmentions }}
-          {{
-            set mentionsData = webmentions.children
-            |> webmentionsByUrl(url, syndication)
-          }}
-        {{ /if }}
-        {{ comp.ui.Webmentions({ mentions: mentionsData }) }}
-      </div>
+  {{ set mentionsData = [] }}
+  {{ if show_webmentions }}
+    {{ if webmentions }}
+      {{
+        set mentionsData = webmentions.children
+        |> webmentionsByUrl(url, syndication)
+      }}
     {{ /if }}
-  </div>
+  {{ /if }}
+
+  {{
+    await comp.ui.PageFooter({
+      ...it,
+      interactions: mentionsData,
+      related: relatedBlock,
+      backlinks: backlinksBlock,
+    })
+  }}
 {{ /set }}
 
 {{

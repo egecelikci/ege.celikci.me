@@ -308,6 +308,13 @@ export const filters = {
     return text.substring(0, length).trim() + "…";
   },
 
+  resolveComp: (compPath: string, compRoot: Record<string, unknown>) => {
+    return compPath.split(".").reduce(
+      (obj, part) => obj?.[part] as Record<string, unknown>,
+      compRoot,
+    );
+  },
+
   // Specialized teaser for notes that preserves some formatting/components
   renderNoteTeaser: function (content: string, length = 400): string {
     if (!content) return "";

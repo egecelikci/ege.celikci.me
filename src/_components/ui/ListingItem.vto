@@ -1,7 +1,7 @@
 {{#
   Component: ListingItem (Shared Primitive)
   The core structural layout for all list-style entries (Notes, Posts, Recipes).
-  
+
   Props:
     - url: string (required)
     - title?: string | html
@@ -19,19 +19,22 @@
 #}}
 
 {{
-  set containerClass = it.compact
-  ? "group relative flex flex-col gap-4 md:gap-6 py-8 md:py-12 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8"
-  : "group relative flex flex-col gap-8 md:gap-12 py-16 md:py-24 border-b border-border/10 last:border-b-0 transition-all duration-500 hover:bg-surface/2 active:bg-surface/5 pl-4 md:pl-8"
+  set spacingClass = it.compact ? "gap-4 md:gap-6 py-8 md:py-12" : "gap-8 md:gap-12 py-16 md:py-24"
 }}
 {{
-  set accentBarClass = it.compact
-  ? "absolute left-0 top-8 md:top-12 bottom-8 md:bottom-12 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20"
-  : "absolute left-0 top-16 md:top-24 bottom-16 md:bottom-24 w-0.5 bg-primary/0 group-hover:bg-primary/60 transition-all duration-500 z-20"
+  set accentSpacingClass = it.compact
+  ? "top-8 md:top-12 bottom-8 md:bottom-12"
+  : "top-16 md:top-24 bottom-16 md:bottom-24"
 }}
 
-<article class="{{ containerClass }} {{ it.classes || '' }}">
+<article
+  class="group relative flex flex-col border-b border-border-subtle last:border-b-0 transition-all duration-500 hover:bg-surface-hover active:bg-surface-hover pl-4 md:pl-8 haptic {{ spacingClass }} {{ it.classes || '' }}"
+>
   {{# 0. CINEMATIC ACCENT #}}
-  <div class="{{ accentBarClass }}"></div>
+  <div
+    class="absolute left-0 w-0.5 bg-primary/0 group-reveal:bg-primary transition-all duration-500 z-20 {{ accentSpacingClass }}"
+  >
+  </div>
 
   {{# Overlay link (z-20) #}}
   <a
@@ -44,7 +47,7 @@
   <header class="listing-meta-row">
     {{ if it.date }}
       <time
-        class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-text-muted"
+        class="text-[11px] font-mono font-bold text-text-muted"
       >
         {{ if typeof it.date === "string" }}{{ it.date }}{{ else }}{{
             it.date
@@ -53,13 +56,13 @@
       </time>
     {{ /if }}
 
-    <div class="h-px grow bg-border/10"></div>
+    <div class="h-px grow bg-border-subtle"></div>
 
     {{ if it.tags && it.tags.length > 0 }}
       <div class="flex gap-4 relative z-40">
         {{ for tag of it.tags |> slice(0, 3) }}
           <span
-            class="text-[10px] font-mono uppercase tracking-[0.3em] font-bold text-primary"
+            class="text-[11px] font-mono font-bold text-primary"
           >#{{ tag }}</span>
         {{ /for }}
       </div>
@@ -107,7 +110,7 @@
     {{ /if }}
 
     <div
-      class="e-content markdown text-lg md:text-xl text-text-muted group-hover:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20 {{ it.bodyClasses || '' }}"
+      class="e-content markdown text-lg md:text-xl text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20 {{ it.bodyClasses || '' }}"
     >
       {{ it.content |> safe }}
     </div>

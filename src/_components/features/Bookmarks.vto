@@ -12,9 +12,9 @@
 
 <div class="[view-transition-name:bookmarks-page] flow">
   {{# ── Filter Bar ──────────────────────────────────────────────────────── #}}
-  <div class="py-2 mb-12 border-b border-border/10">
+  <div class="py-2 mb-12 border-b border-border-subtle">
     {{#
-      Horizontal-scroll single row. Uses JS-free scroll-shadows and 
+      Horizontal-scroll single row. Uses JS-free scroll-shadows and
       a subtle scrollbar for desktop discovery.
     #}}
     <div class="relative scroll-shadows-x">
@@ -80,7 +80,7 @@
             title="{{ item.title }}"
           >
             <div
-              class="aspect-[88/31] overflow-hidden border border-border/10 shadow-sm grayscale group-hover/badge:grayscale-0 group-hover/badge:scale-105 active:scale-95 transition-all duration-500"
+              class="aspect-[88/31] overflow-hidden border border-border-subtle shadow-sm grayscale group-hover/badge:grayscale-0 group-hover/badge:scale-105 transition-all duration-500"
             >
               <img
                 src="{{ item.img |> url }}"
@@ -113,7 +113,7 @@
           This avoids positional differences between img and no-img cards.
         #}}
         <article
-          class="{{ if item.categories.includes('person') }}h-card{{ else }}h-entry{{ /if }} group py-9 border-b border-border/10 last:border-0 grid grid-cols-[1fr] sm:grid-cols-[1fr_92px] gap-x-4 items-start"
+          class="{{ if item.categories.includes('person') }}h-card{{ else }}h-entry{{ /if }} group py-9 border-b border-border-subtle last:border-0 grid grid-cols-[1fr] sm:grid-cols-[1fr_92px] gap-x-4 items-start"
         >
           {{# ── Text column ── #}}
           <div class="flex flex-col gap-2.5 min-w-0">
@@ -181,7 +181,7 @@
                     <span
                       class="typography-sublabel text-text-muted lowercase tracking-normal font-normal group-hover/mirror:text-primary transition-colors"
                     >
-                      <span class="opacity-50">mirror:</span>
+                      <span class="text-text-dim">mirror:</span>
                       {{
                         mirror
                         |> replace("https://", "")
@@ -280,7 +280,7 @@
                 href="{{ item.url || '#' }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="block opacity-25 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 hover:scale-105 active:scale-95"
+                class="block opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 hover:scale-105 active:scale-95"
                 tabindex="-1"
                 aria-hidden="true"
               >
@@ -311,7 +311,7 @@
   {{# ── 88×31 Teaser on "All" page ─────────────────────────────────────── #}}
   {{> const badgeItems = it.filteredBookmarks.filter((b) => b.img) }}
   {{ if badgeItems.length > 0 && !it.activeCategory }}
-    <section class="mt-24 pt-16 border-t border-border/10">
+    <section class="mt-24 pt-16 border-t border-border-subtle">
       <div class="flex items-center justify-between mb-8">
         <h2 class="typography-label text-text-muted">88×31 badges</h2>
         <a
@@ -320,14 +320,14 @@
         >View all →</a>
       </div>
       <div
-        class="flex flex-wrap gap-5 opacity-40 hover:opacity-100 transition-opacity duration-700"
+        class="flex flex-wrap gap-5 text-text-dim hover:text-text transition-colors duration-700"
       >
         {{ for item of badgeItems |> shuffle |> slice(0, 12) }}
           <a
             href="{{ item.url || '#' }}"
             target="_blank"
             rel="noopener noreferrer"
-            class="block grayscale hover:grayscale-0 hover:scale-105 active:scale-95 transition-all duration-500"
+            class="block grayscale hover:grayscale-0 hover:scale-105 transition-all duration-500"
             title="{{ item.title }}"
           >
             <img

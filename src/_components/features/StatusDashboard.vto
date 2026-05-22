@@ -34,7 +34,7 @@
       </h2>
       <div
         id="status-verified-badge"
-        class="hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/10 transition-all duration-500"
+        class="hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary-muted border border-primary-muted transition-all duration-500"
       >
         <div class="w-1 h-1 rounded-full bg-primary animate-pulse"></div>
         <span
@@ -74,7 +74,7 @@
       {{ for i, item of statusItems }}
         <button
           data-index="{{ i }}"
-          class="status-dot w-1.5 h-1.5 rounded-full bg-primary/20 transition-all duration-500 aria-[current=true]:bg-primary aria-[current=true]:w-5"
+          class="status-dot w-1.5 h-1.5 rounded-full bg-primary-muted transition-all duration-500 aria-[current=true]:bg-primary aria-[current=true]:w-5"
           aria-label="Go to {{ item.name }} status"
           {{ if i == 0 }}aria-current="true"{{ /if }}
         >

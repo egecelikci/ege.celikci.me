@@ -1,0 +1,30 @@
+{{#
+  Component: WebmentionComments
+  Minimalist display for interaction comments (replies, mentions).
+
+  Props:
+    - mentions: Array of filtered webmention objects (required)
+    - classes: additional classes
+#}}
+
+<div class="webmentions-comments {{ it.classes }}">
+  {{# Split mentions by type #}}
+  {{
+    set comments = it.mentions.filter((m) =>
+      m["wm-property"] !== "like-of" && m["wm-property"] !== "repost-of"
+    )
+  }}
+
+  {{# 2. COMMENTS LIST #}}
+  {{ if comments.length > 0 }}
+    <div class="space-y-4">
+      <ol class="list-none p-0 m-0">
+        {{ for mention of comments }}
+          <li class="mb-0">
+            {{ await it.comp.ui.WebmentionItem({ webmention: mention }) }}
+          </li>
+        {{ /for }}
+      </ol>
+    </div>
+  {{ /if }}
+</div>

@@ -85,10 +85,10 @@ prose: false
           >
             cat.vision
           </h2>
-          <span class="h-px grow bg-border/20"></span>
+          <span class="divider"></span>
         </div>
         <div
-          class="opacity-80 hover:opacity-100 transition-opacity duration-700"
+          class="reveal-self duration-700"
         >
           {{ set catNotes = search.pages("type=note 'kedi'", "date=desc") }}
           {{ comp.ui.Collage({ items: catNotes, maxItems: 9 }) }}

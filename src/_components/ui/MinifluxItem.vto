@@ -1,11 +1,11 @@
 <article class="break-inside-avoid mb-12 group">
   <div class="border-b-4 border-text mb-4 pb-1">
     <span
-      class="typography-label text-text-muted/95"
+      class="typography-label text-text-muted"
     >
       Entry No. {{ it.index + 1 }}
     </span>
-    <h3 class="text-2xl font-black leading-none uppercase tracking-tighter">
+    <h3 class="text-2xl font-black leading-none">
       <a
         href="{{ it.item.url }}"
       >
@@ -31,7 +31,7 @@
     {{ if it.item.scraper_rules }}
       <div>
         <p
-          class="text-xs font-mono bg-surface/50 p-3 border border-border border-dashed"
+          class="text-xs font-mono bg-surface-subtle p-3 border border-border-subtle border-dashed"
         >
           {{ it.item.scraper_rules }}
         </p>

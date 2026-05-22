@@ -1,20 +1,76 @@
 {{#
   Component: PageHeader (Clean Ledger)
   A high-precision typographic header for all page types.
-  
+
   Props:
   - title: string
   - subtitle?: string
-  - backlink?: { href: string, text: string }
+  - backlink?: { href: string, text: string } | boolean
   - centered?: boolean (default: false)
   - metadata?: { tags?: string[], date?: Date }
   - rightContent?: html
+  - headerExtension?: any
+  - breadcrumbs?: boolean
 #}}
+
+{{# 1. Resolve Header Extension (moved from layout) #}}
+{{ set extensionContent }}
+  {{ if it.headerExtension }}
+    {{ if it.headerExtension.comp }}
+      {{ set resolvedComp = it.headerExtension.comp |> resolveComp(comp) }}
+      {{ if resolvedComp }}
+        {{ await resolvedComp({ ...it.headerExtension.props, ...author }) }}
+      {{ /if }}
+    {{ else }}
+      {{ it.headerExtension |> safe }}
+    {{ /if }}
+  {{ /if }}
+{{ /set }}
+
+{{# 2. Resolve Subtitle (moved from layout) #}}
+{{ set displaySubtitle = it.subtitle || it.description }}
+{{ if !it.subtitle }}
+  {{ if it.type === "post" && it.date }}
+    {{ set displaySubtitle = it.date |> date("dd MMMM yyyy") }}
+  {{ else if it.type === "note" && it.date }}
+    {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
+    {{ set updatedStr = "" }}
+    {{ if it.updated }}
+      {{ set formattedUpdated = it.updated |> date("dd MMM yyyy") }}
+      {{ set updatedStr = " • edited " + formattedUpdated }}
+    {{ /if }}
+    {{ set displaySubtitle = dateStr + updatedStr }}
+  {{ else if it.type === "tag" }}
+    {{
+      set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc")
+    }}
+    {{ set count = matchingEntries.length }}
+    {{ set displaySubtitle = count + (count === 1 ? " item" : " items") }}
+  {{ /if }}
+{{ /if }}
+
+{{# 3. Resolve Title #}}
+{{ set displayTitle = it.title }}
+{{ if it.type === "note" && !it.title }}
+  {{ set displayTitle = "note" }}
+{{ /if }}
+
+{{# 4. Resolve Backlink #}}
+{{ set backlinkData = it.backlink }}
+{{ if it.backlink === undefined || it.backlink === true }}
+  {{ if it.type === "post" }}
+    {{ set backlinkData = { href: "/blog/", text: "writing" } }}
+  {{ else if it.type === "note" }}
+    {{ set backlinkData = { href: "/notes/", text: "notes" } }}
+  {{ else if it.type === "tag" }}
+    {{ set backlinkData = { href: "/tags/", text: "topics" } }}
+  {{ /if }}
+{{ /if }}
 
 {{ set isCentered = it.centered || false }}
 
 <section
-  class="border-b border-border/10 pb-10 pt-16 md:pt-24 {{ if isCentered }}text-center{{ /if }} flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 [view-transition-name:page-header]"
+  class="border-b border-border-subtle pb-10 pt-16 md:pt-24 {{ if isCentered }}text-center{{ /if }} flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 [view-transition-name:page-header]"
 >
   <div class="grow min-w-0 flex flex-col gap-6 md:gap-8">
     {{# 1. NAVIGATION / BREADCRUMB #}}
@@ -22,12 +78,12 @@
       class="h-6 flex items-center {{ if isCentered }}justify-center{{ /if }}"
     >
       {{ if it.breadcrumbs }}
-        {{ await it.comp.ui.breadcrumbs({ url: it.url }) }}
-      {{ else if it.backlink }}
+        {{ await it.comp.ui.Breadcrumbs({ url: it.url }) }}
+      {{ else if backlinkData }}
         {{
-          await it.comp.ui.backlink({
-            href: it.backlink.href,
-            text: it.backlink.text,
+          await it.comp.ui.Backlink({
+            href: backlinkData.href,
+            text: backlinkData.text,
             url: it.url,
           })
         }}
@@ -40,24 +96,24 @@
     <h1
       class="p-name text-5xl md:text-7xl font-bold tracking-tighter text-text leading-[0.85] [view-transition-name:page-title]"
     >
-      {{ it.title }}<span class="text-primary-offset/40">.</span>
+      {{ displayTitle }}<span class="text-primary/40">.</span>
     </h1>
 
     {{# 3. SUBTITLE / DESCRIPTION #}}
-    {{ if it.subtitle }}
+    {{ if displaySubtitle }}
       <div
         class="typography-label text-text-muted font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} [view-transition-name:page-subtitle]"
       >
-        {{ it.subtitle }}
+        {{ displaySubtitle }}
       </div>
     {{ /if }}
 
     {{# 4. TAGS (Unified Typographic) #}}
-    {{ if it.metadata?.tags && it.metadata.tags.length > 0 }}
+    {{ if it.tags && it.tags.length > 0 }}
       <div
         class="flex flex-wrap gap-4 mt-2 {{ if isCentered }}justify-center{{ /if }} [view-transition-name:page-tags]"
       >
-        {{ for tag of it.metadata.tags }}
+        {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}
           {{
             await it.comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" })
@@ -67,11 +123,12 @@
     {{ /if }}
   </div>
 
-  {{ if it.rightContent }}
+  {{ if it.rightContent || extensionContent }}
     <div
       class="shrink-0 flex items-end w-full md:w-auto mt-auto [view-transition-name:page-header-right]"
     >
       {{ it.rightContent |> safe }}
+      {{ extensionContent |> safe }}
     </div>
   {{ /if }}
 </section>

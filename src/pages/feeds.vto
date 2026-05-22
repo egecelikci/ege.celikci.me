@@ -8,7 +8,7 @@ label: Atom & JSON feeds
 searchable: false
 ---
 
-{{# 
+{{#
   AUTOMATIC FEED GENERATION
   We pull the configurations defined in src/_data/feeds.ts which Lume auto-loads into it.feeds.
 #}}
@@ -30,20 +30,26 @@ searchable: false
   // 2. Extract Categories (Notes, Writing, etc.)
   const filtered_feeds = feedList
     .filter((f) => f.id !== "main")
-    .map((config) => ({
-      title: config.title,
-      desc: config.description,
-      feeds: config.output.map((file) => ({
-        title: file.endsWith(".atom") ? "Atom" : "JSON",
-        file: file.substring(1),
-        url: file,
-      })),
-    }))
+    .map((config) => {
+      // Dynamically fetch page info for the category
+      const targetPage = search.page(`url=/${config.id}/`);
+      return {
+        title: targetPage?.title || config.title,
+        desc: targetPage?.description || config.description,
+        feeds: config.output.map((file) => ({
+          title: file.endsWith(".atom") ? "Atom" : "JSON",
+          file: file.substring(1),
+          url: file,
+        })),
+      };
+    })
 }}
 
 {{
   comp.features.Feeds({
     primary_feeds: primary_feeds,
+    primary_label: mainConfig?.title,
+    primary_desc: mainConfig?.description,
     filtered_feeds: filtered_feeds,
     search: search,
   })
