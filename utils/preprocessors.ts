@@ -13,16 +13,4 @@ export default function registerPreprocessors(site: Site) {
   site.use(events());
   site.use(feeds());
   site.use(stats());
-
-  site.preprocess([".html"], (pages) => {
-    for (const page of pages) {
-      const content = String(page.content ?? "");
-      if (content.includes("lightbox-trigger") || content.includes("pswp")) {
-        const extra = (page.data.extraStyles as string[] | undefined) ?? [];
-        if (!extra.includes("/assets/styles/photoswipe.css")) {
-          page.data.extraStyles = [...extra, "/assets/styles/photoswipe.css"];
-        }
-      }
-    }
-  });
 }
