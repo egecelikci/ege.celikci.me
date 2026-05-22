@@ -84,7 +84,12 @@
         aria-label="Back to top"
       >
         <span class="reveal-slide-up inline-block">
-          {{ await it.comp.base.Icon({ name: "arrow-up", classes: "w-3.5 h-3.5 stroke-[1.5]" }) }}
+          {{
+            await it.comp.base.Icon({
+              name: "arrow-up",
+              classes: "w-3.5 h-3.5 stroke-[1.5]",
+            })
+          }}
         </span>
       </a>
     </div>
