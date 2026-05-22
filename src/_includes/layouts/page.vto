@@ -58,15 +58,6 @@ layout: layouts/base.vto
     </div>
   </article>
 
-  {{# 3. Supplemental UI #}}
-  {{ set relatedBlock = "" }}
-  {{ if show_related && tags }}
-    {{ set relatedData = utils.getRelatedContent(search, url, tags) }}
-    {{
-      set relatedBlock = await comp.ui.RelatedContent({ related: relatedData, tags: tags })
-    }}
-  {{ /if }}
-
   {{
     set backlinksBlock = await comp.ui.IncomingLinks({ backlinks: backlinks })
   }}
@@ -85,7 +76,6 @@ layout: layouts/base.vto
     await comp.ui.PageFooter({
       ...it,
       interactions: mentionsData,
-      related: relatedBlock,
       backlinks: backlinksBlock,
     })
   }}
