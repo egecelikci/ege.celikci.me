@@ -62,7 +62,7 @@
       {{ content |> safe }}
     </main>
 
-    {{ await it.comp.ui.Footer({ page: page }) }}
+    {{ await it.comp.layout.Footer({ page: page }) }}
 
     {{# Representative h-card (IndieWeb Identity Consolidation) #}}
     <div class="h-card hidden" aria-hidden="true">

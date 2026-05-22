@@ -19,7 +19,11 @@ class="badge-base {{ it.classes }}"
 >
 {{ if it.icon }}
   {{
-    await it.comp.ui.Icon({ name: it.icon, catalog: "lucide", classes: "w-3 h-3" })
+    await it.comp.base.Icon({
+      name: it.icon,
+      catalog: "lucide",
+      classes: "w-3 h-3",
+    })
   }}
 {{ /if }}
 <span>{{ it.content |> safe }}</span>

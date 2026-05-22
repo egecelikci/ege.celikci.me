@@ -57,7 +57,7 @@
           title="{{ source.label }}"
         >
           {{
-            await it.comp.ui.Icon({
+            await it.comp.base.Icon({
               name: source.icon,
               catalog: source.catalog ||
                 (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
@@ -78,7 +78,7 @@
           class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-primary-muted group-reveal:border-primary-muted group-reveal:scale-110 transition-all"
         >
           {{
-            await it.comp.ui.Icon({
+            await it.comp.base.Icon({
               name: source.icon,
               classes:
                 "w-3 h-3 text-text-muted group-reveal:text-primary transition-colors",
@@ -114,7 +114,7 @@
             title="Subscribe via {{ feed.label }}"
           >
             {{
-              await it.comp.ui.Icon({
+              await it.comp.base.Icon({
                 name: feed.icon,
                 classes:
                   "w-3.5 h-3.5 text-text-muted group-reveal:text-secondary group-reveal:scale-110 transition-all",
@@ -132,7 +132,7 @@
           class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-secondary-muted group-reveal:border-secondary-muted group-reveal:scale-110 transition-all"
         >
           {{
-            await it.comp.ui.Icon({
+            await it.comp.base.Icon({
               name: feeds[0].icon,
               classes:
                 "w-3 h-3 text-text-muted group-reveal:text-secondary transition-colors",

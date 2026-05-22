@@ -37,7 +37,10 @@
     {{ set updatedStr = "" }}
     {{ if it.updated }}
       {{ set formattedUpdated = it.updated |> date("dd MMM yyyy") }}
-      {{ set updatedStr = " • edited " + formattedUpdated }}
+      {{
+        set updatedStr = " • <span class='text-secondary opacity-80'>edited " + formattedUpdated +
+        "</span>"
+      }}
     {{ /if }}
     {{ set displaySubtitle = dateStr + updatedStr }}
   {{ else if it.type === "tag" }}
@@ -78,10 +81,10 @@
       class="h-6 flex items-center {{ if isCentered }}justify-center{{ /if }}"
     >
       {{ if it.breadcrumbs }}
-        {{ await it.comp.ui.Breadcrumbs({ url: it.url }) }}
+        {{ await it.comp.layout.Breadcrumbs({ url: it.url }) }}
       {{ else if backlinkData }}
         {{
-          await it.comp.ui.Backlink({
+          await it.comp.base.Backlink({
             href: backlinkData.href,
             text: backlinkData.text,
             url: it.url,
@@ -94,9 +97,11 @@
 
     {{# 2. MAIN TITLE #}}
     <h1
-      class="p-name text-5xl md:text-7xl font-bold tracking-tighter text-text leading-[0.85] [view-transition-name:page-title]"
+      class="p-name text-5xl md:text-7xl font-bold tracking-tighter text-text leading-[0.85] [view-transition-name:page-title] {{ if it.type === 'tag' }}font-accent !tracking-tight whitespace-nowrap{{ /if }}"
     >
-      {{ displayTitle }}<span class="text-primary/40">.</span>
+      {{ displayTitle }}<span
+        class="text-primary/40 inline translate-y-[-0.1em]"
+      >.</span>
     </h1>
 
     {{# 3. SUBTITLE / DESCRIPTION #}}
@@ -104,7 +109,7 @@
       <div
         class="typography-label text-text-muted font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} [view-transition-name:page-subtitle]"
       >
-        {{ displaySubtitle }}
+        {{ displaySubtitle |> safe }}
       </div>
     {{ /if }}
 
@@ -116,7 +121,7 @@
         {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}
           {{
-            await it.comp.ui.Tag({ content: tag, href: "/tags/" + tagSlug + "/" })
+            await it.comp.base.Tag({ content: tag, href: "/tags/" + tagSlug + "/" })
           }}
         {{ /for }}
       </div>

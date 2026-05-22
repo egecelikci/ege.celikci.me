@@ -33,7 +33,7 @@
             rel="noopener noreferrer"
             aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
             class='
-              lightbox-trigger note-gallery__link group relative block overflow-hidden rounded-2xl border border-border-subtle bg-surface-subtle cursor-zoom-in transition-all duration-700 [&_picture]:contents {{
+              lightbox-trigger note-gallery__link ledger-card group relative block overflow-hidden cursor-zoom-in transition-all duration-700 [&_picture]:contents {{
               it.aspect || "aspect-square"
               }}
             '
@@ -56,7 +56,7 @@
           </a>
         {{ else }}
           <div
-            class='note-gallery__link group relative block overflow-hidden rounded-2xl border border-border-subtle bg-surface-subtle transition-all duration-700 [&_picture]:contents {{ it.aspect || "aspect-square" }}'
+            class='note-gallery__link ledger-card group relative block overflow-hidden transition-all duration-700 [&_picture]:contents {{ it.aspect || "aspect-square" }}'
           >
             {{# 2. THE IMAGE #}}
             <img
@@ -79,7 +79,7 @@
             {{ if it.images.length > 1 }}
               <div class="flex items-center gap-1.5">
                 {{
-                  await it.comp.ui.Icon({ name: "layers", classes: "w-3 h-3" })
+                  await it.comp.base.Icon({ name: "layers", classes: "w-3 h-3" })
                 }}
                 <span>{{ i + 1 }} / {{ it.images.length }}</span>
               </div>
@@ -92,7 +92,7 @@
                   class="flex items-center gap-1.5 hover:text-primary transition-colors pointer-events-auto"
                 >
                   {{
-                    await it.comp.ui.Icon({
+                    await it.comp.base.Icon({
                       name: "camera",
                       catalog: "lucide",
                       classes: "w-3 h-3",
@@ -103,7 +103,7 @@
               {{ else }}
                 <div class="flex items-center gap-1.5">
                   {{
-                    await it.comp.ui.Icon({
+                    await it.comp.base.Icon({
                       name: "camera",
                       catalog: "lucide",
                       classes: "w-3 h-3",

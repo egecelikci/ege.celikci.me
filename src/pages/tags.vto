@@ -26,7 +26,7 @@ menu:
 
         <div class="group flex items-baseline gap-2">
           {{
-            comp.ui.Tag({
+            comp.base.Tag({
               content: tag,
               href: "/tags/" + tagSlug + "/",
               classes: "text-base",
@@ -41,7 +41,7 @@ menu:
       {{ /for }}
     {{ else }}
       {{
-        comp.ui.EmptyState({
+        comp.base.EmptyState({
           icon: "tag",
           title: "No topics found",
           description:

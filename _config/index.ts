@@ -95,7 +95,7 @@ export default function () {
       // Modularized configs
       .use(googleFonts({
         fonts:
-          "https://fonts.google.com/share?selection.family=Inconsolata:wght@200..900|Josefin+Sans:ital,wght@0,100..700;1,100..700",
+          "https://fonts.google.com/share?selection.family=Azeret+Mono:ital,wght@0,100..900;1,100..900|Inconsolata:wght@200..900|Josefin+Sans:ital,wght@0,100..700;1,100..700",
         fontsFolder: "/assets/fonts",
         cssFile: "/assets/styles/main.css",
         subsets: ["latin", "latin-ext"],

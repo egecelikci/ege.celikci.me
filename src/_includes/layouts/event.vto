@@ -52,7 +52,7 @@ layout: layouts/page.vto
 
                 <div class="ml-1.5 inline-block">
                   {{
-                    comp.ui.ExternalLinks({
+                    comp.base.ExternalLinks({
                       links: labelRel.label.externalLinks,
                       showFallbacks: false,
                     })
@@ -144,7 +144,7 @@ layout: layouts/page.vto
 
                     <div class="ml-2 inline-block">
                       {{
-                        comp.ui.ExternalLinks({
+                        comp.base.ExternalLinks({
                           links: rel.artist.externalLinks,
                           showFallbacks: false,
                         })
@@ -187,7 +187,7 @@ layout: layouts/page.vto
                   class="flex items-center gap-1.5 hover:text-primary transition-colors pointer-events-auto"
                 >
                   {{
-                    comp.ui.Icon({
+                    comp.base.Icon({
                       name: credit.icon,
                       catalog: credit.catalog,
                       classes: "w-3 h-3",
@@ -219,7 +219,7 @@ layout: layouts/page.vto
 
                 <div class="ml-2 inline-block">
                   {{
-                    comp.ui.ExternalLinks({
+                    comp.base.ExternalLinks({
                       links: venueRel.place.externalLinks,
                       showFallbacks: false,
                     })
@@ -274,7 +274,7 @@ layout: layouts/page.vto
                       role="menuitem"
                     >
                       {{
-                        comp.ui.Icon({
+                        comp.base.Icon({
                           name: "navigation",
                           catalog: "lucide",
                           classes: "w-4 h-4 opacity-60",
@@ -291,7 +291,11 @@ layout: layouts/page.vto
                       role="menuitem"
                     >
                       {{
-                        comp.ui.Icon({ name: "map", catalog: "lucide", classes: "w-4 h-4 opacity-60" })
+                        comp.base.Icon({
+                          name: "map",
+                          catalog: "lucide",
+                          classes: "w-4 h-4 opacity-60",
+                        })
                       }}
                       <span class="typography-sublabel">OpenStreetMap</span>
                     </a>
@@ -304,7 +308,7 @@ layout: layouts/page.vto
                       role="menuitem"
                     >
                       {{
-                        comp.ui.Icon({
+                        comp.base.Icon({
                           name: "map-pin",
                           catalog: "lucide",
                           classes: "w-4 h-4 opacity-60",
@@ -321,7 +325,7 @@ layout: layouts/page.vto
                     aria-haspopup="true"
                   >
                     {{
-                      comp.ui.Icon({
+                      comp.base.Icon({
                         name: "compass",
                         catalog: "lucide",
                         classes: "w-4 h-4 opacity-90",
@@ -359,7 +363,7 @@ layout: layouts/page.vto
               class="btn-minimal justify-center"
             >
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "ticket",
                   catalog: "lucide",
                   classes: "w-4 h-4",
@@ -384,7 +388,7 @@ layout: layouts/page.vto
                 class="btn-minimal justify-center"
               >
                 {{
-                  comp.ui.Icon({
+                  comp.base.Icon({
                     name: "instagram",
                     catalog: "simpleicons",
                     classes: "w-4 h-4",
@@ -409,7 +413,7 @@ layout: layouts/page.vto
               class="btn-minimal justify-center"
             >
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: info.icon,
                   catalog: info.catalog,
                   classes: "w-4 h-4",

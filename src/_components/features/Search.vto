@@ -19,7 +19,7 @@
     <div
       class="absolute left-4 flex items-center justify-center pointer-events-none text-text-dim group-focus-within:text-primary transition-all duration-300 z-20"
     >
-      {{ await it.comp.ui.Icon({ name: "search", classes: "w-5 h-5" }) }}
+      {{ await it.comp.base.Icon({ name: "search", classes: "w-5 h-5" }) }}
     </div>
 
     <input
@@ -41,7 +41,7 @@
         class="hidden items-center justify-center"
       >
         {{
-          await it.comp.ui.Icon({
+          await it.comp.base.Icon({
             name: "loader-2",
             classes: "w-5 h-5 animate-spin text-primary",
           })
@@ -54,7 +54,7 @@
         class="hidden flex items-center justify-center w-8 h-8 rounded-full bg-surface-subtle hover:bg-surface-hover text-text-muted hover:text-primary transition-all haptic"
         aria-label="Clear search"
       >
-        {{ await it.comp.ui.Icon({ name: "x", classes: "w-4 h-4" }) }}
+        {{ await it.comp.base.Icon({ name: "x", classes: "w-4 h-4" }) }}
       </button>
     </div>
   </div>

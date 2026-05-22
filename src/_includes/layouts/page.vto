@@ -6,7 +6,7 @@ layout: layouts/base.vto
 {{ set pageBody }}
   {{# 1. Page Header #}}
   {{ if it.hide_title !== true }}
-    {{ await comp.ui.PageHeader(it) }}
+    {{ await comp.layout.PageHeader(it) }}
   {{ /if }}
 
   {{# 2. Main Content #}}
@@ -73,7 +73,7 @@ layout: layouts/base.vto
   {{ /if }}
 
   {{
-    await comp.ui.PageFooter({
+    await comp.layout.PageFooter({
       ...it,
       interactions: mentionsData,
       backlinks: backlinksBlock,
@@ -82,7 +82,7 @@ layout: layouts/base.vto
 {{ /set }}
 
 {{
-  comp.ui.Container({
+  comp.layout.Container({
     width: it.container_width || "narrow",
     classes: "min-h-screen pb-32",
     content: pageBody,

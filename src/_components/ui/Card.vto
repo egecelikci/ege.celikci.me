@@ -5,8 +5,7 @@
 {{- set tag = it.href ? "a" : "div" -}}
 <!-- deno-fmt-ignore -->
 <{{ tag }}{{ if it.href }}
-  href="{{ it.href }}"{{ /if }} class="rounded-xl border border-border
-bg-surface-subtle transition-all {{ it.classes || "" }}"{{
+  href="{{ it.href }}"{{ /if }} class="ledger-card {{ it.classes || "" }}"{{
   it.attributes
   |> attr
   |> safe

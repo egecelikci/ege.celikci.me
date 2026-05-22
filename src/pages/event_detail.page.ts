@@ -178,7 +178,7 @@ export default async function* ({ mb_events, events }: any) {
       backlink: { href: "/events/", text: "events" },
       prose: false,
       headerExtension: {
-        comp: "ui.SourceMeta",
+        comp: "layout.SourceMeta",
         props: {
           sources: headerSources,
           variant: "minimal",

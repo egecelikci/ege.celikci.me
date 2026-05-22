@@ -1,23 +1,33 @@
 {{#
   Component: ListingFooter
-  Standardized footer for listings (Notes, EntryCards, etc.)
+  Standardized action bar for any content card or row.
+  Used to provide a consistent "details" link and metadata slot.
 
   Props:
-    - leftContent: html/string (Optional content for the left side)
-    - text: string (default: "view details &rarr;")
+    - leftContent: html/string (Custom slot for left side)
+    - leftText: string (Simple label for left side, e.g. "note", "event")
+    - text: string (default: "details")
+    - compact: boolean (reduces padding from pt-8 to pt-4)
+    - classes: additional classes
 #}}
-<footer class="listing-footer">
-  {{ if it.leftContent }}
-    {{ it.leftContent |> safe }}
-  {{ else }}
-    <div class="grow"></div>
-  {{ /if }}
 
-  <div class="flex items-center gap-4">
-    <span
-      class="text-[11px] font-mono font-bold text-text-muted"
-    >
-      {{ it.text || "view details &rarr;" }}
+{{ set ptClass = it.compact ? "pt-4" : "pt-8" }}
+
+<footer class="listing-footer {{ ptClass }} {{ it.classes || '' }}">
+  <div class="grow flex items-center min-w-0">
+    {{ if it.leftContent }}
+      {{ it.leftContent |> safe }}
+    {{ else if it.leftText }}
+      <span class="typography-sublabel text-text-dim lowercase truncate">{{
+        it.leftText
+      }}</span>
+    {{ /if }}
+  </div>
+
+  <div class="flex items-center gap-2 reveal-slide-right shrink-0">
+    <span class="typography-sublabel font-bold">
+      {{ it.text || "details" }}
     </span>
+    {{ await it.comp.base.Icon({ name: "arrow-right", classes: "w-3 h-3" }) }}
   </div>
 </footer>

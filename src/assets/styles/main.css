@@ -27,14 +27,6 @@
   }
 }
 
-@variant group-reveal-pagerow {
-  @media (hover: hover) and (pointer: fine) {
-    .group\/pagerow:hover & {
-      @slot;
-    }
-  }
-}
-
 @variant dark {
   &:where(.theme-dark, .theme-dark *) {
     @slot;
@@ -117,7 +109,7 @@
   --color-text-dim: color-mix(
     in srgb,
     var(--color-text-muted),
-    transparent 40%
+    transparent 20%
   );
 
   --color-status-error: #dc2626;
@@ -127,6 +119,7 @@
   --font-sans: "Josefin Sans", system-ui, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: "Inconsolata", monospace;
+  --font-accent: "Azeret Mono", monospace;
 
   --width-narrow: 65ch;
   --width-max: 1440px;
@@ -646,6 +639,42 @@
   @apply opacity-60 has-[.is-active]:opacity-100 reveal:opacity-100 transition-opacity duration-500;
 }
 
+@utility reveal-slide-right {
+  @apply transition-transform duration-300 translate-x-0 group-reveal:translate-x-1;
+}
+
+@utility reveal-slide-left {
+  @apply transition-transform duration-300 translate-x-0 group-reveal:-translate-x-1;
+}
+
+@utility precision-link {
+  @apply inline-flex items-center gap-1.5 typography-sublabel transition-all duration-300 no-underline haptic;
+
+  & span:not([class*="reveal-slide"]) {
+    @apply border-b border-transparent transition-colors pb-px;
+  }
+
+  &:hover span:not([class*="reveal-slide"]) {
+    @apply border-current/30;
+  }
+}
+
+@utility reveal-slide-up {
+  @apply transition-transform duration-300 translate-y-0 group-reveal:-translate-y-1;
+}
+
+@utility ledger-card {
+  @apply rounded-2xl border border-border-subtle bg-surface-subtle transition-all duration-500;
+}
+
+@utility ledger-aspect {
+  @apply aspect-video md:aspect-[16/10];
+}
+
+@utility typography-lead {
+  @apply text-lg md:text-xl text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors leading-relaxed;
+}
+
 @utility page-footer-block {
   @apply w-full;
 }
@@ -702,7 +731,7 @@
 }
 
 @utility bookmark-pill--active {
-  @apply !bg-primary !text-white !border-primary;
+  @apply !bg-secondary !text-white !border-secondary;
 }
 
 @utility bookmark-count {
@@ -736,7 +765,7 @@
     @apply bg-border-subtle rounded-full;
   }
   &::-webkit-scrollbar-thumb {
-    @apply bg-text-muted rounded-full hover:bg-primary transition-colors;
+    @apply bg-text-muted rounded-full hover:bg-secondary transition-colors;
   }
 }
 

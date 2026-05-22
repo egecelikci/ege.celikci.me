@@ -30,7 +30,7 @@ menu:
       {{# Posts for this year #}}
       <div class="flex flex-col">
         {{ for post of groupedPosts[year] }}
-          {{ comp.ui.PostRow({ post: post }) }}
+          {{ comp.ui.EntryRow({ entry: post }) }}
         {{ /for }}
       </div>
     </section>

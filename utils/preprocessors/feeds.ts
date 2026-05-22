@@ -18,13 +18,13 @@ function injectFeedSources(page: Page, atomUrl: string, jsonUrl: string) {
   // Convert shorthand or missing extension to full object
   if (!extension || typeof extension !== "object") {
     extension = {
-      comp: "ui.SourceMeta",
+      comp: "layout.SourceMeta",
       props: { sources: [] },
     };
   } else if (!extension.comp) {
     // Shorthand: extension IS the props
     extension = {
-      comp: "ui.SourceMeta",
+      comp: "layout.SourceMeta",
       props: extension,
     };
   }

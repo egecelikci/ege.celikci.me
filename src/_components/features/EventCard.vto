@@ -1,0 +1,134 @@
+{{#
+  Component: EventCard (UI Primitive)
+  A refined, high-precision event display.
+  Uses secondary color for "live" status and improved typography.
+
+  Props:
+    - event: MBEvent (id, name, type, beginDate, isUpcoming, relations, posterUrl, posterThumb, displayTitle, artists)
+#}}
+
+{{ set detailUrl = `/event/${it.event.id}/` }}
+{{ set isPast = !it.event.isUpcoming }}
+{{
+  set posterUrl = it.event.imagePath || it.event.posterThumb || it.event.posterUrl
+}}
+{{ set posterMonoUrl = it.event.imagePathMono }}
+{{ set isCustomTitle = it.event.isCustomTitle ?? false }}
+
+{{# Fallback if preprocessor didn't run or object is unexpected #}}
+{{ set displayTitle = it.event.displayTitle || it.event.name || "Event" }}
+
+<a
+  href="{{ detailUrl }}"
+  class="
+    group flex flex-col h-full ledger-card overflow-hidden haptic
+    reveal:border-primary-muted reveal:shadow-elevated
+    {{ if isPast }}text-text-dim grayscale reveal:grayscale-0{{ else }}reveal:border-secondary-muted{{ /if }}
+  "
+>
+  {{# 1. POSTER / VISUAL #}}
+  <div class="relative aspect-[3/4] bg-surface-subtle overflow-hidden">
+    {{ if posterUrl }}
+      <img
+        src="{{ if isPast && posterMonoUrl }}{{ posterMonoUrl }}{{ else }}{{ posterUrl }}{{ /if }}"
+        alt="{{ displayTitle }}"
+        class="absolute inset-0 w-full h-full object-cover group-reveal:scale-105 transition-transform duration-700"
+        loading="lazy"
+      />
+      {{ if !isPast && posterMonoUrl }}
+        <img
+          src="{{ posterMonoUrl }}"
+          alt="{{ displayTitle }} (monochrome)"
+          class="absolute inset-0 w-full h-full object-cover opacity-0 group-reveal:opacity-100 transition-opacity duration-700 pointer-events-none"
+          loading="lazy"
+        />
+      {{ /if }}
+    {{ else }}
+      <div
+        class="absolute inset-0 flex flex-col items-center justify-center text-text-dim bg-surface/20"
+      >
+        {{
+          await it.comp.base.Icon({
+            name: "image",
+            catalog: "lucide",
+            classes: "w-12 h-12 opacity-20",
+          })
+        }}
+        <span
+          class="typography-label font-bold mt-4 opacity-40 uppercase tracking-widest"
+        >No Poster</span>
+      </div>
+    {{ /if }}
+  </div>
+
+  {{# 2. CONTENT #}}
+  <div class="flex-1 p-6 flex flex-col justify-between min-w-0">
+    <div class="space-y-4">
+      {{# DATE & TIME #}}
+      <div class="flex items-center gap-3">
+        <time
+          class="typography-label {{ if isPast }}text-text-muted{{ else }}text-secondary{{ /if }} transition-colors"
+        >
+          {{ if it.event.beginDate }}
+            {{ it.event.beginDate |> date("EEE, MMM dd") }}
+          {{ else }}
+            TBA
+          {{ /if }}
+        </time>
+
+        {{ if it.event.time }}
+          <div class="w-1 h-1 rounded-full bg-border"></div>
+          <span
+            class="typography-label text-text-dim group-reveal:text-text-muted transition-colors"
+          >
+            {{ it.event.time }}
+          </span>
+        {{ /if }}
+      </div>
+
+      {{# TITLE & LINEUP #}}
+      <div class="flex flex-col gap-1.5">
+        {{ if isCustomTitle }}
+          <h3
+            class="text-xl font-bold text-text leading-tight tracking-tight group-reveal:text-primary transition-colors line-clamp-2"
+          >
+            {{ it.event.name }}
+          </h3>
+        {{ /if }}
+
+        {{ if it.event.relations?.length > 0 }}
+          <div
+            class="inline {{ if isCustomTitle }}text-sm text-text-muted{{ else }}text-xl font-bold text-text group-reveal:text-primary transition-colors{{ /if }} leading-snug"
+          >
+            {{
+              set artistRels = it.event.relations.filter((r) =>
+                r["target-type"] === "artist" &&
+                !["illustration", "graphic design", "artwork", "design", "engineer"].includes(
+                  r.type,
+                )
+              )
+            }}
+            {{ for index, rel of artistRels -}}
+              <span class="inline-block">{{
+                rel["target-credit"] || rel.artist.name
+              }}</span>
+              {{- if index < artistRels.length - 2 }},
+              {{ else if index === artistRels.length - 2 }}
+                &
+              {{ /if -}}
+            {{ /for }}
+          </div>
+        {{ /if }}
+      </div>
+    </div>
+
+    {{# 3. ACTION / FOOTER #}}
+    {{
+      await it.comp.ui.ListingFooter({
+        compact: true,
+        leftText: it.event.type || "event",
+        text: "details",
+      })
+    }}
+  </div>
+</a>

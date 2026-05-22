@@ -11,7 +11,7 @@
     - images?: Array<{ src: string, alt: string }> (Default fallback visuals)
     - content: html/string (The main body text)
     - footerLeft?: html/string
-    - footerText?: string (default: "view details &rarr;")
+    - footerText?: string (default: "view details")
     - classes?: string
     - bodyClasses?: string
     - isNote?: boolean (applies specific note-style logic if needed)
@@ -62,7 +62,7 @@
       <div class="flex gap-4 relative z-40">
         {{ for tag of it.tags |> slice(0, 3) }}
           <span
-            class="text-[11px] font-mono font-bold text-primary"
+            class="text-[10px] font-accent font-bold text-primary"
           >#{{ tag }}</span>
         {{ /for }}
       </div>
@@ -78,7 +78,9 @@
         {{# Multi-image Indicator #}}
         {{ if it.images.length > 1 }}
           <div class="gallery-overlay">
-            {{ await it.comp.ui.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+            {{
+              await it.comp.base.Icon({ name: "layers", classes: "w-3 h-3" })
+            }}
             <span>1 / {{ it.images.length }}</span>
           </div>
         {{ /if }}
@@ -89,7 +91,7 @@
           await it.comp.ui.Gallery({
             images: firstImage,
             static: true,
-            aspect: "aspect-video md:aspect-[16/10]",
+            aspect: "ledger-aspect",
             classes: "m-0 relative z-10",
           })
         }}
@@ -110,7 +112,7 @@
     {{ /if }}
 
     <div
-      class="e-content markdown text-lg md:text-xl text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors leading-relaxed relative z-20 {{ it.bodyClasses || '' }}"
+      class="e-content markdown typography-lead relative z-20 {{ it.bodyClasses || '' }}"
     >
       {{ it.content |> safe }}
     </div>
@@ -122,6 +124,7 @@
       await it.comp.ui.ListingFooter({
         leftContent: it.footerLeft,
         text: it.footerText,
+        compact: it.compact,
       })
     }}
   </div>

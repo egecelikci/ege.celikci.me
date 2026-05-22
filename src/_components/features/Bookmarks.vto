@@ -29,7 +29,7 @@
           class="bookmark-pill {{ if !it.activeCategory }}bookmark-pill--active{{ /if }}"
         >
           {{
-            await it.comp.ui.Icon({
+            await it.comp.base.Icon({
               name: "layout-grid",
               catalog: "lucide",
               classes: "w-3.5 h-3.5",
@@ -50,7 +50,7 @@
           >
             {{ if meta?.icon }}
               {{
-                await it.comp.ui.Icon({
+                await it.comp.base.Icon({
                   name: meta.icon,
                   catalog: "lucide",
                   classes: "w-3.5 h-3.5",
@@ -141,7 +141,7 @@
                   class="inline-flex items-center gap-1.5 no-underline group/url"
                 >
                   {{
-                    await it.comp.ui.Icon({
+                    await it.comp.base.Icon({
                       name: "link",
                       catalog: "lucide",
                       classes:
@@ -171,7 +171,7 @@
                     title="Mirror"
                   >
                     {{
-                      await it.comp.ui.Icon({
+                      await it.comp.base.Icon({
                         name: "copy",
                         catalog: "lucide",
                         classes:
@@ -221,7 +221,7 @@
                   >
                     {{ if meta?.icon }}
                       {{
-                        await it.comp.ui.Icon({
+                        await it.comp.base.Icon({
                           name: meta.icon,
                           catalog: "lucide",
                           classes: "w-3.5 h-3.5",
@@ -229,7 +229,7 @@
                       }}
                     {{ else }}
                       {{
-                        await it.comp.ui.Icon({
+                        await it.comp.base.Icon({
                           name: "hash",
                           catalog: "lucide",
                           classes: "w-3.5 h-3.5",
@@ -251,7 +251,7 @@
                   title="Subscribe via RSS / Atom"
                 >
                   {{
-                    await it.comp.ui.Icon({
+                    await it.comp.base.Icon({
                       name: "rss",
                       catalog: "lucide",
                       classes:
@@ -304,7 +304,21 @@
   {{ if it.filteredBookmarks.length == 0 }}
     <div class="py-32 text-center">
       <p class="text-text-muted italic mb-6">Nothing in this category yet.</p>
-      <a href="/bookmarks/" class="btn-minimal">← All bookmarks</a>
+      <a
+        href="/bookmarks/"
+        class="precision-link text-text-muted hover:text-primary"
+      >
+        <span class="reveal-slide-left inline-block">
+          {{
+            await it.comp.base.Icon({
+              name: "arrow-left",
+              classes: "w-3 h-3 stroke-[1.5]",
+              attributes: { "aria-hidden": "true" },
+            })
+          }}
+        </span>
+        <span>All bookmarks</span>
+      </a>
     </div>
   {{ /if }}
 
@@ -316,8 +330,19 @@
         <h2 class="typography-label text-text-muted">88×31 badges</h2>
         <a
           href="/bookmarks/88x31/"
-          class="typography-sublabel text-primary hover:text-primary-offset no-underline transition-colors"
-        >View all →</a>
+          class="precision-link text-primary hover:text-primary-offset"
+        >
+          <span>View all</span>
+          <span class="reveal-slide-right inline-block">
+            {{
+              await it.comp.base.Icon({
+                name: "arrow-right",
+                classes: "w-3 h-3 stroke-[1.5]",
+                attributes: { "aria-hidden": "true" },
+              })
+            }}
+          </span>
+        </a>
       </div>
       <div
         class="flex flex-wrap gap-5 text-text-dim hover:text-text transition-colors duration-700"

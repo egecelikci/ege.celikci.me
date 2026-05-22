@@ -1,24 +1,131 @@
 {{#
   Component: EntryRow
   A unified, high-density row for any entry type (Note, Post, Recipe, etc.)
-  Used in archive listings (tags, blog, notes) to ensure visual consistency.
-  
+  Replaces the fragmented PostRow, NoteRow, and PageRow.
+
   Props:
     - entry: page object (required)
     - showDate?: boolean (default: true)
+    - classes?: string
 #}}
 
-{{ if it.entry.type === "note" }}
-  {{
-    await it.comp.ui.NoteRow({ note: it.entry, showDate: it.showDate ?? true })
-  }}
-{{ else if it.entry.type === "post" }}
-  {{
-    await it.comp.ui.PostRow({ post: it.entry, showDate: it.showDate ?? true })
-  }}
-{{ else }}
-  {{# Fallback for other types like recipes, bookmarks etc. #}}
-  {{
-    await it.comp.ui.PostRow({ post: it.entry, showDate: it.showDate ?? true })
-  }}
+{{ set entry = it.entry }}
+{{
+  set isNote = entry.type === "note" || (entry.url && entry.url.startsWith("/notes/"))
+}}
+{{ set showDate = it.showDate ?? true }}
+
+{{# Type Label logic #}}
+{{ set typeLabel = entry.type || "entry" }}
+{{ if isNote }}{{ set typeLabel = "note" }}{{ /if }}
+
+{{# Date formatting #}}
+{{ set dateStr = "" }}
+{{ if showDate }}
+  {{ if isNote }}
+    {{ set dateStr = entry.date |> date("MMM dd HH:mm") }}
+  {{ else }}
+    {{ set dateStr = entry.date |> date("dd MMM yyyy") }}
+  {{ /if }}
 {{ /if }}
+
+{{# Vento Context for notes #}}
+{{
+  set vtoContext = { ...entry, author: it.author, site: it.site, comp: it.comp }
+}}
+
+<article
+  class="h-entry group relative flex flex-col gap-3 py-6 border-b border-border-subtle last:border-b-0 transition-all no-underline w-full haptic {{ it.classes || '' }}"
+>
+  {{# 0. Hover Background #}}
+  <div
+    class="absolute -inset-x-4 md:-inset-x-6 inset-y-0 z-0 rounded-2xl transition-colors duration-300 group-reveal:bg-surface-subtle pointer-events-none"
+  >
+  </div>
+
+  {{# 1. HEADER (Time + Tags + Meta) #}}
+  <header class="flex items-center gap-4 relative z-30 overflow-hidden">
+    {{ if showDate }}
+      <time
+        class="dt-published typography-label text-text-muted shrink-0 group-reveal:text-primary transition-all"
+      >
+        {{ dateStr }}
+      </time>
+    {{ else }}
+      <span class="typography-label text-primary flex items-center gap-2">
+        {{
+          await it.comp.base.Icon({
+            name: isNote ? "sticky-note" : "pencil",
+            classes: "w-3 h-3",
+          })
+        }}
+        {{ typeLabel }}
+      </span>
+    {{ /if }}
+
+    {{ if entry.tags }}
+      <div class="flex gap-3 min-w-0">
+        {{ for tag of entry.tags |> slice(0, 2) }}
+          <span
+            class="p-category text-[10px] font-accent font-bold text-text-muted truncate"
+          >#{{ tag }}</span>
+        {{ /for }}
+      </div>
+    {{ /if }}
+
+    <div class="divider min-w-[1rem]"></div>
+
+    {{# Stats + Syndication (only for notes/interaction-heavy items) #}}
+    {{ if isNote || entry.stats || entry.syndication }}
+      {{
+        await it.comp.ui.ActivityMeta({
+          stats: entry.stats,
+          syndication: entry.syndication,
+          classes:
+            "shrink-0 text-text-dim group-reveal:text-text-muted transition-colors relative z-40",
+        })
+      }}
+    {{ /if }}
+  </header>
+
+  {{# 2. CONTENT #}}
+  <div class="flex flex-col gap-2 relative z-10">
+    {{ if entry.title && (!isNote || !entry.isAutoTitle) }}
+      <h3
+        class="p-name text-xl md:text-2xl font-bold tracking-tight text-text group-reveal:text-primary transition-colors leading-tight"
+      >
+        {{ entry.title }}
+      </h3>
+    {{ /if }}
+
+    <div
+      class="e-content markdown text-sm md:text-base leading-relaxed text-text-dim line-clamp-3 group-reveal:text-text transition-colors"
+    >
+      {{ if isNote }}
+        {{ entry.content |> vto(vtoContext) |> md |> safe }}
+      {{ else }}
+        {{ entry.description || "" }}
+      {{ /if }}
+    </div>
+  </div>
+
+  {{# 3. IMAGES (Note specific) #}}
+  {{ if isNote && entry.images?.length > 0 }}
+    <div class="max-w-xl w-full min-w-0 relative z-30">
+      {{
+        await it.comp.ui.Media({
+          images: entry.images,
+          static: false,
+          postUrl: entry.url,
+        })
+      }}
+    </div>
+  {{ /if }}
+
+  {{# 4. OVERLAY LINK #}}
+  <a
+    href="{{ entry.url |> url }}"
+    class="u-url absolute inset-0 z-20 pointer-events-auto"
+    aria-label="View {{ typeLabel }}"
+  ></a>
+</article>

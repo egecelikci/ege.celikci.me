@@ -93,7 +93,7 @@
           >
             <div class="flex items-center gap-3">
               {{
-                await it.comp.ui.Tag({
+                await it.comp.base.Tag({
                   content: tag,
                   href: "/tags/" + slug + "/",
                   classes: "text-sm",
@@ -124,7 +124,7 @@
       {{ else }}
         <div class="py-12 text-center border-b border-border-subtle">
           {{
-            await it.comp.ui.EmptyState({
+            await it.comp.base.EmptyState({
               icon: "tag",
               title: "No topics yet",
               description: "Tags will appear here once you add them to your content.",

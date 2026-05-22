@@ -59,7 +59,7 @@ backlink: { href: "/events/", text: "events" }
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {{ for event of eventsByYear.get(year) }}
-            {{ await comp.ui.EventCard({ event }) }}
+            {{ await comp.features.EventCard({ event }) }}
           {{ /for }}
         </div>
       </div>
@@ -68,7 +68,7 @@ backlink: { href: "/events/", text: "events" }
 {{ else }}
   <div class="mt-12">
     {{
-      comp.ui.EmptyState({
+      comp.base.EmptyState({
         icon: "calendar-x",
         title: "No past events found",
         description: "No past events are currently in the archive.",

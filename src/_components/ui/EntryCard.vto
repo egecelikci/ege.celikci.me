@@ -39,15 +39,12 @@
 {{ if isNote }}
   {{ set leftContent }}
     <div class="flex items-center gap-6">
-      {{ if it.entry.stats }}
-        {{ await it.comp.ui.NoteStats({ stats: it.entry.stats }) }}
-      {{ /if }}
-      {{ if it.entry.syndication }}
-        <div class="h-3 w-px bg-border-subtle"></div>
-        {{
-          await it.comp.ui.Syndication({ syndication: it.entry.syndication })
-        }}
-      {{ /if }}
+      {{
+        await it.comp.ui.ActivityMeta({
+          stats: it.entry.stats,
+          syndication: it.entry.syndication,
+        })
+      }}
     </div>
   {{ /set }}
 {{ /if }}
@@ -61,7 +58,7 @@
     images: it.entry.images,
     content: displayContent,
     footerLeft: leftContent,
-    footerText: "view details &rarr;",
+    footerText: "view details",
     bodyClasses: isNote ? "line-clamp-[12] md:line-clamp-6" : "line-clamp-3",
     classes: it.classes,
     isNote: isNote,

@@ -12,7 +12,7 @@
 {{ if items.length > 1 }}
   <nav
     aria-label="Breadcrumb"
-    class="relative z-20 flex items-center {{ it.classes }}"
+    class="relative z-20 flex items-center typography-sublabel {{ it.classes }}"
   >
     <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
       {{ for index, item of items }}
@@ -25,7 +25,7 @@
           {{ else }}
             <a
               href="{{ item.data.url }}"
-              class="reveal:text-secondary transition-all duration-200 no-underline text-text-muted"
+              class="reveal:text-secondary transition-all duration-300 no-underline text-text-muted border-b border-transparent hover:border-secondary/30 pb-px"
             >
               {{ item.data.title || item.slug }}
             </a>

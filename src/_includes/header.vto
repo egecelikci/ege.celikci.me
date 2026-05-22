@@ -23,7 +23,7 @@
         <div
           class="relative z-10 pointer-events-auto reveal-self"
         >
-          {{ comp.ui.Breadcrumbs({ url: url }) }}
+          {{ comp.layout.Breadcrumbs({ url: url }) }}
         </div>
       {{ /if }}
     </div>
@@ -36,7 +36,7 @@
   aria-label="Site Header"
 >
   {{
-    comp.ui.Container({
+    comp.layout.Container({
       width: "narrow",
       content: headerContent,
     })

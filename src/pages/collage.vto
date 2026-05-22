@@ -34,7 +34,7 @@ menu:
             class="flex items-center gap-2 text-[11px] font-mono text-text-muted"
           >
             {{
-              comp.ui.Icon({ name: "database", classes: "w-3 h-3 text-text-dim" })
+              comp.base.Icon({ name: "database", classes: "w-3 h-3 text-text-dim" })
             }}
             <span>Source</span>
           </div>
@@ -52,7 +52,7 @@ menu:
                 aria-label="Use ListenBrainz"
               >
                 {{
-                  comp.ui.Icon({ name: "brain-circuit", classes: "w-4 h-4" })
+                  comp.base.Icon({ name: "brain-circuit", classes: "w-4 h-4" })
                 }}
                 <span>ListenBrainz</span>
               </button>
@@ -61,7 +61,7 @@ menu:
                 class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic"
                 aria-label="Use Last.fm"
               >
-                {{ comp.ui.Icon({ name: "music", classes: "w-4 h-4" }) }}
+                {{ comp.base.Icon({ name: "music", classes: "w-4 h-4" }) }}
                 <span>Last.fm</span>
               </button>
             </div>
@@ -81,7 +81,7 @@ menu:
                 aria-describedby="username-hint"
               />
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "at-sign",
                   classes:
                     "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
@@ -103,11 +103,11 @@ menu:
               class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
               {{
-                comp.ui.Icon({ name: "palette", classes: "w-3 h-3 text-text-dim" })
+                comp.base.Icon({ name: "palette", classes: "w-3 h-3 text-text-dim" })
               }}
               <span>Appearance</span>
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "chevron-down",
                   classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
                 })
@@ -128,7 +128,7 @@ menu:
                     >
                     </select>
                     {{
-                      comp.ui.Icon({
+                      comp.base.Icon({
                         name: "chevron-down",
                         classes:
                           "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
@@ -155,7 +155,7 @@ menu:
                       <option value="dark">Dark</option>
                     </select>
                     {{
-                      comp.ui.Icon({
+                      comp.base.Icon({
                         name: "sparkles",
                         classes:
                           "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
@@ -179,7 +179,7 @@ menu:
                       <option value="5x5">5×5</option>
                     </select>
                     {{
-                      comp.ui.Icon({
+                      comp.base.Icon({
                         name: "grid-3x3",
                         classes:
                           "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
@@ -203,7 +203,7 @@ menu:
                       <option value="lower">lowercase</option>
                     </select>
                     {{
-                      comp.ui.Icon({
+                      comp.base.Icon({
                         name: "type",
                         classes:
                           "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
@@ -285,11 +285,11 @@ menu:
               class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
               {{
-                comp.ui.Icon({ name: "sliders", classes: "w-3 h-3 text-text-dim" })
+                comp.base.Icon({ name: "sliders", classes: "w-3 h-3 text-text-dim" })
               }}
               <span>Content Options</span>
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "chevron-down",
                   classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
                 })
@@ -302,7 +302,7 @@ menu:
               >
                 <div class="flex items-center gap-3">
                   {{
-                    comp.ui.Icon({
+                    comp.base.Icon({
                       name: "image-off",
                       classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
@@ -329,7 +329,7 @@ menu:
               >
                 <div class="flex items-center gap-3">
                   {{
-                    comp.ui.Icon({
+                    comp.base.Icon({
                       name: "hash",
                       classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
@@ -353,7 +353,7 @@ menu:
               >
                 <div class="flex items-center gap-3">
                   {{
-                    comp.ui.Icon({
+                    comp.base.Icon({
                       name: "globe",
                       classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
                     })
@@ -384,14 +384,14 @@ menu:
               class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
             >
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "settings-2",
                   classes: "w-3 h-3 text-text-dim",
                 })
               }}
               <span>Advanced Options</span>
               {{
-                comp.ui.Icon({
+                comp.base.Icon({
                   name: "chevron-down",
                   classes: "w-3 h-3 ml-auto transition-transform group-open:rotate-180",
                 })
@@ -418,7 +418,7 @@ menu:
                 }}
 
                 {{
-                  comp.ui.Callout({
+                  comp.base.Callout({
                     variant: "action",
                     icon: "badge-info",
                     content: calloutText,
@@ -505,7 +505,7 @@ menu:
             class="flex items-center gap-2 px-4 py-2 rounded-full glassy border border-border-subtle shadow-lg"
           >
             {{
-              comp.ui.Icon({ name: "maximize", classes: "w-3 h-3 text-text-muted" })
+              comp.base.Icon({ name: "maximize", classes: "w-3 h-3 text-text-muted" })
             }}
             <span class="text-xs font-mono text-text">1080 × 1920</span>
           </div>
@@ -544,7 +544,7 @@ menu:
               class="w-16 h-16 mx-auto rounded-2xl bg-surface-hover flex items-center justify-center"
             >
               {{
-                comp.ui.Icon({ name: "image", classes: "w-8 h-8 text-text-muted" })
+                comp.base.Icon({ name: "image", classes: "w-8 h-8 text-text-muted" })
               }}
             </div>
             <div>
@@ -571,7 +571,7 @@ menu:
             aria-label="Download collage as JPG"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "download",
                 classes:
                   "w-4 h-4 text-text-muted group-hover/btn:text-primary transition-colors",
@@ -587,7 +587,7 @@ menu:
             aria-label="Share collage"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "share-2",
                 classes: "w-4 h-4 text-white group-hover/btn:scale-110 transition-transform",
               })
@@ -599,7 +599,7 @@ menu:
         <div class="text-center">
           <p class="text-sm text-text-muted">
             {{
-              comp.ui.Icon({ name: "info", classes: "w-3 h-3 inline mr-1 text-text-dim" })
+              comp.base.Icon({ name: "info", classes: "w-3 h-3 inline mr-1 text-text-dim" })
             }}
             Changes auto-save and regenerate your collage
           </p>

@@ -8,7 +8,7 @@ menu:
   order: 3
   label: music events
 headerExtension:
-  comp: "ui.SourceMeta"
+  comp: "layout.SourceMeta"
   props:
     sources:
       - label: MusicBrainz
@@ -40,7 +40,7 @@ headerExtension:
           title="Subscribe in your default calendar app"
         >
           {{
-            comp.ui.Icon({
+            comp.base.Icon({
               name: "calendar-sync",
               catalog: "lucide",
               classes: "w-3.5 h-3.5",
@@ -58,7 +58,7 @@ headerExtension:
             title="Add to Google Calendar"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "google",
                 catalog: "simpleicons",
                 classes: "w-3.5 h-3.5",
@@ -71,7 +71,7 @@ headerExtension:
             title="Copy Calendar Link"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "copy",
                 catalog: "lucide",
                 classes: "w-3.5 h-3.5",
@@ -89,7 +89,7 @@ headerExtension:
             title="RSS/Atom Feed"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "rss",
                 catalog: "lucide",
                 classes: "w-3.5 h-3.5",
@@ -102,7 +102,7 @@ headerExtension:
             title="JSON Feed"
           >
             {{
-              comp.ui.Icon({
+              comp.base.Icon({
                 name: "code",
                 catalog: "lucide",
                 classes: "w-3.5 h-3.5",
@@ -115,7 +115,7 @@ headerExtension:
   {{ /set }}
 
   {{
-    comp.ui.Callout({
+    comp.base.Callout({
       variant: "action",
       icon: "calendar-plus",
       content: calloutContent,
@@ -125,30 +125,40 @@ headerExtension:
 
 {{# ── CALENDAR VIEW ──────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length > 0 }}
-  {{
-    await comp.ui.EventCalendar({ events: mb_events.upcoming, title: "Upcoming" })
-  }}
-{{ /if }}
+  {{ set pastLink }}
+    {{ if mb_events?.past?.length > 0 }}
+      <a
+        href="/events/archive/"
+        class="group precision-link text-text-muted hover:text-primary"
+      >
+        <span>Past</span>
+        <span class="reveal-slide-right inline-block">
+          {{
+            comp.base.Icon({
+              name: "arrow-right",
+              classes: "w-3 h-3 stroke-[1.5]",
+              attributes: { "aria-hidden": "true" },
+            })
+          }}
+        </span>
+      </a>
+    {{ /if }}
+  {{ /set }}
 
-{{# ─── ARCHIVE LINK ────────────────────────────────────────────────────── #}}
-{{ if mb_events?.past?.length > 0 }}
-  <section class="mt-12 flex justify-center">
-    <a
-      href="/events/archive/"
-      class="btn-minimal group/archive"
-    >
-      View Past Events Archive
-      <span class="group-hover/archive:translate-x-1 transition-transform"
-      >→</span>
-    </a>
-  </section>
+  {{
+    await comp.features.EventCalendar({
+      events: mb_events.upcoming,
+      title: "Upcoming",
+      titleRight: pastLink,
+    })
+  }}
 {{ /if }}
 
 {{# ─── EMPTY STATE ────────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length === 0 }}
   <div class="mt-12">
     {{
-      comp.ui.EmptyState({
+      comp.base.EmptyState({
         icon: "calendar-x",
         title: "No upcoming events found",
         description:
@@ -158,48 +168,54 @@ headerExtension:
   </div>
 {{ /if }}
 
-{{# ─── FOOTER NOTE ─────────────────────────────────────────────────────── #}}
+{{# ─── FOOTER ACTIONS & INFO ───────────────────────────────────────────── #}}
 {{ set customFooterContent }}
-  <div
-    class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
-  >
-    <p class="m-0 text-sm text-text-muted">
-      Data from
-      <a
-        href="https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="link-hover"
-      >MusicBrainz</a>
-      &
-      <a
-        href="https://eventartarchive.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="link-hover"
-      >Event Art Archive</a>
-    </p>
-
-    <a
-      href="https://musicbrainz.org/doc/How_to_Add_an_Event"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="link-hover text-text-muted flex items-center gap-1.5 typography-label"
+  <div class="flex flex-col gap-8">
+    {{# 1. Action Bar #}}
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-border-subtle pb-8"
     >
-      {{
-        comp.ui.Icon({
-          name: "plus-circle",
-          catalog: "lucide",
-          classes: "w-3.5 h-3.5",
-        })
-      }}
-      Add an event on MusicBrainz
-    </a>
+      {{# Left: Add Event #}}
+      <a
+        href="https://musicbrainz.org/doc/How_to_Add_an_Event"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 typography-sublabel text-text-muted hover:text-secondary transition-all duration-300 no-underline haptic"
+      >
+        {{
+          comp.base.Icon({
+            name: "plus-circle",
+            catalog: "lucide",
+            classes: "w-3.5 h-3.5 stroke-[1.5]",
+          })
+        }}
+        Add an event on MusicBrainz
+      </a>
+
+      {{# Right: Archive #}}
+      {{ if mb_events?.past?.length > 0 }}
+        <a
+          href="/events/archive/"
+          class="group precision-link text-text-muted hover:text-primary"
+        >
+          <span>View Past Events Archive</span>
+          <span class="reveal-slide-right inline-block">
+            {{
+              comp.base.Icon({
+                name: "arrow-right",
+                classes: "w-3 h-3 stroke-[1.5]",
+                attributes: { "aria-hidden": "true" },
+              })
+            }}
+          </span>
+        </a>
+      {{ /if }}
+    </div>
   </div>
 {{ /set }}
 
 {{
-  await comp.ui.PageFooter({
+  await comp.layout.PageFooter({
     footerExtension: customFooterContent,
   })
 }}

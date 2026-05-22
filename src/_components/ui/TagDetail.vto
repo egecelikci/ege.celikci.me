@@ -14,7 +14,7 @@
     </div>
   {{ else }}
     {{
-      await it.comp.ui.EmptyState({
+      await it.comp.base.EmptyState({
         icon: "inbox",
         description: "No entries found for <strong>#" + it.tag + "</strong>.",
       })
@@ -38,7 +38,7 @@
       <h3
         class="typography-label text-text-muted mb-8 flex items-center gap-2"
       >
-        {{ await it.comp.ui.Icon({ name: "tags", classes: "w-3 h-3" }) }}
+        {{ await it.comp.base.Icon({ name: "tags", classes: "w-3 h-3" }) }}
         Related Topics
       </h3>
       <div class="flex flex-wrap gap-8">
@@ -47,7 +47,7 @@
           {{ set tagCount = it.search.pages("'" + t + "'").length }}
           <div class="group flex items-baseline gap-2">
             {{
-              await it.comp.ui.Tag({
+              await it.comp.base.Tag({
                 content: t,
                 href: "/tags/" + tagSlug + "/",
                 classes: "text-base",
