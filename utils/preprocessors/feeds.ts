@@ -4,6 +4,9 @@
  */
 
 import type { Page, Site } from "lume/core.ts";
+import createSlugifier from "lume/core/slugifier.ts";
+
+const slugify = createSlugifier();
 
 /**
  * Automatically injects Atom and JSON feed links into the page header extension.
@@ -82,16 +85,7 @@ export default function () {
 
         // 2. Tag Pages
         if (page.data.type === "tag" && page.data.tag) {
-          // Access slugify helper from site.renderer.helpers (registered by slugify_urls plugin)
-          const slugifyHelper = (site as any).renderer.helpers.get("slugify");
-          const slugify = slugifyHelper ? slugifyHelper[0] : null;
-
-          if (!slugify) {
-            throw new Error(
-              `[preprocessor] 'slugify' helper missing. Is 'slugify_urls' plugin enabled?`,
-            );
-          }
-          const slug = slugify(page.data.tag);
+          const slug = slugify(page.data.tag as string, { lowercase: true });
           injectFeedSources(page, `/tags/${slug}.atom`, `/tags/${slug}.json`);
 
           // Custom override for 'kedi' tag: promote subversive.pics

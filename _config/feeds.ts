@@ -4,8 +4,11 @@
  */
 
 import feed, { Options as FeedOptions } from "lume/plugins/feed.ts";
+import createSlugifier from "lume/core/slugifier.ts";
 import { site as siteData } from "./metadata.ts";
 import feedConfigs from "../src/_data/feeds.ts";
+
+const slugify = createSlugifier();
 
 export default function (options: FeedOptions = {}) {
   return (site: Lume.Site) => {
@@ -71,17 +74,9 @@ export default function (options: FeedOptions = {}) {
     // 2. Per-tag feeds
     site.use(feed(() => {
       const tags = site.search.values("tags");
-      const slugifyHelper = (site as any).renderer.helpers.get("slugify");
-      const slugify = slugifyHelper ? slugifyHelper[0] : null;
-
-      if (!slugify) {
-        throw new Error(
-          `[feeds] 'slugify' helper missing. Is 'slugify_urls' plugin enabled?`,
-        );
-      }
 
       return tags.map((tag) => {
-        const slug = slugify(tag);
+        const slug = slugify(tag, { lowercase: true });
         return {
           output: [`/tags/${slug}.atom`, `/tags/${slug}.json`],
 
