@@ -80,8 +80,8 @@
     <div
       class="h-6 flex items-center {{ if isCentered }}justify-center{{ /if }}"
     >
-      {{ if it.breadcrumbs }}
-        {{ await it.comp.layout.Breadcrumbs({ url: it.url }) }}
+      {{ if it.breadcrumbs && !it.sticky_header_active }}
+        {{ await it.comp.layout.Breadcrumbs(it) }}
       {{ else if backlinkData }}
         {{
           await it.comp.base.Backlink({

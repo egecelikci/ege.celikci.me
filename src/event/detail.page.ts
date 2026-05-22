@@ -1,8 +1,6 @@
 import { exists } from "@std/fs/exists";
 import { getLinkInfo } from "../../utils/links.ts";
 
-export const searchable = true;
-
 async function collectGalleryImages(
   eventId: string,
   basePath: string,
@@ -169,6 +167,9 @@ export default async function* ({ mb_events, events }: any) {
     yield {
       url: `/event/${event.id}/`,
       type: "event",
+      navigation: {
+        parent: "/events/",
+      },
       title: event.displayTitle || event.name,
       event: { ...event, local },
       gallery,

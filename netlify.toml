@@ -50,6 +50,16 @@
     force = true
 
 [[redirects]]
+    from = "/event"
+    to = "/events/"
+    status = 301
+
+[[redirects]]
+    from = "/event/"
+    to = "/events/"
+    status = 301
+
+[[redirects]]
     from = "https://ege.celikci.me/notes/20251201173255"
     to = "https://ege.celikci.me/notes/20251201143255"
     status = 302

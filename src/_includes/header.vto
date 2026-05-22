@@ -8,24 +8,12 @@
     class="flex items-center justify-between gap-3 py-4 typography-label font-normal"
   >
     <div class="flex items-center gap-3">
-      {{# 1. SITE LOGO / BRAND #}}
-      <a
-        href="/"
-        rel="home"
-        class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline"
+      {{# 1. CONTEXTUAL NAVIGATION (Breadcrumbs handle root + path) #}}
+      <div
+        class="relative z-10 pointer-events-auto reveal-self"
       >
-        {{ site.host }}
-      </a>
-
-      {{# 2. BREADCRUMBS (Contextual navigation) #}}
-      {{ if url !== "/" }}
-        <span class="text-text-dim select-none">/</span>
-        <div
-          class="relative z-10 pointer-events-auto reveal-self"
-        >
-          {{ comp.layout.Breadcrumbs({ url: url }) }}
-        </div>
-      {{ /if }}
+        {{ comp.layout.Breadcrumbs(it) }}
+      </div>
     </div>
   </div>
 {{ /set }}

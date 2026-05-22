@@ -1,41 +1,90 @@
 {{#
   Component: Breadcrumbs (System Component)
-  Minimalist text-only breadcrumbs.
+  Minimalist text-only breadcrumbs including site root and hierarchical bridging.
 
   Props:
-    - url: string (required)
-    - classes: additional classes
+    - it.url: string (required)
+    - it.classes: additional classes
+    - it.navigation: optional structure override
 #}}
 
-{{ set items = it.nav.breadcrumb(it.url) }}
+{{ set breadcrumbItems = nav.breadcrumb(it.url) }}
 
-{{ if items.length > 1 }}
-  <nav
-    aria-label="Breadcrumb"
-    class="relative z-20 flex items-center typography-sublabel {{ it.classes }}"
-  >
-    <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
-      {{ for index, item of items }}
-        {{ if item.data.url === "/" }}{{ continue }}{{ /if }}
-        <li class="flex items-center gap-2">
-          {{ if index === items.length - 1 }}
-            <span class="font-bold text-text-muted">
-              {{ item.data.title || item.slug }}
-            </span>
-          {{ else }}
-            <a
-              href="{{ item.data.url }}"
-              class="reveal:text-secondary transition-all duration-300 no-underline text-text-muted border-b border-transparent hover:border-secondary/30 pb-px"
-            >
-              {{ item.data.title || item.slug }}
-            </a>
-          {{ /if }}
+{{#
+  BRIDGE LOGIC:
+  If navigation.parent is provided, we use it to construct the trail
+  to bypass virtual paths (e.g. singular /event/ vs plural /events/).
+#}}
+{{ if it.navigation?.parent }}
+  {{ set parentTrail = nav.breadcrumb(it.navigation.parent) }}
 
-          {{ if index < items.length - 1 }}
-            <span class="select-none opacity-50">/</span>
-          {{ /if }}
-        </li>
-      {{ /for }}
-    </ol>
-  </nav>
+  {{# Find the page item (it might not be in Lume's nav yet if generator) #}}
+  {{ set currentItem = breadcrumbItems[breadcrumbItems.length - 1] }}
+
+  {{# If Lume couldn't find the item or it's a virtual node, create a fake one for the trail #}}
+  {{ if !currentItem || currentItem.data?.url !== it.url }}
+    {{
+      set currentItem = {
+        data: { url: it.url, title: it.title },
+        slug: it.url.split("/").filter(Boolean).pop(),
+      }
+    }}
+  {{ /if }}
+
+  {{ set breadcrumbItems = [...parentTrail, currentItem] }}
 {{ /if }}
+
+<nav
+  aria-label="Breadcrumb"
+  class="relative z-20 flex items-center typography-sublabel {{ it.classes }}"
+>
+  <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
+    {{# 1. SITE ROOT (Always shown) #}}
+    <li class="flex items-center gap-2">
+      {{ if it.url === "/" }}
+        <span class="font-bold text-text">
+          {{ site.host }}
+        </span>
+      {{ else }}
+        <a
+          href="/"
+          rel="home"
+          class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline"
+        >
+          {{ site.host }}
+        </a>
+      {{ /if }}
+
+      {{ if breadcrumbItems.length > 1 }}
+        <span class="text-text-dim select-none">/</span>
+      {{ /if }}
+    </li>
+
+    {{# 2. CONTEXTUAL ITEMS (Excluding root which is handled above) #}}
+    {{ for index, item of breadcrumbItems }}
+      {{ if item.data?.url === "/" }}{{ continue }}{{ /if }}
+
+      {{ set itemData = item.data || {} }}
+      {{ set itemTitle = itemData.title || item.slug || "page" }}
+
+      <li class="flex items-center gap-2">
+        {{ if index === breadcrumbItems.length - 1 }}
+          <span class="font-bold text-text-muted">
+            {{ itemTitle }}
+          </span>
+        {{ else }}
+          <a
+            href='{{ itemData.url || "#" }}'
+            class="reveal:text-secondary transition-all duration-300 no-underline text-text-muted border-b border-transparent hover:border-secondary/30 pb-px"
+          >
+            {{ itemTitle }}
+          </a>
+        {{ /if }}
+
+        {{ if index < breadcrumbItems.length - 1 }}
+          <span class="select-none opacity-50">/</span>
+        {{ /if }}
+      </li>
+    {{ /for }}
+  </ol>
+</nav>
