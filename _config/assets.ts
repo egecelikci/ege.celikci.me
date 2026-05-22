@@ -69,7 +69,7 @@ export default function (options: AssetOptions = {}) {
       .use(picture())
       .use(transformImages())
       // Static copies
-      .copy("assets/images")
+      .add("assets/images")
       // Main entry points
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
