@@ -29040,6 +29040,57 @@
               "name": "Crystal Castles"
             }
           ],
+          "barcode": "6354527460002",
+          "country": "HK",
+          "date": "2008",
+          "disambiguation": "",
+          "id": "0ea4ed5b-c935-45c5-a068-a55478bee5c8",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "0373cdff-eac8-3fbc-92dc-36a607da06d1",
+                "iso-3166-1-codes": [
+                  "HK"
+                ],
+                "iso-3166-2-codes": [
+                  "CN-91"
+                ],
+                "name": "Hong Kong",
+                "sort-name": "Hong Kong",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2008"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Crystal Castles"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "CA",
+                "disambiguation": "",
+                "id": "b1570544-93ab-4b2b-8398-131735394202",
+                "name": "Crystal Castles",
+                "sort-name": "Crystal Castles",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Crystal Castles"
+            }
+          ],
           "barcode": "5413356590050",
           "country": "XE",
           "date": "2008-04-28",
@@ -29066,6 +29117,54 @@
           ],
           "status": "Official",
           "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Crystal Castles"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "CA",
+                "disambiguation": "",
+                "id": "b1570544-93ab-4b2b-8398-131735394202",
+                "name": "Crystal Castles",
+                "sort-name": "Crystal Castles",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Crystal Castles"
+            }
+          ],
+          "barcode": "",
+          "country": "CA",
+          "date": "2008",
+          "disambiguation": "watermarked",
+          "id": "13caf71f-3bb3-4ec6-b9fe-6c13da27badd",
+          "packaging": "Jewel Case",
+          "packaging-id": "ec27701a-4a22-37f4-bfac-6616e0f9750a",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "71bbafaa-e825-3e15-8ca9-017dcad1748b",
+                "iso-3166-1-codes": [
+                  "CA"
+                ],
+                "name": "Canada",
+                "sort-name": "Canada",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2008"
+            }
+          ],
+          "status": "Promotion",
+          "status-id": "518ffc83-5cde-34df-8627-81bff5093d92",
           "text-representation": {
             "language": "eng",
             "script": "Latn"
@@ -31537,6 +31636,54 @@
               "name": "Crystal Castles"
             }
           ],
+          "barcode": "",
+          "country": "XE",
+          "date": "2008",
+          "disambiguation": "",
+          "id": "80648e14-8d30-487e-906f-346165acdf69",
+          "packaging": "Cardboard/Paper Sleeve",
+          "packaging-id": "f7101ce3-0384-39ce-9fde-fbbd0044d35f",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "name": "Europe",
+                "sort-name": "Europe",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2008"
+            }
+          ],
+          "status": "Promotion",
+          "status-id": "518ffc83-5cde-34df-8627-81bff5093d92",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Crystal Castles"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "CA",
+                "disambiguation": "",
+                "id": "b1570544-93ab-4b2b-8398-131735394202",
+                "name": "Crystal Castles",
+                "sort-name": "Crystal Castles",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Crystal Castles"
+            }
+          ],
           "barcode": "4988013459342",
           "country": "JP",
           "date": "2008-03-19",
@@ -31861,6 +32008,68 @@
                 "type-id": null
               },
               "date": "2008-04-28"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Crystal Castles"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "CA",
+                "disambiguation": "",
+                "id": "b1570544-93ab-4b2b-8398-131735394202",
+                "name": "Crystal Castles",
+                "sort-name": "Crystal Castles",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Crystal Castles"
+            }
+          ],
+          "barcode": "5021456154401",
+          "country": "AU",
+          "date": "2008",
+          "disambiguation": "",
+          "id": "f760baf8-3b8f-43df-b2b9-085f67df8ba7",
+          "packaging": "Digipak",
+          "packaging-id": "8f931351-d2e2-310f-afc6-37b89ddba246",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "106e0bec-b638-3b37-b731-f53d507dc00e",
+                "iso-3166-1-codes": [
+                  "AU"
+                ],
+                "name": "Australia",
+                "sort-name": "Australia",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2008"
+            },
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8524c7d9-f472-3890-a458-f28d5081d9c4",
+                "iso-3166-1-codes": [
+                  "NZ"
+                ],
+                "name": "New Zealand",
+                "sort-name": "New Zealand",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2008"
             }
           ],
           "status": "Official",
@@ -37209,7 +37418,7 @@
             "language": "eng",
             "script": "Latn"
           },
-          "title": "Good Kid, M.A.A.D City"
+          "title": "good kid, m.A.A.d city"
         },
         {
           "artist-credit": [
@@ -39366,6 +39575,67 @@
                 "type-id": null
               },
               "date": "2023-10-06"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "VOIR DIRE"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "8b22acd6-20e6-4463-a75c-c14b5cfdb666",
+                "name": "Earl Sweatshirt",
+                "sort-name": "Earl Sweatshirt",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": " & ",
+              "name": "Earl Sweatshirt"
+            },
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "hip hop DJ & producer",
+                "id": "03f3deb7-0419-4bf9-a1e7-511946385717",
+                "name": "The Alchemist",
+                "sort-name": "Alchemist, The",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "The Alchemist"
+            }
+          ],
+          "barcode": null,
+          "country": "XW",
+          "date": "2025-06-20",
+          "disambiguation": "",
+          "id": "8b944ebd-9f9c-44f2-bf20-4ad3a1a1bce6",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-06-20"
             }
           ],
           "status": "Official",
@@ -45119,9 +45389,9 @@
               "name": "Massive Attack"
             }
           ],
-          "barcode": "",
-          "country": null,
-          "date": "2006",
+          "barcode": "00724384559953",
+          "country": "XW",
+          "date": "2006-08-28",
           "disambiguation": "",
           "id": "66bea1b8-1e6a-4fd2-84bd-4a4459eca0b0",
           "packaging": "None",
@@ -45129,8 +45399,18 @@
           "quality": "normal",
           "release-events": [
             {
-              "area": null,
-              "date": "2006"
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2006-08-28"
             }
           ],
           "status": "Official",
@@ -45381,54 +45661,6 @@
           "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
           "text-representation": {
             "language": "eng",
-            "script": "Latn"
-          },
-          "title": "Mezzanine"
-        },
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "country": "GB",
-                "disambiguation": "",
-                "id": "10adbe5e-a2c0-4bf3-8249-2b4cbf6e6ca8",
-                "name": "Massive Attack",
-                "sort-name": "Massive Attack",
-                "type": "Group",
-                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
-              },
-              "joinphrase": "",
-              "name": "Massive Attack"
-            }
-          ],
-          "barcode": "724384559953",
-          "country": "XW",
-          "date": "",
-          "disambiguation": "",
-          "id": "ad224474-e534-43d0-a6af-4959d063a460",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "name": "[Worldwide]",
-                "sort-name": "[Worldwide]",
-                "type": null,
-                "type-id": null
-              },
-              "date": ""
-            }
-          ],
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "text-representation": {
-            "language": null,
             "script": "Latn"
           },
           "title": "Mezzanine"
@@ -67988,6 +68220,54 @@
               "name": "JPEGMAFIA"
             }
           ],
+          "barcode": "825702205795",
+          "country": "XW",
+          "date": "2026-03-20",
+          "disambiguation": "",
+          "id": "52c0ab04-b171-41ae-bdb0-839386d7094f",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2026-03-20"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "All My Heroes Are Cornballs."
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "c42e60f4-4520-4954-b6e4-82bbdf532c11",
+                "name": "JPEGMAFIA",
+                "sort-name": "JPEGMAFIA",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "JPEGMAFIA"
+            }
+          ],
           "barcode": "00842812118524",
           "country": null,
           "date": "2019-09-13",
@@ -68201,6 +68481,54 @@
             "script": "Latn"
           },
           "title": "All My Heroes Are Cornballs (Directors Cut)"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "c42e60f4-4520-4954-b6e4-82bbdf532c11",
+                "name": "JPEGMAFIA",
+                "sort-name": "JPEGMAFIA",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "JPEGMAFIA"
+            }
+          ],
+          "barcode": "",
+          "country": "XW",
+          "date": "2025-02-11",
+          "disambiguation": "Bandcamp, with alternate cover and \"touched by an angel\"",
+          "id": "d26d4f4e-1401-4a3d-94b0-bd25f2131f4b",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-02-11"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "All My Heroes Are Cornballs"
         }
       ],
       "secondary-type-ids": [],
@@ -72408,6 +72736,54 @@
               "name": "Kanye West"
             }
           ],
+          "barcode": null,
+          "country": "US",
+          "date": "2007-09-11",
+          "disambiguation": "",
+          "id": "28613215-350d-4f05-9aac-2ef79653d67a",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2007-09-11"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "title": "Graduation"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "formerly Kanye West",
+                "id": "164f0d73-1234-4e2c-8743-d77bf2191051",
+                "name": "Ye",
+                "sort-name": "Ye",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Kanye West"
+            }
+          ],
           "barcode": "00602517483507",
           "country": "XW",
           "date": "2019-02-15",
@@ -72434,6 +72810,54 @@
           ],
           "status": "Official",
           "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Graduation"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "formerly Kanye West",
+                "id": "164f0d73-1234-4e2c-8743-d77bf2191051",
+                "name": "Ye",
+                "sort-name": "Ye",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ye"
+            }
+          ],
+          "barcode": null,
+          "country": "XW",
+          "date": "2007-09-11",
+          "disambiguation": "",
+          "id": "48fd4843-3815-4a40-bfeb-a291c7f30f9c",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2007-09-11"
+            }
+          ],
+          "status": "Bootleg",
+          "status-id": "1156806e-d06a-38bd-83f0-cf2284a808b9",
           "text-representation": {
             "language": "eng",
             "script": "Latn"
@@ -78112,54 +78536,6 @@
           "country": "XW",
           "date": "2017-07-21",
           "disambiguation": "",
-          "id": "35c79c66-5f12-4264-9f7d-a64aafbf4d12",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "release-events": [
-            {
-              "area": {
-                "disambiguation": "",
-                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
-                "iso-3166-1-codes": [
-                  "XW"
-                ],
-                "name": "[Worldwide]",
-                "sort-name": "[Worldwide]",
-                "type": null,
-                "type-id": null
-              },
-              "date": "2017-07-21"
-            }
-          ],
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "title": "Flower Boy (Explicit)"
-        },
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "country": "US",
-                "disambiguation": "",
-                "id": "f6beac20-5dfe-4d1f-ae02-0b0a740aafd6",
-                "name": "Tyler, The Creator",
-                "sort-name": "Tyler, The Creator",
-                "type": "Person",
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
-              },
-              "joinphrase": "",
-              "name": "Tyler, The Creator"
-            }
-          ],
-          "barcode": null,
-          "country": "XW",
-          "date": "2017-07-21",
-          "disambiguation": "",
           "id": "523f5e88-9988-436d-ab60-6d514c1f0e15",
           "packaging": null,
           "packaging-id": null,
@@ -78398,41 +78774,7 @@
                 "type-id": null
               },
               "date": "2017-07-21"
-            }
-          ],
-          "status": "Official",
-          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
-          "text-representation": {
-            "language": "eng",
-            "script": "Latn"
-          },
-          "title": "Flower Boy"
-        },
-        {
-          "artist-credit": [
-            {
-              "artist": {
-                "country": "US",
-                "disambiguation": "",
-                "id": "f6beac20-5dfe-4d1f-ae02-0b0a740aafd6",
-                "name": "Tyler, The Creator",
-                "sort-name": "Tyler, The Creator",
-                "type": "Person",
-                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
-              },
-              "joinphrase": "",
-              "name": "Tyler, The Creator"
-            }
-          ],
-          "barcode": "886446626635",
-          "country": "US",
-          "date": "2017-07-21",
-          "disambiguation": "",
-          "id": "c9e80a5c-6f59-4d06-9241-e0173810bbe5",
-          "packaging": "None",
-          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
-          "quality": "normal",
-          "release-events": [
+            },
             {
               "area": {
                 "disambiguation": "",
@@ -78451,7 +78793,7 @@
           "status": "Official",
           "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
           "text-representation": {
-            "language": null,
+            "language": "eng",
             "script": "Latn"
           },
           "title": "Flower Boy"
@@ -89504,6 +89846,54 @@
               "name": "Death Grips"
             }
           ],
+          "barcode": null,
+          "country": "US",
+          "date": "2025-05-01",
+          "disambiguation": "",
+          "id": "dc3ce500-edbe-4729-8179-940a1f27a463",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "sort-name": "United States",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-05-01"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Exmilitary"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "f9133036-ab3d-4e97-bd11-7a2c98ad148a",
+                "name": "Death Grips",
+                "sort-name": "Death Grips",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Death Grips"
+            }
+          ],
           "barcode": "",
           "country": "XW",
           "date": "2011-04-25",
@@ -89917,6 +90307,54 @@
             "script": "Latn"
           },
           "title": "Trinity (Deluxe)"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "multi-instrumentalist and vocalist Alexandra Drewchin",
+                "id": "7f5a2d26-8625-4788-bafd-0034936895ae",
+                "name": "Eartheater",
+                "sort-name": "Eartheater",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Eartheater"
+            }
+          ],
+          "barcode": "810072043269",
+          "country": "XW",
+          "date": "2019-10-18",
+          "disambiguation": "",
+          "id": "bf665056-3492-46fa-96f1-02ca4bd91cc9",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2019-10-18"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Trinity"
         },
         {
           "artist-credit": [
