@@ -11,17 +11,8 @@ import remarkGfm from "remark-gfm";
 import remarkSmartypants from "remark-smartypants";
 import remarkToc from "remark-toc";
 
-import {
-  alistralLangs,
-  loadAlistralTheme,
-  transformerFilename,
-} from "../src/_includes/alistral-shiki.ts";
-
 export default function (options: RemarkOptions = {}) {
   return async (site: Lume.Site) => {
-    const lotusTheme = await loadAlistralTheme("kanagawa-lotus");
-    const waveTheme = await loadAlistralTheme("kanagawa-wave");
-
     site.use(remark({
       ...options,
       remarkPlugins: [
@@ -50,11 +41,9 @@ export default function (options: RemarkOptions = {}) {
             "json",
             "markdown",
             "typescript",
-            ...alistralLangs,
           ],
-          themes: { light: lotusTheme, dark: waveTheme },
+          themes: { light: "kanagawa-lotus", dark: "kanagawa-wave" },
           defaultColor: "light-dark()",
-          transformers: [transformerFilename()],
         }],
         ...(options.rehypePlugins || []),
       ],
