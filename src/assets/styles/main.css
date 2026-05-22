@@ -84,7 +84,7 @@
   --color-border-subtle: color-mix(
     in srgb,
     var(--color-border),
-    transparent 80%
+    transparent 60%
   );
   --color-surface-subtle: color-mix(
     in srgb,
@@ -655,7 +655,7 @@
   }
 
   &:hover span:not([class*="reveal-slide"]) {
-    @apply border-current/30;
+    @apply border-current/50;
   }
 }
 
