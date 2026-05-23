@@ -6,6 +6,7 @@
     "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
     "@std/fs": "jsr:@std/fs@^1.0.23",
     "@std/path": "jsr:@std/path@^1.1.4",
+    "@std/yaml": "jsr:@std/yaml@^1.1.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "@types/leaflet": "npm:@types/leaflet@^1.9.21",
     "photoswipe": "npm:photoswipe@^5.4.4",
