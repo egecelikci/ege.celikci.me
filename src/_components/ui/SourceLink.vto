@@ -1,0 +1,28 @@
+{{#
+  SourceLink Component
+  Generates a link to a file in the Codeberg repository.
+
+  Props:
+  - path?: string (Direct path, e.g., "utils/posse.ts")
+  - name?: string (Filename to search for, e.g., "posse.ts")
+  - text?: string (Optional custom text)
+  - classes?: string (Optional custom classes)
+  - title?: string (Optional title attribute)
+#}}
+
+{{ set finalPath = it.path || "" }}
+{{ if !finalPath && it.name }}
+  {{ set finalPath = it.name |> findFile }}
+{{ /if }}
+
+{{# Prepend 'src' if it's a page-relative sourcePath (starts with /) #}}
+{{ if finalPath.startsWith("/") }}
+  {{ set finalPath = "src" + finalPath }}
+{{ /if }}
+
+<a
+  href="{{ finalPath |> resolveSourceUrl }}"
+  class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap {{ it.classes || '' }}"
+  {{ if it.title }}
+    title="{{ it.title }}"{{ /if }}
+>{{ it.text || finalPath }}</a>

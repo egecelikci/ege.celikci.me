@@ -348,4 +348,37 @@ export const filters = {
         .filter((entry) => !filters.isOwnWebmention(entry)).length,
     );
   },
+
+  resolveSourceUrl: function (path: string): string {
+    const repoPath = path.startsWith("/") ? path.slice(1) : path;
+    return `https://codeberg.org/${authorData.username}/${siteData.host}/src/branch/main/${repoPath}`;
+  },
+
+  findFile: function (filename: string): string {
+    // Simple recursive search of project root
+    const search = (dir: string): string | null => {
+      try {
+        for (const entry of Deno.readDirSync(dir)) {
+          if (entry.name === filename) {
+            return dir === "." ? entry.name : `${dir}/${entry.name}`;
+          }
+          if (
+            entry.isDirectory &&
+            !["dist", ".git", "node_modules", "_cache", ".netlify"].includes(
+              entry.name,
+            )
+          ) {
+            const found = search(
+              dir === "." ? entry.name : `${dir}/${entry.name}`,
+            );
+            if (found) return found;
+          }
+        }
+      } catch {
+        return null;
+      }
+      return null;
+    };
+    return search(".") || filename;
+  },
 };
