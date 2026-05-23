@@ -11,7 +11,7 @@ menu:
 
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
-  <div class="not-prose">
+  <div class="h-feed not-prose">
     {{ await comp.ui.EntryTimeline({ entries: results }) }}
   </div>
 {{ else }}

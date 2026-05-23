@@ -117,8 +117,9 @@
   --color-status-inactive: var(--color-text-muted);
 
   --font-sans: "Josefin Sans", system-ui, sans-serif;
-  --font-serif: Georgia, serif;
+  --font-serif: "Josefin Slab", serif;
   --font-mono: "Inconsolata", monospace;
+
   --font-accent: "Azeret Mono", monospace;
 
   --width-narrow: 65ch;
@@ -136,6 +137,17 @@
   --flow-space-base: 1.5em;
   --flow-space-tight: 0.75em;
   --flow-space-loose: 2.5em;
+  --flow-space-markdown: 0.5rem;
+
+  /* Typographic System */
+  --font-weight-body: 350;
+  --letter-spacing-h1: 0.25rem;
+  --letter-spacing-h2: 0.125rem;
+  --letter-spacing-h3: 0.05rem;
+
+  --size-h1: 2rem;
+  --size-h2: 1.325rem;
+  --size-h3: 1rem;
 
   /* Header height for scroll offset */
   --header-height: 5rem;
@@ -167,11 +179,13 @@
   }
 
   body {
+    @apply font-sans;
     background-color: var(--color-bg);
     color: var(--color-text);
     transition: background-color 0.3s ease, color 0.3s ease;
-    font-size: var(--size-step-0);
-    line-height: 1.7;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: var(--font-weight-body);
   }
 
   #site-header {
@@ -309,29 +323,76 @@
     --tw-prose-code: var(--color-text);
 
     & > * + * {
-      margin-block-start: var(--flow-space, 1.5em);
+      margin-block-start: var(--flow-space, var(--flow-space-markdown));
     }
 
-    p {
-      max-width: 75ch;
-      line-height: 1.7;
+    p,
+    li {
+      @apply font-sans text-base leading-6;
+      font-weight: var(--font-weight-body);
+      margin-top: 0.5rem;
+      max-width: 70ch;
+      text-wrap: pretty;
+    }
+
+    /* Subtle lead for markdown content */
+    & > p:first-of-type {
+      @apply text-text group-reveal:text-primary transition-colors duration-500;
+    }
+
+    /* Better quotes */
+    blockquote {
+      @apply border-l-4 border-primary/20 pl-6 py-1 italic bg-surface-subtle/30 rounded-r-lg;
+      font-weight: var(--font-weight-body);
     }
 
     /* Fix headings in markdown */
     :is(h1, h2, h3, h4, h5, h6) {
-      @apply font-sans font-bold relative;
-      margin-bottom: 0.5em;
+      @apply font-sans font-bold relative text-balance;
+      word-break: break-word;
+    }
+
+    :is(h1, h2, h3) {
+      @apply uppercase;
+      margin-block: 2rem !important;
     }
 
     h1 {
-      font-size: var(--size-step-3);
+      font-size: var(--size-h1);
+      line-height: 3rem;
+      letter-spacing: var(--letter-spacing-h1);
+      margin-top: -0.5rem !important;
     }
     h2 {
-      font-size: var(--size-step-2);
+      font-size: var(--size-h2);
+      line-height: 2rem;
+      letter-spacing: var(--letter-spacing-h2);
+      margin-top: 0.125rem !important;
     }
     h3 {
-      font-size: var(--size-step-1);
+      font-size: var(--size-h3);
+      line-height: 1.5rem;
+      letter-spacing: var(--letter-spacing-h3);
+      margin-top: 0.5rem !important;
     }
+    h4 {
+      @apply text-base mt-8 mb-2;
+    }
+
+    hr {
+      @apply my-8 border-t border-border-subtle;
+    }
+
+    /* Generic pre blocks (non-figure) */
+    pre:not(figure pre) {
+      @apply my-6 p-4 rounded-lg bg-surface-subtle border border-border-subtle
+        font-mono text-sm overflow-x-auto;
+    }
+  }
+
+  /* Blog-style content separator */
+  .e-content {
+    @apply pt-8 border-t border-text-muted/20;
   }
 
   /* Inline code styling */
@@ -367,11 +428,11 @@
 
   /* Link styles */
   .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {
-    @apply text-primary hover:text-primary-offset underline
-      decoration-primary-muted underline-offset-2 transition-colors;
+    @apply text-primary hover:text-primary-offset no-underline
+      border-b border-primary/20 hover:border-primary-offset transition-all
+      pb-px;
     box-shadow: none !important;
   }
-
   /* Hover effect on code inside links */
   .markdown a:not(.btn, .heading-anchor):hover code {
     @apply bg-primary-muted border-primary/30 text-primary;
@@ -769,16 +830,6 @@
   }
 }
 
-.markdown > p {
-  @apply my-0;
-}
-.markdown ul,
-.markdown ol {
-  @apply space-y-2;
-}
-.markdown li {
-  @apply my-0 leading-relaxed;
-}
 .markdown li > code,
 .markdown a:not(.btn, .heading-anchor) > code {
   @apply bg-transparent border-0 px-0 py-0 shadow-none;
