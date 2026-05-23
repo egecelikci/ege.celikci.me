@@ -8,63 +8,70 @@ import { author, site as siteMeta } from "../_config/metadata.ts";
  * Automates cross-posting notes to Fediverse and Bluesky.
  *
  * Safety features:
- * 1. Production Only: Only runs if NETLIFY=true environment variable is set.
+ * 1. Production Only: Only runs if NETLIFY=true AND CI=true.
  * 2. Recent Only: Only syndicates notes created in the last 24 hours.
+ * 3. File Safety: Only stages the exact source files modified by this plugin.
+ *
+ * Front matter opt-in:
+ *   syndication:             — empty key opts in; filled in by plugin after posting
+ *   posse:
+ *     content: "Custom text" — explicit text for all platforms
+ *     use_title: true        | use the page title as body
+ *     mastodon:
+ *       content: "..."       — platform-specific override
+ *     bluesky:
+ *       content: "..."
  */
 export default function () {
   return (site: any) => {
-    let hasUpdates = false; // scoped to this plugin instance
+    let hasUpdates = false;
+    // Absolute paths of modified source files — used for surgical git staging
+    const updatedFiles = new Set<string>();
 
-    // We use site.process to access the fully rendered HTML and parsed metadata
     site.process([".html"], async (pages: any[]) => {
-      // CRITICAL SAFETY: Never syndicate during local development or non-CI builds
       const isNetlify = Deno.env.get("NETLIFY") === "true";
-      if (!isNetlify) return;
+      const isCI = Deno.env.get("CI") === "true";
+      if (!isNetlify || !isCI) return;
 
-      // Filter: has opt-in flag 'syndicate: true' OR an existing 'syndication' block
-      const notes = pages.filter((p) =>
-        p.data.type === "note" &&
-        (p.data.syndicate === true || p.data.syndication)
+      // Use 'in' to detect keys even when their value is null (empty YAML key).
+      // An empty `syndication:` line opts the note in; the plugin fills it in after posting.
+      const notes = pages.filter((p) => {
+        if (p.data.type !== "note") return false;
+        return "syndication" in p.data;
+      });
+
+      console.log(
+        `[posse] Checking ${notes.length} note(s) for syndication...`,
       );
 
       for (const page of notes) {
-        // Handle syndication results (may be null/absent for new notes)
-        const syndication = (typeof page.data.syndication === "object" &&
-            page.data.syndication !== null)
+        const syndication = typeof page.data.syndication === "object" &&
+            page.data.syndication !== null
           ? page.data.syndication
           : {};
 
-        // Safety: only syndicate if created in the last 24h
         const noteDate = page.data.date instanceof Date
           ? page.data.date
           : new Date(page.data.date);
-        const isRecent =
-          (new Date().getTime() - noteDate.getTime()) / (1000 * 60 * 60) < 24;
+        const hoursOld = (Date.now() - noteDate.getTime()) / (1000 * 60 * 60);
+        const isRecent = hoursOld < 24;
 
         const needsMastodon = !syndication.mastodon && isRecent;
         const needsBluesky = !syndication.bluesky && isRecent;
 
+        console.log(
+          `[posse] ${page.data.url} — ${hoursOld.toFixed(1)}h old.` +
+            ` Needs: ${needsMastodon ? "Mastodon" : "—"} ${
+              needsBluesky ? "Bluesky" : "—"
+            }`,
+        );
+
         if (!needsMastodon && !needsBluesky) continue;
 
-        console.log(`[posse] Processing: ${page.data.url}`);
-
-        // Extract media and prepare content
-        const postData = {
-          url: siteMeta.url + page.data.url,
-          tags: page.data.tags || [],
-          // Extract images from the rendered DOM
-          images: Array.from(page.document.querySelectorAll("img")).map((
-            img: any,
-          ) => ({
-            alt: img.getAttribute("alt") || "",
-            path: img.getAttribute("src"),
-          })).filter((img: any) => img.path && !img.path.startsWith("http")),
-        };
-
+        const postData = buildPostData(page);
         const updatedUrls: Record<string, string> = {};
         const usedContent: Record<string, string> = {};
 
-        // SYNDICATE: Fediverse
         if (needsMastodon) {
           try {
             const content = getPosseContent(page, "mastodon");
@@ -81,7 +88,6 @@ export default function () {
           }
         }
 
-        // SYNDICATE: Bluesky
         if (needsBluesky) {
           try {
             const content = getPosseContent(page, "bluesky");
@@ -98,35 +104,45 @@ export default function () {
           }
         }
 
-        // WRITE BACK: Update the source markdown file
-        if (Object.keys(updatedUrls).length > 0) {
-          const sourcePath = join(site.src(), page.sourcePath.slice(1));
-          await updateSourceFile(sourcePath, updatedUrls, usedContent);
+        if (Object.keys(updatedUrls).length === 0) continue;
 
-          // Update in-memory data for the current build
-          page.data.syndication = { ...syndication, ...updatedUrls };
-          hasUpdates = true;
-        }
+        // page.sourcePath is a Lume v2 getter that returns the path relative
+        // to the source root (e.g. "/notes/my-note.md"). join() with site.src()
+        // produces the absolute filesystem path for reading/writing.
+        const absSourcePath = join(
+          site.src(),
+          page.sourcePath.slice(1),
+        );
+
+        await updateSourceFile(absSourcePath, updatedUrls, usedContent);
+
+        page.data.syndication = { ...syndication, ...updatedUrls };
+        hasUpdates = true;
+        updatedFiles.add(absSourcePath); // absolute path for git add
       }
     });
 
-    // Git Operations: Push updates back to the repo
     site.addEventListener("afterBuild", async () => {
       const isNetlify = Deno.env.get("NETLIFY") === "true";
-      if (!isNetlify || !hasUpdates) return;
+      const isCI = Deno.env.get("CI") === "true";
+      if (!isNetlify || !isCI || !hasUpdates) return;
 
       const sshKeyRaw = Deno.env.get("BOT_SSH_KEY");
       if (!sshKeyRaw) {
-        console.warn("[posse] No BOT_SSH_KEY found. Skipping git push.");
+        console.warn("[posse] BOT_SSH_KEY not set. Skipping git push.");
         return;
       }
 
-      const sshKeyPath = await Deno.makeTempFile();
-      await Deno.writeTextFile(sshKeyPath, sshKeyRaw.replace(/\\n/g, "\n"));
+      // Write key to a temp file with strict permissions
+      const sshKeyPath = await Deno.makeTempFile({ prefix: "posse_ssh_" });
+      await Deno.writeTextFile(
+        sshKeyPath,
+        sshKeyRaw.replace(/\\n/g, "\n"),
+      );
       await Deno.chmod(sshKeyPath, 0o600);
 
       try {
-        await commitAndPush(sshKeyPath);
+        await commitAndPush(sshKeyPath, Array.from(updatedFiles));
       } finally {
         await Deno.remove(sshKeyPath);
       }
@@ -134,29 +150,58 @@ export default function () {
   };
 }
 
-// --- Status Builder ---
+// ---------------------------------------------------------------------------
+// Content helpers
+// ---------------------------------------------------------------------------
+
+function buildPostData(page: any) {
+  return {
+    url: siteMeta.url + page.data.url,
+    tags: (page.data.tags ?? []) as string[],
+    images: (
+      Array.from(page.document.querySelectorAll("img")) as any[]
+    )
+      .map((img) => ({
+        alt: img.getAttribute("alt") ?? "",
+        path: img.getAttribute("src") as string,
+      }))
+      .filter((img) => img.path && !img.path.startsWith("http")),
+  };
+}
 
 /**
- * Resolves the content to be used for a social media post based on opt-in rules.
+ * Resolves the body text for a post, in priority order:
+ *   1. Platform-specific posse.<platform>.content
+ *   2. Generic posse.content
+ *   3. Page title (if posse.use_title is true)
+ *   4. Empty string → link-only post
  */
-function getPosseContent(page: any, platform: "mastodon" | "bluesky"): string {
+function getPosseContent(
+  page: any,
+  platform: "mastodon" | "bluesky",
+): string {
   const posse = page.data.posse;
   if (typeof posse === "object" && posse !== null) {
-    // 1. Platform-specific override
-    if (posse[platform]?.content) return posse[platform].content;
-    // 2. Generic content override
-    if (posse.content) return posse.content;
-    // 3. Opt-in to use title
-    if (posse.use_title) return page.data.title || "";
+    if (posse[platform]?.content) return String(posse[platform].content);
+    if (posse.content) return String(posse.content);
+    if (posse.use_title) return String(page.data.title ?? "");
   }
-  // 4. Default: No content (just link/tags)
   return "";
 }
 
-function constructStatus(data: any, content: string, limit: number): string {
+/**
+ * Builds the status text for a platform, truncating only the body so the
+ * canonical URL and hashtags are always preserved intact.
+ */
+function constructStatus(
+  data: ReturnType<typeof buildPostData>,
+  content: string,
+  limit: number,
+): string {
   const suffix = buildSuffix(data);
   const suffixLen = [...suffix].length;
-  const bodyBudget = limit - suffixLen - 1; // -1 for ellipsis
+  // Reserve 1 extra char for the ellipsis when truncation is needed
+  const bodyBudget = limit - suffixLen - 1;
 
   let body = content;
   if ([...body].length > bodyBudget) {
@@ -166,16 +211,18 @@ function constructStatus(data: any, content: string, limit: number): string {
   return (body + suffix).trim();
 }
 
-function buildSuffix(data: any): string {
+function buildSuffix(data: ReturnType<typeof buildPostData>): string {
+  // Two newlines = one blank line between body and URL
   const parts = ["", "", data.url];
-  if (data.tags && data.tags.length > 0) {
-    parts.push("");
-    parts.push(data.tags.map((t: string) => `#${t}`).join(" "));
+  if (data.tags.length > 0) {
+    parts.push("", data.tags.map((t) => `#${t}`).join(" "));
   }
   return parts.join("\n");
 }
 
-// --- Source File Editor ---
+// ---------------------------------------------------------------------------
+// Front matter write-back
+// ---------------------------------------------------------------------------
 
 async function updateSourceFile(
   filePath: string,
@@ -183,40 +230,58 @@ async function updateSourceFile(
   contents: Record<string, string>,
 ) {
   const raw = await Deno.readTextFile(filePath);
-  const parts = raw.split("---");
-  if (parts.length < 3) return;
-
-  const data = parse(parts[1]) as any;
-
-  // 1. Update syndication URLs
-  data.syndication = { ...data.syndication, ...urls };
-
-  // 2. Archive used content for preset/archival purposes
-  if (!data.posse) data.posse = {};
-  for (const [platform, text] of Object.entries(contents)) {
-    if (text.length === 0) continue;
-    if (!data.posse[platform]) data.posse[platform] = {};
-    // Only archive if not already explicitly set in frontmatter
-    if (!data.posse[platform].content) {
-      data.posse[platform].content = text;
-    }
+  // Split on the front matter delimiters. A valid file looks like:
+  // "---\n{yaml}\n---\n{body}"  → parts = ["", yaml, body]
+  const parts = raw.split(/^---$/m);
+  if (parts.length < 3) {
+    console.warn(`[posse] Unexpected front matter format in ${filePath}`);
+    return;
   }
 
-  // Use stringify with settings that try to preserve a clean look
+  const data = parse(parts[1]) as Record<string, unknown>;
+
+  // 1. Merge syndication URLs
+  data.syndication = {
+    ...(typeof data.syndication === "object" && data.syndication !== null
+      ? data.syndication as Record<string, unknown>
+      : {}),
+    ...urls,
+  };
+
+  // 2. Archive the content that was actually posted, so future builds
+  //    can read back the exact text that was syndicated.
+  if (typeof data.posse !== "object" || data.posse === null) {
+    data.posse = {};
+  }
+  const posse = data.posse as Record<string, unknown>;
+
+  for (const [platform, text] of Object.entries(contents)) {
+    if (!text) continue;
+    if (typeof posse[platform] !== "object" || posse[platform] === null) {
+      posse[platform] = {};
+    }
+    const entry = posse[platform] as Record<string, unknown>;
+    // Only write if the author hasn't already set it explicitly
+    if (!entry.content) entry.content = text;
+  }
+
+  // @std/yaml stringify valid options: indent, lineWidth, skipInvalid,
+  // useAnchors, styles, schema. (noArrayIndent and quotes are NOT valid.)
   parts[1] = "\n" + stringify(data, {
     indent: 2,
-    lineWidth: -1,
-    noArrayIndent: true,
+    lineWidth: -1, // never fold long strings
     skipInvalid: true,
   });
 
   await Deno.writeTextFile(filePath, parts.join("---"));
 }
 
-// --- API Implementation: Fediverse ---
+// ---------------------------------------------------------------------------
+// Mastodon / Fediverse
+// ---------------------------------------------------------------------------
 
 async function postToFediverse(
-  data: any,
+  data: ReturnType<typeof buildPostData>,
   statusText: string,
   srcPath: string,
 ): Promise<string> {
@@ -226,45 +291,39 @@ async function postToFediverse(
   const instanceUrl = new URL(author.social.mastodon.url).hostname;
   const mediaIds: string[] = [];
 
-  // Upload Media
   for (const img of data.images.slice(0, 4)) {
     const relPath = img.path.startsWith("/") ? img.path.slice(1) : img.path;
-    const filePath = join(srcPath, relPath);
     try {
-      const fileData = await Deno.readFile(filePath);
-      const formData = new FormData();
-      formData.append(
+      const fileData = await Deno.readFile(join(srcPath, relPath));
+      const form = new FormData();
+      form.append(
         "file",
         new Blob([fileData], { type: getMimeType(img.path) }),
       );
-      formData.append("description", img.alt);
+      form.append("description", img.alt);
 
-      const mediaRes = await fetch(`https://${instanceUrl}/api/v1/media`, {
+      const res = await fetch(`https://${instanceUrl}/api/v1/media`, {
         method: "POST",
-        headers: { "Authorization": `Bearer ${token}` },
-        body: formData,
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
       });
 
-      if (mediaRes.ok) {
-        const mediaJson = await mediaRes.json();
-        mediaIds.push(mediaJson.id);
+      if (res.ok) {
+        mediaIds.push((await res.json()).id);
       } else {
         console.warn(
-          `  ⚠️  Media upload failed (${mediaRes.status}): ${img.path}`,
+          `  ⚠️  Media upload failed (${res.status}): ${img.path}`,
         );
       }
-    } catch (e) {
-      console.warn(
-        `  ⚠️  Could not read or upload image ${img.path}: ${e.message}`,
-      );
+    } catch (e: any) {
+      console.warn(`  ⚠️  Could not upload ${img.path}: ${e.message}`);
     }
   }
 
-  // Create Post
   const res = await fetch(`https://${instanceUrl}/api/v1/statuses`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -274,15 +333,16 @@ async function postToFediverse(
     }),
   });
 
-  if (!res.ok) throw new Error(`Mastodon API Error: ${res.status}`);
-  const resJson = await res.json();
-  return resJson.url;
+  if (!res.ok) throw new Error(`Mastodon API error: ${res.status}`);
+  return (await res.json()).url as string;
 }
 
-// --- API Implementation: Bluesky ---
+// ---------------------------------------------------------------------------
+// Bluesky
+// ---------------------------------------------------------------------------
 
 async function postToBluesky(
-  data: any,
+  data: ReturnType<typeof buildPostData>,
   statusText: string,
   srcPath: string,
 ): Promise<string> {
@@ -295,29 +355,27 @@ async function postToBluesky(
 
   const agent = new BskyAgent({ service: "https://bsky.social" });
   await agent.login({ identifier: handle, password });
+  // Use the resolved DID from the session (more stable than the profile URL)
   const did = agent.session?.did ?? handle;
 
   const rt = new RichText({ text: statusText });
   await rt.detectFacets(agent);
 
-  const images: any[] = [];
+  const images: { image: unknown; alt: string }[] = [];
   for (const img of data.images.slice(0, 4)) {
     const relPath = img.path.startsWith("/") ? img.path.slice(1) : img.path;
-    const filePath = join(srcPath, relPath);
     try {
-      const fileData = await Deno.readFile(filePath);
-      const uploadRes = await agent.uploadBlob(fileData, {
+      const fileData = await Deno.readFile(join(srcPath, relPath));
+      const upload = await agent.uploadBlob(fileData, {
         encoding: getMimeType(img.path),
       });
-      if (uploadRes.success) {
-        images.push({ image: uploadRes.data.blob, alt: img.alt });
+      if (upload.success) {
+        images.push({ image: upload.data.blob, alt: img.alt });
       } else {
-        console.warn(`  ⚠️  Media upload failed: ${img.path}`);
+        console.warn(`  ⚠️  Blob upload failed: ${img.path}`);
       }
-    } catch (e) {
-      console.warn(
-        `  ⚠️  Could not read or upload image ${img.path}: ${e.message}`,
-      );
+    } catch (e: any) {
+      console.warn(`  ⚠️  Could not upload ${img.path}: ${e.message}`);
     }
   }
 
@@ -335,74 +393,86 @@ async function postToBluesky(
   return `https://bsky.app/profile/${did}/post/${postId}`;
 }
 
-// --- Git Helpers ---
+// ---------------------------------------------------------------------------
+// Git helpers
+// ---------------------------------------------------------------------------
 
-async function commitAndPush(sshKeyPath: string) {
+async function commitAndPush(sshKeyPath: string, files: string[]) {
   const REPO_URL = `git@codeberg.org:${author.username}/${siteMeta.host}.git`;
+  const sshCmd = `ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no`;
 
-  const gitCmds = [
-    ["config", "--global", "user.email", "~egecelikci/posse@lists.sr.ht"],
-    ["config", "--global", "user.name", "POSSE"],
-    [
-      "config",
-      "core.sshCommand",
-      `ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no`,
-    ],
-    ["config", "gpg.format", "ssh"],
-    ["config", "user.signingkey", sshKeyPath],
-    ["config", "commit.gpgsign", "true"],
-    ["add", "src/"],
+  // These -c flags are ephemeral: they apply only to the single git invocation
+  // and leave no trace in .git/config. No --global writes needed.
+  const identity = [
+    "-c",
+    `user.email=${author.email}`,
+    "-c",
+    `user.name=${author.name}`,
   ];
 
-  for (const args of gitCmds) {
-    const { code, stderr } = await new Deno.Command("git", {
-      args,
-      stderr: "piped",
-    }).output();
-    if (code !== 0) {
-      const msg = new TextDecoder().decode(stderr);
-      console.error(`[posse] git ${args[0]} failed: ${msg}`);
-      return;
+  const sshAuth = [
+    "-c",
+    `core.sshCommand=${sshCmd}`,
+  ];
+
+  // 1. Stage only the files this plugin touched (absolute paths work with git add)
+  const stage = await run("git", ["add", "--", ...files]);
+  if (!stage.ok) return;
+
+  // 2. Commit — no signing flags; authentication is handled at push via SSH key
+  const commit = await run("git", [
+    ...identity,
+    "commit",
+    "-m",
+    "chore: syndicate notes to social [skip ci]",
+    "-m",
+    "https://indieweb.org/POSSE",
+  ]);
+
+  if (!commit.ok) {
+    // "nothing to commit" is not an error — the file may already be up to date
+    if (!commit.stderr.includes("nothing to commit")) {
+      console.error(`[posse] git commit failed:\n${commit.stderr}`);
     }
+    return;
   }
 
-  const commit = new Deno.Command("git", {
-    args: [
-      "commit",
-      "-m",
-      "syndicate notes [skip ci]",
-      "-m",
-      "https://indieweb.org/POSSE",
-    ],
-    stderr: "piped",
-  });
+  // 3. Push — identity args aren't needed here; SSH key handles auth
+  const push = await run("git", [
+    ...sshAuth,
+    "push",
+    REPO_URL,
+    "HEAD:main",
+  ]);
 
-  const { code, stderr } = await commit.output();
-  if (code === 0) {
-    const push = await new Deno.Command("git", {
-      args: ["push", REPO_URL, "HEAD:main"],
-      env: {
-        GIT_SSH_COMMAND: `ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no`,
-      },
-      stderr: "piped",
-    }).output();
-    if (push.code === 0) {
-      console.log("[posse] ✅ Pushed updates to Codeberg.");
-    } else {
-      const msg = new TextDecoder().decode(push.stderr);
-      console.error(`[posse] git push failed: ${msg}`);
-    }
+  if (push.ok) {
+    console.log("[posse] ✅ Pushed updates to Codeberg.");
   } else {
-    const msg = new TextDecoder().decode(stderr);
-    if (!msg.includes("nothing to commit")) {
-      console.error(`[posse] git commit failed: ${msg}`);
-    }
+    console.error(`[posse] git push failed:\n${push.stderr}`);
   }
 }
 
+/** Thin wrapper around Deno.Command that captures stderr and exit code. */
+async function run(
+  cmd: string,
+  args: string[],
+): Promise<{ ok: boolean; stderr: string }> {
+  const { code, stderr } = await new Deno.Command(cmd, {
+    args,
+    stderr: "piped",
+  }).output();
+  return {
+    ok: code === 0,
+    stderr: new TextDecoder().decode(stderr),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+
 function getMimeType(path: string): string {
-  const ext = path.split(".").pop()?.toLowerCase();
-  switch (ext) {
+  switch (path.split(".").pop()?.toLowerCase()) {
     case "jpg":
     case "jpeg":
       return "image/jpeg";
