@@ -54886,6 +54886,132 @@
           "artist": {
             "country": "US",
             "disambiguation": "",
+            "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
+            "name": "Narrow Head",
+            "sort-name": "Narrow Head",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Narrow Head"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2014-03-19",
+      "id": "9a057b06-307c-4850-91a4-f2125b08cd8b",
+      "imagePath": "/assets/images/covers/colored/9a057b06-307c-4850-91a4-f2125b08cd8b.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/9a057b06-307c-4850-91a4-f2125b08cd8b.png",
+      "primary-type": "EP",
+      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+      "ratedAt": "Thu, 02 Oct 2025 19:42:18 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
+                "name": "Narrow Head",
+                "sort-name": "Narrow Head",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Narrow Head"
+            }
+          ],
+          "barcode": "5054316240068",
+          "country": "XW",
+          "date": "2020-08-14",
+          "disambiguation": "",
+          "id": "c1d5f5de-db35-4188-a88c-c3e74c6f8d7c",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2020-08-14"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Far Removed"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "",
+                "id": "d2c944b5-7475-47bd-b3bf-df1b68f80a68",
+                "name": "Narrow Head",
+                "sort-name": "Narrow Head",
+                "type": "Group",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Narrow Head"
+            }
+          ],
+          "barcode": "",
+          "country": "XW",
+          "date": "2014-03-19",
+          "disambiguation": "",
+          "id": "ceccb528-2559-45ba-8fde-1a32438cd1df",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2014-03-19"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Far Removed"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Far Removed"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "",
             "id": "8b22acd6-20e6-4463-a75c-c14b5cfdb666",
             "name": "Earl Sweatshirt",
             "sort-name": "Earl Sweatshirt",
