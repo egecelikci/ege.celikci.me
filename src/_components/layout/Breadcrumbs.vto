@@ -36,27 +36,29 @@
 
 <nav
   aria-label="Breadcrumb"
-  class="relative z-20 flex items-center typography-sublabel {{ it.classes }}"
+  class="relative z-20 flex items-center {{ it.classes }}"
 >
   <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
     {{# 1. SITE ROOT (Always shown) #}}
     <li class="flex items-center gap-2">
       {{ if it.url === "/" }}
-        <span class="font-bold text-text">
+        <span class="font-bold text-text pb-px border-b border-transparent">
           {{ site.host }}
         </span>
       {{ else }}
         <a
           href="/"
           rel="home"
-          class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline"
+          class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline pb-px border-b border-transparent"
         >
           {{ site.host }}
         </a>
       {{ /if }}
 
       {{ if breadcrumbItems.length > 1 }}
-        <span class="text-text-dim select-none">/</span>
+        <span
+          class="text-text-dim select-none pb-px border-b border-transparent"
+        >/</span>
       {{ /if }}
     </li>
 
@@ -69,7 +71,9 @@
 
       <li class="flex items-center gap-2">
         {{ if index === breadcrumbItems.length - 1 }}
-          <span class="font-bold text-text-muted">
+          <span
+            class="font-bold text-text-muted pb-px border-b border-transparent"
+          >
             {{ itemTitle }}
           </span>
         {{ else }}
@@ -82,7 +86,8 @@
         {{ /if }}
 
         {{ if index < breadcrumbItems.length - 1 }}
-          <span class="select-none opacity-50">/</span>
+          <span class="select-none opacity-50 pb-px border-b border-transparent"
+          >/</span>
         {{ /if }}
       </li>
     {{ /for }}

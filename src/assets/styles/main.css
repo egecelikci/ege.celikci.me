@@ -150,7 +150,7 @@
   --size-h3: 1rem;
 
   /* Header height for scroll offset */
-  --header-height: 5rem;
+  --header-height: 3.5rem;
 
   --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
   --shadow-elevated:
