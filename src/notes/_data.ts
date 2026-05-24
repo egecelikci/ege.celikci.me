@@ -2,6 +2,7 @@ export const layout = "layouts/page.vto";
 export const templateEngine = ["vto", "md"];
 export const type = "note";
 export const show_webmentions = true;
+export const navigation = { parent: "/notes/" };
 
 export const jsonLd = {
   "@type": "CreativeWork",

@@ -103,6 +103,7 @@ export default async function* (
         l.categories.includes(catId)
       ),
       backlink: { href: "/bookmarks/", text: "bookmarks" },
+      navigation: { parent: "/bookmarks/" },
     };
   }
 }

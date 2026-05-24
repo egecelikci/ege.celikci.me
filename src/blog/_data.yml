@@ -2,6 +2,8 @@ layout: layouts/page.vto
 templateEngine: [vto, md]
 type: post
 show_webmentions: true
+navigation:
+  parent: /blog/
 jsonLd:
   "@type": BlogPosting
   headline: "=title"

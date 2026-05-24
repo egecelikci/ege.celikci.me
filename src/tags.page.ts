@@ -11,6 +11,9 @@ export default function* ({ search }: any, { slugify }: any) {
       title: `#${tag}`,
       type: "tag",
       prose: false,
+      navigation: {
+        parent: "/tags/",
+      },
     };
   }
 }
