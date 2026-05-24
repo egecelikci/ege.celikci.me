@@ -12,7 +12,7 @@ menu:
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
   <div class="h-feed not-prose">
-    {{ await comp.ui.EntryTimeline({ entries: results }) }}
+    {{ await comp.ui.EntryTimeline({ entries: results, hideRowLabel: true }) }}
   </div>
 {{ else }}
   <div class="py-24">

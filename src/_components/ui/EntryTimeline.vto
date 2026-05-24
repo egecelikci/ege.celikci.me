@@ -43,7 +43,13 @@
         {{ set timelineContent }}
           <div class="flex flex-col">
             {{ for item of grouped[dateKey] }}
-              {{ await comp.ui.EntryRow({ entry: item, showDate: false }) }}
+              {{
+                await it.comp.ui.EntryRow({
+                  entry: item,
+                  showDate: false,
+                  hideLabel: it.hideRowLabel,
+                })
+              }}
             {{ /for }}
           </div>
         {{ /set }}

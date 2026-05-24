@@ -59,7 +59,7 @@
             classes: "w-3 h-3",
           })
         }}
-        {{ typeLabel }}
+        {{ if !it.hideLabel }}{{ typeLabel }}{{ /if }}
       </span>
     {{ /if }}
 
