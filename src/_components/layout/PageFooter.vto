@@ -37,7 +37,10 @@
 }}
 {{ set hasRelated = it.related && String(it.related).trim() !== "" }}
 {{ set hasBacklinks = it.backlinks && String(it.backlinks).trim() !== "" }}
-{{ set hasActivity = showInteractions || showStats }}
+{{
+  set hasSyndication = it.syndication && (it.syndication.mastodon || it.syndication.bluesky)
+}}
+{{ set hasActivity = showInteractions || showStats || hasSyndication }}
 {{ set hasMetaRow = hasExtension || hasActivity }}
 {{ set shouldRenderFooter = hasMetaRow || hasRelated || hasBacklinks }}
 
