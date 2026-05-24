@@ -46,7 +46,7 @@
 
 {{ if shouldRenderFooter }}
   <footer
-    class="mt-16 pt-8 border-t border-border-subtle flex flex-col gap-8 md:gap-12 print:hidden [view-transition-name:page-supplemental]"
+    class="mt-12 pt-6 border-t border-border-subtle flex flex-col gap-8 md:gap-12 print:hidden [view-transition-name:page-supplemental]"
   >
     {{# 1. Meta & Activity Row #}}
     {{ if hasMetaRow }}
@@ -60,39 +60,52 @@
         {{ /if }}
 
         {{ if hasActivity }}
-          {{# Row 1: [N interactions] | [stats] [syndication icons] #}}
+          {{# Row 1: [About Webmentions] | [syndication icons] #}}
           <div
             class="flex items-center justify-between gap-4 flex-wrap"
           >
             <div
               class="flex items-center gap-6 text-sm text-text-muted"
             >
-              {{# Primary interactions jump link #}}
-              {{ if showInteractions }}
-                <a
-                  href="#interactions"
-                  class="link-hover flex items-center gap-2 font-bold text-text"
-                >
-                  {{
-                    await it.comp.base.Icon({ name: "messages-square", classes: "w-4 h-4" })
-                  }}
-                  {{ it.interactions.length }} {{
-                    it.interactions.length == 1 ? "interaction" : "interactions"
-                  }}
-                </a>
-              {{ /if }}
+              <div class="flex items-center gap-4">
+                {{ if showInteractions }}
+                  <span class="typography-sublabel text-text-muted">
+                    {{ it.interactions.length }} {{
+                      it.interactions.length == 1 ? "interaction" : "interactions"
+                    }}
+                  </span>
+                {{ /if }}
+
+                {{ if showInteractions }}
+                  <a
+                    href="https://indieweb.org/Webmention"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1.5 typography-sublabel text-text-muted hover:text-secondary transition-all duration-300 no-underline haptic"
+                    title="Learn about Webmentions"
+                  >
+                    {{
+                      await it.comp.base.Icon({
+                        name: "badge-question-mark",
+                        catalog: "lucide",
+                        classes: "w-3.5 h-3.5 stroke-[1.5]",
+                      })
+                    }}
+                    What’s this?
+                  </a>
+                {{ /if }}
+              </div>
             </div>
 
             <div class="shrink-0">
               {{
                 await it.comp.ui.ActivityMeta({
-                  stats: it.stats,
+                  stats: showInteractions ? null : it.stats,
                   syndication: it.syndication,
                 })
               }}
             </div>
           </div>
-
           {{# Row 2: Faces #}}
           {{ if showInteractions }}
             <div id="interactions" class="-mt-2 md:-mt-4">

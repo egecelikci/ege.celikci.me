@@ -390,11 +390,6 @@
     }
   }
 
-  /* Blog-style content separator */
-  .e-content {
-    @apply pt-8 border-t border-text-muted/20;
-  }
-
   /* Inline code styling */
   .markdown :not(pre) > code {
     @apply inline font-mono text-[0.9em] px-[0.3em] py-[0.1em] rounded-sm
