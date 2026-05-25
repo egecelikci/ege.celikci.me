@@ -156,13 +156,13 @@ headerExtension:
 
 {{# ─── EMPTY STATE ────────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length === 0 }}
-  <div class="mt-12">
+  <div class="mt-8">
     {{
       comp.base.EmptyState({
         icon: "calendar-x",
-        title: "No upcoming events found",
+        title: "no upcoming events found",
         description:
-          'No upcoming events are currently listed for İzmir. Check back soon or <a href="https://musicbrainz.org/doc/How_to_Add_an_Event" class="underline">add one on MusicBrainz</a>.',
+          'nothing listed for İzmir right now. check back soon or <a href="https://musicbrainz.org/doc/How_to_Add_an_Event" class="underline decoration-border-subtle hover:text-primary transition-colors">add one on MusicBrainz</a>.',
       })
     }}
   </div>

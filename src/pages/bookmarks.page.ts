@@ -69,7 +69,9 @@ export default async function* (
     return { ...raw, count: categoryCounts[id] ?? 0 };
   });
 
-  const totalCount = normalizedLinks.length;
+  const enrichedLinks = normalizedLinks; // no mutation needed
+
+  const totalCount = enrichedLinks.length;
 
   // /bookmarks/ — all items
   yield {
@@ -77,33 +79,68 @@ export default async function* (
     title: "bookmarks",
     description: "curated collection of favorite links & resources",
     prose: false,
+    search_bar: {
+      placeholder: "filter bookmarks…",
+      mode: "filter",
+    },
+    hide_layout_search: true,
     activeCategory: null,
     allCategoryIds: sortedCategoryIds,
     categoryMetadata,
     totalCount,
-    filteredBookmarks: normalizedLinks,
+    filteredBookmarks: enrichedLinks,
     backlink: { href: "/", text: "home" },
     menu: { group: "collections", label: "internet", order: 1 },
+    navigation: { parent: "/", title: "bookmarks" },
   };
 
   // /bookmarks/[category]/ — per-category filtered views
   for (const catId of sortedCategoryIds) {
     const meta = categoryMetadata.find((m) => m.id === catId);
+
+    // Custom badge for blogroll category
+    let headerExtension;
+    if (catId === "blogroll") {
+      headerExtension = {
+        comp: "layout.SourceMeta",
+        props: {
+          sources: [
+            {
+              label: "blogroll.xml",
+              icon: "rss",
+              url: "/blogroll.xml",
+              type: "feed",
+            },
+          ],
+        },
+      };
+    }
+
     yield {
       url: `/bookmarks/${catId}/`,
       title: meta?.title ?? catId,
       description: meta?.desc ??
         `curated collection of favorite links & resources in ${catId}`,
       prose: false,
+      search_bar: {
+        placeholder: `filter in ${meta?.title ?? catId}…`,
+        mode: "filter",
+      },
+      hide_layout_search: true,
+      headerExtension,
       activeCategory: catId,
       allCategoryIds: sortedCategoryIds,
       categoryMetadata,
       totalCount,
-      filteredBookmarks: normalizedLinks.filter((l) =>
+      filteredBookmarks: enrichedLinks.filter((l) =>
         l.categories.includes(catId)
       ),
       backlink: { href: "/bookmarks/", text: "bookmarks" },
-      navigation: { parent: "/bookmarks/" },
+      navigation: {
+        parent: "/bookmarks/",
+        parentTitle: "bookmarks",
+        title: meta?.title ?? catId,
+      },
     };
   }
 }

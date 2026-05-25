@@ -122,16 +122,13 @@
           </div>
         {{ /for }}
       {{ else }}
-        <div class="py-12 text-center border-b border-border-subtle">
-          {{
-            await it.comp.base.EmptyState({
-              icon: "tag",
-              title: "No topics yet",
-              description: "Tags will appear here once you add them to your content.",
-              size: "sm",
-            })
-          }}
-        </div>
+        {{
+          await it.comp.base.EmptyState({
+            icon: "tag",
+            title: "no topics found",
+            description: "tags will appear here once you add them to your content",
+          })
+        }}
       {{ /if }}
     </div>
   </section>

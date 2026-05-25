@@ -10,15 +10,15 @@ layout: null
     <dateCreated>{{ build.timestamp |> date("ATOM") }}</dateCreated>
   </head>
   <body>
-    {{ for item of bookmarks }}
+    {{ for item of bookmarks.links }}
       {{ if item.feed }}
         <outline
           text="{{ item.title }}"
           title="{{ item.title }}"
           type="rss"
           xmlUrl="{{ item.feed }}"
-          htmlUrl="{{ item.url }}"
-          category="{{ item.category || 'uncategorized' }}"
+          htmlUrl="{{ item.url || '' }}"
+          category="{{ item.categories?.join(',') || 'uncategorized' }}"
         />
       {{ /if }}
     {{ /for }}

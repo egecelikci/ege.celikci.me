@@ -38,35 +38,6 @@
   }
 }
 
-@keyframes album-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes appear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes panic {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.2;
-  }
-}
-
 @theme {
   --color-bg: #fef6e4;
   --color-surface: #f3e1d8;
@@ -157,7 +128,50 @@
     0 10px 15px hsl(0 0% 0% / 0.1),
     0 4px 6px hsl(0 0% 0% / 0.05);
 
+  --animate-album-reveal: album-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-appear: appear 0.3s ease-out;
   --animate-panic: panic 0.5s infinite alternate;
+  --animate-spin-smart: spin-smart 0.8s var(--ease-smart) infinite;
+
+  --ease-smart: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes album-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panic {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes spin-smart {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @layer base {
@@ -229,6 +243,59 @@
   html {
     transition: background-color 0.3s ease;
   }
+
+  /* Hide native search decorations globally */
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+  }
+
+  /* Pagefind Search Highlights */
+  .search-result-item mark,
+  mark {
+    background-color: #fde047; /* Yellow highlight */
+    color: #000;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  .search-action-active {
+    opacity: 1 !important;
+    scale: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+/* Collage Tool Specific Styles */
+.checkbox-base {
+  @apply w-5 h-5 rounded border-border-subtle bg-surface-subtle text-primary focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer transition-all;
+}
+
+.checkbox-base:checked {
+  @apply bg-primary border-primary;
+}
+
+.checkbox-base:focus-visible {
+  @apply ring-2 ring-primary/50 ring-offset-2 ring-offset-bg;
+}
+
+/* Custom scrollbar for selects */
+select::-webkit-scrollbar {
+  width: 6px;
+}
+
+select::-webkit-scrollbar-track {
+  @apply bg-border/20 rounded-full;
+}
+
+select::-webkit-scrollbar-thumb {
+  @apply bg-text-muted/30 rounded-full hover:bg-primary-muted transition-colors;
+}
+
+/* Glassmorphism for inputs */
+.input-base {
+  @apply backdrop-blur-md border border-white/5;
 }
 
 :root {
@@ -782,47 +849,16 @@
   @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border shadow-sm;
 }
 
-@utility bookmark-pill {
-  @apply pill-base px-5 text-text/70 duration-300 whitespace-nowrap shrink-0 cursor-pointer;
+@utility bookmark-index-link {
+  @apply typography-sublabel text-text-muted hover:text-primary transition-colors no-underline pb-px border-b border-transparent hover:border-primary/30 whitespace-nowrap;
 }
 
-@utility bookmark-pill--active {
-  @apply !bg-primary !text-white !border-primary;
+@utility bookmark-index-link--active {
+  @apply !text-primary !border-primary/50;
 }
 
-@utility bookmark-count {
-  @apply inline-flex items-center justify-center min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-current/15 text-[11px] font-mono tabular-nums leading-none;
-}
-
-@utility scroll-shadows-x {
-  background:
-    linear-gradient(to right, var(--color-bg) 30%, transparent),
-    linear-gradient(to right, transparent, var(--color-bg) 70%) 100% 0,
-    radial-gradient(
-    farthest-side at 0 50%,
-    rgba(0, 0, 0, 0.12),
-    transparent
-  ),
-    radial-gradient(
-    farthest-side at 100% 50%,
-    rgba(0, 0, 0, 0.12),
-    transparent
-  ) 100% 0;
-  background-repeat: no-repeat;
-  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-  background-attachment: local, local, scroll, scroll;
-}
-
-@utility scrollbar-subtle {
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    @apply bg-border-subtle rounded-full;
-  }
-  &::-webkit-scrollbar-thumb {
-    @apply bg-text-muted rounded-full hover:bg-secondary transition-colors;
-  }
+@utility bookmark-index-count {
+  @apply ml-1 tabular-nums opacity-50 font-normal;
 }
 
 .markdown li > code,

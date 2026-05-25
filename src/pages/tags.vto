@@ -11,6 +11,8 @@ menu:
     - title: recipes
       href: /tags/recipes/
       desc: treats
+navigation:
+  parent: /
 ---
 
 {{# --- 1. TAG CLOUD (Clean Typographic Style) --- #}}
@@ -40,14 +42,15 @@ menu:
         </div>
       {{ /for }}
     {{ else }}
-      {{
-        comp.base.EmptyState({
-          icon: "tag",
-          title: "No topics found",
-          description:
-            "Tags will appear here once you add them to your posts or notes.",
-        })
-      }}
+      <div class="mt-8">
+        {{
+          comp.base.EmptyState({
+            icon: "tag",
+            title: "no topics found",
+            description: "tags will appear here once you add them to your posts or notes",
+          })
+        }}
+      </div>
     {{ /if }}
   </div>
 {{ /set }}

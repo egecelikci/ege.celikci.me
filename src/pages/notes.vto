@@ -7,6 +7,8 @@ menu:
   group: entries
   label: posts
   order: 2
+navigation:
+  parent: /
 ---
 
 {{ set results = search.pages("type=note", "date=desc") }}
@@ -15,13 +17,12 @@ menu:
     {{ await comp.ui.EntryTimeline({ entries: results, hideRowLabel: true }) }}
   </div>
 {{ else }}
-  <div class="py-24">
+  <div class="mt-8">
     {{
       comp.base.EmptyState({
         icon: "message-square",
-        title: "Quiet in here",
-        description:
-          "No notes found. Once you publish a note, it will appear on this timeline.",
+        title: "no notes found",
+        description: "once you publish a note, it will appear on this timeline",
       })
     }}
   </div>

@@ -5,12 +5,14 @@ categories:
   - id: 88x31
     title: "88×31"
     icon: image
+    desc: "Sites with an 88×31 badge — a small-web tradition."
   - id: person
     title: "people"
     icon: user
   - id: tool
     title: "tools"
     icon: tool-case
+    desc: "Useful web tools and utilities."
   - id: writing
   - id: music
     title: "music"
@@ -18,6 +20,7 @@ categories:
   - id: downloader
     title: "downloaders"
     icon: download
+    desc: "Tools for saving audio and video from streaming platforms."
   - id: library
     title: "libraries"
     icon: library
@@ -30,6 +33,7 @@ categories:
   - id: android
     title: "android"
     icon: smartphone
+    desc: "Apps and operating systems for Android."
   - id: media
     title: "media"
     icon: file
@@ -163,4 +167,8 @@ links:
   - title: "StrongPhrase.net"
     desc: "Create strong, memorable passphrases"
     url: "https://strongphrase.net"
-    tool: [tool, utility]
+    categories: [tool, utility]
+  - title: "Molly"
+    desc: "Molly is an independent [Signal](https://signal.org) fork for Android with improved features"
+    url: "https://molly.im"
+    categories: [tool, android]

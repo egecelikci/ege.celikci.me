@@ -1,25 +1,40 @@
 {{#
   Component: Search (Feature)
   Interactive search powered by Pagefind.
+  Adopted the slim, minimal aesthetic as the site standard.
 
   Props:
     - compId: string (unique ID for multiple instances)
     - placeholder: string (default: "search")
+    - filters: object (Pagefind filter object, e.g. { type: "bookmark" })
+    - variant: "default" | "minimal" (currently both map to the slim style)
 #}}
 
 {{ set id = it.compId || "main" }}
+{{ set isMinimal = it.variant === "minimal" }}
 
 <div
-  class="search-container group relative w-full"
+  class="search-container group relative w-full {{ it.classes || '' }}"
   id="search-root-{{ id }}"
+  data-search-id="{{ id }}"
+  data-search-mode="{{ it.mode || 'pagefind' }}"
+  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : '' }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="relative flex items-center">
+    {{# Autocomplete Trap (Cryptee Pattern) #}}
+    <input
+      type="text"
+      class="absolute -top-[1000px] left-0 w-1 h-1 opacity-0 pointer-events-none"
+      aria-hidden="true"
+      tabindex="-1"
+    />
+
     {{# Search Icon #}}
     <div
-      class="absolute left-4 flex items-center justify-center pointer-events-none text-text-dim group-focus-within:text-primary transition-all duration-300 z-20"
+      class="absolute left-3.5 flex items-center justify-center pointer-events-none text-text-dim group-focus-within:text-primary transition-colors z-20"
     >
-      {{ await it.comp.base.Icon({ name: "search", classes: "w-5 h-5" }) }}
+      {{ await it.comp.base.Icon({ name: "search", classes: "w-3.5 h-3.5" }) }}
     </div>
 
     <input
@@ -27,35 +42,38 @@
       id="site-search-input-{{ id }}"
       placeholder="{{ it.placeholder || 'search…' }}"
       class="
-        w-full bg-surface-subtle dark:bg-surface-subtle backdrop-blur-md border border-border-subtle rounded-2xl py-4 pl-12 pr-14 text-lg text-text
-        placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary-muted focus:border-primary-muted transition-all duration-500 shadow-sm
+        w-full bg-surface-subtle border border-border-subtle rounded-lg py-2.5 pl-10 pr-10 text-sm font-mono text-text
+        placeholder:text-text-dim focus:outline-none focus:border-primary-muted focus:ring-1 focus:ring-primary-muted transition-all
       "
       autocomplete="off"
+      spellcheck="false"
     />
 
     {{# --- Right Side Actions (X Button, Spinner) --- #}}
-    <div class="absolute inset-y-0 right-0 flex items-center pr-4 gap-2 z-20">
-      {{# Loading Spinner #}}
-      <div
-        id="search-spinner-{{ id }}"
-        class="hidden items-center justify-center"
-      >
-        {{
-          await it.comp.base.Icon({
-            name: "loader-2",
-            classes: "w-5 h-5 animate-spin text-primary",
-          })
-        }}
-      </div>
+    <div class="absolute inset-y-0 right-1.5 flex items-center z-20">
+      <div class="relative w-7 h-7 flex items-center justify-center">
+        {{# Loading Spinner #}}
+        <div
+          id="search-spinner-{{ id }}"
+          class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 pointer-events-none transition-all duration-300"
+        >
+          {{
+            await it.comp.base.Icon({
+              name: "loader-circle",
+              classes: "w-3.5 h-3.5 animate-spin-smart text-primary",
+            })
+          }}
+        </div>
 
-      {{# Clear Button #}}
-      <button
-        id="search-clear-{{ id }}"
-        class="hidden flex items-center justify-center w-8 h-8 rounded-full bg-surface-subtle hover:bg-surface-hover text-text-muted hover:text-primary transition-all haptic"
-        aria-label="Clear search"
-      >
-        {{ await it.comp.base.Icon({ name: "x", classes: "w-4 h-4" }) }}
-      </button>
+        {{# Clear Button #}}
+        <button
+          id="search-clear-{{ id }}"
+          class="absolute inset-0 flex items-center justify-center rounded-full text-text-muted hover:text-primary opacity-0 scale-50 pointer-events-none transition-all duration-300 haptic"
+          aria-label="Clear search"
+        >
+          {{ await it.comp.base.Icon({ name: "x", classes: "w-3.5 h-3.5" }) }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -65,204 +83,18 @@
     class="mt-6 space-y-4 opacity-0 -translate-y-2 pointer-events-none transition-all duration-300"
   >
   </div>
+
+  {{# --- 3. EMPTY STATE --- #}}
+  <div
+    id="search-no-results-{{ id }}"
+    class="hidden"
+  >
+    {{
+      await it.comp.base.EmptyState({
+        icon: "search-x",
+        title: "no matches found",
+        description: "try adjusting your search terms or filters",
+      })
+    }}
+  </div>
 </div>
-
-<style>
-  /* Styling Pagefind highlights */
-  .search-result-item mark {
-    background-color: #fde047; /* Yellow highlight */
-    color: #000;
-    padding: 0 2px;
-    border-radius: 2px;
-  }
-
-  /* Hide native search decorations */
-  input[type="search"]::-webkit-search-decoration,
-  input[type="search"]::-webkit-search-cancel-button,
-  input[type="search"]::-webkit-search-results-button,
-  input[type="search"]::-webkit-search-results-decoration {
-    -webkit-appearance: none;
-  }
-</style>
-
-<script type="module">
-  // 1. Initialize Pagefind
-  const pagefindPath = "/pagefind/pagefind.js";
-  let pagefind = null;
-
-  async function initPagefind() {
-    if (pagefind) return;
-    try {
-      pagefind = await import(pagefindPath);
-      // Suppress deprecation warning by passing an empty config object
-      await pagefind.init({});
-    } catch (e) {
-      console.error("Pagefind failed to load:", e);
-    }
-  }
-
-  // 2. State & Elements
-  const compId = "{{ id }}";
-  const root = document.getElementById(`search-root-${compId}`);
-  const input = document.getElementById(`site-search-input-${compId}`);
-  const resultsContainer = document.getElementById(`search-results-${compId}`);
-  const spinner = document.getElementById(`search-spinner-${compId}`);
-  const clearBtn = document.getElementById(`search-clear-${compId}`);
-
-  let activeIndex = -1;
-
-  // 3. Logic
-  async function handleSearch(term) {
-    if (!pagefind) await initPagefind();
-
-    if (!term || term.trim() === "") {
-      clearSearch();
-      return;
-    }
-
-    // Show UI state
-    clearBtn.classList.add("hidden");
-    spinner.classList.remove("hidden");
-
-    // Preload while typing to speed up the actual search
-    pagefind.preload(term);
-
-    // Use debouncedSearch for state-of-the-art performance
-    const search = await pagefind.debouncedSearch(term, {}, 150);
-
-    // If search is null, a more recent search has been triggered
-    if (search === null) return;
-
-    const results = await Promise.all(
-      search.results.slice(0, 5).map((r) => r.data()),
-    );
-
-    spinner.classList.add("hidden");
-    clearBtn.classList.remove("hidden");
-    renderResults(results);
-  }
-
-  function clearSearch() {
-    input.value = "";
-    resultsContainer.innerHTML = "";
-    resultsContainer.classList.add(
-      "opacity-0",
-      "-translate-y-2",
-      "pointer-events-none",
-    );
-    clearBtn.classList.add("hidden");
-    spinner.classList.add("hidden");
-    activeIndex = -1;
-  }
-
-  function renderResults(results) {
-    if (results.length === 0) {
-      resultsContainer.innerHTML = `
-      <div class="typography-label text-text-muted py-8 pl-4 border-l border-border-subtle">
-        No matches found
-      </div>
-    `;
-    } else {
-      resultsContainer.innerHTML = results
-        .map((item, index) => `
-        <a href="${item.url}"
-           class="search-result-item group block py-6 px-8 rounded-3xl bg-surface-subtle dark:bg-surface-subtle border border-border-subtle transition-all no-underline
-                  hover:bg-surface-hover hover:border-primary-muted focus:outline-none focus:ring-2 focus:ring-primary-muted"
-           data-index="${index}">
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-baseline gap-4">
-              <h3 class="text-xl md:text-2xl font-bold text-primary-offset group-hover:text-primary transition-colors m-0 tracking-tight">
-                ${item.meta.title || "Untitled"}
-              </h3>
-              ${
-          item.meta.date
-            ? `<time class="typography-label text-[11px] text-text-muted">${item.meta.date}</time>`
-            : ""
-        }
-            </div>
-            <p class="text-xs md:text-sm text-text-muted leading-relaxed m-0 font-mono italic line-clamp-2">
-              ${item.excerpt || ""}
-            </p>
-          </div>
-        </a>
-      `).join("");
-    }
-
-    // Show container
-    resultsContainer.classList.remove(
-      "opacity-0",
-      "-translate-y-2",
-      "pointer-events-none",
-    );
-    activeIndex = -1;
-  }
-
-  // 4. Events
-  input.addEventListener("input", (e) => {
-    handleSearch(e.target.value);
-  });
-
-  clearBtn.addEventListener("click", clearSearch);
-
-  // Keyboard Navigation
-  input.addEventListener("keydown", (e) => {
-    const results = resultsContainer.querySelectorAll(".search-result-item");
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      activeIndex = Math.min(activeIndex + 1, results.length - 1);
-      if (activeIndex >= 0) results[activeIndex].focus();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      activeIndex = Math.max(activeIndex - 1, -1);
-      if (activeIndex >= 0) results[activeIndex].focus();
-      else input.focus();
-    }
-  });
-
-  resultsContainer.addEventListener("keydown", (e) => {
-    const results = resultsContainer.querySelectorAll(".search-result-item");
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      activeIndex = Math.min(activeIndex + 1, results.length - 1);
-      results[activeIndex].focus();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      activeIndex = Math.max(activeIndex - 1, -1);
-      if (activeIndex >= 0) results[activeIndex].focus();
-      else input.focus();
-    }
-  });
-
-  // Global Keyboard (/)
-  document.addEventListener("keydown", (e) => {
-    if (
-      e.key === "/" && document.activeElement !== input &&
-      !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
-    ) {
-      e.preventDefault();
-      input.focus();
-    }
-    if (e.key === "Escape" && document.activeElement === input) {
-      input.blur();
-      clearSearch();
-    }
-  });
-
-  // Click outside to close results
-  document.addEventListener("click", (e) => {
-    if (!root.contains(e.target)) {
-      resultsContainer.classList.add(
-        "opacity-0",
-        "-translate-y-2",
-        "pointer-events-none",
-      );
-    } else if (input.value.trim() !== "") {
-      resultsContainer.classList.remove(
-        "opacity-0",
-        "-translate-y-2",
-        "pointer-events-none",
-      );
-    }
-  });
-</script>

@@ -18,6 +18,24 @@
 {{ if it.navigation?.parent }}
   {{ set parentTrail = nav.breadcrumb(it.navigation.parent) }}
 
+  {{# Manual fallback for generated intermediate pages (e.g. /bookmarks/) that aren't in Lume's nav tree #}}
+  {{ if parentTrail.length <= 1 && it.navigation.parent !== "/" }}
+    {{ set rootNode = nav.breadcrumb("/")[0] }}
+    {{
+      set manualParentTitle = it.navigation.parentTitle ||
+      it.navigation.parent.split("/").filter(Boolean).pop()
+    }}
+    {{
+      set parentTrail = [
+        rootNode,
+        {
+          data: { url: it.navigation.parent, title: manualParentTitle },
+          slug: manualParentTitle,
+        },
+      ].filter(Boolean)
+    }}
+  {{ /if }}
+
   {{# Find the page item (it might not be in Lume's nav yet if generator) #}}
   {{ set currentItem = breadcrumbItems[breadcrumbItems.length - 1] }}
 
@@ -36,11 +54,11 @@
 
 <nav
   aria-label="Breadcrumb"
-  class="relative z-20 flex items-center {{ it.classes }}"
+  class="relative z-20 flex items-center min-w-0 {{ it.classes }}"
 >
-  <ol class="flex items-center flex-wrap gap-2 list-none p-0 m-0">
+  <ol class="flex items-center flex-nowrap gap-2 list-none p-0 m-0 min-w-0">
     {{# 1. SITE ROOT (Always shown) #}}
-    <li class="flex items-center gap-2">
+    <li class="flex items-center gap-2 flex-shrink-0">
       {{ if it.url === "/" }}
         <span class="font-bold text-text pb-px border-b border-transparent">
           {{ site.host }}
@@ -67,12 +85,20 @@
       {{ if item.data?.url === "/" }}{{ continue }}{{ /if }}
 
       {{ set itemData = item.data || {} }}
-      {{ set itemTitle = itemData.title || item.slug || "page" }}
+      {{# Use item title, falling back to slug if missing. Only use it.title for the very last item if it has no data title. #}}
+      {{ set isLast = index === breadcrumbItems.length - 1 }}
+      {{
+        set itemTitle = (isLast ? (it.title || itemData.title) : itemData.title) ||
+        item.slug || "page"
+      }}
 
-      <li class="flex items-center gap-2">
-        {{ if index === breadcrumbItems.length - 1 }}
+      <li
+        class="flex items-center gap-2 {{ if isLast }}min-w-0{{ else }}flex-shrink-0{{ /if }}"
+      >
+        {{ if isLast }}
           <span
-            class="font-bold text-text-muted pb-px border-b border-transparent"
+            class="font-bold text-text-muted pb-px border-b border-transparent truncate"
+            title="{{ itemTitle }}"
           >
             {{ itemTitle }}
           </span>
@@ -86,7 +112,8 @@
         {{ /if }}
 
         {{ if index < breadcrumbItems.length - 1 }}
-          <span class="select-none opacity-50 pb-px border-b border-transparent"
+          <span
+            class="select-none opacity-50 pb-px border-b border-transparent flex-shrink-0"
           >/</span>
         {{ /if }}
       </li>

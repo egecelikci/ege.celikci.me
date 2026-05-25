@@ -1,31 +1,39 @@
 {{#
   Component: EmptyState (Primitive)
-  A placeholder for empty lists or states.
-  
+  A refined, minimal placeholder for empty lists or results.
+  Aligned with the site's "slim" design language.
+
   Props:
-    - icon: string (required)
+    - icon: string (optional)
     - title: string (optional)
     - description: string (optional)
 #}}
 
-<div
-  class="flex flex-col items-center justify-center py-16 md:py-24 text-center border border-dashed border-border rounded-2xl bg-surface-subtle"
->
-  <div class="p-4 rounded-full bg-surface mb-4 text-text-dim">
-    {{
-      await it.comp.base.Icon({
-        name: it.icon,
-        catalog: "lucide",
-        classes: "w-8 h-8 md:w-10 md:h-10",
-      })
-    }}
+<div class="py-10 border-l border-border-subtle pl-8 not-prose">
+  <div
+    class="flex items-center gap-3 text-text-muted {{ if it.description }}mb-2{{ /if }}"
+  >
+    {{ if it.icon }}
+      {{
+        await it.comp.base.Icon({
+          name: it.icon,
+          catalog: "lucide",
+          classes: "w-3.5 h-3.5 opacity-70",
+        })
+      }}
+    {{ /if }}
+    <span
+      class="typography-label font-bold lowercase tracking-normal opacity-80"
+    >
+      {{ it.title || "no results" }}
+    </span>
   </div>
-  {{ if it.title }}
-    <h3 class="text-lg font-bold text-text mb-2">{{ it.title }}</h3>
-  {{ /if }}
+
   {{ if it.description }}
-    <p class="text-text-muted max-w-sm mx-auto leading-relaxed">
+    <div
+      class="typography-label text-text-muted/60 font-normal max-w-sm leading-relaxed italic lowercase"
+    >
       {{ it.description |> safe }}
-    </p>
+    </div>
   {{ /if }}
 </div>

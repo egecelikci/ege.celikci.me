@@ -81,6 +81,27 @@ async function init() {
     initTouchReveal(".album-item, .collage-item, .h-entry");
   }
 
+  // Pagefind Search
+  if (document.querySelector("[data-search-id]")) {
+    const { initSearch } = await import("./common/search.ts");
+    initSearch();
+  }
+
+  // Brew Calculator
+  if (document.getElementById("coffee-input")) {
+    const { initBrewCalculator } = await import("./common/brew-calculator.ts");
+    initBrewCalculator();
+  }
+
+  // Collage Tool
+  const collageRoot = document.querySelector(
+    "[data-collage-tool]",
+  ) as HTMLElement;
+  if (collageRoot) {
+    const { initCollageTool } = await import("./common/collage-tool.ts");
+    initCollageTool(collageRoot.dataset.defaultUsername || "");
+  }
+
   // Venue Maps (Leaflet)
   if (document.querySelector(".venue-map")) {
     const { initVenueMaps } = await import("./common/map.ts");

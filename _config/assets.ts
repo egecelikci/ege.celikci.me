@@ -18,6 +18,7 @@ export interface AssetOptions {
 
 export default function (options: AssetOptions = {}) {
   const isDev = Deno.env.get("MODE") !== "production";
+  const isNetlify = Deno.env.get("NETLIFY") === "true";
 
   return (site: Lume.Site) => {
     site
@@ -67,7 +68,9 @@ export default function (options: AssetOptions = {}) {
       }))
       .use(inline())
       .use(picture())
-      .use(transformImages())
+      .use(transformImages({
+        concurrency: isNetlify ? 16 : 20,
+      }))
       // Static copies
       .add("assets/images")
       // Main entry points

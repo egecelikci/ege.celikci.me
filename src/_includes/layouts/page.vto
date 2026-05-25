@@ -9,6 +9,25 @@ layout: layouts/base.vto
     {{ await comp.layout.PageHeader(it) }}
   {{ /if }}
 
+  {{# 1b. Optional Search Bar #}}
+  {{ if it.search_bar && !it.hide_layout_search }}
+    <div class="mt-8 mb-12 [view-transition-name:page-search]">
+      {{ if it.search_bar.label }}
+        <div class="flex items-center gap-4 mb-6">
+          <span class="typography-label text-text-muted whitespace-nowrap">
+            {{ it.search_bar.label }}
+          </span>
+        </div>
+      {{ /if }}
+      {{
+        await comp.features.Search({
+          compId: it.search_bar.id || "page-search",
+          ...it.search_bar,
+        })
+      }}
+    </div>
+  {{ /if }}
+
   {{# 2. Main Content #}}
   {{# Use a div for lists/notes to avoid double-article nesting; article for standard pages #}}
   <{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}
@@ -45,6 +64,11 @@ layout: layouts/base.vto
       })
     }}
   {{ else if it.type === "tag" }}
+    <div class="sr-only" data-pagefind-body>
+      {{ it.title }} tag topic index. collection of items related to {{
+        it.tag
+      }}.
+    </div>
     {{ comp.ui.TagDetail({ tag: it.tag }) }}
   {{ else }}
     <div class="{{ (it.prose !== false) ? 'e-content' : '' }}">

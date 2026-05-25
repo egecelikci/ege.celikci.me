@@ -17,9 +17,18 @@
 
 {{# Fallback if preprocessor didn't run or object is unexpected #}}
 {{ set displayTitle = it.event.displayTitle || it.event.name || "Event" }}
+{{
+  set artistNames = it.event.relations
+  ?.filter((r) => r["target-type"] === "artist")
+  ?.map((r) => r["target-credit"] || r.artist.name)
+  ?.join(" ") || ""
+}}
 
 <a
   href="{{ detailUrl }}"
+  id="ev-{{ it.event.id }}"
+  data-search-item
+  data-search-data="{{ [displayTitle, artistNames, it.event.type] |> filter(Boolean) |> join(' ') }}"
   class="
     group flex flex-col h-full ledger-card overflow-hidden haptic
     reveal:border-primary-muted reveal:shadow-elevated

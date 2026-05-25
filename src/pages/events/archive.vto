@@ -66,12 +66,12 @@ backlink: { href: "/events/", text: "events" }
     {{ /for }}
   </section>
 {{ else }}
-  <div class="mt-12">
+  <div class="mt-8">
     {{
       comp.base.EmptyState({
         icon: "calendar-x",
-        title: "No past events found",
-        description: "No past events are currently in the archive.",
+        title: "no past events found",
+        description: "the archive is currently empty",
       })
     }}
   </div>

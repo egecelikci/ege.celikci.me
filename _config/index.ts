@@ -48,7 +48,15 @@ export default function () {
       }))
       .use(paginate())
       .use(sitemap())
-      .use(robots({ rules: [{ userAgent: "*", disallow: "/build.txt" }] }))
+      .use(robots({
+        rules: [
+          {
+            userAgent: "*",
+            disallow: "/build.txt",
+            contentSignal: "none",
+          },
+        ],
+      }))
       .use(nav())
       .use(jsonLd())
       .use(favicon({

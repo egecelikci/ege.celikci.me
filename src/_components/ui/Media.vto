@@ -17,7 +17,7 @@
   }}
 
   <div
-    class="grid gap-1 w-full ledger-card overflow-hidden my-4 {{ gridClass }}"
+    class="grid gap-1 w-full ledger-card overflow-hidden my-4 {{ gridClass }} [view-transition-name:media-{{ it.images[0].src |> slugify }}]"
     data-lightbox-group="{{ gid }}"
   >
     {{ for i, image of it.images |> slice(0, 4) }}
