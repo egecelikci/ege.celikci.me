@@ -46,6 +46,15 @@ categories:
   - id: utility
     title: "utilities"
     icon: wrench
+  - id: text
+    title: "editors"
+    icon: notebook-text
+  - id: visual
+    title: "visual art"
+    icon: brush
+  - id: player
+    title: "media players"
+    icon: disc
 links:
   - title: "monocyte"
     url: "https://monocyte.blog"
@@ -169,6 +178,30 @@ links:
     url: "https://strongphrase.net"
     categories: [tool, utility]
   - title: "Molly"
-    desc: "Molly is an independent [Signal](https://signal.org) fork for Android with improved features"
+    desc: "an independent [Signal](https://signal.org) fork for Android with improved features"
     url: "https://molly.im"
     categories: [tool, android]
+  - title: "Gram"
+    desc: "a powerful and modern source code editor"
+    url: "https://gram-editor.com"
+    categories: [tool, text, utility]
+  - title: "BeauTyXT"
+    desc: "a beautiful, private, secure and minimalistic Plain Text and Markdown editor"
+    url: "https://beautyxt.app"
+    categories: [tool, text, android]
+  - title: "metta"
+    url: "https://mettaflix.tumblr.com"
+    feed: "https://mettaflix.tumblr.com/rss"
+    categories: [person, visual]
+  - title: "Symfonium"
+    desc: "I use Symfonium via Navidrome"
+    url: "https://www.symfonium.app"
+    categories: [tool, android, music, player]
+  - title: "Auxio"
+    desc: "a local music player with a fast, reliable UI/UX without the many useless features present in other music players. Built off of modern media playback libraries, Auxio has superior library support and listening quality compared to other apps that use outdated Android functionality. In short, **It plays music**."
+    url: "https://github.com/OxygenCobalt/Auxio"
+    categories: [tool, android, music, player]
+  - title: "Feishin"
+    desc: "best Navidrome client I found for desktop"
+    url: "https://github.com/OxygenCobalt/Auxio"
+    categories: [tool, music, player]

@@ -1,11 +1,14 @@
 {{#
   Component: Search (Feature)
-  Interactive search powered by Pagefind.
+  Interactive search. Two modes:
+    - "search" (default) — cross-page Pagefind results
+    - "filter"           — client-side DOM filter for [data-search-item] elements
   Adopted the slim, minimal aesthetic as the site standard.
 
   Props:
     - compId: string (unique ID for multiple instances)
     - placeholder: string (default: "search")
+    - mode: "search" | "filter" (default: "search")
     - filters: object (Pagefind filter object, e.g. { type: "bookmark" })
     - variant: "default" | "minimal" (currently both map to the slim style)
 #}}
