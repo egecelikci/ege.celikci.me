@@ -1,4 +1,5 @@
 export const layout = "layouts/bookmarks.vto";
+export const searchable = false;
 
 interface Bookmark {
   title: string;
