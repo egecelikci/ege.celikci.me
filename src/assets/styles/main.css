@@ -584,6 +584,14 @@ select::-webkit-scrollbar-thumb {
   .leaflet-control-attribution a {
     @apply !text-inherit hover:!text-primary !transition-colors;
   }
+
+  .leaflet-marker-halo {
+    @apply absolute w-8 h-8 bg-primary/10 rounded-full border border-primary/5;
+  }
+
+  .leaflet-marker-dot {
+    @apply relative w-4 h-4 bg-primary border-2 border-white rounded-full shadow-lg;
+  }
 }
 
 /* PHOTOSWIPE CUSTOMIZATION (Global Precedence) */
