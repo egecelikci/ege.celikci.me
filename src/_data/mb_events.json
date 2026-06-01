@@ -3214,10 +3214,10 @@
         {
           "artist": {
             "country": "TR",
-            "disambiguation": "Musician from İzmir, Turkey",
+            "disambiguation": "",
             "id": "08c9ac33-dd3e-4ce0-9ede-54b80b0157bd",
-            "name": "Egehan",
-            "sort-name": "Egehan (a.k.a. lütfen beni öldürmeyin)",
+            "name": "lütfen beni öldürmeyin",
+            "sort-name": "lütfen beni öldürmeyin",
             "type": "Person",
             "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
           },
@@ -3237,10 +3237,10 @@
         {
           "artist": {
             "country": "TR",
-            "disambiguation": "Musician from İzmir, Turkey",
+            "disambiguation": "",
             "id": "08c9ac33-dd3e-4ce0-9ede-54b80b0157bd",
-            "name": "Egehan",
-            "sort-name": "Egehan (a.k.a. lütfen beni öldürmeyin)",
+            "name": "lütfen beni öldürmeyin",
+            "sort-name": "lütfen beni öldürmeyin",
             "type": "Person",
             "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
           },
