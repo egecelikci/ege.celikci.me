@@ -65,6 +65,7 @@ export default function (options: AssetOptions = {}) {
             src: "https://api.iconify.design/material-symbols:{name}.svg",
           },
         ],
+        spriteFile: "/assets/icons/icons.sprite.svg",
       }))
       .use(inline())
       .use(picture())
