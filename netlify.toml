@@ -17,18 +17,6 @@
     function = "collage-proxy"
 
 [[edge_functions]]
-    path = "/api/status"
-    function = "status"
-
-[[edge_functions]]
-    path = "/api/verify"
-    function = "verify"
-
-[[edge_functions]]
-    path = "/api/like"
-    function = "like"
-
-[[edge_functions]]
     path = "/api/webmentions"
     function = "webmentions"
 

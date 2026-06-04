@@ -83,10 +83,6 @@
     transparent 20%
   );
 
-  --color-status-error: #dc2626;
-  --color-status-active: var(--color-primary);
-  --color-status-inactive: var(--color-text-muted);
-
   --font-sans: "Josefin Sans", system-ui, sans-serif;
   --font-serif: "Josefin Slab", serif;
   --font-mono: "Inconsolata", monospace;
@@ -130,7 +126,6 @@
 
   --animate-album-reveal: album-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-appear: appear 0.3s ease-out;
-  --animate-panic: panic 0.5s infinite alternate;
   --animate-spin-smart: spin-smart 0.8s var(--ease-smart) infinite;
 
   --ease-smart: cubic-bezier(0.4, 0, 0.2, 1);
@@ -153,15 +148,6 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes panic {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.2;
   }
 }
 
