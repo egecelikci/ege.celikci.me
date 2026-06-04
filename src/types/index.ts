@@ -208,13 +208,6 @@ export interface PageData {
 // COMPONENT PROPS
 // ============================================================================
 
-export interface BadgeProps {
-  text: string;
-  variant?: "default" | "primary" | "success" | "warning" | "error" | "info";
-  icon?: string;
-  classes?: string;
-}
-
 export interface CardProps {
   variant?: "default" | "elevated" | "flat";
   href?: string;

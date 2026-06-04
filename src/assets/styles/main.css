@@ -839,10 +839,6 @@ select::-webkit-scrollbar-thumb {
   @apply focus:border-primary focus:ring-1 focus:ring-primary outline-none;
 }
 
-@utility badge-base {
-  @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border shadow-sm;
-}
-
 @utility bookmark-index-link {
   @apply typography-sublabel text-text-muted hover:text-primary transition-colors no-underline pb-px border-b border-transparent hover:border-primary/30 whitespace-nowrap;
 }
