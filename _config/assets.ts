@@ -70,7 +70,7 @@ export default function (options: AssetOptions = {}) {
       .use(inline())
       .use(picture())
       .use(transformImages({
-        concurrency: isNetlify ? 16 : 20,
+        // concurrency: isNetlify ? 16 : 20,
       }))
       // Static copies
       .add("assets/images")
