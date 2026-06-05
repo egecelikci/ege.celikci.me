@@ -77284,6 +77284,132 @@
         {
           "artist": {
             "country": "US",
+            "disambiguation": "US rapper",
+            "id": "5f1adfe1-4d07-4141-b181-79e5d379d539",
+            "name": "Lil Ugly Mane",
+            "sort-name": "Lil Ugly Mane",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Lil Ugly Mane"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2012-10-28",
+      "id": "de07386c-f339-4197-89d0-4ef4aad937dd",
+      "imagePath": "/assets/images/covers/colored/de07386c-f339-4197-89d0-4ef4aad937dd.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/de07386c-f339-4197-89d0-4ef4aad937dd.png",
+      "primary-type": "EP",
+      "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+      "ratedAt": "Thu, 04 Jun 2026 21:53:21 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US rapper",
+                "id": "5f1adfe1-4d07-4141-b181-79e5d379d539",
+                "name": "Lil Ugly Mane",
+                "sort-name": "Lil Ugly Mane",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Lil Ugly Mane"
+            }
+          ],
+          "barcode": "0840094217508",
+          "country": "XW",
+          "date": "2013-08-22",
+          "disambiguation": "",
+          "id": "0050fc84-972a-4300-b7c3-1fd87db680ba",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2013-08-22"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Uneven Compromise"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "US",
+                "disambiguation": "US rapper",
+                "id": "5f1adfe1-4d07-4141-b181-79e5d379d539",
+                "name": "Lil Ugly Mane",
+                "sort-name": "Lil Ugly Mane",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Lil Ugly Mane"
+            }
+          ],
+          "barcode": "",
+          "country": "XW",
+          "date": "2012-10-28",
+          "disambiguation": "",
+          "id": "a171fb49-0fc1-494d-993b-a8940fef90a7",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2012-10-28"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "Uneven Compromise"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Uneven Compromise"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
             "disambiguation": "US singer‐songwriter",
             "id": "03ad1736-b7c9-412a-b442-82536d63a5c4",
             "name": "Elliott Smith",
