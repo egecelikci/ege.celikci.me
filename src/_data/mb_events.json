@@ -1084,6 +1084,12 @@
         "url": "https://www.instagram.com/underthehorn/"
       }
     ],
+    "948ad07f-4106-41c3-a32f-9fb83e375395": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/berlinbornova/"
+      }
+    ],
     "94bfc6c3-4259-4623-8cc6-46ad3d0d98d5": [],
     "98aa9825-6b28-4e2d-8bb4-070e7b8f9c94": [
       {
@@ -8450,6 +8456,129 @@
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]",
       "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "d0941f03-d2fa-4fce-90e3-6a051d163906",
+      "imagePath": "/assets/images/posters/d0941f03-d2fa-4fce-90e3-6a051d163906.jpg",
+      "life-span": {
+        "begin": "2026-06-15",
+        "end": "2026-06-15",
+        "ended": true
+      },
+      "name": "lütfen beni öldürmeyin at Berlin Coffee Shop",
+      "posterThumb": "https://eventartarchive.org/event/d0941f03-d2fa-4fce-90e3-6a051d163906/45312599573-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/d0941f03-d2fa-4fce-90e3-6a051d163906/45312599573.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "08c9ac33-dd3e-4ce0-9ede-54b80b0157bd",
+            "name": "lütfen beni öldürmeyin",
+            "sort-name": "lütfen beni öldürmeyin",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "design",
+          "type-id": "c49495bf-71d0-4d5f-9121-c775cc33e940"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "08c9ac33-dd3e-4ce0-9ede-54b80b0157bd",
+            "name": "lütfen beni öldürmeyin",
+            "sort-name": "lütfen beni öldürmeyin",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Kazımdirik Mah. Gediz Cad. Onur Sitesi No:3C, 35100, Bornova/İzmir",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.46001,
+              "longitude": 27.210039
+            },
+            "disambiguation": "",
+            "id": "948ad07f-4106-41c3-a32f-9fb83e375395",
+            "name": "Berlin Coffee Shop",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "da4e2b82-7da8-451e-abe5-4728b0e685e3",
+            "name": "Ali Yaren",
+            "sort-name": "Ali Yaren",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
