@@ -79,7 +79,7 @@
             >
               <img
                 src="{{ item.img |> url }}"
-                alt="{{ item.title }}"
+                alt="{{ item.title |> escape }}"
                 width="88"
                 height="31"
                 loading="lazy"

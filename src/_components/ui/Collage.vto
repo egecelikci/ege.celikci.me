@@ -19,7 +19,7 @@
       >
         <img
           src="{{ item.images[0].src }}"
-          alt="{{ item.images[0].alt || 'collage image' }}"
+          alt="{{ (item.images[0].alt || 'collage image') |> escape }}"
           class="w-full h-full object-cover grayscale opacity-60 md:opacity-40 transition-all duration-700 group-reveal-collage:grayscale-0 group-reveal-collage:opacity-100 group-[.is-active]/collage:grayscale-[0.5] group-[.is-active]/collage:opacity-80"
           loading="lazy"
           transform-images="avif webp jpg 200"

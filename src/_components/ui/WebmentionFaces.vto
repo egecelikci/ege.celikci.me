@@ -32,7 +32,7 @@
             {{ if mention.author.photo }}
               <img
                 src="{{ mention.author.photo }}"
-                alt="{{ mention.author.name }}"
+                alt="{{ mention.author.name |> escape }}"
                 width="48"
                 height="48"
                 loading="lazy"

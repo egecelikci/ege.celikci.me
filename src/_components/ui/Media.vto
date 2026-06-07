@@ -31,6 +31,7 @@
       <a
         href="{{ image.src |> url }}"
         class="lightbox-trigger media relative block w-full h-full overflow-hidden bg-surface-subtle no-underline text-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
+        aria-label="{{ (image.alt || 'view image') |> escape }}"
         target="_blank"
         rel="noopener noreferrer"
         {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
@@ -42,7 +43,7 @@
       >
         <img
           src="{{ image.src |> url }}"
-          alt="{{ image.alt }}"
+          alt="{{ image.alt |> escape }}"
           image-size
           transform-images="avif webp jpg 640 1280 1920"
           loading="lazy"
@@ -52,7 +53,7 @@
 
         {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}
         {{ if image.alt?.trim() }}
-          <span class="sr-only">{{ image.alt }}</span>
+          <span class="sr-only">{{ image.alt |> escape }}</span>
 
           {{# 2. VISUAL BADGE (Ignored by Search) #}}
           <div
