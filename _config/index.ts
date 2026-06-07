@@ -30,7 +30,6 @@ import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
-import posse from "../utils/posse.ts";
 import { jsonLd as jsonLdData } from "./metadata.ts";
 
 export default function () {
@@ -122,8 +121,7 @@ export default function () {
         .use(minifyHTML())
         .use(checkUrls())
         .use(seo())
-        .use(validateHTML())
-        .use(posse());
+        .use(validateHTML());
     }
 
     // Global default for all Markdown files: Vento then Markdown
