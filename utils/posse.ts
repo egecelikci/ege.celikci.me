@@ -250,13 +250,14 @@ async function updateSourceFile(
 
   // 2. Archive the content that was actually posted, so future builds
   //    can read back the exact text that was syndicated.
-  if (typeof data.posse !== "object" || data.posse === null) {
-    data.posse = {};
-  }
-  const posse = data.posse as Record<string, unknown>;
-
   for (const [platform, text] of Object.entries(contents)) {
     if (!text) continue;
+
+    if (typeof data.posse !== "object" || data.posse === null) {
+      data.posse = {};
+    }
+    const posse = data.posse as Record<string, unknown>;
+
     if (typeof posse[platform] !== "object" || posse[platform] === null) {
       posse[platform] = {};
     }
