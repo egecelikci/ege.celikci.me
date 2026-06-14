@@ -83,7 +83,11 @@ layout: layouts/base.vto
     data-pagefind-ignore=""
   >
     <a href="/" class="u-url p-name">{{ it.author.name }}</a>
-    <img src="{{ it.author.avatar }}" class="u-photo" />
+    <img
+      src="{{ it.author.avatar }}"
+      class="u-photo"
+      alt="{{ it.author.name }}"
+    />
   </div>
   </{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}>
 

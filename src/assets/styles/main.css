@@ -83,16 +83,13 @@
     transparent 20%
   );
 
-  --font-sans: "Josefin Sans", system-ui, sans-serif;
-  --font-serif: "Josefin Slab", serif;
-  --font-mono: "Inconsolata", monospace;
-
-  --font-accent: "Azeret Mono", monospace;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --font-accent: "DM Mono", monospace;
 
   --width-narrow: 65ch;
   --width-max: 1440px;
 
-  /* Fluid Type Scale */
   --size-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
   --size-step-1: clamp(1.25rem, 1.16rem + 0.43vw, 1.5rem);
   --size-step-2: clamp(1.56rem, 1.41rem + 0.76vw, 2rem);
@@ -100,21 +97,21 @@
   --size-step-4: clamp(2.44rem, 2.05rem + 1.93vw, 3.55rem);
   --size-step-5: clamp(3.05rem, 2.46rem + 2.96vw, 4.74rem);
 
-  /* Flow spacing for Piccalilli pattern */
-  --flow-space-base: 1.5em;
+  --flow-space-base: 1.25em;
   --flow-space-tight: 0.75em;
   --flow-space-loose: 2.5em;
   --flow-space-markdown: 0.5rem;
 
-  /* Typographic System */
   --font-weight-body: 350;
-  --letter-spacing-h1: 0.25rem;
-  --letter-spacing-h2: 0.125rem;
-  --letter-spacing-h3: 0.05rem;
+  --letter-spacing-h1: -0.02em;
+  --letter-spacing-h2: -0.01em;
+  --letter-spacing-h3: 0em;
+  --letter-spacing-label: 0.1em;
 
-  --size-h1: 2rem;
-  --size-h2: 1.325rem;
-  --size-h3: 1rem;
+  --size-h1: clamp(2.44rem, 2.05rem + 1.93vw, 3.55rem);
+  --size-h2: clamp(1.95rem, 1.71rem + 1.24vw, 2.66rem);
+  --size-h3: clamp(1.56rem, 1.41rem + 0.76vw, 2rem);
+  --size-h4: clamp(1.25rem, 1.16rem + 0.43vw, 1.5rem);
 
   /* Header height for scroll offset */
   --header-height: 3.5rem;
@@ -129,6 +126,11 @@
   --animate-spin-smart: spin-smart 0.8s var(--ease-smart) infinite;
 
   --ease-smart: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
 }
 
 @keyframes album-reveal {
@@ -186,6 +188,8 @@
     font-size: 16px;
     line-height: 1.5;
     font-weight: var(--font-weight-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   #site-header {
@@ -302,12 +306,14 @@ select::-webkit-scrollbar-thumb {
   :root:not(.theme-light) {
     /* KEEP IN SYNC WITH :root.theme-dark below */
     color-scheme: dark;
-    --color-bg: #463366;
-    --color-surface: #544474;
-    --color-text: #c9bae2;
-    --color-text-muted: #9d8ec2;
-    --color-border: #5e4d7a;
-    --color-primary: #ff6e6c;
+    --color-bg: #3a2a55;
+    --color-surface: #4a3a6a;
+    --color-text: #e8e2f3;
+    --color-text-muted: #d0c8e8;
+    --color-text-dim: #b8afdc;
+    --color-border: #52427a;
+    --color-primary: #ff8e8c;
+
     --color-primary-offset: #ef5a58;
     --color-secondary: #abd1c6;
 
@@ -322,12 +328,13 @@ select::-webkit-scrollbar-thumb {
 :root.theme-dark {
   /* KEEP IN SYNC WITH @media (prefers-color-scheme: dark) above */
   color-scheme: dark;
-  --color-bg: #463366;
-  --color-surface: #544474;
-  --color-text: #c9bae2;
-  --color-text-muted: #9d8ec2;
-  --color-border: #5e4d7a;
-  --color-primary: #ff6e6c;
+  --color-bg: #3a2a55;
+  --color-surface: #4a3a6a;
+  --color-text: #e8e2f3;
+  --color-text-muted: #d0c8e8;
+  --color-text-dim: #b8afdc;
+  --color-border: #52427a;
+  --color-primary: #ff8e8c;
   --color-primary-offset: #ef5a58;
   --color-secondary: #abd1c6;
 
@@ -339,7 +346,6 @@ select::-webkit-scrollbar-thumb {
 }
 
 @layer components {
-  /* Piccalilli Flow: consistent vertical rhythm */
   .flow > * + * {
     margin-block-start: var(--flow-space, 1.5em);
   }
@@ -356,7 +362,18 @@ select::-webkit-scrollbar-thumb {
 
   .markdown {
     @apply prose max-w-none text-text;
+    font-family: var(--font-sans);
     overflow-wrap: break-word;
+
+    & pre,
+    & code,
+    & kbd,
+    & samp,
+    & figure.code-block pre.shiki,
+    & figure.code-block pre.shiki code {
+      font-family: var(--font-mono);
+      font-variant-ligatures: none;
+    }
 
     /* Variables for Prose mapping */
     --tw-prose-body: var(--color-text);
@@ -376,60 +393,81 @@ select::-webkit-scrollbar-thumb {
     --tw-prose-code: var(--color-text);
 
     & > * + * {
-      margin-block-start: var(--flow-space, var(--flow-space-markdown));
+      margin-block-start: var(--flow-space, var(--flow-space-base));
     }
 
     p,
     li {
-      @apply font-sans text-base leading-6;
+      @apply font-sans text-base;
       font-weight: var(--font-weight-body);
-      margin-top: 0.5rem;
       max-width: 70ch;
       text-wrap: pretty;
+      line-height: 1.625;
+    }
+    & :is(h1, h2, h3, h4, blockquote) {
+      --flow-space: var(--flow-space-loose);
     }
 
-    /* Subtle lead for markdown content */
+    & :is(h1, h2, h3, h4) + * {
+      --flow-space: var(--flow-space-tight);
+    }
+
+    & :is(h1, h2, h3, h4) {
+      line-height: 1.1;
+      text-wrap: balance;
+      font-variant-ligatures: none;
+      font-kerning: normal;
+    }
+
+    & h1 {
+      max-width: 20ch;
+    }
+
+    & h2,
+    & h3 {
+      max-width: 28ch;
+    }
+
+    & blockquote {
+      max-width: 50ch;
+      font-style: italic;
+    }
+
     & > p:first-of-type {
       @apply text-text group-reveal:text-primary transition-colors duration-500;
     }
 
-    /* Better quotes */
     blockquote {
       @apply border-l-4 border-primary/20 pl-6 py-1 italic bg-surface-subtle/30 rounded-r-lg;
       font-weight: var(--font-weight-body);
     }
 
-    /* Fix headings in markdown */
     :is(h1, h2, h3, h4, h5, h6) {
       @apply font-sans font-bold relative text-balance;
       word-break: break-word;
     }
 
     :is(h1, h2, h3) {
-      @apply uppercase;
       margin-block: 2rem !important;
     }
 
     h1 {
       font-size: var(--size-h1);
-      line-height: 3rem;
       letter-spacing: var(--letter-spacing-h1);
-      margin-top: -0.5rem !important;
     }
+
     h2 {
       font-size: var(--size-h2);
-      line-height: 2rem;
       letter-spacing: var(--letter-spacing-h2);
-      margin-top: 0.125rem !important;
     }
+
     h3 {
       font-size: var(--size-h3);
-      line-height: 1.5rem;
       letter-spacing: var(--letter-spacing-h3);
-      margin-top: 0.5rem !important;
     }
     h4 {
-      @apply text-base mt-8 mb-2;
+      @apply text-sm uppercase text-text-muted mt-8 mb-2;
+      letter-spacing: var(--letter-spacing-label);
     }
 
     hr {
@@ -734,15 +772,15 @@ select::-webkit-scrollbar-thumb {
 
 /* Reusable Component Utilities (only for patterns used 2+ times) */
 @utility pill-base {
-  @apply inline-flex items-center gap-2 py-2.5 rounded-full border border-border-subtle bg-surface-subtle hover:bg-surface-hover hover:border-primary-muted text-[11px] font-mono transition-all no-underline haptic;
+  @apply inline-flex items-center gap-2 py-3 px-6 rounded-full border border-border-subtle bg-surface-subtle hover:bg-surface-hover hover:border-primary-muted text-[11px] font-mono transition-all no-underline haptic min-h-[48px];
 }
 
 @utility btn-minimal {
-  @apply pill-base px-6 text-text/80 duration-200;
+  @apply pill-base text-text/80 duration-200;
 }
 
 @utility btn-primary {
-  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 bg-primary text-white hover:bg-primary-offset haptic;
+  @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all duration-200 bg-primary text-white hover:bg-primary-offset haptic min-h-[48px];
 }
 
 @utility haptic {
@@ -750,6 +788,21 @@ select::-webkit-scrollbar-thumb {
   touch-action: manipulation;
   cursor: pointer;
   @apply [transition:transform_150ms_ease] active:scale-95;
+}
+
+/* Semantic Typography & Accessibility Enhancements */
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+dfn {
+  font-style: italic;
+  font-weight: bold;
+}
+
+[role="doc-tip"] {
+  @apply bg-surface-subtle border-l-4 border-primary/40 p-4 rounded-r-lg my-6 text-sm italic;
 }
 
 @utility reveal-self {
