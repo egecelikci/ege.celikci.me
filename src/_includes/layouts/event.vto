@@ -63,12 +63,10 @@ layout: layouts/page.vto
           </div>
         {{ /if }}
 
-        <div class="flex flex-wrap items-center gap-x-12 gap-y-6">
-          <div class="flex flex-col gap-1.5">
-            <span
-              class="typography-label text-text-muted"
-            >Date & Time</span>
-            <div class="text-xl font-bold font-mono text-text">
+        <div class="flex flex-wrap items-center gap-x-12 gap-y-10">
+          <div class="flex flex-col gap-4 min-w-[200px]">
+            {{ comp.ui.SectionHeader({ title: "Date & Time" }) }}
+            <div class="text-xl font-bold font-mono text-text pl-1">
               {{ if it.event.beginDate }}
                 {{ it.event.beginDate |> date("EEE, MMM dd") }}
                 {{ if it.event.time }}
@@ -81,11 +79,9 @@ layout: layouts/page.vto
           </div>
 
           {{ if event.local?.price }}
-            <div class="flex flex-col gap-1.5">
-              <span
-                class="typography-label text-text-muted"
-              >Entry Fee</span>
-              <div class="text-xl font-bold font-mono text-primary">
+            <div class="flex flex-col gap-4 min-w-[140px]">
+              {{ comp.ui.SectionHeader({ title: "Entry Fee" }) }}
+              <div class="text-xl font-bold font-mono text-primary pl-1">
                 {{ event.local.price }}
               </div>
             </div>
@@ -118,11 +114,7 @@ layout: layouts/page.vto
         class="flex flex-col gap-16 pt-12 border-t border-border/10"
       >
         <section class="flex flex-col gap-8">
-          <h2
-            class="typography-label text-text-muted"
-          >
-            Lineup
-          </h2>
+          {{ comp.ui.SectionHeader({ title: "Lineup" }) }}
           {{
             set artistRels = (event.relations || []).filter((r) =>
               r["target-type"] === "artist" &&
@@ -203,11 +195,7 @@ layout: layouts/page.vto
 
       {{# VENUE SECTION (Moved to sidebar for desktop) #}}
       <section class="flex flex-col gap-8">
-        <h2
-          class="typography-label text-text-muted"
-        >
-          Venue
-        </h2>
+        {{ comp.ui.SectionHeader({ title: "Venue" }) }}
         {{
           set venueRel = (event.relations || []).find((r) => r["target-type"] === "place")
         }}
@@ -432,11 +420,7 @@ layout: layouts/page.vto
     <section
       class="flex flex-col gap-8 pt-12 border-t border-border/10 [view-transition-name:event-gallery]"
     >
-      <h2
-        class="typography-label text-text-muted"
-      >
-        Photographs
-      </h2>
+      {{ comp.ui.SectionHeader({ title: "Photographs" }) }}
       {{ await comp.ui.Gallery({ images: gallery }) }}
     </section>
   {{ /if }}
