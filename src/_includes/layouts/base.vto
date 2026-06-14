@@ -42,8 +42,8 @@
     />
 
     {{# 2. Critical Assets #}}
-    <link rel="modulepreload" href="/assets/scripts/main.js">
-    <link rel="stylesheet" href="/assets/styles/main.css" />
+    <link rel="modulepreload" href="/assets/scripts/main.js?v={{ build.id }}">
+    <link rel="stylesheet" href="/assets/styles/main.css?v={{ build.id }}" />
 
     {{ include "meta.vto" }}
   </head>
@@ -93,6 +93,9 @@
     {{# Media Modal (Phanpy-style) #}}
     {{ await it.comp.ui.Lightbox() }}
 
-    <script type="module" src="/assets/scripts/main.js"></script>
+    <script
+      type="module"
+      src="/assets/scripts/main.js?v={{ build.id }}"
+    ></script>
   </body>
 </html>
