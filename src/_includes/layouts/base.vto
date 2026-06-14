@@ -20,21 +20,22 @@
     <link rel="dns-prefetch" href="https://webmention.io" />
     <link
       rel="preload"
-      href="/assets/fonts/josefin-sans-normal-100-700-latin.woff2"
+      href="/assets/fonts/dm-sans-normal-100-1000-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/inconsolata-100-normal-200-900-latin.woff2"
+      href="/assets/fonts/dm-sans-normal-100-1000-latin-ext.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
+
     <link
       rel="preload"
-      href="/assets/fonts/inconsolata-100-normal-200-900-latin-ext.woff2"
+      href="/assets/fonts/dm-mono-normal-400-latin.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -65,11 +66,25 @@
     {{ await it.comp.layout.Footer({ page: page }) }}
 
     {{# Representative h-card (IndieWeb Identity Consolidation) #}}
-    <div class="h-card hidden" aria-hidden="true">
-      <a class="p-name u-url u-uid" rel="me" href="/">{{ author.name }}</a>
-      <img class="u-photo" src="{{ author.avatar }}">
-      <p class="p-note">{{ site.description }}</p>
-      <a class="u-email" href="mailto:{{ author.email }}">{{ author.email }}</a>
+    <div
+      class="h-card hidden"
+      aria-hidden="true"
+      itemscope
+      itemtype="https://schema.org/Person"
+    >
+      <a class="p-name u-url u-uid" rel="me" href="/" itemprop="url">
+        <span itemprop="name">{{ author.name }}</span>
+      </a>
+      <img
+        class="u-photo"
+        src="{{ author.avatar }}"
+        alt="{{ author.name }}"
+        itemprop="image"
+      >
+      <p class="p-note" itemprop="description">{{ site.description }}</p>
+      <a class="u-email" href="mailto:{{ author.email }}" itemprop="email">{{
+        author.email
+      }}</a>
     </div>
 
     {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}

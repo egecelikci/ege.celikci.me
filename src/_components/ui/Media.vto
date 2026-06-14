@@ -9,15 +9,15 @@
   {{ set isAuto = it.aspect === "auto" }}
   {{
     set gridClass = isAuto ? "grid-cols-1" : (it.aspect || {
-      "eq1": "grid-cols-1 aspect-video md:aspect-[16/10]",
-      "eq2": "grid-cols-2 aspect-[2/1]",
-      "eq3": "grid-cols-2 grid-rows-2 aspect-[2/1]",
-      "eq4": "grid-cols-2 grid-rows-2 aspect-[2/1]",
+      "eq1": "grid-cols-1 aspect-[3/2] md:aspect-[16/10]",
+      "eq2": "grid-cols-2 aspect-[3/2] md:aspect-[2/1]",
+      "eq3": "grid-cols-2 grid-rows-2 aspect-[3/2] md:aspect-[2/1]",
+      "eq4": "grid-cols-2 grid-rows-2 aspect-[3/2] md:aspect-[2/1]",
     }["eq" + count])
   }}
 
   <div
-    class="grid gap-1 w-full ledger-card overflow-hidden my-4 {{ gridClass }} [view-transition-name:media-{{ it.images[0].src |> slugify }}]"
+    class="grid gap-2 w-full ledger-card overflow-hidden my-6 {{ gridClass }} [view-transition-name:media-{{ it.images[0].src |> slugify }}]"
     data-lightbox-group="{{ gid }}"
   >
     {{ for i, image of it.images |> slice(0, 4) }}
@@ -48,16 +48,24 @@
           transform-images="avif webp jpg 640 1280 1920"
           loading="lazy"
           decoding="async"
-          class="{{ if isAuto }}block w-full h-auto object-contain{{ else }}absolute inset-0 w-full h-full object-cover{{ /if }} transition-transform duration-300 ease-in-out group-hover/media:scale-105 group-active/media:scale-95"
+          class="{{ if isAuto }}block w-full h-auto object-contain{{ else }}absolute inset-0 w-full h-full object-cover{{ /if }} transition-all duration-500 ease-in-out group-hover/media:scale-105 group-hover/media:brightness-110"
         />
 
-        {{# 1. ACTUAL ALT TEXT (Hidden but indexed by Search for rich excerpts) #}}
+        {{# Museum-grade Caption Overlay #}}
         {{ if image.alt?.trim() }}
-          <span class="sr-only">{{ image.alt |> escape }}</span>
-
-          {{# 2. VISUAL BADGE (Ignored by Search) #}}
           <div
-            class="alt-badge absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[11px] font-bold px-1.5 py-0.5 rounded-md border border-white/10 opacity-90 shadow-sm pointer-events-none z-20"
+            class="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 translate-y-2 group-hover/media:opacity-100 group-hover/media:translate-y-0 transition-all duration-300 pointer-events-none z-20"
+          >
+            <p
+              class="text-white text-xs font-medium leading-relaxed line-clamp-2 m-0"
+            >
+              {{ image.alt |> escape }}
+            </p>
+          </div>
+
+          {{# 2. Subtle Visual Marker (Ignored by Search) #}}
+          <div
+            class="alt-badge absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded border border-white/10 opacity-100 group-hover/media:opacity-0 transition-opacity duration-300 pointer-events-none z-20"
             data-pagefind-ignore
           >
             ALT

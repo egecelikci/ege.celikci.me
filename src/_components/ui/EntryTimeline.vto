@@ -21,23 +21,16 @@
     const dateKeys = Object.keys(grouped)
   }}
 
-  <div class="h-feed flex flex-col gap-20">
+  <div class="h-feed flex flex-col gap-12">
     {{ for dateKey of dateKeys }}
-      <section class="flex flex-col gap-4">
-        {{# Date Marker #}}
-        <div class="flex items-center gap-4">
-          <div
-            class="shrink-0 w-2.5 h-2.5 rounded-full bg-secondary/60 ring-4 ring-secondary/5"
-          >
-          </div>
-
-          <h2
-            class="typography-label text-text-muted font-normal"
-          >
-            {{ dateKey }}
-          </h2>
-          <div class="divider"></div>
-        </div>
+      <section class="flex flex-col gap-6">
+        {{# Date Header #}}
+        {{
+          await it.comp.ui.SectionHeader({
+            title: dateKey,
+            classes: "group",
+          })
+        }}
 
         {{# Timeline Wrapper #}}
         {{ set timelineContent }}
@@ -54,9 +47,7 @@
           </div>
         {{ /set }}
 
-        {{
-          await comp.ui.Timeline({ content: timelineContent, classes: "ml-1" })
-        }}
+        {{ await it.comp.ui.Timeline({ content: timelineContent }) }}
       </section>
     {{ /for }}
   </div>

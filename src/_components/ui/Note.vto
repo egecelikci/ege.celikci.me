@@ -66,7 +66,7 @@
     {{ if !it.hideHeader }}
       <header class="listing-meta-row">
         <time
-          class="dt-published text-[11px] font-mono font-bold text-text-muted"
+          class="dt-published typography-sublabel text-text-muted"
         >
           {{ it.note.date |> date("dd MMM yyyy · HH:mm") }}
         </time>
@@ -75,7 +75,7 @@
           <div class="flex gap-4">
             {{ for tag of it.note.tags |> slice(0, 3) }}
               <span
-                class="text-[11px] font-mono font-bold text-primary"
+                class="typography-sublabel text-primary"
               >#{{ tag }}</span>
             {{ /for }}
           </div>

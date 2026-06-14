@@ -103,7 +103,7 @@ export default function () {
       // Modularized configs
       .use(googleFonts({
         fonts:
-          "https://fonts.google.com/share?selection.family=Azeret+Mono:ital,wght@0,100..900;1,100..900|Inconsolata:wght@200..900|Josefin+Sans:ital,wght@0,100..700;1,100..700",
+          "https://fonts.google.com/share?selection.family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500|DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000",
         fontsFolder: "/assets/fonts",
         cssFile: "/assets/styles/main.css",
         subsets: ["latin", "latin-ext"],

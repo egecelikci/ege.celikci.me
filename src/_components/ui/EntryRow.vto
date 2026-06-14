@@ -35,7 +35,7 @@
 }}
 
 <article
-  class="h-entry group relative flex flex-col gap-3 py-6 border-b border-border-subtle last:border-b-0 transition-all no-underline w-full haptic {{ it.classes || '' }}"
+  class="h-entry group relative flex flex-col gap-3 py-8 transition-all no-underline w-full haptic {{ it.classes || '' }}"
 >
   {{# 0. Hover Background #}}
   <div
@@ -67,7 +67,7 @@
       <div class="flex gap-3 min-w-0">
         {{ for tag of entry.tags |> slice(0, 2) }}
           <span
-            class="p-category text-[10px] font-accent font-bold text-text-muted truncate"
+            class="p-category typography-sublabel text-text-muted truncate"
           >#{{ tag }}</span>
         {{ /for }}
       </div>
@@ -92,7 +92,7 @@
   <div class="flex flex-col gap-2 relative z-10">
     {{ if entry.title && (!isNote || !entry.isAutoTitle) }}
       <h3
-        class="p-name text-xl md:text-2xl font-bold tracking-tight text-text group-reveal:text-primary transition-colors leading-tight"
+        class="p-name text-[length:var(--size-step-1)] font-bold [letter-spacing:var(--letter-spacing-h3)] text-text group-reveal:text-primary transition-colors leading-tight"
       >
         {{ entry.title }}
       </h3>
@@ -111,7 +111,7 @@
 
   {{# 3. IMAGES (Note specific) #}}
   {{ if isNote && entry.images?.length > 0 }}
-    <div class="max-w-xl w-full min-w-0 relative z-30">
+    <div class="w-full relative z-30">
       {{
         await it.comp.ui.Media({
           images: entry.images,

@@ -18,7 +18,7 @@
 
   }}
     <ul
-      class="flex items-center gap-4 p-0 m-0 list-none text-text-muted text-sm"
+      class="flex items-center gap-4 p-0 m-0 list-none text-text-muted typography-sublabel"
     >
       {{# Replies #}}
       <li
@@ -26,7 +26,10 @@
         title="{{ it.stats.replies }} mentions"
       >
         {{
-          await it.comp.base.Icon({ name: "message-square", classes: "mr-2 w-4 h-4" })
+          await it.comp.base.Icon({
+            name: "message-square",
+            classes: "mr-2 w-3.5 h-3.5",
+          })
         }}
         <span>{{ it.stats.replies |> humanizeNumber }}</span>
       </li>
@@ -36,7 +39,7 @@
         title="{{ it.stats.reposts }} reposts"
       >
         {{
-          await it.comp.base.Icon({ name: "repeat-2", classes: "mr-2 w-4 h-4" })
+          await it.comp.base.Icon({ name: "repeat-2", classes: "mr-2 w-3.5 h-3.5" })
         }}
         <span>{{ it.stats.reposts |> humanizeNumber }}</span>
       </li>
@@ -46,7 +49,7 @@
         title="{{ it.stats.likes }} likes"
       >
         {{
-          await it.comp.base.Icon({ name: "heart", classes: "mr-2 w-4 h-4" })
+          await it.comp.base.Icon({ name: "heart", classes: "mr-2 w-3.5 h-3.5" })
         }}
         <span>{{ it.stats.likes |> humanizeNumber }}</span>
       </li>
@@ -63,7 +66,6 @@
     }}
       <div class="h-3 w-px bg-border-subtle"></div>
     {{ /if }}
-
     <div class="flex items-center gap-3">
       {{ if it.syndication.bluesky }}
         <a

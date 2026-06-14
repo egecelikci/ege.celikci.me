@@ -1,0 +1,42 @@
+{{#
+  Component: SectionHeader
+  A flexible, robust marker for grouping lists by year/month or labeling sections.
+  Features a flexible divider line and supports right-aligned content.
+
+  Props:
+    - title: string | number (The main text, e.g. "2026", "Past Events")
+    - variant: "large" | "label" (default: "label")
+    - sticky: boolean (default: false)
+    - rightContent: html/string (Optional content for the right side)
+    - classes: string (Optional wrapper classes)
+#}}
+
+{{ set isLarge = it.variant === "large" }}
+
+<div
+  class="flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] md:top-0 bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || '' }}"
+>
+  {{ if isLarge }}
+    <h2 class="sr-only">{{ it.title }}</h2>
+    <h2
+      class="text-4xl md:text-5xl font-bold tracking-tighter opacity-20 group-hover:text-primary transition-colors"
+      aria-hidden="true"
+    >
+      {{ it.title }}
+    </h2>
+    <div class="divider opacity-20" aria-hidden="true"></div>
+  {{ else }}
+    <h2
+      class="typography-label text-text-muted font-bold uppercase tracking-[var(--letter-spacing-label)] group-hover:text-primary transition-colors"
+    >
+      {{ it.title }}
+    </h2>
+    <div class="divider opacity-50"></div>
+  {{ /if }}
+
+  {{ if it.rightContent }}
+    <div class="shrink-0 flex items-center">
+      {{ it.rightContent |> safe }}
+    </div>
+  {{ /if }}
+</div>

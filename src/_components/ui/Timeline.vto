@@ -1,6 +1,7 @@
 {{#
   Component: Timeline Wrapper (Primitive)
   A minimalist vertical line container for chronological items.
+  Editorial version: Removed the persistent spine in favor of pure typography and rhythm.
 
   Props:
     - content: The items to render inside the timeline (required)
@@ -9,17 +10,8 @@
 #}}
 
 <div class="relative {{ it.classes }}" {{ it.attributes |> attr |> safe }}>
-  {{# 1. THE SPINE #}}
-  <div class="absolute left-0 top-0 bottom-0 w-px bg-border-subtle">
-    {{# Subtle Gradient Overlay for the line #}}
-    <div
-      class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-muted to-transparent opacity-50"
-    >
-    </div>
-  </div>
-
-  {{# 2. THE CONTENT (Shifted to clear the spine) #}}
-  <div class="pl-8 md:pl-12">
+  {{# 1. THE CONTENT (Clean alignment for editorial look) #}}
+  <div class="pl-0">
     {{ content |> safe }}
   </div>
 </div>

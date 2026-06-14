@@ -155,7 +155,7 @@ async function fetchAlbumCover(rgid) {
 
 The `fetchAlbumCover` function works almost exactly like the metadata fetcher, but it hits the [Cover Art Archive](https://coverartarchive.org/). Instead of requesting JSON, I’m grabbing the `buffer` (the raw image data) for the 500px version of the cover. Again, I cache this for 30 days because downloading hundreds of images every time I build the site would be painfully slow.
 
-## the ａｅｓｔｈｅｔｉｃ part, image processing
+## the <span class="font-mono tracking-[0.3em]">aesthetic</span> part, image processing
 
 The hardest part of this whole project wasn’t fetching the data, it was processing the images. I didn’t want to just slap high-res JPEGs on the page. I wanted a specific look: a 1-bit dithered aesthetic that feels a bit retro.
 

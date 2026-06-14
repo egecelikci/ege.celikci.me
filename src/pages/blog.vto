@@ -22,12 +22,13 @@ navigation:
   {{ for year of years }}
     <section class="flex flex-col gap-6 md:gap-8">
       {{# Year Header #}}
-      <div class="flex items-center gap-6 opacity-30">
-        <h2 class="text-4xl md:text-5xl font-bold tracking-tighter">
-          {{ year }}
-        </h2>
-        <div class="h-px grow bg-current"></div>
-      </div>
+      {{
+        await it.comp.ui.SectionHeader({
+          title: year,
+          variant: "large",
+          classes: "mb-4",
+        })
+      }}
 
       {{# Posts for this year #}}
       <div class="flex flex-col">
