@@ -13,7 +13,6 @@
       it.entries,
       (item) =>
         item.date.toLocaleDateString("en-GB", {
-          day: "numeric",
           month: "long",
           year: "numeric",
         }),
@@ -24,7 +23,7 @@
   <div class="h-feed flex flex-col gap-12">
     {{ for dateKey of dateKeys }}
       <section class="flex flex-col gap-6">
-        {{# Date Header #}}
+        {{# Month Header #}}
         {{
           await it.comp.ui.SectionHeader({
             title: dateKey,
@@ -39,7 +38,7 @@
               {{
                 await it.comp.ui.EntryRow({
                   entry: item,
-                  showDate: false,
+                  showDate: true,
                   hideLabel: it.hideRowLabel,
                 })
               }}

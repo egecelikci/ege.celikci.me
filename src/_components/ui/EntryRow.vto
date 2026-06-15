@@ -20,13 +20,12 @@
 {{ if isNote }}{{ set typeLabel = "note" }}{{ /if }}
 
 {{# Date formatting #}}
-{{ set dateStr = "" }}
-{{ if showDate }}
-  {{ if isNote }}
-    {{ set dateStr = entry.date |> date("MMM dd HH:mm") }}
-  {{ else }}
-    {{ set dateStr = entry.date |> date("dd MMM yyyy") }}
-  {{ /if }}
+{{ set dayStr = entry.date |> date("dd") }}
+{{ set subStr = "" }}
+{{ if isNote }}
+  {{ set subStr = entry.date |> date("HH:mm") }}
+{{ else }}
+  {{ set subStr = entry.date |> date("MMM") }}
 {{ /if }}
 
 {{# Vento Context for notes #}}
@@ -35,92 +34,98 @@
 }}
 
 <article
-  class="h-entry group relative flex flex-col gap-3 py-8 transition-all no-underline w-full haptic {{ it.classes || '' }}"
+  class="h-entry group relative flex gap-8 py-10 px-4 md:px-6 transition-all no-underline w-full haptic rounded-2xl hover:bg-surface-subtle {{ it.classes || '' }}"
 >
-  {{# 0. Hover Background #}}
-  <div
-    class="absolute -inset-x-4 md:-inset-x-6 inset-y-0 z-0 rounded-2xl transition-colors duration-300 group-reveal:bg-surface-subtle pointer-events-none"
-  >
-  </div>
-
-  {{# 1. HEADER (Time + Tags + Meta) #}}
-  <header class="flex items-center gap-4 relative z-30 overflow-hidden">
-    {{ if showDate }}
-      <time
-        class="dt-published typography-label text-text-muted shrink-0 group-reveal:text-primary transition-all"
+  {{# 0. SIDE DATE ANCHOR (Classical Archival Look) #}}
+  {{ if showDate }}
+    <div class="flex flex-col items-center shrink-0 w-12 pt-1 relative z-30">
+      <span
+        class="text-4xl md:text-5xl font-bold font-accent tracking-tighter text-text-dim group-hover:text-primary transition-all duration-500"
       >
-        {{ dateStr }}
-      </time>
-    {{ else }}
-      <span class="typography-label text-primary flex items-center gap-2">
-        {{
-          await it.comp.base.Icon({
-            name: isNote ? "sticky-note" : "pencil",
-            classes: "w-3 h-3",
-          })
-        }}
-        {{ if !it.hideLabel }}{{ typeLabel }}{{ /if }}
+        {{ dayStr }}
       </span>
-    {{ /if }}
-
-    {{ if entry.tags }}
-      <div class="flex gap-3 min-w-0">
-        {{ for tag of entry.tags |> slice(0, 2) }}
-          <span
-            class="p-category typography-sublabel text-text-muted truncate"
-          >#{{ tag }}</span>
-        {{ /for }}
-      </div>
-    {{ /if }}
-
-    <div class="divider min-w-[1rem]"></div>
-
-    {{# Stats + Syndication (only for notes/interaction-heavy items) #}}
-    {{ if isNote || entry.stats || entry.syndication }}
-      {{
-        await it.comp.ui.ActivityMeta({
-          stats: entry.stats,
-          syndication: entry.syndication,
-          classes:
-            "shrink-0 text-text-dim group-reveal:text-text-muted transition-colors relative z-40",
-        })
-      }}
-    {{ /if }}
-  </header>
-
-  {{# 2. CONTENT #}}
-  <div class="flex flex-col gap-2 relative z-10">
-    {{ if entry.title && (!isNote || !entry.isAutoTitle) }}
-      <h3
-        class="p-name text-[length:var(--size-step-1)] font-bold [letter-spacing:var(--letter-spacing-h3)] text-text group-reveal:text-primary transition-colors leading-tight"
+      <time
+        class="dt-published typography-sublabel text-text-muted font-mono mt-[-2px] uppercase tracking-widest"
       >
-        {{ entry.title }}
-      </h3>
-    {{ /if }}
-
-    <div
-      class="e-content markdown text-sm md:text-base leading-relaxed text-text-dim line-clamp-3 group-reveal:text-text transition-colors"
-    >
-      {{ if isNote }}
-        {{ entry.content |> vto(vtoContext) |> md |> safe }}
-      {{ else }}
-        {{ entry.description || "" }}
-      {{ /if }}
-    </div>
-  </div>
-
-  {{# 3. IMAGES (Note specific) #}}
-  {{ if isNote && entry.images?.length > 0 }}
-    <div class="w-full relative z-30">
-      {{
-        await it.comp.ui.Media({
-          images: entry.images,
-          static: false,
-          postUrl: entry.url,
-        })
-      }}
+        {{ subStr }}
+      </time>
     </div>
   {{ /if }}
+
+  <div class="flex flex-col gap-3 min-w-0 flex-1">
+    {{# 1. HEADER (Tags + Meta) #}}
+    <header class="flex items-center gap-4 relative z-30 overflow-hidden">
+      {{ if !showDate }}
+        <span class="typography-label text-primary flex items-center gap-2">
+          {{
+            await it.comp.base.Icon({
+              name: isNote ? "sticky-note" : "pencil",
+              classes: "w-3 h-3",
+            })
+          }}
+          {{ if !it.hideLabel }}{{ typeLabel }}{{ /if }}
+        </span>
+      {{ /if }}
+
+      {{ if entry.tags }}
+        <div class="flex gap-3 min-w-0">
+          {{ for tag of entry.tags |> slice(0, 2) }}
+            <span
+              class="p-category typography-sublabel text-text-dim truncate hover:text-primary transition-colors"
+            >#{{ tag }}</span>
+          {{ /for }}
+        </div>
+      {{ /if }}
+
+      <div class="divider min-w-[1rem] opacity-20"></div>
+
+      {{# Stats + Syndication #}}
+      {{ if isNote || entry.stats || entry.syndication }}
+        {{
+          await it.comp.ui.ActivityMeta({
+            stats: entry.stats,
+            syndication: entry.syndication,
+            classes:
+              "shrink-0 text-text-dim group-hover:text-text-muted transition-colors relative z-40",
+          })
+        }}
+      {{ /if }}
+    </header>
+
+    {{# 2. CONTENT #}}
+    <div class="flex flex-col gap-3 relative z-10">
+      {{ if entry.title && (!isNote || !entry.isAutoTitle) }}
+        <h3
+          class="p-name text-[length:var(--size-step-1)] font-bold [letter-spacing:var(--letter-spacing-h3)] text-text group-hover:text-primary transition-colors leading-tight"
+        >
+          {{ entry.title }}
+        </h3>
+      {{ /if }}
+
+      <div
+        class="e-content markdown text-base md:text-lg leading-relaxed text-text-dim group-hover:text-text transition-colors {{ isNote ? '' : 'line-clamp-3' }}"
+      >
+        {{ if isNote }}
+          {{ entry.content |> vto(vtoContext) |> md |> safe }}
+        {{ else }}
+          {{ entry.description || "" }}
+        {{ /if }}
+      </div>
+    </div>
+
+    {{# 3. IMAGES (Note specific) #}}
+    {{ if isNote && entry.images?.length > 0 }}
+      <div class="w-full relative z-30 pt-2">
+        {{
+          await it.comp.ui.Media({
+            images: entry.images,
+            static: false,
+            postUrl: entry.url,
+          })
+        }}
+      </div>
+    {{ /if }}
+  </div>
 
   {{# 4. OVERLAY LINK #}}
   <a
