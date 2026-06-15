@@ -130,12 +130,9 @@ layout: layouts/page.vto
                   <div
                     class="text-xl md:text-2xl font-bold text-text leading-tight flex items-center"
                   >
-                    <a
-                      href="https://musicbrainz.org/artist/{{ rel.artist.id }}"
-                      class="hover:text-primary transition-colors"
-                    >
-                      {{ rel["target-credit"] || rel.artist.name }}
-                    </a>
+                    <span class="inline-block">{{
+                      rel["target-credit"] || rel.artist.name
+                    }}</span>
 
                     <div class="ml-2 inline-block">
                       {{
@@ -158,18 +155,6 @@ layout: layouts/page.vto
             <p class="text-text-muted italic">Lineup TBA</p>
           {{ /if }}
         </section>
-
-        {{# SETLIST SECTION #}}
-        {{ if event.setlist }}
-          <section class="flex flex-col gap-8">
-            {{ comp.ui.SectionHeader({ title: "Setlist" }) }}
-            <div
-              class="markdown prose-li:list-none prose-li:pl-0 prose-ul:pl-0"
-            >
-              {{ event.setlist |> mb_setlist |> md }}
-            </div>
-          </section>
-        {{ /if }}
       </div>
     </div>
 
