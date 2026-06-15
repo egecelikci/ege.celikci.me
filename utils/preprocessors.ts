@@ -3,6 +3,7 @@ import images from "./preprocessors/images.ts";
 import events from "./preprocessors/events.ts";
 import feeds from "./preprocessors/feeds.ts";
 import stats from "./preprocessors/stats.ts";
+import notes from "./preprocessors/notes.ts";
 
 /**
  * Modular preprocessor registration.
@@ -13,4 +14,5 @@ export default function registerPreprocessors(site: Site) {
   site.use(events());
   site.use(feeds());
   site.use(stats());
+  site.use(notes());
 }

@@ -90,7 +90,11 @@ export class HttpClient {
   ): Promise<T | null> {
     const cache = await caches.open(this.cacheName);
     const request = new Request(url, {
-      headers: { "User-Agent": this.userAgent },
+      headers: {
+        "User-Agent": this.userAgent,
+        "Accept": "application/json; charset=utf-8",
+        "Content-Type": "application/json; charset=utf-8",
+      },
     });
 
     // 1. Check cache
@@ -98,7 +102,9 @@ export class HttpClient {
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
         if (type === "json") {
-          return await cachedResponse.json() as T;
+          const buffer = await cachedResponse.arrayBuffer();
+          const text = new TextDecoder("utf-8").decode(buffer);
+          return JSON.parse(text) as T;
         } else {
           const buffer = await cachedResponse.arrayBuffer();
           return buffer as T;
@@ -135,7 +141,11 @@ export class HttpClient {
   ): Promise<T | null> {
     try {
       const response = await this.robustFetch(url, {
-        headers: { "User-Agent": this.userAgent },
+        headers: {
+          "User-Agent": this.userAgent,
+          "Accept": "application/json; charset=utf-8",
+          "Content-Type": "application/json; charset=utf-8",
+        },
       });
 
       this.lastFetch = Date.now();
@@ -154,7 +164,9 @@ export class HttpClient {
           );
           return null;
         }
-        return await response.json() as T;
+        const buffer = await response.arrayBuffer();
+        const text = new TextDecoder("utf-8").decode(buffer);
+        return JSON.parse(text) as T;
       } else {
         const buffer = await response.arrayBuffer();
         return buffer as T;
