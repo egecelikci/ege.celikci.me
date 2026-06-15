@@ -286,8 +286,13 @@ export const filters = {
   mb_setlist: function (content: string): string {
     if (!content) return "";
 
-    return content
-      .split(/\r?\n/)
+    // Normalize: Handle inline separators by inserting newlines
+    // Looks for space or bracket followed by @, *, or #
+    const normalized = content
+      .replace(/(\s|\])([@*#])/g, "$1\n$2")
+      .split(/\r?\n/);
+
+    return normalized
       .map((line) => {
         const trimmed = line.trim();
         if (!trimmed) return "";
@@ -300,8 +305,11 @@ export const filters = {
           match: string,
           rawId: string,
           name: string,
-          type: "artist" | "work",
+          type: "artist" | "recording" | "work",
         ) => {
+          if (rawId.startsWith("http")) {
+            return `[${name}](${rawId})`;
+          }
           const mbidMatch = rawId.match(idRegex);
           const mbid = mbidMatch ? mbidMatch[1] : rawId;
           return `[${name}](https://musicbrainz.org/${type}/${mbid})`;
@@ -322,7 +330,7 @@ export const filters = {
         if (trimmed.startsWith("*")) {
           const text = trimmed.substring(1).trim();
 
-          // Split by parenthetical groups to distinguish context
+          // Split by parenthetical groups to distinguish context (e.g. cover artist)
           const parts = text.split(/(\([^\)]+\))/g);
           const processed = parts.map((part) => {
             if (part.startsWith("(") && part.endsWith(")")) {
@@ -352,7 +360,7 @@ export const filters = {
           }*  `;
         }
 
-        // 4. Default: Handle escaping
+        // 4. Default: Handle escaping and fallback
         const escaped = trimmed
           .replace(/&lsqb;/g, "[")
           .replace(/&rsqb;/g, "]")
@@ -363,6 +371,7 @@ export const filters = {
           (m, id, n) => processLink(m, id, n, "artist"),
         );
       })
+      .filter(Boolean)
       .join("\n");
   },
 

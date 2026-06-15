@@ -166,7 +166,7 @@ layout: layouts/page.vto
             <div
               class="markdown prose-li:list-none prose-li:pl-0 prose-ul:pl-0"
             >
-              {{ event.setlist |> mb_setlist |> md }}
+              {{ event.setlist |> mb_setlist |> md |> safe }}
             </div>
           </section>
         {{ /if }}
