@@ -13,7 +13,7 @@ navigation:
 
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
-  <div class="h-feed not-prose">
+  <div class="h-feed not-prose mt-10">
     {{ await comp.ui.EntryTimeline({ entries: results, hideRowLabel: true }) }}
   </div>
 {{ else }}
