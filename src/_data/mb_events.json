@@ -2456,9 +2456,7 @@
             "cancelled": "efd89258-fb07-48e9-acf9-0a54ce03606d"
           },
           "attribute-values": {},
-          "attributes": [
-            "cancelled"
-          ],
+          "attributes": ["cancelled"],
           "begin": null,
           "direction": "backward",
           "end": null,
@@ -2895,9 +2893,7 @@
             "cancelled": "efd89258-fb07-48e9-acf9-0a54ce03606d"
           },
           "attribute-values": {},
-          "attributes": [
-            "cancelled"
-          ],
+          "attributes": ["cancelled"],
           "begin": null,
           "direction": "backward",
           "end": null,
@@ -3002,9 +2998,7 @@
             "cancelled": "efd89258-fb07-48e9-acf9-0a54ce03606d"
           },
           "attribute-values": {},
-          "attributes": [
-            "cancelled"
-          ],
+          "attributes": ["cancelled"],
           "begin": null,
           "direction": "backward",
           "end": null,
@@ -3340,7 +3334,7 @@
           "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
         }
       ],
-      "setlist": "",
+      "setlist": "@ [08c9ac33-dd3e-4ce0-9ede-54b80b0157bd|lütfen beni öldürmeyin]\r\n* [2140275d-a159-4074-9615-974604ff8b45|Bloodhail] ([70923a5d-d3ba-4ef7-9064-ea5f709aa076|Have a Nice Life] cover)\r\n* [c5b5a7ec-82f9-4fe9-82af-e956f9fd4469|çiçekler, çiçekler]\r\n* [3b143e2f-40f8-493b-9132-158a151956f9|No One Is Ever Going to Want Me] ([d9225474-b3c0-439a-bb3a-cbb34977bc7b|Giles Corey] cover)\r\n* [2b9b02d3-4214-4494-b5bd-fd7f61389129|eski hapishane]\r\n* [8d694c00-eaa2-440e-a94a-b81be1a913b8|Onanist] ([677e31f1-4035-463c-8ca4-41175440c919|Ethel Cain] cover)\r\n* [3a80189c-73e3-4b57-a928-4c5ef8020597|Blackest Bile] ([d9225474-b3c0-439a-bb3a-cbb34977bc7b|Giles Corey] cover)\r\n* [23ae48b7-fa0f-4b56-9cf8-ac2a23a96741|Au pays du cocaine] ([e0c97a4d-c392-41a9-a374-57af3e3eeab3|Geese] cover)\r\n* I Want Wind to Blow ([6f2f87e7-3ce9-4f1c-81dd-6f068a78cf26|The Microphones] cover)\r\n* [ef2fade1-8ee3-4bdd-981f-2ca8116424a1|nükleer gölgeler]\r\n* [0bde0bae-9773-45eb-9c40-d5cd55691c05|hepsini unut]\r\n* II. Solar System ([6f2f87e7-3ce9-4f1c-81dd-6f068a78cf26|The Microphones] cover)\r\n* [3d61f4ea-7a47-40c1-8647-3c7a01bdc720|başka bir ev]",
       "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
@@ -3604,9 +3598,7 @@
             "area": {
               "disambiguation": "",
               "id": "f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5",
-              "iso-3166-2-codes": [
-                "TR-35"
-              ],
+              "iso-3166-2-codes": ["TR-35"],
               "name": "İzmir",
               "sort-name": "İzmir",
               "type": "Subdivision",
@@ -3930,9 +3922,7 @@
           "attribute-values": {
             "task": "sound design"
           },
-          "attributes": [
-            "task"
-          ],
+          "attributes": ["task"],
           "begin": null,
           "direction": "backward",
           "end": null,
@@ -4307,9 +4297,7 @@
             "cancelled": "efd89258-fb07-48e9-acf9-0a54ce03606d"
           },
           "attribute-values": {},
-          "attributes": [
-            "cancelled"
-          ],
+          "attributes": ["cancelled"],
           "begin": null,
           "direction": "backward",
           "end": null,
@@ -4669,9 +4657,7 @@
             "cancelled": "efd89258-fb07-48e9-acf9-0a54ce03606d"
           },
           "attribute-values": {},
-          "attributes": [
-            "cancelled"
-          ],
+          "attributes": ["cancelled"],
           "begin": null,
           "direction": "backward",
           "end": null,
