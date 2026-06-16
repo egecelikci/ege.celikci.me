@@ -54,7 +54,9 @@ search_bar:
         it.indexItems = indexItems
       }}
 
-      {{ comp.ui.IndexList({ items: it.indexItems }) }}
+      <nav>
+        {{ comp.ui.IndexList({ items: it.indexItems }) }}
+      </nav>
     </div>
 
     {{# 3. VISUAL (Sidebar) #}}

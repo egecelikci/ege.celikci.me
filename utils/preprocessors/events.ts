@@ -48,6 +48,11 @@ export default function () {
         const local = events?.[event.id] || {};
         event.local = local;
 
+        // Merge setlist override
+        if (local.setlist) {
+          event.setlist = local.setlist;
+        }
+
         // 4. Resolve Venue Name (Robust & Historical)
         // Priority: local override -> MB relation target-credit -> MB global name
         const venueName = local.venue_name || venueRel?.["target-credit"] ||

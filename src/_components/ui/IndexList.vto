@@ -1,6 +1,6 @@
 {{#
   Component: IndexList
-  A clean, typographic ledger for site-wide navigation.
+  A clean, typographic ledger for site-wide navigation or data lists.
 
   Props:
     - items: Array<{
@@ -14,41 +14,41 @@
 #}}
 
 <div class="flex flex-col {{ it.classes || '' }}">
-  <nav class="flex flex-col font-mono text-xs md:text-sm">
+  <ul class="flex flex-col font-mono text-xs md:text-sm list-none p-0 m-0">
     {{ for item of it.items }}
       {{ if item.type === "section" }}
         {{# --- SECTION HEADER --- #}}
-        <div
+        <li
           class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border-subtle first:border-t-0 first:pt-0"
         >
           <span
             class="typography-label text-text-muted"
           >
-            {{ item.title }}
+            {{ item.title |> safe }}
           </span>
-        </div>
+        </li>
       {{ else }}
         {{# --- LEDGER ENTRY --- #}}
-        <div class="group flex flex-col">
+        <li class="group flex items-center">
           <a
-            href="{{ item.href }}"
+            {{ if item.href }}href="{{ item.href }}"{{ /if }}
             class="
-              flex items-baseline no-underline text-text hover:text-primary transition-all py-1 px-2 -mx-2 rounded-lg
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle
+              grow flex items-baseline no-underline py-1 px-2 -mx-2 rounded-lg transition-all
+              {{ if item.href }}text-text hover:text-primary focus-visible:ring-primary-muted focus-visible:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2{{ else }}text-text-muted cursor-default{{ /if }}
             "
           >
             {{# Marker #}}
             <span
-              class="shrink-0 w-8 text-text-muted group-reveal:text-primary group-[.is-active]:text-primary transition-colors"
+              class="shrink-0 w-8 text-text-muted {{ if item.href }}group-reveal:text-primary group-[.is-active]:text-primary{{ /if }} transition-colors"
             >
               {{ item.marker || "··" }}
             </span>
 
             {{# Title #}}
             <span
-              class="font-bold border-b border-border-subtle group-reveal:border-primary-muted group-[.is-active]:border-primary-muted transition-colors pb-0.5"
+              class="font-bold border-b border-border-subtle {{ if item.href }}group-reveal:border-primary-muted group-[.is-active]:border-primary-muted{{ /if }} transition-colors pb-0.5"
             >
-              {{ item.title }}
+              {{ item.title |> safe }}
             </span>
 
             {{# Connector #}}
@@ -58,52 +58,68 @@
 
             {{# Description #}}
             <span
-              class="text-text-muted italic group-reveal:text-text group-[.is-active]:text-text transition-colors text-right"
+              class="text-text-muted italic {{ if item.href }}group-reveal:text-text group-[.is-active]:text-text{{ /if }} transition-colors text-right"
             >
-              {{ item.desc }}
+              {{ item.desc |> safe }}
             </span>
           </a>
 
-          {{# CHILDREN #}}
-          {{ if item.children && item.children.length > 0 }}
-            <div class="flex flex-col ml-8 mb-1">
-              {{ for child of item.children }}
-                <a
-                  href="{{ child.href }}"
-                  class="
-                    relative flex items-baseline no-underline py-1 pl-6 pr-2 -mr-2 rounded-lg transition-all
-                    before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border-subtle
-                    last:before:h-1/2 group/child
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle
-                  "
-                >
-                  {{# Horizontal L-part #}}
-                  <div
-                    class="absolute left-0 top-1/2 w-4 h-px bg-border-subtle"
-                  >
-                  </div>
-
-                  <span
-                    class="font-bold text-text-dim group-hover/child:text-primary transition-colors"
-                  >
-                    {{ child.title }}
-                  </span>
-
-                  <span
-                    class="h-px grow border-t border-dotted border-border-subtle mx-4"
-                  ></span>
-
-                  <span
-                    class="text-text-muted italic group-hover/child:text-text transition-colors text-right"
-                  >
-                    {{ child.desc }}
-                  </span>
-                </a>
-              {{ /for }}
+          {{ if item.extra }}
+            <div class="flex items-center gap-2 ml-4 relative z-30">
+              {{ item.extra |> safe }}
             </div>
           {{ /if }}
-        </div>
+        </li>
+
+        {{# CHILDREN #}}
+        {{ if item.children && item.children.length > 0 }}
+          <li class="flex flex-col ml-8 mb-2">
+            <ul class="flex flex-col list-none p-0 m-0">
+              {{ for child of item.children }}
+                <li class="group/child-row flex items-center">
+                  <a
+                    {{ if child.href }}href="{{ child.href }}"{{ /if }}
+                    class="
+                      relative grow flex items-baseline no-underline py-1 pl-6 pr-2 -mr-2 rounded-lg transition-all
+                      before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border-subtle
+                      last:before:h-1/2 group/child
+                      {{ if child.href }}focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle{{ else }}cursor-default{{ /if }}
+                    "
+                  >
+                    {{# Horizontal L-part #}}
+                    <div
+                      class="absolute left-0 top-1/2 w-4 h-px bg-border-subtle"
+                    >
+                    </div>
+
+                    <span
+                      class="{{ if child.href }}font-bold text-text-dim group-hover/child:text-primary{{ else }}text-text-muted{{ /if }} transition-colors"
+                    >
+                      {{ child.title |> safe }}
+                    </span>
+
+                    <span
+                      class="h-px grow border-t border-dotted border-border-subtle mx-4"
+                    ></span>
+
+                    <span
+                      class="text-text-muted italic {{ if child.href }}group-hover/child:text-text{{ /if }} transition-colors text-right"
+                    >
+                      {{ child.desc |> safe }}
+                    </span>
+                  </a>
+
+                  {{ if child.extra }}
+                    <div class="flex items-center gap-2 ml-4 relative z-30">
+                      {{ child.extra |> safe }}
+                    </div>
+                  {{ /if }}
+                </li>
+              {{ /for }}
+            </ul>
+          </li>
+        {{ /if }}
       {{ /if }}
     {{ /for }}
-  </nav>
+  </ul>
 </div>

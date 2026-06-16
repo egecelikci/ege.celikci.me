@@ -1,0 +1,83 @@
+{{#
+  Component: Setlist
+  Renders a parsed setlist using the IndexList primitive for a unified, typographic look.
+#}}
+
+{{>
+  // 1. Helpers
+  const idRegex = /([a-f0-9-]{36})/;
+
+  const parseMBLink = (str) => {
+    const m = str.match(/\[([^|\]]+)\|([^\]]+)\]/);
+    if (!m) return { id: null, name: str };
+
+    const rawId = m[1];
+    const name = m[2];
+    const mbidMatch = rawId.match(idRegex);
+    const mbid = mbidMatch ? mbidMatch[1] : rawId;
+
+    return { id: mbid, name };
+  };
+
+  // 2. Main Processing
+  const content = it.content || "";
+  let performer = { id: null, name: "Setlist" };
+  const tracks = [];
+
+  if (content) {
+    const lines = content.split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+
+      if (trimmed.startsWith("@")) {
+        const { id, name } = parseMBLink(trimmed.substring(1).trim());
+        performer = { id, name };
+      } else if (trimmed.startsWith("*")) {
+        const { id, name } = parseMBLink(trimmed.substring(1).trim());
+        tracks.push({
+          workId: id,
+          workTitle: name,
+          title: name,
+          artistName: performer.name,
+          artistId: performer.id,
+        });
+      } else if (trimmed.startsWith("#")) {
+        if (tracks.length > 0) {
+          const last = tracks[tracks.length - 1];
+          last.notes = last.notes || [];
+          last.notes.push(trimmed.substring(1).trim());
+        }
+      }
+    }
+  }
+
+  // 3. Map to IndexList Items
+  const items = [];
+  const artistMBUrl = performer.id
+    ? `https://musicbrainz.org/artist/${performer.id}`
+    : null;
+
+  const sectionTitle = `<b>${
+    artistMBUrl
+      ? `<a href="${artistMBUrl}" class="hover:text-primary transition-colors">${performer.name}</a>`
+      : performer.name
+  }</b>`;
+
+  items.push({ type: "section", title: sectionTitle });
+
+  let counter = 1;
+  for (const t of tracks) {
+    const workUrl = t.workId ? `https://musicbrainz.org/work/${t.workId}` : null;
+    const desc = t.notes ? t.notes.join(" · ") : "";
+
+    items.push({
+      title: `<i>${t.workTitle || t.title}</i>`,
+      ...(workUrl ? { href: workUrl } : {}),
+      marker: String(counter++).padStart(2, "0") + ".",
+      desc: desc,
+    });
+  }
+}}
+
+{{ comp.ui.IndexList({ items, classes: it.classes }) }}

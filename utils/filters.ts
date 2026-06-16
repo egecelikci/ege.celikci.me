@@ -283,6 +283,93 @@ export const filters = {
       .sort(orderByDate);
   },
 
+  mb_setlist: function (content: string): string {
+    if (!content) return "";
+
+    const linkRegex = /\[([^|\]]+)\|([^\]]+)\]/g;
+    const idRegex = /([a-f0-9-]{36})/;
+
+    const processLink = (
+      match: string,
+      rawId: string,
+      name: string,
+      type: "artist" | "work",
+    ) => {
+      const mbidMatch = rawId.match(idRegex);
+      const mbid = mbidMatch ? mbidMatch[1] : rawId;
+      return `[${name}](https://musicbrainz.org/${type}/${mbid})`;
+    };
+
+    const processLine = (line: string) => {
+      const trimmed = line.trim();
+      if (!trimmed) return "";
+
+      // 1. Artist Header (@)
+      if (trimmed.startsWith("@")) {
+        const text = trimmed.substring(1).trim();
+        return `**${
+          text.replace(
+            linkRegex,
+            (m, id, n) => processLink(m, id, n, "artist"),
+          )
+        }**  `;
+      }
+
+      // 2. Song Line (*)
+      if (trimmed.startsWith("*")) {
+        const text = trimmed.substring(1).trim();
+
+        // Split by parenthetical groups to distinguish context
+        const parts = text.split(/(\([^\)]+\))/g);
+        const processed = parts.map((part) => {
+          if (part.startsWith("(") && part.endsWith(")")) {
+            return part.replace(
+              linkRegex,
+              (m, id, n) => processLink(m, id, n, "artist"),
+            );
+          } else {
+            return part.replace(
+              linkRegex,
+              (m, id, n) => processLink(m, id, n, "work"),
+            );
+          }
+        }).join("");
+
+        return `- ${processed}`;
+      }
+
+      // 3. Info Line (#)
+      if (trimmed.startsWith("#")) {
+        const text = trimmed.substring(1).trim();
+        return `*${
+          text.replace(
+            linkRegex,
+            (m, id, n) => processLink(m, id, n, "artist"),
+          )
+        }*  `;
+      }
+
+      // 4. Default: Handle escaping
+      const escaped = trimmed
+        .replace(/&lsqb;/g, "[")
+        .replace(/&rsqb;/g, "]")
+        .replace(/&amp;/g, "&");
+
+      return escaped.replace(
+        linkRegex,
+        (m, id, n) => processLink(m, id, n, "artist"),
+      );
+    };
+
+    // Support single-line setlists using '*' as a separator
+    if (!content.includes("\n") && content.includes("*")) {
+      const parts = content.split("*");
+      return parts.map((p) => processLine(p.trim())).join(" * ");
+    }
+
+    return content.split(/\r?\n/).map(processLine).join("\n");
+  },
+
   truncate: function (str: unknown, length: number, suffix = "…"): string {
     const s = String(str || "");
     if (s.length <= length) return s;
