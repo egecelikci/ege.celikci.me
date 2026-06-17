@@ -13,6 +13,11 @@
 {{# https://github.com/darkreader/darkreader/blob/main/CONTRIBUTING.md#disabling-dark-reader-on-your-site #}}
 <meta name="darkreader-lock" />
 
+{{# Fediverse Attribution #}}
+{{ if author?.social?.mastodon?.name }}
+  <meta name="fediverse:creator" content="{{ author.social.mastodon.name }}" />
+{{ /if }}
+
 {{# Indie Auth #}}
 <link rel="authorization_endpoint" href="https://indieauth.com/auth" />
 <link rel="token_endpoint" href="https://tokens.indieauth.com/token" />
