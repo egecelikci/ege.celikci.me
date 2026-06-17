@@ -20,108 +20,104 @@ headerExtension:
 ---
 
 {{# ── PROMINENT ACTIONS ──────────────────────────────────────────────── #}}
-<div class="mb-24">
-  {{ set calloutContent }}
-    <div
-      class="flex flex-col md:flex-row md:items-center justify-between gap-6"
-    >
-      <div class="space-y-1">
-        <p class="font-bold text-text m-0">Keep up with the scene.</p>
-        <p class="text-sm text-text-muted m-0">
-          Subscribe to the events calendar or feeds to get automatic updates.
-        </p>
-      </div>
-      <div class="flex flex-row flex-wrap items-center gap-3 shrink-0">
-        {{ set icsUrl = "/events.ics" |> url(true) }}
-        {{ set webcalUrl = icsUrl.replace(/^https?:\/\//, "webcal://") }}
-        <a
-          href="{{ webcalUrl }}"
-          class="btn-minimal"
-          title="Subscribe in your default calendar app"
-        >
-          {{
-            comp.base.Icon({
-              name: "calendar-sync",
-              catalog: "lucide",
-              classes: "w-3.5 h-3.5",
-            })
-          }}
-          Subscribe
-        </a>
-
-        <div class="flex items-center gap-2">
-          <a
-            href="https://www.google.com/calendar/render?cid={{ webcalUrl |> encodeURIComponent }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-minimal !px-3"
-            title="Add to Google Calendar"
-          >
-            {{
-              comp.base.Icon({
-                name: "google",
-                catalog: "simpleicons",
-                classes: "w-3.5 h-3.5",
-              })
-            }}
-          </a>
-          <button
-            onclick='navigator.clipboard.writeText("{{ icsUrl }}")'
-            class="btn-minimal !px-3"
-            title="Copy Calendar Link"
-          >
-            {{
-              comp.base.Icon({
-                name: "copy",
-                catalog: "lucide",
-                classes: "w-3.5 h-3.5",
-              })
-            }}
-          </button>
-        </div>
-
-        <div class="w-px h-4 bg-border/20 hidden md:block"></div>
-
-        <div class="flex items-center gap-2">
-          <a
-            href="/events.atom"
-            class="btn-minimal !px-3"
-            title="RSS/Atom Feed"
-          >
-            {{
-              comp.base.Icon({
-                name: "rss",
-                catalog: "lucide",
-                classes: "w-3.5 h-3.5",
-              })
-            }}
-          </a>
-          <a
-            href="/events.json"
-            class="btn-minimal !px-3"
-            title="JSON Feed"
-          >
-            {{
-              comp.base.Icon({
-                name: "code",
-                catalog: "lucide",
-                classes: "w-3.5 h-3.5",
-              })
-            }}
-          </a>
-        </div>
-      </div>
+{{ set calloutContent }}
+  <div
+    class="flex flex-col md:flex-row md:items-center justify-between gap-6"
+  >
+    <div class="space-y-1">
+      <p class="font-bold text-text m-0">Keep up with the scene.</p>
+      <p class="text-sm text-text-muted m-0">
+        Subscribe to the events calendar or feeds to get automatic updates.
+      </p>
     </div>
-  {{ /set }}
+    <div class="flex flex-row flex-wrap items-center gap-2 shrink-0">
+      {{ set icsUrl = "/events.ics" |> url(true) }}
+      {{ set webcalUrl = icsUrl.replace(/^https?:\/\//, "webcal://") }}
 
-  {{
-    comp.base.Callout({
-      variant: "action",
-      icon: "calendar-plus",
-      content: calloutContent,
-    })
-  }}
-</div>
+      <a
+        href="{{ webcalUrl }}"
+        class="btn-minimal"
+        title="Subscribe in your default calendar app"
+      >
+        {{
+          comp.base.Icon({
+            name: "calendar-sync",
+            catalog: "lucide",
+            classes: "w-4 h-4",
+          })
+        }}
+        <span>Subscribe</span>
+      </a>
+
+      <a
+        href="https://www.google.com/calendar/render?cid={{ webcalUrl |> encodeURIComponent }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-minimal px-0 w-12 justify-center"
+        title="Add to Google Calendar"
+      >
+        {{
+          comp.base.Icon({
+            name: "google",
+            catalog: "simpleicons",
+            classes: "w-4 h-4",
+          })
+        }}
+      </a>
+
+      <button
+        onclick='navigator.clipboard.writeText("{{ icsUrl }}")'
+        class="btn-minimal px-0 w-12 justify-center"
+        title="Copy Calendar Link"
+      >
+        {{
+          comp.base.Icon({
+            name: "copy",
+            catalog: "lucide",
+            classes: "w-4 h-4",
+          })
+        }}
+      </button>
+
+      <div class="w-px h-6 bg-border-subtle hidden md:block mx-1"></div>
+
+      <a
+        href="/events.atom"
+        class="btn-minimal px-0 w-12 justify-center"
+        title="RSS/Atom Feed"
+      >
+        {{
+          comp.base.Icon({
+            name: "rss",
+            catalog: "lucide",
+            classes: "w-4 h-4",
+          })
+        }}
+      </a>
+      <a
+        href="/events.json"
+        class="btn-minimal px-0 w-12 justify-center"
+        title="JSON Feed"
+      >
+        {{
+          comp.base.Icon({
+            name: "code",
+            catalog: "lucide",
+            classes: "w-4 h-4",
+          })
+        }}
+      </a>
+    </div>
+  </div>
+{{ /set }}
+
+{{
+  comp.base.Callout({
+    variant: "action",
+    icon: "calendar-plus",
+    content: calloutContent,
+  })
+}}
 
 {{# ── CALENDAR VIEW ──────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length > 0 }}
@@ -156,13 +152,13 @@ headerExtension:
 
 {{# ─── EMPTY STATE ────────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length === 0 }}
-  <div class="mt-8">
+  <div class="mt-12">
     {{
       comp.base.EmptyState({
         icon: "calendar-x",
-        title: "no upcoming events found",
+        title: "No upcoming events found",
         description:
-          'nothing listed for İzmir right now. check back soon or <a href="https://musicbrainz.org/doc/How_to_Add_an_Event" class="underline decoration-border-subtle hover:text-primary transition-colors">add one on MusicBrainz</a>.',
+          `There are currently no events listed for İzmir in the database.`,
       })
     }}
   </div>
@@ -173,37 +169,35 @@ headerExtension:
   <div class="flex flex-col gap-8">
     {{# 1. Action Bar #}}
     <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-border-subtle pb-8"
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border-subtle pb-8"
     >
       {{# Left: Add Event #}}
       <a
-        href="https://musicbrainz.org/doc/How_to_Add_an_Event"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 typography-sublabel text-text-muted hover:text-secondary transition-all duration-300 no-underline haptic"
+        href="/events/contribute/"
+        class="btn-minimal"
       >
         {{
           comp.base.Icon({
             name: "plus-circle",
             catalog: "lucide",
-            classes: "w-3.5 h-3.5 stroke-[1.5]",
+            classes: "w-4 h-4",
           })
         }}
-        Add an event on MusicBrainz
+        <span>How to contribute to events</span>
       </a>
 
       {{# Right: Archive #}}
       {{ if mb_events?.past?.length > 0 }}
         <a
           href="/events/archive/"
-          class="group precision-link text-text-muted hover:text-primary"
+          class="btn-minimal group"
         >
           <span>View Past Events Archive</span>
-          <span class="reveal-slide-right inline-block">
+          <span class="group-hover:translate-x-1 transition-transform">
             {{
               comp.base.Icon({
                 name: "arrow-right",
-                classes: "w-3 h-3 stroke-[1.5]",
+                classes: "w-4 h-4",
                 attributes: { "aria-hidden": "true" },
               })
             }}

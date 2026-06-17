@@ -16,7 +16,10 @@ export default function (options: RemarkOptions = {}) {
     site.use(remark({
       ...options,
       remarkPlugins: [
-        [remarkToc, { tight: true }],
+        [remarkToc, {
+          heading: "([iİIı]ç[iİIı]ndek[iİIı]ler|contents|table of contents)",
+          tight: true,
+        }],
         remarkGfm,
         remarkSmartypants,
         ...(options.remarkPlugins || []),

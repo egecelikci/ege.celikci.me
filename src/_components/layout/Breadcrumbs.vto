@@ -10,6 +10,12 @@
 
 {{ set breadcrumbItems = nav.breadcrumb(it.url) }}
 
+{{# Filter out language segments (e.g., /tr/, /en/) from the breadcrumb trail #}}
+{{
+  set breadcrumbItems = breadcrumbItems
+  |> filter((item) => !['en', 'tr'].includes(item.slug))
+}}
+
 {{#
   BRIDGE LOGIC:
   If navigation.parent is provided, we use it to construct the trail

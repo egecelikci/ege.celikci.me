@@ -559,6 +559,10 @@ select::-webkit-scrollbar-thumb {
     & :is(p, ul, ol) {
       @apply my-0 inline;
     }
+
+    & :is(strong, b) {
+      @apply text-[inherit];
+    }
   }
 
   /* SVG Icon Fixes */

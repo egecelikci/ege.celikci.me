@@ -1,44 +1,64 @@
 {{#
-Component: Callout (Primitive)
-A box for highlighting information, warnings, or actions.
+  Component: Callout (Refined Primitive)
+  A minimalist highlight box for information, warnings, or actions.
+  Aligned with "Clean Ledger" aesthetic.
 
-Props:
-- content: string | html (required)
-- icon: string (optional icon name)
-- variant: string (info, warning, danger, success, action)
-- classes: additional classes
+  Props:
+  - content: string | html (required)
+  - icon: string (optional icon name)
+  - variant: string (info, warning, danger, success, action)
+  - classes: additional classes
 #}}
 
+{{# 1. Variant Normalization #}}
 {{ set variant = it.variant || "info" }}
+
+{{# 2. Auto-Icon Selection #}}
+{{ set autoIcon = it.icon }}
+{{ if !autoIcon }}
+  {{
+    set autoIcon = {
+      "info": "info",
+      "warning": "triangle-alert",
+      "danger": "octagon-x",
+      "success": "circle-check",
+      "action": "sparkles",
+    }[variant] || "info"
+  }}
+{{ /if }}
+
+{{# 3. Style Resolution #}}
 {{
-  set variantClasses = [
-    {
-      "info":
-        "bg-blue-50/50 text-blue-900 border-blue-200 dark:bg-blue-950/30 dark:text-blue-200 dark:border-blue-800",
-      "warning":
-        "bg-yellow-50/50 text-yellow-900 border-yellow-200 dark:bg-yellow-950/30 dark:text-yellow-200 dark:border-yellow-800",
-      "danger":
-        "bg-red-50/50 text-red-900 border-red-200 dark:bg-red-950/30 dark:text-red-200 dark:border-red-800",
-      "success":
-        "bg-green-50/50 text-green-900 border-green-200 dark:bg-green-950/30 dark:text-green-200 dark:border-green-800",
-      "action":
-        "bg-purple-50/50 text-purple-900 border-purple-200 dark:bg-purple-950/30 dark:text-purple-200 dark:border-purple-800",
-    }[variant],
-  ]
+  set variantStyles = {
+    "info": "border-secondary/20 bg-secondary/5 text-secondary",
+    "warning":
+      "border-orange-500/30 bg-orange-500/5 text-orange-700 dark:text-orange-300",
+    "danger": "border-primary/20 bg-primary/5 text-primary",
+    "success":
+      "border-green-600/30 bg-green-600/5 text-green-700 dark:text-green-300",
+    "action": "border-primary/40 bg-primary/5 text-primary shadow-sm",
+  }[variant] || "border-border-subtle bg-surface-subtle"
 }}
 
 <div
-  class="flex gap-3 px-3 py-2 rounded-md border text-sm my-4 {{ variantClasses }} {{ it.classes }}"
+  class="relative flex gap-4 px-5 py-4 my-8 rounded-sm border-l-2 {{ variantStyles }} {{ it.classes }} transition-all duration-300"
   {{ it.attributes |> attr |> safe }}
 >
-  <!-- deno-fmt-ignore -->
-  {{ if it.icon }}
-  <div class="shrink-0 mt-0.5 [&>img]:inline-block [&>img]:align-middle">
-    {{ await it.comp.base.Icon({ name: it.icon, catalog: "lucide", classes: "w-5 h-5" }) }}
+  {{# Icon Badge #}}
+  <div
+    class="shrink-0 flex items-center justify-center w-6 h-6 mt-0.5 rounded-full bg-white/50 dark:bg-black/20 border border-inherit shadow-sm"
+  >
+    {{
+      await it.comp.base.Icon({
+        name: autoIcon,
+        catalog: "lucide",
+        classes: "w-3.5 h-3.5",
+      })
+    }}
   </div>
-  {{ /if }}
 
-  <div class="markdown max-w-none leading-normal [&>*]:my-0">
+  {{# Content #}}
+  <div class="grow markdown-inline text-[0.95em] leading-relaxed [&_p]:m-0">
     {{ it.content |> safe }}
   </div>
 </div>

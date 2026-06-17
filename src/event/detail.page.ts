@@ -170,13 +170,12 @@ export default async function* ({ mb_events, events }: any) {
       navigation: {
         parent: "/events/",
       },
-      title: event.displayTitle || event.name,
+      title: local.title || event.name || event.displayTitle,
       event: { ...event, local },
       gallery,
       posterCredits,
       videoCredits,
       layout: "layouts/event.vto",
-      backlink: { href: "/events/", text: "events" },
       prose: false,
       headerExtension: {
         comp: "layout.SourceMeta",

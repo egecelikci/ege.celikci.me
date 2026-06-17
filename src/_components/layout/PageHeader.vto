@@ -60,6 +60,18 @@
 
 {{# 4. Resolve Backlink #}}
 {{ set backlinkData = it.backlink }}
+
+{{# Unified: Use navigation.parent as default backlink if available #}}
+{{ if !backlinkData && it.navigation?.parent }}
+  {{
+    set backlinkData = {
+      href: it.navigation.parent,
+      text: it.navigation.parentTitle ||
+        it.navigation.parent.split("/").filter(Boolean).pop(),
+    }
+  }}
+{{ /if }}
+
 {{ if it.backlink === undefined || it.backlink === true }}
   {{ if it.type === "post" }}
     {{ set backlinkData = { href: "/blog/", text: "writing" } }}
@@ -126,12 +138,23 @@
     {{ /if }}
   </div>
 
-  {{ if it.rightContent || extensionContent }}
-    <div
-      class="shrink-0 flex items-end w-full md:w-auto mt-auto [view-transition-name:page-header-right]"
-    >
-      {{ it.rightContent |> safe }}
-      {{ extensionContent |> safe }}
+  {{# RIGHT SIDE: Actions & Extensions #}}
+  <div
+    class="shrink-0 flex flex-col items-end gap-10 mt-auto md:mt-0 [view-transition-name:page-header-right-column]"
+  >
+    {{# 1. Global Actions (Outer Right) #}}
+    <div class="[view-transition-name:page-header-actions]">
+      {{ comp.layout.LanguageSwitcher(it) }}
     </div>
-  {{ /if }}
+
+    {{# 2. Page Content Extensions (Inner Right) #}}
+    {{ if it.rightContent || extensionContent }}
+      <div
+        class="[view-transition-name:page-header-right]"
+      >
+        {{ it.rightContent |> safe }}
+        {{ extensionContent |> safe }}
+      </div>
+    {{ /if }}
+  </div>
 </section>

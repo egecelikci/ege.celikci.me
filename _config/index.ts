@@ -17,6 +17,7 @@ import googleFonts from "lume/plugins/google_fonts.ts";
 import imageSize from "lume/plugins/image_size.ts";
 import jsonLd from "lume/plugins/json_ld.ts";
 import metas from "lume/plugins/metas.ts";
+import multilanguage from "lume/plugins/multilanguage.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import nav from "lume/plugins/nav.ts";
 import pagefind from "lume/plugins/pagefind.ts";
@@ -41,6 +42,10 @@ export default function () {
       .use(imageSize())
       .use(slugifyPlugin())
       .use(metas())
+      .use(multilanguage({
+        languages: ["en", "tr"],
+        defaultLanguage: "en",
+      }))
       .use(extractDate())
       .use(date({
         formats: { URL: "yyyyMMddHHmmss" },

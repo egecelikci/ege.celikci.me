@@ -1,0 +1,23 @@
+{{#
+  Component: LanguageSwitcher
+  Minimalist, text-based language selector.
+  Designed to be used as a PageHeader extension.
+#}}
+
+{{ if it.alternates && it.alternates.length > 1 }}
+  <nav class="flex items-center gap-2" aria-label="Language Selector">
+    {{ for index, alt of it.alternates }}
+      {{ if index > 0 }}
+        <span class="text-text-muted/20 typography-sublabel select-none"
+        >/</span>
+      {{ /if }}
+      <a
+        href="{{ alt.url }}"
+        class="typography-sublabel no-underline transition-colors {{ if alt.lang === it.lang }}text-primary{{ else }}text-text-muted hover:text-text{{ /if }} uppercase tracking-widest"
+        {{ if alt.lang === it.lang }}aria-current="page"{{ /if }}
+      >
+        {{ alt.lang }}
+      </a>
+    {{ /for }}
+  </nav>
+{{ /if }}
