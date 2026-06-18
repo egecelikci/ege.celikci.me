@@ -17,107 +17,10 @@ headerExtension:
       - label: Event Art Archive
         icon: image
         url: "https://eventartarchive.org/"
+      - label: Calendar
+        url: "webcal://ege.celikci.me/events.ics"
+        type: feed
 ---
-
-{{# ── PROMINENT ACTIONS ──────────────────────────────────────────────── #}}
-{{ set calloutContent }}
-  <div
-    class="flex flex-col md:flex-row md:items-center justify-between gap-6"
-  >
-    <div class="space-y-1">
-      <p class="font-bold text-text m-0">Keep up with the scene.</p>
-      <p class="text-sm text-text-muted m-0">
-        Subscribe to the events calendar or feeds to get automatic updates.
-      </p>
-    </div>
-    <div class="flex flex-row flex-wrap items-center gap-2 shrink-0">
-      {{ set icsUrl = "/events.ics" |> url(true) }}
-      {{ set webcalUrl = icsUrl.replace(/^https?:\/\//, "webcal://") }}
-
-      <a
-        href="{{ webcalUrl }}"
-        class="btn-minimal"
-        title="Subscribe in your default calendar app"
-      >
-        {{
-          comp.base.Icon({
-            name: "calendar-sync",
-            catalog: "lucide",
-            classes: "w-4 h-4",
-          })
-        }}
-        <span>Subscribe</span>
-      </a>
-
-      <a
-        href="https://www.google.com/calendar/render?cid={{ webcalUrl |> encodeURIComponent }}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-minimal px-0 w-12 justify-center"
-        title="Add to Google Calendar"
-      >
-        {{
-          comp.base.Icon({
-            name: "google",
-            catalog: "simpleicons",
-            classes: "w-4 h-4",
-          })
-        }}
-      </a>
-
-      <button
-        onclick='navigator.clipboard.writeText("{{ icsUrl }}")'
-        class="btn-minimal px-0 w-12 justify-center"
-        title="Copy Calendar Link"
-      >
-        {{
-          comp.base.Icon({
-            name: "copy",
-            catalog: "lucide",
-            classes: "w-4 h-4",
-          })
-        }}
-      </button>
-
-      <div class="w-px h-6 bg-border-subtle hidden md:block mx-1"></div>
-
-      <a
-        href="/events.atom"
-        class="btn-minimal px-0 w-12 justify-center"
-        title="RSS/Atom Feed"
-      >
-        {{
-          comp.base.Icon({
-            name: "rss",
-            catalog: "lucide",
-            classes: "w-4 h-4",
-          })
-        }}
-      </a>
-      <a
-        href="/events.json"
-        class="btn-minimal px-0 w-12 justify-center"
-        title="JSON Feed"
-      >
-        {{
-          comp.base.Icon({
-            name: "code",
-            catalog: "lucide",
-            classes: "w-4 h-4",
-          })
-        }}
-      </a>
-    </div>
-  </div>
-{{ /set }}
-
-{{
-  comp.base.Callout({
-    variant: "action",
-    icon: "calendar-plus",
-    content: calloutContent,
-  })
-}}
 
 {{# ── CALENDAR VIEW ──────────────────────────────────────────────────── #}}
 {{ if mb_events?.upcoming?.length > 0 }}
@@ -169,7 +72,7 @@ headerExtension:
   <div class="flex flex-col gap-8">
     {{# 1. Action Bar #}}
     <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border-subtle pb-8"
+      class="flex flex-row items-center justify-between gap-4 border-b border-border-subtle pb-8"
     >
       {{# Left: Add Event #}}
       <a

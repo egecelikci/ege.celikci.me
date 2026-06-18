@@ -53,7 +53,7 @@
         <a
           href="{{ targetUrl }}"
           target="_blank"
-          class="btn-minimal !px-3 !py-2 justify-center group"
+          class="btn-minimal px-0 w-10 h-10 min-h-0 justify-center"
           title="{{ source.label }}"
         >
           {{
@@ -63,8 +63,7 @@
                 (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
                   ? "simpleicons"
                   : "lucide"),
-              classes:
-                "w-3.5 h-3.5 text-text-muted group-reveal:text-primary group-reveal:scale-110 transition-all",
+              classes: "w-4 h-4",
             })
           }}
           <span class="sr-only">{{ source.label }}</span>
@@ -110,14 +109,13 @@
           <a
             href="{{ feed.url }}"
             target="_blank"
-            class="btn-minimal !px-3 !py-2 justify-center group"
+            class="btn-minimal px-0 w-10 h-10 min-h-0 justify-center"
             title="Subscribe via {{ feed.label }}"
           >
             {{
               await it.comp.base.Icon({
                 name: feed.icon,
-                classes:
-                  "w-3.5 h-3.5 text-text-muted group-reveal:text-secondary group-reveal:scale-110 transition-all",
+                classes: "w-4 h-4",
               })
             }}
             <span class="sr-only">Subscribe via {{ feed.label }}</span>
