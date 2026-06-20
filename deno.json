@@ -1,8 +1,8 @@
 {
   "nodeModulesDir": "auto",
   "imports": {
-    "@shikijs/rehype": "npm:@shikijs/rehype@^4.1.0",
-    "@shikijs/themes": "npm:@shikijs/themes@^4.1.0",
+    "@shikijs/rehype": "npm:@shikijs/rehype@^4.2.0",
+    "@shikijs/themes": "npm:@shikijs/themes@^4.2.0",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.7",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/path": "jsr:@std/path@^1.1.5",
@@ -18,9 +18,9 @@
     "remark-gfm": "npm:remark-gfm@^4.0.1",
     "remark-smartypants": "npm:remark-smartypants@^3.0.2",
     "remark-toc": "npm:remark-toc@^9.0.0",
-    "sanitize-html": "npm:sanitize-html@^2.17.4",
-    "sharp": "npm:sharp@^0.34.5",
-    "shiki": "npm:shiki@^4.1.0",
+    "sanitize-html": "npm:sanitize-html@^2.17.5",
+    "sharp": "npm:sharp@^0.35.2",
+    "shiki": "npm:shiki@^4.2.0",
     "workbox-cli": "npm:workbox-cli@^7.4.1"
   },
   "tasks": {
@@ -69,33 +69,22 @@
     ]
   },
   "compilerOptions": {
-    "types": [
-      "lume/types.ts"
-    ],
+    "types": ["lume/types.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "lume"
   },
-  "unstable": [
-    "temporal",
-    "fmt-component"
-  ],
+  "unstable": ["temporal", "fmt-component"],
   "lint": {
-    "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/lint.ts"
-    ],
+    "plugins": ["https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/lint.ts"],
     "rules": {
-      "exclude": [
-        "no-import-prefix"
-      ]
+      "exclude": ["no-import-prefix"]
     }
   },
   "lock": false,
   "permissions": {
     "lume": {
       "read": true,
-      "write": [
-        "./"
-      ],
+      "write": ["./"],
       "import": [
         "cdn.jsdelivr.net:443",
         "jsr.io:443",
@@ -117,7 +106,5 @@
       "sys": true
     }
   },
-  "allowScripts": [
-    "npm:sharp"
-  ]
+  "allowScripts": ["npm:sharp"]
 }
