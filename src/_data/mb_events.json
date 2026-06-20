@@ -744,6 +744,12 @@
         "url": "https://www.instagram.com/jazzgirlive/"
       }
     ],
+    "5be07348-df7d-439b-bf7f-622273e17a42": [
+      {
+        "type": "social network",
+        "url": "https://ieji.de/@Wanderfool_experimental"
+      }
+    ],
     "5cc24ee3-c273-4e1e-8b6c-593eafbf558f": [
       {
         "type": "bandcamp",
@@ -1796,6 +1802,12 @@
     "e8889444-7496-4b57-834d-01e04250ddc1": [],
     "ed513697-67ce-405f-b8de-ff54f5f70b3e": [],
     "ee9f2ed7-533b-446d-8b1e-c86d892ce7a4": [],
+    "ef1ad5ba-4b38-45c6-bc31-f5f5601250e5": [
+      {
+        "type": "social network",
+        "url": "https://ieji.de/@Oxomo"
+      }
+    ],
     "f15a4701-7d9d-4089-a75a-ff183d8f17fb": [],
     "f16f8acd-bd38-4ab3-881c-a2da36acd649": [
       {
@@ -8910,6 +8922,128 @@
       ],
       "setlist": "",
       "time": "21:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "f32d2722-35f3-4416-b08c-5a83c5d91ab4",
+      "life-span": {
+        "begin": "2026-06-17",
+        "end": "2026-06-18",
+        "ended": true
+      },
+      "name": "Wanderfool, Oxomo & Random Input at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/f32d2722-35f3-4416-b08c-5a83c5d91ab4/45443773205-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/f32d2722-35f3-4416-b08c-5a83c5d91ab4/45443773205.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "5be07348-df7d-439b-bf7f-622273e17a42",
+            "name": "Wanderfool",
+            "sort-name": "Wanderfool",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
+            "name": "Random Input",
+            "sort-name": "Random Input",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "ef1ad5ba-4b38-45c6-bc31-f5f5601250e5",
+            "name": "Oxomo",
+            "sort-name": "Oxomo",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
+      "time": "22:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
