@@ -25,6 +25,18 @@ If you want to see an event on the [events](/events) page and are wondering what
 
 ## Adding an Event to MusicBrainz
 
+{{
+await comp.ui.Video({
+id: "t_I7n49ZhOg",
+title: "How to Add Events to MusicBrainz",
+credits: [{
+name: "MetaBrainz",
+role: "Author",
+url: "https://metabrainz.org"
+}]
+})
+}}
+
 ### 1. Create an Account
 
 - Go to the [MusicBrainz Registration Page](https://musicbrainz.org/register).
@@ -72,7 +84,7 @@ When you click the **Add relationship** button, you can select the relationship 
 
 ![Artist Relationship Editor](/assets/images/docs/events/2a8475bd-4bcd-4d4c-b0bb-ae0928ab6d35.png)
 
-Beyond the musicians on stage, adding the backstage crew is a great archival step to honor the workers in the music ecosystem:
+Beyond the musicians on stage, adding the backstage crew is a great archival step to honor those who contribute to the music community:
 
 - **Performers**: You can add the names on stage with roles like **main performer**, **support act**, **guest performer**, **host**, **supporting DJ** or **VJ**. These names are listed directly on the events in İzmir page.
 - **Visual / Audio Crew (Non-performing)**: If you add the people who drew or designed the event poster with the **artwork**, **graphic design** or **illustration** role, these names will be listed as _Poster Credits_ on the event detail page. You can also add those who did the sound/video production using the **engineer** or **design** role.

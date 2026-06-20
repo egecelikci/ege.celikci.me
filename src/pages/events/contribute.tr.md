@@ -25,6 +25,18 @@ Bir etkinliğin [events](/events) sayfasında görüntülenmesini istiyor ve bu 
 
 ## MusicBrainz’e Etkinlik Ekleme
 
+{{
+await comp.ui.Video({
+id: "t_I7n49ZhOg",
+title: "How to Add Events to MusicBrainz",
+credits: [{
+name: "MetaBrainz",
+role: "Author",
+url: "https://metabrainz.org"
+}]
+})
+}}
+
 ### 1. Bir Hesap Açın
 
 - [MusicBrainz Kayıt Sayfası](https://musicbrainz.org/register)na gidin.
@@ -72,7 +84,7 @@ Bu kısım oldukça önemlidir. Buraya girdiğiniz veriler sayesinde İzmir'deki
 
 ![Artist İlişkisi Ekleme Bölümü](/assets/images/docs/events/2a8475bd-4bcd-4d4c-b0bb-ae0928ab6d35.png)
 
-Sahnedeki müzisyenlerin ötesinde, arka plan ekibini de eklemek müzik ekosistemindeki emekçileri onurlandırmak adına harika bir arşivcilik adımıdır:
+Sahnedeki müzisyenlerin ötesinde, arka plan ekibini de eklemek müzik topluluğuna emek verenleri onurlandırmak adına harika bir arşivcilik adımıdır:
 
 - **Sahnedekiler:** Sahnedeki isimleri **main performer** (ana sanatçı), **support act** (alt grup), **guest performer**, **host**, **supporting DJ**, **VJ** gibi rollerle ekleyebilirsiniz. Bu isimler İzmir'deki etkinlikler sayfasında doğrudan listelenir.
 - **Görsel / İşitsel Emekçiler (Non-performing):** Etkinliğin afişini çizen veya tasarlayan kişileri **artwork**, **graphic design** veya **illustration** rolüyle eklerseniz, bu isimler etkinlik detay sayfasında _Afiş (Poster) Kredisi_ olarak listelenir. Ses/video prodüksiyonunu yapan kişileri ise **engineer** veya **design** rolüyle ekleyebilirsiniz.
