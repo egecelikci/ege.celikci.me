@@ -996,6 +996,16 @@
         "url": "https://www.youtube.com/user/RxTxGrind"
       }
     ],
+    "76f3035b-6dac-4c35-b386-9922e4b7d329": [
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/people/Ayd%C4%B1n-Emrah-Tattoo/61563998587915"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/aydine.tattoo/"
+      }
+    ],
     "79d3cce1-480a-416d-8bd2-d696b8453d73": [],
     "7e8567c3-8655-45a6-b404-36c4174604ca": [],
     "7ed3bedf-7ac7-4ec6-a65a-84c77cef8bfc": [],
@@ -1469,6 +1479,24 @@
       {
         "type": "youtube",
         "url": "https://www.youtube.com/@vco2-music"
+      }
+    ],
+    "b43f1ac4-1bf8-4978-8841-349dc61f9577": [
+      {
+        "type": "bandcamp",
+        "url": "https://tamponx.bandcamp.com/"
+      },
+      {
+        "type": "discogs",
+        "url": "https://www.discogs.com/artist/2831418"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/tamponx"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/tamponx/"
       }
     ],
     "b440fce8-a13b-4f74-b7e9-849f565c726d": [
@@ -6136,6 +6164,106 @@
     {
       "cancelled": false,
       "disambiguation": "",
+      "id": "7898ad7f-55e4-45d6-9044-634668656a38",
+      "imagePath": "/assets/images/posters/7898ad7f-55e4-45d6-9044-634668656a38.jpg",
+      "life-span": {
+        "begin": "2026-06-27",
+        "end": "2026-06-27",
+        "ended": true
+      },
+      "name": "Yamaç & bun6 at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/7898ad7f-55e4-45d6-9044-634668656a38/45452327425-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/7898ad7f-55e4-45d6-9044-634668656a38/45452327425.jpg",
+      "relations": [
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "b80d13f4-e92f-4974-b879-e37f07c5ec4e",
+            "name": "bun6",
+            "sort-name": "bun6",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "metal from İzmir",
+            "id": "c5216a5f-4701-4c75-9d55-2d5bc8a2b4a1",
+            "name": "Yamaç",
+            "sort-name": "Yamaç",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
       "id": "827ebc06-86c7-4877-9d86-465de169e424",
       "life-span": {
         "begin": "2018-03-10",
@@ -8487,6 +8615,152 @@
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]",
       "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "cf6e5d51-b113-4ab9-b658-4fc1c5357cb0",
+      "imagePath": "/assets/images/posters/cf6e5d51-b113-4ab9-b658-4fc1c5357cb0.jpg",
+      "life-span": {
+        "begin": "2026-06-26",
+        "end": "2026-06-26",
+        "ended": true
+      },
+      "name": "Tampon, Düz Mantık & Marina Poison at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/cf6e5d51-b113-4ab9-b658-4fc1c5357cb0/45452314066-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/cf6e5d51-b113-4ab9-b658-4fc1c5357cb0/45452314066.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "428d6343-233a-4395-a1fd-4713aabde7bb",
+            "name": "Düz Mantık",
+            "sort-name": "Düz Mantık",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "76f3035b-6dac-4c35-b386-9922e4b7d329",
+            "name": "Aydın Emrah Çalışkan",
+            "sort-name": "Çalışkan, Aydın Emrah",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "98aa9825-6b28-4e2d-8bb4-070e7b8f9c94",
+            "name": "Aybike Çelik",
+            "sort-name": "Çelik, Aybike",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "Marina Poison",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish punk",
+            "id": "b43f1ac4-1bf8-4978-8841-349dc61f9577",
+            "name": "Tampon",
+            "sort-name": "Tampon",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
