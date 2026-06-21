@@ -1,6 +1,7 @@
 ---
 title: topics
 searchable: false
+noindex: true
 prose: false
 menu:
   group: entries
@@ -19,14 +20,14 @@ navigation:
 {{ set tagsContent }}
   {{ set allTags = search.values("tags") }}
 
-  <div class="flex flex-wrap gap-8">
+  <ul class="flex flex-wrap gap-8 h-feed">
     {{ if allTags.length > 0 }}
       {{ for tag of allTags }}
         {{# Get count for this tag #}}
         {{ set tagCount = search.pages("'" + tag + "'").length }}
         {{ set tagSlug = tag |> slugify }}
 
-        <div class="group flex items-baseline gap-2">
+        <li class="group flex items-baseline gap-2">
           {{
             comp.base.Tag({
               content: tag,
@@ -39,7 +40,7 @@ navigation:
           >
             {{ tagCount }}
           </span>
-        </div>
+        </li>
       {{ /for }}
     {{ else }}
       <div class="mt-8">
@@ -52,7 +53,7 @@ navigation:
         }}
       </div>
     {{ /if }}
-  </div>
+  </ul>
 {{ /set }}
 
 {{ tagsContent |> safe }}

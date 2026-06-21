@@ -64,6 +64,11 @@ function injectFeedSources(page: Page, atomUrl: string, jsonUrl: string) {
 
   extension.props.sources = sources;
   page.data.headerExtension = extension;
+
+  page.data.alternateFeeds = [
+    { type: "application/atom+xml", url: atomUrl, label: "Atom Feed" },
+    { type: "application/feed+json", url: jsonUrl, label: "JSON Feed" },
+  ];
 }
 
 export default function () {

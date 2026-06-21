@@ -3,6 +3,7 @@ title: writing
 description: "a blog I don't use very often"
 prose: false
 searchable: false
+noindex: true
 menu:
   group: entries
   title: writing
@@ -12,30 +13,5 @@ navigation:
   parent: /
 ---
 
-{{>
-  const posts = search.pages("type=post", "date=desc");
-  const groupedPosts = Object.groupBy(posts, (post) => post.date.getFullYear());
-  const years = Object.keys(groupedPosts).sort((a, b) => b - a)
-}}
-
-<div class="flex flex-col gap-16 md:gap-24">
-  {{ for year of years }}
-    <section class="flex flex-col gap-6 md:gap-8">
-      {{# Year Header #}}
-      {{
-        await it.comp.ui.SectionHeader({
-          title: year,
-          variant: "large",
-          classes: "mb-4",
-        })
-      }}
-
-      {{# Posts for this year #}}
-      <div class="flex flex-col">
-        {{ for post of groupedPosts[year] }}
-          {{ comp.ui.EntryRow({ entry: post }) }}
-        {{ /for }}
-      </div>
-    </section>
-  {{ /for }}
-</div>
+{{> const posts = search.pages("type=post", "date=desc") }}
+{{ await it.comp.ui.EntryTimeline({ entries: posts, groupBy: "year" }) }}

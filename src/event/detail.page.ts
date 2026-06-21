@@ -176,6 +176,24 @@ export default async function* ({ mb_events, events }: any) {
       posterCredits,
       videoCredits,
       layout: "layouts/event.vto",
+      jsonLd: {
+        "@type": "Event",
+        name: local.title || event.name || event.displayTitle,
+        url: "=url",
+        description: local.description || event.disambiguation,
+        image: event.imagePath || event.posterThumb || event.posterUrl,
+        startDate: event.start?.date,
+        endDate: event.end?.date,
+        location: event.location && {
+          "@type": "Place",
+          name: event.location.name,
+          address: event.location.address,
+        },
+        performer: event.performers?.map((p: any) => ({
+          "@type": "Person",
+          name: p.name,
+        })),
+      },
       prose: false,
       headerExtension: {
         comp: "layout.SourceMeta",

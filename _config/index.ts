@@ -21,12 +21,12 @@ import multilanguage from "lume/plugins/multilanguage.ts";
 import minifyHTML from "lume/plugins/minify_html.ts";
 import nav from "lume/plugins/nav.ts";
 import pagefind from "lume/plugins/pagefind.ts";
-import paginate from "lume/plugins/paginate.ts";
 import robots from "lume/plugins/robots.ts";
 import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
+import typst from "./typst.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -50,7 +50,6 @@ export default function () {
       .use(date({
         formats: { URL: "yyyyMMddHHmmss" },
       }))
-      .use(paginate())
       .use(sitemap())
       .use(robots({
         rules: [
@@ -115,6 +114,7 @@ export default function () {
       }))
       .use(assets())
       .use(feeds())
+      .use(typst())
       .use(filters())
       .use(markdown())
       .use(gitDate())

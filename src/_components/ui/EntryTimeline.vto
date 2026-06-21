@@ -9,13 +9,19 @@
 
 {{ if it.entries && it.entries.length > 0 }}
   {{>
+    const groupBy = it.groupBy || "month";
     const grouped = Object.groupBy(
       it.entries,
-      (item) =>
-        item.date.toLocaleDateString("en-GB", {
+      (item) => {
+        if (groupBy === "year") {
+          return item.date.getFullYear().toString();
+        }
+        // month + year format
+        return item.date.toLocaleDateString("en-GB", {
           month: "long",
           year: "numeric",
-        }),
+        });
+      },
     );
     const dateKeys = Object.keys(grouped)
   }}
@@ -27,26 +33,23 @@
         {{
           await it.comp.ui.SectionHeader({
             title: dateKey,
+            variant: groupBy === "year" ? "large" : "label",
             classes: "group",
           })
         }}
 
-        {{# Timeline Wrapper #}}
-        {{ set timelineContent }}
-          <div class="flex flex-col">
-            {{ for item of grouped[dateKey] }}
-              {{
-                await it.comp.ui.EntryRow({
-                  entry: item,
-                  showDate: true,
-                  hideLabel: it.hideRowLabel,
-                })
-              }}
-            {{ /for }}
-          </div>
-        {{ /set }}
-
-        {{ await it.comp.ui.Timeline({ content: timelineContent }) }}
+        {{# Direct entry list #}}
+        <div class="flex flex-col">
+          {{ for item of grouped[dateKey] }}
+            {{
+              await it.comp.ui.EntryRow({
+                entry: item,
+                showDate: true,
+                hideLabel: it.hideRowLabel,
+              })
+            }}
+          {{ /for }}
+        </div>
       </section>
     {{ /for }}
   </div>

@@ -10,8 +10,22 @@
   title="{{ site.title }}"
 />
 
+{{ if it.alternateFeeds }}
+  {{ for feed of it.alternateFeeds }}
+    <link
+      rel="alternate"
+      type="{{ feed.type }}"
+      title="{{ it.title ? it.title + ' | ' : '' }}{{ feed.label }}"
+      href="{{ feed.url }}"
+    />
+  {{ /for }}
+{{ /if }}
+
 {{# https://github.com/darkreader/darkreader/blob/main/CONTRIBUTING.md#disabling-dark-reader-on-your-site #}}
 <meta name="darkreader-lock" />
+{{ if it.noindex }}
+  <meta name="robots" content="noindex, nofollow" />
+{{ /if }}
 
 {{# Fediverse Attribution #}}
 {{ if author?.social?.mastodon?.name }}

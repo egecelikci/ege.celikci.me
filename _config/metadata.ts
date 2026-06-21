@@ -117,7 +117,7 @@ export const author = {
 
 export const jsonLd = {
   "@type": "WebSite",
-  url: site.url,
+  url: "=url",
   name: author.name,
   description: "=description || " + site.description,
   author: {

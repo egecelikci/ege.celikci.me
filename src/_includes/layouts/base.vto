@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang }}" class="{{ htmlClass }}">
+<html lang="{{ lang || site.lang }}" class="{{ htmlClass }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,6 +10,7 @@
       content="#463366"
       media="(prefers-color-scheme: dark)"
     />
+    <meta name="color-scheme" content="light dark">
     <title>
       {{ if title && title !== site.title }}{{ title }} | {{ site.title }}{{
         else if type === "note"
@@ -50,7 +51,9 @@
   <body
     class="overflow-x-clip print:bg-white print:text-black flex flex-col min-h-screen"
     {{ if it.disable_animation }}data-disable-animation="true"{{ /if }}
-    {{ if it.searchable === false }}data-pagefind-ignore="all"{{ /if }}
+    {{ if it.searchable === false || it.noindex }}data-pagefind-ignore="all"{{
+      /if
+    }}
   >
     <a
       href="#main"

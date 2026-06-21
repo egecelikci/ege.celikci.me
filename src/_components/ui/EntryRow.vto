@@ -36,25 +36,18 @@
 <article
   class="h-entry group relative flex gap-8 py-10 px-4 md:px-6 transition-all no-underline w-full haptic rounded-2xl hover:bg-surface-subtle {{ it.classes || '' }}"
 >
-  {{# 0. SIDE DATE ANCHOR (Classical Archival Look) #}}
-  {{ if showDate }}
-    <div class="flex flex-col items-center shrink-0 w-12 pt-1 relative z-30">
-      <span
-        class="text-4xl md:text-5xl font-bold font-accent tracking-tighter text-text-dim group-hover:text-primary transition-all duration-500"
-      >
-        {{ dayStr }}
-      </span>
-      <time
-        class="dt-published typography-sublabel text-text-muted font-mono mt-[-2px] uppercase tracking-widest"
-      >
-        {{ subStr }}
-      </time>
-    </div>
-  {{ /if }}
-
   <div class="flex flex-col gap-3 min-w-0 flex-1">
     {{# 1. HEADER (Tags + Meta) #}}
     <header class="flex items-center gap-4 relative z-30 overflow-hidden">
+      {{ if showDate }}
+        <time
+          datetime='{{ entry.date |> date("yyyy-MM-dd") }}'
+          class="date-badge dt-published typography-sublabel text-text-muted mr-2"
+        >
+          {{ entry.date |> date("dd MMM yyyy") }}{{ if isNote }}
+            {{ entry.date |> date("HH:mm") }}{{ /if }}
+        </time>
+      {{ /if }}
       {{ if !showDate }}
         <span class="typography-label text-primary flex items-center gap-2">
           {{

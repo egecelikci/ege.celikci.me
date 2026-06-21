@@ -1,5 +1,6 @@
 export const layout = "layouts/bookmarks.vto";
 export const searchable = false;
+export const noindex = true;
 
 interface Bookmark {
   title: string;
@@ -90,7 +91,6 @@ export default async function* (
     categoryMetadata,
     totalCount,
     filteredBookmarks: enrichedLinks,
-    backlink: { href: "/", text: "home" },
     menu: { group: "collections", label: "internet", order: 1 },
     navigation: { parent: "/", title: "bookmarks" },
   };
@@ -136,7 +136,6 @@ export default async function* (
       filteredBookmarks: enrichedLinks.filter((l) =>
         l.categories.includes(catId)
       ),
-      backlink: { href: "/bookmarks/", text: "bookmarks" },
       navigation: {
         parent: "/bookmarks/",
         parentTitle: "bookmarks",
