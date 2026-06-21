@@ -26,6 +26,7 @@ import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
+import typst from "./typst.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -113,6 +114,7 @@ export default function () {
       }))
       .use(assets())
       .use(feeds())
+      .use(typst())
       .use(filters())
       .use(markdown())
       .use(gitDate())
