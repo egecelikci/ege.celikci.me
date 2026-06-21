@@ -41023,6 +41023,272 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "AU",
+            "disambiguation": "EDM DJ & producer Nina Wilson",
+            "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+            "name": "Ninajirachi",
+            "sort-name": "Ninajirachi",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Ninajirachi"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2025-08-08",
+      "id": "6ab2d1f5-1730-499d-a814-6fe6eb9ec1f0",
+      "imagePath": "/assets/images/covers/colored/6ab2d1f5-1730-499d-a814-6fe6eb9ec1f0.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/6ab2d1f5-1730-499d-a814-6fe6eb9ec1f0.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Wed, 17 Jun 2026 11:51:59 GMT",
+      "releases": [
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "AU",
+                "disambiguation": "EDM DJ & producer Nina Wilson",
+                "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+                "name": "Ninajirachi",
+                "sort-name": "Ninajirachi",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ninajirachi"
+            }
+          ],
+          "barcode": "604675224350",
+          "country": "AU",
+          "date": "2025-08-10",
+          "disambiguation": "",
+          "id": "167fe8d9-402e-431b-964e-adae7d483675",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "106e0bec-b638-3b37-b731-f53d507dc00e",
+                "iso-3166-1-codes": [
+                  "AU"
+                ],
+                "name": "Australia",
+                "sort-name": "Australia",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-08-10"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "I Love My Computer"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "AU",
+                "disambiguation": "EDM DJ & producer Nina Wilson",
+                "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+                "name": "Ninajirachi",
+                "sort-name": "Ninajirachi",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ninajirachi"
+            }
+          ],
+          "barcode": "604675377919",
+          "country": "AU",
+          "date": "2025-08-08",
+          "disambiguation": "Silver metallic vinyl",
+          "id": "544fe8c0-8bc6-4434-b27c-4b7fcaedfebe",
+          "packaging": "Gatefold Cover",
+          "packaging-id": "e724a489-a7e8-30a1-a17c-30dfd6831202",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "106e0bec-b638-3b37-b731-f53d507dc00e",
+                "iso-3166-1-codes": [
+                  "AU"
+                ],
+                "name": "Australia",
+                "sort-name": "Australia",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-08-08"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "I Love My Computer"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "AU",
+                "disambiguation": "EDM DJ & producer Nina Wilson",
+                "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+                "name": "Ninajirachi",
+                "sort-name": "Ninajirachi",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ninajirachi"
+            }
+          ],
+          "barcode": "840526501236",
+          "country": "XE",
+          "date": "2026-02-09",
+          "disambiguation": "half blue / half white, limited edition",
+          "id": "9a638353-d6d2-4be2-9d32-fbb6283af517",
+          "packaging": "Gatefold Cover",
+          "packaging-id": "e724a489-a7e8-30a1-a17c-30dfd6831202",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "89a675c2-3e37-3518-b83c-418bad59a85a",
+                "iso-3166-1-codes": [
+                  "XE"
+                ],
+                "name": "Europe",
+                "sort-name": "Europe",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2026-02-09"
+            },
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "8a754a16-0027-3a29-b6d7-2b40ea0481ed",
+                "iso-3166-1-codes": [
+                  "GB"
+                ],
+                "name": "United Kingdom",
+                "sort-name": "United Kingdom",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2026-02-09"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "I Love My Computer"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "AU",
+                "disambiguation": "EDM DJ & producer Nina Wilson",
+                "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+                "name": "Ninajirachi",
+                "sort-name": "Ninajirachi",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ninajirachi"
+            }
+          ],
+          "barcode": null,
+          "disambiguation": "",
+          "id": "9ec707db-8852-4db6-a96f-4d32c25baff0",
+          "packaging": null,
+          "packaging-id": null,
+          "quality": "normal",
+          "status": "Pseudo-Release",
+          "status-id": "41121bb9-3413-3818-8a9a-9742318349aa",
+          "text-representation": {
+            "language": null,
+            "script": null
+          },
+          "title": "I Love My Computer"
+        },
+        {
+          "artist-credit": [
+            {
+              "artist": {
+                "country": "AU",
+                "disambiguation": "EDM DJ & producer Nina Wilson",
+                "id": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+                "name": "Ninajirachi",
+                "sort-name": "Ninajirachi",
+                "type": "Person",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+              },
+              "joinphrase": "",
+              "name": "Ninajirachi"
+            }
+          ],
+          "barcode": "199350974793",
+          "country": "XW",
+          "date": "2025-08-08",
+          "disambiguation": "",
+          "id": "fc8bf81b-babb-47fe-99fc-841c1abfeb7c",
+          "packaging": "None",
+          "packaging-id": "119eba76-b343-3e02-a292-f0f00644bb9b",
+          "quality": "normal",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-08-08"
+            }
+          ],
+          "status": "Official",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "text-representation": {
+            "language": "eng",
+            "script": "Latn"
+          },
+          "title": "I Love My Computer"
+        }
+      ],
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "I Love My Computer"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "TR",
             "disambiguation": "",
             "id": "eb153320-b043-4015-b89a-78d4cbc7cb1e",
