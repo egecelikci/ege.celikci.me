@@ -5,12 +5,14 @@
 
   Props:
     - entries: Page[] (required)
+    - groupBy: "year" | "month" | "none" (default: "month")
+    - hideRowLabel: boolean
 #}}
 
 {{ if it.entries && it.entries.length > 0 }}
   {{>
     const groupBy = it.groupBy || "month";
-    const grouped = Object.groupBy(
+    const grouped = groupBy === "none" ? { "all": it.entries } : Object.groupBy(
       it.entries,
       (item) => {
         if (groupBy === "year") {
@@ -29,14 +31,16 @@
   <div class="h-feed flex flex-col gap-12">
     {{ for dateKey of dateKeys }}
       <section class="flex flex-col gap-6">
-        {{# Month Header #}}
-        {{
-          await it.comp.ui.SectionHeader({
-            title: dateKey,
-            variant: groupBy === "year" ? "large" : "label",
-            classes: "group",
-          })
-        }}
+        {{# Optional Header #}}
+        {{ if groupBy !== "none" }}
+          {{
+            await it.comp.ui.SectionHeader({
+              title: dateKey,
+              variant: groupBy === "year" ? "large" : "label",
+              classes: "group",
+            })
+          }}
+        {{ /if }}
 
         {{# Direct entry list #}}
         <div class="flex flex-col">
@@ -46,6 +50,7 @@
                 entry: item,
                 showDate: true,
                 hideLabel: it.hideRowLabel,
+                hideYear: groupBy === "year",
               })
             }}
           {{ /for }}

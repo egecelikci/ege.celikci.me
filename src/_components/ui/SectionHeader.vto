@@ -6,31 +6,42 @@
   Props:
     - title: string | number (The main text, e.g. "2026", "Past Events")
     - variant: "large" | "label" (default: "label")
+    - level: 2 | 3 | 4 (The heading level, default: 2)
     - sticky: boolean (default: false)
     - rightContent: html/string (Optional content for the right side)
     - classes: string (Optional wrapper classes)
 #}}
 
 {{ set isLarge = it.variant === "large" }}
+{{ set level = it.level || 2 }}
+{{ set tag = `h${level}` }}
 
 <div
-  class="flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || '' }}"
+  class="group/section flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || '' }}"
 >
   {{ if isLarge }}
-    <h2
-      class="text-4xl md:text-5xl font-bold tracking-tighter text-text-dim group-hover:text-primary transition-colors duration-500"
+    <{{ tag }}
+    class="text-4xl md:text-5xl font-bold tracking-tighter text-text-dim
+    group-hover/section:text-primary transition-colors duration-500"
+    aria-hidden="true" >
+    {{ it.title }}
+    </{{ tag }}>
+    <div
+      class="divider opacity-20 group-hover/section:opacity-40 transition-opacity duration-500"
       aria-hidden="true"
     >
-      {{ it.title }}
-    </h2>
-    <div class="divider opacity-20" aria-hidden="true"></div>
+    </div>
   {{ else }}
-    <h2
-      class="typography-label text-text-muted font-bold uppercase tracking-[var(--letter-spacing-label)] group-hover:text-primary transition-colors"
+    <{{ tag }}
+    class="typography-label text-text-muted font-bold uppercase
+    tracking-[var(--letter-spacing-label)] group-hover/section:text-primary
+    transition-colors duration-200" >
+    {{ it.title }}
+    </{{ tag }}>
+    <div
+      class="divider opacity-20 group-hover/section:opacity-40 transition-opacity duration-200"
     >
-      {{ it.title }}
-    </h2>
-    <div class="divider opacity-20"></div>
+    </div>
   {{ /if }}
 
   {{ if it.rightContent }}

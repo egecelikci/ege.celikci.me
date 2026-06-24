@@ -6,6 +6,7 @@
   Props:
     - entry: page object (required)
     - showDate?: boolean (default: true)
+    - hideYear?: boolean (default: false)
     - classes?: string
 #}}
 
@@ -19,13 +20,34 @@
 {{ set typeLabel = entry.type || "entry" }}
 {{ if isNote }}{{ set typeLabel = "note" }}{{ /if }}
 
+{{# Pre-calculate URL to avoid pipes in HTML attributes for deno fmt #}}
+{{ set entryUrl = "" }}
+{{ if entry.url }}
+  {{ set entryUrl = entry.url |> url }}
+{{ /if }}
+
 {{# Date formatting #}}
-{{ set dayStr = entry.date |> date("dd") }}
-{{ set subStr = "" }}
-{{ if isNote }}
-  {{ set subStr = entry.date |> date("HH:mm") }}
-{{ else }}
-  {{ set subStr = entry.date |> date("MMM") }}
+{{ set formattedDate = "" }}
+{{ set isoDate = "" }}
+{{ set parsedDate = entry.date ? new Date(entry.date) : null }}
+{{ set hasValidDate = parsedDate && !isNaN(parsedDate.getTime()) }}
+
+{{ if hasValidDate }}
+  {{ set isoDate = parsedDate |> date("yyyy-MM-dd") }}
+
+  {{# Build the format pattern dynamically #}}
+  {{ set formatStr = "dd MMM" }}
+
+  {{ if !it.hideYear }}
+    {{ set formatStr = formatStr + " yyyy" }}
+  {{ /if }}
+
+  {{ if isNote }}
+    {{ set formatStr = formatStr + " HH:mm" }}
+  {{ /if }}
+
+  {{# Apply the filter once with the combined pattern #}}
+  {{ set formattedDate = parsedDate |> date(formatStr) }}
 {{ /if }}
 
 {{# Vento Context for notes #}}
@@ -39,13 +61,12 @@
   <div class="flex flex-col gap-3 min-w-0 flex-1">
     {{# 1. HEADER (Tags + Meta) #}}
     <header class="flex items-center gap-4 relative z-30 overflow-hidden">
-      {{ if showDate }}
+      {{ if showDate && hasValidDate }}
         <time
-          datetime='{{ entry.date |> date("yyyy-MM-dd") }}'
-          class="date-badge dt-published typography-sublabel text-text-muted mr-2"
+          datetime="{{ isoDate }}"
+          class="date-badge dt-published mr-2"
         >
-          {{ entry.date |> date("dd MMM yyyy") }}{{ if isNote }}
-            {{ entry.date |> date("HH:mm") }}{{ /if }}
+          {{ formattedDate }}
         </time>
       {{ /if }}
       {{ if !showDate }}
@@ -107,7 +128,7 @@
     </div>
 
     {{# 3. IMAGES (Note specific) #}}
-    {{ if isNote && entry.images?.length > 0 }}
+    {{ if isNote && entry.images?.length }}
       <div class="w-full relative z-30 pt-2">
         {{
           await it.comp.ui.Media({
@@ -122,7 +143,7 @@
 
   {{# 4. OVERLAY LINK #}}
   <a
-    href="{{ entry.url |> url }}"
+    href="{{ entryUrl }}"
     class="u-url absolute inset-0 z-20 pointer-events-auto"
     aria-label="View {{ typeLabel }}"
   ></a>
