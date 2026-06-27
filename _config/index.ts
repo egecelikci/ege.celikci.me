@@ -26,7 +26,7 @@ import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
-import typst from "./typst.ts";
+import typst from "https://codeberg.org/egecelikci/experimental-plugins/raw/commit/473516014232336fc8aa820691bec0cb41fd4f2e/typst/mod.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -114,7 +114,9 @@ export default function () {
       }))
       .use(assets())
       .use(feeds())
-      .use(typst())
+      .use(typst({
+        fonts: ["/assets/fonts"],
+      }))
       .use(filters())
       .use(markdown())
       .use(gitDate())
@@ -131,6 +133,7 @@ export default function () {
 
     // Global default for all Markdown files: Vento then Markdown
     site.data("templateEngine", ["vto", "md"], ".md");
+    site.data("templateEngine", "typ", ".typ");
     site.data("jsonLd", jsonLdData);
   };
 }
