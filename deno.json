@@ -13,6 +13,7 @@
     "instant.page": "npm:instant.page@^5.2.0",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
+    "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
     "rehype-slug": "npm:rehype-slug@^6.0.0",
     "remark-gfm": "npm:remark-gfm@^4.0.1",
@@ -42,7 +43,11 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib"
+    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
+    "new": {
+      "description": "Create new content or code using artifacts",
+      "command": "deno task lume new"
+    }
   },
   "fmt": {
     "useTabs": false,

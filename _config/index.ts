@@ -26,7 +26,8 @@ import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
-import typst from "https://codeberg.org/egecelikci/experimental-plugins/raw/commit/473516014232336fc8aa820691bec0cb41fd4f2e/typst/mod.ts";
+import typst from "typst";
+import typstOgImages from "../utils/plugins/typst_og.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -56,7 +57,6 @@ export default function () {
           {
             userAgent: "*",
             disallow: "/build.txt",
-            contentSignal: "none",
           },
         ],
       }))
@@ -104,7 +104,6 @@ export default function () {
           resetStyles: true,
         },
       }))
-      // Modularized configs
       .use(googleFonts({
         fonts:
           "https://fonts.google.com/share?selection.family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500|DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000",
@@ -112,11 +111,12 @@ export default function () {
         cssFile: "/assets/styles/main.css",
         subsets: ["latin", "latin-ext"],
       }))
-      .use(assets())
-      .use(feeds())
       .use(typst({
         fonts: ["/assets/fonts"],
       }))
+      .use(typstOgImages())
+      .use(assets())
+      .use(feeds())
       .use(filters())
       .use(markdown())
       .use(gitDate())
