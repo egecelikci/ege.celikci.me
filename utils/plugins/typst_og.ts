@@ -171,9 +171,10 @@ export default function typstOg({
         const output = `/assets/images/og${urlPath}.png`;
 
         site.pages.push(Page.create({ url: output, content: png }));
-
-        page.data.metas ??= {};
-        page.data.metas.image = site.url(output, true);
+        page.data.metas = {
+          ...(page.data.metas || {}),
+          image: site.url(output, true),
+        };
       } catch (error) {
         console.error(
           `[typst-og] Failed to generate for ${page.data.url}:`,

@@ -42,6 +42,10 @@ export default function () {
       .use(attributes())
       .use(imageSize())
       .use(slugifyPlugin())
+      .use(typst({
+        fonts: ["/assets/fonts"],
+      }))
+      .use(typstOgImages())
       .use(metas())
       .use(multilanguage({
         languages: ["en", "tr"],
@@ -111,10 +115,6 @@ export default function () {
         cssFile: "/assets/styles/main.css",
         subsets: ["latin", "latin-ext"],
       }))
-      .use(typst({
-        fonts: ["/assets/fonts"],
-      }))
-      .use(typstOgImages())
       .use(assets())
       .use(feeds())
       .use(filters())
