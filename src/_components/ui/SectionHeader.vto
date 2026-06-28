@@ -17,7 +17,7 @@
 {{ set tag = `h${level}` }}
 
 <div
-  class="group/section flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || '' }}"
+  class="group/section flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || "" }}"
 >
   {{ if isLarge }}
     <{{ tag }}

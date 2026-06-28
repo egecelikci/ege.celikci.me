@@ -17,11 +17,11 @@
 {{ set isMinimal = it.variant === "minimal" }}
 
 <div
-  class="search-container group relative w-full {{ it.classes || '' }}"
+  class="search-container group relative w-full {{ it.classes || "" }}"
   id="search-root-{{ id }}"
   data-search-id="{{ id }}"
-  data-search-mode="{{ it.mode || 'pagefind' }}"
-  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : '' }}"
+  data-search-mode="{{ it.mode || "pagefind" }}"
+  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : "" }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="relative flex items-center">
@@ -43,7 +43,7 @@
     <input
       type="search"
       id="site-search-input-{{ id }}"
-      placeholder="{{ it.placeholder || 'search…' }}"
+      placeholder="{{ it.placeholder || "search…" }}"
       class="
         w-full bg-surface-subtle border border-border-subtle rounded-lg py-2.5 pl-10 pr-10 text-sm font-mono text-text
         placeholder:text-text-dim focus:outline-none focus:border-primary-muted focus:ring-1 focus:ring-primary-muted transition-all

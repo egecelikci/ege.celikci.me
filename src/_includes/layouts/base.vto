@@ -14,9 +14,7 @@
     <title>
       {{ if title && title !== site.title }}{{ title }} | {{ site.title }}{{
         else if type === "note"
-      }}note from {{ it.date |> date("dd MMM yyyy HH:mm") }} | {{
-          site.title
-        }}{{ else }}{{ site.title }}{{ /if }}
+      }}note from {{ it.date |> date("dd MMM yyyy HH:mm") }} | {{ site.title }}{{ else }}{{ site.title }}{{ /if }}
     </title>
     <link rel="dns-prefetch" href="https://webmention.io" />
     <link
@@ -50,8 +48,8 @@
   </head>
   <body
     class="overflow-x-clip print:bg-white print:text-black flex flex-col min-h-screen"
-    {{ if it.disable_animation }}data-disable-animation="true"{{ /if }}
-    {{ if it.searchable === false || it.noindex }}data-pagefind-ignore="all"{{
+    {{ if it.disable_animation }} data-disable-animation="true" {{ /if }}
+    {{ if it.searchable === false || it.noindex }} data-pagefind-ignore="all" {{
       /if
     }}
   >
@@ -79,9 +77,7 @@
         <span itemprop="name">{{ author.name }}</span>
       </a>
       <p class="p-note" itemprop="description">{{ site.description }}</p>
-      <a class="u-email" href="mailto:{{ author.email }}" itemprop="email">{{
-        author.email
-      }}</a>
+      <a class="u-email" href="mailto:{{ author.email }}" itemprop="email">{{ author.email }}</a>
     </div>
 
     {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}

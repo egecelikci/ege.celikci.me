@@ -45,9 +45,7 @@
           aria-label="More options"
           aria-haspopup="menu"
         >
-          {{
-            await it.comp.base.Icon({ name: "more-horizontal", classes: "w-5 h-5" })
-          }}
+          {{ await it.comp.base.Icon({ name: "more-horizontal", classes: "w-5 h-5" }) }}
         </button>
 
         <div
@@ -59,9 +57,7 @@
             class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left hidden pswp-view-post"
             role="menuitem"
           >
-            {{
-              await it.comp.base.Icon({ name: "message-square", classes: "w-4 h-4" })
-            }}
+            {{ await it.comp.base.Icon({ name: "message-square", classes: "w-4 h-4" }) }}
             <span>View post</span>
           </a>
           <a
@@ -71,9 +67,7 @@
             class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left pswp-open-original"
             role="menuitem"
           >
-            {{
-              await it.comp.base.Icon({ name: "external-link", classes: "w-4 h-4" })
-            }}
+            {{ await it.comp.base.Icon({ name: "external-link", classes: "w-4 h-4" }) }}
             <span>Open original</span>
           </a>
           <button
@@ -81,9 +75,7 @@
             class="flex items-center gap-3 px-4 py-3 text-sm font-medium text-text hover:bg-black/5 transition-colors w-full text-left pswp-download"
             role="menuitem"
           >
-            {{
-              await it.comp.base.Icon({ name: "download", classes: "w-4 h-4" })
-            }}
+            {{ await it.comp.base.Icon({ name: "download", classes: "w-4 h-4" }) }}
             <span>Download</span>
           </button>
         </div>
@@ -170,18 +162,14 @@
       class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 absolute left-10 top-1/2 -translate-y-1/2 pswp-prev"
       aria-label="Previous image"
     >
-      {{
-        await it.comp.base.Icon({ name: "chevron-left", classes: "w-6 h-6" })
-      }}
+      {{ await it.comp.base.Icon({ name: "chevron-left", classes: "w-6 h-6" }) }}
     </button>
     <button
       type="button"
       class="carousel-button pointer-events-auto bg-white/10 backdrop-blur-md border border-white/10 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all hover:bg-white/20 haptic shadow-lg shrink-0 absolute right-10 top-1/2 -translate-y-1/2 pswp-next"
       aria-label="Next image"
     >
-      {{
-        await it.comp.base.Icon({ name: "chevron-right", classes: "w-6 h-6" })
-      }}
+      {{ await it.comp.base.Icon({ name: "chevron-right", classes: "w-6 h-6" }) }}
     </button>
   </div>
 </template>

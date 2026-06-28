@@ -38,7 +38,7 @@
         {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
         data-cropped="true"
         data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
-        data-media-type="{{ image.type || 'image' }}"
+        data-media-type="{{ image.type || "image" }}"
         {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}
       >
         <img
@@ -76,9 +76,7 @@
           <div
             class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"
           >
-            <span class="text-white font-bold text-xl">+{{
-                it.images.length - 4
-              }}</span>
+            <span class="text-white font-bold text-xl">+{{ it.images.length - 4 }}</span>
           </div>
         {{ /if }}
       </a>

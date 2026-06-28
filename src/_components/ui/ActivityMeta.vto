@@ -38,9 +38,7 @@
         class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
         title="{{ it.stats.reposts }} reposts"
       >
-        {{
-          await it.comp.base.Icon({ name: "repeat-2", classes: "mr-2 w-3.5 h-3.5" })
-        }}
+        {{ await it.comp.base.Icon({ name: "repeat-2", classes: "mr-2 w-3.5 h-3.5" }) }}
         <span>{{ it.stats.reposts |> humanizeNumber }}</span>
       </li>
       {{# Likes #}}
@@ -48,9 +46,7 @@
         class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
         title="{{ it.stats.likes }} likes"
       >
-        {{
-          await it.comp.base.Icon({ name: "heart", classes: "mr-2 w-3.5 h-3.5" })
-        }}
+        {{ await it.comp.base.Icon({ name: "heart", classes: "mr-2 w-3.5 h-3.5" }) }}
         <span>{{ it.stats.likes |> humanizeNumber }}</span>
       </li>
     </ul>

@@ -70,9 +70,7 @@
               <div class="flex items-center gap-4">
                 {{ if showInteractions }}
                   <span class="typography-sublabel text-text-muted">
-                    {{ it.interactions.length }} {{
-                      it.interactions.length == 1 ? "interaction" : "interactions"
-                    }}
+                    {{ it.interactions.length }} {{ it.interactions.length == 1 ? "interaction" : "interactions" }}
                   </span>
                 {{ /if }}
 
@@ -109,9 +107,7 @@
           {{# Row 2: Faces #}}
           {{ if showInteractions }}
             <div id="interactions" class="-mt-2 md:-mt-4">
-              {{
-                await it.comp.ui.WebmentionFaces({ mentions: it.interactions })
-              }}
+              {{ await it.comp.ui.WebmentionFaces({ mentions: it.interactions }) }}
             </div>
           {{ /if }}
 

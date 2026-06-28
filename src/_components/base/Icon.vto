@@ -8,8 +8,8 @@
 {{- set sizeClasses = (hasWidth || hasHeight) ? "" : "h-[1em] w-[1em]" -}}
 {{- set isStroke = !it.filled && (it.catalog === "lucide" || !it.catalog) -}}
 <svg
-  class="{{ defaultClasses }} {{ sizeClasses }} {{ if isStroke }}stroke-current fill-none{{ else }}fill-current{{ /if }} {{ it.classes || '' }}"
-  data-catalog="{{ it.catalog || 'lucide' }}"
+  class="{{ defaultClasses }} {{ sizeClasses }} {{ if isStroke }}stroke-current fill-none{{ else }}fill-current{{ /if }} {{ it.classes || "" }}"
+  data-catalog="{{ it.catalog || "lucide" }}"
 >
   <use href="{{ it.name |> spriteIcon(it.catalog || 'lucide') }}"></use>
 </svg>

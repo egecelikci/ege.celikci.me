@@ -17,8 +17,8 @@ layout: null
           title="{{ item.title }}"
           type="rss"
           xmlUrl="{{ item.feed }}"
-          htmlUrl="{{ item.url || '' }}"
-          category="{{ item.categories?.join(',') || 'uncategorized' }}"
+          htmlUrl="{{ item.url || "" }}"
+          category="{{ item.categories?.join(",") || "uncategorized" }}"
         />
       {{ /if }}
     {{ /for }}

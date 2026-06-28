@@ -143,9 +143,7 @@
       >
         {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}
-          {{
-            await it.comp.base.Tag({ content: tag, href: "/tags/" + tagSlug + "/" })
-          }}
+          {{ await it.comp.base.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) }}
         {{ /for }}
       </div>
     {{ /if }}

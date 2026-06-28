@@ -22,7 +22,7 @@
 
 <a
   href="{{ finalPath |> resolveSourceUrl }}"
-  class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap {{ it.classes || '' }}"
+  class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap {{ it.classes || "" }}"
   {{ if it.title }}
     title="{{ it.title }}"{{ /if }}
 >{{ it.text || finalPath }}</a>

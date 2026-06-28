@@ -13,14 +13,12 @@
 
 {{ set ptClass = it.compact ? "pt-4" : "pt-8" }}
 
-<footer class="listing-footer {{ ptClass }} {{ it.classes || '' }}">
+<footer class="listing-footer {{ ptClass }} {{ it.classes || "" }}">
   <div class="grow flex items-center min-w-0">
     {{ if it.leftContent }}
       {{ it.leftContent |> safe }}
     {{ else if it.leftText }}
-      <span class="typography-sublabel text-text-dim lowercase truncate">{{
-        it.leftText
-      }}</span>
+      <span class="typography-sublabel text-text-dim lowercase truncate">{{ it.leftText }}</span>
     {{ /if }}
   </div>
 

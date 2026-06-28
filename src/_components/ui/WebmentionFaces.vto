@@ -43,9 +43,7 @@
               <div
                 class="flex w-full h-full items-center justify-center bg-surface-subtle text-text-dim"
               >
-                {{
-                  await it.comp.base.Icon({ name: "user", classes: "text-[10px]" })
-                }}
+                {{ await it.comp.base.Icon({ name: "user", classes: "text-[10px]" }) }}
               </div>
             {{ /if }}
           </div>
@@ -55,13 +53,9 @@
             class="absolute -bottom-1 -right-1 flex items-center justify-center w-3.5 h-3.5 bg-bg rounded-full text-primary group-hover/face:text-primary transition-colors border border-border-subtle shadow-sm"
           >
             {{ if mention["wm-property"] == "like-of" }}
-              {{
-                await it.comp.base.Icon({ name: "heart", classes: "text-[7px] fill-current" })
-              }}
+              {{ await it.comp.base.Icon({ name: "heart", classes: "text-[7px] fill-current" }) }}
             {{ else }}
-              {{
-                await it.comp.base.Icon({ name: "repeat-2", classes: "text-[7px]" })
-              }}
+              {{ await it.comp.base.Icon({ name: "repeat-2", classes: "text-[7px]" }) }}
             {{ /if }}
           </span>
         </span>

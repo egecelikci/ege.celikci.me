@@ -30,9 +30,7 @@
   {{ set noteDate = it.note.date |> date("dd MMM yyyy · HH:mm") }}
   {{ set noteVisuals }}
     {{ if hasImages }}
-      {{
-        await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
-      }}
+      {{ await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
     {{ /if }}
   {{ /set }}
   {{ set noteContent = it.note.content |> vto(vtoContext) |> md }}
@@ -85,9 +83,7 @@
 
     {{# Visuals #}}
     {{ if hasImages }}
-      {{
-        await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url })
-      }}
+      {{ await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
     {{ /if }}
 
     {{# Textual Content #}}

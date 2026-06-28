@@ -28,9 +28,7 @@
       href="/bookmarks/"
       class="bookmark-index-link {{ if !it.activeCategory }}bookmark-index-link--active{{ /if }}"
     >
-      all<span class="bookmark-index-count">{{
-        it.totalCount ?? it.filteredBookmarks.length
-      }}</span>
+      all<span class="bookmark-index-count">{{ it.totalCount ?? it.filteredBookmarks.length }}</span>
     </a>
 
     {{ for catId of it.allCategoryIds }}
@@ -40,9 +38,7 @@
         href="/bookmarks/{{ catId }}/"
         class="bookmark-index-link {{ if it.activeCategory == catId }}bookmark-index-link--active{{ /if }}"
       >
-        {{ meta?.title || catId }}<span class="bookmark-index-count">{{
-          meta?.count ?? 0
-        }}</span>
+        {{ meta?.title || catId }}<span class="bookmark-index-count">{{ meta?.count ?? 0 }}</span>
       </a>
     {{ /for }}
   </nav>
@@ -68,7 +64,7 @@
         {{ for item of it.filteredBookmarks |> shuffle }}
           <a
             id="bm-{{ item.title |> slugify }}"
-            href="{{ item.url || '#' }}"
+            href="{{ item.url || "#" }}"
             target="_blank"
             rel="noopener noreferrer"
             class="block group/badge"
@@ -114,7 +110,7 @@
           {{ if item.img }}
             <div class="absolute top-5 right-0 hidden sm:block">
               <a
-                href="{{ item.url || '#' }}"
+                href="{{ item.url || "#" }}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="block opacity-40 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500 hover:scale-105 active:scale-95"
@@ -139,7 +135,7 @@
           >
             {{# Title #}}
             <a
-              href="{{ item.url || '#' }}"
+              href="{{ item.url || "#" }}"
               target="_blank"
               rel="noopener noreferrer {{ if item.categories.includes('person') }}u-url{{ else }}u-bookmark-of h-cite{{ /if }}"
               class="no-underline"
@@ -291,7 +287,7 @@
           {{ if item.img }}
             <div class="flex sm:hidden pt-3">
               <a
-                href="{{ item.url || '#' }}"
+                href="{{ item.url || "#" }}"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="block opacity-60 grayscale"

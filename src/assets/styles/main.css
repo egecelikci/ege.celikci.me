@@ -181,7 +181,8 @@
 }
 
 @utility sr-only {
-  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap
+    border-0;
   clip: rect(0, 0, 0, 0);
 }
 
@@ -313,7 +314,8 @@
     @apply bg-border/20 rounded-full;
   }
   select::-webkit-scrollbar-thumb {
-    @apply bg-text-muted/30 rounded-full hover:bg-primary-muted transition-colors;
+    @apply bg-text-muted/30 rounded-full hover:bg-primary-muted
+      transition-colors;
   }
 
   /* Flow Spacing */
@@ -414,7 +416,8 @@
     }
 
     & blockquote {
-      @apply border-l-4 border-primary/20 pl-6 py-1 italic bg-surface-subtle/30 rounded-r-lg;
+      @apply border-l-4 border-primary/20 pl-6 py-1 italic bg-surface-subtle/30
+        rounded-r-lg;
       max-width: 50ch;
       font-weight: var(--font-weight-body);
     }
@@ -437,13 +440,15 @@
     }
 
     pre:not(figure pre) {
-      @apply my-6 p-4 rounded-lg bg-surface-subtle border border-border-subtle font-mono text-sm overflow-x-auto;
+      @apply my-6 p-4 rounded-lg bg-surface-subtle border border-border-subtle
+        font-mono text-sm overflow-x-auto;
     }
   }
 
   /* Inline code styling */
   .markdown :not(pre) > code {
-    @apply inline font-mono text-[0.9em] px-[0.3em] py-[0.1em] rounded-sm bg-surface border border-border-subtle text-text break-all;
+    @apply inline font-mono text-[0.9em] px-[0.3em] py-[0.1em] rounded-sm
+      bg-surface border border-border-subtle text-text break-all;
   }
   .markdown :not(pre) > code::before,
   .markdown :not(pre) > code::after {
@@ -452,7 +457,8 @@
 
   /* Heading anchors */
   .markdown .heading-anchor {
-    @apply absolute top-0 -left-[1.25em] w-[1em] opacity-0 transition-opacity duration-200 no-underline text-primary-muted;
+    @apply absolute top-0 -left-[1.25em] w-[1em] opacity-0 transition-opacity
+      duration-200 no-underline text-primary-muted;
     box-shadow: none !important;
   }
 
@@ -462,15 +468,14 @@
     }
   }
 
-  .markdown
-    :is(h1, h2, h3, h4, h5, h6):is(:hover, :focus-within)
-    .heading-anchor {
+  .markdown :is(h1, h2, h3, h4, h5, h6):is(:hover, :focus-within) .heading-anchor {
     @apply opacity-100;
   }
 
   /* Links */
   .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {
-    @apply text-primary hover:text-primary-offset no-underline border-b border-primary/20 hover:border-primary-offset transition-all pb-px;
+    @apply text-primary hover:text-primary-offset no-underline border-b
+      border-primary/20 hover:border-primary-offset transition-all pb-px;
     box-shadow: none !important;
   }
   .markdown a:not(.btn, .heading-anchor):hover code {
@@ -479,13 +484,16 @@
 
   /* Shiki Code Blocks */
   .markdown figure {
-    @apply my-8 block w-full max-w-full rounded-xl border border-border-subtle bg-surface-subtle text-left overflow-hidden shadow-sm;
+    @apply my-8 block w-full max-w-full rounded-xl border border-border-subtle
+      bg-surface-subtle text-left overflow-hidden shadow-sm;
   }
   .markdown figure.code-block figcaption.code-header {
-    @apply flex items-center justify-start border-b border-border-subtle glassy px-5 py-2.5 font-mono text-[11px] font-bold text-text-muted not-italic;
+    @apply flex items-center justify-start border-b border-border-subtle glassy
+      px-5 py-2.5 font-mono text-[11px] font-bold text-text-muted not-italic;
   }
   .markdown figure.code-block pre.shiki {
-    @apply m-0 border-0 rounded-none w-full max-w-full p-5 text-xs lg:text-sm overflow-x-auto !bg-transparent;
+    @apply m-0 border-0 rounded-none w-full max-w-full p-5 text-xs lg:text-sm
+      overflow-x-auto !bg-transparent;
   }
   .markdown figure.code-block pre.shiki code {
     @apply bg-transparent p-0 text-inherit border-0 shadow-none;
@@ -578,7 +586,8 @@
     background: transparent !important;
     box-shadow: none !important;
     text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
-    @apply !typography-sublabel !text-text-dim !transition-opacity !duration-500 !mt-4 !mr-4;
+    @apply !typography-sublabel !text-text-dim !transition-opacity !duration-500
+      !mt-4 !mr-4;
   }
   .leaflet-control-attribution:hover {
     @apply !text-text-dim !opacity-100;
@@ -590,7 +599,8 @@
     @apply absolute w-8 h-8 bg-primary/10 rounded-full border border-primary/5;
   }
   .leaflet-marker-dot {
-    @apply relative w-4 h-4 bg-primary border-2 border-white rounded-full shadow-lg;
+    @apply relative w-4 h-4 bg-primary border-2 border-white rounded-full
+      shadow-lg;
   }
 }
 
@@ -672,7 +682,9 @@
 
 /* Utilities */
 @utility checkbox-base {
-  @apply w-5 h-5 rounded border-border-subtle bg-surface-subtle text-primary focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer transition-all;
+  @apply w-5 h-5 rounded border-border-subtle bg-surface-subtle text-primary
+    focus:ring-2 focus:ring-primary/50 focus:ring-offset-0 cursor-pointer
+    transition-all;
   &:checked {
     @apply bg-primary border-primary;
   }
@@ -682,7 +694,8 @@
 }
 
 @utility input-base {
-  @apply w-full px-4 py-3 bg-surface border border-border/50 rounded-lg transition-all backdrop-blur-md;
+  @apply w-full px-4 py-3 bg-surface border border-border/50 rounded-lg
+    transition-all backdrop-blur-md;
 }
 
 @utility input-focus {
@@ -749,14 +762,19 @@
 }
 
 @utility pill-base {
-  @apply inline-flex items-center gap-2 py-3 px-6 rounded-full border border-border-subtle bg-surface-subtle hover:bg-surface-hover hover:border-primary-muted text-[11px] font-mono transition-all no-underline haptic min-h-[48px];
+  @apply inline-flex items-center gap-2 py-3 px-6 rounded-full border
+    border-border-subtle bg-surface-subtle hover:bg-surface-hover
+    hover:border-primary-muted text-[11px] font-mono transition-all no-underline
+    haptic min-h-[48px];
 }
 
 @utility btn-minimal {
   @apply pill-base text-text/80 duration-200;
 }
 @utility btn-primary {
-  @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all duration-200 bg-primary text-white hover:bg-primary-offset haptic min-h-[48px];
+  @apply inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold
+    transition-all duration-200 bg-primary text-white hover:bg-primary-offset
+    haptic min-h-[48px];
 }
 @utility haptic {
   -webkit-tap-highlight-color: transparent;
@@ -775,24 +793,30 @@ dfn {
   font-weight: bold;
 }
 [role="doc-tip"] {
-  @apply bg-surface-subtle border-l-4 border-primary/40 p-4 rounded-r-lg my-6 text-sm italic;
+  @apply bg-surface-subtle border-l-4 border-primary/40 p-4 rounded-r-lg my-6
+    text-sm italic;
 }
 
 @utility reveal-self {
-  @apply opacity-60 has-[.is-active]:opacity-100 reveal:opacity-100 transition-opacity duration-500;
+  @apply opacity-60 has-[.is-active]:opacity-100 reveal:opacity-100
+    transition-opacity duration-500;
 }
 @utility reveal-slide-right {
-  @apply transition-transform duration-300 translate-x-0 group-reveal:translate-x-1;
+  @apply transition-transform duration-300 translate-x-0
+    group-reveal:translate-x-1;
 }
 @utility reveal-slide-left {
-  @apply transition-transform duration-300 translate-x-0 group-reveal:-translate-x-1;
+  @apply transition-transform duration-300 translate-x-0
+    group-reveal:-translate-x-1;
 }
 @utility reveal-slide-up {
-  @apply transition-transform duration-300 translate-y-0 group-reveal:-translate-y-1;
+  @apply transition-transform duration-300 translate-y-0
+    group-reveal:-translate-y-1;
 }
 
 @utility precision-link {
-  @apply inline-flex items-center gap-1.5 typography-sublabel transition-all duration-300 no-underline haptic;
+  @apply inline-flex items-center gap-1.5 typography-sublabel transition-all
+    duration-300 no-underline haptic;
   & span:not([class*="reveal-slide"]) {
     @apply border-b border-transparent transition-colors pb-px;
   }
@@ -802,13 +826,15 @@ dfn {
 }
 
 @utility ledger-card {
-  @apply rounded-2xl border border-border-subtle bg-surface-subtle transition-all duration-500;
+  @apply rounded-2xl border border-border-subtle bg-surface-subtle
+    transition-all duration-500;
 }
 @utility ledger-aspect {
   @apply aspect-video md:aspect-[16/10];
 }
 @utility typography-lead {
-  @apply text-lg md:text-xl text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors leading-relaxed;
+  @apply text-lg md:text-xl text-text-muted group-reveal:text-text
+    group-[.is-active]:text-text transition-colors leading-relaxed;
 }
 @utility page-footer-block {
   @apply w-full;
@@ -829,28 +855,44 @@ dfn {
   @apply no-underline transition-colors hover:text-primary;
 }
 @utility listing-meta-row {
-  @apply relative z-20 flex items-center gap-4 text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors;
+  @apply relative z-20 flex items-center gap-4 text-text-muted
+    group-reveal:text-text group-[.is-active]:text-text transition-colors;
 }
 @utility listing-title {
-  @apply text-3xl md:text-4xl font-bold tracking-tighter text-text group-reveal:text-primary group-[.is-active]:text-primary transition-colors leading-tight m-0 relative z-20;
+  @apply text-3xl md:text-4xl font-bold tracking-tighter text-text
+    group-reveal:text-primary group-[.is-active]:text-primary transition-colors
+    leading-tight m-0 relative z-20;
 }
 @utility listing-footer {
-  @apply relative z-10 flex items-center justify-between pt-8 border-t border-border-subtle text-text-muted group-reveal:text-text group-[.is-active]:text-text transition-colors duration-500;
+  @apply relative z-10 flex items-center justify-between pt-8 border-t
+    border-border-subtle text-text-muted group-reveal:text-text
+    group-[.is-active]:text-text transition-colors duration-500;
 }
 @utility gallery-overlay {
-  @apply absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm bg-bg/90 backdrop-blur-md border border-border-subtle text-[11px] font-mono font-bold text-text-muted opacity-100 md:opacity-0 md:group-reveal:opacity-100 md:group-[.is-active]:opacity-100 transition-all duration-500 pointer-events-none z-20;
+  @apply absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm
+    bg-bg/90 backdrop-blur-md border border-border-subtle text-[11px] font-mono
+    font-bold text-text-muted opacity-100 md:opacity-0
+    md:group-reveal:opacity-100 md:group-[.is-active]:opacity-100 transition-all
+    duration-500 pointer-events-none z-20;
 }
 @utility credit-badge {
-  @apply pointer-events-auto inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-[11px] font-medium text-white/90 hover:text-white hover:bg-black/80 hover:border-white/20 transition-all shadow-sm;
+  @apply pointer-events-auto inline-flex items-center gap-2 px-2.5 py-1.5
+    rounded-md bg-black/60 backdrop-blur-md border border-white/10 text-[11px]
+    font-medium text-white/90 hover:text-white hover:bg-black/80
+    hover:border-white/20 transition-all shadow-sm;
 }
 @utility date-badge {
-  @apply inline-flex items-center rounded border border-border-subtle bg-surface-subtle text-text-muted px-2 py-0.5 text-[11px] font-mono font-bold transition-all;
+  @apply inline-flex items-center rounded border border-border-subtle
+    bg-surface-subtle text-text-muted px-2 py-0.5 text-[11px] font-mono
+    font-bold transition-all;
   &:hover {
     @apply bg-surface-hover border-primary/30 text-primary;
   }
 }
 @utility bookmark-index-link {
-  @apply typography-sublabel text-text-muted hover:text-primary transition-colors no-underline pb-px border-b border-transparent hover:border-primary/30 whitespace-nowrap;
+  @apply typography-sublabel text-text-muted hover:text-primary
+    transition-colors no-underline pb-px border-b border-transparent
+    hover:border-primary/30 whitespace-nowrap;
 }
 @utility bookmark-index-link--active {
   @apply !text-primary !border-primary/50;

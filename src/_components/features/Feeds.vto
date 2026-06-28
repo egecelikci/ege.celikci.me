@@ -16,12 +16,8 @@
         class="flex items-center justify-between py-6 border-b border-border-subtle group hover:bg-surface-hover transition-colors px-2 -mx-2 rounded-lg"
       >
         <div class="flex flex-col gap-1">
-          <span class="text-sm font-bold text-text">{{
-            it.primary_label
-          }}</span>
-          <span class="text-[11px] font-mono text-text-muted">{{
-            it.primary_desc
-          }}</span>
+          <span class="text-sm font-bold text-text">{{ it.primary_label }}</span>
+          <span class="text-[11px] font-mono text-text-muted">{{ it.primary_desc }}</span>
         </div>
         <div class="flex items-center gap-4">
           {{ for feed of it.primary_feeds }}
@@ -54,9 +50,7 @@
         >
           <div class="flex flex-col">
             <span class="text-sm font-bold text-text">{{ cat.title }}</span>
-            <span class="text-[11px] font-mono text-text-muted">{{
-              cat.desc
-            }}</span>
+            <span class="text-[11px] font-mono text-text-muted">{{ cat.desc }}</span>
           </div>
           <div class="flex items-center gap-4">
             {{ for feed of cat.feeds }}

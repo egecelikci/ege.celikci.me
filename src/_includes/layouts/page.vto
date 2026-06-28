@@ -31,11 +31,7 @@ layout: layouts/base.vto
   {{# 2. Main Content #}}
   {{# Use a div for lists/notes to avoid double-article nesting; article for standard pages #}}
   <{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}
-  class="{{
-    (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : ""
-  }} {{ it.hide_title !== true ? "mt-12" : "pt-24" }} {{
-    it.article_classes || ""
-  }} [view-transition-name:page-content]"
+  class="{{ (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : "" }} {{ it.hide_title !== true ? "mt-12" : "pt-24" }} {{ it.article_classes || "" }} [view-transition-name:page-content]"
   {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
   {{ if it.type === "note" }}
@@ -65,13 +61,11 @@ layout: layouts/base.vto
     }}
   {{ else if it.type === "tag" }}
     <div class="sr-only" data-pagefind-body>
-      {{ it.title }} tag topic index. collection of items related to {{
-        it.tag
-      }}.
+      {{ it.title }} tag topic index. collection of items related to {{ it.tag }}.
     </div>
     {{ comp.ui.TagDetail({ tag: it.tag }) }}
   {{ else }}
-    <div class="{{ (it.prose !== false) ? 'e-content' : '' }}">
+    <div class="{{ (it.prose !== false) ? "e-content" : "" }}">
       {{ content |> safe }}
     </div>
   {{ /if }}

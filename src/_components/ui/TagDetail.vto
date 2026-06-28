@@ -10,9 +10,7 @@
   {{# 1. ENTRIES #}}
   {{ if matchingEntries.length > 0 }}
     <div class="not-prose">
-      {{
-        await it.comp.ui.EntryTimeline({ entries: matchingEntries, groupBy: "none" })
-      }}
+      {{ await it.comp.ui.EntryTimeline({ entries: matchingEntries, groupBy: "none" }) }}
     </div>
   {{ else }}
     {{

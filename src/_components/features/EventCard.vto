@@ -118,9 +118,7 @@
               )
             }}
             {{ for index, rel of artistRels -}}
-              <span class="inline-block">{{
-                rel["target-credit"] || rel.artist.name
-              }}</span>
+              <span class="inline-block">{{ rel["target-credit"] || rel.artist.name }}</span>
               {{- if index < artistRels.length - 2 }},
               {{ else if index === artistRels.length - 2 }}
                 &
