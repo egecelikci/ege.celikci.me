@@ -1,8 +1,3 @@
-/**
- * _config/assets.ts
- * Scripts, styles, and images pipeline.
- */
-
 import esbuild, { Options as EsbuildOptions } from "lume/plugins/esbuild.ts";
 import icons from "lume/plugins/icons.ts";
 import inline from "lume/plugins/inline.ts";
@@ -18,7 +13,6 @@ export interface AssetOptions {
 
 export default function (options: AssetOptions = {}) {
   const isDev = Deno.env.get("MODE") !== "production";
-  const isNetlify = Deno.env.get("NETLIFY") === "true";
 
   return (site: Lume.Site) => {
     site
@@ -60,12 +54,8 @@ export default function (options: AssetOptions = {}) {
       }))
       .use(inline())
       .use(picture())
-      .use(transformImages({
-        // concurrency: isNetlify ? 16 : 20,
-      }))
-      // Static copies
+      .use(transformImages())
       .add("assets/images")
-      // Main entry points
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
       .add("assets/styles/main.css");
