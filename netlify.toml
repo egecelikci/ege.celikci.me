@@ -12,20 +12,26 @@
     path = "/api/collage-proxy"
     function = "collage-proxy"
 
-[[edge_functions]]
-    path = "/api/webmentions"
-    function = "webmentions"
-
 [[plugins]]
     package = "./plugins/cache"
 
-# Netlify subdomain
+[[redirects]]
+    from = "https://celikci.me/.well-known/webfinger"
+    to = "/webfinger.json"
+    status = 200
+    force = true
+
+[[redirects]]
+    from = "/.well-known/webfinger"
+    to = "/webfinger.json"
+    status = 200
+    force = true
+
 [[redirects]]
     from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
     to = "https://ege.celikci.me/:splat"
     status = 301
     force = true
-
 
 [[redirects]]
     from = "https://celikci.me/*"
