@@ -68,7 +68,6 @@
       "*.css"
     ],
     "exclude": [
-      "src/site.webmanifest.vto",
       "src/_data/music.json",
       "src/_data/mb_events.json"
     ]

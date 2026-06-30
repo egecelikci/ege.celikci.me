@@ -32,6 +32,7 @@ import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
+import pwa from "https://codeberg.org/egecelikci/lume/raw/commit/22aa5978f11a441d97265c0f71e71f404fb85b47/plugins/pwa.ts";
 import { jsonLd as jsonLdData } from "./metadata.ts";
 
 export default function () {
@@ -95,6 +96,7 @@ export default function () {
           },
         ],
       }))
+      .use(pwa())
       .use(pagefind({
         outputPath: "/pagefind",
         indexing: {
