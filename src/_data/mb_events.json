@@ -608,6 +608,12 @@
     ],
     "4a95d054-2349-4d7a-a6b6-c72d1ea96e7c": [],
     "4ab63863-dce7-4640-8814-7f75dff550a0": [],
+    "4c5f7485-d9f0-44c9-859c-1a3def73920f": [
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/mad-honey-604141806"
+      }
+    ],
     "4d86a02e-01d8-4abf-8169-570ccde8e63a": [
       {
         "type": "streaming",
@@ -817,6 +823,7 @@
     ],
     "67aba44d-d073-494d-aa99-39a6782b57fc": [],
     "67b100f7-925f-4825-8427-95020b722801": [],
+    "69a3bd80-8e10-4968-98ab-bdaa60633ac4": [],
     "6bbb9ed3-bb91-452f-b801-5c9a511de165": [
       {
         "type": "purchase for download",
@@ -1032,6 +1039,7 @@
         "url": "https://www.izmir.art/tr/rene-lokal"
       }
     ],
+    "86f4ce99-8e2e-4a56-b97b-896533217840": [],
     "88b80dac-3975-49da-be8e-9b7fc819687c": [
       {
         "type": "social network",
@@ -1749,6 +1757,7 @@
       }
     ],
     "d77ba579-30c3-4964-938d-5510b3f24f37": [],
+    "d811f90c-0bd7-4090-9d66-d2b9f1a3143d": [],
     "da4e2b82-7da8-451e-abe5-4728b0e685e3": [
       {
         "type": "social network",
@@ -4089,7 +4098,7 @@
         {
           "artist": {
             "country": null,
-            "disambiguation": "",
+            "disambiguation": "Breakcore DJ",
             "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
             "name": "Random Input",
             "sort-name": "Random Input",
@@ -5652,6 +5661,216 @@
         }
       ],
       "setlist": "@ [6ef45a19-e7ed-4b1d-b00c-24c1dad843be|Kana Kana]\r\n@ [6bbb9ed3-bb91-452f-b801-5c9a511de165|She Past Away]\r\n@ [e3f3e3cd-35b1-4032-adee-8cd24dc32f16|Hakan Tamar]",
+      "time": "20:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b",
+      "imagePath": "/assets/images/posters/6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b.jpg",
+      "life-span": {
+        "begin": "2026-07-03",
+        "end": "2026-07-03",
+        "ended": true
+      },
+      "name": "Fry Day",
+      "posterThumb": "https://eventartarchive.org/event/6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b/45537884602-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b/45537884602.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "DJ based in İzmir",
+            "id": "4c5f7485-d9f0-44c9-859c-1a3def73920f",
+            "name": "Mad Honey",
+            "sort-name": "Mad Honey",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "Flow artist based in İzmir",
+            "id": "69a3bd80-8e10-4968-98ab-bdaa60633ac4",
+            "name": "Ank",
+            "sort-name": "Ank",
+            "type": null,
+            "type-id": null
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "support act",
+          "type-id": "492a850e-97eb-306a-a85e-4b6d98527796"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "DJ based in İzmir",
+            "id": "86f4ce99-8e2e-4a56-b97b-896533217840",
+            "name": "Chuck",
+            "sort-name": "Chuck",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "support act",
+          "type-id": "492a850e-97eb-306a-a85e-4b6d98527796"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "abab7daf-c631-4836-991b-1fed96a10250",
+            "name": "Lizrith",
+            "sort-name": "Lizrith",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "b440fce8-a13b-4f74-b7e9-849f565c726d",
+            "name": "p0isonrat",
+            "sort-name": "p0isonrat",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "Breakcore DJ",
+            "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
+            "name": "Random Input",
+            "sort-name": "Random Input",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "url",
+          "type": "social network",
+          "type-id": "68f5fcaa-b58c-3bfe-9b7c-75c2b56e839a",
+          "url": {
+            "id": "d811f90c-0bd7-4090-9d66-d2b9f1a3143d",
+            "resource": "https://do.basspistol.org/event/fry-day"
+          }
+        }
+      ],
+      "setlist": "",
       "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
@@ -9273,7 +9492,7 @@
         {
           "artist": {
             "country": null,
-            "disambiguation": "",
+            "disambiguation": "Breakcore DJ",
             "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
             "name": "Random Input",
             "sort-name": "Random Input",
