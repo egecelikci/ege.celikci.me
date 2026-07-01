@@ -11,7 +11,7 @@ import checkUrls from "lume/plugins/check_urls.ts";
 import date from "lume/plugins/date.ts";
 import extractDate from "lume/plugins/extract_date.ts";
 import favicon from "lume/plugins/favicon.ts";
-import gitDate from "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@6f4b6eb74af9524b49170c858727319dd1c49780/git_date/mod.ts";
+import gitDate from "https://cdn.jsdelivr.net/gh/lumeland/lume@53659446df4c748e20bf5eacb17ebbcbc66bb19b/plugins/git_date.ts";
 import gitInfo from "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@6f4b6eb74af9524b49170c858727319dd1c49780/git_info/mod.ts";
 import googleFonts from "lume/plugins/google_fonts.ts";
 import imageSize from "lume/plugins/image_size.ts";
