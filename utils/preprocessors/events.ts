@@ -150,8 +150,9 @@ export default function () {
       for (const page of pages) {
         if (page.data.event) {
           enrichEvent(page.data.event);
-          // Sync page title with enriched event title (filtering non-performers)
-          page.data.title = page.data.event.displayTitle;
+          const event = page.data.event;
+          page.data.title = event.local?.title ||
+            (event.isCustomTitle ? event.name : event.displayTitle);
         }
       }
     });

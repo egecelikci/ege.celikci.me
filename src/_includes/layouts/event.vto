@@ -3,7 +3,6 @@ layout: layouts/page.vto
 ---
 
 {{>
-  // 1. Poster Setup: Prepare for Media component (unconstrained)
   const posterImages = it.event.imagePath
     ? [{ src: it.event.imagePath, alt: it.event.name }]
     : (it.event.posterUrl
@@ -15,16 +14,14 @@ layout: layouts/page.vto
   <div
     class="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-12 md:gap-20 items-start"
   >
-    {{# MAIN CONTENT #}}
     <div class="space-y-16 [view-transition-name:event-content]">
-      {{# HEADER META (Price, Date) #}}
       <section class="space-y-10">
-        {{ if event.isCustomTitle && event.name }}
-          <h1
-            class="text-[length:var(--size-step-3)] font-sans font-bold tracking-tight text-text leading-[1.1] text-balance"
+        {{ if event.isCustomTitle && event.displayTitle }}
+          <p
+            class="text-[length:var(--size-step-1)] font-sans font-bold tracking-tight text-text-muted leading-[1.2] text-balance"
           >
-            {{ event.name }}
-          </h1>
+            {{ event.displayTitle }}
+          </p>
         {{ /if }}
 
         {{ if event.disambiguation }}
