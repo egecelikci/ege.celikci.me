@@ -8,11 +8,14 @@
     "@std/path": "jsr:@std/path@^1.1.6",
     "@std/yaml": "jsr:@std/yaml@^1.1.2",
     "@types/leaflet": "npm:@types/leaflet@^1.9.21",
+    "gitDate": "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_date.ts",
+    "gitInfo": "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_info.ts",
     "instant.page": "npm:instant.page@^5.2.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.6/",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
     "photoswipe": "npm:photoswipe@^5.4.4",
+    "pwa": "https://cdn.jsdelivr.net/gh/lumeland/lume@017ee20ca7cf60dc2649cd5da66982ab79b21651/plugins/pwa.ts",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
     "rehype-slug": "npm:rehype-slug@^6.0.0",
     "remark-gfm": "npm:remark-gfm@^4.0.1",
@@ -22,10 +25,8 @@
     "sharp": "npm:sharp@^0.35.3",
     "shiki": "npm:shiki@^4.3.1",
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
-    "workbox-cli": "npm:workbox-cli@^7.4.1",
-    "pwa": "https://cdn.jsdelivr.net/gh/lumeland/lume@017ee20ca7cf60dc2649cd5da66982ab79b21651/plugins/pwa.ts",
-    "gitDate": "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_date.ts",
-    "gitInfo": "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_info.ts"
+    "well-known": "https://codeberg.org/egecelikci/experimental-plugins/raw/commit/602508b02b3d04739dddd77ba843eff64306a5a9/well-known/mod.ts",
+    "workbox-cli": "npm:workbox-cli@^7.4.1"
   },
   "tasks": {
     "lume": {

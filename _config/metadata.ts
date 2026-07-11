@@ -17,8 +17,14 @@ const USERNAME = "egecelikci";
 const EMAIL = "ege@celikci.me";
 const MATRIX_USER = "eg";
 const MATRIX_HOST = "metropolis.nexus";
+const ATPROTO_DID = "did:plc:ecyojzioziuposnh6utazpu6";
 const SIGNAL_URL =
   "aHR0cHM6Ly9zaWduYWwubWUvI2V1L3owc1ZpZzFYYzFtMWdNU0RwRnFWMDF1Qk5wSXZBV3d5X1k4aFVJNlhBckczcXBKNnVmcExsNVNSRlB4a3NzYWM=";
+
+export const atproto = {
+  did: ATPROTO_DID,
+  handle: "ege.celikci.me",
+};
 
 export const author = {
   name: "Ege Çelikçi",
@@ -30,8 +36,8 @@ export const author = {
       url: "https://ieji.de/@eg",
     },
     bluesky: {
-      name: "ege.celikci.me",
-      url: "https://bsky.app/profile/did:plc:ecyojzioziuposnh6utazpu6",
+      name: atproto.handle,
+      url: `https://bsky.app/profile/${atproto.did}`,
     },
     signal: {
       url: SIGNAL_URL,

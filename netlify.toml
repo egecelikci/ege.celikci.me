@@ -17,13 +17,7 @@
 
 [[redirects]]
     from = "https://celikci.me/.well-known/webfinger"
-    to = "/webfinger.json"
-    status = 200
-    force = true
-
-[[redirects]]
-    from = "/.well-known/webfinger"
-    to = "/webfinger.json"
+    to = "/.well-known/webfinger"
     status = 200
     force = true
 

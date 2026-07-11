@@ -30,6 +30,7 @@ import gitDate from "gitDate";
 import gitInfo from "gitInfo";
 import pwa from "pwa";
 import typst from "typst";
+import wellKnown from "well-known";
 
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
@@ -38,6 +39,7 @@ import markdown from "./markdown.ts";
 import typstOgImages from "../utils/plugins/typst_og.ts";
 
 import {
+  atproto,
   author,
   jsonLd as jsonLdData,
   site as siteMetadata,
@@ -130,7 +132,30 @@ export default function () {
       .use(filters())
       .use(markdown())
       .use(gitDate())
-      .use(gitInfo());
+      .use(gitInfo())
+      .use(wellKnown({
+        atProto: atproto.did,
+        webfinger: {
+          subject: `acct:${author.email}`,
+          links: [
+            {
+              rel: "http://openid.net/specs/connect/1.0/issuer",
+              href: "https://codeberg.org",
+            },
+          ],
+        },
+        security: {
+          contact: `mailto:${author.email}`,
+          expires: new Date("2027-07-11"),
+          preferredLanguages: ["en", "tr"],
+        },
+        trust: {
+          social: author.social.mastodon.url,
+          contact: `mailto:${author.email}`,
+          dataTrainingAllowed: false,
+        },
+        gpc: true,
+      }));
 
     // Production-only optimizations and checks
     if (!isDev) {
