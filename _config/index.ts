@@ -6,13 +6,12 @@
 Deno.env.set("TZ", "Europe/Istanbul");
 
 import "./types.ts";
+
 import attributes from "lume/plugins/attributes.ts";
 import checkUrls from "lume/plugins/check_urls.ts";
 import date from "lume/plugins/date.ts";
 import extractDate from "lume/plugins/extract_date.ts";
 import favicon from "lume/plugins/favicon.ts";
-import gitDate from "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_date.ts";
-import gitInfo from "https://cdn.jsdelivr.net/gh/lumeland/lume@db4363f00724b5cbe793c6a5bfd628de42acd670/plugins/git_info.ts";
 import googleFonts from "lume/plugins/google_fonts.ts";
 import imageSize from "lume/plugins/image_size.ts";
 import jsonLd from "lume/plugins/json_ld.ts";
@@ -26,14 +25,23 @@ import seo from "lume/plugins/seo.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
+
+import gitDate from "gitDate";
+import gitInfo from "gitInfo";
+import pwa from "pwa";
 import typst from "typst";
-import typstOgImages from "../utils/plugins/typst_og.ts";
+
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
-import pwa from "https://codeberg.org/egecelikci/lume/raw/commit/22aa5978f11a441d97265c0f71e71f404fb85b47/plugins/pwa.ts";
-import { jsonLd as jsonLdData } from "./metadata.ts";
+import typstOgImages from "../utils/plugins/typst_og.ts";
+
+import {
+  author,
+  jsonLd as jsonLdData,
+  site as siteMetadata,
+} from "./metadata.ts";
 
 export default function () {
   const isDev = Deno.env.get("MODE") !== "production";
@@ -133,9 +141,12 @@ export default function () {
         .use(validateHTML());
     }
 
-    // Global default for all Markdown files: Vento then Markdown
+    // Global default configurations
     site.data("templateEngine", ["vto", "md"], ".md");
     site.data("templateEngine", "typ", ".typ");
     site.data("jsonLd", jsonLdData);
+
+    site.data("site", siteMetadata);
+    site.data("author", author);
   };
 }
