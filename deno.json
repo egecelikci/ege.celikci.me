@@ -25,7 +25,7 @@
     "sharp": "npm:sharp@^0.35.3",
     "shiki": "npm:shiki@^4.3.1",
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
-    "well-known": "https://codeberg.org/egecelikci/experimental-plugins/raw/commit/602508b02b3d04739dddd77ba843eff64306a5a9/well-known/mod.ts",
+    "wellKnown": "https://cdn.jsdelivr.net/gh/lumeland/lume@a46d9d2794c432b6f23610879b5e4f393db2f79e/plugins/well_known.ts",
     "workbox-cli": "npm:workbox-cli@^7.4.1"
   },
   "tasks": {

@@ -30,7 +30,7 @@ import gitDate from "gitDate";
 import gitInfo from "gitInfo";
 import pwa from "pwa";
 import typst from "typst";
-import wellKnown from "well-known";
+import wellKnown from "wellKnown";
 
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
