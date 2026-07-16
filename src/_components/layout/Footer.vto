@@ -43,7 +43,7 @@
           class="font-mono hover:text-primary transition-colors text-text-dim whitespace-nowrap"
           aria-label="view latest commit: {{ it.gitInfo.hash }}"
         >
-          {{ it.gitInfo.hash }}
+          {{ it.gitInfo.hash.substring(0, 7) }}
         </a>
       {{ /if }}
 
