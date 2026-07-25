@@ -16,24 +16,6 @@
     package = "./plugins/cache"
 
 [[redirects]]
-    from = "https://celikci.me/.well-known/webfinger"
-    to = "/.well-known/webfinger"
-    status = 200
-    force = true
-
-[[redirects]]
-    from = "/.well-known/matrix/server"
-    to = "https://matrix.celikci.me/.well-known/matrix/server"
-    status = 200
-    force = true
-
-[[redirects]]
-    from = "/.well-known/matrix/client"
-    to = "https://matrix.celikci.me/.well-known/matrix/client"
-    status = 200
-    force = true
-
-[[redirects]]
     from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
     to = "https://ege.celikci.me/:splat"
     status = 301
@@ -43,7 +25,6 @@
     from = "https://celikci.me/*"
     to = "https://ege.celikci.me/:splat"
     status = 301
-    force = true
 
 [[redirects]]
     from = "/event"
