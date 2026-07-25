@@ -163,11 +163,11 @@ export default function () {
         gpc: true,
         matrix: {
           server: {
-            "m.server": "matrix.celikci.me:443",
+            "m.server": "matrix.balcova.online:443",
           },
           client: {
             "m.homeserver": {
-              base_url: "https://matrix.celikci.me",
+              base_url: "https://matrix.balcova.online",
             },
           },
         },
