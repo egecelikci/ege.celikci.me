@@ -1,5 +1,4 @@
 import { Page } from "lume/core/file.ts";
-import sharp from "sharp";
 import type { TypstEngine } from "typst";
 
 export interface TypstOgOptions {
@@ -10,6 +9,9 @@ export default function typstOg({
   layout = "/_includes/layouts/og.typ",
 }: TypstOgOptions = {}) {
   return (site: Lume.Site) => {
+    const isDev = Deno.env.get("MODE") !== "production";
+    if (isDev) return;
+
     let engine: TypstEngine | undefined;
 
     site.hooks.typst?.((e) => {
@@ -158,6 +160,7 @@ export default function typstOg({
           return;
         }
 
+        const sharp = (await import("sharp")).default;
         const png = new Uint8Array(
           await sharp(new TextEncoder().encode(svgText))
             .resize({ width: 1200 })

@@ -21,7 +21,8 @@ export async function loadState<T>(
     return JSON.parse(text) as T;
   } catch (error) {
     if (!(error instanceof Deno.errors.NotFound)) {
-      console.warn(`[state] ⚠️ Failed to load ${filePath}:`, error.message);
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`[state] ⚠️ Failed to load ${filePath}:`, message);
     }
     return defaultValue;
   }
@@ -36,7 +37,8 @@ export async function saveState<T>(filePath: string, data: T): Promise<void> {
     const sorted = sortObjectKeys(data);
     await Deno.writeTextFile(filePath, JSON.stringify(sorted, null, 2));
   } catch (error) {
-    console.error(`[state] ❌ Failed to save ${filePath}:`, error.message);
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[state] ❌ Failed to save ${filePath}:`, message);
   }
 }
 

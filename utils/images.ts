@@ -1,5 +1,10 @@
+/**
+ * utils/images.ts
+ * Image processing utilities using Sharp (loaded dynamically to avoid HMR worker conflicts).
+ */
+
 import { Buffer } from "node:buffer";
-import sharp from "sharp";
+
 /**
  * Saves a resized, color DITHERED version of the cover.
  * OPTIMIZATION: High compression, low color count.
@@ -10,6 +15,7 @@ export async function saveColorVersion(
   width = 290,
 ) {
   try {
+    const sharp = (await import("sharp")).default;
     const ditheredBuffer = await sharp(inputPath)
       .resize(width, width, { fit: "cover" })
       .png({
@@ -42,6 +48,7 @@ export async function ditherWithSharp(
   outputPath: string,
   width = 290,
 ) {
+  const sharp = (await import("sharp")).default;
   const { data, info } = await sharp(inputPath)
     .resize(width, width, { fit: "cover" })
     .greyscale()

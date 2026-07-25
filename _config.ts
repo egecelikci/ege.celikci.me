@@ -38,11 +38,20 @@ const runFetch = async (script: string, label: string) => {
   }
 };
 
-site.addEventListener("beforeBuild", () =>
-  Promise.all([
+const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
+const isDev = Deno.env.get("LUME_ENV") === "development" || isServe;
+
+// Skip heavy data fetching scripts during local development serve
+site.addEventListener("beforeBuild", () => {
+  if (isDev) {
+    console.log("[build] Skipping network fetch scripts in development.");
+    return Promise.resolve();
+  }
+  return Promise.all([
     runFetch("utils/fetch-music.ts", "music"),
     runFetch("utils/fetch-events.ts", "events"),
-  ]));
+  ]);
+});
 
 // Service Worker generation
 site.addEventListener("afterBuild", async () => {

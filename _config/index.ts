@@ -36,7 +36,6 @@ import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
 import markdown from "./markdown.ts";
-import typstOgImages from "../utils/plugins/typst_og.ts";
 
 import {
   atproto,
@@ -48,15 +47,22 @@ import {
 export default function () {
   const isDev = Deno.env.get("MODE") !== "production";
 
-  return (site: Lume.Site) => {
+  return async (site: Lume.Site) => {
     site
       .use(attributes())
       .use(imageSize())
       .use(slugifyPlugin())
       .use(typst({
         fonts: ["/assets/fonts"],
-      }))
-      .use(typstOgImages())
+      }));
+
+    if (!isDev) {
+      const typstOgImages =
+        (await import("../utils/plugins/typst_og.ts")).default;
+      site.use(typstOgImages());
+    }
+
+    site
       .use(metas())
       .use(multilanguage({
         languages: ["en", "tr"],
@@ -155,6 +161,16 @@ export default function () {
           dataTrainingAllowed: false,
         },
         gpc: true,
+        matrix: {
+          server: {
+            "m.server": "matrix.celikci.me:443",
+          },
+          client: {
+            "m.homeserver": {
+              base_url: "https://matrix.celikci.me",
+            },
+          },
+        },
       }));
 
     // Production-only optimizations and checks

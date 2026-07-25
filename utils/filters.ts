@@ -1,5 +1,5 @@
 import * as path from "@std/path";
-import sanitizeHTML from "sanitize-html";
+import xss from "xss";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
 import { getLinkInfo } from "./links.ts";
@@ -222,9 +222,13 @@ export const filters = {
     const cleanUrl = (u: string) => u.replace(/\/+$/, "");
     const targetUrl = cleanUrl(absoluteUrl);
     const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of"];
-    const allowedHTML = {
-      allowedTags: ["b", "i", "em", "strong", "a"],
-      allowedAttributes: {
+
+    const xssOptions = {
+      whiteList: {
+        b: [],
+        i: [],
+        em: [],
+        strong: [],
         a: ["href"],
       },
     };
@@ -261,10 +265,10 @@ export const filters = {
               entry["wm-source"]
             }">${entry["wm-source"]}</a>`;
           } else {
-            entry.content.value = sanitizeHTML(html, allowedHTML);
+            entry.content.value = xss(html, xssOptions);
           }
         } else {
-          entry.content.value = sanitizeHTML(text || "", allowedHTML);
+          entry.content.value = xss(text || "", xssOptions);
         }
       } else {
         entry.content = { value: "" };

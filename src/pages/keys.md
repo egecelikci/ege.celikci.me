@@ -7,9 +7,15 @@ menu:
   order: 2
 ---
 
-## SSH
+## age
 
 I don’t use PGP, but you might want to check [age-encryption](https://age-encryption.org/#encrypting-to-a-github-user) as an encryption method for sensitive information you might send me over insecure channels.
+
+```text
+age1vryy7ntgdxrvr4lcevvhqr78yp4wpud42ahcdn0ah7ggtuqxfymq9hw07s
+```
+
+## SSH
 
 <!-- deno-fmt-ignore -->
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
