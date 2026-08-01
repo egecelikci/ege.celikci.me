@@ -30,7 +30,7 @@ import slugifyPlugin from "lume/plugins/slugify_urls.ts";
 import validateHTML from "lume/plugins/validate_html.ts";
 import wellKnown from "lume/plugins/well_known.ts";
 
-import typst from "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts";
+import typst from "typst";
 
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";

@@ -14,7 +14,7 @@ export default function typstOg({
 
     let engine: TypstEngine | undefined;
 
-    site.hooks.typst?.((e) => {
+    site.hooks.typst?.((e: TypstEngine) => {
       engine = e;
     });
 
