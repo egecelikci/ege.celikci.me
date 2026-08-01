@@ -63,6 +63,10 @@ export default function typstOg({
           }
         }
 
+        if (!desc) {
+          desc = page.data.site?.description ?? "";
+        }
+
         let imgUrl = page.data.image ?? page.data.coverImage ??
           page.data.images?.[0]?.src;
 
@@ -84,18 +88,15 @@ export default function typstOg({
           }
         }
 
-        // --- EXACT MATHEMATICAL LAYOUT CAPACITY ---
         const hasImage = finalImage !== "none";
 
         const textWidth = hasImage ? 648 : 1072;
         const titleFontSize = hasImage ? 56 : 72;
         const descFontSize = hasImage ? 32 : 36;
 
-        // DM Mono character width ratio is ~0.58.
         const titleCPL = Math.floor(textWidth / (titleFontSize * 0.58));
         const descCPL = Math.floor(textWidth / (descFontSize * 0.58));
 
-        // Title capacity (Cap title at 3 visual lines to save space)
         const estimatedTitleLines = Math.max(
           1,
           Math.ceil(title.length / titleCPL),
@@ -106,31 +107,25 @@ export default function typstOg({
           title = title.substring(0, (titleCPL * 3) - 2).trimEnd() + "…";
         }
 
-        // Title Height Formula: lines * fontSize + (lines - 1) * leading(0.6em)
         const titleHeight = (finalTitleLines * titleFontSize) +
           (Math.max(0, finalTitleLines - 1) * (titleFontSize * 0.6));
 
         const verticalGap = hasImage ? 40 : 48;
 
-        // Set mathematical limit slightly smaller than the physical 460pt box.
-        // This guarantees a ~10pt buffer at the bottom so descenders ('y', 'p') are never cut.
         const maxMathHeight = 450;
 
         const availableDescHeight = maxMathHeight - titleHeight - verticalGap;
 
         let maxDescLines = 0;
         if (availableDescHeight >= descFontSize) {
-          // Desc lines Formula: Divide by 1.6 to account for 0.6em leading
           maxDescLines = Math.floor(availableDescHeight / (descFontSize * 1.6));
         }
 
-        // Add a 5% bonus to capacity to account for word-wrap packing differences
         const descCharLimit = Math.max(
           0,
           Math.floor(maxDescLines * descCPL * 1.05),
         );
 
-        // Apply dynamic limit and Ellipsis
         if (desc.length > descCharLimit) {
           if (descCharLimit > 3) {
             desc = desc.substring(0, descCharLimit - 2).trimEnd() + "…";
@@ -138,7 +133,6 @@ export default function typstOg({
             desc = "";
           }
         }
-        // -------------------------------------------
 
         const injectedSource = `
 #let og-title = "${escapeTypstStr(title)}"

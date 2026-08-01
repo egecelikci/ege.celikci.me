@@ -6,7 +6,8 @@
 export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",
-  description: "personal website",
+  description:
+    "Ege Çelikçi’s personal website: ephemeral notes, occasional writing, curated music, bookmarks, music events in İzmir and small tools.",
   lang: "en",
   locale: "en_US",
   url: "https://ege.celikci.me",
@@ -121,6 +122,15 @@ export const author = {
   ],
 };
 
+export const socialProfiles = [
+  "https://ieji.de/@eg",
+  `https://bsky.app/profile/${atproto.did}`,
+  `https://github.com/${USERNAME}`,
+  `https://codeberg.org/${USERNAME}`,
+  `https://gitlab.com/${USERNAME}`,
+  `https://listenbrainz.org/user/${USERNAME}`,
+];
+
 export const jsonLd = {
   "@type": "WebSite",
   url: "=url",
@@ -129,7 +139,10 @@ export const jsonLd = {
   author: {
     "@type": "Person",
     name: author.name,
+    email: EMAIL,
+    url: site.url,
+    sameAs: socialProfiles,
   },
   headline: "=title || " + site.title,
-  sameAs: author.links.filter((l) => l.relMe).map((l) => l.url),
+  sameAs: socialProfiles,
 };
