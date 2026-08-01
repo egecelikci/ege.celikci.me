@@ -4,6 +4,13 @@
  */
 
 import "lume/types.ts";
+import type {
+  EnrichedIzmirEvents,
+  LocalEventData,
+  MBRelationPlace,
+} from "../utils/fetch-events.ts";
+import type { PostImage } from "../utils/preprocessors/images.ts";
+import type { HeaderExtension } from "../utils/preprocessors/feeds.ts";
 
 export interface SiteData {
   site: {
@@ -41,8 +48,42 @@ export interface SiteData {
   };
 }
 
+/** Webmention counts set by the stats preprocessor */
+export interface WebmentionStats {
+  likes: number;
+  reposts: number;
+  replies: number;
+}
+
+/** The `backlink` page data pointing to a previous entry */
+export interface Backlink {
+  url: string;
+  title: string;
+}
+
 declare global {
   namespace Lume {
-    export interface Data extends SiteData {}
+    export interface GlobalData extends SiteData {
+      mb_events: EnrichedIzmirEvents;
+      events: Record<string, LocalEventData>;
+      venues: Record<string, Partial<MBRelationPlace>>;
+      stats?: WebmentionStats;
+      images?: PostImage[];
+      description?: string;
+      type?: string;
+      updated?: string;
+      coverImage?: string;
+      coverImageAlt?: string;
+      metaImage?: string;
+      headerExtension?: HeaderExtension;
+      alternateFeeds?: Array<{ type: string; url: string; label: string }>;
+      tag?: string;
+      navigation?: { parent?: string };
+      searchable?: boolean;
+      noindex?: boolean;
+      prose?: boolean;
+      backlink?: Backlink;
+      openGraphLayout?: string | false;
+    }
   }
 }
