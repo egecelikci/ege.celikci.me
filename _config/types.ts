@@ -4,8 +4,10 @@
  */
 
 import "lume/types.ts";
+import type Searcher from "lume/core/searcher.ts";
 import type {
   EnrichedIzmirEvents,
+  EnrichedMBEvent,
   LocalEventData,
   MBRelationPlace,
 } from "../utils/fetch-events.ts";
@@ -63,12 +65,20 @@ export interface Backlink {
 
 declare global {
   namespace Lume {
+    export interface TypeConfig {
+      strict: true;
+    }
+
     export interface GlobalData extends SiteData {
+      search: Searcher;
       mb_events: EnrichedIzmirEvents;
       events: Record<string, LocalEventData>;
       venues: Record<string, Partial<MBRelationPlace>>;
       stats?: WebmentionStats;
       images?: PostImage[];
+      title?: string;
+      image?: string;
+      event?: EnrichedMBEvent;
       description?: string;
       type?: string;
       updated?: string;

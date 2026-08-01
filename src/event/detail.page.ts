@@ -1,5 +1,6 @@
 import { exists } from "@std/fs/exists";
 import { getLinkInfo } from "../../utils/links.ts";
+import type { MBEntityLink, MBRelation } from "../../utils/fetch-events.ts";
 
 async function collectGalleryImages(
   eventId: string,
@@ -34,7 +35,7 @@ async function collectGalleryImages(
   return images;
 }
 
-export default async function* ({ mb_events, events }: any) {
+export default async function* ({ mb_events, events }: Lume.Data) {
   const rawEvents = mb_events?.events || mb_events?.all;
   if (!rawEvents) return;
 
@@ -86,7 +87,7 @@ export default async function* ({ mb_events, events }: any) {
     }
 
     // Add all event-level URL relations from MusicBrainz (homepages, ticketing, etc.)
-    (event.relations || []).forEach((rel: any) => {
+    (event.relations || []).forEach((rel: MBRelation) => {
       if (rel["target-type"] === "url" && rel.url?.resource) {
         const info = getLinkInfo(rel.type, rel.url.resource);
         // Exclude generic fallbacks from the header to keep it high-quality
@@ -102,20 +103,20 @@ export default async function* ({ mb_events, events }: any) {
     });
 
     // Gather all credits from MB relations
-    const allCredits = (event.relations || []).filter((rel: any) =>
+    const allCredits = (event.relations || []).filter((rel: MBRelation) =>
       ["illustration", "graphic design", "artwork", "design", "engineer"]
         .includes(rel.type)
-    ).map((rel: any) => {
+    ).map((rel: MBRelation) => {
       const artistId = rel.artist?.id;
-      const entityLinks = mb_events.entities?.[artistId] || [];
+      const entityLinks = (artistId && mb_events.entities[artistId]) || [];
       const artistName = rel["target-credit"] || rel.artist?.name;
 
       // Find primary link for the credit (homepage > instagram > MB)
-      const homepage = entityLinks.find((l: any) =>
+      const homepage = entityLinks.find((l: MBEntityLink) =>
         l.type.toLowerCase().includes("homepage") ||
         l.type.toLowerCase().includes("site")
       );
-      const instagram = entityLinks.find((l: any) =>
+      const instagram = entityLinks.find((l: MBEntityLink) =>
         l.type.toLowerCase() === "instagram" ||
         l.url.includes("instagram.com")
       );
@@ -151,10 +152,10 @@ export default async function* ({ mb_events, events }: any) {
     // Split credits by logic:
     // 1. Static visual roles -> Poster
     // 2. Technical/Motion roles -> Video
-    let posterCredits = allCredits.filter((c: any) =>
+    let posterCredits = allCredits.filter((c) =>
       ["illustration", "graphic design", "artwork"].includes(c.type)
     );
-    let videoCredits = allCredits.filter((c: any) =>
+    let videoCredits = allCredits.filter((c) =>
       ["design", "engineer"].includes(c.type)
     );
 
@@ -182,17 +183,6 @@ export default async function* ({ mb_events, events }: any) {
         url: "=url",
         description: local.description || event.disambiguation,
         image: event.imagePath || event.posterThumb || event.posterUrl,
-        startDate: event.start?.date,
-        endDate: event.end?.date,
-        location: event.location && {
-          "@type": "Place",
-          name: event.location.name,
-          address: event.location.address,
-        },
-        performer: event.performers?.map((p: any) => ({
-          "@type": "Person",
-          name: p.name,
-        })),
       },
       prose: false,
       headerExtension: {

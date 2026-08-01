@@ -1,8 +1,8 @@
 export const layout = "layouts/page.vto";
 export const searchable = true;
 
-export default function* ({ search }: any, { slugify }: any) {
-  const tags = search.values("tags");
+export default function* ({ search }: Lume.Data, { slugify }: Lume.Helpers) {
+  const tags = search.values<string>("tags");
 
   for (const tag of tags) {
     yield {

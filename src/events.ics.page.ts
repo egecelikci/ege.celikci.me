@@ -1,7 +1,7 @@
 export const url = "/events.ics";
 export const layout = null;
 
-export default function ({ mb_events }: any) {
+export default function ({ mb_events }: Lume.Data) {
   const events = mb_events?.upcoming || [];
 
   const icsLines = [
@@ -21,7 +21,7 @@ export default function ({ mb_events }: any) {
       .replace(/;/g, "\\;")
       .replace(/\n/g, "\\n");
 
-  const formatDate = (date: any, timeStr?: string) => {
+  const formatDate = (date: Date, timeStr?: string) => {
     const d = new Date(date);
     if (isNaN(d.getTime())) return "";
 

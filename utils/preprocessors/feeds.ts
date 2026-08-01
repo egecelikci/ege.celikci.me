@@ -1,5 +1,4 @@
 /**
- * utils/preprocessors/feeds.ts
  * Automatically injects Atom and JSON feed links into the page header extension.
  */
 
@@ -17,42 +16,54 @@ export interface HeaderSource {
   type?: string;
 }
 
-/** The `headerExtension` data: a SourceMeta component with its props */
-export interface HeaderExtension {
-  comp?: string;
-  props?: {
-    sources?: HeaderSource | HeaderSource[];
-    label?: string;
-    url?: string;
-    icon?: string;
-    catalog?: string;
-    variant?: string;
-  };
+/** The props of the SourceMeta component */
+export interface HeaderExtensionProps {
+  sources?: HeaderSource | HeaderSource[];
+  label?: string;
+  url?: string;
+  icon?: string;
+  catalog?: string;
+  variant?: string;
 }
+
+/**
+ * The `headerExtension` data: either a full SourceMeta object
+ * or a shorthand where the value IS the props.
+ */
+export type HeaderExtension =
+  | { comp: string; props?: HeaderExtensionProps }
+  | HeaderExtensionProps;
 
 /**
  * Automatically injects Atom and JSON feed links into the page header extension.
  * Supports full SourceMeta structure and shorthands.
  */
-function injectFeedSources(page: Lume.Page, atomUrl: string, jsonUrl: string) {
-  let extension = page.data.headerExtension;
+function injectFeedSources(
+  page: Lume.Page<Lume.GlobalData>,
+  atomUrl: string,
+  jsonUrl: string,
+) {
+  const raw = page.data.headerExtension;
+  let extension: { comp: string; props: HeaderExtensionProps };
 
-  // Convert shorthand or missing extension to full object
-  if (!extension || typeof extension !== "object") {
+  if (raw && typeof raw === "object") {
+    if ("comp" in raw) {
+      extension = {
+        comp: raw.comp,
+        props: raw.props ?? { sources: [] },
+      };
+    } else {
+      // Shorthand: extension IS the props
+      extension = {
+        comp: "layout.SourceMeta",
+        props: raw,
+      };
+    }
+  } else {
     extension = {
       comp: "layout.SourceMeta",
       props: { sources: [] },
     };
-  } else if (!extension.comp) {
-    // Shorthand: extension IS the props
-    extension = {
-      comp: "layout.SourceMeta",
-      props: extension,
-    };
-  }
-
-  if (!extension.props) {
-    extension.props = { sources: [] };
   }
 
   // Handle sources as array or single object shorthand
@@ -62,7 +73,7 @@ function injectFeedSources(page: Lume.Page, atomUrl: string, jsonUrl: string) {
   }
 
   // If no sources but there are root props (shorthand label/url), migrate them
-  if (sources.length === 0 && extension.props.label) {
+  if (sources.length === 0 && extension.props.label && extension.props.url) {
     sources.push({
       label: extension.props.label,
       url: extension.props.url,
@@ -77,10 +88,10 @@ function injectFeedSources(page: Lume.Page, atomUrl: string, jsonUrl: string) {
   }
 
   // Add feeds if not already present
-  if (!sources.find((s: any) => s.url === atomUrl)) {
+  if (!sources.find((s) => s.url === atomUrl)) {
     sources.push({ label: "Atom Feed", url: atomUrl });
   }
-  if (!sources.find((s: any) => s.url === jsonUrl)) {
+  if (!sources.find((s) => s.url === jsonUrl)) {
     sources.push({ label: "JSON Feed", url: jsonUrl });
   }
 
@@ -118,8 +129,10 @@ export default function () {
           // Custom override for 'kedi' tag: promote subversive.pics
           if (page.data.tag === "kedi") {
             const extension = page.data.headerExtension;
-            if (extension && extension.props &&
-              Array.isArray(extension.props.sources)) {
+            if (
+              extension && "props" in extension && extension.props &&
+              Array.isArray(extension.props.sources)
+            ) {
               extension.props.sources.unshift({
                 label: "subversive.pics",
                 url: "https://subversive.pics/",

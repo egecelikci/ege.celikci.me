@@ -73,7 +73,7 @@ export default function (options: FeedOptions = {}) {
 
     // 2. Per-tag feeds
     site.use(feed(() => {
-      const tags = site.search.values("tags");
+      const tags = site.search.values<string>("tags");
 
       return tags.map((tag) => {
         const slug = slugify(tag);

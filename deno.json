@@ -73,7 +73,8 @@
   },
   "compilerOptions": {
     "types": [
-      "lume/types.ts"
+      "lume/types.ts",
+      "./_config/types.ts"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "lume"

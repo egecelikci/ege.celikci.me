@@ -35,7 +35,7 @@ export default function typstOg({
       );
     }
 
-    async function processPage(page: Lume.Page) {
+    async function processPage(page: Lume.Page<Lume.GlobalData>) {
       if (page.data.openGraphLayout === false) return;
 
       const template = typeof page.data.openGraphLayout === "string"
