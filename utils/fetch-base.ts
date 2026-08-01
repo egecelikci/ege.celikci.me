@@ -1,16 +1,3 @@
-/**
- * utils/fetch-base.ts
- *
- * Shared utilities for data fetching scripts (music, events, etc.)
- * Uses standard Web Cache API for HTTP caching.
- */
-
-Deno.env.set("TZ", "Europe/Istanbul");
-
-// ============================================================================
-// HTTP CLIENT
-// ============================================================================
-
 export type CachePolicy = "no-cache" | "force-cache" | "only-if-cached";
 
 interface HttpClientOptions {
@@ -32,9 +19,6 @@ export class HttpClient {
     this.cacheName = options.cacheName;
   }
 
-  /**
-   * Fetches a resource with retries, timeout, and custom User-Agent.
-   */
   private async robustFetch(
     url: string,
     init: RequestInit = {},
@@ -57,7 +41,7 @@ export class HttpClient {
           );
           await new Promise<void>((r) => setTimeout(r, retryAfter * 1_000));
           lastError = new Error("Rate limited (429)");
-          continue; // force retry
+          continue;
         }
 
         if (response.ok || (response.status >= 400 && response.status < 500)) {
@@ -70,7 +54,6 @@ export class HttpClient {
         lastError = err as Error;
       }
 
-      // Wait before retry (exponential backoff)
       const delay = Math.pow(2, i) * 1000;
       await new Promise((r) => setTimeout(r, delay));
     }
@@ -97,7 +80,6 @@ export class HttpClient {
       },
     });
 
-    // 1. Check cache
     if (cachePolicy !== "no-cache") {
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
@@ -116,7 +98,6 @@ export class HttpClient {
       return null;
     }
 
-    // 2. Queue for rate limiting
     if (!bypassRateLimit && this.rateLimitMs > 0) {
       const result = this.queue.then(async () => {
         const now = Date.now();
@@ -154,7 +135,6 @@ export class HttpClient {
 
       const contentType = response.headers.get("Content-Type") || "";
 
-      // Clone response before consuming it to store in cache
       await cache.put(request, response.clone());
 
       if (type === "json") {

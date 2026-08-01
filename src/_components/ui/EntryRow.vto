@@ -117,7 +117,7 @@
       {{ /if }}
 
       <div
-        class="e-content markdown text-base md:text-lg leading-relaxed text-text-dim group-hover:text-text transition-colors {{ isNote ? "" : "line-clamp-3" }}"
+        class="e-content markdown text-base md:text-lg leading-relaxed text-text-dim group-hover:text-text transition-colors line-clamp-3"
       >
         {{ if isNote }}
           {{ entry.content |> vto(vtoContext) |> md |> safe }}
