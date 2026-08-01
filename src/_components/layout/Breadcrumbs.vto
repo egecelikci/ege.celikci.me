@@ -60,29 +60,27 @@
 
 <nav
   aria-label="Breadcrumb"
-  class="relative z-20 flex items-center min-w-0 {{ it.classes }}"
+  class="breadcrumb {{ it.classes }}"
 >
-  <ol class="flex items-center flex-nowrap gap-2 list-none p-0 m-0 min-w-0">
+  <ol class="breadcrumb__list">
     {{# 1. SITE ROOT (Always shown) #}}
-    <li class="flex items-center gap-2 flex-shrink-0">
+    <li class="breadcrumb__item">
       {{ if it.url === "/" }}
-        <span class="font-bold text-text pb-px border-b border-transparent">
+        <span class="breadcrumb__root">
           {{ site.host }}
         </span>
       {{ else }}
         <a
           href="/"
           rel="home"
-          class="font-bold text-text hover:text-primary transition-colors duration-200 no-underline pb-px border-b border-transparent"
+          class="breadcrumb__root"
         >
           {{ site.host }}
         </a>
       {{ /if }}
 
       {{ if breadcrumbItems.length > 1 }}
-        <span
-          class="text-text-dim select-none pb-px border-b border-transparent"
-        >/</span>
+        <span class="breadcrumb__sep">/</span>
       {{ /if }}
     </li>
 
@@ -99,11 +97,11 @@
       }}
 
       <li
-        class="flex items-center gap-2 {{ if isLast }}min-w-0{{ else }}flex-shrink-0{{ /if }}"
+        class="breadcrumb__item {{ if isLast }}breadcrumb__item--current{{ /if }}"
       >
         {{ if isLast }}
           <span
-            class="font-bold text-text-muted pb-px border-b border-transparent truncate"
+            class="breadcrumb__current"
             title="{{ itemTitle }}"
           >
             {{ itemTitle }}
@@ -111,16 +109,14 @@
         {{ else }}
           <a
             href='{{ itemData.url || "#" }}'
-            class="reveal:text-secondary transition-all duration-300 no-underline text-text-muted border-b border-transparent hover:border-secondary/30 pb-px"
+            class="breadcrumb__link"
           >
             {{ itemTitle }}
           </a>
         {{ /if }}
 
         {{ if index < breadcrumbItems.length - 1 }}
-          <span
-            class="select-none opacity-50 pb-px border-b border-transparent flex-shrink-0"
-          >/</span>
+          <span class="breadcrumb__sep breadcrumb__sep--faded">/</span>
         {{ /if }}
       </li>
     {{ /for }}

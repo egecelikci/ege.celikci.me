@@ -1,0 +1,91 @@
+// ---------------------------------------------------------------------------
+// Breadcrumb — minimalist text-only trail in the site header.
+// ---------------------------------------------------------------------------
+
+.breadcrumb {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  &__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+
+    &--current {
+      min-width: 0;
+    }
+  }
+
+  &__root,
+  &__current {
+    font-weight: 700;
+    padding-bottom: 1px;
+    border-bottom: 1px solid transparent;
+  }
+
+  &__root {
+    color: var(--color-text);
+  }
+
+  a.breadcrumb__root {
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  &__link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding-bottom: 1px;
+    border-bottom: 1px solid transparent;
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--color-secondary);
+        border-color: color-mix(in srgb, var(--color-secondary) 30%, transparent);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__current {
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__sep {
+    color: var(--color-text-dim);
+    user-select: none;
+    padding-bottom: 1px;
+    border-bottom: 1px solid transparent;
+    flex-shrink: 0;
+
+    &--faded {
+      color: inherit;
+      opacity: 0.5;
+    }
+  }
+}

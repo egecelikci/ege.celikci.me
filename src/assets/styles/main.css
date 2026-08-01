@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import "npm:photoswipe/dist/photoswipe.css";
-@import "npm:leaflet/dist/leaflet.css";
 @plugin "@tailwindcss/typography";
 
 @variant reveal {

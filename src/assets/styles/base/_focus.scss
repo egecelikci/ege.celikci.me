@@ -1,0 +1,8 @@
+// ---------------------------------------------------------------------------
+// Focus — visible focus for semantic components.
+//
+// NOTE: A global `:focus-visible { outline }` is deferred until Tailwind is
+// removed, because the still-active Tailwind components apply their own focus
+// rings (`focus-visible:ring-*`) and a second outline would double-ring them.
+// Converted components declare their own focus styles instead.
+// ---------------------------------------------------------------------------

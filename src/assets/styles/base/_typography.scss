@@ -1,0 +1,43 @@
+// ---------------------------------------------------------------------------
+// Typography — global text defaults and element-level type styling.
+// ---------------------------------------------------------------------------
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: var(--font-weight-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  // Matches the previous global heading rhythm (see main.css `.flow` layer).
+  :is(h1, h2, h3) {
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  mark,
+  .search-result-item mark {
+    background-color: #fde047;
+    color: #000;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+
+  abbr[title] {
+    text-decoration: underline dotted;
+    cursor: help;
+  }
+
+  dfn {
+    font-style: italic;
+    font-weight: bold;
+  }
+}

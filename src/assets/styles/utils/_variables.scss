@@ -1,0 +1,123 @@
+$bp-sm: 40em;
+$bp-md: 48em;
+$bp-lg: 64em;
+
+:root {
+  color-scheme: light;
+
+  /* palette */
+  --color-bg: #fef6e4;
+  --color-surface: #f3e1d8;
+  --color-text: #172c66;
+  --color-text-muted: #5b6a9a;
+  --color-border: #f3d2c1;
+  --color-primary: #a60c49;
+  --color-primary-offset: #8a0a3d;
+  --color-secondary: #2d6a7a;
+  --color-mastodon: #595aff;
+  --color-bluesky: #3471f6;
+
+  /* semantic alpha colors */
+  --color-border-subtle: color-mix(
+    in srgb,
+    var(--color-border),
+    transparent 60%
+  );
+  --color-surface-subtle: color-mix(
+    in srgb,
+    var(--color-surface),
+    transparent 90%
+  );
+  --color-surface-hover: color-mix(
+    in srgb,
+    var(--color-surface),
+    transparent 70%
+  );
+  --color-primary-muted: color-mix(
+    in srgb,
+    var(--color-primary),
+    transparent 80%
+  );
+  --color-secondary-muted: color-mix(
+    in srgb,
+    var(--color-secondary),
+    transparent 80%
+  );
+  --color-text-dim: color-mix(
+    in srgb,
+    var(--color-text-muted),
+    transparent 20%
+  );
+
+  --bg-color: var(--color-bg);
+  --text-color: var(--color-text);
+  --divider-color: var(--color-border);
+  --bg-faded-color: var(--color-surface);
+
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --font-accent: "DM Mono", monospace;
+  --font-weight-body: 350;
+  --letter-spacing-h1: -0.02em;
+  --letter-spacing-h2: -0.01em;
+  --letter-spacing-h3: 0em;
+  --letter-spacing-label: 0.1em;
+
+  --size-step-0: clamp(1rem, 0.96rem + 0.22vw, 1.13rem);
+  --size-step-1: clamp(1.25rem, 1.16rem + 0.43vw, 1.5rem);
+  --size-step-2: clamp(1.56rem, 1.41rem + 0.76vw, 2rem);
+  --size-step-3: clamp(1.95rem, 1.71rem + 1.24vw, 2.66rem);
+  --size-step-4: clamp(2.44rem, 2.05rem + 1.93vw, 3.55rem);
+  --size-step-5: clamp(3.05rem, 2.46rem + 2.96vw, 4.74rem);
+
+  --width-narrow: 65ch;
+  --width-max: 1440px;
+  --header-height: 3.5rem;
+
+  --flow-space-base: 1.25em;
+  --flow-space-tight: 0.75em;
+  --flow-space-loose: 2.5em;
+  --flow-space-markdown: 0.5rem;
+
+  --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.07);
+  --shadow-elevated:
+    0 10px 15px hsl(0 0% 0% / 0.1),
+    0 4px 6px hsl(0 0% 0% / 0.05);
+  --ease-smart: cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-album-reveal: album-reveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-appear: appear 0.3s ease-out;
+  --animate-spin-smart: spin-smart 0.8s var(--ease-smart) infinite;
+
+  --album-mono-invert: 0;
+  --album-mono-brightness: 1;
+  --album-mono-contrast: 1;
+  --album-mono-opacity: 0.9;
+}
+
+@mixin dark-palette {
+  color-scheme: dark;
+  --color-bg: #3a2a55;
+  --color-surface: #4a3a6a;
+  --color-text: #e8e2f3;
+  --color-text-muted: #d0c8e8;
+  --color-text-dim: #b8afdc;
+  --color-border: #52427a;
+  --color-primary: #ff8e8c;
+  --color-primary-offset: #ef5a58;
+  --color-secondary: #abd1c6;
+
+  --album-mono-invert: 1;
+  --album-mono-brightness: 1.1;
+  --album-mono-contrast: 0.8;
+  --album-mono-opacity: 0.7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme-light) {
+    @include dark-palette;
+  }
+}
+
+:root.theme-dark {
+  @include dark-palette;
+}

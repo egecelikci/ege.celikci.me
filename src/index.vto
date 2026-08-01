@@ -1,6 +1,6 @@
 ---
 layout: layouts/page.vto
-title: Ege Çelikçi
+title: ege.celikci.me
 container_width: narrow
 searchable: false
 prose: false
@@ -23,23 +23,14 @@ app:
   dir: ltr
 ---
 
-<div class="flex flex-col gap-16 pb-12">
-  {{# 2. TWO-COLUMN GRID (Nav + Visual) #}}
-  <div
-    class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start [view-transition-name:home-grid]"
-  >
-    {{# THE INDEX (Unified Component) #}}
-    <div class="md:col-span-7">
+<div class="home">
+  <div class="home__grid">
+    <div class="home__index">
       {{>
-        // ─── THE ONLY THING YOU EVER EDIT: group display order ───────────────────
         const NAV_GROUPS = ["entries", "collections", "tools", "meta"];
-
-        // Every page that declared a menu gets picked up automatically
         const menuPages = search.pages("menu!=undefined")
           .filter((p) => p.menu?.group)
           .sort((a, b) => (a.menu?.order ?? 99) - (b.menu?.order ?? 99));
-
-        // Group by menu.group
         const grouped = {};
         for (const page of menuPages) {
           const g = page.menu.group;
@@ -50,8 +41,6 @@ app:
             children: page.menu.children || [],
           });
         }
-
-        // Build the flat item list IndexList already understands
         const indexItems = [];
         let n = 1;
         for (const g of NAV_GROUPS) {
@@ -73,43 +62,5 @@ app:
         {{ comp.ui.IndexList({ items: it.indexItems }) }}
       </nav>
     </div>
-
-    {{# 3. VISUAL (Sidebar) #}}
-    <aside class="md:col-span-5 flex flex-col gap-12">
-      {{# 3.1 CATS #}}
-      <div class="flex flex-col gap-6">
-        <div class="flex items-center gap-4">
-          <h2
-            class="typography-label text-text-muted"
-          >
-            cat.vision
-          </h2>
-          <span class="divider"></span>
-        </div>
-        <div
-          class="reveal-self duration-700"
-        >
-          {{ set catNotes = search.pages("type=note 'kedi'", "date=desc") }}
-          {{ comp.ui.Collage({ items: catNotes, maxItems: 9 }) }}
-        </div>
-        <div class="flex justify-end">
-          <a
-            href="/tags/kedi/"
-            class="group precision-link text-text-muted hover:text-primary"
-          >
-            <span>view log</span>
-            <span class="reveal-slide-right inline-block">
-              {{
-                await it.comp.base.Icon({
-                  name: "arrow-right",
-                  classes: "w-3 h-3 stroke-[1.5]",
-                  attributes: { "aria-hidden": "true" },
-                })
-              }}
-            </span>
-          </a>
-        </div>
-      </div>
-    </aside>
   </div>
 </div>

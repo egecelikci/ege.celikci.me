@@ -1,0 +1,24 @@
+// ---------------------------------------------------------------------------
+// site.scss — semantic CSS entry point (replacing Tailwind utilities).
+// Loaded AFTER main.css so it wins the cascade for converted components.
+// ---------------------------------------------------------------------------
+
+// Layer order is established by Tailwind's main.css (theme, base, components,
+// utilities). The *base* partials declare `@layer base` internally so that
+// Tailwind's utilities still win for any element that still carries Tailwind
+// classes (icons, link colors, …). Component partials use unique class names
+// and stay unlayered so they definitively apply to converted markup.
+@use "utils/variables";
+
+@use "base/reset";
+@use "base/typography";
+@use "base/layout";
+@use "base/focus";
+@use "base/utilities";
+
+@use "components/container";
+@use "components/site-header";
+@use "components/breadcrumb";
+@use "components/site-footer";
+@use "components/page-footer";
+@use "components/home";

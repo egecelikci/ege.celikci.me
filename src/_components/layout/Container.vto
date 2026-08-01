@@ -14,24 +14,23 @@
 
 {{
   set widthClass = {
-    "narrow": "max-w-3xl",
-    "default": "max-w-6xl",
-    "wide": "max-w-screen-2xl",
-    "full": "max-w-full",
-  }[it.width] || it.width || "max-w-6xl"
+    "narrow": "container--narrow",
+    "default": "container--default",
+    "wide": "container--wide",
+    "full": "container--full",
+  }[it.width] || it.width || "container--default"
 }}
 
 {{
   set paddingClass = it.padding === false
   ? ""
-  : (typeof it.padding === "string" ? it.padding : "px-4 md:px-0")
+  : (typeof it.padding === "string" ? it.padding : "")
 }}
 
 {{
   set containerClasses = [
-    "w-full",
+    "container",
     paddingClass,
-    it.centered !== false ? "mx-auto" : "",
     widthClass,
     it.classes,
   ]

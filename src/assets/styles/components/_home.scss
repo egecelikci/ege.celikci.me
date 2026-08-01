@@ -1,0 +1,29 @@
+// ---------------------------------------------------------------------------
+// Home — the index page layout.
+// ---------------------------------------------------------------------------
+
+@use "../utils/variables";
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding-bottom: 3rem;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: start;
+    view-transition-name: home-grid;
+
+    @media (width >= variables.$bp-md) {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 4rem;
+    }
+  }
+
+  &__index {
+    grid-column: span 12;
+  }
+}

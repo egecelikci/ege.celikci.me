@@ -3,6 +3,7 @@ import icons from "lume/plugins/icons.ts";
 import inline from "lume/plugins/inline.ts";
 import lightningcss from "lume/plugins/lightningcss.ts";
 import picture from "lume/plugins/picture.ts";
+import sass from "lume/plugins/sass.ts";
 import svgo from "lume/plugins/svgo.ts";
 import tailwindcss from "lume/plugins/tailwindcss.ts";
 import transformImages from "lume/plugins/transform_images.ts";
@@ -17,6 +18,9 @@ export default function (options: AssetOptions = {}) {
   return (site: Lume.Site) => {
     site
       .use(tailwindcss())
+      .use(sass({
+        format: "expanded",
+      }))
       .use(lightningcss())
       .use(svgo())
       .use(esbuild({
@@ -58,6 +62,9 @@ export default function (options: AssetOptions = {}) {
       .add("assets/images")
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
-      .add("assets/styles/main.css");
+      .add("assets/styles/main.css")
+      .add("assets/styles/site.scss")
+      .add("assets/styles/vendor/photoswipe.css")
+      .add("assets/styles/vendor/leaflet.css");
   };
 }

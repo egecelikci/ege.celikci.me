@@ -43,24 +43,25 @@
     {{# 2. Critical Assets #}}
     <link rel="modulepreload" href="/assets/scripts/main.js?v={{ build.id }}">
     <link rel="stylesheet" href="/assets/styles/main.css?v={{ build.id }}" />
+    <link rel="stylesheet" href="/assets/styles/site.css?v={{ build.id }}" />
+    <link rel="stylesheet" href="/assets/styles/vendor/photoswipe.css?v={{ build.id }}" />
+    {{ for css of extraStyles }}
+    <link rel="stylesheet" href="/assets/styles/vendor/{{ css }}.css?v={{ build.id }}" />
+    {{ /for }}
 
     {{ include "meta.vto" }}
   </head>
   <body
-    class="overflow-x-clip print:bg-white print:text-black flex flex-col min-h-screen"
     {{ if it.disable_animation }} data-disable-animation="true" {{ /if }}
     {{ if it.searchable === false || it.noindex }} data-pagefind-ignore="all" {{
       /if
     }}
   >
-    <a
-      href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:left-1/2 focus:top-0 focus:text-base focus:-translate-x-1/2 bg-surface focus:text-white focus:rounded-b-lg focus:px-6 focus:py-4 focus:outline-none focus:whitespace-nowrap print:hidden"
-    >skip to main content</a>
+    <a href="#main" class="skip-link">skip to main content</a>
 
     {{ include "header.vto" }}
 
-    <main id="main" tabindex="-1" class="flex-grow">
+    <main id="main" tabindex="-1">
       {{ content |> safe }}
     </main>
 

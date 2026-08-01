@@ -1,70 +1,51 @@
-{{#
-  Footer Component
-  Props:
-    - page: current page object (required for metadata and tools)
-#}}
-
 {{ set footerContent }}
-  <div
-    class="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-t border-border-subtle typography-label font-normal"
-  >
-    {{# LEFT: Site Info #}}
-    <div
-      class="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-text-muted"
-    >
-      <div class="flex items-center gap-1.5 whitespace-nowrap">
+  <div class="site-footer__inner">
+    <div class="site-footer__meta">
+      <div class="site-footer__copyright">
         <span aria-label="Copyright">&copy;</span>
         {{ it.build.timestamp |> date("yyyy") }}
         <a
           href="{{ it.site.url }}"
-          class="text-text hover:text-primary transition-colors no-underline"
+          class="site-footer__author"
         >{{ it.author.name }}</a>
       </div>
 
-      <span class="text-border-subtle select-none">|</span>
+      <span class="site-footer__sep">|</span>
       <a
         href="/colophon/"
-        class="hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="site-footer__link"
       >colophon</a>
 
-      <span class="text-border-subtle select-none">|</span>
+      <span class="site-footer__sep">|</span>
       <a
         href="https://creativecommons.org/licenses/by-sa/4.0/"
-        class="hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="site-footer__link"
         rel="license"
       >
         CC BY-SA 4.0
       </a>
 
       {{ if it.gitInfo?.hash }}
-        <span class="text-border-subtle select-none">|</span>
+        <span class="site-footer__sep">|</span>
         <a
           href="https://codeberg.org/{{ it.author.username }}/{{ it.site.host }}/commit/{{ it.gitInfo.hash }}"
-          class="font-mono hover:text-primary transition-colors text-text-dim whitespace-nowrap"
+          class="site-footer__commit"
           aria-label="view latest commit: {{ it.gitInfo.hash }}"
         >
           {{ it.gitInfo.hash.substring(0, 7) }}
         </a>
       {{ /if }}
 
-      {{# Page Update Metadata #}}
       {{ if it.page.data.updated || it.page.data.date }}
-        <span class="text-border-subtle select-none">|</span>
-        <div
-          class="inline-flex items-center px-1.5 py-0.5 rounded-sm bg-surface-subtle border border-border-subtle typography-label text-text-muted font-normal whitespace-nowrap"
-        >
-          <span
-            class="mr-1.5 text-text-muted italic lowercase"
-          >rev.</span>
+        <span class="site-footer__sep">|</span>
+        <div class="site-footer__rev">
+          <span class="site-footer__rev-label">rev.</span>
           {{ it.page.data.updated || it.page.data.date |> date("dd MMM yyyy") }}
         </div>
       {{ /if }}
     </div>
 
-    {{# RIGHT: Utility Links #}}
-    <div
-      class="flex items-center justify-center md:justify-end gap-x-6 gap-y-2 font-bold"
-    >
+    <div class="site-footer__utility">
       {{
         comp.ui.SourceLink({
           path: it.page.sourcePath,
@@ -75,15 +56,15 @@
 
       <a
         href="/feeds/"
-        class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap"
+        class="site-footer__link"
       >feeds</a>
 
       <a
         href="#"
-        class="group precision-link text-text-muted hover:text-primary"
+        class="precision-link"
         aria-label="Back to top"
       >
-        <span class="reveal-slide-up inline-block">
+        <span class="reveal-slide-up">
           {{
             await it.comp.base.Icon({
               name: "arrow-up",
@@ -95,38 +76,33 @@
     </div>
   </div>
 
-  {{# WEBRINGS (Minimal Accessory) #}}
   {{ if it.webrings && it.webrings.length > 0 }}
-    <div
-      class="flex flex-col gap-3 items-center pt-8 border-t border-border-subtle"
-    >
+    <div class="site-footer__webring">
         {{ for ring of it.webrings }}
-        <div
-          class="flex items-center gap-1.5 typography-label text-text-muted whitespace-nowrap"
-        >
+        <div class="site-footer__ring">
           <a
             href="{{ ring.prev }}"
-            class="group hover:text-primary transition-colors no-underline p-1"
+            class="site-footer__ring-nav"
             aria-label="Previous site"
           >
-            <span class="reveal-slide-left inline-block">
+            <span class="reveal-slide-left">
               {{ await it.comp.base.Icon({ name: "arrow-left", classes: "w-3 h-3" }) }}
             </span>
           </a>
-          <span class="ml-1">An</span>
+          <span class="site-footer__ring-an">An</span>
           <a
             href="{{ ring.url }}"
-            class="text-text-muted hover:text-primary transition-colors no-underline whitespace-nowrap lowercase font-bold"
+            class="site-footer__ring-name"
           >
             {{ ring.name }}
           </a>
-          <span class="mr-1">{{ ring.emoji }}</span>
+          <span class="site-footer__ring-emoji">{{ ring.emoji }}</span>
           <a
             href="{{ ring.next }}"
-            class="group hover:text-primary transition-colors no-underline p-1"
+            class="site-footer__ring-nav"
             aria-label="Next site"
           >
-            <span class="reveal-slide-right inline-block">
+            <span class="reveal-slide-right">
               {{ await it.comp.base.Icon({ name: "arrow-right", classes: "w-3 h-3" }) }}
             </span>
           </a>
@@ -137,7 +113,7 @@
 {{ /set }}
 
 <footer
-  class="mt-16 pb-8 print:hidden [view-transition-name:site-footer]"
+  class="site-footer"
   role="contentinfo"
 >
   {{
