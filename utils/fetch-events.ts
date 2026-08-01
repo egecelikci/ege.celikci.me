@@ -35,21 +35,55 @@ const CONFIG = {
 // TYPES
 // ============================================================================
 
+/** An external link harvested for a MusicBrainz entity (homepage, instagram, ...) */
+export interface MBEntityLink {
+  type: string;
+  url: string;
+}
+
+/** Common fields shared by MusicBrainz relation targets */
+interface MBEntityBase {
+  id: string;
+  name: string;
+  "sort-name"?: string;
+  disambiguation?: string;
+  /** Links harvested for this entity, merged by the events preprocessor */
+  externalLinks?: MBEntityLink[];
+}
+
+export interface MBRelationArtist extends MBEntityBase {
+  "sort-name": string;
+  country?: string;
+  type?: string;
+  "type-id"?: string;
+}
+
+export interface MBRelationPlace extends MBEntityBase {
+  address?: string;
+  coordinates?: { latitude: number; longitude: number } | null;
+  area?: MBRelationArtist;
+}
+
+export interface MBRelationLabel extends MBEntityBase {
+  "sort-name": string;
+  "label-code"?: string | null;
+  type?: string | null;
+  "type-id"?: string | null;
+}
+
 export interface MBRelation {
   type: string;
   "target-type": "artist" | "place" | "url" | "label";
   "target-credit"?: string;
-  artist?: { id: string; name: string; "sort-name": string };
-  place?: {
-    id: string;
-    name: string;
-    address?: string;
-    coordinates?: { latitude: number; longitude: number };
-  };
+  ended?: boolean;
+  "attribute-values"?: Record<string, string>;
+  artist?: MBRelationArtist;
+  place?: MBRelationPlace;
   url?: { id: string; resource: string };
-  label?: { id: string; name: string; "sort-name": string };
+  label?: MBRelationLabel;
 }
 
+/** A raw event as returned by the MusicBrainz API and cached to disk */
 export interface MBEvent {
   id: string;
   name: string;
@@ -63,26 +97,51 @@ export interface MBEvent {
   time?: string;
   cancelled: boolean;
   disambiguation?: string;
+  setlist?: string;
   relations?: MBRelation[];
-  // Derived fields
-  beginDate: string | null;
-  isUpcoming: boolean;
+  // Poster fields saved by the sync script
   posterUrl?: string; // Remote original URL
   posterThumb?: string; // Remote thumbnail URL
   imagePath?: string; // Local relative path
-  isCustomTitle?: boolean; // Set by preprocessor
+}
+
+/** Local event metadata from src/_data/events.yml */
+export interface LocalEventData {
+  title?: string;
+  description?: string;
+  instagram_url?: string | string[];
+  venue_name?: string;
+  price?: string;
+  video?: { src: string; title?: string };
+  exclude_labels?: string[];
+  setlist?: string;
+  photographers?: Record<string, { name: string; url?: string }>;
+  photographer?: { name: string; url?: string };
+}
+
+/** An event after the events preprocessor has enriched it at build time */
+export interface EnrichedMBEvent extends MBEvent {
+  beginDate: string | null;
+  isUpcoming: boolean;
+  displayTitle: string;
+  artists: string[];
+  isCustomTitle: boolean;
+  local: LocalEventData;
+  venueName?: string;
+  labels?: MBRelation[];
 }
 
 export interface RawIzmirEvents {
   events: MBEvent[];
-  entities: Record<string, Array<{ type: string; url: string }>>;
+  entities: Record<string, MBEntityLink[]>;
 }
 
-// Derived at build time by preprocessors.ts — never saved to disk
+// Built at build time by preprocessors/events.ts — never saved to disk
 export interface EnrichedIzmirEvents extends RawIzmirEvents {
-  upcoming: MBEvent[];
-  past: MBEvent[];
-  all: MBEvent[];
+  events: EnrichedMBEvent[];
+  all: EnrichedMBEvent[];
+  upcoming: EnrichedMBEvent[];
+  past: EnrichedMBEvent[];
 }
 
 // ============================================================================
@@ -153,8 +212,8 @@ class PosterDownloader {
 // SYNC LOGIC
 // ============================================================================
 
-async function fetchAllEvents(httpClient: HttpClient): Promise<any[]> {
-  const events: any[] = [];
+async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
+  const events: MBEvent[] = [];
   const firstUrl = new URL(`${MB_API}/event`);
   firstUrl.searchParams.set("area", IZMIR_AREA_MBID);
   firstUrl.searchParams.set(
@@ -223,8 +282,8 @@ async function fetchEventPosterInfo(
 async function fetchEntityDetails(
   httpClient: HttpClient,
   entityId: string,
-  type: "artist" | "place" | "label",
-): Promise<Array<{ type: string; url: string }> | null> {
+  type: "artist" | "place" | "label" | "url",
+): Promise<MBEntityLink[] | null> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
   // These MUST be rate limited as they hit MusicBrainz
   const data = await httpClient.fetch<any>(url, "json", "force-cache", false);
@@ -232,7 +291,7 @@ async function fetchEntityDetails(
   if (data === null) return null;
   if (!data.relations) return [];
 
-  const links: Array<{ type: string; url: string }> = [];
+  const links: MBEntityLink[] = [];
   data.relations.forEach((rel: any) => {
     if (
       rel["target-type"] === "url" &&
@@ -267,16 +326,16 @@ async function syncEvents() {
   try {
     const raw = await fetchAllEvents(httpClient);
 
-    const entityIds = new Map<string, "artist" | "place" | "label">();
+    const entityIds = new Map<string, "artist" | "place" | "label" | "url">();
 
     console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters...`);
 
     const events = await Promise.all(
-      raw.map(async (event) => {
+      raw.map(async (event: MBEvent) => {
         const cachedEvent = eventsMap.get(event.id);
 
         // Collect entity IDs for enrichment (always do this to ensure entities map is fresh)
-        (event.relations || []).forEach((rel: any) => {
+        (event.relations || []).forEach((rel: MBRelation) => {
           if (rel["target-type"] === "artist" && rel.artist?.id) {
             entityIds.set(rel.artist.id, "artist");
           } else if (rel["target-type"] === "place" && rel.place?.id) {
@@ -290,7 +349,7 @@ async function syncEvents() {
 
         // Sort relations for determinism
         if (event.relations) {
-          event.relations.sort((a: any, b: any) => {
+          event.relations.sort((a: MBRelation, b: MBRelation) => {
             const idA = a.artist?.id || a.place?.id || a.url?.id ||
               a.label?.id || "";
             const idB = b.artist?.id || b.place?.id || b.url?.id ||
@@ -339,7 +398,7 @@ async function syncEvents() {
     );
 
     // 4. Enrich entities (All links)
-    const entities: Record<string, Array<{ type: string; url: string }>> = {};
+    const entities: Record<string, MBEntityLink[]> = {};
     console.log(
       `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities...`,
     );
