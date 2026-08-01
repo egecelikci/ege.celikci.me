@@ -3,11 +3,9 @@
  * Enriches MusicBrainz event data with local metadata and performers.
  */
 
-import type { Page, Site } from "lume/core.ts";
-
 export default function () {
-  return (site: Site) => {
-    site.preprocess("*", (pages: Page[]) => {
+  return (site: Lume.Site) => {
+    site.preprocess("*", (pages) => {
       const globalData = pages[0]?.data;
       if (!globalData?.mb_events) return;
 

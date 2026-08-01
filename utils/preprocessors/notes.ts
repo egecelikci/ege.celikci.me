@@ -3,11 +3,9 @@
  * Extracts metadata (description, coverImage) from note content.
  */
 
-import type { Page, Site } from "lume/core.ts";
-
 export default function () {
-  return (site: Site) => {
-    site.preprocess("*", (pages: Page[]) => {
+  return (site: Lume.Site) => {
+    site.preprocess("*", (pages) => {
       const notePages = pages.filter((p) => p.data.type === "note");
 
       for (const page of notePages) {

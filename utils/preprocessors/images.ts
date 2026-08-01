@@ -3,19 +3,20 @@
  * Extracts images from Markdown content and manages cover/meta images.
  */
 
-import type { Page, Site } from "lume/core.ts";
-
 // Support standard ![alt](src) and ![alt](src =WxH)
 const IMG_REGEX =
   /!\[([^\]]*)\]\(([^)\s=]+)(?:\s+=(\d+)?x(\d+)?)?(?:\s+"([^"]+)")?\)/g;
 
-export function extractImagesFromNote(content: string) {
-  const images: Array<{
-    src: string;
-    alt: string;
-    width?: number;
-    height?: number;
-  }> = [];
+/** An image extracted from a page's Markdown content */
+export interface PostImage {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+export function extractImagesFromNote(content: string): PostImage[] {
+  const images: PostImage[] = [];
 
   const regex = new RegExp(IMG_REGEX.source, "g");
   let match;
@@ -42,8 +43,8 @@ export function extractImagesFromNote(content: string) {
 }
 
 export default function () {
-  return (site: Site) => {
-    site.preprocess([".md"], (pages: Page[]) => {
+  return (site: Lume.Site) => {
+    site.preprocess([".md"], (pages) => {
       for (const page of pages) {
         const pageUrl = page.data.url as string;
         if (!pageUrl) continue;

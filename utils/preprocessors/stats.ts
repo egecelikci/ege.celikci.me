@@ -3,7 +3,6 @@
  * Processes Webmention statistics for pages.
  */
 
-import type { Page, Site } from "lume/core.ts";
 import { site as settings } from "../../_config/metadata.ts";
 import { filters } from "../filters.ts";
 
@@ -13,8 +12,8 @@ function normalizeUrl(url: string) {
 }
 
 export default function () {
-  return (site: Site) => {
-    site.preprocess([".md"], (pages: Page[]) => {
+  return (site: Lume.Site) => {
+    site.preprocess([".md"], (pages) => {
       for (const page of pages) {
         const pageUrl = page.data.url as string;
         if (!pageUrl) continue;

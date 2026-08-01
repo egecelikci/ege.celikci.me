@@ -3,16 +3,38 @@
  * Automatically injects Atom and JSON feed links into the page header extension.
  */
 
-import type { Page, Site } from "lume/core.ts";
 import createSlugifier from "lume/core/slugifier.ts";
 
 const slugify = createSlugifier();
+
+/** A single link shown in the page header extension */
+export interface HeaderSource {
+  label: string;
+  url: string;
+  icon?: string;
+  catalog?: string;
+  prefix?: string;
+  type?: string;
+}
+
+/** The `headerExtension` data: a SourceMeta component with its props */
+export interface HeaderExtension {
+  comp?: string;
+  props?: {
+    sources?: HeaderSource | HeaderSource[];
+    label?: string;
+    url?: string;
+    icon?: string;
+    catalog?: string;
+    variant?: string;
+  };
+}
 
 /**
  * Automatically injects Atom and JSON feed links into the page header extension.
  * Supports full SourceMeta structure and shorthands.
  */
-function injectFeedSources(page: Page, atomUrl: string, jsonUrl: string) {
+function injectFeedSources(page: Lume.Page, atomUrl: string, jsonUrl: string) {
   let extension = page.data.headerExtension;
 
   // Convert shorthand or missing extension to full object
@@ -72,8 +94,8 @@ function injectFeedSources(page: Page, atomUrl: string, jsonUrl: string) {
 }
 
 export default function () {
-  return (site: Site) => {
-    site.preprocess("*", (pages: Page[]) => {
+  return (site: Lume.Site) => {
+    site.preprocess("*", (pages) => {
       for (const page of pages) {
         const pageUrl = page.data.url as string;
         if (!pageUrl) continue;
@@ -90,13 +112,14 @@ export default function () {
 
         // 2. Tag Pages
         if (page.data.type === "tag" && page.data.tag) {
-          const slug = slugify(page.data.tag as string, { lowercase: true });
+          const slug = slugify(page.data.tag as string);
           injectFeedSources(page, `/tags/${slug}.atom`, `/tags/${slug}.json`);
 
           // Custom override for 'kedi' tag: promote subversive.pics
           if (page.data.tag === "kedi") {
             const extension = page.data.headerExtension;
-            if (extension && extension.props && extension.props.sources) {
+            if (extension && extension.props &&
+              Array.isArray(extension.props.sources)) {
               extension.props.sources.unshift({
                 label: "subversive.pics",
                 url: "https://subversive.pics/",
