@@ -76,7 +76,7 @@ export default function (options: FeedOptions = {}) {
       const tags = site.search.values("tags");
 
       return tags.map((tag) => {
-        const slug = slugify(tag, { lowercase: true });
+        const slug = slugify(tag);
         return {
           output: [`/tags/${slug}.atom`, `/tags/${slug}.json`],
 
