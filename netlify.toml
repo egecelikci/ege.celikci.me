@@ -15,6 +15,51 @@
 [[plugins]]
     package = "./plugins/cache"
 
+[[headers]]
+    for = "/*"
+    [headers.values]
+        X-Frame-Options = "DENY"
+        X-Content-Type-Options = "nosniff"
+        Referrer-Policy = "strict-origin-when-cross-origin"
+        Permissions-Policy = "browsing-topics=(), attribution-reporting=(), run-ad-auction=(), join-ad-interest-group=()"
+        Content-Security-Policy = "default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://webmention.io https://avatars.webmention.io https://*.basemaps.cartocdn.com; connect-src 'self' https://webmention.io; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+[[headers]]
+    for = "/assets/*"
+    [headers.values]
+        Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+    for = "/sw.js"
+    [headers.values]
+        Cache-Control = "max-age=0, no-cache, no-store, must-revalidate"
+        Service-Worker-Allowed = "/"
+
+[[headers]]
+    for = "/manifest.json"
+    [headers.values]
+        Content-Type = "application/manifest+json"
+        Cache-Control = "public, max-age=604800"
+
+[[headers]]
+    for = "/events.ics"
+    [headers.values]
+        Content-Type = "text/calendar; charset=utf-8"
+        Content-Disposition = "attachment; filename=\"events.ics\""
+        Cache-Control = "no-cache"
+
+[[headers]]
+    for = "/.well-known/webfinger"
+    [headers.values]
+        Content-Type = "application/jrd+json"
+        Access-Control-Allow-Origin = "*"
+
+[[headers]]
+    for = "/.well-known/matrix/*"
+    [headers.values]
+        Content-Type = "application/json"
+        Access-Control-Allow-Origin = "*"
+
 [[redirects]]
     from = "https://rcucnw5pfx25wcc8xp4c28w359bsk74mdgy8u.netlify.app/*"
     to = "https://ege.celikci.me/:splat"
