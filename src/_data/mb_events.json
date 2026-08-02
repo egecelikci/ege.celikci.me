@@ -445,6 +445,12 @@
         "url": "https://www.youtube.com/c/cemiyettv"
       }
     ],
+    "37563b7b-5209-4510-ab21-4683c36ff0a1": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/simetrikburundelikleri/"
+      }
+    ],
     "37689db2-d9d0-4097-8595-aa17f74955f1": [
       {
         "type": "blog",
@@ -1281,6 +1287,28 @@
       }
     ],
     "ab1557d0-d523-4367-adb0-47f6bc74b7a7": [],
+    "ab1f87f1-4e56-4f4b-9f7e-99aab4e4520d": [
+      {
+        "type": "purchase for download",
+        "url": "https://music.apple.com/tr/artist/1884455757"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/tr/artist/1884455757"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/05ZQZiwTa1wflgSp4GdwLH"
+      },
+      {
+        "type": "social network",
+        "url": "https://twitter.com/krizunlem"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/krizunlem/"
+      }
+    ],
     "abab7daf-c631-4836-991b-1fed96a10250": [
       {
         "type": "soundcloud",
@@ -3513,6 +3541,129 @@
         }
       ],
       "setlist": "@ [9c27db9d-890c-4c14-bf43-3d371380a8d4|SPRAY]\r\n* Bir Kapak Daha\r\n* İsyan Devrim Anarşi\r\n* Aptal\r\n* Altıma İşemeden\r\n* Tatlı İğne \r\n* [aa0fa3be-db4e-48b0-a326-2c9501f0efa8|Dağınık]\r\n* Supradin\r\n* Sik Kafalı\r\n* Bakış Açısı\r\n* Kutu\r\n* Üç Lira\r\n* Alsancak\r\n@ [89bbcfcb-8bc6-4d5f-bacd-219713954841|Goblin Daycare]\r\n@ [563baa1a-a6a5-4f17-b54e-356160830ea6|Scenes We Have Missed]\r\n* L'appel Du Vide\r\n* Broken Shell\r\n* DMW\r\n* Frames\r\n* 5 A.M.\r\n* Anxious\r\n* Subculture\r\n* The Bearers\r\n* Girdap\r\n* Pretend\r\n* Modern Times\r\n* Geçmiş\r\n* Scenes",
+      "time": "21:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "30bf3a19-b22f-4c0d-832c-f91fac6d0586",
+      "imagePath": "/assets/images/posters/30bf3a19-b22f-4c0d-832c-f91fac6d0586.jpg",
+      "life-span": {
+        "begin": "2026-08-08",
+        "end": "2026-08-08",
+        "ended": true
+      },
+      "name": "Krizünlem & SPRAY at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/30bf3a19-b22f-4c0d-832c-f91fac6d0586/45815597181-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/30bf3a19-b22f-4c0d-832c-f91fac6d0586/45815597181.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "37563b7b-5209-4510-ab21-4683c36ff0a1",
+            "name": "Umay Sanalan",
+            "sort-name": "Sanalan, Umay",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish punk group",
+            "id": "9c27db9d-890c-4c14-bf43-3d371380a8d4",
+            "name": "SPRAY",
+            "sort-name": "SPRAY",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "ab1f87f1-4e56-4f4b-9f7e-99aab4e4520d",
+            "name": "Krizünlem",
+            "sort-name": "Krizünlem",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
       "time": "21:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
@@ -7585,6 +7736,106 @@
       ],
       "setlist": "",
       "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "964a7f09-5d7d-4deb-a17d-313c90a5294d",
+      "imagePath": "/assets/images/posters/964a7f09-5d7d-4deb-a17d-313c90a5294d.jpg",
+      "life-span": {
+        "begin": "2026-08-08",
+        "end": "2026-08-08",
+        "ended": true
+      },
+      "name": "Asimptot & Yamaç at Che",
+      "posterThumb": "https://eventartarchive.org/event/964a7f09-5d7d-4deb-a17d-313c90a5294d/45815560411-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/964a7f09-5d7d-4deb-a17d-313c90a5294d/45815560411.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "07056e71-f1a4-432c-a613-6baf50042b55",
+            "name": "Asimptot",
+            "sort-name": "Asimptot",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, 1453. Sk. No:7, 35500",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437386,
+              "longitude": 27.142344
+            },
+            "disambiguation": "",
+            "id": "12ac7e00-1eec-4d0c-b717-f1ad40b0c010",
+            "name": "Che",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "metal from İzmir",
+            "id": "c5216a5f-4701-4c75-9d55-2d5bc8a2b4a1",
+            "name": "Yamaç",
+            "sort-name": "Yamaç",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
