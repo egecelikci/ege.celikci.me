@@ -2,6 +2,7 @@
   "imports": {
     "@shikijs/rehype": "npm:@shikijs/rehype@^4.3.1",
     "@shikijs/themes": "npm:@shikijs/themes@^4.3.1",
+    "@std/assert": "jsr:@std/assert@^1.0.19",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.7",
     "@std/fs": "jsr:@std/fs@^1.0.24",
     "@std/path": "jsr:@std/path@^1.1.6",
@@ -21,7 +22,8 @@
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
     "workbox-cli": "npm:workbox-cli@^7.4.1",
     "xss": "npm:xss@^1.0.15",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts"
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
+    "zod": "npm:zod@^4.4.3"
   },
   "tasks": {
     "lume": {
@@ -43,6 +45,7 @@
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
     "check": "deno check _config.ts",
+    "test": "deno test utils/",
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "new": {
       "description": "Create new content or code using artifacts",
@@ -94,7 +97,7 @@
       ]
     }
   },
-  "lock": false,
+  "lock": true,
   "permissions": {
     "lume": {
       "read": true,
