@@ -1,0 +1,275 @@
+@use "../utils/variables";
+
+// ---------------------------------------------------------------------------
+// Markdown — rich-text content styling (replaces Tailwind's typography plugin).
+// Scoped to a single container class so `.not-prose` is no longer needed.
+// ---------------------------------------------------------------------------
+
+.markdown {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  overflow-wrap: break-word;
+
+  /* Vertical rhythm between siblings. */
+  & > * + * {
+    margin-block-start: var(--flow-space, var(--flow-space-base));
+  }
+
+  p,
+  li {
+    max-width: 70ch;
+    font-size: 1rem;
+    font-weight: var(--font-weight-body);
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  /* -- Flow spacing -- */
+
+  & :is(h1, h2, h3, h4, blockquote) {
+    --flow-space: var(--flow-space-loose);
+  }
+
+  & :is(h1, h2, h3, h4) + * {
+    --flow-space: var(--flow-space-tight);
+  }
+
+  /* -- Headings -- */
+
+  & :is(h1, h2, h3, h4) {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    line-height: 1.1;
+    text-wrap: balance;
+    margin-block: 2rem;
+    word-break: break-word;
+    font-variant-ligatures: none;
+    font-kerning: normal;
+  }
+
+  & h1 {
+    max-width: 20ch;
+    font-size: var(--size-h1);
+    letter-spacing: var(--letter-spacing-h1);
+  }
+
+  & h2,
+  & h3 {
+    max-width: 28ch;
+  }
+
+  & h2 {
+    font-size: var(--size-h2);
+    letter-spacing: var(--letter-spacing-h2);
+  }
+
+  & h3 {
+    font-size: var(--size-h3);
+    letter-spacing: var(--letter-spacing-h3);
+  }
+
+  & h4 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-label);
+    color: var(--color-text-muted);
+  }
+
+  /* -- Paragraph links -- */
+
+  & a:not(.btn, .heading-anchor, .no-underline) {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,
+      transparent);
+    padding-bottom: 1px;
+    transition: all 300ms ease;
+
+    &:hover {
+      color: var(--color-primary-offset);
+      border-bottom-color: var(--color-primary-offset);
+    }
+  }
+
+  & a:not(.btn, .heading-anchor):hover code {
+    color: var(--color-primary);
+    background-color: var(--color-primary-muted);
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+
+  /* -- Blockquote -- */
+
+  & blockquote {
+    max-width: 50ch;
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    border-left: 4px solid color-mix(in srgb, var(--color-primary) 20%,
+      transparent);
+    border-radius: 0 0.5rem 0.5rem 0;
+    background-color: color-mix(in srgb, var(--color-surface-subtle) 30%,
+      transparent);
+    font-weight: var(--font-weight-body);
+    font-style: italic;
+  }
+
+  /* -- Horizontal rule -- */
+
+  & hr {
+    margin-block: 2rem;
+    border: none;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  /* -- Code -- */
+
+  & pre,
+  & code,
+  & kbd,
+  & samp {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+  }
+
+  & pre:not(figure pre) {
+    margin-block: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-subtle);
+    font-size: 0.875rem;
+    overflow-x: auto;
+  }
+
+  & :not(pre) > code {
+    display: inline;
+    padding: 0.1em 0.3em;
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.9em;
+    overflow-wrap: break-word;
+
+    &::before,
+    &::after {
+      content: none !important;
+    }
+  }
+
+  /* -- Lists -- */
+
+  & ul {
+    list-style: disc;
+
+    & ul {
+      list-style: circle;
+    }
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & ul,
+  & ol {
+    padding-inline-start: 1.25em;
+  }
+
+  & li::marker {
+    color: var(--color-text-muted);
+  }
+
+  & li > code,
+  & a:not(.btn, .heading-anchor) > code {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  /* -- Inline emphasis -- */
+
+  & strong {
+    font-weight: 700;
+  }
+
+  & em {
+    font-style: italic;
+  }
+
+  /* -- Images -- */
+
+  & img {
+    border-radius: 0.5rem;
+  }
+
+  & figure {
+    margin-block: 2rem;
+  }
+
+  & figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  /* -- Tables -- */
+
+  & table {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+  }
+
+  & th,
+  & td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    text-align: left;
+  }
+
+  & th {
+    font-weight: 700;
+  }
+
+  /* -- kbd -- */
+
+  & kbd {
+    padding: 0.1em 0.3em;
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface);
+  }
+
+  /* -- Heading anchors -- */
+
+  & .heading-anchor {
+    position: absolute;
+    top: 0;
+    left: -1.25em;
+    width: 1em;
+    color: var(--color-primary-muted);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+    box-shadow: none !important;
+
+    @include variables.bp(lg) {
+      display: block;
+    }
+  }
+
+  & :is(h1, h2, h3, h4):is(:hover, :focus-within) .heading-anchor {
+    opacity: 1;
+  }
+}
+
+/* Inline markdown (flows within a sentence). */
+.markdown-inline {
+  & :is(p, ul, ol) {
+    display: inline;
+    margin: 0;
+  }
+}

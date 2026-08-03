@@ -14,6 +14,7 @@
 @use "base/typography";
 @use "base/layout";
 @use "base/focus";
+@use "base/animations";
 @use "base/utilities";
 
 @use "components/container";
@@ -31,3 +32,9 @@
 @use "components/entry-row";
 @use "components/entry-timeline";
 @use "components/event-card";
+@use "components/markdown";
+@use "components/buttons";
+@use "components/forms";
+@use "components/photoswipe";
+@use "components/map";
+@use "components/bookmark-index";

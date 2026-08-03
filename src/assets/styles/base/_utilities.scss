@@ -92,6 +92,40 @@
     transition: all 500ms ease;
   }
 
+  /* Credit/overlay badge floating over media (revealed on group hover) */
+  .gallery-overlay {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    opacity: 1;
+    transition: all 500ms ease;
+    pointer-events: none;
+    z-index: 20;
+
+    @include variables.bp(md) {
+      opacity: 0;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .group:hover &,
+      .group.is-active & {
+        opacity: 1;
+      }
+    }
+  }
+
   /* Tap-affordance for interactive elements */
   .haptic {
     @include variables.haptic;
@@ -180,4 +214,38 @@
       outline-offset: 2px;
     }
   }
+
+  /* Adjacent-sibling vertical rhythm container */
+  .flow > * + * {
+    margin-block-start: var(--flow-space, 1.5em);
+  }
+
+  :is(h1, h2, h3) {
+    --flow-space: 1.5em;
+  }
+
+  :is(h1, h2, h3) + * {
+    --flow-space: 0.75em;
+  }
+}
+
+/* Sidebar note (admonition-style) */
+[role="doc-tip"] {
+  margin-block: 1.5rem;
+  padding: 1rem;
+  border-left: 4px solid color-mix(in srgb, var(--color-primary) 40%,
+    transparent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  background-color: var(--color-surface-subtle);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* Icons that want to inherit their current color */
+svg[inline].fill-current path,
+svg[inline].fill-current circle,
+svg[inline].fill-current rect,
+svg[inline].fill-current polygon,
+svg[inline].fill-current ellipse {
+  fill: currentColor !important;
 }

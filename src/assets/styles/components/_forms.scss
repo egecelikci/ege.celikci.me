@@ -1,0 +1,70 @@
+// ---------------------------------------------------------------------------
+// Forms — checkboxes, text inputs, and scrollbar utilities.
+// ---------------------------------------------------------------------------
+
+.checkbox-base {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-subtle);
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  transition: all 150ms ease;
+
+  &:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-primary) 50%,
+      transparent);
+    outline-offset: 2px;
+  }
+}
+
+.input-base {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(12px);
+  transition: all 150ms ease;
+
+  &:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+select::-webkit-scrollbar {
+  width: 6px;
+
+  &-track {
+    background-color: color-mix(in srgb, var(--color-border) 20%, transparent);
+    border-radius: 9999px;
+  }
+
+  &-thumb {
+    background-color: color-mix(in srgb, var(--color-text-muted) 30%,
+      transparent);
+    border-radius: 9999px;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background-color: var(--color-primary-muted);
+    }
+  }
+}

@@ -1,0 +1,60 @@
+// ---------------------------------------------------------------------------
+// Buttons — pill and primary actions with a tactile press-down affordance.
+// ---------------------------------------------------------------------------
+
+%press {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+  transition: transform 150ms ease;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+%pill-base {
+  @extend %press;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-decoration: none;
+  transition: all 500ms ease;
+
+  &:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-primary-muted);
+  }
+}
+
+.btn-minimal {
+  @extend %pill-base;
+  color: color-mix(in srgb, var(--color-text) 80%, transparent);
+  transition-duration: 200ms;
+}
+
+.btn-primary {
+  @extend %press;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 200ms ease;
+
+  &:hover {
+    background-color: var(--color-primary-offset);
+  }
+}
