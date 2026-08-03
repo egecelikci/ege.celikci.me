@@ -68,6 +68,13 @@ export interface ProcessedAlbum extends Album {
   ratedAt: string;
 }
 
+/** Persisted music cache shape (src/_data/music.json) */
+export interface MusicStore {
+  /** Bumped whenever the persisted format changes; stale caches are rejected */
+  schemaVersion: number;
+  albums: ProcessedAlbum[];
+}
+
 export interface CritiqueBrainzReview {
   entity_id: string;
   entity_type: "release_group" | "recording";
@@ -145,6 +152,9 @@ export interface WebmentionApiResponse {
  * Internal feed structure with metadata
  */
 export interface WebmentionFeed {
+  /** Bumped whenever the persisted format changes; stale caches are rejected */
+  schemaVersion: number;
+
   /** Array of all webmentions */
   children: Webmention[];
 

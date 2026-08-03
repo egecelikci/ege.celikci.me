@@ -7,13 +7,14 @@
 
 import "@std/dotenv/load";
 import { join } from "@std/path";
-import { loadState, saveState, sortObjectKeys } from "../../utils/cache.ts";
+import { loadState, saveState } from "../../utils/cache.ts";
 import { HttpClient } from "../../utils/fetch-base.ts";
-import type {
-  Webmention,
-  WebmentionApiResponse,
-  WebmentionFeed,
-} from "../types/index.ts";
+import {
+  validate,
+  WebmentionApiResponseSchema,
+  WebmentionFeedSchema,
+} from "../../utils/schemas.ts";
+import type { Webmention, WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 
 // ============================================================================
@@ -60,15 +61,21 @@ class WebmentionFetcher {
 
     console.log(`[webmentions] 🌐 Checking for updates since ${sinceLabel}...`);
 
-    const data = await this.httpClient.fetch<WebmentionApiResponse>(
+    const data = await this.httpClient.fetch<unknown>(
       url,
       "json",
       "force-cache",
     );
 
-    if (!data?.children) return [];
+    const validated = validate(WebmentionApiResponseSchema, data);
+    if (!validated) {
+      console.warn(
+        "[webmentions] ⚠️ API response failed validation, treating as no updates",
+      );
+      return [];
+    }
 
-    const count = data.children.length;
+    const count = validated.children.length;
     if (count > 0) {
       console.log(
         `[webmentions] ✅ Fetched ${count} new webmention${
@@ -79,7 +86,7 @@ class WebmentionFetcher {
       console.log("[webmentions] ℹ️ No new webmentions found");
     }
 
-    return data.children;
+    return validated.children;
   }
 
   private buildUrl(
@@ -196,10 +203,11 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   const processor = new WebmentionProcessor();
 
   try {
-    const cachedFeed = await loadState<WebmentionFeed>(CONFIG.paths.cacheFile, {
-      children: [],
-      lastFetched: null,
-    });
+    const cachedFeed = await loadState<WebmentionFeed>(
+      CONFIG.paths.cacheFile,
+      { schemaVersion: 1, children: [], lastFetched: null },
+      WebmentionFeedSchema,
+    );
 
     if (!CONFIG.credentials.token) {
       console.warn(
@@ -223,11 +231,12 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
     );
 
     const updatedFeed: WebmentionFeed = {
+      schemaVersion: 1,
       children: mergedMentions,
       lastFetched: new Date().toISOString(),
     };
 
-    await saveState(CONFIG.paths.cacheFile, updatedFeed);
+    await saveState(CONFIG.paths.cacheFile, updatedFeed, WebmentionFeedSchema);
 
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
     const typeStats = processor.getStatsByType(mergedMentions);

@@ -7,11 +7,17 @@ import "@std/dotenv/load";
 import { join } from "@std/path";
 import type {
   Album,
-  CritiqueBrainzResponse,
   CritiqueBrainzReview,
+  MusicStore,
   ProcessedAlbum,
 } from "../src/types/index.ts";
 import { loadState, saveState, sortObjectKeys } from "./cache.ts";
+import {
+  AlbumSchema,
+  CritiqueBrainzResponseSchema,
+  MusicStoreSchema,
+  validate,
+} from "./schemas.ts";
 import { ditherWithSharp, saveColorVersion } from "./images.ts";
 import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
@@ -54,26 +60,27 @@ class AlbumFetcher {
   ): Promise<Map<string, string>> {
     const allReviews: CritiqueBrainzReview[] = [];
     const firstUrl = this.buildReviewUrl(0);
-    const firstData = await this.httpClient.fetch<CritiqueBrainzResponse>(
+    const firstData = await this.httpClient.fetch<unknown>(
       firstUrl,
       "json",
       "no-cache",
     );
-    if (!firstData?.reviews) return new Map();
-    allReviews.push(...firstData.reviews);
+    const validatedFirst = validate(CritiqueBrainzResponseSchema, firstData);
+    if (!validatedFirst) return new Map();
+    allReviews.push(...validatedFirst.reviews);
 
     if (
       (CONFIG.syncMode === "mirror" || forceFullSync) &&
-      firstData.count > CONFIG.fetchLimit
+      validatedFirst.count > CONFIG.fetchLimit
     ) {
       const pages = [];
       for (
         let offset = CONFIG.fetchLimit;
-        offset < firstData.count;
+        offset < validatedFirst.count;
         offset += CONFIG.fetchLimit
       ) {
         pages.push(
-          this.httpClient.fetch<CritiqueBrainzResponse>(
+          this.httpClient.fetch<unknown>(
             this.buildReviewUrl(offset),
             "json",
             "force-cache",
@@ -83,7 +90,8 @@ class AlbumFetcher {
       }
       const results = await Promise.all(pages);
       results.forEach((data) => {
-        if (data?.reviews) allReviews.push(...data.reviews);
+        const validated = validate(CritiqueBrainzResponseSchema, data);
+        if (validated) allReviews.push(...validated.reviews);
       });
     }
     return new Map(
@@ -99,12 +107,13 @@ class AlbumFetcher {
   ): Promise<Album | null> {
     const url =
       `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits+releases`;
-    return await this.httpClient.fetch<Album>(
+    const data = await this.httpClient.fetch<unknown>(
       url,
       "json",
       policy,
       policy !== "only-if-cached",
     );
+    return validate(AlbumSchema, data);
   }
 
   async fetchCoverImage(rgid: string): Promise<ArrayBuffer | null> {
@@ -166,9 +175,10 @@ async function getMusicData() {
   const imageProcessor = new ImageProcessor();
   await imageProcessor.inventory();
 
-  const cachedData = await loadState<{ albums: ProcessedAlbum[] }>(
+  const cachedData = await loadState<MusicStore>(
     CONFIG.paths.cacheFile,
-    { albums: [] },
+    { schemaVersion: 1, albums: [] },
+    MusicStoreSchema,
   );
   const albumsMap = new Map(cachedData.albums.map((a) => [a.id, a]));
 
@@ -220,7 +230,11 @@ async function getMusicData() {
     JSON.stringify(sortObjectKeys(cachedData.albums));
 
   if (hasChanged) {
-    await saveState(CONFIG.paths.cacheFile, { albums: processed });
+    await saveState(
+      CONFIG.paths.cacheFile,
+      { schemaVersion: 1, albums: processed },
+      MusicStoreSchema,
+    );
     console.log(`[music] ✅ Synced ${processed.length} albums.`);
   } else {
     console.log("[music] ℹ️ No changes detected, skipping save.");

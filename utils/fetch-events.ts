@@ -11,6 +11,14 @@ import { ensureDir } from "@std/fs/ensure-dir";
 import { loadState, saveState, sortObjectKeys } from "./cache.ts";
 import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
+import {
+  EAAPosterInfoSchema,
+  EntityDetailsSchema,
+  MBEventListSchema,
+  RawIzmirEventsSchema,
+  validate,
+  validateOrThrow,
+} from "./schemas.ts";
 
 // ============================================================================
 // CONFIGURATION
@@ -84,7 +92,7 @@ export interface MBRelation {
 }
 
 /** A page of events as returned by the MusicBrainz browse endpoint */
-interface MBEventList {
+export interface MBEventList {
   events: MBEvent[];
   "event-count": number;
 }
@@ -140,7 +148,7 @@ export interface EnrichedMBEvent extends MBEvent {
 }
 
 /** Event Art Archive poster metadata */
-interface EAAPosterInfo {
+export interface EAAPosterInfo {
   images?: Array<{
     front: boolean;
     image: string;
@@ -149,6 +157,8 @@ interface EAAPosterInfo {
 }
 
 export interface RawIzmirEvents {
+  /** Bumped whenever the persisted format changes; stale caches are rejected */
+  schemaVersion: number;
   events: MBEvent[];
   entities: Record<string, MBEntityLink[]>;
 }
@@ -242,7 +252,7 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   firstUrl.searchParams.set("offset", "0");
 
   console.log(`[mb_events] 🌐 Fetching initial events...`);
-  const firstData = await httpClient.fetch<MBEventList>(
+  const firstData = await httpClient.fetch<unknown>(
     firstUrl.toString(),
     "json",
     "no-cache",
@@ -250,8 +260,9 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   );
 
   if (!firstData) return [];
-  events.push(...(firstData.events ?? []));
-  const totalCount = firstData["event-count"] ?? 0;
+  const validated = validateOrThrow(MBEventListSchema, firstData);
+  events.push(...(validated.events ?? []));
+  const totalCount = validated["event-count"] ?? 0;
 
   if (totalCount > events.length) {
     const pages = [];
@@ -263,12 +274,12 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
       const url = new URL(firstUrl.toString());
       url.searchParams.set("offset", String(offset));
       pages.push(
-        httpClient.fetch<MBEventList>(url.toString(), "json", "no-cache", true),
+        httpClient.fetch<unknown>(url.toString(), "json", "no-cache", true),
       );
     }
     const results = await Promise.all(pages);
     results.forEach((data) => {
-      if (data?.events) events.push(...data.events);
+      if (data) events.push(...validateOrThrow(MBEventListSchema, data).events);
     });
   }
 
@@ -282,15 +293,16 @@ async function fetchEventPosterInfo(
   const url = `${EAA_API}/event/${eventId}/`;
 
   // EAA API calls are NOT rate limited like MusicBrainz
-  const data = await httpClient.fetch<EAAPosterInfo>(
+  const data = await httpClient.fetch<unknown>(
     url,
     "json",
     "force-cache",
     true,
   );
 
-  if (!data) return {};
-  const frontImage = data.images?.find((img) => img.front);
+  const validated = validate(EAAPosterInfoSchema, data);
+  if (!validated) return {};
+  const frontImage = validated.images?.find((img) => img.front);
 
   if (frontImage) {
     return {
@@ -308,18 +320,19 @@ async function fetchEntityDetails(
 ): Promise<MBEntityLink[] | null> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
   // These MUST be rate limited as they hit MusicBrainz
-  const data = await httpClient.fetch<{ relations?: MBRelation[] }>(
+  const data = await httpClient.fetch<unknown>(
     url,
     "json",
     "force-cache",
     false,
   );
 
-  if (data === null) return null;
-  if (!data.relations) return [];
+  const validated = validate(EntityDetailsSchema, data);
+  if (validated === null) return null;
+  if (!validated.relations) return [];
 
   const links: MBEntityLink[] = [];
-  data.relations.forEach((rel) => {
+  validated.relations.forEach((rel) => {
     if (
       rel["target-type"] === "url" &&
       rel.url?.resource &&
@@ -342,10 +355,11 @@ async function syncEvents() {
   const posterDownloader = new PosterDownloader();
   await posterDownloader.inventory();
 
-  const cachedData = await loadState<RawIzmirEvents>(CONFIG.paths.cacheFile, {
-    events: [],
-    entities: {},
-  });
+  const cachedData = await loadState<RawIzmirEvents>(
+    CONFIG.paths.cacheFile,
+    { schemaVersion: 1, events: [], entities: {} },
+    RawIzmirEventsSchema,
+  );
   const eventsMap = new Map(cachedData.events.map((e) => [e.id, e]));
 
   console.log("[mb_events] ℹ️ Starting MusicBrainz sync...");
@@ -449,6 +463,7 @@ async function syncEvents() {
     }
 
     const newData = {
+      schemaVersion: 1,
       events: events.sort((a, b) => a.id.localeCompare(b.id)),
       entities,
     };
@@ -458,7 +473,7 @@ async function syncEvents() {
       JSON.stringify(sortObjectKeys(cachedData));
 
     if (hasChanged) {
-      await saveState(CONFIG.paths.cacheFile, newData);
+      await saveState(CONFIG.paths.cacheFile, newData, RawIzmirEventsSchema);
       console.log(`[mb_events] ✅ Synced ${events.length} raw events.`);
     } else {
       console.log("[mb_events] ℹ️ No changes detected, skipping save.");
