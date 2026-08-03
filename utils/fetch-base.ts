@@ -84,9 +84,15 @@ export class HttpClient {
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
         if (type === "json") {
-          const buffer = await cachedResponse.arrayBuffer();
-          const text = new TextDecoder("utf-8").decode(buffer);
-          return JSON.parse(text) as T;
+          try {
+            const buffer = await cachedResponse.arrayBuffer();
+            const text = new TextDecoder("utf-8").decode(buffer);
+            return JSON.parse(text) as T;
+          } catch {
+            console.warn(
+              `[http] Corrupt cached JSON for ${url}, falling back to network`,
+            );
+          }
         } else {
           const buffer = await cachedResponse.arrayBuffer();
           return buffer as T;
