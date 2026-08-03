@@ -46,18 +46,16 @@ export async function saveState<T>(filePath: string, data: T): Promise<void> {
  * Recursively sort object keys for stable JSON output.
  * Essential for consistent git diffs across environments.
  */
-export function sortObjectKeys(obj: any): any {
-  if (obj === null || typeof obj !== "object" || Array.isArray(obj)) {
-    if (Array.isArray(obj)) {
-      return obj.map((item) => sortObjectKeys(item));
-    }
-    return obj;
+export function sortObjectKeys(obj: unknown): unknown {
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) {
+    return obj.map((item) => sortObjectKeys(item));
   }
 
+  const sortedObj: Record<string, unknown> = {};
   const sortedKeys = Object.keys(obj).sort();
-  const sortedObj: any = {};
   for (const key of sortedKeys) {
-    sortedObj[key] = sortObjectKeys(obj[key]);
+    sortedObj[key] = sortObjectKeys((obj as Record<string, unknown>)[key]);
   }
   return sortedObj;
 }

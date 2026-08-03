@@ -3,6 +3,8 @@
  * Enriches MusicBrainz event data with local metadata and performers.
  */
 
+import type { EnrichedMBEvent, MBRelation } from "../fetch-events.ts";
+
 export default function () {
   return (site: Lume.Site) => {
     site.preprocess("*", (pages) => {
@@ -16,8 +18,7 @@ export default function () {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-      const enrichEvent = (event: any) => {
-        if (!event) return;
+      const enrichEvent = (event: EnrichedMBEvent) => {
         if (event._enriched) return;
 
         // 1. Date Processing & Upcoming Status
@@ -35,7 +36,7 @@ export default function () {
           !event.cancelled;
 
         // 2. Merge Venue overrides
-        const venueRel = (event.relations || []).find((r: any) =>
+        const venueRel = (event.relations || []).find((r: MBRelation) =>
           r["target-type"] === "place"
         );
         if (venueRel?.place?.id && venues?.[venueRel.place.id]) {
@@ -67,11 +68,11 @@ export default function () {
           "engineer",
         ];
         const artists = (event.relations || [])
-          .filter((r: any) =>
+          .filter((r: MBRelation) =>
             r["target-type"] === "artist" && !nonPerformerRoles.includes(r.type)
           )
-          .map((r: any) => r["target-credit"] || r.artist?.name)
-          .filter(Boolean);
+          .map((r: MBRelation) => r["target-credit"] || r.artist?.name)
+          .filter((name): name is string => Boolean(name));
 
         let title = "";
         if (artists.length === 0) {
@@ -100,17 +101,18 @@ export default function () {
         const nameLower = event.name.toLowerCase();
         event.isCustomTitle = artists.length === 0
           ? Boolean(event.name)
-          : !artists.some((a: string) => nameLower.includes(a.toLowerCase()));
+          : !artists.some((a) => nameLower.includes(a.toLowerCase()));
 
         // 7. Label filtering
         const excludeLabels: string[] = local.exclude_labels ?? [];
         event.labels = (event.relations ?? [])
-          .filter((r: any) =>
-            r["target-type"] === "label" && !excludeLabels.includes(r.label?.id)
+          .filter((r: MBRelation) =>
+            r["target-type"] === "label" &&
+            !excludeLabels.includes(r.label?.id ?? "")
           );
 
         // 8. Enrich relations with raw link data from global entities map
-        (event.relations || []).forEach((rel: any) => {
+        (event.relations || []).forEach((rel: MBRelation) => {
           const entity = rel.artist || rel.place || rel.label;
           if (entity?.id && mbEntities[entity.id]) {
             entity.externalLinks = mbEntities[entity.id];
@@ -124,19 +126,23 @@ export default function () {
       rawEvents.forEach(enrichEvent);
 
       // Group and sort
-      const sortByDate = (a: any, b: any, desc = false) => {
+      const sortByDate = (
+        a: EnrichedMBEvent,
+        b: EnrichedMBEvent,
+        desc = false,
+      ) => {
         const da = a.beginDate ? new Date(a.beginDate).getTime() : 0;
         const db = b.beginDate ? new Date(b.beginDate).getTime() : 0;
         return desc ? db - da : da - db;
       };
 
-      const upcoming = rawEvents.filter((e: any) => e.isUpcoming).sort((
-        a: any,
-        b: any,
+      const upcoming = rawEvents.filter((e) => e.isUpcoming).sort((
+        a: EnrichedMBEvent,
+        b: EnrichedMBEvent,
       ) => sortByDate(a, b));
-      const past = rawEvents.filter((e: any) => !e.isUpcoming).sort((
-        a: any,
-        b: any,
+      const past = rawEvents.filter((e) => !e.isUpcoming).sort((
+        a: EnrichedMBEvent,
+        b: EnrichedMBEvent,
       ) => sortByDate(a, b, true));
 
       // Expose grouped lists to templates

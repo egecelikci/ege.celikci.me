@@ -160,7 +160,6 @@ export default function () {
           contact: `mailto:${author.email}`,
           dataTrainingAllowed: false,
         },
-        gpc: true,
         matrix: {
           server: {
             "m.server": "matrix.balcova.online:443",

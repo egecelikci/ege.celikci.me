@@ -79,7 +79,6 @@ interface Webmention {
   "wm-source"?: string;
   url?: string | string[];
   photo?: string | string[];
-  [key: string]: unknown;
 }
 
 export const filters = {

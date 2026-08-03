@@ -83,6 +83,12 @@ export interface MBRelation {
   label?: MBRelationLabel;
 }
 
+/** A page of events as returned by the MusicBrainz browse endpoint */
+interface MBEventList {
+  events: MBEvent[];
+  "event-count": number;
+}
+
 /** A raw event as returned by the MusicBrainz API and cached to disk */
 export interface MBEvent {
   id: string;
@@ -129,6 +135,17 @@ export interface EnrichedMBEvent extends MBEvent {
   local: LocalEventData;
   venueName?: string;
   labels?: MBRelation[];
+  /** Set by the events preprocessor to guard against double enrichment */
+  _enriched?: boolean;
+}
+
+/** Event Art Archive poster metadata */
+interface EAAPosterInfo {
+  images?: Array<{
+    front: boolean;
+    image: string;
+    thumbnails?: Record<string, string>;
+  }>;
 }
 
 export interface RawIzmirEvents {
@@ -225,7 +242,7 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   firstUrl.searchParams.set("offset", "0");
 
   console.log(`[mb_events] 🌐 Fetching initial events...`);
-  const firstData = await httpClient.fetch<any>(
+  const firstData = await httpClient.fetch<MBEventList>(
     firstUrl.toString(),
     "json",
     "no-cache",
@@ -246,7 +263,7 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
       const url = new URL(firstUrl.toString());
       url.searchParams.set("offset", String(offset));
       pages.push(
-        httpClient.fetch<any>(url.toString(), "json", "no-cache", true),
+        httpClient.fetch<MBEventList>(url.toString(), "json", "no-cache", true),
       );
     }
     const results = await Promise.all(pages);
@@ -265,10 +282,15 @@ async function fetchEventPosterInfo(
   const url = `${EAA_API}/event/${eventId}/`;
 
   // EAA API calls are NOT rate limited like MusicBrainz
-  const data = await httpClient.fetch<any>(url, "json", "force-cache", true);
+  const data = await httpClient.fetch<EAAPosterInfo>(
+    url,
+    "json",
+    "force-cache",
+    true,
+  );
 
   if (!data) return {};
-  const frontImage = data.images?.find((img: any) => img.front);
+  const frontImage = data.images?.find((img) => img.front);
 
   if (frontImage) {
     return {
@@ -286,13 +308,18 @@ async function fetchEntityDetails(
 ): Promise<MBEntityLink[] | null> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
   // These MUST be rate limited as they hit MusicBrainz
-  const data = await httpClient.fetch<any>(url, "json", "force-cache", false);
+  const data = await httpClient.fetch<{ relations?: MBRelation[] }>(
+    url,
+    "json",
+    "force-cache",
+    false,
+  );
 
   if (data === null) return null;
   if (!data.relations) return [];
 
   const links: MBEntityLink[] = [];
-  data.relations.forEach((rel: any) => {
+  data.relations.forEach((rel) => {
     if (
       rel["target-type"] === "url" &&
       rel.url?.resource &&

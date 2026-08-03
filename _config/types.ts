@@ -13,6 +13,7 @@ import type {
 } from "../utils/fetch-events.ts";
 import type { PostImage } from "../utils/preprocessors/images.ts";
 import type { HeaderExtension } from "../utils/preprocessors/feeds.ts";
+import type { WebmentionFeed } from "../src/types/index.ts";
 
 export interface SiteData {
   site: {
@@ -75,6 +76,7 @@ declare global {
       events: Record<string, LocalEventData>;
       venues: Record<string, Partial<MBRelationPlace>>;
       stats?: WebmentionStats;
+      webmentions?: WebmentionFeed;
       images?: PostImage[];
       title?: string;
       image?: string;

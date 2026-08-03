@@ -1,8 +1,3 @@
-/**
- * _config/feeds.ts
- * RSS and JSON feed orchestration.
- */
-
 import feed, { Options as FeedOptions } from "lume/plugins/feed.ts";
 import createSlugifier from "lume/core/slugifier.ts";
 import { site as siteData } from "./metadata.ts";
@@ -12,20 +7,18 @@ const slugify = createSlugifier();
 
 export default function (options: FeedOptions = {}) {
   return (site: Lume.Site) => {
-    // Common configuration for feed items
     const items = {
       title: "=title",
       description: "=excerpt || =description",
-      content: (data: any) => {
+      content: (data: Lume.Data<Lume.GlobalData>) => {
         let html = (data.content || data.description || "") as string;
 
-        // If the page has extracted images (e.g. from the preprocessor), prepend them to the feed content
         if (
           data.images && Array.isArray(data.images) && data.images.length > 0
         ) {
           const timestamp = Math.floor(data.date.getTime() / 1000);
           const imagesHtml = data.images
-            .map((img: any) => {
+            .map((img) => {
               const fullSrc = site.url(img.src, true);
               let thumb = "";
               if (img.src.includes("/gallery/")) {
@@ -56,7 +49,6 @@ export default function (options: FeedOptions = {}) {
       generator: true,
     };
 
-    // 1. Register Feeds with Lume
     for (const config of feedConfigs) {
       site.use(feed({
         ...options,
@@ -71,7 +63,6 @@ export default function (options: FeedOptions = {}) {
       }));
     }
 
-    // 2. Per-tag feeds
     site.use(feed(() => {
       const tags = site.search.values<string>("tags");
 
