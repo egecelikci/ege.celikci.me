@@ -1,9 +1,20 @@
 /**
  * utils/preprocessors/events.ts
  * Enriches MusicBrainz event data with local metadata and performers.
+ * Pure logic lives in utils/events.ts for unit testing.
  */
 
 import type { EnrichedMBEvent, MBRelation } from "../fetch-events.ts";
+import {
+  buildDisplayTitle,
+  detectCustomTitle,
+  extractArtists,
+  filterLabels,
+  isEventUpcoming,
+  parseEventDate,
+  resolveVenueName,
+  sortByDate,
+} from "../events.ts";
 
 export default function () {
   return (site: Lume.Site) => {
@@ -22,18 +33,16 @@ export default function () {
         if (event._enriched) return;
 
         // 1. Date Processing & Upcoming Status
-        const beginStr = event["life-span"]?.begin;
+        const beginDate = parseEventDate(event["life-span"]?.begin);
         const ended = event["life-span"]?.ended ?? false;
 
-        const beginDate: Date | null = (() => {
-          if (!beginStr) return null;
-          const d = new Date(beginStr);
-          return isNaN(d.getTime()) ? null : d;
-        })();
-
         event.beginDate = beginDate ? beginDate.toISOString() : null;
-        event.isUpcoming = (beginDate ? beginDate >= today : !ended) &&
-          !event.cancelled;
+        event.isUpcoming = isEventUpcoming(
+          beginDate,
+          ended,
+          event.cancelled,
+          today,
+        );
 
         // 2. Merge Venue overrides
         const venueRel = (event.relations || []).find((r: MBRelation) =>
@@ -54,62 +63,26 @@ export default function () {
 
         // 4. Resolve Venue Name (Robust & Historical)
         // Priority: local override -> MB relation target-credit -> MB global name
-        const venueName = local.venue_name || venueRel?.["target-credit"] ||
-          venueRel?.place?.name;
-        event.venueName = venueName;
+        event.venueName = resolveVenueName(local, venueRel);
 
         // 5. Generate artists array and displayTitle
         // Filter out non-performer roles (posters, design, etc.)
-        const nonPerformerRoles = [
-          "illustration",
-          "graphic design",
-          "artwork",
-          "design",
-          "engineer",
-        ];
-        const artists = (event.relations || [])
-          .filter((r: MBRelation) =>
-            r["target-type"] === "artist" && !nonPerformerRoles.includes(r.type)
-          )
-          .map((r: MBRelation) => r["target-credit"] || r.artist?.name)
-          .filter((name): name is string => Boolean(name));
-
-        let title = "";
-        if (artists.length === 0) {
-          title = event.name;
-        } else {
-          if (artists.length === 1) {
-            title = artists[0];
-          } else if (artists.length === 2) {
-            title = artists.join(" & ");
-          } else {
-            const others = artists.slice(0, -1);
-            const last = artists[artists.length - 1];
-            title = `${others.join(", ")} & ${last}`;
-          }
-        }
-
-        if (venueName) {
-          title += ` @ ${venueName}`;
-        }
-
-        event.displayTitle = title;
+        const artists = extractArtists(event.relations);
         event.artists = artists;
+
+        event.displayTitle = buildDisplayTitle(
+          artists,
+          event.name,
+          event.venueName,
+        );
 
         // 6. Detect custom titles: Heuristic - if none of the artist names
         // appear verbatim in event.name, it's likely a real custom title.
-        const nameLower = event.name.toLowerCase();
-        event.isCustomTitle = artists.length === 0
-          ? Boolean(event.name)
-          : !artists.some((a) => nameLower.includes(a.toLowerCase()));
+        event.isCustomTitle = detectCustomTitle(event.name, artists);
 
         // 7. Label filtering
         const excludeLabels: string[] = local.exclude_labels ?? [];
-        event.labels = (event.relations ?? [])
-          .filter((r: MBRelation) =>
-            r["target-type"] === "label" &&
-            !excludeLabels.includes(r.label?.id ?? "")
-          );
+        event.labels = filterLabels(event.relations, excludeLabels);
 
         // 8. Enrich relations with raw link data from global entities map
         (event.relations || []).forEach((rel: MBRelation) => {
@@ -126,24 +99,12 @@ export default function () {
       rawEvents.forEach(enrichEvent);
 
       // Group and sort
-      const sortByDate = (
-        a: EnrichedMBEvent,
-        b: EnrichedMBEvent,
-        desc = false,
-      ) => {
-        const da = a.beginDate ? new Date(a.beginDate).getTime() : 0;
-        const db = b.beginDate ? new Date(b.beginDate).getTime() : 0;
-        return desc ? db - da : da - db;
-      };
-
-      const upcoming = rawEvents.filter((e) => e.isUpcoming).sort((
-        a: EnrichedMBEvent,
-        b: EnrichedMBEvent,
-      ) => sortByDate(a, b));
-      const past = rawEvents.filter((e) => !e.isUpcoming).sort((
-        a: EnrichedMBEvent,
-        b: EnrichedMBEvent,
-      ) => sortByDate(a, b, true));
+      const upcoming = rawEvents.filter((e) => e.isUpcoming).sort(
+        (a: EnrichedMBEvent, b: EnrichedMBEvent) => sortByDate(a, b),
+      );
+      const past = rawEvents.filter((e) => !e.isUpcoming).sort(
+        (a: EnrichedMBEvent, b: EnrichedMBEvent) => sortByDate(a, b, true),
+      );
 
       // Expose grouped lists to templates
       globalData.mb_events.all = rawEvents;
