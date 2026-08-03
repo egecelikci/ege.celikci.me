@@ -42,6 +42,7 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
+    "check": "deno check _config.ts",
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "new": {
       "description": "Create new content or code using artifacts",
