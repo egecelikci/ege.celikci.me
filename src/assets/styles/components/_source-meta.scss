@@ -31,22 +31,6 @@
         border-color: var(--color-primary);
       }
     }
-
-    &--feed:hover {
-      .source-meta__badge {
-        background-color: var(--color-secondary-muted);
-        border-color: var(--color-secondary-muted);
-      }
-
-      .source-meta__icon {
-        color: var(--color-secondary);
-      }
-
-      .source-meta__link {
-        color: var(--color-secondary);
-        border-color: var(--color-secondary);
-      }
-    }
   }
 
   &__badge {
