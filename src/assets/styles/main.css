@@ -857,14 +857,6 @@ dfn {
     font-medium text-white/90 hover:text-white hover:bg-black/80
     hover:border-white/20 transition-all shadow-sm;
 }
-@utility date-badge {
-  @apply inline-flex items-center rounded border border-border-subtle
-    bg-surface-subtle text-text-muted px-2 py-0.5 text-[11px] font-mono
-    font-bold transition-all;
-  &:hover {
-    @apply bg-surface-hover border-primary/30 text-primary;
-  }
-}
 @utility bookmark-index-link {
   @apply typography-sublabel text-text-muted hover:text-primary
     transition-colors no-underline pb-px border-b border-transparent

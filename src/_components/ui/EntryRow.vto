@@ -1,32 +1,17 @@
-{{#
-  Component: EntryRow
-  A unified, high-density row for any entry type (Note, Post, Recipe, etc.)
-  Replaces the fragmented PostRow, NoteRow, and PageRow.
-
-  Props:
-    - entry: page object (required)
-    - showDate?: boolean (default: true)
-    - hideYear?: boolean (default: false)
-    - classes?: string
-#}}
-
 {{ set entry = it.entry }}
 {{
   set isNote = entry.type === "note" || (entry.url && entry.url.startsWith("/notes/"))
 }}
 {{ set showDate = it.showDate ?? true }}
 
-{{# Type Label logic #}}
 {{ set typeLabel = entry.type || "entry" }}
 {{ if isNote }}{{ set typeLabel = "note" }}{{ /if }}
 
-{{# Pre-calculate URL to avoid pipes in HTML attributes for deno fmt #}}
 {{ set entryUrl = "" }}
 {{ if entry.url }}
   {{ set entryUrl = entry.url |> url }}
 {{ /if }}
 
-{{# Date formatting #}}
 {{ set formattedDate = "" }}
 {{ set isoDate = "" }}
 {{ set parsedDate = entry.date ? new Date(entry.date) : null }}
@@ -34,8 +19,6 @@
 
 {{ if hasValidDate }}
   {{ set isoDate = parsedDate |> date("yyyy-MM-dd") }}
-
-  {{# Build the format pattern dynamically #}}
   {{ set formatStr = "dd MMM" }}
 
   {{ if !it.hideYear }}
@@ -46,31 +29,28 @@
     {{ set formatStr = formatStr + " HH:mm" }}
   {{ /if }}
 
-  {{# Apply the filter once with the combined pattern #}}
   {{ set formattedDate = parsedDate |> date(formatStr) }}
 {{ /if }}
 
-{{# Vento Context for notes #}}
 {{
   set vtoContext = { ...entry, author: it.author, site: it.site, comp: it.comp }
 }}
 
 <article
-  class="h-entry group relative flex gap-8 py-10 px-4 md:px-6 transition-all no-underline w-full haptic rounded-2xl hover:bg-surface-subtle {{ it.classes || "" }}"
+  class="h-entry entry-row {{ it.classes || "" }}"
 >
-  <div class="flex flex-col gap-3 min-w-0 flex-1">
-    {{# 1. HEADER (Tags + Meta) #}}
-    <header class="flex items-center gap-4 relative z-30 overflow-hidden">
+  <div class="entry-row__body">
+    <header class="entry-row__header">
       {{ if showDate && hasValidDate }}
         <time
           datetime="{{ isoDate }}"
-          class="date-badge dt-published mr-2"
+          class="entry-row__date dt-published"
         >
           {{ formattedDate }}
         </time>
       {{ /if }}
       {{ if !showDate }}
-        <span class="typography-label text-primary flex items-center gap-2">
+        <span class="entry-row__type">
           {{
             await it.comp.base.Icon({
               name: isNote ? "sticky-note" : "pencil",
@@ -82,43 +62,34 @@
       {{ /if }}
 
       {{ if entry.tags }}
-        <div class="flex gap-3 min-w-0">
+        <div class="entry-row__tags">
           {{ for tag of entry.tags |> slice(0, 2) }}
-            <span
-              class="p-category typography-sublabel text-text-dim truncate hover:text-primary transition-colors"
-            >#{{ tag }}</span>
+            <span class="p-category">#{{ tag }}</span>
           {{ /for }}
         </div>
       {{ /if }}
 
-      <div class="divider min-w-[1rem] opacity-20"></div>
+      <div class="divider entry-row__divider"></div>
 
-      {{# Stats + Syndication #}}
       {{ if isNote || entry.stats || entry.syndication }}
         {{
           await it.comp.ui.ActivityMeta({
             stats: entry.stats,
             syndication: entry.syndication,
-            classes:
-              "shrink-0 text-text-dim group-hover:text-text-muted transition-colors relative z-40",
+            classes: "entry-row__meta",
           })
         }}
       {{ /if }}
     </header>
 
-    {{# 2. CONTENT #}}
     <div class="flex flex-col gap-3 relative z-10">
       {{ if entry.title && (!isNote || !entry.isAutoTitle) }}
-        <h3
-          class="p-name text-[length:var(--size-step-1)] font-bold [letter-spacing:var(--letter-spacing-h3)] text-text group-hover:text-primary transition-colors leading-tight"
-        >
+        <h3 class="p-name entry-row__title">
           {{ entry.title }}
         </h3>
       {{ /if }}
 
-      <div
-        class="e-content markdown text-base md:text-lg leading-relaxed text-text-dim group-hover:text-text transition-colors line-clamp-3"
-      >
+      <div class="e-content markdown entry-row__content">
         {{ if isNote }}
           {{ entry.content |> vto(vtoContext) |> md |> safe }}
         {{ else }}
@@ -127,9 +98,8 @@
       </div>
     </div>
 
-    {{# 3. IMAGES (Note specific) #}}
     {{ if isNote && entry.images?.length }}
-      <div class="w-full relative z-30 pt-2">
+      <div class="entry-row__media">
         {{
           await it.comp.ui.Media({
             images: entry.images,
@@ -141,10 +111,9 @@
     {{ /if }}
   </div>
 
-  {{# 4. OVERLAY LINK #}}
   <a
     href="{{ entryUrl }}"
-    class="u-url absolute inset-0 z-20 pointer-events-auto"
+    class="u-url entry-row__link"
     aria-label="View {{ typeLabel }}"
   ></a>
 </article>

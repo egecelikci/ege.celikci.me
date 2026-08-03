@@ -1,14 +1,3 @@
-{{#
-  Component: EntryTimeline
-  Groups entries by date and renders them with a timeline spine.
-  Provides a unified, robust solution for date-based listings.
-
-  Props:
-    - entries: Page[] (required)
-    - groupBy: "year" | "month" | "none" (default: "month")
-    - hideRowLabel: boolean
-#}}
-
 {{ if it.entries && it.entries.length > 0 }}
   {{>
     const groupBy = it.groupBy || "month";
@@ -18,7 +7,6 @@
         if (groupBy === "year") {
           return item.date.getFullYear().toString();
         }
-        // month + year format
         return item.date.toLocaleDateString("en-GB", {
           month: "long",
           year: "numeric",
@@ -28,22 +16,19 @@
     const dateKeys = Object.keys(grouped)
   }}
 
-  <div class="h-feed flex flex-col gap-12">
+  <div class="h-feed entry-timeline">
     {{ for dateKey of dateKeys }}
-      <section class="flex flex-col gap-6">
-        {{# Optional Header #}}
+      <section class="entry-timeline__group">
         {{ if groupBy !== "none" }}
           {{
             await it.comp.ui.SectionHeader({
               title: dateKey,
               variant: groupBy === "year" ? "large" : "label",
-              classes: "group",
             })
           }}
         {{ /if }}
 
-        {{# Direct entry list #}}
-        <div class="flex flex-col">
+        <div class="entry-timeline__list">
           {{ for item of grouped[dateKey] }}
             {{
               await it.comp.ui.EntryRow({

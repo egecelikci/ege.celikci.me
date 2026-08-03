@@ -1,6 +1,8 @@
-<footer
-  class="listing-footer {{ it.compact ? "listing-footer--compact" : "" }} {{ it.classes || "" }}"
->
+{{ set footerClass = "listing-footer" }}
+{{ if it.compact }}{{ set footerClass = footerClass + " listing-footer--compact" }}{{ /if }}
+{{ if it.classes }}{{ set footerClass = footerClass + " " + it.classes }}{{ /if }}
+
+<footer class="{{ footerClass }}">
   <div class="listing-footer__label typography-sublabel">
     {{ it.leftText || "" }}
   </div>

@@ -1,0 +1,16 @@
+.entry-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+}
