@@ -92,14 +92,13 @@
     transition: all 500ms ease;
   }
 
-  /* Credit/overlay badge floating over media (revealed on group hover) */
+  /* Attribution chip floating over media (revealed on group hover) */
   .gallery-overlay {
     position: absolute;
     top: 1rem;
     right: 1rem;
     display: flex;
-    align-items: center;
-    gap: 0.375rem;
+    align-items: baseline;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     background-color: color-mix(in srgb, var(--color-bg) 90%, transparent);
@@ -123,6 +122,34 @@
       .group.is-active & {
         opacity: 1;
       }
+    }
+
+    &__link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.375rem;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      pointer-events: auto;
+      transition: color 300ms ease;
+
+      &:hover {
+        color: var(--color-primary);
+      }
+
+      & + &::before {
+        content: "·";
+        margin-inline: 0.375rem;
+        opacity: 0.4;
+      }
+    }
+
+    &__label {
+      color: color-mix(in srgb, var(--color-text-muted) 70%, transparent);
+    }
+
+    &__name {
+      color: var(--color-text);
     }
   }
 
