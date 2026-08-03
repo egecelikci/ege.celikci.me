@@ -42,7 +42,7 @@
 }}
 
 <div
-  class="flex {{ if variantVal === 'minimal' }}flex-row gap-2{{ else }}flex-col gap-3{{ /if }}"
+  class="source-meta {{ if variantVal === 'minimal' }}source-meta--minimal{{ /if }}"
 >
   {{# 1. DATA SOURCES (Synced from...) #}}
   {{ for source of nonFeeds }}
@@ -53,7 +53,7 @@
         <a
           href="{{ targetUrl }}"
           target="_blank"
-          class="btn-minimal px-0 w-10 h-10 min-h-0 justify-center"
+          class="source-meta__icon-btn"
           title="{{ source.label }}"
         >
           {{
@@ -70,28 +70,21 @@
         </a>
       {{ /if }}
     {{ else }}
-      <div
-        class="flex items-center gap-3 text-text-muted transition-colors duration-200 group"
-      >
-        <div
-          class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-primary-muted group-reveal:border-primary-muted group-reveal:scale-110 transition-all"
-        >
+      <div class="source-meta__row">
+        <div class="source-meta__badge">
           {{
             await it.comp.base.Icon({
               name: source.icon,
-              classes:
-                "w-3 h-3 text-text-muted group-reveal:text-primary transition-colors",
+              classes: "w-3 h-3 source-meta__icon",
             })
           }}
         </div>
-        <p
-          class="typography-label text-text-muted font-normal tracking-tight leading-tight m-0"
-        >
+        <p class="source-meta__text">
           {{ if targetUrl }}
             {{ source.prefix || "Synced from" }} <a
               href="{{ targetUrl }}"
               target="_blank"
-              class="text-text-muted reveal:text-primary transition-colors no-underline border-b border-border-subtle reveal:border-primary inline-block"
+              class="source-meta__link"
             >{{ source.label }}</a>
           {{ else }}
             {{ source.prefix || "Source:" }} {{ source.label }}
@@ -109,7 +102,7 @@
           <a
             href="{{ feed.url }}"
             target="_blank"
-            class="btn-minimal px-0 w-10 h-10 min-h-0 justify-center"
+            class="source-meta__icon-btn"
             title="Subscribe via {{ feed.label }}"
           >
             {{
@@ -123,30 +116,23 @@
         {{ /for }}
       </div>
     {{ else }}
-      <div
-        class="flex items-center gap-3 text-text-muted transition-colors duration-200 group"
-      >
-        <div
-          class="flex items-center justify-center shrink-0 w-6 h-6 rounded-full bg-surface-subtle border border-border-subtle group-reveal:bg-secondary-muted group-reveal:border-secondary-muted group-reveal:scale-110 transition-all"
-        >
+      <div class="source-meta__row source-meta__row--feed">
+        <div class="source-meta__badge">
           {{
             await it.comp.base.Icon({
               name: feeds[0].icon,
-              classes:
-                "w-3 h-3 text-text-muted group-reveal:text-secondary transition-colors",
+              classes: "w-3 h-3 source-meta__icon",
             })
           }}
         </div>
-        <p
-          class="typography-label text-text-muted font-normal tracking-tight leading-tight m-0"
-        >
+        <p class="source-meta__text">
           Subscribe via
           {{ for i, feed of feeds }}
-            {{ if i > 0 }}<span class="mx-1 text-text-muted">|</span>{{ /if }}
+            {{ if i > 0 }}<span class="source-meta__separator">|</span>{{ /if }}
             <a
               href="{{ feed.url }}"
               target="_blank"
-              class="text-text-muted reveal:text-secondary transition-colors no-underline border-b border-border-subtle reveal:border-secondary inline-block"
+              class="source-meta__link"
             >{{ feed.label.replace(/ feed/i, "") }}</a>
           {{ /for }}
         </p>

@@ -17,14 +17,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  // Matches the previous global heading rhythm (see main.css `.flow` layer).
   :is(h1, h2, h3) {
     line-height: 1.1;
     text-wrap: balance;
   }
 
-  mark,
-  .search-result-item mark {
+  mark {
     background-color: #fde047;
     color: #000;
     padding: 0 2px;

@@ -5,7 +5,6 @@ $bp-lg: 64em;
 :root {
   color-scheme: light;
 
-  /* palette */
   --color-bg: #fef6e4;
   --color-surface: #f3e1d8;
   --color-text: #172c66;
@@ -17,7 +16,6 @@ $bp-lg: 64em;
   --color-mastodon: #595aff;
   --color-bluesky: #3471f6;
 
-  /* semantic alpha colors */
   --color-border-subtle: color-mix(
     in srgb,
     var(--color-border),

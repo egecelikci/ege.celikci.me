@@ -1,7 +1,4 @@
 {{#
-  Component: PageHeader (Clean Ledger)
-  A high-precision typographic header for all page types.
-
   Props:
   - title: string
   - subtitle?: string
@@ -13,7 +10,6 @@
   - breadcrumbs?: boolean
 #}}
 
-{{# 1. Resolve Header Extension (moved from layout) #}}
 {{ set extensionContent }}
   {{ if it.headerExtension }}
     {{ if it.headerExtension.comp }}
@@ -27,7 +23,6 @@
   {{ /if }}
 {{ /set }}
 
-{{# 2. Resolve Subtitle (moved from layout) #}}
 {{ set displaySubtitle = it.subtitle || it.description }}
 {{ if !it.subtitle }}
   {{ if it.type === "post" && it.date }}
@@ -52,16 +47,13 @@
   {{ /if }}
 {{ /if }}
 
-{{# 3. Resolve Title #}}
 {{ set displayTitle = it.title }}
 {{ if it.type === "note" && !it.title }}
   {{ set displayTitle = "note" }}
 {{ /if }}
 
-{{# 4. Resolve Backlink #}}
 {{ set backlinkData = it.backlink }}
 
-{{# Unified: Use navigation.parent as default backlink if available #}}
 {{ if !backlinkData && it.navigation?.parent }}
   {{
     set backlinkData = {
@@ -85,16 +77,12 @@
 {{ set isCentered = it.centered || false }}
 
 <section
-  class="border-b border-border-subtle pb-10 pt-16 md:pt-24 {{ if isCentered }}text-center{{ /if }} flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 [view-transition-name:page-header]"
+  class="page-header {{ if isCentered }}page-header--centered{{ /if }}"
 >
-  <div class="grow min-w-0 flex flex-col gap-6 md:gap-8">
-    {{# 1. NAVIGATION / BREADCRUMB / ACTIONS #}}
-    <div
-      class="h-6 flex items-center justify-between"
-    >
-      {{# Backlink (Left) #}}
+  <div class="page-header__body">
+    <div class="page-header__nav">
       <div
-        class="flex items-center {{ if isCentered }}justify-center w-full{{ /if }}"
+        class="page-header__nav-left {{ if isCentered }}page-header__nav-left--centered{{ /if }}"
       >
         {{ if backlinkData }}
           {{
@@ -105,41 +93,35 @@
             })
           }}
         {{ else }}
-          <span class="opacity-0 cursor-default" aria-hidden="true"
+          <span class="page-header__nav-placeholder" aria-hidden="true"
           >&nbsp;</span>
         {{ /if }}
       </div>
 
-      {{# Global Actions (Right) #}}
       {{ if !isCentered }}
-        <div class="[view-transition-name:page-header-actions]">
+        <div class="page-header__actions">
           {{ comp.layout.LanguageSwitcher(it) }}
         </div>
       {{ /if }}
     </div>
 
-    {{# 2. MAIN TITLE #}}
     <h1
-      class="p-name text-[length:var(--size-step-5)] font-bold [letter-spacing:var(--letter-spacing-h1)] text-text leading-[1.1] text-balance [view-transition-name:page-title] {{ if it.type === 'tag' }}font-accent !tracking-normal whitespace-nowrap{{ /if }}"
+      class="page-header__title p-name {{ if it.type === 'tag' }}page-header__title--tag{{ /if }}"
     >
-      {{ displayTitle }}<span
-        class="text-primary/40 inline translate-y-[-0.1em]"
-      >.</span>
+      {{ displayTitle }}<span class="page-header__period">.</span>
     </h1>
 
-    {{# 3. SUBTITLE / DESCRIPTION #}}
     {{ if displaySubtitle }}
       <div
-        class="typography-label text-text-muted font-normal max-w-lg leading-relaxed text-balance italic {{ if isCentered }}mx-auto{{ /if }} [view-transition-name:page-subtitle]"
+        class="page-header__subtitle {{ if isCentered }}page-header__subtitle--centered{{ /if }}"
       >
         {{ displaySubtitle |> safe }}
       </div>
     {{ /if }}
 
-    {{# 4. TAGS (Unified Typographic) #}}
     {{ if it.tags && it.tags.length > 0 }}
       <div
-        class="flex flex-wrap gap-4 mt-2 {{ if isCentered }}justify-center{{ /if }} [view-transition-name:page-tags]"
+        class="page-header__tags {{ if isCentered }}page-header__tags--centered{{ /if }}"
       >
         {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}
@@ -149,11 +131,8 @@
     {{ /if }}
   </div>
 
-  {{# RIGHT SIDE: Extensions #}}
   {{ if it.rightContent || extensionContent }}
-    <div
-      class="shrink-0 flex items-end w-full md:w-auto mt-auto [view-transition-name:page-header-right]"
-    >
+    <div class="page-header__right">
       {{ it.rightContent |> safe }}
       {{ extensionContent |> safe }}
     </div>

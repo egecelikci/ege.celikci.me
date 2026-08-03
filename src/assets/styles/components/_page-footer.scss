@@ -1,9 +1,3 @@
-// ---------------------------------------------------------------------------
-// Page footer — per-page supplemental footer (webmentions, backlinks…).
-// Only the shell is converted for now; inner blocks keep Tailwind during the
-// transition.
-// ---------------------------------------------------------------------------
-
 @use "../utils/variables";
 
 .page-footer {

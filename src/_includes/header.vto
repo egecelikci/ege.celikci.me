@@ -1,11 +1,5 @@
-{{#
-  Site Header Component
-  Minimal "Status Bar" style top navigation
-#}}
-
 {{ set headerContent }}
   <div class="site-header__bar">
-    {{# 1. CONTEXTUAL NAVIGATION (Breadcrumbs handle root + path) #}}
     <div class="reveal-self">
       {{ comp.layout.Breadcrumbs(it) }}
     </div>

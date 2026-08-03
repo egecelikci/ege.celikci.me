@@ -1,7 +1,4 @@
 {{#
-  Component: IndexList
-  A clean, typographic ledger for site-wide navigation or data lists.
-
   Props:
     - items: Array<{
         title: string,
@@ -13,104 +10,70 @@
       }>
 #}}
 
-<div class="flex flex-col {{ it.classes || "" }}">
-  <ul class="flex flex-col font-mono text-xs md:text-sm list-none p-0 m-0">
+<div class="index-list {{ it.classes || "" }}">
+  <ul class="index-list__group">
     {{ for item of it.items }}
       {{ if item.type === "section" }}
-        {{# --- SECTION HEADER --- #}}
-        <li
-          class="mt-6 mb-2 first:mt-0 pt-6 border-t border-border-subtle first:border-t-0 first:pt-0"
-        >
-          <span
-            class="typography-label text-text-muted"
-          >
+        <li class="index-list__section">
+          <span class="index-list__section-label">
             {{ item.title |> safe }}
           </span>
         </li>
       {{ else }}
         {{# --- LEDGER ENTRY --- #}}
-        <li class="group flex items-center">
+        <li
+          class="index-list__row {{ if item.href }}index-list__row--link{{ /if }}"
+        >
           <a
             {{ if item.href }}href="{{ item.href }}"{{ /if }}
-            class="
-              grow flex items-baseline no-underline py-1 px-2 -mx-2 rounded-lg transition-all
-              {{ if item.href }}text-text hover:text-primary focus-visible:ring-primary-muted focus-visible:bg-surface-subtle focus-visible:outline-none focus-visible:ring-2{{ else }}text-text-muted cursor-default{{ /if }}
-            "
+            class="index-list__link {{ if item.href }}index-list__link--href{{ else }}index-list__link--static{{ /if }}"
           >
-            {{# Marker #}}
-            <span
-              class="shrink-0 w-8 text-text-muted {{ if item.href }}group-reveal:text-primary group-[.is-active]:text-primary{{ /if }} transition-colors"
-            >
+            <span class="index-list__marker">
               {{ item.marker || "··" }}
             </span>
 
-            {{# Title #}}
-            <span
-              class="font-bold border-b border-border-subtle {{ if item.href }}group-reveal:border-primary-muted group-[.is-active]:border-primary-muted{{ /if }} transition-colors pb-0.5"
-            >
+            <span class="index-list__title">
               {{ item.title |> safe }}
             </span>
 
-            {{# Connector #}}
-            <span
-              class="h-px grow border-t border-dashed border-border-subtle ml-4 mr-4"
-            ></span>
+            <span class="index-list__connector"></span>
 
-            {{# Description #}}
-            <span
-              class="text-text-muted italic {{ if item.href }}group-reveal:text-text group-[.is-active]:text-text{{ /if }} transition-colors text-right"
-            >
+            <span class="index-list__desc">
               {{ item.desc |> safe }}
             </span>
           </a>
 
           {{ if item.extra }}
-            <div class="flex items-center gap-2 ml-4 relative z-30">
+            <div class="index-list__extra">
               {{ item.extra |> safe }}
             </div>
           {{ /if }}
         </li>
 
-        {{# CHILDREN #}}
         {{ if item.children && item.children.length > 0 }}
-          <li class="flex flex-col ml-8 mb-2">
-            <ul class="flex flex-col list-none p-0 m-0">
+          <li class="index-list__children">
+            <ul class="index-list__child-group">
               {{ for child of item.children }}
-                <li class="group/child-row flex items-center">
+                <li class="index-list__child-row">
                   <a
                     {{ if child.href }}href="{{ child.href }}"{{ /if }}
-                    class="
-                      relative grow flex items-baseline no-underline py-1 pl-6 pr-2 -mr-2 rounded-lg transition-all
-                      before:absolute before:left-0 before:top-0 before:w-px before:h-full before:bg-border-subtle
-                      last:before:h-1/2 group/child
-                      {{ if child.href }}focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-muted focus-visible:bg-surface-subtle{{ else }}cursor-default{{ /if }}
-                    "
+                    class="index-list__child-link {{ if child.href }}index-list__child-link--href{{ else }}index-list__child-link--static{{ /if }}"
                   >
-                    {{# Horizontal L-part #}}
-                    <div
-                      class="absolute left-0 top-1/2 w-4 h-px bg-border-subtle"
-                    >
-                    </div>
+                    <div class="index-list__child-rail"></div>
 
-                    <span
-                      class="{{ if child.href }}font-bold text-text-dim group-hover/child:text-primary{{ else }}text-text-muted{{ /if }} transition-colors"
-                    >
+                    <span class="index-list__child-title">
                       {{ child.title |> safe }}
                     </span>
 
-                    <span
-                      class="h-px grow border-t border-dotted border-border-subtle mx-4"
-                    ></span>
+                    <span class="index-list__child-connector"></span>
 
-                    <span
-                      class="text-text-muted italic {{ if child.href }}group-hover/child:text-text{{ /if }} transition-colors text-right"
-                    >
+                    <span class="index-list__child-desc">
                       {{ child.desc |> safe }}
                     </span>
                   </a>
 
                   {{ if child.extra }}
-                    <div class="flex items-center gap-2 ml-4 relative z-30">
+                    <div class="index-list__extra">
                       {{ child.extra |> safe }}
                     </div>
                   {{ /if }}

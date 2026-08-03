@@ -95,10 +95,10 @@ export async function initSearch() {
         });
 
         if (noResults) {
-          noResults.classList.toggle("hidden", visibleCount > 0);
+          noResults.hidden = visibleCount > 0;
         }
 
-        clearBtn?.classList.add("search-action-active");
+        clearBtn?.classList.add("is-active");
         return;
       }
 
@@ -115,15 +115,15 @@ export async function initSearch() {
           }));
 
         renderResults(results);
-        clearBtn?.classList.add("search-action-active");
+        clearBtn?.classList.add("is-active");
         return;
       }
 
       const pf = await ensurePagefind();
       if (!pf) return;
 
-      clearBtn?.classList.remove("search-action-active");
-      spinner?.classList.add("search-action-active");
+      clearBtn?.classList.remove("is-active");
+      spinner?.classList.add("is-active");
 
       pf.preload(term);
 
@@ -138,22 +138,18 @@ export async function initSearch() {
         search.results.slice(0, 5).map((r: any) => r.data()),
       );
 
-      spinner?.classList.remove("search-action-active");
-      clearBtn?.classList.add("search-action-active");
+      spinner?.classList.remove("is-active");
+      clearBtn?.classList.add("is-active");
       renderResults(results);
     }
 
     function clearSearch() {
       input.value = "";
       resultsContainer.innerHTML = "";
-      resultsContainer.classList.add(
-        "opacity-0",
-        "-translate-y-2",
-        "pointer-events-none",
-      );
-      clearBtn?.classList.remove("search-action-active");
-      spinner?.classList.remove("search-action-active");
-      if (noResults) noResults.classList.add("hidden");
+      resultsContainer.classList.remove("is-visible");
+      clearBtn?.classList.remove("is-active");
+      spinner?.classList.remove("is-active");
+      if (noResults) noResults.hidden = true;
 
       if (mode === "filter") {
         const items = document.querySelectorAll("[data-search-item]");
@@ -165,7 +161,7 @@ export async function initSearch() {
 
     function renderResults(results: any[]) {
       if (noResults) {
-        noResults.classList.toggle("hidden", results.length > 0);
+        noResults.hidden = results.length > 0;
       }
 
       if (results.length === 0) {
@@ -176,27 +172,26 @@ export async function initSearch() {
             const isAnchor = item.url.startsWith("#");
             return `
           <a href="${item.url}"
-             class="search-result-item group block py-4 px-6 rounded-xl bg-surface-subtle border border-border-subtle transition-all no-underline
-                    hover:bg-surface-hover hover:border-primary-muted focus:outline-none focus:ring-1 focus:ring-primary-muted hover:translate-x-1"
+             class="search__result"
              data-index="${index}"
              ${isAnchor ? 'data-anchor-jump="true"' : ""}>
-            <div class="flex flex-col gap-2">
-              <div class="flex justify-between items-center gap-4">
-                <h3 class="text-base font-bold text-primary transition-colors m-0 tracking-tight flex items-center gap-2">
+            <div class="search__result__body">
+              <div class="search__result__head">
+                <h3 class="search__result__title">
                   <span>${item.meta.title || "Untitled"}</span>
                   ${
               isAnchor
-                ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-hover:opacity-50 transition-opacity"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>'
+                ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="search__result__arrow"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>'
                 : ""
             }
                 </h3>
                 ${
               item.meta.date
-                ? `<time class="typography-label text-[10px] text-text-muted/50">${item.meta.date}</time>`
+                ? `<time class="search__result__date">${item.meta.date}</time>`
                 : ""
             }
               </div>
-              <p class="text-xs text-text-muted/70 leading-relaxed m-0 font-mono italic line-clamp-2">
+              <p class="search__result__excerpt">
                 ${item.excerpt || ""}
               </p>
             </div>
@@ -205,11 +200,7 @@ export async function initSearch() {
           }).join("");
       }
 
-      resultsContainer.classList.remove(
-        "opacity-0",
-        "-translate-y-2",
-        "pointer-events-none",
-      );
+      resultsContainer.classList.add("is-visible");
 
       // Handle anchor jumps manually for smooth UX
       resultsContainer.querySelectorAll('[data-anchor-jump="true"]').forEach(
@@ -249,7 +240,7 @@ export async function initSearch() {
 
     const handleKeyNav = (e: KeyboardEvent) => {
       const results = resultsContainer.querySelectorAll(
-        ".search-result-item",
+        ".search__result",
       ) as NodeListOf<HTMLElement>;
       if (!results.length) return;
 
@@ -277,17 +268,9 @@ export async function initSearch() {
     // Handle clicks outside to close results
     document.addEventListener("click", (e) => {
       if (!root.contains(e.target as Node)) {
-        resultsContainer.classList.add(
-          "opacity-0",
-          "-translate-y-2",
-          "pointer-events-none",
-        );
+        resultsContainer.classList.remove("is-visible");
       } else if (input.value.trim() !== "") {
-        resultsContainer.classList.remove(
-          "opacity-0",
-          "-translate-y-2",
-          "pointer-events-none",
-        );
+        resultsContainer.classList.add("is-visible");
       }
     });
   });

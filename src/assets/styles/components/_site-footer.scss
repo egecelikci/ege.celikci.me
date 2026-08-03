@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Site footer — global footer + webring.
-// ---------------------------------------------------------------------------
-
 @use "../utils/variables";
 
 .site-footer {
@@ -109,7 +105,6 @@
     color: var(--color-text-muted);
   }
 
-  // Webring
   &__webring {
     display: flex;
     flex-direction: column;
@@ -157,7 +152,6 @@
   }
 }
 
-// Edit/source link (used only inside the footer)
 .source-link {
   color: var(--color-text-muted);
   text-decoration: none;

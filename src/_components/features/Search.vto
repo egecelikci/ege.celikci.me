@@ -17,26 +17,24 @@
 {{ set isMinimal = it.variant === "minimal" }}
 
 <div
-  class="search-container group relative w-full {{ it.classes || "" }}"
+  class="search {{ it.classes || "" }}"
   id="search-root-{{ id }}"
   data-search-id="{{ id }}"
   data-search-mode="{{ it.mode || "pagefind" }}"
   data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : "" }}"
 >
   {{# --- 1. THE INPUT --- #}}
-  <div class="relative flex items-center">
+  <div class="search__field">
     {{# Autocomplete Trap (Cryptee Pattern) #}}
     <input
       type="text"
-      class="absolute -top-[1000px] left-0 w-1 h-1 opacity-0 pointer-events-none"
+      class="search__trap"
       aria-hidden="true"
       tabindex="-1"
     />
 
     {{# Search Icon #}}
-    <div
-      class="absolute left-3.5 flex items-center justify-center pointer-events-none text-text-dim group-focus-within:text-primary transition-colors z-20"
-    >
+    <div class="search__icon" aria-hidden="true">
       {{ await it.comp.base.Icon({ name: "search", classes: "w-3.5 h-3.5" }) }}
     </div>
 
@@ -44,21 +42,18 @@
       type="search"
       id="site-search-input-{{ id }}"
       placeholder="{{ it.placeholder || "search…" }}"
-      class="
-        w-full bg-surface-subtle border border-border-subtle rounded-lg py-2.5 pl-10 pr-10 text-sm font-mono text-text
-        placeholder:text-text-dim focus:outline-none focus:border-primary-muted focus:ring-1 focus:ring-primary-muted transition-all
-      "
+      class="search__input"
       autocomplete="off"
       spellcheck="false"
     />
 
     {{# --- Right Side Actions (X Button, Spinner) --- #}}
-    <div class="absolute inset-y-0 right-1.5 flex items-center z-20">
-      <div class="relative w-7 h-7 flex items-center justify-center">
+    <div class="search__actions">
+      <div class="search__action-box">
         {{# Loading Spinner #}}
         <div
           id="search-spinner-{{ id }}"
-          class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 pointer-events-none transition-all duration-300"
+          class="search__spinner"
         >
           {{
             await it.comp.base.Icon({
@@ -71,7 +66,7 @@
         {{# Clear Button #}}
         <button
           id="search-clear-{{ id }}"
-          class="absolute inset-0 flex items-center justify-center rounded-full text-text-muted hover:text-primary opacity-0 scale-50 pointer-events-none transition-all duration-300 haptic"
+          class="search__clear"
           aria-label="Clear search"
         >
           {{ await it.comp.base.Icon({ name: "x", classes: "w-3.5 h-3.5" }) }}
@@ -83,14 +78,15 @@
   {{# --- 2. THE RESULTS --- #}}
   <div
     id="search-results-{{ id }}"
-    class="mt-6 space-y-4 opacity-0 -translate-y-2 pointer-events-none transition-all duration-300"
+    class="search__results"
   >
   </div>
 
   {{# --- 3. EMPTY STATE --- #}}
   <div
     id="search-no-results-{{ id }}"
-    class="hidden"
+    class="search__empty"
+    hidden
   >
     {{
       await it.comp.base.EmptyState({

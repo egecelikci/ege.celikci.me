@@ -1,9 +1,3 @@
-// ---------------------------------------------------------------------------
-// Reset — minimal modern reset, mirrors Tailwind preflight so the cascade is
-// identical while Tailwind is still loaded. Lives in the `base` cascade layer
-// so Tailwind *utilities* (icon sizing, text colors, …) still win.
-// ---------------------------------------------------------------------------
-
 @layer base {
   *,
   *::before,
