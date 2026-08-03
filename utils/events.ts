@@ -16,7 +16,7 @@ export const NON_PERFORMER_ROLES = [
 ];
 
 /** Parse an ISO date string, tolerating bad input. */
-export function parseEventDate(beginStr?: string): Date | null {
+export function parseEventDate(beginStr?: string | null): Date | null {
   if (!beginStr) return null;
   const d = new Date(beginStr);
   return isNaN(d.getTime()) ? null : d;

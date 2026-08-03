@@ -105,8 +105,7 @@ class AlbumFetcher {
     rgid: string,
     policy: import("./fetch-base.ts").CachePolicy = "force-cache",
   ): Promise<Album | null> {
-    const url =
-      `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits+releases`;
+    const url = `${CONFIG.api.musicBrainz}${rgid}?fmt=json&inc=artist-credits`;
     const data = await this.httpClient.fetch<unknown>(
       url,
       "json",
@@ -177,13 +176,20 @@ async function getMusicData() {
 
   const cachedData = await loadState<MusicStore>(
     CONFIG.paths.cacheFile,
-    { schemaVersion: 1, albums: [] },
+    { schemaVersion: 2, albums: [] },
     MusicStoreSchema,
   );
   const albumsMap = new Map(cachedData.albums.map((a) => [a.id, a]));
 
   console.log("[music] ℹ️ Syncing favorite albums...");
   const favorites = await fetcher.getFavoriteReviews(albumsMap.size === 0);
+
+  if (favorites.size === 0 && cachedData.albums.length > 0) {
+    console.warn(
+      "[music] ⚠️ Empty favorites response, keeping existing cache",
+    );
+    return { albums: cachedData.albums };
+  }
 
   console.log(`[music] 🔍 Processing ${favorites.size} albums...`);
 
@@ -199,11 +205,6 @@ async function getMusicData() {
             console.log(`[music] 📥 Fetching cover for: ${metadata.title}`);
             const buf = await fetcher.fetchCoverImage(id);
             if (buf) await imageProcessor.process(id, buf);
-          }
-
-          // Sort releases for determinism
-          if (metadata.releases) {
-            metadata.releases.sort((a, b) => a.id.localeCompare(b.id));
           }
 
           const paths = imageProcessor.buildPaths(id);
@@ -232,7 +233,7 @@ async function getMusicData() {
   if (hasChanged) {
     await saveState(
       CONFIG.paths.cacheFile,
-      { schemaVersion: 1, albums: processed },
+      { schemaVersion: 2, albums: processed },
       MusicStoreSchema,
     );
     console.log(`[music] ✅ Synced ${processed.length} albums.`);

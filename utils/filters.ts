@@ -64,21 +64,22 @@ interface Post {
 interface Webmention {
   author?: {
     name?: string;
-    url?: string;
-    photo?: string;
-  };
-  published?: string;
+    type?: string;
+    url?: string | null;
+    photo?: string | null;
+  } | null;
+  published?: string | null;
   "wm-received"?: string;
   content?: {
-    html?: string;
-    text?: string;
-    value?: string;
-  };
+    html?: string | null;
+    text?: string | null;
+    value?: string | null;
+  } | null;
   "wm-target"?: string;
   "wm-property"?: string;
   "wm-source"?: string;
-  url?: string | string[];
-  photo?: string | string[];
+  url?: string | string[] | null;
+  photo?: string | string[] | null;
 }
 
 export const filters = {

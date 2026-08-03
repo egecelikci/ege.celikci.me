@@ -61,9 +61,9 @@ interface MBEntityBase {
 
 export interface MBRelationArtist extends MBEntityBase {
   "sort-name": string;
-  country?: string;
-  type?: string;
-  "type-id"?: string;
+  country?: string | null;
+  type?: string | null;
+  "type-id"?: string | null;
 }
 
 export interface MBRelationPlace extends MBEntityBase {
@@ -101,11 +101,11 @@ export interface MBEventList {
 export interface MBEvent {
   id: string;
   name: string;
-  type?: string;
-  "type-id"?: string;
+  type?: string | null;
+  "type-id"?: string | null;
   "life-span": {
-    begin?: string;
-    end?: string;
+    begin?: string | null;
+    end?: string | null;
     ended: boolean;
   };
   time?: string;
@@ -366,6 +366,13 @@ async function syncEvents() {
 
   try {
     const raw = await fetchAllEvents(httpClient);
+
+    if (raw.length === 0 && cachedData.events.length > 0) {
+      console.warn(
+        "[mb_events] ⚠️ Empty MusicBrainz response, keeping existing cache",
+      );
+      return;
+    }
 
     const entityIds = new Map<string, "artist" | "place" | "label" | "url">();
 

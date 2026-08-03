@@ -14,15 +14,6 @@ export interface MusicBrainzArtist {
   country?: string | null;
 }
 
-export interface ReleaseEvent {
-  date?: string;
-  area?: {
-    id: string;
-    name: string;
-    "iso-3166-1-codes"?: string[];
-  };
-}
-
 export interface ArtistCredit {
   name: string;
   artist: {
@@ -31,32 +22,11 @@ export interface ArtistCredit {
   };
 }
 
-export interface Release {
-  id: string;
-  title: string;
-  date?: string;
-  status?: string;
-  "status-id"?: string;
-  packaging?: string;
-  "packaging-id"?: string;
-  barcode?: string | null;
-  disambiguation?: string;
-  country?: string;
-  quality?: string;
-  "artist-credit": ArtistCredit[];
-  "release-events"?: ReleaseEvent[];
-  "text-representation"?: {
-    language: string;
-    script: string;
-  };
-}
-
 export interface Album {
   id: string;
   title: string;
   "first-release-date": string;
   "artist-credit": ArtistCredit[];
-  releases?: Release[];
   imagePath?: string;
   imagePathMono?: string;
   ratedAt?: string;
@@ -77,7 +47,7 @@ export interface MusicStore {
 
 export interface CritiqueBrainzReview {
   entity_id: string;
-  entity_type: "release_group" | "recording";
+  entity_type: string;
   rating: number;
   created: string;
 }
@@ -113,25 +83,29 @@ export interface Webmention {
   /** Information about the person who sent the mention */
   author?: {
     name: string;
-    url?: string;
-    photo?: string;
-  };
+    type?: string;
+    url?: string | null;
+    photo?: string | null;
+  } | null;
 
   /** Canonical URL of the source content */
-  url?: string;
+  url?: string | string[] | null;
 
   /** ISO timestamp when the mention was published */
-  published?: string;
+  published?: string | null;
 
   /** Content of the mention (for replies and mentions) */
   content?: {
-    html?: string;
-    text?: string;
-    value?: string;
-  };
+    html?: string | null;
+    text?: string | null;
+    value?: string | null;
+  } | null;
 
   /** Private flag (if set, should not be displayed publicly) */
   "wm-private"?: boolean;
+
+  /** Top-level photo(s) of the source (jf2 may return a list) */
+  photo?: string | string[] | null;
 }
 
 /**

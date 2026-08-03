@@ -25,7 +25,6 @@ import type {
   CritiqueBrainzReview,
   MusicStore,
   ProcessedAlbum,
-  Release,
   Webmention,
   WebmentionApiResponse,
   WebmentionFeed,
@@ -41,9 +40,9 @@ const artistTargetSchema: z.ZodType<MBRelationArtist> = z.object({
   name: z.string(),
   "sort-name": z.string(),
   disambiguation: z.string().optional(),
-  country: z.string().optional(),
-  type: z.string().optional(),
-  "type-id": z.string().optional(),
+  country: z.string().nullable().optional(),
+  type: z.string().nullable().optional(),
+  "type-id": z.string().nullable().optional(),
 }).passthrough();
 
 const placeTargetSchema: z.ZodType<MBRelationPlace> = z.object({
@@ -85,11 +84,11 @@ const relationSchema: z.ZodType<MBRelation> = z.object({
 const mbEventSchema: z.ZodType<MBEvent> = z.object({
   id: z.string(),
   name: z.string(),
-  type: z.string().optional(),
-  "type-id": z.string().optional(),
+  type: z.string().nullable().optional(),
+  "type-id": z.string().nullable().optional(),
   "life-span": z.object({
-    begin: z.string().optional(),
-    end: z.string().optional(),
+    begin: z.string().nullable().optional(),
+    end: z.string().nullable().optional(),
     ended: z.boolean(),
   }).passthrough(),
   time: z.string().optional(),
@@ -123,7 +122,7 @@ export const EntityDetailsSchema: z.ZodType<{ relations?: MBRelation[] }> = z
   }).passthrough();
 
 export const RawIzmirEventsSchema: z.ZodType<RawIzmirEvents> = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(1).default(1),
   events: z.array(mbEventSchema),
   entities: z.record(z.string(), z.array(entityLinkSchema)),
 }).passthrough();
@@ -136,17 +135,19 @@ const webmentionSchema: z.ZodType<Webmention> = z.object({
   "wm-received": z.string(),
   author: z.object({
     name: z.string(),
-    url: z.string().optional(),
-    photo: z.string().optional(),
-  }).passthrough().optional(),
-  url: z.string().optional(),
-  published: z.string().optional(),
+    type: z.string().optional(),
+    url: z.string().nullable().optional(),
+    photo: z.string().nullable().optional(),
+  }).passthrough().nullable().optional(),
+  url: z.union([z.string(), z.array(z.string())]).nullable().optional(),
+  published: z.string().nullable().optional(),
   content: z.object({
-    html: z.string().optional(),
-    text: z.string().optional(),
-    value: z.string().optional(),
-  }).passthrough().optional(),
+    html: z.string().nullable().optional(),
+    text: z.string().nullable().optional(),
+    value: z.string().nullable().optional(),
+  }).passthrough().nullable().optional(),
   "wm-private": z.boolean().optional(),
+  photo: z.union([z.string(), z.array(z.string())]).nullable().optional(),
 }).passthrough();
 
 export const WebmentionApiResponseSchema: z.ZodType<WebmentionApiResponse> = z
@@ -157,14 +158,14 @@ export const WebmentionApiResponseSchema: z.ZodType<WebmentionApiResponse> = z
   }).passthrough();
 
 export const WebmentionFeedSchema: z.ZodType<WebmentionFeed> = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(1).default(1),
   children: z.array(webmentionSchema),
   lastFetched: z.string().nullable(),
 }).passthrough();
 
 const critiqueBrainzReviewSchema: z.ZodType<CritiqueBrainzReview> = z.object({
   entity_id: z.string(),
-  entity_type: z.enum(["release_group", "recording"]),
+  entity_type: z.string(),
   rating: z.number(),
   created: z.string(),
 }).passthrough();
@@ -174,40 +175,6 @@ export const CritiqueBrainzResponseSchema: z.ZodType<CritiqueBrainzResponse> = z
     reviews: z.array(critiqueBrainzReviewSchema),
     count: z.number(),
   }).passthrough();
-
-const releaseSchema: z.ZodType<Release> = z.object({
-  id: z.string(),
-  title: z.string(),
-  date: z.string().optional(),
-  status: z.string().optional(),
-  "status-id": z.string().optional(),
-  packaging: z.string().optional(),
-  "packaging-id": z.string().optional(),
-  barcode: z.string().nullable().optional(),
-  disambiguation: z.string().optional(),
-  country: z.string().optional(),
-  quality: z.string().optional(),
-  "artist-credit": z.array(
-    z.object({
-      name: z.string(),
-      artist: z.object({ id: z.string(), name: z.string() }).passthrough(),
-    }).passthrough(),
-  ),
-  "release-events": z.array(
-    z.object({
-      date: z.string().optional(),
-      area: z.object({
-        id: z.string(),
-        name: z.string(),
-        "iso-3166-1-codes": z.array(z.string()).optional(),
-      }).passthrough().optional(),
-    }).passthrough(),
-  ).optional(),
-  "text-representation": z.object({
-    language: z.string(),
-    script: z.string(),
-  }).passthrough().optional(),
-}).passthrough();
 
 const albumBaseSchema = z.object({
   id: z.string(),
@@ -219,7 +186,6 @@ const albumBaseSchema = z.object({
       artist: z.object({ id: z.string(), name: z.string() }).passthrough(),
     }).passthrough(),
   ),
-  releases: z.array(releaseSchema).optional(),
 }).passthrough();
 
 export const AlbumSchema: z.ZodType<Album> = albumBaseSchema.extend({
@@ -236,7 +202,7 @@ export const ProcessedAlbumSchema: z.ZodType<ProcessedAlbum> = albumBaseSchema
   }).passthrough();
 
 export const MusicStoreSchema: z.ZodType<MusicStore> = z.object({
-  schemaVersion: z.literal(1),
+  schemaVersion: z.literal(2),
   albums: z.array(ProcessedAlbumSchema),
 }).passthrough();
 
