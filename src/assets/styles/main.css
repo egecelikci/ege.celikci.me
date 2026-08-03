@@ -823,16 +823,8 @@ dfn {
   }
 }
 
-@utility ledger-card {
-  @apply rounded-2xl border border-border-subtle bg-surface-subtle
-    transition-all duration-500;
-}
 @utility ledger-aspect {
   @apply aspect-video md:aspect-[16/10];
-}
-@utility typography-lead {
-  @apply text-lg md:text-xl text-text-muted group-reveal:text-text
-    group-[.is-active]:text-text transition-colors leading-relaxed;
 }
 @utility page-footer-block {
   @apply w-full;
@@ -851,20 +843,6 @@ dfn {
 }
 @utility link-hover {
   @apply no-underline transition-colors hover:text-primary;
-}
-@utility listing-meta-row {
-  @apply relative z-20 flex items-center gap-4 text-text-muted
-    group-reveal:text-text group-[.is-active]:text-text transition-colors;
-}
-@utility listing-title {
-  @apply text-3xl md:text-4xl font-bold tracking-tighter text-text
-    group-reveal:text-primary group-[.is-active]:text-primary transition-colors
-    leading-tight m-0 relative z-20;
-}
-@utility listing-footer {
-  @apply relative z-10 flex items-center justify-between pt-8 border-t
-    border-border-subtle text-text-muted group-reveal:text-text
-    group-[.is-active]:text-text transition-colors duration-500;
 }
 @utility gallery-overlay {
   @apply absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm

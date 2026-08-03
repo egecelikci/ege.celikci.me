@@ -1,0 +1,35 @@
+.listing-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+  transition: color 0.5s ease;
+
+  &--compact {
+    padding-top: 1rem;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex-grow: 1;
+    color: var(--color-text-dim);
+    text-transform: lowercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+}
