@@ -124,6 +124,8 @@
       }
     }
 
+    gap: 0.75rem;
+
     &__link {
       display: inline-flex;
       align-items: baseline;
@@ -136,12 +138,12 @@
       &:hover {
         color: var(--color-primary);
       }
+    }
 
-      & + &::before {
-        content: "·";
-        margin-inline: 0.375rem;
-        opacity: 0.4;
-      }
+    &__label::after {
+      content: "·";
+      margin-inline: 0.375rem;
+      opacity: 0.4;
     }
 
     &__label {

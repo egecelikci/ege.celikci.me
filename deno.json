@@ -59,16 +59,12 @@
     "semiColons": true,
     "singleQuote": false,
     "proseWrap": "preserve",
+    "json.trailingCommas": "never",
     "include": [
       "src/",
       "_config/",
       "utils/",
-      "netlify/",
-      "*.ts",
-      "*.json",
-      "*.md",
-      "*.yml",
-      "*.css"
+      "netlify/"
     ],
     "exclude": [
       "src/_data/music.json",

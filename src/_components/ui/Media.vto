@@ -1,8 +1,3 @@
-{{#
-  Component: Media (Phanpy-inspired)
-  A flexible grid for 1-4 images with hover zoom and Lightbox integration.
-  Whitespace-tight to prevent text-node offsets in note opener.
-#}}
 {{ if it.images && it.images.length > 0 }}
   {{ set count = Math.min(it.images.length, 4) }}
   {{ set gid = it.groupId || Math.random().toString(36).slice(2, 10) }}
@@ -51,32 +46,17 @@
           class="{{ if isAuto }}block w-full h-auto object-contain{{ else }}absolute inset-0 w-full h-full object-cover{{ /if }} transition-all duration-500 ease-in-out group-hover/media:scale-105 group-hover/media:brightness-110"
         />
 
-        {{# Museum-grade Caption Overlay #}}
         {{ if image.alt?.trim() }}
-          <div
-            class="absolute inset-x-0 bottom-0 p-4 pt-12 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 translate-y-2 group-hover/media:opacity-100 group-hover/media:translate-y-0 transition-all duration-300 pointer-events-none z-20"
-          >
-            <p
-              class="text-white text-xs font-medium leading-relaxed line-clamp-2 m-0"
-            >
-              {{ image.alt |> escape }}
-            </p>
+          <div class="media-caption">
+            <p>{{ image.alt |> escape }}</p>
           </div>
 
-          {{# 2. Subtle Visual Marker (Ignored by Search) #}}
-          <div
-            class="alt-badge absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded border border-white/10 opacity-100 group-hover/media:opacity-0 transition-opacity duration-300 pointer-events-none z-20"
-            data-pagefind-ignore
-          >
-            ALT
-          </div>
+          <div class="alt-badge" data-pagefind-ignore>ALT</div>
         {{ /if }}
 
         {{ if i === 3 && it.images.length > 4 }}
-          <div
-            class="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none z-20"
-          >
-            <span class="text-white font-bold text-xl">+{{ it.images.length - 4 }}</span>
+          <div class="media-more">
+            <span>+{{ it.images.length - 4 }}</span>
           </div>
         {{ /if }}
       </a>

@@ -1,13 +1,5 @@
-/**
- * lightbox.ts
- * PhotoSwipe 5 implementation with custom Phanpy-inspired UI.
- * Refined for PhotoSwipe 5 registerElement API and fixed null-checks.
- */
-
 import PhotoSwipe from "photoswipe";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface PswpItem {
   src?: string;
@@ -21,8 +13,6 @@ interface PswpItem {
   mediaType?: string;
   cropped?: boolean;
 }
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const getTemplate = (id: string): HTMLElement | null => {
   const template = document.getElementById(id) as HTMLTemplateElement | null;
@@ -48,8 +38,6 @@ const downloadMedia = async (src: string) => {
   }
 };
 
-// ─── Main Init ───────────────────────────────────────────────────────────────
-
 let isLightboxInitialized = false;
 
 export function initLightbox() {
@@ -60,32 +48,21 @@ export function initLightbox() {
     gallery: "[data-lightbox-group], .markdown",
     children: "a.lightbox-trigger, img:not(.lightbox-trigger img)",
     pswpModule: PhotoSwipe,
-
-    // Disable default UI
     zoom: false,
     close: false,
     counter: false,
     arrowPrev: false,
     arrowNext: false,
-
-    // Performance
     preload: [1, 2],
-
-    // Gestures
     closeOnVerticalDrag: true,
     mouseMovePan: true,
-
-    // Animation & Transitions (Sturdy & Robust)
     showHideAnimationType: "zoom",
     showAnimationDuration: 200,
     hideAnimationDuration: 200,
-    easing: "cubic-bezier(0.1, 0, 0, 1)", // Phanpy-style dramatic initial pop
-
-    // Spacing to keep image between custom UI elements
+    easing: "cubic-bezier(0.1, 0, 0, 1)",
     padding: { top: 60, bottom: 60, left: 10, right: 10 },
   });
 
-  // 1. Data Parsing
   lightbox.addFilter("itemData", (itemData) => {
     const el = itemData.element;
     if (!el) return itemData;
@@ -124,9 +101,7 @@ export function initLightbox() {
     return itemData;
   });
 
-  // 1b. Correct Thumbnail Bounds for object-fit: cover
   lightbox.addFilter("thumbEl", (thumbnail, itemData) => {
-    // Use the exact anchor container bounds, bypassing the scaled inner image
     return (itemData.element as HTMLElement) || thumbnail;
   });
 
@@ -134,7 +109,6 @@ export function initLightbox() {
     return (content.data as PswpItem).msrc || placeholderSrc;
   });
 
-  // 2. Video/Gifv Support
   lightbox.on("contentLoad", (e) => {
     const { content } = e;
     const data = content.data as PswpItem;
@@ -163,12 +137,10 @@ export function initLightbox() {
     }
   });
 
-  // 3. Custom UI Registration
   lightbox.on("uiRegister", () => {
     const pswp = lightbox.pswp;
     if (!pswp) return;
 
-    // A. Main Controls
     pswp.ui?.registerElement({
       name: "custom-controls",
       appendTo: "root",
@@ -223,7 +195,7 @@ export function initLightbox() {
             "scale-95",
           );
           moreBtn?.setAttribute("aria-expanded", "true");
-          // Defer to prevent this click from immediately closing
+
           requestAnimationFrame(() => {
             document.addEventListener("click", handleOutsideClick);
           });
@@ -244,7 +216,6 @@ export function initLightbox() {
           if (data?.src) downloadMedia(data.src);
         });
 
-        // Controls auto-hide on idle (Phanpy-style)
         let idleTimer: ReturnType<typeof setTimeout> | null = null;
         const showControls = () => {
           controls.style.opacity = "1";
@@ -271,7 +242,6 @@ export function initLightbox() {
           document.removeEventListener("click", handleOutsideClick);
         });
 
-        // Build dots once
         const dots: HTMLButtonElement[] = [];
         const dotsContainer = controls.querySelector(
           ".pswp-dots",
@@ -296,13 +266,10 @@ export function initLightbox() {
           const data = pswp.currSlide?.data as PswpItem;
           if (!data) return;
 
-          // Close menu on slide change
           closeMoreMenu();
 
-          // Pause any rogue videos from adjacent slides
           pswp.element?.querySelectorAll("video").forEach((v) => v.pause());
 
-          // Show controls briefly on change
           showControls();
 
           if (viewPost) {
@@ -344,12 +311,10 @@ export function initLightbox() {
             }
           }
         });
-
         el.appendChild(controls);
       },
     });
 
-    // B. Alt Sheet
     pswp.ui?.registerElement({
       name: "custom-alt",
       appendTo: "root",
@@ -386,7 +351,7 @@ export function initLightbox() {
             "pointer-events-none",
           );
           sheet.style.transform = "";
-          closeSheet?.focus({ preventScroll: true }); // Move focus into dialog
+          closeSheet?.focus({ preventScroll: true });
         };
 
         const closeAlt = () => {
@@ -401,7 +366,7 @@ export function initLightbox() {
           sheet.style.transform = "";
           (altTrigger.querySelector("button") as HTMLButtonElement)?.focus({
             preventScroll: true,
-          }); // Restore focus
+          });
         };
 
         const handleKeydown = (e: KeyboardEvent) => {
@@ -420,7 +385,6 @@ export function initLightbox() {
           document.removeEventListener("keydown", handleKeydown);
         });
 
-        // Swipe to close functionality
         let startY = 0;
         let isDragging = false;
 
@@ -435,13 +399,11 @@ export function initLightbox() {
           if (!isDragging) return;
           const diff = e.touches[0].clientY - startY;
 
-          // Only allow dismiss swipe when at top of scroll
           if (diff > 0 && sheet.scrollTop === 0) {
             sheet.style.transform = `translateY(${diff}px)`;
             const opacity = Math.max(0, 1 - (diff / 300));
             backdrop.style.opacity = opacity.toString();
           } else if (sheet.scrollTop > 0) {
-            // Reset drag origin if they scrolled
             startY = e.touches[0].clientY;
           }
 
@@ -462,7 +424,6 @@ export function initLightbox() {
           }
         });
 
-        // Prevent scrolls from propagating to the background
         sheet.addEventListener("wheel", (e) => e.stopPropagation(), {
           passive: true,
         });
@@ -475,7 +436,6 @@ export function initLightbox() {
           altTrigger.classList.toggle("opacity-0", !hasAlt);
           altTrigger.classList.toggle("pointer-events-none", !hasAlt);
 
-          // Hide the entire sheet wrapper if no alt text
           sheetWrapper.classList.toggle("hidden", !hasAlt);
 
           if (captionPreview) captionPreview.textContent = alt;
@@ -487,7 +447,6 @@ export function initLightbox() {
       },
     });
 
-    // C. Navigation
     pswp.ui?.registerElement({
       name: "custom-nav",
       appendTo: "root",
@@ -534,7 +493,6 @@ export function initLightbox() {
   });
 
   lightbox.on("beforeOpen", () => {
-    // Set scrollbar width variable for CSS compensation
     document.documentElement.style.setProperty(
       "--pswp-sw",
       `${window.innerWidth - document.documentElement.clientWidth}px`,
