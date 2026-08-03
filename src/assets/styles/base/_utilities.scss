@@ -5,6 +5,8 @@
 // utilities still win on any element that carries a Tailwind class.
 // ---------------------------------------------------------------------------
 
+@use "../utils/variables";
+
 @layer base {
   /* Skip-to-content link (sr-only until focused) */
   .skip-link {
@@ -84,9 +86,7 @@
 
   /* Tap-affordance for interactive elements */
   .haptic {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    cursor: pointer;
+    @include variables.haptic;
     transition: transform 150ms ease;
 
     &:active {
@@ -132,9 +132,7 @@
     font-weight: 700;
     color: var(--color-text-muted);
     text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    cursor: pointer;
+    @include variables.haptic;
     transition:
       color 0.3s ease,
       transform 150ms ease;

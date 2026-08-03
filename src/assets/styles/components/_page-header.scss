@@ -10,7 +10,7 @@
   padding-bottom: 2.5rem;
   view-transition-name: page-header;
 
-  @media (width >= variables.$bp-md) {
+  @include variables.bp(md) {
     flex-direction: row;
     align-items: flex-start;
     gap: 3rem;
@@ -28,7 +28,7 @@
     flex-direction: column;
     gap: 1.5rem;
 
-    @media (width >= variables.$bp-md) {
+    @include variables.bp(md) {
       gap: 2rem;
     }
   }
@@ -118,7 +118,7 @@
     margin-top: auto;
     view-transition-name: page-header-right;
 
-    @media (width >= variables.$bp-md) {
+    @include variables.bp(md) {
       width: auto;
     }
   }

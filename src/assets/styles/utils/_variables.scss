@@ -1,6 +1,22 @@
-$bp-sm: 40em;
-$bp-md: 48em;
-$bp-lg: 64em;
+@use "sass:map";
+
+$breakpoints: (
+  sm: 40em,
+  md: 48em,
+  lg: 64em,
+);
+
+@mixin bp($name) {
+  @media (width >= map.get($breakpoints, $name)) {
+    @content;
+  }
+}
+
+@mixin haptic {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
 
 :root {
   color-scheme: light;

@@ -87,9 +87,7 @@
     height: 2.5rem;
     border-radius: 0.5rem;
     color: var(--color-text-muted);
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    cursor: pointer;
+    @include variables.haptic;
     transition:
       color 150ms ease,
       background-color 150ms ease;

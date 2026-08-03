@@ -13,7 +13,7 @@
     align-items: start;
     view-transition-name: home-grid;
 
-    @media (width >= variables.$bp-md) {
+    @include variables.bp(md) {
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: 4rem;
     }
