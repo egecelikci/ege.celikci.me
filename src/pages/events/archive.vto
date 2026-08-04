@@ -31,7 +31,7 @@ navigation:
     )
   }}
 
-  <section class="mt-8 space-y-16">
+  <section class="event-archive">
     {{
       await it.comp.ui.SectionHeader({
         title: "Past Events",
@@ -41,25 +41,27 @@ navigation:
       })
     }}
 
-    {{ for year of sortedYears }}
-      <div class="space-y-8">
-        {{
-          await it.comp.ui.SectionHeader({
-            title: year,
-            variant: "large",
-          })
-        }}
+    <div class="event-archive__years">
+      {{ for year of sortedYears }}
+        <div class="event-archive__year">
+          {{
+            await it.comp.ui.SectionHeader({
+              title: year,
+              variant: "large",
+            })
+          }}
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {{ for event of eventsByYear.get(year) }}
-            {{ await comp.features.EventCard({ event }) }}
-          {{ /for }}
+          <div class="event-grid">
+            {{ for event of eventsByYear.get(year) }}
+              {{ await comp.features.EventCard({ event }) }}
+            {{ /for }}
+          </div>
         </div>
-      </div>
-    {{ /for }}
+      {{ /for }}
+    </div>
   </section>
 {{ else }}
-  <div class="mt-8">
+  <div class="event-empty">
     {{
       comp.base.EmptyState({
         icon: "calendar-x",

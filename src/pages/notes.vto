@@ -14,7 +14,7 @@ navigation:
 
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
-  <div class="h-feed not-prose mt-10">
+  <div class="h-feed not-prose notes-index">
     {{
       await comp.ui.EntryTimeline({
         entries: results,
@@ -24,7 +24,7 @@ navigation:
     }}
   </div>
 {{ else }}
-  <div class="mt-8">
+  <div class="notes-index__empty">
     {{
       comp.base.EmptyState({
         icon: "message-square",

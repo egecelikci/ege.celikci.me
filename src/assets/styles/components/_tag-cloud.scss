@@ -1,0 +1,28 @@
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1.5rem 2rem;
+
+  &__item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  &__count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  &__empty {
+    margin-block-start: 2rem;
+  }
+}
+
+.tag-cloud .tag {
+  font-size: 1rem;
+  font-weight: 400;
+}

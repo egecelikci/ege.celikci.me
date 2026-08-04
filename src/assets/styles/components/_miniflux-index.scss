@@ -1,0 +1,12 @@
+@use "../utils/variables";
+
+.miniflux-index {
+  column-count: 1;
+  column-gap: 3rem;
+  column-rule: 1px solid var(--color-border);
+  margin-block-start: 3rem;
+
+  @include variables.bp(md) {
+    column-count: 2;
+  }
+}

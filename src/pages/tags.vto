@@ -20,30 +20,25 @@ navigation:
 {{ set tagsContent }}
   {{ set allTags = search.values("tags") }}
 
-  <ul class="flex flex-wrap gap-8 h-feed">
+  <ul class="h-feed tag-cloud">
     {{ if allTags.length > 0 }}
       {{ for tag of allTags }}
         {{# Get count for this tag #}}
         {{ set tagCount = search.pages("'" + tag + "'").length }}
         {{ set tagSlug = tag |> slugify }}
 
-        <li class="group flex items-baseline gap-2">
+        <li class="tag-cloud__item">
           {{
             comp.base.Tag({
               content: tag,
               href: "/tags/" + tagSlug + "/",
-              classes: "text-base",
             })
           }}
-          <span
-            class="typography-label text-text-muted font-normal"
-          >
-            {{ tagCount }}
-          </span>
+          <span class="tag-cloud__count">{{ tagCount }}</span>
         </li>
       {{ /for }}
     {{ else }}
-      <div class="mt-8">
+      <div class="tag-cloud__empty">
         {{
           comp.base.EmptyState({
             icon: "tag",

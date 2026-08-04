@@ -15,20 +15,16 @@ headerExtension:
     url: https://critiquebrainz.org/user/egecelikci
 ---
 
-<div class="mt-10">
-  <div
-    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-12"
-  >
+<div class="album-grid album-grid--offset">
+  {{
+    for i, album of music.albums
+    |> sort((a, b) => new Date(b.ratedAt) - new Date(a.ratedAt))
+  }}
     {{
-      for i, album of music.albums
-      |> sort((a, b) => new Date(b.ratedAt) - new Date(a.ratedAt))
+      comp.ui.Album({
+        album: album,
+        priority: i < 15,
+      })
     }}
-      {{
-        comp.ui.Album({
-          album: album,
-          priority: i < 15,
-        })
-      }}
-    {{ /for }}
-  </div>
+  {{ /for }}
 </div>

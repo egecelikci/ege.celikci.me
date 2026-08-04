@@ -43,18 +43,19 @@
 }}
 
 {{ if sortedMonths.length > 0 }}
-  <section class="mb-12">
-    {{
-      await it.comp.ui.SectionHeader({
-        title: title,
-        rightContent: it.titleRight,
-        classes: "mb-6",
-      })
-    }}
+  <section class="event-calendar">
+    <div class="event-calendar__header">
+      {{
+        await it.comp.ui.SectionHeader({
+          title: title,
+          rightContent: it.titleRight,
+        })
+      }}
+    </div>
 
-    <div class="space-y-12">
+    <div class="event-calendar__months">
       {{ for [monthKey, monthData] of sortedMonths }}
-        <div class="space-y-6">
+        <div class="event-calendar__month">
           {{
             await it.comp.ui.SectionHeader({
               title: monthData.label,
@@ -62,7 +63,7 @@
             })
           }}
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div class="event-calendar__grid">
             {{ for event of monthData.events }}
               {{ await it.comp.features.EventCard({ event }) }}
             {{ /for }}
