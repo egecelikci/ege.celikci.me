@@ -103,21 +103,18 @@ export function initCollageTool(defaultUsername: string) {
   }
 
   function applySourceStyles() {
-    const activeClasses = "bg-primary text-white shadow-md";
-    const inactiveClasses =
-      "text-text-dim hover:text-text-muted hover:bg-surface-hover";
+    const activeClasses = "collage-tool__source--active";
+    const inactiveClasses = "collage-tool__source--inactive";
 
     if (sourceLb) {
-      sourceLb.className =
-        `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic ${
-          currentSource === "lb" ? activeClasses : inactiveClasses
-        }`;
+      sourceLb.className = `collage-tool__source ${
+        currentSource === "lb" ? activeClasses : inactiveClasses
+      }`;
     }
     if (sourceLfm) {
-      sourceLfm.className =
-        `flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic ${
-          currentSource === "lfm" ? activeClasses : inactiveClasses
-        }`;
+      sourceLfm.className = `collage-tool__source ${
+        currentSource === "lfm" ? activeClasses : inactiveClasses
+      }`;
     }
   }
 

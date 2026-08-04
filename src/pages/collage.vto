@@ -9,48 +9,26 @@ menu:
 ---
 
 <div
-  class="max-w-6xl mx-auto px-4 py-8"
+  class="collage-tool"
   data-collage-tool
   data-default-username="{{ author.username }}"
 >
-  <div class="flex flex-col lg:flex-row gap-8 items-start">
-    {{# 1. CONTROLS PANEL #}}
-    <div
-      class="w-full lg:w-96 shrink-0 flex flex-col gap-6 [view-transition-name:collage-controls]"
-    >
-      {{# MAIN CONTROL CARD #}}
-      <div
-        class="flex flex-col gap-6 p-6 rounded-[2rem] bg-surface-subtle backdrop-blur-2xl border border-border-subtle shadow-2xl relative overflow-hidden"
-      >
-        {{# Ambient background effect #}}
-        <div
-          class="absolute -top-32 -right-32 w-64 h-64 bg-primary-muted rounded-full blur-3xl pointer-events-none"
-        >
-        </div>
-        <div
-          class="absolute -bottom-32 -left-32 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"
-        >
-        </div>
-
-        {{# SECTION: IDENTITY #}}
-        <div class="flex flex-col gap-4 relative z-10">
-          <div
-            class="flex items-center gap-2 text-[11px] font-mono text-text-muted"
-          >
+  <div class="collage-tool__layout">
+    <div class="collage-tool__controls">
+      <div class="collage-tool__panel">
+        <div class="collage-tool__blob collage-tool__blob--primary"></div>
+        <div class="collage-tool__blob collage-tool__blob--secondary"></div>
+        <div class="collage-tool__section">
+          <div class="collage-tool__section-head">
             {{ comp.base.Icon({ name: "database", classes: "w-3 h-3 text-text-dim" }) }}
-            <span>Source</span>
+            <span class="collage-tool__section-title">Source</span>
           </div>
-
-          {{# Service Selection #}}
-          <div class="flex flex-col gap-2">
-            <label for="service-select" class="text-sm font-medium text-text"
-            >Service</label>
-            <div
-              class="grid grid-cols-2 gap-2 p-1 bg-surface-subtle rounded-xl border border-border-subtle"
-            >
+          <div class="collage-tool__field">
+            <label for="service-select" class="collage-tool__label">Service</label>
+            <div class="collage-tool__source-grid">
               <button
                 id="source-lb"
-                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic"
+                class="collage-tool__source"
                 aria-label="Use ListenBrainz"
               >
                 {{ comp.base.Icon({ name: "brain-circuit", classes: "w-4 h-4" }) }}
@@ -58,7 +36,7 @@ menu:
               </button>
               <button
                 id="source-lfm"
-                class="flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all haptic"
+                class="collage-tool__source"
                 aria-label="Use Last.fm"
               >
                 {{ comp.base.Icon({ name: "music", classes: "w-4 h-4" }) }}
@@ -66,17 +44,14 @@ menu:
               </button>
             </div>
           </div>
-
-          {{# Username Input #}}
-          <div class="flex flex-col gap-2">
-            <label for="username" class="text-sm font-medium text-text"
-            >Username</label>
-            <div class="relative">
+          <div class="collage-tool__field">
+            <label for="username" class="collage-tool__label">Username</label>
+            <div class="collage-tool__input-wrap">
               <input
                 type="text"
                 id="username"
                 placeholder="Enter your username"
-                class="input-base input-focus !py-3 !pl-11 !pr-4 !rounded-xl !text-sm font-medium bg-surface-subtle"
+                class="input-base input-focus collage-tool__input"
                 value="{{ author.username }}"
                 aria-describedby="username-hint"
               />
@@ -88,61 +63,53 @@ menu:
                 })
               }}
             </div>
-            <p id="username-hint" class="text-xs text-text-muted">
+            <p id="username-hint" class="collage-tool__hint">
               Your username on the selected service
             </p>
           </div>
         </div>
 
-        <div class="h-px bg-border-subtle"></div>
-
-        {{# SECTION: APPEARANCE #}}
-        <div class="flex flex-col gap-4 relative z-10">
-          <details class="group/section" open>
-            <summary
-              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
-            >
+        <div class="collage-tool__divider"></div>
+        <div class="collage-tool__section">
+          <details class="collage-tool__details" open>
+            <summary class="collage-tool__summary">
               {{ comp.base.Icon({ name: "palette", classes: "w-3 h-3 text-text-dim" }) }}
               <span>Appearance</span>
               {{
                 comp.base.Icon({
                   name: "chevron-down",
-                  classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
+                  classes: "w-3 h-3 collage-tool__chevron",
                 })
               }}
             </summary>
 
-            <div class="mt-4 flex flex-col gap-4">
-              <div class="grid grid-cols-2 gap-3">
-                {{# Period #}}
-                <div class="flex flex-col gap-2">
-                  <label for="period" class="text-sm font-medium text-text"
+            <div class="collage-tool__section">
+              <div class="collage-tool__field">
+                <div class="collage-tool__field">
+                  <label for="period" class="collage-tool__label"
                   >Time Period</label>
-                  <div class="relative">
+                  <div class="collage-tool__select-wrap">
                     <select
                       id="period"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
+                      class="input-base input-focus collage-tool__select"
                       aria-label="Select time period"
                     >
                     </select>
                     {{
                       comp.base.Icon({
                         name: "chevron-down",
-                        classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
+                        classes: "w-4 h-4 collage-tool__select-icon",
                       })
                     }}
                   </div>
                 </div>
-
-                {{# Aesthetic #}}
-                <div class="flex flex-col gap-2">
-                  <label for="bg-mode" class="text-sm font-medium text-text"
+                <div class="collage-tool__field">
+                  <label for="bg-mode" class="collage-tool__label"
                   >Style</label>
-                  <div class="relative">
+                  <div class="collage-tool__select-wrap">
                     <select
                       id="bg-mode"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
+                      class="input-base input-focus collage-tool__select"
                       aria-label="Select visual style"
                     >
                       <option value="aura" selected>Aura</option>
@@ -155,21 +122,18 @@ menu:
                     {{
                       comp.base.Icon({
                         name: "sparkles",
-                        classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
+                        classes: "w-4 h-4 collage-tool__select-icon",
                       })
                     }}
                   </div>
                 </div>
-
-                {{# Grid Size #}}
-                <div class="flex flex-col gap-2">
-                  <label for="grid-size" class="text-sm font-medium text-text"
+                <div class="collage-tool__field">
+                  <label for="grid-size" class="collage-tool__label"
                   >Grid Layout</label>
-                  <div class="relative">
+                  <div class="collage-tool__select-wrap">
                     <select
                       id="grid-size"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
+                      class="input-base input-focus collage-tool__select"
                       aria-label="Select grid size"
                     >
                       <option value="3x3" selected>3×3</option>
@@ -179,21 +143,18 @@ menu:
                     {{
                       comp.base.Icon({
                         name: "grid-3x3",
-                        classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
+                        classes: "w-4 h-4 collage-tool__select-icon",
                       })
                     }}
                   </div>
                 </div>
-
-                {{# Text Casing #}}
-                <div class="flex flex-col gap-2">
-                  <label for="text-case" class="text-sm font-medium text-text"
+                <div class="collage-tool__field">
+                  <label for="text-case" class="collage-tool__label"
                   >Text Style</label>
-                  <div class="relative">
+                  <div class="collage-tool__select-wrap">
                     <select
                       id="text-case"
-                      class="input-base input-focus !py-2.5 !px-3 !text-sm font-medium !rounded-xl cursor-pointer bg-surface-subtle appearance-none pr-8"
+                      class="input-base input-focus collage-tool__select"
                       aria-label="Select text casing"
                     >
                       <option value="none" selected>Original</option>
@@ -203,23 +164,18 @@ menu:
                     {{
                       comp.base.Icon({
                         name: "type",
-                        classes:
-                          "absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none",
+                        classes: "w-4 h-4 collage-tool__select-icon",
                       })
                     }}
                   </div>
                 </div>
               </div>
-
-              {{# Texture Toggles #}}
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-text">Effects</span>
+              <div class="collage-tool__field">
+                <div class="collage-tool__field-row">
+                  <span class="collage-tool__label">Effects</span>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <label
-                    class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
-                  >
+                <div class="collage-tool__toggle-grid">
+                  <label class="collage-tool__toggle">
                     <input
                       type="checkbox"
                       id="grain"
@@ -227,45 +183,35 @@ menu:
                       class="checkbox-base"
                       aria-label="Enable film grain effect"
                     >
-                    <div class="flex flex-col">
-                      <span
-                        class="text-sm font-medium text-text group-hover:text-primary transition-colors"
-                      >Grain</span>
-                      <span class="text-xs text-text-muted">Film texture</span>
+                    <div class="collage-tool__toggle-text">
+                      <span class="collage-tool__toggle-title">Grain</span>
+                      <span class="collage-tool__toggle-desc">Film texture</span>
                     </div>
                   </label>
-                  <label
-                    class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
-                  >
+                  <label class="collage-tool__toggle">
                     <input
                       type="checkbox"
                       id="glass"
                       class="checkbox-base"
                       aria-label="Enable glass effect"
                     >
-                    <div class="flex flex-col">
-                      <span
-                        class="text-sm font-medium text-text group-hover:text-primary transition-colors"
-                      >Glass</span>
-                      <span class="text-xs text-text-muted"
+                    <div class="collage-tool__toggle-text">
+                      <span class="collage-tool__toggle-title">Glass</span>
+                      <span class="collage-tool__toggle-desc"
                       >Frosted overlay</span>
                     </div>
                   </label>
                 </div>
-                <label
-                  class="flex items-center gap-3 p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-colors group"
-                >
+                <label class="collage-tool__toggle">
                   <input
                     type="checkbox"
                     id="darken-bottom"
                     class="checkbox-base"
                     aria-label="Darken bottom section"
                   >
-                  <div class="flex flex-col">
-                    <span
-                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
-                    >Dim Bottom</span>
-                    <span class="text-xs text-text-muted"
+                  <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-title">Dim Bottom</span>
+                    <span class="collage-tool__toggle-desc"
                     >Darker album list area</span>
                   </div>
                 </label>
@@ -274,40 +220,33 @@ menu:
           </details>
         </div>
 
-        <div class="h-px bg-border-subtle"></div>
-
-        {{# SECTION: CONTENT #}}
-        <div class="flex flex-col gap-4 relative z-10">
-          <details class="group/section" open>
-            <summary
-              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
-            >
+        <div class="collage-tool__divider"></div>
+        <div class="collage-tool__section">
+          <details class="collage-tool__details" open>
+            <summary class="collage-tool__summary">
               {{ comp.base.Icon({ name: "sliders", classes: "w-3 h-3 text-text-dim" }) }}
               <span>Content Options</span>
               {{
                 comp.base.Icon({
                   name: "chevron-down",
-                  classes: "w-3 h-3 ml-auto transition-transform group-open/section:rotate-180",
+                  classes: "w-3 h-3 collage-tool__chevron",
                 })
               }}
             </summary>
 
-            <div class="mt-4 space-y-2">
-              <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
-              >
-                <div class="flex items-center gap-3">
+            <div class="collage-tool__field">
+              <label class="collage-tool__toggle collage-tool__toggle--row">
+                <div class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "image-off",
-                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="flex flex-col">
-                    <span
-                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                  <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-title"
                     >Skip missing cover art</span>
-                    <span class="text-xs text-text-muted"
+                    <span class="collage-tool__toggle-desc"
                     >Hide albums without covers</span>
                   </div>
                 </div>
@@ -320,19 +259,16 @@ menu:
                 >
               </label>
 
-              <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
-              >
-                <div class="flex items-center gap-3">
+              <label class="collage-tool__toggle collage-tool__toggle--row">
+                <div class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "hash",
-                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="flex flex-col">
-                    <span
-                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                  <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-title"
                     >Display listen counts</span>
                   </div>
                 </div>
@@ -344,19 +280,16 @@ menu:
                 >
               </label>
 
-              <label
-                class="flex items-center justify-between p-3 rounded-xl bg-surface-subtle border border-border-subtle cursor-pointer hover:bg-surface-hover transition-all group"
-              >
-                <div class="flex items-center gap-3">
+              <label class="collage-tool__toggle collage-tool__toggle--row">
+                <div class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "globe",
-                      classes: "w-4 h-4 text-text-muted group-hover:text-primary transition-colors",
+                      classes: "w-4 h-4 collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="flex flex-col">
-                    <span
-                      class="text-sm font-medium text-text group-hover:text-primary transition-colors"
+                  <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-title"
                     >Show website name</span>
                   </div>
                 </div>
@@ -371,14 +304,10 @@ menu:
             </div>
           </details>
         </div>
-        <div class="h-px bg-border-subtle"></div>
-
-        {{# SECTION: ADVANCED #}}
-        <div class="flex flex-col gap-4 relative z-10">
-          <details class="group">
-            <summary
-              class="flex items-center gap-2 text-[11px] font-mono text-text-muted cursor-pointer hover:text-text transition-colors list-none"
-            >
+        <div class="collage-tool__divider"></div>
+        <div class="collage-tool__section">
+          <details class="collage-tool__details">
+            <summary class="collage-tool__summary">
               {{
                 comp.base.Icon({
                   name: "settings-2",
@@ -389,22 +318,21 @@ menu:
               {{
                 comp.base.Icon({
                   name: "chevron-down",
-                  classes: "w-3 h-3 ml-auto transition-transform group-open:rotate-180",
+                  classes: "w-3 h-3 collage-tool__chevron",
                 })
               }}
             </summary>
 
-            <div class="mt-4 space-y-4">
-              {{# Font Family #}}
-              <div class="flex flex-col gap-2">
-                <label for="font-family" class="text-sm font-medium text-text"
+            <div class="collage-tool__field">
+              <div class="collage-tool__field">
+                <label for="font-family" class="collage-tool__label"
                 >Custom Font</label>
-                <div class="relative">
+                <div class="collage-tool__input-wrap">
                   <input
                     type="text"
                     id="font-family"
                     placeholder="Josefin Sans"
-                    class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface-subtle"
+                    class="input-base input-focus collage-tool__input"
                     aria-describedby="font-hint"
                   />
                 </div>
@@ -421,13 +349,11 @@ menu:
                   })
                 }}
               </div>
-
-              {{# Footer Text #}}
-              <div class="flex flex-col gap-2">
-                <div class="flex items-center justify-between">
-                  <label for="footer-text" class="text-sm font-medium text-text"
+              <div class="collage-tool__field">
+                <div class="collage-tool__field-row">
+                  <label for="footer-text" class="collage-tool__label"
                   >Footer Text</label>
-                  <label class="flex items-center gap-2 cursor-pointer group">
+                  <label class="collage-tool__auto-toggle">
                     <input
                       type="checkbox"
                       id="footer-auto"
@@ -435,8 +361,7 @@ menu:
                       class="checkbox-base !w-4 !h-4"
                       aria-label="Use automatic footer text"
                     >
-                    <span
-                      class="text-xs font-medium text-text-muted group-hover:text-text transition-colors"
+                    <span class="collage-tool__auto-label"
                     >Auto-generate</span>
                   </label>
                 </div>
@@ -444,27 +369,25 @@ menu:
                   type="text"
                   id="footer-text"
                   placeholder="Custom footer text"
-                  class="input-base input-focus !py-3 !px-4 !rounded-xl !text-sm font-medium bg-surface-subtle disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+                  class="input-base input-focus collage-tool__input"
                   disabled
                   aria-describedby="footer-hint"
                 />
-                <p id="footer-hint" class="text-xs text-text-muted">
+                <p id="footer-hint" class="collage-tool__hint">
                   Leave empty to use automatic text based on period
                 </p>
               </div>
-
-              {{# Artist Aliases #}}
-              <div class="flex flex-col gap-2">
-                <label for="aliases" class="text-sm font-medium text-text"
+              <div class="collage-tool__field">
+                <label for="aliases" class="collage-tool__label"
                 >Artist Aliases</label>
                 <textarea
                   id="aliases"
                   placeholder="Ye -> Kanye West"
                   rows="3"
-                  class="input-base input-focus !text-sm font-medium leading-relaxed resize-none !py-3 !px-4 !rounded-xl bg-surface-subtle border-dashed"
+                  class="input-base input-focus collage-tool__input collage-tool__textarea"
                   aria-describedby="aliases-hint"
                 ></textarea>
-                <p id="aliases-hint" class="text-xs text-text-muted">
+                <p id="aliases-hint" class="collage-tool__hint">
                   Merge artists with different names (one per line)
                 </p>
               </div>
@@ -472,124 +395,88 @@ menu:
           </details>
         </div>
       </div>
-
-      {{# ACTION BUTTONS (Moved under canvas) #}}
     </div>
-
-    {{# 2. PREVIEW AREA #}}
     <div
       id="preview-wrapper"
-      class="grow flex flex-col items-center justify-center w-full min-h-[50vh] group/preview"
+      class="collage-tool__preview"
     >
-      <div
-        id="canvas-container"
-        class="relative shadow-2xl rounded-[2.5rem] overflow-hidden border border-border-subtle max-w-full bg-[#09090b] transition-all duration-500"
-      >
+      <div class="collage-tool__frame">
         <canvas
           id="collage-canvas"
           width="1080"
           height="1920"
-          class="w-full h-auto max-h-[85vh] cursor-crosshair transition-all duration-700 text-text-muted group-[.is-ready]/preview:opacity-100"
+          class="collage-tool__canvas"
           aria-label="Generated album collage preview"
         ></canvas>
-
-        {{# Dimensions overlay #}}
-        <div
-          class="absolute inset-0 flex items-center justify-center backdrop-blur-sm opacity-0 group-[.is-ready]/preview:hover:opacity-100 transition-opacity pointer-events-none"
-        >
-          <div
-            class="flex items-center gap-2 px-4 py-2 rounded-full glassy border border-border-subtle shadow-lg"
-          >
+        <div class="collage-tool__overlay">
+          <div class="collage-tool__dimensions">
             {{ comp.base.Icon({ name: "maximize", classes: "w-3 h-3 text-text-muted" }) }}
-            <span class="text-xs font-mono text-text">1080 × 1920</span>
+            <span class="collage-tool__dimension-text">1080 × 1920</span>
           </div>
         </div>
-
-        {{# Loading overlay #}}
         <div
           id="canvas-loader"
-          class="absolute inset-0 flex items-center justify-center bg-black/90 backdrop-blur-xl pointer-events-none transition-opacity duration-500 opacity-0 group-[.is-loading]/preview:opacity-100"
+          class="collage-tool__loader"
         >
-          <div class="flex flex-col items-center gap-6">
-            <div class="relative">
-              <div class="w-12 h-12 border-2 border-white/10 rounded-full">
-              </div>
-              <div
-                class="absolute top-0 left-0 w-12 h-12 border-2 border-primary-muted border-t-transparent rounded-full animate-spin"
-              >
-              </div>
-            </div>
+          <div class="collage-tool__loader-inner">
+            <div class="collage-tool__spinner"></div>
             <div class="text-center">
               <span
                 id="status-text"
-                class="text-sm font-mono text-white/60 tracking-wider lowercase block"
+                class="collage-tool__status"
               >initializing...</span>
             </div>
           </div>
         </div>
-
-        {{# Empty state #}}
         <div
           id="empty-state"
-          class="absolute inset-0 flex flex-col items-center justify-center glassy transition-opacity duration-500"
+          class="collage-tool__empty"
         >
-          <div class="text-center space-y-4">
-            <div
-              class="w-16 h-16 mx-auto rounded-2xl bg-surface-hover flex items-center justify-center"
-            >
+          <div class="collage-tool__empty-inner">
+            <div class="collage-tool__empty-icon">
               {{ comp.base.Icon({ name: "image", classes: "w-8 h-8 text-text-muted" }) }}
             </div>
             <div>
-              <h3 class="text-lg font-semibold text-text mb-1">
-                Ready to Create
-              </h3>
-              <p class="text-sm text-text-muted">
+              <h3 class="collage-tool__empty-title">Ready to Create</h3>
+              <p class="collage-tool__empty-desc">
                 Enter your username to generate your collage
               </p>
             </div>
           </div>
         </div>
       </div>
-
-      {{# HELP AND ACTIONS #}}
-      <div class="w-full max-w-[1080px] mt-8 flex flex-col gap-6">
-        <div
-          id="result-actions"
-          class="grid grid-cols-2 gap-4 pointer-events-none transition-all duration-500 group-[.is-ready]/preview:opacity-100 group-[.is-ready]/preview:pointer-events-auto"
-        >
+      <div class="collage-tool__actions">
+        <div id="result-actions" class="collage-tool__action-grid">
           <button
             id="download-btn"
-            class="haptic flex items-center justify-center gap-2 !rounded-2xl bg-surface-subtle backdrop-blur-xl border border-border-subtle !py-4 shadow-xl !px-6 group/btn"
+            class="collage-tool__btn collage-tool__btn--download"
             aria-label="Download collage as JPG"
           >
             {{
               comp.base.Icon({
                 name: "download",
-                classes:
-                  "w-4 h-4 text-text-muted group-hover/btn:text-primary transition-colors",
+                classes: "w-4 h-4",
               })
             }}
-            <span
-              class="typography-label text-text-muted group-hover/btn:text-primary transition-colors"
-            >JPG</span>
+            <span class="typography-label">JPG</span>
           </button>
           <button
             id="share-btn"
-            class="btn-primary flex items-center justify-center !rounded-2xl haptic !py-4 shadow-xl !px-6 group/btn"
+            class="collage-tool__btn collage-tool__btn--share"
             aria-label="Share collage"
           >
             {{
               comp.base.Icon({
                 name: "share-2",
-                classes: "w-4 h-4 text-white group-hover/btn:scale-110 transition-transform",
+                classes: "w-4 h-4",
               })
             }}
-            <span class="typography-label text-white">Share</span>
+            <span class="typography-label">Share</span>
           </button>
         </div>
 
-        <div class="text-center">
-          <p class="text-sm text-text-muted">
+        <div class="collage-tool__help">
+          <p class="collage-tool__help-text">
             {{ comp.base.Icon({ name: "info", classes: "w-3 h-3 inline mr-1 text-text-dim" }) }}
             Changes auto-save and regenerate your collage
           </p>

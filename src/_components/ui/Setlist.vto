@@ -1,10 +1,4 @@
-{{#
-  Component: Setlist
-  Renders a parsed setlist using the IndexList primitive for a unified, typographic look.
-#}}
-
 {{>
-  // 1. Helpers
   const idRegex = /([a-f0-9-]{36})/;
 
   const parseMBLink = (str) => {
@@ -19,7 +13,6 @@
     return { id: mbid, name };
   };
 
-  // 2. Main Processing
   const content = it.content || "";
   let performer = { id: null, name: "Setlist" };
   const tracks = [];
@@ -52,7 +45,6 @@
     }
   }
 
-  // 3. Map to IndexList Items
   const items = [];
   const artistMBUrl = performer.id
     ? `https://listenbrainz.org/artist/${performer.id}`
@@ -60,7 +52,7 @@
 
   const sectionTitle = `<b>${
     artistMBUrl
-      ? `<a href="${artistMBUrl}" class="hover:text-primary transition-colors">${performer.name}</a>`
+      ? `<a href="${artistMBUrl}" class="setlist__artist-link">${performer.name}</a>`
       : performer.name
   }</b>`;
 

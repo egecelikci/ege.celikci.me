@@ -1,15 +1,4 @@
-{{#
-  Component: SourceMeta
-  Standardized indicator for data provenance and subscription feeds.
-  Designed to be used as a PageHeader extension.
-
-  Props:
-  - sources: Array of { label, url, icon, catalog?, type? }
-  - variant: 'minimal' (icons only) | 'full' (default, with text)
-#}}
-
 {{>
-  // Normalize sources: convert single source shorthand to array
   const rawSources = it.sources || (it.label
     ? [{
       label: it.label,
@@ -20,9 +9,7 @@
     }]
     : []);
 
-  // Process and group sources
   const processed = rawSources.map((s) => {
-    // Inference: if label has 'Feed' or URL ends with common feed extensions, it's a feed
     const isFeed = s.type === "feed" ||
       s.label?.toLowerCase().includes("feed") ||
       s.url?.endsWith(".atom") ||
@@ -44,7 +31,6 @@
 <div
   class="source-meta {{ if variantVal === 'minimal' }}source-meta--minimal{{ /if }}"
 >
-  {{# 1. DATA SOURCES (Synced from...) #}}
   {{ for source of nonFeeds }}
     {{> let targetUrl = source.url }}
 
@@ -94,10 +80,9 @@
     {{ /if }}
   {{ /for }}
 
-  {{# 2. SUBSCRIPTION FEEDS (Subscribe via...) #}}
   {{ if feeds.length > 0 }}
     {{ if variantVal === "minimal" }}
-      <div class="flex gap-2">
+      <div class="source-meta__feeds">
         {{ for feed of feeds }}
           <a
             href="{{ feed.url }}"

@@ -1,0 +1,8 @@
+.setlist__artist-link {
+  color: var(--color-text);
+  transition: color 300ms ease;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

@@ -1,18 +1,3 @@
-{{#
-  Component: PageFooter
-  A unified, robust footer for content pages.
-
-  Props:
-    - interactions: Array of webmention objects
-    - stats: { replies: number, reposts: number, likes: number }
-    - syndication: { bluesky?: string, mastodon?: string }
-    - related: html (Related Content block)
-    - backlinks: html (IncomingLinks block)
-    - footerExtension: Object for custom footer meta content
-    - show_webmentions: boolean (default: false)
-#}}
-
-{{# Resolve footer extension if it's an object #}}
 {{ set extensionContent }}
   {{ if it.footerExtension }}
     {{ if it.footerExtension.comp }}
@@ -48,19 +33,17 @@
   <footer
     class="page-footer"
   >
-    {{# 1. Meta & Activity Row #}}
     {{ if hasMetaRow }}
       <div
         class="page-footer__meta {{ if hasRelated || hasBacklinks }}page-footer__meta--divided{{ /if }}"
       >
         {{ if hasExtension }}
-          <div class="w-full">
+          <div class="page-footer__extension">
             {{ extensionContent |> safe }}
           </div>
         {{ /if }}
 
         {{ if hasActivity }}
-          {{# Row 1: [About Webmentions] | [syndication icons] #}}
           <div class="page-footer__activity-row">
             <div class="page-footer__activity-left">
               <div class="page-footer__interactions">
@@ -100,14 +83,12 @@
               }}
             </div>
           </div>
-          {{# Row 2: Faces #}}
           {{ if showInteractions }}
             <div id="interactions" class="page-footer__faces">
               {{ await it.comp.ui.WebmentionFaces({ mentions: it.interactions }) }}
             </div>
           {{ /if }}
 
-          {{# Row 3: Comments #}}
           {{ if showInteractions }}
             <div>
               {{
@@ -121,7 +102,6 @@
       </div>
     {{ /if }}
 
-    {{# 2. Supplemental Blocks #}}
     {{ if hasRelated || hasBacklinks }}
       <div class="page-footer__supplemental">
         {{ if hasRelated }}

@@ -63,12 +63,12 @@ async function init() {
   }
 
   const revealItems = document.querySelector(
-    ".album-item, .collage-item, .h-entry",
+    ".album-item, .h-entry",
   );
 
   if (revealItems && !document.body.dataset.disableAnimation) {
     const { initTouchReveal } = await import("./common/touch.ts");
-    initTouchReveal(".album-item, .collage-item, .h-entry");
+    initTouchReveal(".album-item, .h-entry");
   }
 
   if (document.querySelector("[data-search-id]")) {

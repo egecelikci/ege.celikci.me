@@ -97,4 +97,9 @@
       background-color: var(--color-surface-subtle);
     }
   }
+
+  &__feeds {
+    display: flex;
+    gap: 0.5rem;
+  }
 }
