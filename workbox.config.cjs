@@ -17,23 +17,23 @@ module.exports = {
   clientsClaim: true,
   runtimeCaching: [
     {
-      urlPattern: ({ request, }) => request.mode === "navigate",
+      urlPattern: ({ request }) => request.mode === "navigate",
       handler: "NetworkFirst", // Prefer fresh content, fallback to offline
       options: {
         cacheName: "pages",
         plugins: [
           {
             handlerDidError: async () => {
-              return await caches.match("/offline/index.html",);
+              return await caches.match("/offline/index.html");
             },
           },
         ],
       },
     },
     {
-      urlPattern: ({ url, }) =>
+      urlPattern: ({ url }) =>
         url.pathname === "/api/collage-proxy" &&
-        url.searchParams.get("source",) === "cover",
+        url.searchParams.get("source") === "cover",
       handler: "CacheFirst",
       options: {
         cacheName: "collage-covers-v1",
@@ -44,9 +44,9 @@ module.exports = {
       },
     },
     {
-      urlPattern: ({ url, }) =>
+      urlPattern: ({ url }) =>
         url.pathname === "/api/collage-proxy" &&
-        url.searchParams.get("source",) !== "cover",
+        url.searchParams.get("source") !== "cover",
       handler: "NetworkFirst",
       options: {
         cacheName: "collage-api-v1",
@@ -58,7 +58,7 @@ module.exports = {
       },
     },
     {
-      urlPattern: ({ request, }) =>
+      urlPattern: ({ request }) =>
         request.destination === "style" ||
         request.destination === "script" ||
         request.destination === "worker",
@@ -72,7 +72,18 @@ module.exports = {
       },
     },
     {
-      urlPattern: ({ request, }) => request.destination === "image",
+      urlPattern: ({ request }) => request.destination === "font",
+      handler: "CacheFirst",
+      options: {
+        cacheName: "fonts",
+        expiration: {
+          maxEntries: 30,
+          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 Year
+        },
+      },
+    },
+    {
+      urlPattern: ({ request }) => request.destination === "image",
       handler: "CacheFirst",
       options: {
         cacheName: "images",
