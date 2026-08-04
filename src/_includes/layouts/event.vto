@@ -176,20 +176,20 @@ extraStyles:
     >
       {{# POSTER #}}
       {{ if posterImages.length > 0 }}
-        <div class="w-full relative group/poster">
+        <div class="w-full">
           {{ await comp.ui.Media({ images: posterImages, aspect: "auto" }) }}
 
-          {{# POSTER CREDITS OVERLAY #}}
+          {{# POSTER CREDITS #}}
           {{ if posterCredits?.length > 0 }}
-            <div class="gallery-overlay group-hover/poster:opacity-100">
+            <div class="poster-credits">
               {{ for credit of posterCredits }}
                 <a
                   href="{{ credit.url }}"
                   target="_blank"
-                  class="gallery-overlay__link"
+                  class="poster-credits__link"
                 >
-                  <span class="gallery-overlay__label">{{ credit.role }}</span>
-                  <span class="gallery-overlay__name">{{ credit.name }}</span>
+                  <span class="poster-credits__label">{{ credit.role }}</span>
+                  <span class="poster-credits__name">{{ credit.name }}</span>
                 </a>
               {{ /for }}
             </div>
@@ -256,13 +256,13 @@ extraStyles:
                 >
                   {{# THE POPUP MENU #}}
                   <div
-                    class="mb-3 w-44 bg-surface/95 backdrop-blur-xl border border-border/20 rounded-2xl overflow-hidden shadow-2xl opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
+                    class="mb-3 w-44 menu opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
                     role="menu"
                   >
                     {{# Option 1: Native #}}
                     <a
                       href='geo:{{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}({{ (venueRel["target-credit"] || venueRel.place.name) |> encodeURIComponent }})'
-                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline border-b border-border/5"
+                      class="menu__item border-b border-border/5"
                       role="menuitem"
                     >
                       {{
@@ -279,7 +279,7 @@ extraStyles:
                     <a
                       href="https://www.openstreetmap.org/?mlat={{ venueRel.place.coordinates.latitude }}&mlon={{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
-                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline border-b border-border/5"
+                      class="menu__item border-b border-border/5"
                       role="menuitem"
                     >
                       {{
@@ -296,7 +296,7 @@ extraStyles:
                     <a
                       href="https://maps.google.com/maps?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
-                      class="flex items-center gap-3 px-4 py-3 text-text/70 hover:text-primary hover:bg-primary/5 transition-all no-underline"
+                      class="menu__item"
                       role="menuitem"
                     >
                       {{
@@ -312,7 +312,7 @@ extraStyles:
 
                   {{# THE TRIGGER BUTTON #}}
                   <button
-                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-bg/90 backdrop-blur-md text-text border border-border/20 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto group-hover/nav:border-primary/40 group-hover/nav:text-primary"
+                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-bg/90 backdrop-blur-md text-text border border-border-subtle shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto group-hover/nav:border-primary/40 group-hover/nav:text-primary"
                     aria-label="Get directions to {{ event.venueName }}"
                     aria-haspopup="true"
                   >
