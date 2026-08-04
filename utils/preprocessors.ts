@@ -1,17 +1,15 @@
-import images from "./preprocessors/images.ts";
+import media from "./preprocessors/media.ts";
 import events from "./preprocessors/events.ts";
 import feeds from "./preprocessors/feeds.ts";
 import stats from "./preprocessors/stats.ts";
-import notes from "./preprocessors/notes.ts";
 
 /**
  * Modular preprocessor registration.
- * Decouples logic for images, events, feeds, and statistics.
+ * Decouples logic for media, events, feeds, and statistics.
  */
 export default function registerPreprocessors(site: Lume.Site) {
-  site.use(images());
+  site.use(media());
   site.use(events());
   site.use(feeds());
   site.use(stats());
-  site.use(notes());
 }

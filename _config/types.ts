@@ -11,7 +11,7 @@ import type {
   LocalEventData,
   MBRelationPlace,
 } from "../utils/fetch-events.ts";
-import type { PostImage } from "../utils/preprocessors/images.ts";
+import type { PostImage } from "../utils/preprocessors/media.ts";
 import type { HeaderExtension } from "../utils/preprocessors/feeds.ts";
 import type { WebmentionFeed } from "../src/types/index.ts";
 
