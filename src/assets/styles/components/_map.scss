@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Map — Leaflet venue-map overrides and marker styling.
-// ---------------------------------------------------------------------------
-
 .leaflet-container {
   background: transparent !important;
   font-family: inherit !important;
@@ -17,7 +13,7 @@
   }
 
   .leaflet-tile-pane {
-    filter: grayscale(1) contrast(1.25) brightness(0.9);
+    filter: brightness(0.9) contrast(1.25) grayscale(1);
     transition: all 700ms ease;
   }
 
