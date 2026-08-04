@@ -125,6 +125,15 @@
     font-weight: 700;
   }
 
+  .link-underline {
+    text-decoration: underline;
+    transition: color 300ms ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
   .divider {
     height: 1px;
     flex-grow: 1;

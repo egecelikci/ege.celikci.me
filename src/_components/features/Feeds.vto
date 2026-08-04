@@ -8,22 +8,20 @@
     - search: Lume search object (passed from global data)
 #}}
 
-<div class="flex flex-col gap-20">
+<div class="feeds">
   {{# 1. PRIMARY FEED (Site-wide) #}}
   <section>
-    <div class="border-t border-border-subtle">
-      <div
-        class="flex items-center justify-between py-6 border-b border-border-subtle group hover:bg-surface-hover transition-colors px-2 -mx-2 rounded-lg"
-      >
-        <div class="flex flex-col gap-1">
-          <span class="text-sm font-bold text-text">{{ it.primary_label }}</span>
-          <span class="text-[11px] font-mono text-text-muted">{{ it.primary_desc }}</span>
+    <div class="feeds__list">
+      <div class="feeds__row">
+        <div class="feeds__row-text">
+          <span class="feeds__row-title">{{ it.primary_label }}</span>
+          <span class="feeds__row-desc">{{ it.primary_desc }}</span>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="feeds__actions">
           {{ for feed of it.primary_feeds }}
             <a
               href="{{ it.site.url }}{{ feed.url }}"
-              class="btn-minimal !px-3 !py-1 !rounded-md"
+              class="btn-minimal btn-minimal--compact"
               target="_blank"
             >
               {{ feed.title.split(" ")[0] }}
@@ -36,27 +34,25 @@
 
   {{# 2. CATEGORY FEEDS #}}
   <section>
-    <header class="mb-6">
-      <h2 class="typography-label text-text-muted mb-2">other feeds</h2>
-      <p class="text-sm text-text-muted leading-relaxed">
+    <header class="feeds__header">
+      <h2 class="feeds__title">other feeds</h2>
+      <p class="feeds__desc">
         feeds scoped to specific content types
       </p>
     </header>
 
-    <div class="border-t border-border-subtle">
+    <div class="feeds__list">
       {{ for cat of it.filtered_feeds }}
-        <div
-          class="flex items-center justify-between py-4 border-b border-border-subtle group hover:bg-surface-hover transition-colors px-2 -mx-2 rounded-lg"
-        >
-          <div class="flex flex-col">
-            <span class="text-sm font-bold text-text">{{ cat.title }}</span>
-            <span class="text-[11px] font-mono text-text-muted">{{ cat.desc }}</span>
+        <div class="feeds__row feeds__row--compact">
+          <div class="feeds__row-text">
+            <span class="feeds__row-title">{{ cat.title }}</span>
+            <span class="feeds__row-desc">{{ cat.desc }}</span>
           </div>
-          <div class="flex items-center gap-4">
+          <div class="feeds__actions">
             {{ for feed of cat.feeds }}
               <a
                 href="{{ it.site.url }}{{ feed.url }}"
-                class="btn-minimal !px-3 !py-1 !rounded-md"
+                class="btn-minimal btn-minimal--compact"
                 target="_blank"
               >
                 {{ feed.title }}
@@ -70,22 +66,20 @@
 
   {{# 3. TOPIC FEEDS #}}
   <section>
-    <header class="mb-6">
-      <h2 class="typography-label text-text-muted mb-2">topic feeds</h2>
-      <p class="text-sm text-text-muted leading-relaxed">
+    <header class="feeds__header">
+      <h2 class="feeds__title">topic feeds</h2>
+      <p class="feeds__desc">
         subscribe to specific tags
       </p>
     </header>
 
-    <div class="border-t border-border-subtle">
+    <div class="feeds__list">
       {{ set allTags = it.search.values("tags") }}
       {{ if allTags.length > 0 }}
         {{ for tag of allTags |> sort }}
           {{ set slug = tag |> slugify }}
-          <div
-            class="flex items-center justify-between py-4 border-b border-border-subtle group hover:bg-surface-hover transition-colors px-2 -mx-2 rounded-lg"
-          >
-            <div class="flex items-center gap-3">
+          <div class="feeds__row feeds__row--compact">
+            <div class="feeds__row-tags">
               {{
                 await it.comp.base.Tag({
                   content: tag,
@@ -93,21 +87,21 @@
                   classes: "text-sm",
                 })
               }}
-              <span class="text-[11px] font-mono text-text-muted">
+              <span class="feeds__row-desc">
                 {{ it.search.pages("'" + tag + "'").length }} entries
               </span>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="feeds__actions">
               <a
                 href="{{ it.site.url }}/tags/{{ slug }}.atom"
-                class="btn-minimal !px-3 !py-1 !rounded-md"
+                class="btn-minimal btn-minimal--compact"
                 target="_blank"
               >
                 Atom
               </a>
               <a
                 href="{{ it.site.url }}/tags/{{ slug }}.json"
-                class="btn-minimal !px-3 !py-1 !rounded-md"
+                class="btn-minimal btn-minimal--compact"
                 target="_blank"
               >
                 JSON

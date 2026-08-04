@@ -37,6 +37,11 @@
   transition-duration: 200ms;
 }
 
+.btn-minimal--compact {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
 .btn-icon {
   @extend %press;
   display: flex;
