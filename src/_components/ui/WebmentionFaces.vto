@@ -17,12 +17,10 @@
 {{ if interactions.length > 0 }}
   <div class="wm-faces">
     <div class="wm-faces__stack">
-      {{ set zIndex = interactions.length }}
       {{ for mention of interactions }}
         <span
           class="wm-face"
           title="{{ mention.author.name }}"
-          style="z-index: {{ zIndex }}"
         >
           <div class="wm-face__img-wrap">
             {{ if mention.author.photo }}
@@ -42,7 +40,6 @@
             {{ /if }}
           </div>
         </span>
-        {{ set zIndex = zIndex - 1 }}
       {{ /for }}
     </div>
   </div>

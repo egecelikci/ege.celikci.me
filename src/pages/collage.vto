@@ -437,7 +437,7 @@ menu:
         <div id="result-actions" class="collage-tool__action-grid">
           <button
             id="download-btn"
-            class="collage-tool__btn collage-tool__btn--download"
+            class="btn-minimal collage-tool__btn"
             aria-label="Download collage as JPG"
           >
             {{
@@ -446,11 +446,11 @@ menu:
                 classes: "",
               })
             }}
-            <span class="typography-label">JPG</span>
+            <span class="typography-label">Download</span>
           </button>
           <button
             id="share-btn"
-            class="collage-tool__btn collage-tool__btn--share"
+            class="btn-primary collage-tool__btn collage-tool__btn--share"
             aria-label="Share collage"
           >
             {{
@@ -463,11 +463,9 @@ menu:
           </button>
         </div>
 
-        <div class="collage-tool__help">
-          <p class="collage-tool__help-text">
-            {{ comp.base.Icon({ name: "info", classes: "" }) }}
-            Changes auto-save and regenerate your collage
-          </p>
+        <div class="collage-tool__action-hint">
+          {{ comp.base.Icon({ name: "info", classes: "" }) }}
+          <span>Changes auto-save and regenerate your collage</span>
         </div>
       </div>
     </div>

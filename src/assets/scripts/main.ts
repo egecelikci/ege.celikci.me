@@ -58,6 +58,14 @@ window.addEventListener(
 async function init() {
   initLazyLoad();
 
+  document.addEventListener("click", (e) => {
+    const card = (e.target as HTMLElement).closest<HTMLElement>(
+      ".video-card[data-embed]",
+    );
+    if (!card) return;
+    card.innerHTML = card.dataset.embed || "";
+  });
+
   if (process.env.MODE === "production") {
     await import("./common/register-serviceworker.ts");
   }
