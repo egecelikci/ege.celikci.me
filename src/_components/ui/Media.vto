@@ -7,6 +7,7 @@
     - aspect: "auto" | "eq1" | "eq2" | "eq3" | "eq4" (default: auto-derived from count)
     - limit: number | null (default: null = show all; listings pass 4)
     - static: boolean (default: false)
+    - card: boolean (default: false; true renders the ledger-card chrome)
     - postUrl: link the +N tile (and media) to a note
     - classes: additional classes
 #}}
@@ -33,7 +34,7 @@
   }}
 
   <div
-    class="media-grid ledger-card {{ gridClass }}"
+    class="media-grid {{ gridClass }}{{ if it.card }} ledger-card{{ /if }}"
     style="view-transition-name: media-{{ it.images[0].src |> slugify }}"
     data-lightbox-group="{{ it.images[0].src |> slugify }}"
   >
@@ -54,7 +55,7 @@
 
       <a
         href="{{ tileHref |> url }}"
-        class="{{ if !isMoreLink }}lightbox-trigger{{ /if }} media {{ if isAuto }}media--auto{{ /if }} {{ if isMore }}media--more{{ /if }} {{ itemClass }}"
+        class="media {{ if !isMoreLink }}lightbox-trigger {{ /if }}{{ if isAuto }}media--auto {{ /if }}{{ if isMore }}media--more {{ /if }}{{ itemClass }}"
         {{ if isMore }}
           aria-label="View {{ remaining }} more {{ remaining === 1 ? "photo" : "photos" }}"
         {{ else }}

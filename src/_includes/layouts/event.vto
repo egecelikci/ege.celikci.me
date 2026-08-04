@@ -157,7 +157,7 @@ extraStyles:
       {{# POSTER #}}
       {{ if posterImages.length > 0 }}
         <div>
-          {{ await comp.ui.Media({ images: posterImages, aspect: "auto" }) }}
+          {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true }) }}
 
           {{# POSTER CREDITS #}}
           {{ if posterCredits?.length > 0 }}
