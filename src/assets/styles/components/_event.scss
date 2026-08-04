@@ -55,32 +55,50 @@
 
   &__organizers {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 2rem;
+    flex-direction: column;
   }
 
   &__organizer {
-    display: inline-flex;
-    align-items: center;
-    font-size: 1rem;
-    font-weight: 700;
-    color: color-mix(in srgb, var(--color-text) 80%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-border-subtle);
+
+    &:first-child {
+      padding-top: 0;
+      border-top: none;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
 
   &__organizer-label {
-    display: inline-block;
-    margin-right: 0.5rem;
-    translate: 0 -1px;
     color: var(--color-text-muted);
   }
 
+  &__organizer-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+  }
+
   &__organizer-name {
-    display: inline-block;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text);
   }
 
   &__organizer-links {
-    display: inline-block;
-    margin-left: 0.375rem;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
   }
 
   &__meta-row {

@@ -34,16 +34,16 @@ extraStyles:
             {{ for labelRel of event.labels }}
               <div class="event-page__organizer">
                 <span class="event-page__organizer-label typography-label">Presented by</span>
-
-                <span class="event-page__organizer-name">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
-
-                <div class="event-page__organizer-links">
-                  {{
-                    comp.base.ExternalLinks({
-                      links: labelRel.label.externalLinks,
-                      showFallbacks: false,
-                    })
-                  }}
+                <div class="event-page__organizer-main">
+                  <span class="event-page__organizer-name">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
+                  <div class="event-page__organizer-links">
+                    {{
+                      comp.base.ExternalLinks({
+                        links: labelRel.label.externalLinks,
+                        showFallbacks: false,
+                      })
+                    }}
+                  </div>
                 </div>
               </div>
             {{ /for }}

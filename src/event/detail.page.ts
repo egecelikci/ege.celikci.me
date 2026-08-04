@@ -15,7 +15,9 @@ async function collectGalleryImages(
     if (entry.isFile && /\.(jpg|jpeg|png|webp|avif)$/i.test(entry.name)) {
       images.push({
         src: `/assets/images/events/${eventId}/${entry.name}`,
-        alt: `Photograph from event`,
+        alt: defaultPhotographer
+          ? `Photograph by ${defaultPhotographer.name}`
+          : "Photograph from event",
         photographer: defaultPhotographer,
       });
     } else if (entry.isDirectory) {
