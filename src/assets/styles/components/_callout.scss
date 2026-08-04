@@ -1,12 +1,61 @@
 .callout {
+  --callout-accent: var(--color-secondary);
   display: flex;
   gap: 0.75rem;
   padding: 1.25rem;
   margin-block: 2rem;
-  border-radius: 0.25rem;
-  border-left: 2px solid var(--callout-accent);
-  background-color: color-mix(in srgb, var(--callout-accent) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--callout-accent) 35%, transparent);
+  border-radius: 1rem;
+  background-color: color-mix(in srgb, var(--callout-accent) 8%, transparent);
   color: var(--color-text);
+}
+
+.callout__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  color: var(--callout-accent);
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+.callout__content {
+  flex-grow: 1;
+  font-size: 0.95em;
+  line-height: 1.625;
+
+  p {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 0 0;
+    padding-left: 1.5rem;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+
+  a:not(.btn) {
+    color: var(--color-primary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,
+      transparent);
+    padding-bottom: 1px;
+    transition: all 300ms ease;
+
+    &:hover {
+      color: var(--color-primary-offset);
+      border-bottom-color: var(--color-primary-offset);
+    }
+  }
 }
 
 .callout--info {
@@ -35,22 +84,4 @@
 
 :root.theme-dark .callout--success {
   --callout-accent: #86efac;
-}
-
-.callout__icon {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin-top: 0.25rem;
-  color: var(--callout-accent);
-}
-
-.callout__content {
-  flex-grow: 1;
-  font-size: 0.95em;
-  line-height: 1.625;
-
-  p {
-    margin: 0;
-  }
 }

@@ -126,7 +126,7 @@ On the same form, right below the **Relationships** section, you will see a sepa
 {{ set calloutTip = `Contributions like this can serve as an infrastructure for artists to showcase their links on a single page. For example:
 
 - [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` |> md }}
-  {{ comp base.Callout { variant: "info", content: calloutTip } /}}
+{{ comp base.Callout { variant: "info", content: calloutTip } /}}
 
 ---
 

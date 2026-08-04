@@ -134,7 +134,7 @@
       transform: scale(1.25);
     }
 
-    &:hover {
+    &:not([data-active="true"]):hover {
       color: var(--color-text-muted);
     }
   }

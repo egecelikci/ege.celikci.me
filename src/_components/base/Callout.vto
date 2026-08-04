@@ -1,52 +1,13 @@
-{{#
-  Component: Callout (Refined Primitive)
-  A minimalist highlight box for information, warnings, or actions.
-  Aligned with "Clean Ledger" aesthetic.
-
-  Props:
-  - content: string | html (required)
-  - icon: string (optional icon name)
-  - variant: string (info, warning, danger, success, action)
-  - classes: additional classes
-#}}
-
-{{# 1. Variant Normalization #}}
-{{ set variant = it.variant || "info" }}
-
-{{# 2. Auto-Icon Selection #}}
-{{ set autoIcon = it.icon }}
-{{ if !autoIcon }}
-  {{
-    set autoIcon = {
-      "info": "info",
-      "warning": "triangle-alert",
-      "danger": "octagon-x",
-      "success": "circle-check",
-      "action": "sparkles",
-    }[variant] || "info"
-  }}
-{{ /if }}
-
-{{# 3. Style Resolution #}}
-{{ set variantClass = "callout--" + variant }}
-
-<div
-  class="callout {{ variantClass }} {{ it.classes }}"
-  {{ it.attributes |> attr |> safe }}
->
-  {{# Icon #}}
-  <div class="callout__icon">
-    {{
-      await it.comp.base.Icon({
-        name: autoIcon,
-        catalog: "lucide",
-        classes: "w-4 h-4",
-      })
-    }}
-  </div>
-
-  {{# Content #}}
-  <div class="callout__content markdown-inline">
-    {{ it.content |> safe }}
-  </div>
+{{- set variant = it.variant || "info" }}
+{{- set autoIcon = it.icon || ({
+  "info": "info",
+  "warning": "triangle-alert",
+  "danger": "octagon-x",
+  "success": "circle-check",
+  "action": "sparkles",
+}[variant] || "info") }}
+{{- set variantClass = "callout--" + variant }}
+<div class="callout {{ variantClass }} {{ it.classes }}"{{ it.attributes |> attr |> safe }}>
+  <span class="callout__icon">{{- await it.comp.base.Icon({ name: autoIcon, catalog: "lucide", classes: "w-4 h-4" }) -}}</span>
+  <div class="callout__content">{{ it.content |> safe }}</div>
 </div>

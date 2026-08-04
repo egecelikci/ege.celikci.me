@@ -10,26 +10,25 @@
 #}}
 
 <div class="empty-state not-prose">
-  <div
-    class="empty-state__row {{ if it.description }}empty-state__row--with-desc{{ /if }}"
-  >
-    {{ if it.icon }}
+  {{ if it.icon }}
+    <span class="empty-state__icon">
       {{
         await it.comp.base.Icon({
           name: it.icon,
           catalog: "lucide",
-          classes: "w-3.5 h-3.5",
+          classes: "w-5 h-5",
         })
       }}
-    {{ /if }}
-    <span class="empty-state__title">
-      {{ it.title || "no results" }}
     </span>
-  </div>
+  {{ /if }}
+
+  <span class="empty-state__title">
+    {{ it.title || "no results" }}
+  </span>
 
   {{ if it.description }}
-    <div class="empty-state__desc">
+    <p class="empty-state__desc">
       {{ it.description |> safe }}
-    </div>
+    </p>
   {{ /if }}
 </div>

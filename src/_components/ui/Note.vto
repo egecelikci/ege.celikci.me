@@ -19,7 +19,14 @@
   {{ /if }}
 
   {{ if hasImages }}
-    {{ await it.comp.ui.Media({ images: it.note.images, postUrl: it.note.url }) }}
+    {{
+      await it.comp.ui.Media({
+        images: it.note.images,
+        postUrl: it.note.url,
+        limit: null,
+        aspect: it.note.images.length === 1 ? "auto" : undefined,
+      })
+    }}
   {{ /if }}
 
   <div class="note__body">

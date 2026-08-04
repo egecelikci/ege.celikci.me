@@ -215,26 +215,8 @@
     background-color: var(--color-surface);
   }
 
-  & .heading-anchor {
-    display: none;
-    margin-left: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.5em;
-    font-weight: 400;
-    color: var(--color-primary-muted);
-    text-decoration: none;
-    opacity: 0;
-    transition: opacity 200ms ease;
-    box-shadow: none !important;
-    vertical-align: middle;
-
-    @include variables.bp(lg) {
-      display: inline-block;
-    }
-  }
-
   & :is(h1, h2, h3, h4):is(:hover, :focus-within) .heading-anchor {
-    opacity: 1;
+    color: var(--color-primary);
   }
 }
 

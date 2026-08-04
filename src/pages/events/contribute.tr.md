@@ -126,7 +126,7 @@ Aynı form üzerinde, **Relationships** bölümünün hemen altında **External 
 {{ set calloutTip = `Bu tarz katkılar sanatçıların bağlantılarını tek bir sayfada sergilemesi için bir altyapı görevi görebilir. Örneğin:
 
 - [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` |> md }}
-  {{ comp base.Callout { variant: "info", content: calloutTip } /}}
+{{ comp base.Callout { variant: "info", content: calloutTip } /}}
 
 ---
 
