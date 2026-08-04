@@ -1,0 +1,22 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-dim);
+  text-decoration: none;
+  box-shadow: none !important;
+  transition: all 200ms ease;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-secondary);
+    }
+  }
+
+  .tag__hash {
+    opacity: 0.6;
+    margin-right: 0.25rem;
+  }
+}

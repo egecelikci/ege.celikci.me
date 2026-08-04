@@ -10,21 +10,30 @@
 
 <div class="feeds">
   {{# 1. PRIMARY FEED (Site-wide) #}}
-  <section>
+  <section class="feeds__section">
+    {{
+      await it.comp.ui.SectionHeader({
+        title: it.primary_label,
+        level: 2,
+      })
+    }}
     <div class="feeds__list">
       <div class="feeds__row">
-        <div class="feeds__row-text">
-          <span class="feeds__row-title">{{ it.primary_label }}</span>
-          <span class="feeds__row-desc">{{ it.primary_desc }}</span>
-        </div>
+        <span class="feeds__row-desc">{{ it.primary_desc }}</span>
         <div class="feeds__actions">
           {{ for feed of it.primary_feeds }}
             <a
               href="{{ it.site.url }}{{ feed.url }}"
-              class="btn-minimal btn-minimal--compact"
+              class="feeds__link"
               target="_blank"
             >
-              {{ feed.title.split(" ")[0] }}
+              {{ feed.title.split(" ")[0].toLowerCase() }}
+              {{
+                await it.comp.base.Icon({
+                  name: "external-link",
+                  classes: "w-3 h-3",
+                })
+              }}
             </a>
           {{ /for }}
         </div>
@@ -33,17 +42,16 @@
   </section>
 
   {{# 2. CATEGORY FEEDS #}}
-  <section>
-    <header class="feeds__header">
-      <h2 class="feeds__title">other feeds</h2>
-      <p class="feeds__desc">
-        feeds scoped to specific content types
-      </p>
-    </header>
-
+  <section class="feeds__section">
+    {{
+      await it.comp.ui.SectionHeader({
+        title: "other feeds",
+        level: 2,
+      })
+    }}
     <div class="feeds__list">
       {{ for cat of it.filtered_feeds }}
-        <div class="feeds__row feeds__row--compact">
+        <div class="feeds__row">
           <div class="feeds__row-text">
             <span class="feeds__row-title">{{ cat.title }}</span>
             <span class="feeds__row-desc">{{ cat.desc }}</span>
@@ -52,10 +60,16 @@
             {{ for feed of cat.feeds }}
               <a
                 href="{{ it.site.url }}{{ feed.url }}"
-                class="btn-minimal btn-minimal--compact"
+                class="feeds__link"
                 target="_blank"
               >
-                {{ feed.title }}
+                {{ feed.title.toLowerCase() }}
+                {{
+                  await it.comp.base.Icon({
+                    name: "external-link",
+                    classes: "w-3 h-3",
+                  })
+                }}
               </a>
             {{ /for }}
           </div>
@@ -65,46 +79,56 @@
   </section>
 
   {{# 3. TOPIC FEEDS #}}
-  <section>
-    <header class="feeds__header">
-      <h2 class="feeds__title">topic feeds</h2>
-      <p class="feeds__desc">
-        subscribe to specific tags
-      </p>
-    </header>
-
+  <section class="feeds__section">
+    {{
+      await it.comp.ui.SectionHeader({
+        title: "topic feeds",
+        level: 2,
+      })
+    }}
     <div class="feeds__list">
       {{ set allTags = it.search.values("tags") }}
       {{ if allTags.length > 0 }}
         {{ for tag of allTags |> sort }}
           {{ set slug = tag |> slugify }}
-          <div class="feeds__row feeds__row--compact">
-            <div class="feeds__row-tags">
+          <div class="feeds__row">
+            <div class="feeds__tags">
               {{
                 await it.comp.base.Tag({
                   content: tag,
                   href: "/tags/" + slug + "/",
-                  classes: "text-sm",
                 })
               }}
-              <span class="feeds__row-desc">
+              <span class="feeds__count">
                 {{ it.search.pages("'" + tag + "'").length }} entries
               </span>
             </div>
             <div class="feeds__actions">
               <a
                 href="{{ it.site.url }}/tags/{{ slug }}.atom"
-                class="btn-minimal btn-minimal--compact"
+                class="feeds__link"
                 target="_blank"
               >
-                Atom
+                atom
+                {{
+                  await it.comp.base.Icon({
+                    name: "external-link",
+                    classes: "w-3 h-3",
+                  })
+                }}
               </a>
               <a
                 href="{{ it.site.url }}/tags/{{ slug }}.json"
-                class="btn-minimal btn-minimal--compact"
+                class="feeds__link"
                 target="_blank"
               >
-                JSON
+                json
+                {{
+                  await it.comp.base.Icon({
+                    name: "external-link",
+                    classes: "w-3 h-3",
+                  })
+                }}
               </a>
             </div>
           </div>

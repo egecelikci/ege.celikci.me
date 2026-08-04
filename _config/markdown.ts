@@ -36,14 +36,14 @@ export const remarkPlugin = (options: RemarkOptions = {}) => {
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, {
-          behavior: "prepend",
+          behavior: "append",
           content: {
             type: "element",
             tagName: "span",
-            properties: { className: ["heading-anchor"] },
             children: [{ type: "text", value: "#" }],
           },
           properties: {
+            className: ["heading-anchor"],
             ariaHidden: true,
             tabIndex: -1,
           },

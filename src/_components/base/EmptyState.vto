@@ -9,30 +9,26 @@
     - description: string (optional)
 #}}
 
-<div class="py-10 border-l border-border-subtle pl-8 not-prose">
+<div class="empty-state not-prose">
   <div
-    class="flex items-center gap-3 text-text-muted {{ if it.description }}mb-2{{ /if }}"
+    class="empty-state__row {{ if it.description }}empty-state__row--with-desc{{ /if }}"
   >
     {{ if it.icon }}
       {{
         await it.comp.base.Icon({
           name: it.icon,
           catalog: "lucide",
-          classes: "w-3.5 h-3.5 opacity-70",
+          classes: "w-3.5 h-3.5",
         })
       }}
     {{ /if }}
-    <span
-      class="typography-label font-bold lowercase tracking-normal opacity-80"
-    >
+    <span class="empty-state__title">
       {{ it.title || "no results" }}
     </span>
   </div>
 
   {{ if it.description }}
-    <div
-      class="typography-label text-text-muted/60 font-normal max-w-sm leading-relaxed italic lowercase"
-    >
+    <div class="empty-state__desc">
       {{ it.description |> safe }}
     </div>
   {{ /if }}

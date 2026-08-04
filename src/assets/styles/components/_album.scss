@@ -1,0 +1,117 @@
+@use "../utils/variables";
+
+.album-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  text-decoration: none;
+
+  &:hover .album-item__cover {
+    scale: 1.05;
+  }
+
+  &:active .album-item__cover,
+  &.is-active .album-item__cover {
+    scale: 1.05;
+  }
+
+  &:hover .album-item__color-img {
+    opacity: 1;
+  }
+
+  &:active .album-item__color-img,
+  &.is-active .album-item__color-img {
+    opacity: 1;
+  }
+
+  &:hover .album-item__mono-img {
+    opacity: 0;
+  }
+
+  &:active .album-item__mono-img,
+  &.is-active .album-item__mono-img {
+    opacity: 0;
+  }
+
+  &:hover .album-item__meta {
+    opacity: 1;
+  }
+
+  &:active .album-item__meta,
+  &.is-active .album-item__meta {
+    opacity: 1;
+  }
+}
+
+.album-item__cover {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0.75rem;
+  background-color: var(--color-surface-subtle);
+  transition: all 700ms ease-out;
+}
+
+.album-item__clip {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.album-item__color-img,
+.album-item__mono-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 500ms ease-in-out;
+}
+
+.album-item__color-img {
+  z-index: 20;
+  opacity: 0;
+}
+
+.album-item__mono-img {
+  z-index: 10;
+  opacity: var(--album-mono-opacity);
+  filter: invert(var(--album-mono-invert))
+    brightness(var(--album-mono-brightness))
+    contrast(var(--album-mono-contrast));
+  transition: opacity 700ms ease-in-out;
+}
+
+.album-item__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  opacity: 1;
+  transition: opacity 500ms ease;
+}
+
+.album-item__title {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.album-item__artist {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

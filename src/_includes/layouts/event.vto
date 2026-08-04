@@ -161,16 +161,18 @@ extraStyles:
 
           {{# POSTER CREDITS #}}
           {{ if posterCredits?.length > 0 }}
-            <div class="poster-credits">
+            <div class="media-credits media-credits--poster">
               {{ for credit of posterCredits }}
-                <a
-                  href="{{ credit.url }}"
-                  target="_blank"
-                  class="poster-credits__link"
-                >
-                  <span class="poster-credits__label">{{ credit.role }}</span>
-                  <span class="poster-credits__name">{{ credit.name }}</span>
-                </a>
+                <div class="media-credits__row">
+                  <span class="media-credits__label">{{ credit.role }}</span>
+                  <a
+                    href="{{ credit.url }}"
+                    target="_blank"
+                    class="media-credits__name"
+                  >
+                    {{ credit.name }}
+                  </a>
+                </div>
               {{ /for }}
             </div>
           {{ /if }}

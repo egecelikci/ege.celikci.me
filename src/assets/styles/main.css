@@ -453,22 +453,7 @@
     content: none !important;
   }
 
-  /* Heading anchors */
-  .markdown .heading-anchor {
-    @apply absolute top-0 -left-[1.25em] w-[1em] opacity-0 transition-opacity
-      duration-200 no-underline text-primary-muted;
-    box-shadow: none !important;
-  }
-
-  @media (min-width: 1024px) {
-    .markdown .heading-anchor {
-      @apply block;
-    }
-  }
-
-  .markdown :is(h1, h2, h3, h4, h5, h6):is(:hover, :focus-within) .heading-anchor {
-    @apply opacity-100;
-  }
+  /* Heading anchors are styled in components/_markdown.scss */
 
   /* Links */
   .markdown a:not(.btn, .heading-anchor, .not-prose, .no-underline) {

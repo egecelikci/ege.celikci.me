@@ -28,37 +28,25 @@
 {{ /if }}
 
 {{# 3. Style Resolution #}}
-{{
-  set variantStyles = {
-    "info": "border-secondary/20 bg-secondary/5 text-secondary",
-    "warning":
-      "border-orange-500/30 bg-orange-500/5 text-orange-700 dark:text-orange-300",
-    "danger": "border-primary/20 bg-primary/5 text-primary",
-    "success":
-      "border-green-600/30 bg-green-600/5 text-green-700 dark:text-green-300",
-    "action": "border-primary/40 bg-primary/5 text-primary shadow-sm",
-  }[variant] || "border-border-subtle bg-surface-subtle"
-}}
+{{ set variantClass = "callout--" + variant }}
 
 <div
-  class="relative flex gap-4 px-5 py-4 my-8 rounded-sm border-l-2 {{ variantStyles }} {{ it.classes }} transition-all duration-300"
+  class="callout {{ variantClass }} {{ it.classes }}"
   {{ it.attributes |> attr |> safe }}
 >
-  {{# Icon Badge #}}
-  <div
-    class="shrink-0 flex items-center justify-center w-6 h-6 mt-0.5 rounded-full bg-white/50 dark:bg-black/20 border border-inherit shadow-sm"
-  >
+  {{# Icon #}}
+  <div class="callout__icon">
     {{
       await it.comp.base.Icon({
         name: autoIcon,
         catalog: "lucide",
-        classes: "w-3.5 h-3.5",
+        classes: "w-4 h-4",
       })
     }}
   </div>
 
   {{# Content #}}
-  <div class="grow markdown-inline text-[0.95em] leading-relaxed [&_p]:m-0">
+  <div class="callout__content markdown-inline">
     {{ it.content |> safe }}
   </div>
 </div>

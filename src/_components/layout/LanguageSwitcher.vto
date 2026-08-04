@@ -5,15 +5,15 @@
 #}}
 
 {{ if it.alternates && it.alternates.length > 1 }}
-  <nav class="flex items-center gap-2" aria-label="Language Selector">
+  <nav class="language-switcher" aria-label="Language Selector">
     {{ for index, alt of it.alternates }}
       {{ if index > 0 }}
-        <span class="text-text-muted/20 typography-sublabel select-none"
+        <span class="language-switcher__sep"
         >/</span>
       {{ /if }}
       <a
         href="{{ alt.url }}"
-        class="typography-sublabel no-underline transition-colors {{ if alt.lang === it.lang }}text-primary{{ else }}text-text-muted hover:text-text{{ /if }} uppercase tracking-widest"
+        class="language-switcher__link {{ if alt.lang === it.lang }}language-switcher__link--current{{ /if }}"
         {{ if alt.lang === it.lang }}aria-current="page"{{ /if }}
       >
         {{ alt.lang }}

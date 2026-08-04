@@ -9,7 +9,7 @@
     - classes: string
 #}}
 
-<div class="flex items-center gap-4 {{ it.classes }}">
+<div class="activity-meta {{ it.classes }}">
   {{# 1. Stats #}}
   {{
     if 
@@ -17,36 +17,33 @@
     (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
 
   }}
-    <ul
-      class="flex items-center gap-4 p-0 m-0 list-none text-text-muted typography-sublabel"
-    >
+    <ul class="activity-meta__stats">
       {{# Replies #}}
       <li
-        class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+        class="activity-meta__stat"
         title="{{ it.stats.replies }} mentions"
       >
         {{
           await it.comp.base.Icon({
             name: "message-square",
-            classes: "mr-2 w-3.5 h-3.5",
           })
         }}
         <span>{{ it.stats.replies |> humanizeNumber }}</span>
       </li>
       {{# Reposts #}}
       <li
-        class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+        class="activity-meta__stat"
         title="{{ it.stats.reposts }} reposts"
       >
-        {{ await it.comp.base.Icon({ name: "repeat-2", classes: "mr-2 w-3.5 h-3.5" }) }}
+        {{ await it.comp.base.Icon({ name: "repeat-2" }) }}
         <span>{{ it.stats.reposts |> humanizeNumber }}</span>
       </li>
       {{# Likes #}}
       <li
-        class="flex items-center leading-none transition-colors duration-150 ease-in-out hover:text-primary"
+        class="activity-meta__stat"
         title="{{ it.stats.likes }} likes"
       >
-        {{ await it.comp.base.Icon({ name: "heart", classes: "mr-2 w-3.5 h-3.5" }) }}
+        {{ await it.comp.base.Icon({ name: "heart" }) }}
         <span>{{ it.stats.likes |> humanizeNumber }}</span>
       </li>
     </ul>
@@ -60,13 +57,13 @@
       (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
 
     }}
-      <div class="h-3 w-px bg-border-subtle"></div>
+      <div class="activity-meta__divider"></div>
     {{ /if }}
-    <div class="flex items-center gap-3">
+    <div class="activity-meta__syndication">
       {{ if it.syndication.bluesky }}
         <a
           href="{{ it.syndication.bluesky }}"
-          class="u-syndication text-text-dim hover:text-[var(--color-bluesky)] transition-all duration-200 hover:scale-110"
+          class="u-syndication activity-meta__syndication-link activity-meta__syndication-link--bluesky"
           title="View on Bluesky"
           target="_blank"
           rel="noopener noreferrer syndication"
@@ -84,7 +81,7 @@
       {{ if it.syndication.mastodon }}
         <a
           href="{{ it.syndication.mastodon }}"
-          class="u-syndication text-text-dim hover:text-[var(--color-mastodon)] transition-all duration-200 hover:scale-110"
+          class="u-syndication activity-meta__syndication-link activity-meta__syndication-link--mastodon"
           title="View on Mastodon"
           target="_blank"
           rel="noopener noreferrer syndication"

@@ -1,0 +1,60 @@
+@use "../utils/variables";
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-header--sticky {
+  position: sticky;
+  top: var(--header-height, 3.5rem);
+  z-index: 40;
+  padding-block: 1rem;
+  margin-block: -1rem;
+  background-color: color-mix(in srgb, var(--color-bg) 95%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.section-header__title--large {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: var(--color-text-dim);
+  transition: color 500ms ease;
+
+  @include variables.bp(md) {
+    font-size: 3rem;
+  }
+}
+
+.section-header__title--label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-label);
+  color: var(--color-text-muted);
+  transition: color 200ms ease;
+}
+
+.section-header:hover .section-header__title--large,
+.section-header:hover .section-header__title--label {
+  color: var(--color-primary);
+}
+
+.section-header__divider {
+  opacity: 0.2;
+  transition: opacity 200ms ease;
+}
+
+.section-header:hover .section-header__divider {
+  opacity: 0.4;
+}
+
+.section-header__right {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}

@@ -17,35 +17,32 @@
 {{ set tag = `h${level}` }}
 
 <div
-  class="group/section flex items-center gap-4 {{ it.sticky ? 'sticky top-[var(--header-height,3.5rem)] bg-bg/95 backdrop-blur-sm z-40 py-4 -my-4' : '' }} {{ it.classes || "" }}"
+  class="section-header {{ if it.sticky }}section-header--sticky{{ /if }} {{ it.classes || "" }}"
 >
   {{ if isLarge }}
     <{{ tag }}
-    class="text-4xl md:text-5xl font-bold tracking-tighter text-text-dim
-    group-hover/section:text-primary transition-colors duration-500"
+    class="section-header__title--large"
     aria-hidden="true" >
     {{ it.title }}
     </{{ tag }}>
     <div
-      class="divider opacity-20 group-hover/section:opacity-40 transition-opacity duration-500"
+      class="divider section-header__divider"
       aria-hidden="true"
     >
     </div>
   {{ else }}
     <{{ tag }}
-    class="typography-label text-text-muted font-bold uppercase
-    tracking-[var(--letter-spacing-label)] group-hover/section:text-primary
-    transition-colors duration-200" >
+    class="section-header__title--label">
     {{ it.title }}
     </{{ tag }}>
     <div
-      class="divider opacity-20 group-hover/section:opacity-40 transition-opacity duration-200"
+      class="divider section-header__divider"
     >
     </div>
   {{ /if }}
 
   {{ if it.rightContent }}
-    <div class="shrink-0 flex items-center">
+    <div class="section-header__right">
       {{ it.rightContent |> safe }}
     </div>
   {{ /if }}

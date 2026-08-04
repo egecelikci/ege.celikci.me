@@ -9,30 +9,24 @@
 
 {{ if it.backlinks && it.backlinks.length > 0 }}
   <div
-    class="print:hidden {{ it.classes }}"
+    class="incoming-links {{ it.classes }}"
   >
-    <div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
-      <h3
-        class="typography-label text-text-muted whitespace-nowrap"
-      >
+    <div class="incoming-links__row">
+      <h3 class="incoming-links__title">
         Linked from
       </h3>
 
-      <ul class="flex flex-wrap gap-x-6 gap-y-2 list-none p-0 m-0">
+      <ul class="incoming-links__list">
         {{ for link of it.backlinks }}
           <li>
             <a
               href="{{ link.url }}"
-              class="group inline-flex items-baseline gap-2 no-underline"
+              class="incoming-links__link"
             >
-              <span
-                class="text-xs font-bold text-text-muted group-hover:text-primary transition-colors"
-              >
+              <span class="incoming-links__name">
                 {{ link.title || "Untitled" }}
               </span>
-              <time
-                class="typography-label text-text-muted"
-              >
+              <time class="incoming-links__date">
                 {{ link.date |> date("dd MMM") }}
               </time>
             </a>

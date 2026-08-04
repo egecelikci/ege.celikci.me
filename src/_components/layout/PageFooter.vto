@@ -51,7 +51,7 @@
     {{# 1. Meta & Activity Row #}}
     {{ if hasMetaRow }}
       <div
-        class="flex flex-col gap-6 md:gap-8 {{ if hasRelated || hasBacklinks }}pb-8 border-b border-border-subtle{{ /if }}"
+        class="page-footer__meta {{ if hasRelated || hasBacklinks }}page-footer__meta--divided{{ /if }}"
       >
         {{ if hasExtension }}
           <div class="w-full">
@@ -61,13 +61,9 @@
 
         {{ if hasActivity }}
           {{# Row 1: [About Webmentions] | [syndication icons] #}}
-          <div
-            class="flex items-center justify-between gap-4 flex-wrap"
-          >
-            <div
-              class="flex items-center gap-6 text-sm text-text-muted"
-            >
-              <div class="flex items-center gap-4">
+          <div class="page-footer__activity-row">
+            <div class="page-footer__activity-left">
+              <div class="page-footer__interactions">
                 {{ if showInteractions }}
                   <span class="typography-sublabel text-text-muted">
                     {{ it.interactions.length }} {{ it.interactions.length == 1 ? "interaction" : "interactions" }}
@@ -79,14 +75,14 @@
                     href="https://indieweb.org/Webmention"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="inline-flex items-center gap-1.5 typography-sublabel text-text-muted hover:text-secondary transition-all duration-300 no-underline haptic"
+                    class="page-footer__whats-this"
                     title="Learn about Webmentions"
                   >
                     {{
                       await it.comp.base.Icon({
                         name: "badge-question-mark",
                         catalog: "lucide",
-                        classes: "w-3.5 h-3.5 stroke-[1.5]",
+                        classes: "w-3.5 h-3.5 stroke-1.5",
                       })
                     }}
                     What’s this?
@@ -95,7 +91,7 @@
               </div>
             </div>
 
-            <div class="shrink-0">
+            <div class="page-footer__syndication">
               {{
                 await it.comp.ui.ActivityMeta({
                   stats: showInteractions ? null : it.stats,
@@ -106,7 +102,7 @@
           </div>
           {{# Row 2: Faces #}}
           {{ if showInteractions }}
-            <div id="interactions" class="-mt-2 md:-mt-4">
+            <div id="interactions" class="page-footer__faces">
               {{ await it.comp.ui.WebmentionFaces({ mentions: it.interactions }) }}
             </div>
           {{ /if }}
@@ -117,7 +113,6 @@
               {{
                 await it.comp.ui.WebmentionComments({
                   mentions: it.interactions,
-                  classes: "mt-4",
                 })
               }}
             </div>
@@ -128,7 +123,7 @@
 
     {{# 2. Supplemental Blocks #}}
     {{ if hasRelated || hasBacklinks }}
-      <div class="flex flex-col gap-24">
+      <div class="page-footer__supplemental">
         {{ if hasRelated }}
           <div id="related">
             {{ it.related |> safe }}

@@ -3,16 +3,17 @@
   {{ set gid = it.groupId || Math.random().toString(36).slice(2, 10) }}
   {{ set isAuto = it.aspect === "auto" }}
   {{
-    set gridClass = isAuto ? "grid-cols-1" : (it.aspect || {
-      "eq1": "grid-cols-1 aspect-[3/2] md:aspect-[16/10]",
-      "eq2": "grid-cols-2 aspect-[3/2] md:aspect-[2/1]",
-      "eq3": "grid-cols-2 grid-rows-2 aspect-[3/2] md:aspect-[2/1]",
-      "eq4": "grid-cols-2 grid-rows-2 aspect-[3/2] md:aspect-[2/1]",
+    set gridClass = isAuto ? "media-grid--auto" : (it.aspect || {
+      "eq1": "media-grid--eq1",
+      "eq2": "media-grid--eq2",
+      "eq3": "media-grid--eq3",
+      "eq4": "media-grid--eq4",
     }["eq" + count])
   }}
 
   <div
-    class="grid gap-2 w-full ledger-card overflow-hidden my-6 {{ gridClass }} [view-transition-name:media-{{ it.images[0].src |> slugify }}]"
+    class="media-grid ledger-card {{ gridClass }}"
+    style="view-transition-name: media-{{ it.images[0].src |> slugify }}"
     data-lightbox-group="{{ gid }}"
   >
     {{ for i, image of it.images |> slice(0, 4) }}
@@ -20,12 +21,12 @@
         set isPanoramic = image.width && image.height && (image.width / image.height > 2)
       }}
       {{ set itemClass = "" }}
-      {{ if isPanoramic && !isAuto }}{{ set itemClass = "col-span-full" }}{{
+      {{ if isPanoramic && !isAuto }}{{ set itemClass = "media--span-full" }}{{
         else if count === 3 && i === 0 && !isAuto
-      }}{{ set itemClass = "row-span-2" }}{{ /if }}
+      }}{{ set itemClass = "media--span-row" }}{{ /if }}
       <a
         href="{{ image.src |> url }}"
-        class="lightbox-trigger media relative block w-full h-full overflow-hidden bg-surface-subtle no-underline text-inherit cursor-zoom-in group/media [&_picture]:contents {{ if isAuto }}w-full h-auto{{ /if }} {{ itemClass }}"
+        class="lightbox-trigger media {{ if isAuto }}media--auto{{ /if }} {{ itemClass }}"
         aria-label="{{ (image.alt || 'view image') |> escape }}"
         target="_blank"
         rel="noopener noreferrer"
@@ -43,7 +44,7 @@
           transform-images="avif webp jpg 640 1280 1920"
           loading="lazy"
           decoding="async"
-          class="{{ if isAuto }}block w-full h-auto object-contain{{ else }}absolute inset-0 w-full h-full object-cover{{ /if }} transition-all duration-500 ease-in-out group-hover/media:scale-105 group-hover/media:brightness-110"
+          class="media__img"
         />
 
         {{ if image.alt?.trim() }}

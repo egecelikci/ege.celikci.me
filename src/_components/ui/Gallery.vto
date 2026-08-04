@@ -6,22 +6,22 @@
     - images: Array of { src, alt, width, height }
     - static: boolean (default: false)
     - classes: additional classes
-    - aspect: string (default: "aspect-square")
+    - aspect: "square" | "video" (default: "square")
 #}}
 
 {{ if it.images && it.images.length > 0 }}
   {{ set isSingle = it.images.length == 1 }}
   {{
-    set gridClasses = isSingle ? "block" : "grid grid-cols-1 sm:grid-cols-2 gap-4"
+    set gridClasses = isSingle ? "gallery gallery--single" : "gallery"
   }}
   {{ set gid = it.groupId || Math.random().toString(36).slice(2, 10) }}
 
   <div
-    class="{{ gridClasses }} mb-4 {{ it.classes }}"
+    class="{{ gridClasses }} {{ it.classes }}"
     {{ if !it.static }}data-lightbox-group="{{ gid }}"{{ /if }}
   >
     {{ for i, image of it.images }}
-      <div class="relative group h-full">
+      <div class="gallery__item">
         {{# 1. WRAPPER ELEMENT #}}
         {{ if !it.static }}
           <a
@@ -32,9 +32,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt |> escape }}{{ /if }}"
-            class='
-              lightbox-trigger note-gallery__link ledger-card group relative block overflow-hidden cursor-zoom-in transition-all duration-700 [&_picture]:contents {{ it.aspect || "aspect-square" }}
-            '
+            class="lightbox-trigger note-gallery__link ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
           >
             {{# 2. THE IMAGE #}}
             <img
@@ -42,7 +40,7 @@
               alt="{{ image.alt |> escape }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-reveal:scale-105 group-[.is-active]:scale-105"
+              class="gallery__img"
               loading="lazy"
               decoding="async"
             />
@@ -54,7 +52,7 @@
           </a>
         {{ else }}
           <div
-            class='note-gallery__link ledger-card group relative block overflow-hidden transition-all duration-700 [&_picture]:contents {{ it.aspect || "aspect-square" }}'
+            class="note-gallery__link ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
           >
             {{# 2. THE IMAGE #}}
             <img
@@ -62,7 +60,7 @@
               alt="{{ image.alt |> escape }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-reveal:scale-105 group-[.is-active]:scale-105"
+              class="gallery__img"
               loading="lazy"
               decoding="async"
             />
@@ -72,10 +70,10 @@
         {{# 3. MINIMALIST OVERLAY #}}
         {{ if it.images.length > 1 || image.photographer }}
           <div
-            class="absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 rounded-sm glassy border border-border-subtle text-[11px] font-mono font-bold text-text-muted opacity-100 md:opacity-0 md:group-reveal:opacity-100 md:group-[.is-active]:opacity-100 transition-all duration-500 pointer-events-none z-20 flex flex-col items-end gap-1 group-reveal:opacity-100"
+            class="gallery__overlay"
           >
             {{ if it.images.length > 1 }}
-              <div class="flex items-center gap-1.5">
+              <div class="gallery__overlay-row">
                 {{ await it.comp.base.Icon({ name: "layers", classes: "w-3 h-3" }) }}
                 <span>{{ i + 1 }} / {{ it.images.length }}</span>
               </div>
@@ -85,7 +83,7 @@
                 <a
                   href="{{ image.photographer.url }}"
                   target="_blank"
-                  class="flex items-center gap-1.5 hover:text-primary transition-colors pointer-events-auto"
+                  class="gallery__overlay-link"
                 >
                   {{
                     await it.comp.base.Icon({
@@ -97,7 +95,7 @@
                   <span>{{ image.photographer.name }}</span>
                 </a>
               {{ else }}
-                <div class="flex items-center gap-1.5">
+                <div class="gallery__overlay-row">
                   {{
                     await it.comp.base.Icon({
                       name: "camera",

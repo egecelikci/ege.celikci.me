@@ -1,0 +1,68 @@
+.activity-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activity-meta__stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.activity-meta__stat {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  transition: color 150ms ease-in-out;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  svg {
+    margin-right: 0.5rem;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+.activity-meta__divider {
+  width: 1px;
+  height: 0.75rem;
+  background-color: var(--color-border-subtle);
+}
+
+.activity-meta__syndication {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.activity-meta__syndication-link {
+  display: flex;
+  color: var(--color-text-dim);
+  text-decoration: none;
+  transition:
+    color 200ms ease,
+    scale 200ms ease;
+
+  &:hover {
+    scale: 1.1;
+  }
+}
+
+.activity-meta__syndication-link--bluesky:hover {
+  color: var(--color-bluesky);
+}
+
+.activity-meta__syndication-link--mastodon:hover {
+  color: var(--color-mastodon);
+}

@@ -2,13 +2,10 @@
   Component: Icon
   Lume-native icon loader using the icons plugin's SVG sprite feature.
 #}}
-{{- set defaultClasses = "inline-block align-middle pointer-events-none" -}}
-{{- set hasWidth = it.classes?.includes("w-") || false -}}
-{{- set hasHeight = it.classes?.includes("h-") || false -}}
-{{- set sizeClasses = (hasWidth || hasHeight) ? "" : "h-[1em] w-[1em]" -}}
-{{- set isStroke = !it.filled && (it.catalog === "lucide" || !it.catalog) -}}
+{{- set defaultClasses = "icon" -}}
+{{- set strokeClasses = !it.filled && (it.catalog === "lucide" || !it.catalog) ? "icon--stroke" : "icon--fill" -}}
 <svg
-  class="{{ defaultClasses }} {{ sizeClasses }} {{ if isStroke }}stroke-current fill-none{{ else }}fill-current{{ /if }} {{ it.classes || "" }}"
+  class="{{ defaultClasses }} {{ strokeClasses }} {{ it.classes || "" }}"
   data-catalog="{{ it.catalog || "lucide" }}"
 >
   <use href="{{ it.name |> spriteIcon(it.catalog || 'lucide') }}"></use>
