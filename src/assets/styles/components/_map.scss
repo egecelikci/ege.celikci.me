@@ -12,6 +12,15 @@
   &.map-ready {
     opacity: 1;
   }
+
+  .leaflet-tile-pane {
+    filter: grayscale(1) contrast(1.25) brightness(0.9);
+    transition: all 700ms ease;
+  }
+
+  &:hover .leaflet-tile-pane {
+    opacity: 1;
+  }
 }
 
 .leaflet-control-attribution {

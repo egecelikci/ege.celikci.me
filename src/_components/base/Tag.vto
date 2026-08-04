@@ -13,7 +13,7 @@
 
 <{{ tag }}
 {{ if it.href }}href="{{ it.href }}"{{ /if }}
-class="tag not-prose {{ it.classes }}"
+class="tag {{ it.classes }}"
 {{ it.attributes |> attr |> safe }}
 >
 <span class="tag__hash">#</span>

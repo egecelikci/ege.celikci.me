@@ -9,7 +9,7 @@
 <div class="tag-detail">
   {{# 1. ENTRIES #}}
   {{ if matchingEntries.length > 0 }}
-    <div class="not-prose">
+    <div>
       {{ await it.comp.ui.EntryTimeline({ entries: matchingEntries, groupBy: "none" }) }}
     </div>
   {{ else }}

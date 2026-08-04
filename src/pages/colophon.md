@@ -10,7 +10,7 @@ This page will be a living documentation of how site is built and what are the c
 - **runtime:** [Deno](https://deno.com/)
 - **ssg:** [Lume](https://lume.deno.dev/)
 - **templating:** [Vento](https://vento.js.org/)
-- **styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **styling:** [Sass](https://sass-lang.com/)
 - **fonts:** [DM Sans](https://fonts.google.com/specimen/DM+Sans) & [DM Mono](https://fonts.google.com/specimen/DM+Mono)
 - **icons:** [Lucide](https://lucide.dev/) & [Simple Icons](https://simpleicons.org/)
 - **lightbox:** [PhotoSwipe](https://photoswipe.com/)

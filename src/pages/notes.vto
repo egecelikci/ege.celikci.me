@@ -14,7 +14,7 @@ navigation:
 
 {{ set results = search.pages("type=note", "date=desc") }}
 {{ if results.length }}
-  <div class="h-feed not-prose notes-index">
+  <div class="h-feed notes-index">
     {{
       await comp.ui.EntryTimeline({
         entries: results,
