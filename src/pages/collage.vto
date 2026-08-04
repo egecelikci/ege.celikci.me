@@ -31,7 +31,7 @@ menu:
                 class="collage-tool__source"
                 aria-label="Use ListenBrainz"
               >
-                {{ comp.base.Icon({ name: "brain-circuit", classes: "w-4 h-4" }) }}
+                {{ comp.base.Icon({ name: "brain-circuit" }) }}
                 <span>ListenBrainz</span>
               </button>
               <button
@@ -39,14 +39,14 @@ menu:
                 class="collage-tool__source"
                 aria-label="Use Last.fm"
               >
-                {{ comp.base.Icon({ name: "music", classes: "w-4 h-4" }) }}
+                {{ comp.base.Icon({ name: "music" }) }}
                 <span>Last.fm</span>
               </button>
             </div>
           </div>
           <div class="collage-tool__field">
             <label for="username" class="collage-tool__label">Username</label>
-            <div class="collage-tool__input-wrap">
+            <div class="collage-tool__input-wrap collage-tool__input-wrap--icon">
               <input
                 type="text"
                 id="username"
@@ -234,7 +234,7 @@ menu:
               }}
             </summary>
 
-            <div class="collage-tool__field">
+            <div class="collage-tool__section">
               <label class="collage-tool__toggle collage-tool__toggle--row">
                 <div class="collage-tool__toggle-body">
                   {{
@@ -323,7 +323,7 @@ menu:
               }}
             </summary>
 
-            <div class="collage-tool__field">
+            <div class="collage-tool__section">
               <div class="collage-tool__field">
                 <label for="font-family" class="collage-tool__label"
                 >Custom Font</label>
@@ -455,7 +455,7 @@ menu:
             {{
               comp.base.Icon({
                 name: "download",
-                classes: "w-4 h-4",
+                classes: "",
               })
             }}
             <span class="typography-label">JPG</span>
@@ -468,7 +468,7 @@ menu:
             {{
               comp.base.Icon({
                 name: "share-2",
-                classes: "w-4 h-4",
+                classes: "",
               })
             }}
             <span class="typography-label">Share</span>
