@@ -32,6 +32,6 @@ url: "https://www.youtube.com/channel/UCMb0O2CdPBNi-QqPk5T3gsQ"
 - after drawdown, swirl canister to melt ice
 - serve on fresh ice
 
-## calculator
+### calculator
 
 {{ comp.features.BrewCalculator() }}

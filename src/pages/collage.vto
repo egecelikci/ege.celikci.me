@@ -19,10 +19,6 @@ menu:
         <div class="collage-tool__blob collage-tool__blob--primary"></div>
         <div class="collage-tool__blob collage-tool__blob--secondary"></div>
         <div class="collage-tool__section">
-          <div class="collage-tool__section-head">
-            {{ comp.base.Icon({ name: "database", classes: "" }) }}
-            <span class="collage-tool__section-title">Source</span>
-          </div>
           <div class="collage-tool__field">
             <label for="service-select" class="collage-tool__label">Service</label>
             <div class="collage-tool__source-grid">
@@ -73,7 +69,6 @@ menu:
         <div class="collage-tool__section">
           <details class="collage-tool__details" open>
             <summary class="collage-tool__summary">
-              {{ comp.base.Icon({ name: "palette", classes: "" }) }}
               <span>Appearance</span>
               {{
                 comp.base.Icon({
@@ -224,7 +219,6 @@ menu:
         <div class="collage-tool__section">
           <details class="collage-tool__details" open>
             <summary class="collage-tool__summary">
-              {{ comp.base.Icon({ name: "sliders", classes: "" }) }}
               <span>Content Options</span>
               {{
                 comp.base.Icon({
@@ -308,12 +302,6 @@ menu:
         <div class="collage-tool__section">
           <details class="collage-tool__details">
             <summary class="collage-tool__summary">
-              {{
-                comp.base.Icon({
-                  name: "settings-2",
-                  classes: "",
-                })
-              }}
               <span>Advanced Options</span>
               {{
                 comp.base.Icon({
