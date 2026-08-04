@@ -115,11 +115,10 @@ export function initLightbox() {
     if (data.mediaType === "video" || data.mediaType === "gifv") {
       e.preventDefault();
       content.element = document.createElement("div");
-      content.element.className =
-        "pswp__content-video flex items-center justify-center w-full h-full p-4 md:p-12";
+      content.element.className = "pswp__content-video";
 
       const video = document.createElement("video");
-      video.className = "max-w-full max-h-full object-contain";
+      video.className = "pswp__content-video-el";
       video.setAttribute("aria-label", data.alt || "Video");
       video.src = data.src || "";
 
