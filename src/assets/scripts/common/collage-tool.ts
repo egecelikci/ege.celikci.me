@@ -80,6 +80,11 @@ export function initCollageTool(defaultUsername: string) {
     console.log(`[collage] ${text}`);
   }
 
+  function setActionsEnabled(enabled: boolean) {
+    if (downloadBtn) downloadBtn.disabled = !enabled;
+    if (shareBtn) shareBtn.disabled = !enabled;
+  }
+
   function saveSettings() {
     const settings = {
       source: currentSource,
@@ -191,6 +196,7 @@ export function initCollageTool(defaultUsername: string) {
     const user = usernameInput.value.trim();
     if (!user) {
       if (emptyState) emptyState.style.opacity = "1";
+      setActionsEnabled(false);
       return;
     }
 
@@ -198,6 +204,7 @@ export function initCollageTool(defaultUsername: string) {
     updateStatus("fetching stats from service");
     previewWrapper?.classList.add("is-loading");
     previewWrapper?.classList.remove("is-ready");
+    setActionsEnabled(false);
 
     try {
       const proxyUrl =
@@ -263,9 +270,11 @@ export function initCollageTool(defaultUsername: string) {
           updateStatus("Complete");
           previewWrapper?.classList.remove("is-loading");
           previewWrapper?.classList.add("is-ready");
+          setActionsEnabled(true);
         } else if (type === "error") {
           updateStatus(`Error: ${message}`);
           previewWrapper?.classList.remove("is-loading");
+          setActionsEnabled(false);
         }
       };
 
@@ -295,6 +304,7 @@ export function initCollageTool(defaultUsername: string) {
     } catch (err: any) {
       updateStatus(`Error: ${err.message}`);
       previewWrapper?.classList.remove("is-loading");
+      setActionsEnabled(false);
     }
   }
 

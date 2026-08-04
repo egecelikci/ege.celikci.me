@@ -319,7 +319,7 @@ menu:
                   <input
                     type="text"
                     id="font-family"
-                    placeholder="Josefin Sans"
+                    placeholder="DM Sans"
                     class="input-base input-focus collage-tool__input"
                     aria-describedby="font-hint"
                   />
@@ -439,6 +439,7 @@ menu:
             id="download-btn"
             class="btn-minimal collage-tool__btn"
             aria-label="Download collage as JPG"
+            disabled
           >
             {{
               comp.base.Icon({
@@ -450,8 +451,9 @@ menu:
           </button>
           <button
             id="share-btn"
-            class="btn-primary collage-tool__btn collage-tool__btn--share"
+            class="btn-minimal collage-tool__btn"
             aria-label="Share collage"
+            disabled
           >
             {{
               comp.base.Icon({
