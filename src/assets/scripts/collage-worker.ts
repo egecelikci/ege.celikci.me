@@ -51,21 +51,20 @@ interface Options {
 const W = 1080;
 const H = 1920;
 const MARGIN = 80;
-const FONT_SANS =
-  "'Josefin Sans', 'Inter', system-ui, -apple-system, sans-serif";
-const FONT_MONO = "'Inconsolata', monospace";
+const FONT_SANS = "'DM Sans', 'Inter', system-ui, -apple-system, sans-serif";
+const FONT_MONO = "'DM Mono', monospace";
 
 const WORKER_DEFAULT_FONTS: { family: string; url: string; weight: string }[] =
   [
     {
-      family: "Josefin Sans",
-      url: "/assets/fonts/josefin-sans-normal-100-700-latin.woff2",
-      weight: "100 700",
+      family: "DM Sans",
+      url: "/assets/fonts/dm-sans-normal-100-1000-latin.woff2",
+      weight: "100 1000",
     },
     {
-      family: "Inconsolata",
-      url: "/assets/fonts/inconsolata-100-normal-200-900-latin.woff2",
-      weight: "200 900",
+      family: "DM Mono",
+      url: "/assets/fonts/dm-mono-normal-400-latin.woff2",
+      weight: "400",
     },
   ];
 
@@ -200,8 +199,8 @@ self.onmessage = async (e: MessageEvent) => {
 
     if (
       fontFamily &&
-      fontFamily !== "Josefin Sans" &&
-      fontFamily !== "Inconsolata"
+      fontFamily !== "DM Sans" &&
+      fontFamily !== "DM Mono"
     ) {
       self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
       await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
