@@ -118,6 +118,7 @@
   }
 
   &__title {
+    min-width: 0;
     font-weight: 700;
     padding-bottom: 2px;
     border-bottom: 1px solid var(--color-border-subtle);
@@ -132,6 +133,8 @@
   }
 
   &__desc {
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--color-text-muted);
     font-style: italic;
     text-align: right;
@@ -239,6 +242,7 @@
   }
 
   &__child-title {
+    min-width: 0;
     transition: color 0.3s ease;
   }
 
@@ -250,6 +254,8 @@
   }
 
   &__child-desc {
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--color-text-muted);
     font-style: italic;
     text-align: right;
