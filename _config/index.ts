@@ -130,7 +130,8 @@ export default function () {
         fonts:
           "https://fonts.google.com/share?selection.family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500|DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000",
         fontsFolder: "/assets/fonts",
-        cssFile: "/assets/styles/main.css",
+        cssFile: "/assets/styles/site.scss",
+        placeholder: "/* google-fonts */",
         subsets: ["latin", "latin-ext"],
       }))
       .use(assets())
