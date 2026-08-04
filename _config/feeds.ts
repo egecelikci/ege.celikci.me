@@ -20,15 +20,8 @@ export default function (options: FeedOptions = {}) {
           const imagesHtml = data.images
             .map((img) => {
               const fullSrc = site.url(img.src, true);
-              let thumb = "";
-              if (img.src.includes("/gallery/")) {
-                thumb = site.url(
-                  img.src.replace(/(\.[a-z]+)$/i, "-preview.jpg"),
-                  true,
-                );
-              }
 
-              return `<img class="webring" src="${fullSrc}" data-timestamp="${timestamp}" data-thumb="${thumb}" alt="${
+              return `<img class="webring" src="${fullSrc}" data-timestamp="${timestamp}" data-thumb="" alt="${
                 img.alt || ""
               }">`;
             })
