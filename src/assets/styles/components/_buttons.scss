@@ -32,6 +32,7 @@
 
 .btn-minimal {
   @extend %pill-base;
+  justify-content: center;
   color: color-mix(in srgb, var(--color-text) 80%, transparent);
   transition-duration: 200ms;
 }

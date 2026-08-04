@@ -12,42 +12,32 @@ extraStyles:
       : [])
 }}
 
-<div class="flex flex-col gap-16 pb-16 [view-transition-name:event-page]">
-  <div
-    class="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-12 md:gap-20 items-start"
-  >
-    <div class="space-y-16 [view-transition-name:event-content]">
-      <section class="space-y-10">
+<div class="event-page">
+  <div class="event-page__grid">
+    <div class="event-page__content">
+      <section class="event-page__header">
         {{ if event.isCustomTitle && event.displayTitle }}
-          <p
-            class="text-[length:var(--size-step-1)] font-sans font-bold tracking-tight text-text-muted leading-[1.2] text-balance"
-          >
+          <p class="event-page__custom-title">
             {{ event.displayTitle }}
           </p>
         {{ /if }}
 
         {{ if event.disambiguation }}
-          <p
-            class="text-xl text-text-muted italic border-l-2 border-primary/20 pl-6 py-1"
-          >
+          <p class="event-page__disambiguation">
             {{ event.disambiguation }}
           </p>
         {{ /if }}
 
         {{# ORGANIZERS (Promoted) #}}
         {{ if event.labels?.length > 0 }}
-          <div class="flex flex-wrap gap-x-8 gap-y-3">
+          <div class="event-page__organizers">
             {{ for labelRel of event.labels }}
-              <div
-                class="text-base font-bold text-text/80 inline-flex items-center"
-              >
-                <span
-                  class="typography-label text-text-muted mr-2 inline-block translate-y-[-1px]"
-                >Presented by</span>
+              <div class="event-page__organizer">
+                <span class="event-page__organizer-label typography-label">Presented by</span>
 
-                <span class="inline-block">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
+                <span class="event-page__organizer-name">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
 
-                <div class="ml-1.5 inline-block">
+                <div class="event-page__organizer-links">
                   {{
                     comp.base.ExternalLinks({
                       links: labelRel.label.externalLinks,
@@ -60,14 +50,14 @@ extraStyles:
           </div>
         {{ /if }}
 
-        <div class="flex flex-wrap items-center gap-x-12 gap-y-10">
-          <div class="flex flex-col gap-4 min-w-[200px]">
+        <div class="event-page__meta-row">
+          <div class="event-page__meta-col">
             {{ comp.ui.SectionHeader({ title: "Date & Time" }) }}
-            <div class="text-xl font-bold font-mono text-text pl-1">
+            <div class="event-page__meta-value">
               {{ if it.event.beginDate }}
                 {{ it.event.beginDate |> date("EEE, MMM dd") }}
                 {{ if it.event.time }}
-                  <span class="ml-2 text-text-muted">{{ it.event.time }}</span>
+                  <span class="event-page__meta-time">{{ it.event.time }}</span>
                 {{ /if }}
               {{ else }}
                 TBA
@@ -76,9 +66,9 @@ extraStyles:
           </div>
 
           {{ if event.local?.price }}
-            <div class="flex flex-col gap-4 min-w-[140px]">
+            <div class="event-page__meta-col event-page__meta-col--fee">
               {{ comp.ui.SectionHeader({ title: "Entry Fee" }) }}
-              <div class="text-xl font-bold font-mono text-primary pl-1">
+              <div class="event-page__meta-value event-page__meta-value--fee">
                 {{ event.local.price }}
               </div>
             </div>
@@ -86,15 +76,13 @@ extraStyles:
         </div>
 
         {{ if event.local?.description }}
-          <div
-            class="prose max-w-none prose-p:text-lg prose-p:leading-relaxed pt-4 border-t border-border/10"
-          >
+          <div class="event-page__description markdown">
             {{ event.local.description }}
           </div>
         {{ /if }}
 
         {{ if event.local?.video }}
-          <div class="pt-8 border-t border-border/10">
+          <div class="event-page__video">
             {{
               comp.ui.Video({
                 src: event.local.video.src,
@@ -107,10 +95,8 @@ extraStyles:
       </section>
 
       {{# LINEUP SECTION #}}
-      <div
-        class="flex flex-col gap-16 pt-12 border-t border-border/10"
-      >
-        <section class="flex flex-col gap-8">
+      <div class="event-page__lineup">
+        <section class="event-page__section">
           {{ comp.ui.SectionHeader({ title: "Lineup" }) }}
           {{
             set artistRels = (event.relations || []).filter((r) =>
@@ -121,20 +107,18 @@ extraStyles:
             )
           }}
           {{ if artistRels.length > 0 }}
-            <ul class="flex flex-col gap-6">
+            <ul class="event-page__artist-list">
               {{ for rel of artistRels }}
-                <li class="flex flex-col gap-1">
-                  <div
-                    class="text-xl md:text-2xl font-bold text-text leading-tight flex items-center"
-                  >
+                <li class="event-page__artist">
+                  <div class="event-page__artist-name">
                     <a
                       href="https://musicbrainz.org/artist/{{ rel.artist.id }}"
-                      class="hover:text-primary transition-colors"
+                      class="event-page__artist-link"
                     >
                       {{ rel["target-credit"] || rel.artist.name }}
                     </a>
 
-                    <div class="ml-2 inline-block">
+                    <div class="event-page__artist-links">
                       {{
                         comp.base.ExternalLinks({
                           links: rel.artist.externalLinks,
@@ -143,22 +127,20 @@ extraStyles:
                       }}
                     </div>
                   </div>
-                  <span
-                    class="typography-label font-normal text-text-muted"
-                  >
+                  <span class="event-page__artist-role typography-label">
                     {{ rel.type }}
                   </span>
                 </li>
               {{ /for }}
             </ul>
           {{ else }}
-            <p class="text-text-muted italic">Lineup TBA</p>
+            <p class="event-page__tba">Lineup TBA</p>
           {{ /if }}
         </section>
 
         {{# SETLIST SECTION #}}
         {{ if event.setlist }}
-          <section class="flex flex-col gap-8">
+          <section class="event-page__section">
             {{ comp.ui.SectionHeader({ title: "Setlist" }) }}
             {{
               await it.comp.ui.Setlist({
@@ -171,12 +153,10 @@ extraStyles:
     </div>
 
     {{# SIDEBAR #}}
-    <aside
-      class="space-y-12 md:sticky md:top-24 [view-transition-name:event-sidebar]"
-    >
+    <aside class="event-page__sidebar">
       {{# POSTER #}}
       {{ if posterImages.length > 0 }}
-        <div class="w-full">
+        <div>
           {{ await comp.ui.Media({ images: posterImages, aspect: "auto" }) }}
 
           {{# POSTER CREDITS #}}
@@ -198,18 +178,18 @@ extraStyles:
       {{ /if }}
 
       {{# VENUE SECTION (Moved to sidebar for desktop) #}}
-      <section class="flex flex-col gap-8">
+      <section class="event-page__section">
         {{ comp.ui.SectionHeader({ title: "Venue" }) }}
         {{
           set venueRel = (event.relations || []).find((r) => r["target-type"] === "place")
         }}
         {{ if venueRel }}
-          <div class="space-y-8">
-            <div class="flex flex-col gap-2">
-              <div class="text-xl font-bold text-text flex items-center">
-                <span class="inline-block">{{ event.venueName }}</span>
+          <div class="event-page__venue-body">
+            <div class="event-page__venue-header">
+              <div class="event-page__venue-name">
+                <span class="event-page__venue-name-text">{{ event.venueName }}</span>
 
-                <div class="ml-2 inline-block">
+                <div class="event-page__venue-links">
                   {{
                     comp.base.ExternalLinks({
                       links: venueRel.place.externalLinks,
@@ -219,9 +199,7 @@ extraStyles:
                 </div>
               </div>
               {{ if venueRel.place.address }}
-                <p
-                  class="text-sm text-text-muted leading-relaxed"
-                >
+                <p class="event-page__venue-address">
                   {{ venueRel.place.address }}
                 </p>
               {{ /if }}
@@ -229,47 +207,39 @@ extraStyles:
 
             {{# MAP VIEW #}}
             {{ if venueRel.place.coordinates }}
-              <div
-                class="relative group/map shadow-xl rounded-2xl overflow-hidden border border-border/10 bg-surface/5"
-              >
+              <div class="event-page__map">
                 {{# 1. The Map #}}
-                <div
-                  class="w-full aspect-square"
-                >
+                <div class="event-page__map-square">
                   <div
-                    class="venue-map w-full h-full"
+                    class="venue-map"
                     data-lat="{{ venueRel.place.coordinates.latitude }}"
                     data-lng="{{ venueRel.place.coordinates.longitude }}"
                     data-name="{{ event.venueName }}"
                   >
                   </div>
                   {{# Glass Overlay #}}
-                  <div
-                    class="absolute inset-0 pointer-events-none border border-inset border-white/5 rounded-2xl z-[10]"
-                  >
+                  <div class="event-page__map-overlay">
                   </div>
                 </div>
 
                 {{# 2. Navigation UI #}}
-                <div
-                  class="absolute bottom-4 right-4 flex flex-col items-end group/nav z-[1010] pointer-events-none"
-                >
+                <div class="event-page__map-nav">
                   {{# THE POPUP MENU #}}
                   <div
-                    class="mb-3 w-44 menu opacity-0 scale-95 translate-y-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:scale-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto group-focus-within/nav:opacity-100 group-focus-within/nav:scale-100 group-focus-within/nav:translate-y-0 group-focus-within/nav:pointer-events-auto transition-all duration-300 origin-bottom-right pointer-events-auto"
+                    class="event-page__map-menu menu menu--divided"
                     role="menu"
                   >
                     {{# Option 1: Native #}}
                     <a
                       href='geo:{{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}({{ (venueRel["target-credit"] || venueRel.place.name) |> encodeURIComponent }})'
-                      class="menu__item border-b border-border/5"
+                      class="menu__item"
                       role="menuitem"
                     >
                       {{
                         comp.base.Icon({
                           name: "navigation",
                           catalog: "lucide",
-                          classes: "w-4 h-4 opacity-60",
+                          classes: "w-4 h-4",
                         })
                       }}
                       <span class="typography-sublabel">Native App</span>
@@ -279,14 +249,14 @@ extraStyles:
                     <a
                       href="https://www.openstreetmap.org/?mlat={{ venueRel.place.coordinates.latitude }}&mlon={{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
-                      class="menu__item border-b border-border/5"
+                      class="menu__item"
                       role="menuitem"
                     >
                       {{
                         comp.base.Icon({
                           name: "map",
                           catalog: "lucide",
-                          classes: "w-4 h-4 opacity-60",
+                          classes: "w-4 h-4",
                         })
                       }}
                       <span class="typography-sublabel">OpenStreetMap</span>
@@ -303,7 +273,7 @@ extraStyles:
                         comp.base.Icon({
                           name: "map-pin",
                           catalog: "lucide",
-                          classes: "w-4 h-4 opacity-60",
+                          classes: "w-4 h-4",
                         })
                       }}
                       <span class="typography-sublabel">Google Maps</span>
@@ -312,7 +282,7 @@ extraStyles:
 
                   {{# THE TRIGGER BUTTON #}}
                   <button
-                    class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-bg/90 backdrop-blur-md text-text border border-border-subtle shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto group-hover/nav:border-primary/40 group-hover/nav:text-primary"
+                    class="event-page__map-trigger"
                     aria-label="Get directions to {{ event.venueName }}"
                     aria-haspopup="true"
                   >
@@ -320,10 +290,10 @@ extraStyles:
                       comp.base.Icon({
                         name: "compass",
                         catalog: "lucide",
-                        classes: "w-4 h-4 opacity-90",
+                        classes: "w-4 h-4",
                       })
                     }}
-                    <span class="typography-sublabel font-black"
+                    <span class="typography-sublabel"
                     >Directions</span>
                   </button>
                 </div>
@@ -331,12 +301,12 @@ extraStyles:
             {{ /if }}
           </div>
         {{ else }}
-          <p class="text-text-muted italic">Venue TBA</p>
+          <p class="event-page__tba">Venue TBA</p>
         {{ /if }}
       </section>
 
       {{# ACTIONS & LINKS #}}
-      <div class="flex flex-col gap-4">
+      <div class="event-page__actions">
         {{# URL RELATIONS (Ticket links, streams, homepages etc. from MB) #}}
         {{
           set urlRels = (event.relations || []).filter((r) =>
@@ -345,14 +315,14 @@ extraStyles:
           )
         }}
 
-        <div class="flex flex-col gap-2">
+        <div class="event-page__actions-links">
           {{# TICKETS (Manual Priority) #}}
           {{ if event.local?.tickets_url }}
             <a
               href="{{ event.local.tickets_url }}"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn-minimal justify-center"
+              class="btn-minimal"
             >
               {{
                 comp.base.Icon({
@@ -377,7 +347,7 @@ extraStyles:
                 href="{{ url }}"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn-minimal justify-center"
+                class="btn-minimal"
               >
                 {{
                   comp.base.Icon({
@@ -402,7 +372,7 @@ extraStyles:
               href="{{ rel.url.resource }}"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn-minimal justify-center"
+              class="btn-minimal"
             >
               {{
                 comp.base.Icon({
@@ -421,9 +391,7 @@ extraStyles:
 
   {{# GALLERY #}}
   {{ if gallery && gallery.length > 0 }}
-    <section
-      class="flex flex-col gap-8 pt-12 border-t border-border/10 [view-transition-name:event-gallery]"
-    >
+    <section class="event-page__gallery">
       {{ comp.ui.SectionHeader({ title: "Photographs" }) }}
       {{ await comp.ui.Gallery({ images: gallery }) }}
     </section>

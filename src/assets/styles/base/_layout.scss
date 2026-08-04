@@ -31,6 +31,38 @@
     flex-grow: 1;
   }
 
+  .page-body {
+    min-height: 100vh;
+    padding-bottom: 4rem;
+  }
+
+  .page-search {
+    margin-block: 2rem 3rem;
+    view-transition-name: page-search;
+
+    &__label-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    &__label {
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+  }
+
+  .page-content {
+    margin-top: 3rem;
+    view-transition-name: page-content;
+
+    &--bare {
+      margin-top: 0;
+      padding-top: 6rem;
+    }
+  }
+
   html.pswp-open,
   html.pswp-closing {
     overflow: hidden !important;

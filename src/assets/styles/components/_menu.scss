@@ -4,6 +4,11 @@
   border-radius: 0.75rem;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
   overflow: hidden;
+
+  &--divided .menu__item + .menu__item {
+    border-top: 1px solid color-mix(in srgb, var(--color-border) 5%,
+      transparent);
+  }
 }
 
 .menu__item {

@@ -8,10 +8,10 @@ layout: layouts/base.vto
   {{ /if }}
 
   {{ if it.search_bar && !it.hide_layout_search }}
-    <div class="mt-8 mb-12 [view-transition-name:page-search]">
+    <div class="page-search">
       {{ if it.search_bar.label }}
-        <div class="flex items-center gap-4 mb-6">
-          <span class="typography-label text-text-muted whitespace-nowrap">
+        <div class="page-search__label-row">
+          <span class="page-search__label typography-label">
             {{ it.search_bar.label }}
           </span>
         </div>
@@ -26,7 +26,7 @@ layout: layouts/base.vto
   {{ /if }}
 
   <{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}
-  class="{{ (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : "" }} {{ it.hide_title !== true ? "mt-12" : "pt-24" }} {{ it.article_classes || "" }} [view-transition-name:page-content]"
+  class="{{ (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : "" }} {{ it.hide_title !== true ? "page-content" : "page-content page-content--bare" }} {{ it.article_classes || "" }}"
   {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
   {{ if it.type === "note" }}
@@ -99,7 +99,7 @@ layout: layouts/base.vto
 {{
   await comp.layout.Container({
     width: it.container_width || "narrow",
-    classes: "min-h-screen pb-16",
+    classes: "page-body",
     content: pageBody,
   })
 }}
