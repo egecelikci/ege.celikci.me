@@ -37,7 +37,6 @@ export const remarkPlugin = (options: RemarkOptions = {}) => {
         rehypeSlug,
         [rehypeAutolinkHeadings, {
           behavior: "append",
-          content: [],
           properties: {
             className: ["heading-anchor"],
             ariaHidden: true,
