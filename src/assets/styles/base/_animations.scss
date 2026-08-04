@@ -1,7 +1,3 @@
-// ---------------------------------------------------------------------------
-// Animations — keyframes, scroll-driven reveals, and view-transition opts-in.
-// ---------------------------------------------------------------------------
-
 @keyframes album-reveal {
   from {
     opacity: 0;
@@ -35,7 +31,6 @@
   navigation: auto;
 }
 
-/* Scroll-linked reveal for album grids (staggered per row position). */
 .album-item {
   animation-name: album-reveal;
   animation-timing-function: linear;

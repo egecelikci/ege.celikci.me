@@ -1,11 +1,4 @@
-// ---------------------------------------------------------------------------
-// Media — on-image chrome for the media grid (ALT badge, hover caption,
-// overflow count). Uses the same light glassy chip language as the credits
-// overlay (`.gallery-overlay`) and the rest of the site.
-// ---------------------------------------------------------------------------
-
 .media {
-  /* "ALT" badge — signals an accessible description is available */
   .alt-badge {
     position: absolute;
     top: 0.75rem;
@@ -26,7 +19,6 @@
     transition: opacity 300ms ease;
   }
 
-  /* Hover caption — reveals the image description */
   .media-caption {
     position: absolute;
     inset-inline: 0;
@@ -58,7 +50,6 @@
     }
   }
 
-  /* Overflow count — "+N" over the last tile */
   .media-more {
     position: absolute;
     inset: 0;

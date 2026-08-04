@@ -1,16 +1,10 @@
 @use "../utils/variables";
 
-// ---------------------------------------------------------------------------
-// Markdown — rich-text content styling (replaces Tailwind's typography plugin).
-// Scoped to a single container class so `.not-prose` is no longer needed.
-// ---------------------------------------------------------------------------
-
 .markdown {
   font-family: var(--font-sans);
   color: var(--color-text);
   overflow-wrap: break-word;
 
-  /* Vertical rhythm between siblings. */
   & > * + * {
     margin-block-start: var(--flow-space, var(--flow-space-base));
   }
@@ -24,8 +18,6 @@
     text-wrap: pretty;
   }
 
-  /* -- Flow spacing -- */
-
   & :is(h1, h2, h3, h4, blockquote) {
     --flow-space: var(--flow-space-loose);
   }
@@ -33,8 +25,6 @@
   & :is(h1, h2, h3, h4) + * {
     --flow-space: var(--flow-space-tight);
   }
-
-  /* -- Headings -- */
 
   & :is(h1, h2, h3, h4) {
     font-family: var(--font-sans);
@@ -77,8 +67,6 @@
     color: var(--color-text-muted);
   }
 
-  /* -- Paragraph links -- */
-
   & a:not(.btn, .heading-anchor, .no-underline) {
     color: var(--color-primary);
     text-decoration: none;
@@ -99,8 +87,6 @@
     border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
 
-  /* -- Blockquote -- */
-
   & blockquote {
     max-width: 50ch;
     padding: 0.25rem 0 0.25rem 1.5rem;
@@ -113,15 +99,11 @@
     font-style: italic;
   }
 
-  /* -- Horizontal rule -- */
-
   & hr {
     margin-block: 2rem;
     border: none;
     border-top: 1px solid var(--color-border-subtle);
   }
-
-  /* -- Code -- */
 
   & pre,
   & code,
@@ -157,8 +139,6 @@
     }
   }
 
-  /* -- Lists -- */
-
   & ul {
     list-style: disc;
 
@@ -188,8 +168,6 @@
     box-shadow: none;
   }
 
-  /* -- Inline emphasis -- */
-
   & strong {
     font-weight: 700;
   }
@@ -197,8 +175,6 @@
   & em {
     font-style: italic;
   }
-
-  /* -- Images -- */
 
   & img {
     border-radius: 0.5rem;
@@ -214,8 +190,6 @@
     font-size: 0.75rem;
     color: var(--color-text-muted);
   }
-
-  /* -- Tables -- */
 
   & table {
     width: 100%;
@@ -234,16 +208,12 @@
     font-weight: 700;
   }
 
-  /* -- kbd -- */
-
   & kbd {
     padding: 0.1em 0.3em;
     border-radius: 0.25rem;
     border: 1px solid var(--color-border-subtle);
     background-color: var(--color-surface);
   }
-
-  /* -- Heading anchors -- */
 
   & .heading-anchor {
     position: absolute;
@@ -266,7 +236,6 @@
   }
 }
 
-/* Inline markdown (flows within a sentence). */
 .markdown-inline {
   & :is(p, ul, ol) {
     display: inline;
