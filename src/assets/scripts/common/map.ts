@@ -1,8 +1,3 @@
-/**
- * map.ts
- * Leaflet integration for venue maps.
- */
-
 import L from "leaflet";
 
 export function initVenueMaps() {
@@ -13,11 +8,9 @@ export function initVenueMaps() {
     const element = container as HTMLElement;
     const lat = parseFloat(element.dataset.lat || "0");
     const lng = parseFloat(element.dataset.lng || "0");
-    const name = element.dataset.name || "Venue";
 
     if (!lat || !lng) return;
 
-    // Initialize map with a small timeout to ensure container size is stable
     setTimeout(() => {
       const map = L.map(element, {
         center: [lat, lng],
@@ -26,13 +19,11 @@ export function initVenueMaps() {
         attributionControl: false,
       });
 
-      // Customized Attribution (Moved to top-right to avoid any collision with bottom controls)
       L.control.attribution({
         position: "topright",
         prefix: false,
       }).addTo(map);
 
-      // CARTO Voyager (Clean, elegant tiles with subtle colors)
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
         {
@@ -42,32 +33,31 @@ export function initVenueMaps() {
         },
       ).addTo(map);
 
-      // Custom marker icon
       const icon = L.divIcon({
         className: "custom-venue-marker",
         html: `
-          <div class="relative flex items-center justify-center">
-            <div class="leaflet-marker-halo"></div>
-            <div class="leaflet-marker-dot"></div>
-          </div>
+          <div class="leaflet-marker-halo"></div>
+          <div class="leaflet-marker-dot"></div>
         `,
-        iconSize: [16, 16],
-        iconAnchor: [8, 8],
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
       });
 
       L.marker([lat, lng], { icon }).addTo(map);
 
-      // Fix for mobile: ensure map doesn't swallow clicks on our custom popup
       const navGroup = element.parentElement?.querySelector(".group\\/nav");
       if (navGroup) {
         L.DomEvent.disableClickPropagation(navGroup as HTMLElement);
         L.DomEvent.disableScrollPropagation(navGroup as HTMLElement);
       }
 
-      // Force a resize check
-      map.invalidateSize();
+      const invalidate = () => map.invalidateSize();
+      invalidate();
 
-      // Fade in effect
+      requestAnimationFrame(() => setTimeout(invalidate, 300));
+      document.fonts?.ready.then(() => requestAnimationFrame(invalidate));
+      self.addEventListener("resize", invalidate);
+
       element.classList.add("map-ready");
     }, 100);
   });
