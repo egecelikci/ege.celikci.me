@@ -1,4 +1,5 @@
 {
+  "nodeModulesDir": "auto",
   "imports": {
     "@shikijs/rehype": "npm:@shikijs/rehype@^4.3.1",
     "@shikijs/themes": "npm:@shikijs/themes@^4.3.1",
@@ -20,7 +21,9 @@
     "sharp": "npm:sharp@^0.35.3",
     "shiki": "npm:shiki@^4.3.1",
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
-    "workbox-cli": "npm:workbox-cli@^7.4.1",
+    "serwist": "npm:serwist@^9.5.12",
+    "@serwist/build": "npm:@serwist/build@^9.5.12",
+    "esbuild": "npm:esbuild@^0.28.1",
     "xss": "npm:xss@^1.0.15",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
     "zod": "npm:zod@^4.4.3"
