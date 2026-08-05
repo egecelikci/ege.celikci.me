@@ -1,6 +1,7 @@
 ---
 title: colophon
 tags: ["meta"]
+templateEngine: [vto, md]
 ---
 
 This page will be a living documentation of how site is built and what are the current standards I try to apply are. Even though I have just started this type of documentation (you might want to check the page footer to see the last time I edited this page), I want to store and share information about each part of the site is built as components on this page.
@@ -19,3 +20,7 @@ This page will be a living documentation of how site is built and what are the c
 ## accessibility
 
 **Seirdy taught me:** Since I do not yet have enough knowledge to trust my own decisions on this subject, but at the same time, I want to keep the accessibility of the website as important and at the forefront as possible, I wanted to implement, as much as I could, the accessibility practices explained in [Seirdy’s site design standards](https://seirdy.one/meta/site-design/), whom I trust as someone who is more knowledgeable on this subject.
+
+## license
+
+{{ it.readme.license }}
