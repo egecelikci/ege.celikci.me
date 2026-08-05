@@ -1,5 +1,4 @@
 {
-  "nodeModulesDir": "auto",
   "imports": {
     "@shikijs/rehype": "npm:@shikijs/rehype@^4.3.1",
     "@shikijs/themes": "npm:@shikijs/themes@^4.3.1",
