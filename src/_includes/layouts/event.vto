@@ -28,7 +28,6 @@ extraStyles:
           </p>
         {{ /if }}
 
-        {{# ORGANIZERS (Promoted) #}}
         {{ if event.labels?.length > 0 }}
           <div class="event-page__organizers">
             {{ for labelRel of event.labels }}
@@ -94,7 +93,6 @@ extraStyles:
         {{ /if }}
       </section>
 
-      {{# LINEUP SECTION #}}
       <div class="event-page__lineup">
         <section class="event-page__section">
           {{ comp.ui.SectionHeader({ title: "Lineup" }) }}
@@ -138,7 +136,6 @@ extraStyles:
           {{ /if }}
         </section>
 
-        {{# SETLIST SECTION #}}
         {{ if event.setlist }}
           <section class="event-page__section">
             {{ comp.ui.SectionHeader({ title: "Setlist" }) }}
@@ -152,14 +149,11 @@ extraStyles:
       </div>
     </div>
 
-    {{# SIDEBAR #}}
     <aside class="event-page__sidebar">
-      {{# POSTER #}}
       {{ if posterImages.length > 0 }}
         <div>
           {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true }) }}
 
-          {{# POSTER CREDITS #}}
           {{ if posterCredits?.length > 0 }}
             <div class="media-credits media-credits--poster">
               {{ for credit of posterCredits }}
@@ -179,7 +173,6 @@ extraStyles:
         </div>
       {{ /if }}
 
-      {{# VENUE SECTION (Moved to sidebar for desktop) #}}
       <section class="event-page__section">
         {{ comp.ui.SectionHeader({ title: "Venue" }) }}
         {{
@@ -207,10 +200,8 @@ extraStyles:
               {{ /if }}
             </div>
 
-            {{# MAP VIEW #}}
             {{ if venueRel.place.coordinates }}
               <div class="event-page__map">
-                {{# 1. The Map #}}
                 <div class="event-page__map-square">
                   <div
                     class="venue-map"
@@ -219,19 +210,15 @@ extraStyles:
                     data-name="{{ event.venueName }}"
                   >
                   </div>
-                  {{# Glass Overlay #}}
                   <div class="event-page__map-overlay">
                   </div>
                 </div>
 
-                {{# 2. Navigation UI #}}
                 <div class="event-page__map-nav">
-                  {{# THE POPUP MENU #}}
                   <div
                     class="event-page__map-menu menu menu--divided"
                     role="menu"
                   >
-                    {{# Option 1: Native #}}
                     <a
                       href='geo:{{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}({{ (venueRel["target-credit"] || venueRel.place.name) |> encodeURIComponent }})'
                       class="menu__item"
@@ -247,7 +234,6 @@ extraStyles:
                       <span class="typography-sublabel">Native App</span>
                     </a>
 
-                    {{# Option 2: OSM #}}
                     <a
                       href="https://www.openstreetmap.org/?mlat={{ venueRel.place.coordinates.latitude }}&mlon={{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
@@ -264,7 +250,6 @@ extraStyles:
                       <span class="typography-sublabel">OpenStreetMap</span>
                     </a>
 
-                    {{# Option 3: Google Maps #}}
                     <a
                       href="https://maps.google.com/maps?q={{ venueRel.place.coordinates.latitude }},{{ venueRel.place.coordinates.longitude }}"
                       target="_blank"
@@ -282,7 +267,6 @@ extraStyles:
                     </a>
                   </div>
 
-                  {{# THE TRIGGER BUTTON #}}
                   <button
                     class="event-page__map-trigger"
                     aria-label="Get directions to {{ event.venueName }}"
@@ -307,9 +291,7 @@ extraStyles:
         {{ /if }}
       </section>
 
-      {{# ACTIONS & LINKS #}}
       <div class="event-page__actions">
-        {{# URL RELATIONS (Ticket links, streams, homepages etc. from MB) #}}
         {{
           set urlRels = (event.relations || []).filter((r) =>
             r["target-type"] === "url" &&
@@ -318,7 +300,6 @@ extraStyles:
         }}
 
         <div class="event-page__actions-links">
-          {{# TICKETS (Manual Priority) #}}
           {{ if event.local?.tickets_url }}
             <a
               href="{{ event.local.tickets_url }}"
@@ -337,7 +318,6 @@ extraStyles:
             </a>
           {{ /if }}
 
-          {{# Local Instagram URLs #}}
           {{ if event.local?.instagram_url }}
             {{>
               const igUrls = Array.isArray(event.local.instagram_url)
@@ -367,7 +347,6 @@ extraStyles:
             {{ /for }}
           {{ /if }}
 
-          {{# Other MB URL Relations #}}
           {{ for rel of urlRels }}
             {{ set info = rel.type |> getLinkInfo(rel.url.resource) }}
             <a
@@ -391,7 +370,6 @@ extraStyles:
     </aside>
   </div>
 
-  {{# GALLERY #}}
   {{ if gallery && gallery.length > 0 }}
     <section class="event-page__gallery">
       {{ comp.ui.SectionHeader({ title: "Photographs" }) }}
