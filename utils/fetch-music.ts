@@ -150,8 +150,8 @@ class ImageProcessor {
     const monoPath = join(CONFIG.paths.coverMono, `${rgid}.png`);
     const uint8 = new Uint8Array(imageBuffer);
     await Promise.all([
-      saveColorVersion(uint8, colorPath),
-      ditherWithSharp(uint8, monoPath),
+      saveColorVersion(Buffer.from(uint8), colorPath),
+      ditherWithSharp(Buffer.from(uint8), monoPath),
     ]);
   }
 

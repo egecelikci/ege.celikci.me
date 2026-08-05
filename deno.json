@@ -46,7 +46,7 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "check": "deno check _config.ts",
+    "check": "deno check _config.ts utils/**/*.ts src/*.page.ts",
     "test": "deno test utils/",
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "new": {
