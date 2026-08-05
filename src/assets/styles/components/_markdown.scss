@@ -5,7 +5,8 @@
   color: var(--color-text);
   overflow-wrap: break-word;
 
-  & > * + * {
+  & > * + *,
+  & .e-content > * + * {
     margin-block-start: var(--flow-space, var(--flow-space-base));
   }
 
@@ -32,6 +33,7 @@
     line-height: 1.1;
     text-wrap: balance;
     margin-block: 2rem;
+    scroll-margin-top: calc(var(--header-height) + 1rem);
     word-break: break-word;
     font-variant-ligatures: none;
     font-kerning: normal;
@@ -265,8 +267,41 @@
     background-color: var(--color-surface);
   }
 
-  & :is(h1, h2, h3, h4):is(:hover, :focus-within) .heading-anchor {
-    color: var(--color-primary);
+  & a.heading-anchor {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: "#";
+      margin-inline-start: 0.25em;
+      color: var(--color-text-muted);
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+        text-decoration-color: color-mix(
+          in srgb,
+          var(--color-text-muted) 40%,
+          transparent
+        );
+      }
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      border-radius: 0.125rem;
+    }
   }
 }
 
