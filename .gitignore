@@ -7,3 +7,5 @@ node_modules/
 
 # Rust
 src/_rust/**/target/
+# Playwright MCP
+.playwright-mcp/
