@@ -12,9 +12,6 @@
     path = "/api/collage-proxy"
     function = "collage-proxy"
 
-[[plugins]]
-    package = "./plugins/cache"
-
 [[headers]]
     for = "/*"
     [headers.values]

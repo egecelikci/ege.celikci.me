@@ -8,28 +8,16 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Clone repository
+        uses: actions/checkout@v7
 
-      - uses: actions/cache@v4
+      - name: Setup Deno
+        uses: https://github.com/denoland/setup-deno@v2
         with:
-          path: _cache
-          key: _cache
-          restore-keys: _cache
+          cache: true
+          deno-version: 2.9.2
 
-      - uses: actions/cache@v4
-        with:
-          path: ~/.cache/deno
-          key: deno-${{ hashFiles('deno.lock') }}
-          restore-keys: deno-
-
-      - name: Install Deno
-        run: |
-          export DENO_INSTALL=/opt/deno
-          curl -fsSL https://deno.land/install.sh | sh
-          echo "/opt/deno/bin" >> "$GITHUB_PATH"
-          deno --version
-
-      - name: Build
+      - name: Build site
         run: deno task build
         env:
           CRITIQUEBRAINZ_ID: ${{ secrets.CRITIQUEBRAINZ_ID }}
