@@ -8,8 +8,28 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Install git-lfs
+        run: |
+          if ! command -v git-lfs >/dev/null 2>&1; then
+            curl -sL https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-linux-amd64-v3.7.1.tar.gz \
+              | tar -xz -C /tmp
+            install /tmp/git-lfs-3.7.1/git-lfs /usr/local/bin/
+          fi
+          git lfs install
+
       - name: Clone repository
         uses: actions/checkout@v7
+
+      - name: Get week
+        id: week
+        run: echo "week=$(/bin/date -u +%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Lume resources
+        uses: actions/cache@v4
+        with:
+          path: _cache
+          key: _cache-${{ steps.week.outputs.week }}
+          restore-keys: _cache-
 
       - name: Setup Deno
         uses: https://github.com/denoland/setup-deno@v2
