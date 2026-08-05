@@ -36,11 +36,9 @@ export const remarkPlugin = (options: RemarkOptions = {}) => {
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, {
-          behavior: "append",
+          behavior: "wrap",
           properties: {
             className: ["heading-anchor"],
-            ariaHidden: true,
-            tabIndex: -1,
           },
         }],
         [rehypeShiki, shikiConfig],
