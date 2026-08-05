@@ -1,0 +1,42 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          path: _cache
+          key: _cache
+          restore-keys: _cache
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/deno
+          key: deno-${{ hashFiles('deno.lock') }}
+          restore-keys: deno-
+
+      - name: Install Deno
+        run: |
+          export DENO_INSTALL=/opt/deno
+          curl -fsSL https://deno.land/install.sh | sh
+          echo "/opt/deno/bin" >> "$GITHUB_PATH"
+          deno --version
+
+      - name: Build
+        run: deno task build
+        env:
+          CRITIQUEBRAINZ_ID: ${{ secrets.CRITIQUEBRAINZ_ID }}
+          WEBMENTION_IO_TOKEN: ${{ secrets.WEBMENTION_IO_TOKEN }}
+
+      - name: Deploy to Netlify
+        run: npx netlify-cli deploy --prod --dir=dist
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
