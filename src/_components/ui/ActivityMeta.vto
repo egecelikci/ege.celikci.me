@@ -10,12 +10,7 @@
 #}}
 
 <div class="activity-meta {{ it.classes }}">
-  {{
-    if
-    it.stats &&
-    (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
-
-  }}
+  {{ if it.stats && (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0) }}
     <ul class="activity-meta__stats">
       <li
         class="activity-meta__stat"
@@ -46,12 +41,7 @@
   {{ /if }}
 
   {{ if it.syndication }}
-    {{
-      if
-      it.stats &&
-      (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
-
-    }}
+    {{ if it.stats && (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0) }}
       <div class="activity-meta__divider"></div>
     {{ /if }}
     <div class="activity-meta__syndication">
