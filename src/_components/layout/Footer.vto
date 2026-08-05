@@ -28,7 +28,7 @@
       {{ if it.gitInfo?.hash }}
         <span class="site-footer__sep">|</span>
         <a
-          href="https://codeberg.org/{{ it.author.username }}/{{ it.site.host }}/commit/{{ it.gitInfo.hash }}"
+          href="https://git.{{ it.site.host }}/{{ it.author.username }}/{{ it.site.host }}/commit/{{ it.gitInfo.hash }}"
           class="site-footer__commit"
           aria-label="view latest commit: {{ it.gitInfo.hash }}"
         >
