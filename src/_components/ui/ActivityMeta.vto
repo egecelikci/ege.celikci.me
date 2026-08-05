@@ -10,15 +10,13 @@
 #}}
 
 <div class="activity-meta {{ it.classes }}">
-  {{# 1. Stats #}}
   {{
-    if 
+    if
     it.stats &&
     (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
 
   }}
     <ul class="activity-meta__stats">
-      {{# Replies #}}
       <li
         class="activity-meta__stat"
         title="{{ it.stats.replies }} mentions"
@@ -30,7 +28,6 @@
         }}
         <span>{{ it.stats.replies |> humanizeNumber }}</span>
       </li>
-      {{# Reposts #}}
       <li
         class="activity-meta__stat"
         title="{{ it.stats.reposts }} reposts"
@@ -38,7 +35,6 @@
         {{ await it.comp.base.Icon({ name: "repeat-2" }) }}
         <span>{{ it.stats.reposts |> humanizeNumber }}</span>
       </li>
-      {{# Likes #}}
       <li
         class="activity-meta__stat"
         title="{{ it.stats.likes }} likes"
@@ -49,10 +45,9 @@
     </ul>
   {{ /if }}
 
-  {{# 2. Separator + Syndication #}}
   {{ if it.syndication }}
     {{
-      if 
+      if
       it.stats &&
       (it.stats.replies > 0 || it.stats.reposts > 0 || it.stats.likes > 0)
 
