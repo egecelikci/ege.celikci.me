@@ -130,13 +130,6 @@
     z-index: 40;
     color: var(--color-text-dim);
     transition: color 0.3s ease;
-
-    @media (width < 48em) {
-      .activity-meta__stats,
-      .activity-meta__divider {
-        display: none;
-      }
-    }
   }
 
   &__title {
