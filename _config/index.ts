@@ -52,9 +52,7 @@ export default function () {
       .use(attributes())
       .use(imageSize())
       .use(slugifyPlugin())
-      .use(typst({
-        fonts: ["/assets/fonts"],
-      }));
+      .use(typst());
 
     if (!isDev) {
       const typstOgImages =

@@ -19,7 +19,7 @@
     "remark-toc": "npm:remark-toc@^9.0.0",
     "sharp": "npm:sharp@^0.35.3",
     "shiki": "npm:shiki@^4.3.1",
-    "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@74fe9bd69dc67854912d4d31ed9a65a7bf5d0198/typst/mod.ts",
+    "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@f9908714f8fa211b75d4f55ff1656a22ce9e880f/typst/mod.ts",
     "serwist": "npm:serwist@^9.5.12",
     "@serwist/build": "npm:@serwist/build@^9.5.12",
     "esbuild": "npm:esbuild@^0.28.1",
