@@ -40,7 +40,7 @@ jobs:
           deno-version: 2.9.2
 
       - name: Prepare node_modules
-        run: deno cache --node-modules-dir=auto npm:serwist@9.5.12 npm:esbuild@0.28.1
+        run: deno cache --node-modules-dir=auto npm:serwist@9.5.12
 
       - name: Build site
         run: deno task build

@@ -21,8 +21,7 @@
     "shiki": "npm:shiki@^4.3.1",
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@f9908714f8fa211b75d4f55ff1656a22ce9e880f/typst/mod.ts",
     "serwist": "npm:serwist@^9.5.12",
-    "@serwist/build": "npm:@serwist/build@^9.5.12",
-    "esbuild": "npm:esbuild@^0.28.1",
+    "@serwist/cli": "npm:@serwist/cli@^9.5.12",
     "xss": "npm:xss@^1.0.15",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
     "zod": "npm:zod@^4.4.3"

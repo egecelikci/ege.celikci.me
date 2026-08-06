@@ -1,3 +1,9 @@
+/**
+ * sw.ts
+ * Service worker built with Serwist. Bundled and manifest-injected by
+ * `@serwist/cli build` in the `afterBuild` hook.
+ */
+
 import { CacheFirst, ExpirationPlugin, NetworkFirst, Serwist } from "serwist";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
 
@@ -11,6 +17,9 @@ declare const self: ServiceWorkerGlobalScope;
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
+  precacheOptions: {
+    cleanupOutdatedCaches: true,
+  },
   skipWaiting: true,
   clientsClaim: true,
   navigationPreload: true,
@@ -52,7 +61,7 @@ const serwist = new Serwist({
         plugins: [
           new ExpirationPlugin({
             maxEntries: 20,
-            maxAgeSeconds: 3600,
+            maxAgeSeconds: 60 * 60,
           }),
         ],
       }),

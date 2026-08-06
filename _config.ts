@@ -1,7 +1,6 @@
 import lume from "lume/mod.ts";
 import config from "./_config/index.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
-import sw from "./_config/sw.ts";
 
 const site = lume({
   src: "./src",
@@ -55,6 +54,14 @@ site.addEventListener("beforeBuild", () => {
 });
 
 // Service Worker generation (bundled + precache manifest injected)
-site.use(sw());
+site.addEventListener("afterBuild", async () => {
+  const command = new Deno.Command("deno", {
+    args: ["run", "-A", "@serwist/cli", "build"],
+    env: { NODE_ENV: "production" },
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  await command.spawn().status;
+});
 
 export default site;
