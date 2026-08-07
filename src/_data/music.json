@@ -1459,7 +1459,7 @@
         }
       ],
       "disambiguation": "",
-      "first-release-date": "2002",
+      "first-release-date": "2002-01-16",
       "id": "64469db1-27e2-42d2-afe1-9c8fe44c354f",
       "imagePath": "/assets/images/covers/colored/64469db1-27e2-42d2-afe1-9c8fe44c354f.webp",
       "imagePathMono": "/assets/images/covers/monochrome/64469db1-27e2-42d2-afe1-9c8fe44c354f.png",
@@ -4060,6 +4060,47 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "GB",
+            "disambiguation": "",
+            "id": "eac22afb-3316-41e5-8ea9-acf2e237856f",
+            "name": "Jawnino",
+            "sort-name": "Jawnino",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": " & ",
+          "name": "Jawnino"
+        },
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "",
+            "id": "d7c69035-c53d-4236-9b9a-f490ba5e61ef",
+            "name": "Surf Gang",
+            "sort-name": "Surf Gang",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Surf Gang"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2025-12-05",
+      "id": "e31cd6f8-b622-4e00-b4ee-19069a45973c",
+      "imagePath": "/assets/images/covers/colored/e31cd6f8-b622-4e00-b4ee-19069a45973c.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/e31cd6f8-b622-4e00-b4ee-19069a45973c.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Fri, 07 Aug 2026 05:46:11 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "amnesia"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "US",
             "disambiguation": "US depressive black metal band",
             "id": "2ef8e9b2-5f7d-4cfb-899a-bc4544755371",
@@ -4464,6 +4505,34 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "Narin Yalnızlık"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "US‐based electronic group",
+            "id": "987fc4c9-2c99-4f6c-949b-8da8019769a8",
+            "name": "SALEM",
+            "sort-name": "SALEM",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Salem"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2020-10-30",
+      "id": "f55dd98b-34f3-4493-a91e-cba16e0add79",
+      "imagePath": "/assets/images/covers/colored/f55dd98b-34f3-4493-a91e-cba16e0add79.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/f55dd98b-34f3-4493-a91e-cba16e0add79.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Fri, 07 Aug 2026 05:43:34 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Fires in Heaven"
     },
     {
       "artist-credit": [
