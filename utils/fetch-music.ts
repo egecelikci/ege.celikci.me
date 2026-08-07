@@ -83,7 +83,7 @@ class AlbumFetcher {
           this.httpClient.fetch<unknown>(
             this.buildReviewUrl(offset),
             "json",
-            "force-cache",
+            "no-cache",
             true,
           ),
         );
