@@ -59,7 +59,7 @@ class WebmentionFetcher {
       ? new Date(since).toLocaleDateString()
       : "the beginning";
 
-    console.log(`[webmentions] 🌐 Checking for updates since ${sinceLabel}...`);
+    console.log(`[webmentions] 🌐 Checking for updates since ${sinceLabel}…`);
 
     const data = await this.httpClient.fetch<unknown>(
       url,
@@ -113,7 +113,7 @@ class WebmentionProcessor {
     if (incoming.length === 0) return existing;
 
     console.log(
-      `[webmentions] ♻️ Merging ${incoming.length} new entries with ${existing.length} existing...`,
+      `[webmentions] ♻️ Merging ${incoming.length} new entries with ${existing.length} existing…`,
     );
 
     const byId = new Map<number, Webmention>(
@@ -191,7 +191,7 @@ class WebmentionProcessor {
 
 async function getWebmentionsData(): Promise<WebmentionFeed> {
   const startTime = performance.now();
-  console.log("[webmentions] ℹ️ Starting webmentions sync...");
+  console.log("[webmentions] ℹ️ Starting webmentions sync…");
 
   const httpClient = new HttpClient({
     userAgent: CONFIG.userAgent,

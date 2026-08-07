@@ -174,7 +174,7 @@ async function getMusicData() {
   );
   const albumsMap = new Map(cachedData.albums.map((a) => [a.id, a]));
 
-  console.log("[music] ℹ️ Syncing favorite albums...");
+  console.log("[music] ℹ️ Syncing favorite albums…");
   const favorites = await fetcher.getFavoriteReviews();
 
   if (favorites.size === 0 && cachedData.albums.length > 0) {
@@ -184,7 +184,7 @@ async function getMusicData() {
     return { albums: cachedData.albums };
   }
 
-  console.log(`[music] 🔍 Processing ${favorites.size} albums...`);
+  console.log(`[music] 🔍 Processing ${favorites.size} albums…`);
 
   try {
     const results = await Promise.all(

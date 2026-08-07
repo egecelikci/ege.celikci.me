@@ -162,7 +162,7 @@ export default function () {
 
             if (teaser) {
               page.data.description = teaser.length > 200
-                ? teaser.substring(0, 197) + "..."
+                ? teaser.substring(0, 197) + "…"
                 : teaser;
             }
           }

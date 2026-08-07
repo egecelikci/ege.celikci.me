@@ -362,7 +362,7 @@ async function syncEvents() {
   );
   const eventsMap = new Map(cachedData.events.map((e) => [e.id, e]));
 
-  console.log("[mb_events] ℹ️ Starting MusicBrainz sync...");
+  console.log("[mb_events] ℹ️ Starting MusicBrainz sync…");
 
   try {
     const raw = await fetchAllEvents(httpClient);
@@ -376,7 +376,7 @@ async function syncEvents() {
 
     const entityIds = new Map<string, "artist" | "place" | "label" | "url">();
 
-    console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters...`);
+    console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters…`);
 
     const events = await Promise.all(
       raw.map(async (event: MBEvent) => {
@@ -448,7 +448,7 @@ async function syncEvents() {
     // 4. Enrich entities (All links)
     const entities: Record<string, MBEntityLink[]> = {};
     console.log(
-      `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities...`,
+      `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities…`,
     );
 
     const harvestResults = await Promise.all(
