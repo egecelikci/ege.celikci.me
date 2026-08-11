@@ -1,5 +1,4 @@
 import { Page } from "lume/core/file.ts";
-import type { Data } from "lume/types.ts";
 import type { TypstEngine } from "typst";
 
 export interface TypstOgOptions {
@@ -143,7 +142,8 @@ export default function typstOg({
 
         const svg = await engine!.render(injectedSource, {
           url: "/og.svg",
-        } as Data);
+          type: "svg",
+        });
 
         const svgText = typeof svg === "string"
           ? svg
