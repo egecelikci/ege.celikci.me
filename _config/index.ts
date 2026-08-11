@@ -40,6 +40,7 @@ import markdown from "./markdown.ts";
 import {
   atproto,
   author,
+  git as gitMetadata,
   jsonLd as jsonLdData,
   site as siteMetadata,
 } from "./metadata.ts";
@@ -187,5 +188,6 @@ export default function () {
 
     site.data("site", siteMetadata);
     site.data("author", author);
+    site.data("git", gitMetadata);
   };
 }

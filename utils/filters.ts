@@ -2,6 +2,7 @@ import * as path from "@std/path";
 import xss from "xss";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
+import gitData from "../src/_data/git.ts";
 import { getLinkInfo } from "./links.ts";
 
 const SITE_URL = siteData.url;
@@ -442,7 +443,7 @@ export const filters = {
 
   resolveSourceUrl: function (path: string): string {
     const repoPath = path.startsWith("/") ? path.slice(1) : path;
-    return `https://codeberg.org/${authorData.username}/${siteData.host}/src/branch/main/${repoPath}`;
+    return `https://${gitData.host}/${authorData.username}/${siteData.host}/src/branch/main/${repoPath}`;
   },
 
   findFile: function (filename: string): string {

@@ -1,8 +1,3 @@
-/**
- * _config/metadata.ts
- * Single source of truth for site and author constants.
- */
-
 export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",
@@ -13,7 +8,10 @@ export const site = {
   url: "https://ege.celikci.me",
 };
 
-// Internal constants for reuse
+export const git = {
+  host: "git.celikci.me",
+};
+
 const USERNAME = "egecelikci";
 const EMAIL = "ege@celikci.me";
 const MATRIX_USER = "eg";
