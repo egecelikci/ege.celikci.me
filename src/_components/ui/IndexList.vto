@@ -5,17 +5,23 @@
         href?: string,
         desc?: string,
         marker?: string,
-        type?: "section" | "item",
+        type?: "section" | "item" | "info",
         children?: Array<{ title: string, href: string, desc: string }>
       }>
 #}}
 
-<div class="index-list {{ it.classes || "" }}">
+<div class="index-list {{ it.classes || " " }}">
   <ul class="index-list__group">
     {{ for item of it.items }}
       {{ if item.type === "section" }}
         <li class="index-list__section">
           <span class="index-list__section-label">
+            {{ item.title |> safe }}
+          </span>
+        </li>
+      {{ else if item.type === "info" }}
+        <li class="index-list__info">
+          <span class="index-list__info-label">
             {{ item.title |> safe }}
           </span>
         </li>

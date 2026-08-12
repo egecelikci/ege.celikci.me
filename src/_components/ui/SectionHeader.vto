@@ -17,7 +17,7 @@
 {{ set tag = `h${level}` }}
 
 <div
-  class="section-header {{ if it.sticky }}section-header--sticky{{ /if }} {{ it.classes || "" }}"
+  class="section-header {{ if it.sticky }}section-header--sticky{{ /if }} {{ it.classes }}"
 >
   {{ if isLarge }}
     <{{ tag }}

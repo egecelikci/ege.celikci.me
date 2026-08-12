@@ -1,12 +1,27 @@
 {{>
   const idRegex = /([a-f0-9-]{36})/;
 
+  const decodeEntities = (str) =>
+    str
+      .replace(/&lsqb;/g, "[")
+      .replace(/&rsqb;/g, "]")
+      .replace(/&lbrack;/g, "[")
+      .replace(/&rbrack;/g, "]")
+      .replace(/&amp;/g, "&")
+      .replace(/&AMP;/g, "&")
+      .replace(/&#91;/g, "[")
+      .replace(/&#93;/g, "]")
+      .replace(/&#x5b;/g, "[")
+      .replace(/&#x5d;/g, "]")
+      .replace(/&#38;/g, "&")
+      .replace(/&#x26;/g, "&");
+
   const parseMBLink = (str) => {
     const m = str.match(/\[([^|\]]+)\|([^\]]+)\]/);
-    if (!m) return { id: null, name: str };
+    if (!m) return { id: null, name: decodeEntities(str) };
 
     const rawId = m[1];
-    const name = m[2];
+    const name = decodeEntities(m[2]);
     const mbidMatch = rawId.match(idRegex);
     const mbid = mbidMatch ? mbidMatch[1] : rawId;
 
@@ -14,8 +29,8 @@
   };
 
   const content = it.content || "";
-  let performer = { id: null, name: "Setlist" };
-  const tracks = [];
+  const groups = [];
+  let current = null;
 
   if (content) {
     const lines = content.split(/\r?\n/);
@@ -25,50 +40,58 @@
 
       if (trimmed.startsWith("@")) {
         const { id, name } = parseMBLink(trimmed.substring(1).trim());
-        performer = { id, name };
+        current = { id, name, flow: [] };
+        groups.push(current);
       } else if (trimmed.startsWith("*")) {
+        if (!current) {
+          current = { id: null, name: null, flow: [] };
+          groups.push(current);
+        }
         const { id, name } = parseMBLink(trimmed.substring(1).trim());
-        tracks.push({
-          workId: id,
-          workTitle: name,
-          title: name,
-          artistName: performer.name,
-          artistId: performer.id,
-        });
+        current.flow.push({ type: "track", workId: id, title: name });
       } else if (trimmed.startsWith("#")) {
-        if (tracks.length > 0) {
-          const last = tracks[tracks.length - 1];
-          last.notes = last.notes || [];
-          last.notes.push(trimmed.substring(1).trim());
+        const note = decodeEntities(trimmed.substring(1).trim());
+        if (current) {
+          current.flow.push({ type: "info", title: note });
         }
       }
     }
   }
 
   const items = [];
-  const artistMBUrl = performer.id
-    ? `https://listenbrainz.org/artist/${performer.id}`
-    : null;
 
-  const sectionTitle = `<b>${
-    artistMBUrl
-      ? `<a href="${artistMBUrl}" class="setlist__artist-link">${performer.name}</a>`
-      : performer.name
-  }</b>`;
+  for (const group of groups) {
+    const artistMBUrl = group.id
+      ? `https://listenbrainz.org/artist/${group.id}`
+      : null;
 
-  items.push({ type: "section", title: sectionTitle });
+    const sectionTitle = `<b>${
+      artistMBUrl
+        ? `<a href="${artistMBUrl}" class="setlist__artist-link">${group.name}</a>`
+        : group.name || "Setlist"
+    }</b>`;
 
-  let counter = 1;
-  for (const t of tracks) {
-    const workUrl = t.workId ? `https://musicbrainz.org/work/${t.workId}` : null;
-    const desc = t.notes ? t.notes.join(" · ") : "";
+    let counter = 1;
+    for (const entry of group.flow) {
+      if (entry.type === "info") {
+        items.push({ type: "info", title: entry.title });
+        continue;
+      }
 
-    items.push({
-      title: `<i>${t.workTitle || t.title}</i>`,
-      ...(workUrl ? { href: workUrl } : {}),
-      marker: String(counter++).padStart(2, "0") + ".",
-      desc: desc,
-    });
+      if (counter === 1) {
+        items.push({ type: "section", title: sectionTitle });
+      }
+
+      const workUrl = entry.workId
+        ? `https://musicbrainz.org/work/${entry.workId}`
+        : null;
+
+      items.push({
+        title: `<i>${entry.title}</i>`,
+        ...(workUrl ? { href: workUrl } : {}),
+        marker: String(counter++).padStart(2, "0") + ".",
+      });
+    }
   }
 }}
 
