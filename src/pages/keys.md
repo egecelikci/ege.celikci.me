@@ -18,9 +18,9 @@ age1vryy7ntgdxrvr4lcevvhqr78yp4wpud42ahcdn0ah7ggtuqxfymq9hw07s
 ## SSH
 
 <!-- deno-fmt-ignore -->
+- [{{ git.host }}/{{ author.username }}.keys](https://{{ git.host }}/{{ author.username }}.keys)
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
-- [gitlab.com/{{ author.username }}.keys](https://gitlab.com/{{ author.username }}.keys)
 - [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
 
 ### authentication
@@ -41,7 +41,7 @@ SHA256:ib7FCqCTFCAbsqZMh2f/HO0oAEVuhUN14AnkYSwbkz0
 
 ### signing
 
-This info is also available at [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitLab](https://gitlab.com/{{ author.username }}/{{ author.username }}), [GitHub](https://github.com/{{ author.username }}/{{ author.username }}) & [sourcehut](https://git.sr.ht/~{{ author.username }}/{{ author.username }}). All four repositories should be identical and show commits signed with one of the keys below.
+This info is also available at [Forgejo](https://{{ git.host }}/{{ author.username }}/{{ author.username }}), [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitHub](https://github.com/{{ author.username }}/{{ author.username }}) & [sourcehut](https://git.sr.ht/~{{ author.username }}/{{ author.username }}). All four repositories should be identical and show commits signed with one of the keys below.
 
 #### public signing key of bilgisayar
 

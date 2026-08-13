@@ -96,11 +96,11 @@ export const author = {
       label: "Code",
     },
     {
-      id: "gitlab",
-      name: "GitLab",
-      url: `https://gitlab.com/${USERNAME}`,
+      id: "forgejo",
+      name: "Forgejo",
+      url: `https://${git.host}/${USERNAME}`,
       relMe: true,
-      icon: "gitlab",
+      icon: "forgejo",
       label: "Code",
     },
     {
@@ -125,7 +125,7 @@ export const socialProfiles = [
   `https://bsky.app/profile/${atproto.did}`,
   `https://github.com/${USERNAME}`,
   `https://codeberg.org/${USERNAME}`,
-  `https://gitlab.com/${USERNAME}`,
+  `https://${git.host}/${USERNAME}`,
   `https://listenbrainz.org/user/${USERNAME}`,
 ];
 
