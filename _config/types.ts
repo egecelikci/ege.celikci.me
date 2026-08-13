@@ -1,8 +1,3 @@
-/**
- * _config/types.ts
- * Lume and Site-wide type augmentations.
- */
-
 import "lume/types.ts";
 import type Searcher from "lume/core/searcher.ts";
 import type {
@@ -51,14 +46,12 @@ export interface SiteData {
   };
 }
 
-/** Webmention counts set by the stats preprocessor */
 export interface WebmentionStats {
   likes: number;
   reposts: number;
   replies: number;
 }
 
-/** The `backlink` page data pointing to a previous entry */
 export interface Backlink {
   url: string;
   title: string;
@@ -83,7 +76,7 @@ declare global {
       event?: EnrichedMBEvent;
       description?: string;
       type?: string;
-      updated?: string;
+      updated?: Date;
       coverImage?: string;
       coverImageAlt?: string;
       metaImage?: string;

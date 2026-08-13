@@ -139,7 +139,7 @@ export default function () {
       .use(feeds())
       .use(filters())
       .use(markdown())
-      .use(gitDate())
+      .use(gitDate({ varName: "updated" }))
       .use(gitInfo())
       .use(wellKnown({
         atProto: atproto.did,
