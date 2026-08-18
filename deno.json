@@ -11,6 +11,7 @@
     "instant.page": "npm:instant.page@^5.2.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/",
+    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.8/",
     "photoswipe": "npm:photoswipe@^5.4.4",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
     "rehype-slug": "npm:rehype-slug@^6.0.0",
