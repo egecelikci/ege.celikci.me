@@ -2620,6 +2620,34 @@
       "artist-credit": [
         {
           "artist": {
+            "country": "US",
+            "disambiguation": "US rapper",
+            "id": "5f1adfe1-4d07-4141-b181-79e5d379d539",
+            "name": "Lil Ugly Mane",
+            "sort-name": "Lil Ugly Mane",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Lil Ugly Mane"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2015-12-18",
+      "id": "9e07db2c-4a6e-4991-89f5-3ccdd73d9ca9",
+      "imagePath": "/assets/images/covers/colored/9e07db2c-4a6e-4991-89f5-3ccdd73d9ca9.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/9e07db2c-4a6e-4991-89f5-3ccdd73d9ca9.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 18 Aug 2026 11:35:37 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Oblivion Access"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
             "country": "UA",
             "disambiguation": "Ukrainian post-rock",
             "id": "1f381976-ea4d-47f0-badc-31e2223b382a",
