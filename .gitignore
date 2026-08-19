@@ -9,3 +9,7 @@ node_modules/
 src/_rust/**/target/
 # Playwright MCP
 .playwright-mcp/
+
+# CMS runtime state (the server working clone keeps these locally)
+.ssh/
+.config/
