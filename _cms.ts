@@ -63,6 +63,49 @@ cms.collection({
       description: "Optional link if this note points to something",
     },
     {
+      name: "images",
+      type: "object-list",
+      label: "Gallery images",
+      description: "Images for the note gallery, each with alt text",
+      fields: [
+        {
+          name: "src",
+          type: "url",
+          label: "Source",
+          description: "e.g. /assets/images/gallery/<file>.jpg",
+        },
+        {
+          name: "alt",
+          type: "text",
+          label: "Alt text",
+        },
+      ],
+    },
+    {
+      name: "syndication",
+      type: "object",
+      label: "Syndication",
+      description: "Links to cross-posted versions of this note",
+      fields: [
+        {
+          name: "mastodon",
+          type: "url",
+          label: "Mastodon",
+        },
+        {
+          name: "bluesky",
+          type: "url",
+          label: "Bluesky",
+        },
+      ],
+    },
+    {
+      name: "updated",
+      type: "date",
+      label: "Edited on",
+      description: "Optional; shown as an edit timestamp",
+    },
+    {
       name: "content",
       type: "markdown",
       label: "Content",
@@ -102,6 +145,55 @@ cms.collection({
       name: "tags",
       type: "list",
       label: "Tags",
+    },
+    {
+      name: "description",
+      type: "textarea",
+      label: "Description",
+      description: "Short summary used in feeds and page metadata",
+    },
+    {
+      name: "images",
+      type: "object-list",
+      label: "Gallery images",
+      description: "Images for the post, each with alt text",
+      fields: [
+        {
+          name: "src",
+          type: "url",
+          label: "Source",
+          description: "e.g. /assets/images/gallery/<file>.jpg",
+        },
+        {
+          name: "alt",
+          type: "text",
+          label: "Alt text",
+        },
+      ],
+    },
+    {
+      name: "syndication",
+      type: "object",
+      label: "Syndication",
+      description: "Links to cross-posted versions of this post",
+      fields: [
+        {
+          name: "mastodon",
+          type: "url",
+          label: "Mastodon",
+        },
+        {
+          name: "bluesky",
+          type: "url",
+          label: "Bluesky",
+        },
+      ],
+    },
+    {
+      name: "updated",
+      type: "date",
+      label: "Edited on",
+      description: "Optional; shown as an edit timestamp",
     },
     {
       name: "content",
