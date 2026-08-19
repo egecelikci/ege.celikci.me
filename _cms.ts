@@ -71,14 +71,16 @@ cms.collection({
     },
   ],
   documentName() {
-    // Notes are named by the current timestamp YYYY-MM-DD-HH-mm-ss, matching
-    // the site's URL scheme (every digit becomes part of the note's slug).
+    // Notes are named by the current UTC timestamp YYYY-MM-DD-HH-mm-ss,
+    // matching the site's URL scheme (every digit becomes part of the note's
+    // slug) and the site's date handling (which interprets the filename in
+    // UTC and renders it in Europe/Istanbul).
     const now = new Date();
     const pad = (n: number) => String(n).padStart(2, "0");
-    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${
-      pad(now.getDate())
-    }-${pad(now.getHours())}-${pad(now.getMinutes())}-${
-      pad(now.getSeconds())
+    return `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${
+      pad(now.getUTCDate())
+    }-${pad(now.getUTCHours())}-${pad(now.getUTCMinutes())}-${
+      pad(now.getUTCSeconds())
     }.md`;
   },
   // Keep the timestamp filename fixed once created (renaming would change the URL).
