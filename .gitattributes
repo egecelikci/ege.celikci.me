@@ -8,12 +8,8 @@
 *.gif filter=lfs diff=lfs merge=lfs -text
 *.ico filter=lfs diff=lfs merge=lfs -text
 
-# Track font assets
-*.ttf filter=lfs diff=lfs merge=lfs -text
-*.otf filter=lfs diff=lfs merge=lfs -text
-*.woff filter=lfs diff=lfs merge=lfs -text
-*.woff2 filter=lfs diff=lfs merge=lfs -text
-*.eot filter=lfs diff=lfs merge=lfs -text
-
 # Ensure JSON files in the data directory are treated as standard text
 src/_data/*.json !text !filter !merge !diff
+
+src/assets/images/88x31/**.gif !filter !diff !merge
+src/assets/images/88x31/**.png !filter !diff !merge
