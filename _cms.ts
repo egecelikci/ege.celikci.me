@@ -16,7 +16,6 @@ const cms = lumeCMS({
   },
 });
 
-// Browser Basic Auth. The git author identity is bound to this user.
 cms.auth({
   [user]: {
     password,
@@ -27,11 +26,6 @@ cms.auth({
 
 cms.git({ prodBranch: "main", remote: "origin", command: gitCommand });
 
-/**
- * Upload entity for images used in notes and blog posts.
- * The site renders note images into a gallery and people from
- * /assets/images/gallery/**, so new uploads land there (Git LFS tracked).
- */
 cms.upload({
   name: "images",
   label: "Images",
@@ -39,10 +33,6 @@ cms.upload({
   store: "src:assets/images/gallery",
 });
 
-/**
- * Notes: ephemeral short-form posts. Files are named YYYY-MM-DD-HH-mm-ss.md
- * (the URL is derived from every digit in the filename).
- */
 cms.collection({
   name: "notes",
   label: "Notes",
@@ -114,10 +104,6 @@ cms.collection({
     },
   ],
   documentName() {
-    // Notes are named by the current UTC timestamp YYYY-MM-DD-HH-mm-ss,
-    // matching the site's URL scheme (every digit becomes part of the note's
-    // slug) and the site's date handling (which interprets the filename in
-    // UTC and renders it in Europe/Istanbul).
     const now = new Date();
     const pad = (n: number) => String(n).padStart(2, "0");
     return `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${
@@ -126,13 +112,9 @@ cms.collection({
       pad(now.getUTCSeconds())
     }.md`;
   },
-  // Keep the timestamp filename fixed once created (renaming would change the URL).
   rename: false,
 });
 
-/**
- * Blog: longer-form posts.
- */
 cms.collection({
   name: "blog",
   label: "Blog",
@@ -210,10 +192,6 @@ cms.collection({
   rename: "auto",
 });
 
-/**
- * Standalone pages (like /keys, /contact and /colophon) mix markdown with
- * Vento template syntax, so they are edited as raw code (full file).
- */
 for (
   const page of [
     { name: "keys", store: "src:pages/keys.md", label: "Keys" },
@@ -229,6 +207,7 @@ for (
       store: "src:pages/iced-filter-coffee.md",
       label: "Iced filter coffee",
     },
+    { name: "offline", store: "src:pages/offline.md", label: "Offline" },
   ]
 ) {
   cms.document({
