@@ -180,6 +180,7 @@ export interface PageData {
   title: string;
   date?: Date;
   updated?: Date;
+  edited?: boolean;
   description?: string;
   tags?: string[];
   type?: "post" | "note" | "entry" | "index";

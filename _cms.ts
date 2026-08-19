@@ -53,25 +53,6 @@ cms.collection({
       description: "Optional link if this note points to something",
     },
     {
-      name: "images",
-      type: "object-list",
-      label: "Gallery images",
-      description: "Images for the note gallery, each with alt text",
-      fields: [
-        {
-          name: "src",
-          type: "url",
-          label: "Source",
-          description: "e.g. /assets/images/gallery/<file>.jpg",
-        },
-        {
-          name: "alt",
-          type: "text",
-          label: "Alt text",
-        },
-      ],
-    },
-    {
       name: "syndication",
       type: "object",
       label: "Syndication",
@@ -90,16 +71,10 @@ cms.collection({
       ],
     },
     {
-      name: "updated",
-      type: "date",
-      label: "Edited on",
-      description: "Optional; shown as an edit timestamp",
-    },
-    {
       name: "content",
       type: "markdown",
       label: "Content",
-      description: "Markdown body; pick images with the image button",
+      description: "Markdown body; drop images inline (they become the gallery), or use the image button",
       upload: "images",
     },
   ],
@@ -135,25 +110,6 @@ cms.collection({
       description: "Short summary used in feeds and page metadata",
     },
     {
-      name: "images",
-      type: "object-list",
-      label: "Gallery images",
-      description: "Images for the post, each with alt text",
-      fields: [
-        {
-          name: "src",
-          type: "url",
-          label: "Source",
-          description: "e.g. /assets/images/gallery/<file>.jpg",
-        },
-        {
-          name: "alt",
-          type: "text",
-          label: "Alt text",
-        },
-      ],
-    },
-    {
       name: "syndication",
       type: "object",
       label: "Syndication",
@@ -170,12 +126,6 @@ cms.collection({
           label: "Bluesky",
         },
       ],
-    },
-    {
-      name: "updated",
-      type: "date",
-      label: "Edited on",
-      description: "Optional; shown as an edit timestamp",
     },
     {
       name: "content",

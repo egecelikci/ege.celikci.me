@@ -77,6 +77,7 @@ declare global {
       description?: string;
       type?: string;
       updated?: Date;
+      edited?: boolean;
       coverImage?: string;
       coverImageAlt?: string;
       metaImage?: string;

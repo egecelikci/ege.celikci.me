@@ -30,7 +30,7 @@
   {{ else if it.type === "note" && it.date }}
     {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
     {{ set updatedStr = "" }}
-    {{ if it.updated }}
+    {{ if it.edited && it.updated }}
       {{ set formattedUpdated = it.updated |> date("dd MMM yyyy") }}
       {{
         set updatedStr = " • <span class='text-secondary opacity-80'>edited " + formattedUpdated +
