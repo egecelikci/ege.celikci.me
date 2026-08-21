@@ -1,317 +1,318 @@
 @use "../utils/variables";
-
-.markdown {
-  font-family: var(--font-sans);
-  color: var(--color-text);
-  overflow-wrap: break-word;
-
-  & > :where(*) + :where(*),
-  & :where(.e-content) > :where(*) + :where(*) {
-    margin-block-start: var(--flow-space, var(--flow-space-base));
-  }
-
-  p,
-  li {
-    max-width: 70ch;
-    font-size: 1rem;
-    font-weight: var(--font-weight-body);
-    line-height: 1.625;
-    text-wrap: pretty;
-  }
-
-  & :is(h1, h2, h3, h4, blockquote) {
-    --flow-space: var(--flow-space-loose);
-  }
-
-  & :is(h1, h2, h3, h4) + * {
-    --flow-space: var(--flow-space-tight);
-  }
-
-  & :is(h1, h2, h3, h4) {
+@layer components {
+  .markdown {
     font-family: var(--font-sans);
-    font-weight: 700;
-    line-height: 1.1;
-    text-wrap: balance;
-    margin-block: 2.5rem 0.75rem;
-    scroll-margin-top: 0;
-    word-break: break-word;
-    font-variant-ligatures: none;
-    font-kerning: normal;
-  }
-
-  & h1 {
-    max-width: 20ch;
-    font-size: var(--size-h1);
-    letter-spacing: var(--letter-spacing-h1);
-    scroll-margin-top: 2.5rem;
-  }
-
-  & h2,
-  & h3 {
-    max-width: 28ch;
-  }
-
-  & h2 {
-    font-size: var(--size-h2);
-    letter-spacing: var(--letter-spacing-h2);
-    scroll-margin-top: 2.5rem;
-  }
-
-  & h3 {
-    margin-block: 1.75rem 0.625rem;
-    font-size: var(--size-h3);
-    letter-spacing: var(--letter-spacing-h3);
-    scroll-margin-top: 1.75rem;
-  }
-
-  & h4 {
-    margin-block: 1.5rem 0.5rem;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-label);
-    color: var(--color-text-muted);
-    scroll-margin-top: 1.5rem;
-  }
-
-  & a:not(.btn, .heading-anchor, .no-underline) {
-    color: var(--color-primary);
-    text-decoration: none;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,
-      transparent);
-    padding-bottom: 1px;
-    transition: all 300ms ease;
-
-    &:hover {
-      color: var(--color-primary-offset);
-      border-bottom-color: var(--color-primary-offset);
-    }
-  }
-
-  & a:not(.btn, .heading-anchor):hover code {
-    color: var(--color-primary);
-    background-color: var(--color-primary-muted);
-    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
-  }
-
-  & blockquote {
-    max-width: 50ch;
-    padding: 0.25rem 0 0.25rem 1.5rem;
-    border-left: 4px solid color-mix(in srgb, var(--color-primary) 20%,
-      transparent);
-    border-radius: 0 0.5rem 0.5rem 0;
-    background-color: color-mix(in srgb, var(--color-surface-subtle) 30%,
-      transparent);
-    font-weight: var(--font-weight-body);
-    font-style: italic;
-  }
-
-  & hr {
-    margin-block: 2rem;
-    border: none;
-    border-top: 1px solid var(--color-border-subtle);
-  }
-
-  & pre,
-  & code,
-  & kbd,
-  & samp {
-    font-family: var(--font-mono);
-    font-variant-ligatures: none;
-  }
-
-  & pre:not(figure pre) {
-    margin-block: 1.25rem 1rem;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface-subtle);
-    font-size: 0.875rem;
-    overflow-x: auto;
-  }
-
-  & :not(pre) > code {
-    display: inline;
-    padding: 0.1em 0.3em;
-    border-radius: 0.25rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface);
     color: var(--color-text);
-    font-size: 0.9em;
     overflow-wrap: break-word;
 
-    &::before,
-    &::after {
-      content: none !important;
+    & > :where(*) + :where(*),
+    & :where(.e-content) > :where(*) + :where(*) {
+      margin-block-start: var(--flow-space, var(--flow-space-base));
     }
-  }
 
-  & ul {
-    list-style: disc;
+    p,
+    li {
+      max-width: 70ch;
+      font-size: 1rem;
+      font-weight: var(--font-weight-body);
+      line-height: 1.625;
+      text-wrap: pretty;
+    }
+
+    & :is(h1, h2, h3, h4, blockquote) {
+      --flow-space: var(--flow-space-loose);
+    }
+
+    & :is(h1, h2, h3, h4) + * {
+      --flow-space: var(--flow-space-tight);
+    }
+
+    & :is(h1, h2, h3, h4) {
+      font-family: var(--font-sans);
+      font-weight: 700;
+      line-height: 1.1;
+      text-wrap: balance;
+      margin-block: 2.5rem 0.75rem;
+      scroll-margin-top: 0;
+      word-break: break-word;
+      font-variant-ligatures: none;
+      font-kerning: normal;
+    }
+
+    & h1 {
+      max-width: 20ch;
+      font-size: var(--size-h1);
+      letter-spacing: var(--letter-spacing-h1);
+      scroll-margin-top: 2.5rem;
+    }
+
+    & h2,
+    & h3 {
+      max-width: 28ch;
+    }
+
+    & h2 {
+      font-size: var(--size-h2);
+      letter-spacing: var(--letter-spacing-h2);
+      scroll-margin-top: 2.5rem;
+    }
+
+    & h3 {
+      margin-block: 1.75rem 0.625rem;
+      font-size: var(--size-h3);
+      letter-spacing: var(--letter-spacing-h3);
+      scroll-margin-top: 1.75rem;
+    }
+
+    & h4 {
+      margin-block: 1.5rem 0.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-label);
+      color: var(--color-text-muted);
+      scroll-margin-top: 1.5rem;
+    }
+
+    & a:not(.btn, .heading-anchor, .no-underline) {
+      color: var(--color-primary);
+      text-decoration: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,
+        transparent);
+      padding-bottom: 1px;
+      transition: all 300ms ease;
+
+      &:hover {
+        color: var(--color-primary-offset);
+        border-bottom-color: var(--color-primary-offset);
+      }
+    }
+
+    & a:not(.btn, .heading-anchor):hover code {
+      color: var(--color-primary);
+      background-color: var(--color-primary-muted);
+      border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    }
+
+    & blockquote {
+      max-width: 50ch;
+      padding: 0.25rem 0 0.25rem 1.5rem;
+      border-left: 4px solid color-mix(in srgb, var(--color-primary) 20%,
+        transparent);
+      border-radius: 0 0.5rem 0.5rem 0;
+      background-color: color-mix(in srgb, var(--color-surface-subtle) 30%,
+        transparent);
+      font-weight: var(--font-weight-body);
+      font-style: italic;
+    }
+
+    & hr {
+      margin-block: 2rem;
+      border: none;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    & pre,
+    & code,
+    & kbd,
+    & samp {
+      font-family: var(--font-mono);
+      font-variant-ligatures: none;
+    }
+
+    & pre:not(figure pre) {
+      margin-block: 1.25rem 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--color-border-subtle);
+      background-color: var(--color-surface-subtle);
+      font-size: 0.875rem;
+      overflow-x: auto;
+    }
+
+    & :not(pre) > code {
+      display: inline;
+      padding: 0.1em 0.3em;
+      border-radius: 0.25rem;
+      border: 1px solid var(--color-border-subtle);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      font-size: 0.9em;
+      overflow-wrap: break-word;
+
+      &::before,
+      &::after {
+        content: none !important;
+      }
+    }
 
     & ul {
-      list-style: circle;
-    }
-  }
+      list-style: disc;
 
-  & ol {
-    list-style: decimal;
-  }
-
-  & ul,
-  & ol {
-    padding-inline-start: 1.25em;
-  }
-
-  & li::marker {
-    color: var(--color-text-muted);
-  }
-
-  & li > code,
-  & a:not(.btn, .heading-anchor) > code {
-    background-color: transparent;
-    border: 0;
-    padding: 0;
-    box-shadow: none;
-  }
-
-  & strong {
-    font-weight: 700;
-  }
-
-  & em {
-    font-style: italic;
-  }
-
-  & img {
-    border-radius: 0.5rem;
-  }
-
-  & figure {
-    margin-block: 2rem;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 0.75rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface-subtle);
-    text-align: left;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-  }
-
-  & figure.code-block {
-    figcaption.code-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      border-bottom: 1px solid var(--color-border-subtle);
-      background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 0.625rem 1.25rem;
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: var(--color-text-muted);
-      font-style: normal;
-    }
-
-    pre.shiki {
-      margin: 0;
-      border: 0;
-      border-radius: 0;
-      width: 100%;
-      max-width: 100%;
-      padding: 1.25rem;
-      font-size: 0.75rem;
-      overflow-x: auto;
-      background-color: transparent !important;
-
-      @include variables.bp(lg) {
-        font-size: 0.875rem;
+      & ul {
+        list-style: circle;
       }
     }
 
-    pre.shiki code {
+    & ol {
+      list-style: decimal;
+    }
+
+    & ul,
+    & ol {
+      padding-inline-start: 1.25em;
+    }
+
+    & li::marker {
+      color: var(--color-text-muted);
+    }
+
+    & li > code,
+    & a:not(.btn, .heading-anchor) > code {
       background-color: transparent;
-      padding: 0;
-      color: inherit;
       border: 0;
+      padding: 0;
       box-shadow: none;
     }
-  }
 
-  & figcaption {
-    margin-top: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-  }
-
-  & table {
-    width: 100%;
-    font-size: 0.875rem;
-    border-collapse: collapse;
-  }
-
-  & th,
-  & td {
-    padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid var(--color-border-subtle);
-    text-align: left;
-  }
-
-  & th {
-    font-weight: 700;
-  }
-
-  & kbd {
-    padding: 0.1em 0.3em;
-    border-radius: 0.25rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface);
-  }
-
-  & a.heading-anchor {
-    color: inherit;
-    text-decoration: none;
-
-    &::after {
-      content: "#";
-      margin-inline-start: 0.25em;
-      color: var(--color-text-muted);
-      opacity: 0;
-      transition: opacity 150ms ease;
+    & strong {
+      font-weight: 700;
     }
 
-    @media (hover: hover) {
-      &:hover {
-        text-decoration: underline;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 0.25em;
-        text-decoration-color: color-mix(
-          in srgb,
-          var(--color-text-muted) 40%,
-          transparent
-        );
+    & em {
+      font-style: italic;
+    }
+
+    & img {
+      border-radius: 0.5rem;
+    }
+
+    & figure {
+      margin-block: 2rem;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0.75rem;
+      border: 1px solid var(--color-border-subtle);
+      background-color: var(--color-surface-subtle);
+      text-align: left;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    & figure.code-block {
+      figcaption.code-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border-bottom: 1px solid var(--color-border-subtle);
+        background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 0.625rem 1.25rem;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--color-text-muted);
+        font-style: normal;
+      }
+
+      pre.shiki {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 1.25rem;
+        font-size: 0.75rem;
+        overflow-x: auto;
+        background-color: transparent !important;
+
+        @include variables.bp(lg) {
+          font-size: 0.875rem;
+        }
+      }
+
+      pre.shiki code {
+        background-color: transparent;
+        padding: 0;
+        color: inherit;
+        border: 0;
+        box-shadow: none;
       }
     }
 
-    &:hover::after,
-    &:focus-visible::after {
-      opacity: 1;
+    & figcaption {
+      margin-top: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
     }
 
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-      border-radius: 0.125rem;
+    & table {
+      width: 100%;
+      font-size: 0.875rem;
+      border-collapse: collapse;
+    }
+
+    & th,
+    & td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--color-border-subtle);
+      text-align: left;
+    }
+
+    & th {
+      font-weight: 700;
+    }
+
+    & kbd {
+      padding: 0.1em 0.3em;
+      border-radius: 0.25rem;
+      border: 1px solid var(--color-border-subtle);
+      background-color: var(--color-surface);
+    }
+
+    & a.heading-anchor {
+      color: inherit;
+      text-decoration: none;
+
+      &::after {
+        content: "#";
+        margin-inline-start: 0.25em;
+        color: var(--color-text-muted);
+        opacity: 0;
+        transition: opacity 150ms ease;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          text-decoration: underline;
+          text-decoration-thickness: 1px;
+          text-underline-offset: 0.25em;
+          text-decoration-color: color-mix(
+            in srgb,
+            var(--color-text-muted) 40%,
+            transparent
+          );
+        }
+      }
+
+      &:hover::after,
+      &:focus-visible::after {
+        opacity: 1;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+        border-radius: 0.125rem;
+      }
     }
   }
-}
 
-.markdown-inline {
-  & :is(p, ul, ol) {
-    display: inline;
-    margin: 0;
+  .markdown-inline {
+    & :is(p, ul, ol) {
+      display: inline;
+      margin: 0;
+    }
   }
 }

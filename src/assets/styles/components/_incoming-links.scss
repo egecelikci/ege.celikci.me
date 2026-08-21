@@ -1,61 +1,62 @@
 @use "../utils/variables";
-
-.incoming-links {
-  @media print {
-    display: none;
+@layer components {
+  .incoming-links {
+    @media print {
+      display: none;
+    }
   }
-}
 
-.incoming-links__row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  .incoming-links__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-  @include variables.bp(sm) {
-    flex-direction: row;
+    @include variables.bp(sm) {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 1rem;
+    }
+  }
+
+  .incoming-links__title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .incoming-links__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .incoming-links__link {
+    display: inline-flex;
     align-items: baseline;
-    gap: 1rem;
+    gap: 0.5rem;
+    text-decoration: none;
+
+    &:hover .incoming-links__name {
+      color: var(--color-primary);
+    }
   }
-}
 
-.incoming-links__title {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.incoming-links__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.incoming-links__link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  text-decoration: none;
-
-  &:hover .incoming-links__name {
-    color: var(--color-primary);
+  .incoming-links__name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    transition: color 300ms ease;
   }
-}
 
-.incoming-links__name {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  transition: color 300ms ease;
-}
-
-.incoming-links__date {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
+  .incoming-links__date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
 }

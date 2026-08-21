@@ -1,32 +1,34 @@
-.language-switcher {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.language-switcher__sep {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: color-mix(in srgb, var(--color-text-muted) 20%, transparent);
-  user-select: none;
-}
-
-.language-switcher__link {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-decoration: none;
-  color: var(--color-text-muted);
-  transition: color 300ms ease;
-
-  &:hover {
-    color: var(--color-text);
+@layer components {
+  .language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-}
 
-.language-switcher__link--current {
-  color: var(--color-primary);
+  .language-switcher__sep {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--color-text-muted) 20%, transparent);
+    user-select: none;
+  }
+
+  .language-switcher__link {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    transition: color 300ms ease;
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .language-switcher__link--current {
+    color: var(--color-primary);
+  }
 }

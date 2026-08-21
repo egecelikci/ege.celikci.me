@@ -37,6 +37,131 @@
     }
   }
 
+  .typography-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .typography-sublabel {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+
+  .divider {
+    height: 1px;
+    flex-grow: 1;
+    background-color: var(--color-border-subtle);
+  }
+
+  .glassy {
+    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  .ledger-card {
+    border-radius: 1rem;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-subtle);
+    transition: all 500ms ease;
+  }
+
+  .ledger-card--flush {
+    margin-block: 1.5rem;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .haptic {
+    @include variables.haptic;
+    transition: transform 150ms ease;
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .reveal-self {
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+
+    &:has(.is-active) {
+      opacity: 1;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .reveal-slide-right,
+  .reveal-slide-left,
+  .reveal-slide-up {
+    transition: transform 0.3s ease;
+    transform: translate(0, 0);
+  }
+
+  span.reveal-slide-right,
+  span.reveal-slide-left,
+  span.reveal-slide-up {
+    display: inline-block;
+  }
+
+  .precision-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    @include variables.haptic;
+    transition:
+      color 0.3s ease,
+      transform 150ms ease;
+
+    & span:not([class*="reveal-slide"]) {
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+      transition: border-color 0.3s ease;
+    }
+
+    &:hover {
+      color: var(--color-primary);
+
+      & span:not([class*="reveal-slide"]) {
+        border-color: color-mix(in srgb, currentColor 50%, transparent);
+      }
+
+      & .reveal-slide-right {
+        transform: translateX(0.25rem);
+      }
+
+      & .reveal-slide-left {
+        transform: translateX(-0.25rem);
+      }
+
+      & .reveal-slide-up {
+        transform: translateY(-0.25rem);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+@layer utilities {
   .sr-only {
     position: absolute;
     width: 1px;
@@ -174,135 +299,12 @@
     animation: var(--animate-spin-smart);
   }
 
-  .typography-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-
-  .typography-sublabel {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 700;
-  }
-
   .link-underline {
     text-decoration: underline;
     transition: color 300ms ease;
 
     &:hover {
       color: var(--color-primary);
-    }
-  }
-
-  .divider {
-    height: 1px;
-    flex-grow: 1;
-    background-color: var(--color-border-subtle);
-  }
-
-  .glassy {
-    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(12px);
-  }
-
-  .ledger-card {
-    border-radius: 1rem;
-    border: 1px solid var(--color-border-subtle);
-    background-color: var(--color-surface-subtle);
-    transition: all 500ms ease;
-  }
-
-  .ledger-card--flush {
-    margin-block: 1.5rem;
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .haptic {
-    @include variables.haptic;
-    transition: transform 150ms ease;
-
-    &:active {
-      transform: scale(0.95);
-    }
-  }
-
-  .reveal-self {
-    opacity: 0.6;
-    transition: opacity 0.5s ease;
-
-    &:has(.is-active) {
-      opacity: 1;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        opacity: 1;
-      }
-    }
-  }
-
-  .reveal-slide-right,
-  .reveal-slide-left,
-  .reveal-slide-up {
-    transition: transform 0.3s ease;
-    transform: translate(0, 0);
-  }
-
-  span.reveal-slide-right,
-  span.reveal-slide-left,
-  span.reveal-slide-up {
-    display: inline-block;
-  }
-
-  .precision-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    @include variables.haptic;
-    transition:
-      color 0.3s ease,
-      transform 150ms ease;
-
-    & span:not([class*="reveal-slide"]) {
-      border-bottom: 1px solid transparent;
-      padding-bottom: 1px;
-      transition: border-color 0.3s ease;
-    }
-
-    &:hover {
-      color: var(--color-primary);
-
-      & span:not([class*="reveal-slide"]) {
-        border-color: color-mix(in srgb, currentColor 50%, transparent);
-      }
-
-      & .reveal-slide-right {
-        transform: translateX(0.25rem);
-      }
-
-      & .reveal-slide-left {
-        transform: translateX(-0.25rem);
-      }
-
-      & .reveal-slide-up {
-        transform: translateY(-0.25rem);
-      }
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
     }
   }
 

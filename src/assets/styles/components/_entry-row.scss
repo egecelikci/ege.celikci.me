@@ -1,187 +1,188 @@
 @use "../utils/variables";
-
-.entry-row__main {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  position: relative;
-  z-index: 10;
-}
-
-.entry-row {
-  position: relative;
-  display: flex;
-  width: 100%;
-  padding: 2.5rem 1rem;
-  border-radius: 1rem;
-  text-decoration: none;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    transform 150ms ease;
-  @include variables.haptic;
-
-  &:active {
-    transform: scale(0.95);
-  }
-
-  @include variables.bp(md) {
-    padding-inline: 1.5rem;
-  }
-
-  &:hover {
-    background-color: var(--color-surface-subtle);
-  }
-
-  &__body {
+@layer components {
+  .entry-row__main {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    min-width: 0;
-    flex: 1;
-  }
-
-  &__header {
     position: relative;
-    z-index: 30;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1rem;
-    overflow: hidden;
+    z-index: 10;
   }
 
-  &__date {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 0.5rem;
-    padding: 0.125rem 0.5rem;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 0.25rem;
-    background-color: var(--color-surface-subtle);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    white-space: nowrap;
+  .entry-row {
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 2.5rem 1rem;
+    border-radius: 1rem;
+    text-decoration: none;
     transition:
       background-color 0.3s ease,
-      border-color 0.3s ease,
-      color 0.3s ease;
+      color 0.3s ease,
+      transform 150ms ease;
+    @include variables.haptic;
 
-    &:hover {
-      background-color: var(--color-surface-hover);
-      border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
-      color: var(--color-primary);
+    &:active {
+      transform: scale(0.95);
     }
-  }
-
-  &__type {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-primary);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-
-    svg {
-      width: 0.75rem;
-      height: 0.75rem;
-    }
-  }
-
-  &__tags {
-    display: flex;
-    flex-basis: 100%;
-    order: 10;
-    gap: 0.75rem;
-    min-width: 0;
 
     @include variables.bp(md) {
-      flex-basis: auto;
-      order: 0;
+      padding-inline: 1.5rem;
     }
 
-    span {
+    &:hover {
+      background-color: var(--color-surface-subtle);
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    &__header {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      overflow: hidden;
+    }
+
+    &__date {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 0.5rem;
+      padding: 0.125rem 0.5rem;
+      border: 1px solid var(--color-border-subtle);
+      border-radius: 0.25rem;
+      background-color: var(--color-surface-subtle);
+      color: var(--color-text-muted);
       font-family: var(--font-mono);
       font-size: 0.6875rem;
       font-weight: 700;
-      color: var(--color-text-dim);
-      overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
-      transition: color 0.3s ease;
+      transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 
       &:hover {
+        background-color: var(--color-surface-hover);
+        border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
         color: var(--color-primary);
       }
     }
-  }
 
-  &__divider {
-    min-width: 1rem;
-    opacity: 0.2;
-  }
-
-  &__meta {
-    flex-shrink: 0;
-    position: relative;
-    z-index: 40;
-    color: var(--color-text-dim);
-    transition: color 0.3s ease;
-  }
-
-  &__title {
-    margin: 0;
-    font-size: var(--size-step-1);
-    font-weight: 700;
-    letter-spacing: var(--letter-spacing-h3);
-    line-height: 1.25;
-    color: var(--color-text);
-    transition: color 0.3s ease;
-  }
-
-  &__content {
-    font-size: 1rem;
-    line-height: 1.625;
-    color: var(--color-text-dim);
-    transition: color 0.3s ease;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-
-    @include variables.bp(md) {
-      font-size: 1.125rem;
-    }
-  }
-
-  &__media {
-    position: relative;
-    z-index: 30;
-    width: 100%;
-    padding-top: 0.5rem;
-  }
-
-  &__link {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-  }
-
-  &:hover {
-    &__title {
+    &__type {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       color: var(--color-primary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+
+      svg {
+        width: 0.75rem;
+        height: 0.75rem;
+      }
     }
 
-    &__content {
-      color: var(--color-text);
+    &__tags {
+      display: flex;
+      flex-basis: 100%;
+      order: 10;
+      gap: 0.75rem;
+      min-width: 0;
+
+      @include variables.bp(md) {
+        flex-basis: auto;
+        order: 0;
+      }
+
+      span {
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        font-weight: 700;
+        color: var(--color-text-dim);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: var(--color-primary);
+        }
+      }
+    }
+
+    &__divider {
+      min-width: 1rem;
+      opacity: 0.2;
     }
 
     &__meta {
-      color: var(--color-text-muted);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 40;
+      color: var(--color-text-dim);
+      transition: color 0.3s ease;
+    }
+
+    &__title {
+      margin: 0;
+      font-size: var(--size-step-1);
+      font-weight: 700;
+      letter-spacing: var(--letter-spacing-h3);
+      line-height: 1.25;
+      color: var(--color-text);
+      transition: color 0.3s ease;
+    }
+
+    &__content {
+      font-size: 1rem;
+      line-height: 1.625;
+      color: var(--color-text-dim);
+      transition: color 0.3s ease;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      @include variables.bp(md) {
+        font-size: 1.125rem;
+      }
+    }
+
+    &__media {
+      position: relative;
+      z-index: 30;
+      width: 100%;
+      padding-top: 0.5rem;
+    }
+
+    &__link {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+    }
+
+    &:hover {
+      &__title {
+        color: var(--color-primary);
+      }
+
+      &__content {
+        color: var(--color-text);
+      }
+
+      &__meta {
+        color: var(--color-text-muted);
+      }
     }
   }
 }

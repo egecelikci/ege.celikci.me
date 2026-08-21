@@ -1,66 +1,67 @@
 @use "../utils/variables";
+@layer components {
+  .brew-calculator {
+    margin-block: 2rem;
 
-.brew-calculator {
-  margin-block: 2rem;
-
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-block-end: 1.5rem;
-  }
-
-  &__label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: var(--letter-spacing-label);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  &__input {
-    font-family: var(--font-mono);
-    font-size: 1.125rem;
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-block: 0.75rem;
-    border-block-end: 1px solid var(--color-border-subtle);
-
-    &:last-child {
-      border-block-end: 0;
+    &__field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-block-end: 1.5rem;
     }
-  }
 
-  &__row-label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: var(--letter-spacing-label);
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    opacity: 0.7;
-  }
+    &__label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
 
-  &__row-value {
-    font-family: var(--font-mono);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text);
-    white-space: nowrap;
-  }
+    &__input {
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+    }
 
-  &__row--bloom &__row-value {
-    color: var(--color-secondary);
+    &__list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 0.75rem;
+      border-block-end: 1px solid var(--color-border-subtle);
+
+      &:last-child {
+        border-block-end: 0;
+      }
+    }
+
+    &__row-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      opacity: 0.7;
+    }
+
+    &__row-value {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      white-space: nowrap;
+    }
+
+    &__row--bloom &__row-value {
+      color: var(--color-secondary);
+    }
   }
 }

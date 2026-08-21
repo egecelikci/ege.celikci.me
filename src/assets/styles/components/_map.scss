@@ -1,72 +1,74 @@
-.leaflet-container {
-  background: transparent !important;
-  font-family: inherit !important;
-}
-
-.venue-map {
-  height: 100%;
-  background-color: color-mix(in srgb, var(--color-surface) 5%, transparent);
-  opacity: 0;
-  transition: opacity 1s ease;
-
-  &.map-ready {
-    opacity: 1;
+@layer components {
+  .leaflet-container {
+    background: transparent !important;
+    font-family: inherit !important;
   }
 
-  .leaflet-tile-pane {
-    // order matters: apply brightness/contrast before grayscale, otherwise the enhancement runs on desaturated pixels and the map looks washed out.
-    filter: brightness(0.9) contrast(1.25) grayscale(1);
-    transition: all 700ms ease;
-  }
+  .venue-map {
+    height: 100%;
+    background-color: color-mix(in srgb, var(--color-surface) 5%, transparent);
+    opacity: 0;
+    transition: opacity 1s ease;
 
-  &:hover .leaflet-tile-pane {
-    opacity: 1;
-  }
-}
+    &.map-ready {
+      opacity: 1;
+    }
 
-.leaflet-control-attribution {
-  background: transparent !important;
-  box-shadow: none !important;
-  text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
-  font-family: var(--font-mono) !important;
-  font-size: 0.6875rem !important;
-  font-weight: 700 !important;
-  color: var(--color-text-dim) !important;
-  margin: 1rem 1rem 0 0 !important;
-  transition:
-    opacity 0.5s ease,
-    color 0.3s ease;
+    .leaflet-tile-pane {
+      // order matters: apply brightness/contrast before grayscale, otherwise the enhancement runs on desaturated pixels and the map looks washed out.
+      filter: brightness(0.9) contrast(1.25) grayscale(1);
+      transition: all 700ms ease;
+    }
 
-  a {
-    color: inherit !important;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: var(--color-primary) !important;
+    &:hover .leaflet-tile-pane {
+      opacity: 1;
     }
   }
-}
 
-.leaflet-marker-halo {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 5%, transparent);
-}
+  .leaflet-control-attribution {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
+    font-family: var(--font-mono) !important;
+    font-size: 0.6875rem !important;
+    font-weight: 700 !important;
+    color: var(--color-text-dim) !important;
+    margin: 1rem 1rem 0 0 !important;
+    transition:
+      opacity 0.5s ease,
+      color 0.3s ease;
 
-.leaflet-marker-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1rem;
-  height: 1rem;
-  border-radius: 9999px;
-  background-color: var(--color-primary);
-  border: 2px solid #fff;
-  box-shadow: var(--shadow-elevated);
+    a {
+      color: inherit !important;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--color-primary) !important;
+      }
+    }
+  }
+
+  .leaflet-marker-halo {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 5%, transparent);
+  }
+
+  .leaflet-marker-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1rem;
+    height: 1rem;
+    border-radius: 9999px;
+    background-color: var(--color-primary);
+    border: 2px solid #fff;
+    box-shadow: var(--shadow-elevated);
+  }
 }

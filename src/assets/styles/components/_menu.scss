@@ -1,35 +1,37 @@
-.menu {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
-  overflow: hidden;
+@layer components {
+  .menu {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+    overflow: hidden;
 
-  &--divided .menu__item + .menu__item {
-    border-top: 1px solid color-mix(in srgb, var(--color-border) 5%,
-      transparent);
+    &--divided .menu__item + .menu__item {
+      border-top: 1px solid color-mix(in srgb, var(--color-border) 5%,
+        transparent);
+    }
   }
-}
 
-.menu__item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text);
-  background: none;
-  border: none;
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background-color 300ms ease,
-    color 300ms ease;
+  .menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background: none;
+    border: none;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
 
-  &:hover {
-    background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
+    &:hover {
+      background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
+    }
   }
 }

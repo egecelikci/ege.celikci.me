@@ -1,59 +1,60 @@
 @use "../utils/variables";
+@layer components {
+  .event-calendar {
+    margin-block-end: 3rem;
 
-.event-calendar {
-  margin-block-end: 3rem;
+    &__header {
+      margin-block-end: 1.5rem;
+    }
 
-  &__header {
-    margin-block-end: 1.5rem;
+    &__months {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    &__month {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    &__grid {
+      @extend .event-grid;
+    }
   }
 
-  &__months {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
-  &__month {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  &__grid {
-    @extend .event-grid;
-  }
-}
-
-.event-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-
-  @include variables.bp(sm) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @include variables.bp(md) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.event-archive {
-  margin-block-start: 2rem;
-
-  &__years {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-  }
-
-  &__year {
-    display: flex;
-    flex-direction: column;
+  .event-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 2rem;
-  }
-}
 
-.event-empty {
-  margin-block-start: 3rem;
+    @include variables.bp(sm) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include variables.bp(md) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .event-archive {
+    margin-block-start: 2rem;
+
+    &__years {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    &__year {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+
+  .event-empty {
+    margin-block-start: 3rem;
+  }
 }

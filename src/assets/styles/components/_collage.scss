@@ -1,574 +1,575 @@
 @use "../utils/variables";
+@layer components {
+  .collage-tool {
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    padding-block: 2rem;
 
-.collage-tool {
-  max-width: 72rem;
-  margin-inline: auto;
-  padding-inline: 1rem;
-  padding-block: 2rem;
+    &__layout {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2rem;
 
-  &__layout {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2rem;
-
-    @include variables.bp(lg) {
-      flex-direction: row;
-    }
-  }
-
-  &__controls {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    width: 100%;
-    flex-shrink: 0;
-    view-transition-name: collage-controls;
-
-    @include variables.bp(lg) {
-      width: 24rem;
-    }
-  }
-
-  &__panel {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 1.5rem;
-    border-radius: 2rem;
-    background-color: var(--color-surface-subtle);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--color-border-subtle);
-    box-shadow: var(--shadow-elevated);
-    overflow: hidden;
-  }
-
-  &__blob {
-    position: absolute;
-    width: 16rem;
-    height: 16rem;
-    border-radius: 9999px;
-    pointer-events: none;
-    filter: blur(64px);
-
-    &--primary {
-      top: -8rem;
-      right: -8rem;
-      background-color: var(--color-primary-muted);
+      @include variables.bp(lg) {
+        flex-direction: row;
+      }
     }
 
-    &--secondary {
-      bottom: -8rem;
-      left: -8rem;
-      background-color: color-mix(in srgb, var(--color-secondary) 5%,
-        transparent);
-    }
-  }
-
-  &__section {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  &__summary {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-label);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    list-style: none;
-    transition: color 200ms ease;
-
-    &:hover {
-      color: var(--color-primary);
-    }
-
-    &::-webkit-details-marker {
-      display: none;
-    }
-  }
-
-  &__chevron {
-    margin-left: auto;
-    width: 0.75rem;
-    height: 0.75rem;
-    transition: rotate 300ms ease;
-
-    .collage-tool__details[open] & {
-      rotate: 180deg;
-    }
-  }
-
-  &__details {
-    & > .collage-tool__section,
-    & > .collage-tool__field {
-      margin-top: 1rem;
-    }
-  }
-
-  &__divider {
-    height: 1px;
-    background-color: var(--color-border-subtle);
-  }
-
-  &__field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  &__label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text);
-  }
-
-  &__hint {
-    margin: 0;
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-  }
-
-  &__select-wrap,
-  &__input-wrap {
-    position: relative;
-  }
-
-  &__input-wrap--icon {
-    .collage-tool__input {
-      padding-inline-start: 2.75rem;
-    }
-  }
-
-  &__input-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    translate: 0 -50%;
-    width: 1rem;
-    height: 1rem;
-    color: var(--color-text-muted);
-    pointer-events: none;
-  }
-
-  &__select {
-    padding-inline-end: 2.5rem;
-    cursor: pointer;
-    appearance: none;
-  }
-
-  &__select-icon {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    translate: 0 -50%;
-    color: var(--color-text-muted);
-    pointer-events: none;
-  }
-
-  &__source-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-    padding: 0.25rem;
-    border-radius: 0.75rem;
-    background-color: var(--color-surface-subtle);
-    border: 1px solid var(--color-border-subtle);
-  }
-
-  &__source {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid transparent;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    transition: all 300ms ease;
-    @include variables.haptic;
-
-    svg {
-      width: 1rem;
-      height: 1rem;
+    &__controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
       flex-shrink: 0;
+      view-transition-name: collage-controls;
+
+      @include variables.bp(lg) {
+        width: 24rem;
+      }
     }
 
-    &--inactive {
+    &__panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 2rem;
+      background-color: var(--color-surface-subtle);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-elevated);
+      overflow: hidden;
+    }
+
+    &__blob {
+      position: absolute;
+      width: 16rem;
+      height: 16rem;
+      border-radius: 9999px;
+      pointer-events: none;
+      filter: blur(64px);
+
+      &--primary {
+        top: -8rem;
+        right: -8rem;
+        background-color: var(--color-primary-muted);
+      }
+
+      &--secondary {
+        bottom: -8rem;
+        left: -8rem;
+        background-color: color-mix(in srgb, var(--color-secondary) 5%,
+          transparent);
+      }
+    }
+
+    &__section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &__summary {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: var(--letter-spacing-label);
       color: var(--color-text-muted);
+      cursor: pointer;
+      list-style: none;
+      transition: color 200ms ease;
 
       &:hover {
-        color: var(--color-text);
-        background-color: var(--color-surface-hover);
+        color: var(--color-primary);
+      }
+
+      &::-webkit-details-marker {
+        display: none;
       }
     }
 
-    &--active {
-      color: var(--color-primary);
-      background-color: var(--color-surface);
-      border-color: var(--color-primary-muted);
-      box-shadow: var(--shadow-sm);
-    }
-  }
-
-  &__toggle-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-  }
-
-  &__toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    background-color: var(--color-surface-subtle);
-    border: 1px solid var(--color-border-subtle);
-    cursor: pointer;
-    transition:
-      background-color 300ms ease,
-      border-color 300ms ease;
-
-    &:hover {
-      background-color: var(--color-surface-hover);
-    }
-
-    &--row {
-      justify-content: space-between;
-    }
-  }
-
-  &__toggle-body {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-  }
-
-  &__toggle-text {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-  }
-
-  &__toggle-title {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text);
-    transition: color 300ms ease;
-
-    .collage-tool__toggle:hover & {
-      color: var(--color-primary);
-    }
-  }
-
-  &__toggle-desc {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-  }
-
-  &__toggle-icon {
-    width: 1rem;
-    height: 1rem;
-    color: var(--color-text-muted);
-    transition: color 300ms ease;
-
-    .collage-tool__toggle:hover & {
-      color: var(--color-primary);
-    }
-  }
-
-  &__field-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  &__auto-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-
-    &:hover {
-      .collage-tool__auto-label {
-        color: var(--color-text);
-      }
-    }
-  }
-
-  &__auto-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    transition: color 300ms ease;
-  }
-
-  &__input:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  &__checkbox-sm {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  .callout {
-    margin-block: 0.5rem;
-  }
-
-  &__preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 50vh;
-    flex-grow: 1;
-  }
-
-  &__frame {
-    position: relative;
-    max-width: 100%;
-    border-radius: 2.5rem;
-    overflow: hidden;
-    background-color: #09090b;
-    border: 1px solid var(--color-border-subtle);
-    box-shadow: var(--shadow-elevated);
-    transition: all 500ms ease;
-  }
-
-  &__canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 85vh;
-    cursor: crosshair;
-    color: var(--color-text-muted);
-    transition: all 700ms ease;
-    opacity: 0;
-
-    .collage-tool__preview.is-ready & {
-      opacity: 1;
-    }
-  }
-
-  &__overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 300ms ease;
-
-    .collage-tool__preview.is-ready:hover & {
-      opacity: 1;
-    }
-  }
-
-  &__dimensions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid var(--color-border-subtle);
-    box-shadow: var(--shadow-elevated);
-    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  &__dimension-text {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-text);
-  }
-
-  &__dimensions .icon {
-    width: 0.75rem;
-    height: 0.75rem;
-    color: var(--color-text-muted);
-  }
-
-  &__loader {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(0 0 0 / 0.9);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 500ms ease;
-
-    .collage-tool__preview.is-loading & {
-      opacity: 1;
-    }
-  }
-
-  &__loader-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  &__spinner {
-    position: relative;
-    width: 3rem;
-    height: 3rem;
-
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 9999px;
-      border: 2px solid rgb(255 255 255 / 0.1);
-    }
-
-    &::after {
-      border-color: var(--color-primary-muted);
-      border-top-color: transparent;
-      animation: spin-smart 0.8s var(--ease-smart) infinite;
-    }
-  }
-
-  &__status {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    letter-spacing: 0.1em;
-    text-transform: lowercase;
-    color: rgb(255 255 255 / 0.6);
-    display: block;
-  }
-
-  &__status-wrap {
-    text-align: center;
-  }
-
-  &__empty {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 500ms ease;
-    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  &__empty-inner {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  &__empty-icon {
-    width: 4rem;
-    height: 4rem;
-    margin-inline: auto;
-    border-radius: 1rem;
-    background-color: var(--color-surface-hover);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .icon {
-      width: 2rem;
-      height: 2rem;
-      color: var(--color-text-muted);
-    }
-  }
-
-  &__empty-title {
-    margin: 0 0 0.25rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-text);
-  }
-
-  &__empty-desc {
-    margin: 0;
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-  }
-
-  &__actions {
-    width: 100%;
-    max-width: 1080px;
-    margin-top: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  &__action-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    pointer-events: none;
-    transition: opacity 500ms ease;
-
-    .collage-tool__preview.is-ready & {
-      pointer-events: auto;
-    }
-
-    .collage-tool__preview:not(.is-ready) & {
-      opacity: 0.5;
-    }
-  }
-
-  &__btn {
-    justify-content: center;
-
-    svg {
-      width: 1rem;
-      height: 1rem;
-      transition:
-        color 300ms ease,
-        scale 300ms ease;
-    }
-  }
-
-  &__action-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.375rem;
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--color-text-muted);
-
-    svg {
+    &__chevron {
+      margin-left: auto;
       width: 0.75rem;
       height: 0.75rem;
-      color: var(--color-text-dim);
-      flex-shrink: 0;
+      transition: rotate 300ms ease;
+
+      .collage-tool__details[open] & {
+        rotate: 180deg;
+      }
+    }
+
+    &__details {
+      & > .collage-tool__section,
+      & > .collage-tool__field {
+        margin-top: 1rem;
+      }
+    }
+
+    &__divider {
+      height: 1px;
+      background-color: var(--color-border-subtle);
+    }
+
+    &__field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    &__label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    &__hint {
+      margin: 0;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    &__select-wrap,
+    &__input-wrap {
+      position: relative;
+    }
+
+    &__input-wrap--icon {
+      .collage-tool__input {
+        padding-inline-start: 2.75rem;
+      }
+    }
+
+    &__input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      translate: 0 -50%;
+      width: 1rem;
+      height: 1rem;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+
+    &__select {
+      padding-inline-end: 2.5rem;
+      cursor: pointer;
+      appearance: none;
+    }
+
+    &__select-icon {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      translate: 0 -50%;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+
+    &__source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      background-color: var(--color-surface-subtle);
+      border: 1px solid var(--color-border-subtle);
+    }
+
+    &__source {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid transparent;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      transition: all 300ms ease;
+      @include variables.haptic;
+
+      svg {
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+      }
+
+      &--inactive {
+        color: var(--color-text-muted);
+
+        &:hover {
+          color: var(--color-text);
+          background-color: var(--color-surface-hover);
+        }
+      }
+
+      &--active {
+        color: var(--color-primary);
+        background-color: var(--color-surface);
+        border-color: var(--color-primary-muted);
+        box-shadow: var(--shadow-sm);
+      }
+    }
+
+    &__toggle-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+    }
+
+    &__toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      background-color: var(--color-surface-subtle);
+      border: 1px solid var(--color-border-subtle);
+      cursor: pointer;
+      transition:
+        background-color 300ms ease,
+        border-color 300ms ease;
+
+      &:hover {
+        background-color: var(--color-surface-hover);
+      }
+
+      &--row {
+        justify-content: space-between;
+      }
+    }
+
+    &__toggle-body {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    &__toggle-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    &__toggle-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text);
+      transition: color 300ms ease;
+
+      .collage-tool__toggle:hover & {
+        color: var(--color-primary);
+      }
+    }
+
+    &__toggle-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    &__toggle-icon {
+      width: 1rem;
+      height: 1rem;
+      color: var(--color-text-muted);
+      transition: color 300ms ease;
+
+      .collage-tool__toggle:hover & {
+        color: var(--color-primary);
+      }
+    }
+
+    &__field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    &__auto-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+
+      &:hover {
+        .collage-tool__auto-label {
+          color: var(--color-text);
+        }
+      }
+    }
+
+    &__auto-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      transition: color 300ms ease;
+    }
+
+    &__input:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &__checkbox-sm {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .callout {
+      margin-block: 0.5rem;
+    }
+
+    &__preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 50vh;
+      flex-grow: 1;
+    }
+
+    &__frame {
+      position: relative;
+      max-width: 100%;
+      border-radius: 2.5rem;
+      overflow: hidden;
+      background-color: #09090b;
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-elevated);
+      transition: all 500ms ease;
+    }
+
+    &__canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 85vh;
+      cursor: crosshair;
+      color: var(--color-text-muted);
+      transition: all 700ms ease;
+      opacity: 0;
+
+      .collage-tool__preview.is-ready & {
+        opacity: 1;
+      }
+    }
+
+    &__overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms ease;
+
+      .collage-tool__preview.is-ready:hover & {
+        opacity: 1;
+      }
+    }
+
+    &__dimensions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid var(--color-border-subtle);
+      box-shadow: var(--shadow-elevated);
+      background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    &__dimension-text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text);
+    }
+
+    &__dimensions .icon {
+      width: 0.75rem;
+      height: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    &__loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgb(0 0 0 / 0.9);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 500ms ease;
+
+      .collage-tool__preview.is-loading & {
+        opacity: 1;
+      }
+    }
+
+    &__loader-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    &__spinner {
+      position: relative;
+      width: 3rem;
+      height: 3rem;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        border: 2px solid rgb(255 255 255 / 0.1);
+      }
+
+      &::after {
+        border-color: var(--color-primary-muted);
+        border-top-color: transparent;
+        animation: spin-smart 0.8s var(--ease-smart) infinite;
+      }
+    }
+
+    &__status {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      color: rgb(255 255 255 / 0.6);
+      display: block;
+    }
+
+    &__status-wrap {
+      text-align: center;
+    }
+
+    &__empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 500ms ease;
+      background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    &__empty-inner {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &__empty-icon {
+      width: 4rem;
+      height: 4rem;
+      margin-inline: auto;
+      border-radius: 1rem;
+      background-color: var(--color-surface-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon {
+        width: 2rem;
+        height: 2rem;
+        color: var(--color-text-muted);
+      }
+    }
+
+    &__empty-title {
+      margin: 0 0 0.25rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    &__empty-desc {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    &__actions {
+      width: 100%;
+      max-width: 1080px;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &__action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      pointer-events: none;
+      transition: opacity 500ms ease;
+
+      .collage-tool__preview.is-ready & {
+        pointer-events: auto;
+      }
+
+      .collage-tool__preview:not(.is-ready) & {
+        opacity: 0.5;
+      }
+    }
+
+    &__btn {
+      justify-content: center;
+
+      svg {
+        width: 1rem;
+        height: 1rem;
+        transition:
+          color 300ms ease,
+          scale 300ms ease;
+      }
+    }
+
+    &__action-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+
+      svg {
+        width: 0.75rem;
+        height: 0.75rem;
+        color: var(--color-text-dim);
+        flex-shrink: 0;
+      }
     }
   }
 }

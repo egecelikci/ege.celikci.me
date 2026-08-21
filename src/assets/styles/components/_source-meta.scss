@@ -1,105 +1,106 @@
 @use "../utils/variables";
-
-.source-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  &--minimal {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  &__row {
+@layer components {
+  .source-meta {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.75rem;
-    color: var(--color-text-muted);
 
-    &:hover {
-      .source-meta__badge {
-        background-color: var(--color-primary-muted);
-        border-color: var(--color-primary-muted);
-      }
+    &--minimal {
+      flex-direction: row;
+      gap: 0.5rem;
+    }
 
-      .source-meta__icon {
-        color: var(--color-primary);
-      }
+    &__row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--color-text-muted);
 
-      .source-meta__link {
-        color: var(--color-primary);
-        border-color: var(--color-primary);
+      &:hover {
+        .source-meta__badge {
+          background-color: var(--color-primary-muted);
+          border-color: var(--color-primary-muted);
+        }
+
+        .source-meta__icon {
+          color: var(--color-primary);
+        }
+
+        .source-meta__link {
+          color: var(--color-primary);
+          border-color: var(--color-primary);
+        }
       }
     }
-  }
 
-  &__badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 0.5rem;
-    background-color: var(--color-surface-subtle);
-    border: 1px solid var(--color-border-subtle);
-    transition:
-      background-color 200ms ease,
-      border-color 200ms ease;
-  }
-
-  &__icon {
-    width: 0.75rem;
-    height: 0.75rem;
-    color: var(--color-text-muted);
-    transition: color 200ms ease;
-  }
-
-  &__text {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.025em;
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  &__link {
-    color: var(--color-text-muted);
-    text-decoration: none;
-    border-bottom: 1px solid var(--color-border-subtle);
-    transition:
-      color 200ms ease,
-      border-color 200ms ease;
-  }
-
-  &__separator {
-    margin-inline: 0.25rem;
-    color: var(--color-text-muted);
-  }
-
-  &__icon-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.5rem;
-    color: var(--color-text-muted);
-    @include variables.haptic;
-    transition:
-      color 150ms ease,
-      background-color 150ms ease;
-
-    &:hover {
-      color: var(--color-primary);
+    &__badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 0.5rem;
       background-color: var(--color-surface-subtle);
+      border: 1px solid var(--color-border-subtle);
+      transition:
+        background-color 200ms ease,
+        border-color 200ms ease;
     }
-  }
 
-  &__feeds {
-    display: flex;
-    gap: 0.5rem;
+    &__icon {
+      width: 0.75rem;
+      height: 0.75rem;
+      color: var(--color-text-muted);
+      transition: color 200ms ease;
+    }
+
+    &__text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+
+    &__link {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--color-border-subtle);
+      transition:
+        color 200ms ease,
+        border-color 200ms ease;
+    }
+
+    &__separator {
+      margin-inline: 0.25rem;
+      color: var(--color-text-muted);
+    }
+
+    &__icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      color: var(--color-text-muted);
+      @include variables.haptic;
+      transition:
+        color 150ms ease,
+        background-color 150ms ease;
+
+      &:hover {
+        color: var(--color-primary);
+        background-color: var(--color-surface-subtle);
+      }
+    }
+
+    &__feeds {
+      display: flex;
+      gap: 0.5rem;
+    }
   }
 }

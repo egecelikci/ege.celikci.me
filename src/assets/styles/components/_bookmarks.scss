@@ -1,272 +1,273 @@
 @use "../utils/variables";
-
-.bookmarks-page {
-  view-transition-name: bookmarks-page;
-}
-
-.bookmark-filter-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem 1.25rem;
-  padding-block: 1rem;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--color-border-subtle);
-}
-
-.bookmark-filter-search {
-  margin-block: 1rem 2rem;
-}
-
-.bookmark-badge-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-
-  @include variables.bp(sm) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+@layer components {
+  .bookmarks-page {
+    view-transition-name: bookmarks-page;
   }
 
-  @include variables.bp(md) {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .bookmark-filter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.25rem;
+    padding-block: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
 
-  @include variables.bp(lg) {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-
-    @media (width >= 80em) {
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-    }
-  }
-}
-
-.bookmark-badge {
-  display: block;
-  text-decoration: none;
-
-  &:hover .bookmark-badge__frame {
-    filter: grayscale(0);
-    scale: 1.05;
+  .bookmark-filter-search {
+    margin-block: 1rem 2rem;
   }
 
-  &:hover .bookmark-badge__title {
-    color: var(--color-primary);
-  }
-}
+  .bookmark-badge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
 
-.bookmark-badge__frame {
-  aspect-ratio: 88 / 31;
-  overflow: hidden;
-  border: 1px solid var(--color-border-subtle);
-  box-shadow: var(--shadow-sm);
-  filter: grayscale(1);
-  transition:
-    filter 500ms ease,
-    scale 500ms ease;
-
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    image-rendering: pixelated;
-  }
-}
-
-.bookmark-badge__title {
-  display: block;
-  margin-top: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: color 300ms ease;
-}
-
-.bookmark-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-top: 1rem;
-}
-
-.bookmark-card {
-  position: relative;
-  padding-block: 1.25rem;
-  border-bottom: 1px solid var(--color-border-subtle);
-
-  &:last-child {
-    border-bottom: 0;
-  }
-
-  &:hover .bookmark-card__title {
-    color: var(--color-primary);
-  }
-
-  &:hover .bookmark-card__badge-link {
-    opacity: 1;
-    filter: grayscale(0);
-  }
-}
-
-.bookmark-card__badge {
-  position: absolute;
-  top: 1.25rem;
-  right: 0;
-  display: none;
-
-  @include variables.bp(sm) {
-    display: block;
-  }
-
-  img {
-    width: 88px;
-    height: 31px;
-    object-fit: contain;
-    image-rendering: pixelated;
-  }
-}
-
-.bookmark-card__badge-link {
-  display: block;
-  opacity: 0.4;
-  filter: grayscale(1);
-  transition:
-    opacity 500ms ease,
-    filter 500ms ease,
-    scale 500ms ease;
-
-  &:hover {
-    scale: 1.05;
-  }
-
-  &:active {
-    scale: 0.95;
-  }
-}
-
-.bookmark-card__body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  min-width: 0;
-
-  &.bookmark-card__body--has-image {
     @include variables.bp(sm) {
-      padding-right: 6rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @include variables.bp(md) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    @include variables.bp(lg) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+
+      @media (width >= 80em) {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+      }
     }
   }
-}
 
-.bookmark-card__title {
-  display: block;
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.025em;
-  color: var(--color-text);
-  transition: color 300ms ease;
-}
+  .bookmark-badge {
+    display: block;
+    text-decoration: none;
 
-.bookmark-card__urls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.75rem;
-}
+    &:hover .bookmark-badge__frame {
+      filter: grayscale(0);
+      scale: 1.05;
+    }
 
-.bookmark-card__url {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  transition: color 300ms ease;
-
-  svg {
-    flex-shrink: 0;
+    &:hover .bookmark-badge__title {
+      color: var(--color-primary);
+    }
   }
 
-  span {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 400;
-    letter-spacing: normal;
-    text-transform: lowercase;
-    color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
-    transition: color 300ms ease;
+  .bookmark-badge__frame {
+    aspect-ratio: 88 / 31;
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-sm);
+    filter: grayscale(1);
+    transition:
+      filter 500ms ease,
+      scale 500ms ease;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
   }
 
-  &:hover,
-  &:hover span {
-    color: var(--color-primary);
-  }
-}
-
-.bookmark-card__desc {
-  font-size: 0.875rem;
-  line-height: 1.625;
-  color: color-mix(in srgb, var(--color-text-muted) 90%, transparent);
-}
-
-.bookmark-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.75rem;
-}
-
-.bookmark-card__tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--color-text-dim);
-  text-decoration: none;
-  transition: color 300ms ease;
-
-  &:hover {
-    color: var(--color-primary);
-  }
-}
-
-.bookmark-card__feed {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  color: #fb923c;
-  text-decoration: none;
-  transition: color 300ms ease;
-
-  span {
+  .bookmark-badge__title {
+    display: block;
+    margin-top: 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     font-weight: 700;
-    color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+    color: var(--color-text-muted);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     transition: color 300ms ease;
   }
 
-  &:hover,
-  &:hover span {
-    color: #f97316;
+  .bookmark-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 1rem;
   }
-}
 
-.bookmark-card__badge-mobile {
-  display: flex;
+  .bookmark-card {
+    position: relative;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--color-border-subtle);
 
-  @include variables.bp(sm) {
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover .bookmark-card__title {
+      color: var(--color-primary);
+    }
+
+    &:hover .bookmark-card__badge-link {
+      opacity: 1;
+      filter: grayscale(0);
+    }
+  }
+
+  .bookmark-card__badge {
+    position: absolute;
+    top: 1.25rem;
+    right: 0;
     display: none;
+
+    @include variables.bp(sm) {
+      display: block;
+    }
+
+    img {
+      width: 88px;
+      height: 31px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
   }
 
   .bookmark-card__badge-link {
-    opacity: 0.6;
-  }
-}
+    display: block;
+    opacity: 0.4;
+    filter: grayscale(1);
+    transition:
+      opacity 500ms ease,
+      filter 500ms ease,
+      scale 500ms ease;
 
-.bookmark-empty {
-  margin-block: 2rem 3rem;
+    &:hover {
+      scale: 1.05;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+  }
+
+  .bookmark-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+
+    &.bookmark-card__body--has-image {
+      @include variables.bp(sm) {
+        padding-right: 6rem;
+      }
+    }
+  }
+
+  .bookmark-card__title {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    transition: color 300ms ease;
+  }
+
+  .bookmark-card__urls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .bookmark-card__url {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 300ms ease;
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 400;
+      letter-spacing: normal;
+      text-transform: lowercase;
+      color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+      transition: color 300ms ease;
+    }
+
+    &:hover,
+    &:hover span {
+      color: var(--color-primary);
+    }
+  }
+
+  .bookmark-card__desc {
+    font-size: 0.875rem;
+    line-height: 1.625;
+    color: color-mix(in srgb, var(--color-text-muted) 90%, transparent);
+  }
+
+  .bookmark-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .bookmark-card__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text-dim);
+    text-decoration: none;
+    transition: color 300ms ease;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  .bookmark-card__feed {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: #fb923c;
+    text-decoration: none;
+    transition: color 300ms ease;
+
+    span {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
+      transition: color 300ms ease;
+    }
+
+    &:hover,
+    &:hover span {
+      color: #f97316;
+    }
+  }
+
+  .bookmark-card__badge-mobile {
+    display: flex;
+
+    @include variables.bp(sm) {
+      display: none;
+    }
+
+    .bookmark-card__badge-link {
+      opacity: 0.6;
+    }
+  }
+
+  .bookmark-empty {
+    margin-block: 2rem 3rem;
+  }
 }

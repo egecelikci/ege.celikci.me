@@ -3,10 +3,8 @@
 @use "base/reset";
 @use "base/typography";
 @use "base/layout";
-@use "base/focus";
 @use "base/animations";
 @use "base/transitions";
-@use "base/utilities";
 
 @use "components/container";
 @use "components/site-header";
@@ -60,5 +58,8 @@
 @use "components/bookmark-index";
 @use "components/bookmarks";
 @use "components/feeds";
+@use "base/utilities";
+
+@layer reset, base, components, utilities;
 
 /* google-fonts */
