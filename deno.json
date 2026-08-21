@@ -125,5 +125,6 @@
   },
   "allowScripts": [
     "npm:sharp"
-  ]
+  ],
+  "nodeModulesDir": "auto"
 }

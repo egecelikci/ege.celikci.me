@@ -180,7 +180,6 @@ export default function () {
         .use(minifyHTML())
         .use(checkUrls())
         .use(seo({
-          output: "_reports/seo.txt",
           options: {
             body: false,
             imgAlt: { min: 0, max: 1500, unit: "character" },
@@ -188,7 +187,6 @@ export default function () {
           },
         }))
         .use(validateHTML({
-          output: "_reports/html.txt",
           rules: {
             "attribute-empty-style": "off",
             "attribute-boolean-style": "off",
