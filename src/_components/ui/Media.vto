@@ -61,6 +61,7 @@
           aria-label="{{ (image.alt || 'view image') |> escape }}"
           target="_blank"
           rel="noopener noreferrer"
+          data-src="{{ image.src |> url }}"
           {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
           {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
           data-cropped="true"

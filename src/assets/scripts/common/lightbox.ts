@@ -70,7 +70,7 @@ export function initLightbox() {
     if (el.tagName === "A") {
       const anchor = el as HTMLAnchorElement;
       const img = anchor.querySelector("img");
-      itemData.src = anchor.href;
+      itemData.src = anchor.getAttribute("data-src") || anchor.href;
       itemData.msrc = img?.src;
       itemData.srcset = img?.getAttribute("srcset") || undefined;
       itemData.alt = img?.alt || anchor.getAttribute("data-alt") || "";
@@ -272,7 +272,12 @@ export function initLightbox() {
           showControls();
 
           if (viewPost) {
-            viewPost.classList.toggle("hidden", !data.postUrl);
+            const postPath = data.postUrl
+              ? new URL(data.postUrl, location.href).pathname.replace(/\/+$/, "")
+              : null;
+            const currentPath = location.pathname.replace(/\/+$/, "");
+            const redundant = postPath !== null && postPath === currentPath;
+            viewPost.classList.toggle("hidden", !data.postUrl || redundant);
             if (data.postUrl) viewPost.href = data.postUrl;
           }
           if (openOrig && data.src) openOrig.href = data.src;
