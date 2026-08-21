@@ -22,7 +22,7 @@
         X-Content-Type-Options = "nosniff"
         Referrer-Policy = "strict-origin-when-cross-origin"
         Permissions-Policy = "browsing-topics=(), attribution-reporting=(), run-ad-auction=(), join-ad-interest-group=()"
-        Content-Security-Policy = "default-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://webmention.io https://avatars.webmention.io https://*.basemaps.cartocdn.com; connect-src 'self' https://webmention.io https://*.basemaps.cartocdn.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+        Content-Security-Policy = "default-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://webmention.io https://avatars.webmention.io https://*.basemaps.cartocdn.com https://cdn.bsky.app https://cdn.bsky.social; connect-src 'self' https://webmention.io https://avatars.webmention.io https://*.basemaps.cartocdn.com https://cdn.bsky.app https://cdn.bsky.social; frame-src 'self' https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'"
 
 [[headers]]
     for = "/assets/*"
