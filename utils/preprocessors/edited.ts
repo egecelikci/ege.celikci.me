@@ -25,7 +25,13 @@ function countCommits(root: string): Map<string, number> {
     return counts;
   }
 
-  const str = gitCommand("log", "--format=COMMIT:%H", "--name-only", "--", root);
+  const str = gitCommand(
+    "log",
+    "--format=COMMIT:%H",
+    "--name-only",
+    "--",
+    root,
+  );
 
   if (!str) {
     return counts;

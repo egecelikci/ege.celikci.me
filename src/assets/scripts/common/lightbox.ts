@@ -273,7 +273,10 @@ export function initLightbox() {
 
           if (viewPost) {
             const postPath = data.postUrl
-              ? new URL(data.postUrl, location.href).pathname.replace(/\/+$/, "")
+              ? new URL(data.postUrl, location.href).pathname.replace(
+                /\/+$/,
+                "",
+              )
               : null;
             const currentPath = location.pathname.replace(/\/+$/, "");
             const redundant = postPath !== null && postPath === currentPath;
