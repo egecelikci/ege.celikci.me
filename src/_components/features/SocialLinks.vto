@@ -1,6 +1,6 @@
 {{ set links = it.links || it.author?.links || [] }}
 
-<div class="hidden" aria-hidden="true">
+<div class="hidden">
   {{ for link of links }}
     {{ if link.relMe }}
       <a href="{{ link.url }}" class="u-url p-name" rel="me">{{ link.name }}</a>

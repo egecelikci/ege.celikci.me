@@ -2,7 +2,7 @@
   <div class="site-footer__inner">
     <div class="site-footer__meta">
       <div class="site-footer__copyright">
-        <span aria-label="Copyright">&copy;</span>
+        <span role="img" aria-label="Copyright">&copy;</span>
         {{ it.build.timestamp |> date("yyyy") }}
         <a
           href="{{ it.site.url }}"
@@ -114,7 +114,6 @@
 
 <footer
   class="site-footer"
-  role="contentinfo"
 >
   {{
     await it.comp.layout.Container({

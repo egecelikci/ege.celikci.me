@@ -15,7 +15,7 @@
   class="u-comment h-cite webmention-item {{ isOwn ? "webmention-item--own" : "" }} {{ it.classes }}"
   {{ it.attributes |> attr |> safe }}
 >
-  <header class="webmention-item__header">
+  <div class="webmention-item__header">
     <div class="webmention-item__author p-author h-card">
       {{# Author Image #}}
       <div class="webmention-item__avatar">
@@ -66,7 +66,7 @@
         {{ it.webmention.published |> date("dd MMM yyyy") }}
       </time>
     {{ /if }}
-  </header>
+  </div>
 
   {{# Content #}}
   <div class="webmention-item__content e-content markdown">

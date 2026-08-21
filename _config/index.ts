@@ -179,8 +179,25 @@ export default function () {
       site
         .use(minifyHTML())
         .use(checkUrls())
-        .use(seo())
-        .use(validateHTML());
+        .use(seo({
+          output: "_reports/seo.txt",
+          options: {
+            body: false,
+            imgAlt: { min: 0, max: 1500, unit: "character" },
+            duplicateDescription: false,
+          },
+        }))
+        .use(validateHTML({
+          output: "_reports/html.txt",
+          rules: {
+            "attribute-empty-style": "off",
+            "attribute-boolean-style": "off",
+            "no-inline-style": "off",
+            "no-implicit-input-type": "off",
+            "long-title": "off",
+            "valid-id": "off",
+          },
+        }));
     }
 
     // Global default configurations

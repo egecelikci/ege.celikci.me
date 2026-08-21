@@ -16,6 +16,6 @@ you are free to use, share and adapt them as long as you give appropriate credit
 
 additionally, some pages might be under a different license. please check the page footer for the specific license governing the content on that page.
 
-### 3rd party assets
+### third-party assets
 
-please note that certain assets used on this site: such as event poster covers, album artwork and specific media elements (like reposts) **do not** belong to me. these items are the property of their respective owners and are **excluded** from the CC BY-SA 4.0 license. you must obtain permission from the original copyright holders before reusing 3rd party assets.
+please note that certain assets used on this site: such as event poster covers, album artwork and specific media elements (like reposts) **do not** belong to me. these items are the property of their respective owners and are **excluded** from the CC BY-SA 4.0 license. you must obtain permission from the original copyright holders before reusing third-party party assets.

@@ -18,7 +18,7 @@
   <div class="wm-faces">
     <div class="wm-faces__stack">
       {{ for mention of interactions }}
-        <span
+        <div
           class="wm-face"
           title="{{ mention.author.name }}"
         >
@@ -39,7 +39,7 @@
               </div>
             {{ /if }}
           </div>
-        </span>
+        </div>
       {{ /for }}
     </div>
   </div>

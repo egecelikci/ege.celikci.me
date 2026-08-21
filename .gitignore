@@ -13,3 +13,4 @@ src/_rust/**/target/
 # CMS runtime state (the server working clone keeps these locally)
 .ssh/
 .config/
+_reports/

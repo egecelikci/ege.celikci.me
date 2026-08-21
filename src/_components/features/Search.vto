@@ -45,6 +45,7 @@
       class="search__input"
       autocomplete="off"
       spellcheck="false"
+      aria-label="Search"
     />
 
     {{# --- Right Side Actions (X Button, Spinner) --- #}}
@@ -65,6 +66,7 @@
 
         {{# Clear Button #}}
         <button
+          type="button"
           id="search-clear-{{ id }}"
           class="search__clear"
           aria-label="Clear search"

@@ -8,7 +8,7 @@
     class="carousel-top-controls"
   >
     {{# Close #}}
-    <span>
+    <div>
       <button
         type="button"
         class="btn-icon pswp-close-btn"
@@ -16,7 +16,7 @@
       >
         {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) }}
       </button>
-    </span>
+    </div>
 
     {{# Dots & Counter #}}
     <div
@@ -37,7 +37,7 @@
     </div>
 
     {{# More menu #}}
-    <span>
+    <div>
       <div class="pswp-more-wrap">
         <button
           type="button"
@@ -80,7 +80,7 @@
           </button>
         </div>
       </div>
-    </span>
+    </div>
   </div>
 </template>
 
@@ -113,7 +113,7 @@
       aria-labelledby="pswp-sheet-title"
       aria-modal="true"
     >
-      <header class="pswp-sheet-header">
+      <div class="pswp-sheet-header">
         <h2
           id="pswp-sheet-title"
           class="pswp-sheet-title"
@@ -127,12 +127,12 @@
         >
           {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) }}
         </button>
-      </header>
-      <main
+      </div>
+      <div
         class="pswp-sheet-content"
       >
         {{# Alt text injected here by JS #}}
-      </main>
+      </div>
     </div>
   </div>
 </template>
@@ -140,6 +140,7 @@
 {{# 4. DOT TEMPLATE #}}
 <template id="pswp-template-dot">
   <button
+    type="button"
     class="carousel-dot pswp-dot"
     aria-label="Go to slide"
   >
