@@ -16,8 +16,7 @@ The system behind this site automatically fetches events from MusicBrainz. This 
 
 If you want to see an event on the [events](/events) page and are wondering what you can do, I wanted to prepare this detailed yet easy to follow guide so you can get a general idea of the process and contribute on your own.
 
-{{ set calloutInfo = "For more details and official documentation, check the [How to Add an Event on MusicBrainz](https://musicbrainz.org/doc/How_to_Add_an_Event) page." |> md }}
-{{ comp base.Callout { variant: "info", content: calloutInfo } /}}
+{{ comp.base.Callout({ variant: "info", content: "For more details and official documentation, check the [How to Add an Event on MusicBrainz](https://musicbrainz.org/doc/How_to_Add_an_Event) page." }) }}
 
 ## Contents
 
@@ -62,8 +61,7 @@ MusicBrainz has specific standards to maintain database quality:
 - **Type**: Indicates the type of event. A type other than **Concert** is rarely needed. (Not every event is a concert; if there is a different concept, you can select the appropriate type in MusicBrainz).
 - **Date period**: The start and end dates, along with the start time. Since door opening and concert start times often differ, you can enter whichever makes more sense to you.
 
-{{ set calloutHeadsUp = "When filling out the form, if you are unsure or do not know certain details, please **leave them blank**. It is much better for the database health to leave data incomplete than to enter incorrect information." |> md }}
-{{ comp base.Callout { variant: "danger", content: calloutHeadsUp } /}}
+{{ comp.base.Callout({ variant: "danger", content: "When filling out the form, if you are unsure or do not know certain details, please **leave them blank**. It is much better for the database health to leave data incomplete than to enter incorrect information." }) }}
 
 ---
 
@@ -75,8 +73,7 @@ This part is highly important. The data you enter here allows the events in İzm
 
 ![Relationship Editor](/assets/images/docs/events/8be0c907-526b-4234-a7d5-7f52197e6d3f.png)
 
-{{ set calloutWarning = 'An event with no relationships (artist or venue links) will eventually be deleted by MusicBrainz for being "empty."' |> md }}
-{{ comp base.Callout { variant: "warning", content: calloutWarning } /}}
+{{ comp.base.Callout({ variant: "warning", content: 'An event with no relationships (artist or venue links) will eventually be deleted by MusicBrainz for being "empty."' }) }}
 
 #### Artists and Crew (Artist-Event)
 
@@ -123,10 +120,9 @@ On the same form, right below the **Relationships** section, you will see a sepa
 - **For the event**: You can copy the URL of the event's ticket sales page, Facebook event, Last.fm event page or organizer's site and paste it into the **Add link** box here. These links turn into special buttons (Buy Tickets, Visit Event Page, etc.) on the event detail page of the events in İzmir.
 - **For artists and profiles**: When editing an artist, venue or organizer (Label) from their own profile pages, make sure to add their **Instagram** or **official homepages** links as well. The events in İzmir page automatically fetches this data and tries to list it as much as possible.
 
-{{ set calloutTip = `Contributions like this can serve as an infrastructure for artists to showcase their links on a single page. For example:
+{{ comp.base.Callout({ variant: "info", content: `Contributions like this can serve as an infrastructure for artists to showcase their links on a single page. For example:
 
-- [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` |> md }}
-{{ comp base.Callout { variant: "info", content: calloutTip } /}}
+- [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` }) }}
 
 ---
 
@@ -140,8 +136,7 @@ Once everything is complete, you can add the event by clicking the **Enter edit*
 
 !["Enter edit" Button](/assets/images/docs/events/6ee2c777-6bf9-4e18-83d1-3a1fa9bab8b9.png)
 
-{{ set calloutExamples = "If you are unsure how to structure relationships or fields when filling out the form, you can check the [MusicBrainz İzmir Event List](https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events) page. There are dozens of previously created, approved, and successfully listed event examples there, so you can use this page as a practical template guide for yourself." |> md }}
-{{ comp base.Callout { variant: "info", content: calloutExamples, icon: "lightbulb" } /}}
+{{ comp.base.Callout({ variant: "info", content: "If you are unsure how to structure relationships or fields when filling out the form, you can check the [MusicBrainz İzmir Event List](https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events) page. There are dozens of previously created, approved, and successfully listed event examples there, so you can use this page as a practical template guide for yourself.", icon: "lightbulb" }) }}
 
 ---
 

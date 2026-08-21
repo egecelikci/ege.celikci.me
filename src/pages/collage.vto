@@ -20,9 +20,10 @@ menu:
         <div class="collage-tool__blob collage-tool__blob--secondary"></div>
         <div class="collage-tool__section">
           <div class="collage-tool__field">
-            <label for="service-select" class="collage-tool__label">Service</label>
+            <label class="collage-tool__label">Service</label>
             <div class="collage-tool__source-grid">
               <button
+                type="button"
                 id="source-lb"
                 class="collage-tool__source"
                 aria-label="Use ListenBrainz"
@@ -31,6 +32,7 @@ menu:
                 <span>ListenBrainz</span>
               </button>
               <button
+                type="button"
                 id="source-lfm"
                 class="collage-tool__source"
                 aria-label="Use Last.fm"
@@ -178,10 +180,10 @@ menu:
                       class="checkbox-base"
                       aria-label="Enable film grain effect"
                     >
-                    <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-text">
                       <span class="collage-tool__toggle-title">Grain</span>
                       <span class="collage-tool__toggle-desc">Film texture</span>
-                    </div>
+                    </span>
                   </label>
                   <label class="collage-tool__toggle">
                     <input
@@ -190,11 +192,11 @@ menu:
                       class="checkbox-base"
                       aria-label="Enable glass effect"
                     >
-                    <div class="collage-tool__toggle-text">
+                    <span class="collage-tool__toggle-text">
                       <span class="collage-tool__toggle-title">Glass</span>
                       <span class="collage-tool__toggle-desc"
                       >Frosted overlay</span>
-                    </div>
+                    </span>
                   </label>
                 </div>
                 <label class="collage-tool__toggle">
@@ -204,11 +206,11 @@ menu:
                     class="checkbox-base"
                     aria-label="Darken bottom section"
                   >
-                  <div class="collage-tool__toggle-text">
+                  <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title">Dim Bottom</span>
                     <span class="collage-tool__toggle-desc"
                     >Darker album list area</span>
-                  </div>
+                  </span>
                 </label>
               </div>
             </div>
@@ -230,20 +232,20 @@ menu:
 
             <div class="collage-tool__section">
               <label class="collage-tool__toggle collage-tool__toggle--row">
-                <div class="collage-tool__toggle-body">
+                <span class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "image-off",
                       classes: "collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="collage-tool__toggle-text">
+                  <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
                     >Skip missing cover art</span>
                     <span class="collage-tool__toggle-desc"
                     >Hide albums without covers</span>
-                  </div>
-                </div>
+                  </span>
+                </span>
                 <input
                   type="checkbox"
                   id="skip-missing"
@@ -254,18 +256,18 @@ menu:
               </label>
 
               <label class="collage-tool__toggle collage-tool__toggle--row">
-                <div class="collage-tool__toggle-body">
+                <span class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "hash",
                       classes: "collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="collage-tool__toggle-text">
+                  <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
                     >Display listen counts</span>
-                  </div>
-                </div>
+                  </span>
+                </span>
                 <input
                   type="checkbox"
                   id="show-counts"
@@ -275,18 +277,18 @@ menu:
               </label>
 
               <label class="collage-tool__toggle collage-tool__toggle--row">
-                <div class="collage-tool__toggle-body">
+                <span class="collage-tool__toggle-body">
                   {{
                     comp.base.Icon({
                       name: "globe",
                       classes: "collage-tool__toggle-icon",
                     })
                   }}
-                  <div class="collage-tool__toggle-text">
+                  <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
                     >Show website name</span>
-                  </div>
-                </div>
+                  </span>
+                </span>
                 <input
                   type="checkbox"
                   id="show-site"
@@ -321,12 +323,10 @@ menu:
                     id="font-family"
                     placeholder="DM Sans"
                     class="input-base input-focus collage-tool__input"
-                    aria-describedby="font-hint"
                   />
                 </div>
                 {{
                   set calloutText = "Enter a font name from [Google Fonts](https://fonts.google.com/)"
-                  |> md
                 }}
 
                 {{
@@ -394,6 +394,7 @@ menu:
           width="1080"
           height="1920"
           class="collage-tool__canvas"
+          role="img"
           aria-label="Generated album collage preview"
         ></canvas>
         <div class="collage-tool__overlay">
@@ -425,7 +426,7 @@ menu:
               {{ comp.base.Icon({ name: "image", classes: "" }) }}
             </div>
             <div>
-              <h3 class="collage-tool__empty-title">Ready to Create</h3>
+              <h2 class="collage-tool__empty-title">Ready to Create</h2>
               <p class="collage-tool__empty-desc">
                 Enter your username to generate your collage
               </p>
@@ -436,6 +437,7 @@ menu:
       <div class="collage-tool__actions">
         <div id="result-actions" class="collage-tool__action-grid">
           <button
+            type="button"
             id="download-btn"
             class="btn-minimal collage-tool__btn"
             aria-label="Download collage as JPG"
@@ -450,6 +452,7 @@ menu:
             <span class="typography-label">Download</span>
           </button>
           <button
+            type="button"
             id="share-btn"
             class="btn-minimal collage-tool__btn"
             aria-label="Share collage"
