@@ -3,6 +3,12 @@
     "004e8cd8-1df5-4e29-bf15-a1eca96d868b": [],
     "008ea70a-8cbf-4c16-b23c-922d15fcb286": [],
     "00d8b164-48cd-40e3-8d7b-178af9483d9f": [],
+    "05251a71-2050-4e8e-a653-904373a66778": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/sleepwalk_capsule/"
+      }
+    ],
     "07056e71-f1a4-432c-a613-6baf50042b55": [
       {
         "type": "free streaming",
@@ -910,6 +916,16 @@
         "url": "https://www.setlist.fm/venue/gundodu-meydan-izmir-turkey-53d79fb5.html"
       }
     ],
+    "6c596ec7-4d5f-4771-8f47-d85c066e2ee3": [
+      {
+        "type": "bandcamp",
+        "url": "https://pangrealrock.bandcamp.com/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/pangrealrock/"
+      }
+    ],
     "6e81cc99-3132-448c-888d-6f6930e04b2d": [
       {
         "type": "social network",
@@ -1028,6 +1044,12 @@
       {
         "type": "social network",
         "url": "https://www.instagram.com/bannerofresistance/"
+      }
+    ],
+    "83c6127d-25db-406e-b124-96ecc15f07bb": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/edaddincer.ink/"
       }
     ],
     "85cf2dea-d08f-4593-b6b3-1cb1dd2e05f6": [],
@@ -9460,6 +9482,175 @@
     {
       "cancelled": false,
       "disambiguation": "",
+      "id": "e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d",
+      "imagePath": "/assets/images/posters/e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d.jpg",
+      "life-span": {
+        "begin": "2026-08-26",
+        "end": "2026-08-26",
+        "ended": true
+      },
+      "name": "PANG, sleepwalk capsule, histeri & Lizrith at NØMADS-36",
+      "posterThumb": "https://eventartarchive.org/event/e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d/45980554502-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d/45980554502.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "05251a71-2050-4e8e-a653-904373a66778",
+            "name": "sleepwalk capsule",
+            "sort-name": "sleepwalk capsule",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "25a3afd1-7bf0-48ff-8012-3409b86de1c6",
+            "name": "histeri",
+            "sort-name": "histeri",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "GE",
+            "disambiguation": "Tbilisi garage punk",
+            "id": "6c596ec7-4d5f-4771-8f47-d85c066e2ee3",
+            "name": "PANG",
+            "sort-name": "PANG",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "83c6127d-25db-406e-b124-96ecc15f07bb",
+            "name": "Eda Dincer",
+            "sort-name": "Dincer, Eda",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "abab7daf-c631-4836-991b-1fed96a10250",
+            "name": "Lizrith",
+            "sort-name": "Lizrith",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "supporting DJ",
+          "type-id": "2c5c92da-259c-42fc-ac1f-53d9dda2d6d0"
+        }
+      ],
+      "setlist": "",
+      "time": "20:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
       "id": "e8049b5d-d9a3-4c6a-a7f3-46c1c65484a3",
       "life-span": {
         "begin": "2010-10-09",
@@ -10156,5 +10347,6 @@
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     }
-  ]
+  ],
+  "schemaVersion": 1
 }
