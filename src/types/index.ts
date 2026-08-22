@@ -212,6 +212,7 @@ export interface NoteProps {
     syndication?: {
       bluesky?: string;
       mastodon?: string;
+      instagram?: string;
     };
   };
 }

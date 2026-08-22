@@ -5,7 +5,7 @@
 
   Props:
     - stats: { replies: number, reposts: number, likes: number }
-    - syndication: { bluesky?: string, mastodon?: string }
+    - syndication: { bluesky?: string, mastodon?: string, instagram?: string }
     - classes: string
 #}}
 
@@ -76,6 +76,25 @@
           {{
             await it.comp.base.Icon({
               name: "mastodon",
+              catalog: "simpleicons",
+              classes: "w-4 h-4 fill-current",
+            })
+          }}
+        </a>
+      {{ /if }}
+
+      {{ if it.syndication.instagram }}
+        <a
+          href="{{ it.syndication.instagram }}"
+          class="u-syndication activity-meta__syndication-link activity-meta__syndication-link--instagram"
+          aria-label="View on Instagram"
+          title="View on Instagram"
+          target="_blank"
+          rel="noopener noreferrer syndication"
+        >
+          {{
+            await it.comp.base.Icon({
+              name: "instagram",
               catalog: "simpleicons",
               classes: "w-4 h-4 fill-current",
             })

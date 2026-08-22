@@ -57,6 +57,8 @@ cms.collection({
       type: "object",
       label: "Syndication",
       description: "Links to cross-posted versions of this note",
+      transform: (value) =>
+        value && Object.values(value).some(Boolean) ? value : undefined,
       fields: [
         {
           name: "mastodon",
@@ -67,6 +69,11 @@ cms.collection({
           name: "bluesky",
           type: "url",
           label: "Bluesky",
+        },
+        {
+          name: "instagram",
+          type: "url",
+          label: "Instagram",
         },
       ],
     },
@@ -114,6 +121,8 @@ cms.collection({
       type: "object",
       label: "Syndication",
       description: "Links to cross-posted versions of this post",
+      transform: (value) =>
+        value && Object.values(value).some(Boolean) ? value : undefined,
       fields: [
         {
           name: "mastodon",
@@ -124,6 +133,11 @@ cms.collection({
           name: "bluesky",
           type: "url",
           label: "Bluesky",
+        },
+        {
+          name: "instagram",
+          type: "url",
+          label: "Instagram",
         },
       ],
     },
