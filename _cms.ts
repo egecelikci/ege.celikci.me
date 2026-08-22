@@ -26,135 +26,128 @@ cms.auth({
 
 cms.git({ prodBranch: "main", remote: "origin", command: gitCommand });
 
-cms.upload({
-  name: "images",
-  label: "Images",
-  description: "Upload images for notes and posts",
-  store: "src:assets/images/gallery",
-});
+cms.upload(
+  {
+    name: "images",
+    label: "Images",
+    description: "Upload images for notes and posts",
+    store: "src:assets/images/gallery",
+  } satisfies Lume.CMS.UploadOptions,
+);
 
-cms.collection({
-  name: "notes",
-  label: "Notes",
-  description: "Ephemeral updates, logs & short form content",
-  store: "src:notes/*.md",
-  fields: [
-    "title: text",
-    {
-      name: "tags",
-      type: "list",
-      label: "Tags",
-      description: "e.g. kedi, coffee",
-    },
-    {
-      name: "link",
-      type: "url",
-      label: "Link",
-      description: "Optional link if this note points to something",
-    },
-    {
-      name: "syndication",
-      type: "object",
-      label: "Syndication",
-      description: "Links to cross-posted versions of this note",
-      transform: (value) =>
-        value && Object.values(value).some(Boolean) ? value : undefined,
-      fields: [
-        {
-          name: "mastodon",
-          type: "url",
-          label: "Mastodon",
-        },
-        {
-          name: "bluesky",
-          type: "url",
-          label: "Bluesky",
-        },
-        {
-          name: "instagram",
-          type: "url",
-          label: "Instagram",
-        },
-      ],
-    },
-    {
-      name: "content",
-      type: "markdown",
-      label: "Content",
-      description: "Markdown body; drop images inline (they become the gallery), or use the image button",
-      upload: "images",
-    },
-  ],
-  documentName() {
-    const now = new Date();
-    const pad = (n: number) => String(n).padStart(2, "0");
-    return `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${
-      pad(now.getUTCDate())
-    }-${pad(now.getUTCHours())}-${pad(now.getUTCMinutes())}-${
-      pad(now.getUTCSeconds())
-    }.md`;
-  },
-  rename: false,
-});
+/**
+ * builds a unique, sortable filename for a new note from the current UTC time.
+ * @returns {string} filename in the form YYYY-MM-DD-HH-mm-ss.md.
+ * */
+function timestampName(): string {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${
+    pad(now.getUTCDate())
+  }-${pad(now.getUTCHours())}-${pad(now.getUTCMinutes())}-${
+    pad(now.getUTCSeconds())
+  }.md`;
+}
 
-cms.collection({
-  name: "blog",
-  label: "Blog",
-  description: "Longer-form posts",
-  store: "src:blog/*.md",
+/**
+ * converts a title into a URL and filename safe slug.
+ * @param {string} title - the source title.
+ * @returns {string} lowercased slug, non-alphanumeric runs collapsed to "-".
+ */
+function slugify(title: string): string {
+  return title.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-");
+}
+
+const syndicationField: {
+  type: "object";
+  label: string;
+  description: string;
+  transform: (
+    value: Record<string, unknown> | undefined,
+  ) => Record<string, unknown> | undefined;
+  fields: Lume.CMS.Field[];
+} = {
+  type: "object",
+  label: "Syndication",
+  description: "Links to cross-posted versions of this entry",
+  transform: (value) =>
+    value && Object.values(value).some(Boolean) ? value : undefined,
   fields: [
-    "title: text!",
-    "date: date",
-    {
-      name: "tags",
-      type: "list",
-      label: "Tags",
-    },
-    {
-      name: "description",
-      type: "textarea",
-      label: "Description",
-      description: "Short summary used in feeds and page metadata",
-    },
-    {
-      name: "syndication",
-      type: "object",
-      label: "Syndication",
-      description: "Links to cross-posted versions of this post",
-      transform: (value) =>
-        value && Object.values(value).some(Boolean) ? value : undefined,
-      fields: [
-        {
-          name: "mastodon",
-          type: "url",
-          label: "Mastodon",
-        },
-        {
-          name: "bluesky",
-          type: "url",
-          label: "Bluesky",
-        },
-        {
-          name: "instagram",
-          type: "url",
-          label: "Instagram",
-        },
-      ],
-    },
-    {
-      name: "content",
-      type: "markdown",
-      label: "Content",
-      upload: "images",
-    },
+    { name: "mastodon", type: "url", label: "Mastodon" },
+    { name: "bluesky", type: "url", label: "Bluesky" },
+    { name: "instagram", type: "url", label: "Instagram" },
   ],
-  documentName(data) {
-    return data.title
-      ? `${data.title.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-")}.md`
-      : undefined;
-  },
-  rename: "auto",
-});
+};
+
+cms.collection(
+  {
+    name: "notes",
+    label: "Notes",
+    description: "Ephemeral updates, logs & short form content",
+    store: "src:notes/*.md",
+    fields: [
+      "title: text",
+      {
+        name: "tags",
+        type: "list",
+        label: "Tags",
+        description: "e.g. kedi, coffee",
+      },
+      {
+        name: "link",
+        type: "url",
+        label: "Link",
+        description: "Optional link if this note points to something",
+      },
+      { name: "syndication", ...syndicationField },
+      {
+        name: "content",
+        type: "markdown",
+        label: "Content",
+        description:
+          "Markdown body; drop images inline (they become the gallery), or use the image button",
+        upload: "images",
+      },
+    ],
+    documentName: timestampName,
+    rename: false,
+  } satisfies Lume.CMS.CollectionOptions,
+);
+
+cms.collection(
+  {
+    name: "blog",
+    label: "Blog",
+    description: "Longer-form posts",
+    store: "src:blog/*.md",
+    fields: [
+      "title: text!",
+      "date: date",
+      {
+        name: "tags",
+        type: "list",
+        label: "Tags",
+      },
+      {
+        name: "description",
+        type: "textarea",
+        label: "Description",
+        description: "Short summary used in feeds and page metadata",
+      },
+      { name: "syndication", ...syndicationField },
+      {
+        name: "content",
+        type: "markdown",
+        label: "Content",
+        upload: "images",
+      },
+    ],
+    documentName(data) {
+      return data.title ? `${slugify(data.title)}.md` : undefined;
+    },
+    rename: "auto",
+  } satisfies Lume.CMS.CollectionOptions,
+);
 
 for (
   const page of [
@@ -174,12 +167,14 @@ for (
     { name: "offline", store: "src:pages/offline.md", label: "Offline" },
   ]
 ) {
-  cms.document({
-    name: page.name,
-    label: page.label,
-    description: "Edit the content of this page",
-    store: page.store,
-  });
+  cms.document(
+    {
+      name: page.name,
+      label: page.label,
+      description: "Edit the content of this page",
+      store: page.store,
+    } satisfies Lume.CMS.DocumentOptions,
+  );
 }
 
 export default cms;
