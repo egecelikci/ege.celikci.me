@@ -38,7 +38,7 @@ cms.upload(
 /**
  * builds a unique, sortable filename for a new note from the current UTC time.
  * @returns {string} filename in the form YYYY-MM-DD-HH-mm-ss.md.
- * */
+ */
 function timestampName(): string {
   const now = new Date();
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -79,6 +79,19 @@ const syndicationField: {
   ],
 };
 
+/**
+ * LumeCMS's YAML writer fails on `undefined` values and field transforms are always assigned even when they return `undefined` (e.g. an empty syndication object).
+ * Strip such keys so they never reach the front matter. Runs after all field changes are applied, before the document is written.
+ * @param {Record<string, unknown>} data - the data to be persisted.
+ */
+function stripUndefined(data: Record<string, unknown>): void {
+  for (const [key, value] of Object.entries(data)) {
+    if (value === undefined) {
+      delete data[key];
+    }
+  }
+}
+
 cms.collection(
   {
     name: "notes",
@@ -111,6 +124,7 @@ cms.collection(
     ],
     documentName: timestampName,
     rename: false,
+    transform: stripUndefined,
   } satisfies Lume.CMS.CollectionOptions,
 );
 
@@ -146,6 +160,7 @@ cms.collection(
       return data.title ? `${slugify(data.title)}.md` : undefined;
     },
     rename: "auto",
+    transform: stripUndefined,
   } satisfies Lume.CMS.CollectionOptions,
 );
 
