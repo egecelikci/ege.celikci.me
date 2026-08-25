@@ -58,6 +58,7 @@ export default function (options: AssetOptions = {}) {
       .use(picture())
       .use(transformImages())
       .add("assets/images")
+      .add("assets/fonts")
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
       .add("assets/styles/site.scss")
