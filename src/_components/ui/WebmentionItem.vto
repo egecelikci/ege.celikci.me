@@ -11,8 +11,9 @@
 {{ set isOwn = it.webmention |> isOwnWebmention }}
 
 <div
-  id="webmention-{{ it.webmention["wm-id"] }}"
-  class="u-comment h-cite webmention-item {{ isOwn ? "webmention-item--own" : "" }} {{ it.classes }}"
+  id="webmention-{{ it.webmention[" wm-id"] }}"
+  class="u-comment h-cite webmention-item {{ isOwn ? " webmention-item--own" :
+  "" }} {{ it.classes }} "
   {{ it.attributes |> attr |> safe }}
 >
   <div class="webmention-item__header">

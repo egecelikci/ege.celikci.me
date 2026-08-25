@@ -13,11 +13,11 @@
 {{ if it.alternateFeeds }}
   {{ for feed of it.alternateFeeds }}
     <link
-      rel="alternate"
-      type="{{ feed.type }}"
-      title="{{ it.title ? it.title + " | " : "" }}{{ feed.label }}"
-      href="{{ feed.url }}"
-    />
+  rel="alternate"
+  type="{{ feed.type }}"
+  title="{{ it.title ? it.title + " | " : "" }}{{ feed.label }}"
+  href="{{ feed.url }}"
+/>
   {{ /for }}
 {{ /if }}
 

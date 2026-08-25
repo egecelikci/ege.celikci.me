@@ -32,9 +32,9 @@ layout: layouts/base.vto
   {{ if it.type === "note" }}
     {{ if !it.title }}
       <span
-        data-pagefind-meta="title:note from {{ it.date |> date('dd MMM yyyy HH:mm') }}"
-        class="sr-only"
-      ></span>
+  data-pagefind-meta="title:note from {{ it.date |> date('dd MMM yyyy HH:mm') }}"
+  class="sr-only"
+></span>
     {{ /if }}
 
     {{
@@ -59,17 +59,17 @@ layout: layouts/base.vto
     </div>
     {{ await comp.ui.TagDetail({ tag: it.tag }) }}
   {{ else }}
-    <div class="{{ (it.prose !== false) ? "e-content" : "" }}">
+    <div class="{{ (it.prose !== false) ? " e-content" : "" }}">
       {{ content |> safe }}
     </div>
   {{ /if }}
 
   <div
-    class="p-author h-card hidden"
-    data-pagefind-ignore=""
-  >
-    <a href="/" class="u-url p-name">{{ it.author.name }}</a>
-  </div>
+  class="p-author h-card hidden"
+  data-pagefind-ignore=""
+>
+  <a href="/" class="u-url p-name">{{ it.author.name }}</a>
+</div>
   </{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}>
 
   {{

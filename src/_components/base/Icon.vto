@@ -8,8 +8,8 @@
 {{- set spriteUrl = spriteHref |> split("#") -}}
 {{- set cacheBusted = spriteUrl[0] + "?v=" + (it.build?.id || "") + "#" + spriteUrl[1] -}}
 <svg
-  class="{{ defaultClasses }} {{ strokeClasses }} {{ it.classes || "" }}"
-  data-catalog="{{ it.catalog || "lucide" }}"
+  class="{{ defaultClasses }} {{ strokeClasses }} {{ it.classes || " " }}"
+  data-catalog="{{ it.catalog || " lucide" }}"
 >
   <use href="{{ cacheBusted }}"></use>
 </svg>

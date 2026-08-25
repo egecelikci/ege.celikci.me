@@ -7,7 +7,9 @@
   "action": "sparkles",
 }[variant] || "info") }}
 {{- set variantClass = "callout--" + variant }}
-<div class="callout {{ variantClass }} {{ it.classes }}"{{ it.attributes |> attr |> safe }}>
-  <span class="callout__icon">{{- await it.comp.base.Icon({ name: autoIcon, catalog: "lucide", classes: "w-4 h-4" }) -}}</span>
+<div class="callout {{ variantClass }} {{ it.classes }}"
+  {{ it.attributes |> attr |> safe }}>
+  <span
+    class="callout__icon">{{- await it.comp.base.Icon({ name: autoIcon, catalog: "lucide", classes: "w-4 h-4" }) -}}</span>
   <div class="callout__content">{{ it.content |> md |> safe }}</div>
 </div>

@@ -22,7 +22,7 @@
 
 <a
   href="{{ finalPath |> resolveSourceUrl }}"
-  class="source-link {{ it.classes || "" }}"
+  class="source-link {{ it.classes || " " }}"
   {{ if it.title }}
-    title="{{ it.title }}"{{ /if }}
+  title="{{ it.title }}" {{ /if }}
 >{{ it.text || finalPath }}</a>

@@ -34,9 +34,9 @@
   }}
 
   <div
-    class="media-grid {{ gridClass }}{{ if it.card }} ledger-card{{ /if }}"
-    data-lightbox-group="{{ it.images[0].src |> slugify }}"
-  >
+  class="media-grid {{ gridClass }}{{ if it.card }} ledger-card{{ /if }}"
+  data-lightbox-group="{{ it.images[0].src |> slugify }}"
+>
     {{ for i, image of it.images |> slice(0, count) }}
       {{
         set isPanoramic = image.width && image.height && (image.width / image.height > 2)

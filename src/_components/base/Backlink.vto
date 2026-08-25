@@ -21,10 +21,10 @@
 
 {{ if backHref }}
   <a
-    href="{{ backHref }}"
-    class="precision-link {{ it.classes }}"
-  >
-    <span class="reveal-slide-left">
+  href="{{ backHref }}"
+  class="precision-link {{ it.classes }}"
+>
+  <span class="reveal-slide-left">
       {{
         await it.comp.base.Icon({
           name: "arrow-left",
@@ -33,6 +33,6 @@
         })
       }}
     </span>
-    <span>{{ backText }}</span>
-  </a>
+  <span>{{ backText }}</span>
+</a>
 {{ /if }}

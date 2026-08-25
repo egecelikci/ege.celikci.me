@@ -17,11 +17,11 @@
 {{ set isMinimal = it.variant === "minimal" }}
 
 <div
-  class="search {{ it.classes || "" }}"
+  class="search {{ it.classes || " " }}"
   id="search-root-{{ id }}"
   data-search-id="{{ id }}"
-  data-search-mode="{{ it.mode || "pagefind" }}"
-  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : "" }}"
+  data-search-mode="{{ it.mode || " pagefind" }}"
+  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : " " }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="search__field">

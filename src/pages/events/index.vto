@@ -28,11 +28,11 @@ headerExtension:
   {{ set pastLink }}
     {{ if mb_events?.past?.length > 0 }}
       <a
-        href="/events/archive/"
-        class="precision-link"
-      >
-        <span>Past</span>
-        <span class="reveal-slide-right">
+  href="/events/archive/"
+  class="precision-link"
+>
+  <span>Past</span>
+  <span class="reveal-slide-right">
           {{
             comp.base.Icon({
               name: "arrow-right",
@@ -41,7 +41,7 @@ headerExtension:
             })
           }}
         </span>
-      </a>
+</a>
     {{ /if }}
   {{ /set }}
 
@@ -71,7 +71,7 @@ headerExtension:
 {{# ─── FOOTER ACTIONS & INFO ───────────────────────────────────────────── #}}
 {{ set customFooterContent }}
   <div class="event-actions">
-    <div class="event-actions__bar">
+  <div class="event-actions__bar">
       {{# Left: Add Event #}}
       <a
         href="/events/contribute/"
@@ -106,7 +106,7 @@ headerExtension:
         </a>
       {{ /if }}
     </div>
-  </div>
+</div>
 {{ /set }}
 
 {{

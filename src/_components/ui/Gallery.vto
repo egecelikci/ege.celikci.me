@@ -17,9 +17,9 @@
   {{ set gid = it.groupId || it.images[0].src |> slugify }}
 
   <div
-    class="{{ gridClasses }} {{ it.classes }}"
-    {{ if !it.static }}data-lightbox-group="{{ gid }}"{{ /if }}
-  >
+  class="{{ gridClasses }} {{ it.classes }}"
+  {{ if !it.static }} data-lightbox-group="{{ gid }}" {{ /if }}
+>
     {{ for i, image of it.images }}
       <div class="gallery__item">
         {{# 1. WRAPPER ELEMENT #}}

@@ -9,14 +9,14 @@
 
 {{ if it.backlinks && it.backlinks.length > 0 }}
   <div
-    class="incoming-links {{ it.classes }}"
-  >
-    <div class="incoming-links__row">
-      <h3 class="incoming-links__title">
+  class="incoming-links {{ it.classes }}"
+>
+  <div class="incoming-links__row">
+    <h3 class="incoming-links__title">
         Linked from
       </h3>
 
-      <ul class="incoming-links__list">
+    <ul class="incoming-links__list">
         {{ for link of it.backlinks }}
           <li>
             <a
@@ -33,6 +33,6 @@
           </li>
         {{ /for }}
       </ul>
-    </div>
   </div>
+</div>
 {{ /if }}

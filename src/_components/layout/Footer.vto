@@ -1,6 +1,6 @@
 {{ set footerContent }}
   <div class="site-footer__inner">
-    <div class="site-footer__meta">
+  <div class="site-footer__meta">
       <div class="site-footer__copyright">
         <span role="img" aria-label="Copyright">&copy;</span>
         {{ it.build.timestamp |> date("yyyy") }}
@@ -45,7 +45,7 @@
       {{ /if }}
     </div>
 
-    <div class="site-footer__utility">
+  <div class="site-footer__utility">
       {{
         comp.ui.SourceLink({
           path: it.page.sourcePath,
@@ -74,7 +74,7 @@
         </span>
       </a>
     </div>
-  </div>
+</div>
 
   {{ if it.webrings && it.webrings.length > 0 }}
     <div class="site-footer__webring">
