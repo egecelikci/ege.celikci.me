@@ -568,6 +568,34 @@
           "artist": {
             "country": "US",
             "disambiguation": "",
+            "id": "3f79eda2-ce47-4131-bd85-065c0defd649",
+            "name": "Hermit and the Recluse",
+            "sort-name": "Hermit and the Recluse",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "joinphrase": "",
+          "name": "Hermit and the Recluse"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2018-08-18",
+      "id": "36008368-4336-4003-a1b6-6f24ff5c66d9",
+      "imagePath": "/assets/images/covers/colored/36008368-4336-4003-a1b6-6f24ff5c66d9.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/36008368-4336-4003-a1b6-6f24ff5c66d9.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 25 Aug 2026 15:44:42 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Orpheus vs. The Sirens"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "",
             "id": "8b22acd6-20e6-4463-a75c-c14b5cfdb666",
             "name": "Earl Sweatshirt",
             "sort-name": "Earl Sweatshirt",
@@ -1441,6 +1469,34 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "Misery Is a Butterfly"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "US rapper",
+            "id": "e7d4f00b-2938-4049-aa44-e69a59a7b3da",
+            "name": "Ka",
+            "sort-name": "Ka",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Ka"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2020-05-01",
+      "id": "63f689ce-a3bb-4c6c-b468-50a21e9c77a8",
+      "imagePath": "/assets/images/covers/colored/63f689ce-a3bb-4c6c-b468-50a21e9c77a8.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/63f689ce-a3bb-4c6c-b468-50a21e9c77a8.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 25 Aug 2026 15:45:03 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Descendants of Cain"
     },
     {
       "artist-credit": [
@@ -2899,6 +2955,34 @@
       "secondary-type-ids": [],
       "secondary-types": [],
       "title": "_____"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
+            "disambiguation": "US rapper",
+            "id": "e7d4f00b-2938-4049-aa44-e69a59a7b3da",
+            "name": "Ka",
+            "sort-name": "Ka",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Ka"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2016-08-13",
+      "id": "a87472bc-03fb-4d9a-8721-f54128c82e14",
+      "imagePath": "/assets/images/covers/colored/a87472bc-03fb-4d9a-8721-f54128c82e14.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/a87472bc-03fb-4d9a-8721-f54128c82e14.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 25 Aug 2026 15:45:02 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Honor Killed the Samurai"
     },
     {
       "artist-credit": [
