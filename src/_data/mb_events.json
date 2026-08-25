@@ -1002,6 +1002,16 @@
         "url": "https://www.youtube.com/channel/UCfP-Ntg1KWKkGhaQseVMqLQ"
       }
     ],
+    "7367a444-389c-4740-ab09-71f722756586": [
+      {
+        "type": "social network",
+        "url": "https://ieji.de/@engin"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/etikmaske/"
+      }
+    ],
     "751bc341-3cb7-4202-945a-55bc4151ba03": [],
     "768536de-640c-4eb8-bf14-5cfd3d2a9aeb": [
       {
@@ -1601,6 +1611,12 @@
         "url": "https://www.instagram.com/fakefunpunk/"
       }
     ],
+    "bcde1b99-a96e-4847-ab1c-647cca6981cc": [
+      {
+        "type": "official homepage",
+        "url": "https://actus-sonorus.at/hoerspiel"
+      }
+    ],
     "be38dcea-2940-41b9-9a41-98b9bc0bb47c": [],
     "beb9c753-3f00-42c1-be32-94ee4706312f": [
       {
@@ -1712,6 +1728,25 @@
       {
         "type": "social network",
         "url": "https://www.facebook.com/kronovoxarchives"
+      }
+    ],
+    "c9cd48a5-26be-4f2b-8af3-17d09a855fae": [],
+    "caa42bc2-a055-4c9e-8b1a-860b1aeb4c52": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/7xpsV5euJfGzf2oT6KUpyo"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/ur0123456789"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://ur0123456789.mom/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/ur0123456789/"
       }
     ],
     "caf305a9-7961-404e-86fc-ea80be464ea4": [
@@ -1858,6 +1893,16 @@
       {
         "type": "other databases",
         "url": "https://www.metal-archives.com/bands/Kaptan_Kadavra/3540479901"
+      }
+    ],
+    "e069b18c-cf1e-435d-bc15-33c58333fa3c": [
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/justajoooke"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/x384kdlab/"
       }
     ],
     "e1c6eec7-8325-4458-b700-23b3d6263c96": [
@@ -6133,6 +6178,244 @@
         }
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]",
+      "time": "",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "6d833b76-47c8-469b-a3c7-12a8c0839167",
+      "imagePath": "/assets/images/posters/6d833b76-47c8-469b-a3c7-12a8c0839167.jpg",
+      "life-span": {
+        "begin": "2026-09-04",
+        "end": "2026-09-04",
+        "ended": true
+      },
+      "name": "Synth Sessions & Punk Concert",
+      "posterThumb": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46014328643-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46014328643.jpg",
+      "relations": [
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "label": {
+            "disambiguation": "",
+            "id": "2bfa1d83-63e4-433b-9b9a-17ef5dcc8964",
+            "label-code": null,
+            "name": "Uncivilization Records",
+            "sort-name": "Uncivilization Records",
+            "type": null,
+            "type-id": null
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "label",
+          "type": "presented",
+          "type-id": "09bd2cba-6160-408b-b191-afef7480ce54"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "7367a444-389c-4740-ab09-71f722756586",
+            "name": "Balgum",
+            "sort-name": "Balgum",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "b3fea910-b2d9-40ff-8b7b-cbfce82c6b9d",
+            "name": "VCO2",
+            "sort-name": "VCO2",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "AT",
+            "disambiguation": "",
+            "id": "bcde1b99-a96e-4847-ab1c-647cca6981cc",
+            "name": "Hörspiel",
+            "sort-name": "Hörspiel",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "Breakcore DJ",
+            "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
+            "name": "Random Input",
+            "sort-name": "Random Input",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "punk hardcore clowns",
+            "id": "c9cd48a5-26be-4f2b-8af3-17d09a855fae",
+            "name": "Übena",
+            "sort-name": "Übena",
+            "type": null,
+            "type-id": null
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "caa42bc2-a055-4c9e-8b1a-860b1aeb4c52",
+            "name": "ur0123456789",
+            "sort-name": "ur0123456789",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "e069b18c-cf1e-435d-bc15-33c58333fa3c",
+            "name": "loremipsum",
+            "sort-name": "loremipsum",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        }
+      ],
+      "setlist": "",
       "time": "",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
