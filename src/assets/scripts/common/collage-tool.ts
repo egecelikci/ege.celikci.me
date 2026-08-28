@@ -6,8 +6,12 @@
 export function initCollageTool(defaultUsername: string) {
   let canvas = document.getElementById("collage-canvas") as HTMLCanvasElement;
   const previewWrapper = document.getElementById("preview-wrapper");
-  const downloadBtn = document.getElementById("download-btn");
-  const shareBtn = document.getElementById("share-btn");
+  const downloadBtn = document.getElementById("download-btn") as
+    | HTMLButtonElement
+    | null;
+  const shareBtn = document.getElementById("share-btn") as
+    | HTMLButtonElement
+    | null;
   const statusText = document.getElementById("status-text");
   const emptyState = document.getElementById("empty-state");
   const usernameInput = document.getElementById("username") as HTMLInputElement;

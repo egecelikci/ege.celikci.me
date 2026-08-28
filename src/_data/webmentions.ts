@@ -256,7 +256,7 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
       "[webmentions] ❌ Fatal error during webmentions sync:",
       (error as Error).message,
     );
-    return { children: [], lastFetched: null };
+    return { schemaVersion: 1, children: [], lastFetched: null };
   }
 }
 

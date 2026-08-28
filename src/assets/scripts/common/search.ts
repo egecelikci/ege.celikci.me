@@ -4,7 +4,7 @@
  */
 
 export async function initSearch() {
-  const containers = document.querySelectorAll("[data-search-id]");
+  const containers = document.querySelectorAll<HTMLElement>("[data-search-id]");
   if (!containers.length) return;
 
   const pagefindPath = "/pagefind/pagefind.js";
@@ -26,7 +26,14 @@ export async function initSearch() {
     const id = root.getAttribute("data-search-id");
     const mode = root.getAttribute("data-search-mode") || "pagefind";
     const filtersStr = root.getAttribute("data-search-filters");
-    const filters = filtersStr ? JSON.parse(filtersStr) : null;
+    let filters: any = null;
+    if (filtersStr) {
+      try {
+        filters = JSON.parse(filtersStr);
+      } catch {
+        filters = null;
+      }
+    }
 
     const input = root.querySelector(
       `#site-search-input-${id}`,

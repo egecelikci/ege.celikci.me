@@ -129,7 +129,9 @@ async function getVibrantColor(
   const mctx = mini.getContext("2d");
   if (!mctx) return { r: 30, g: 27, b: 75 };
   mctx.drawImage(img, 0, 0, 20, 20);
-  const color = get_vibrant_color(mctx.getImageData(0, 0, 20, 20).data);
+  const color = get_vibrant_color(
+    new Uint8Array(mctx.getImageData(0, 0, 20, 20).data),
+  );
   return { r: color.r, g: color.g, b: color.b };
 }
 
