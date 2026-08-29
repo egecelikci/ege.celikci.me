@@ -1,7 +1,8 @@
-// src/_data/build.ts
+import { uuidv7 } from "../../utils/uuid.ts";
 
 /**
  * Checks if it is currently CSS Naked Day.
+ * @see https://css-naked-day.org/
  */
 function isCSSNakedDay(): boolean {
   const now = Date.now();
@@ -23,6 +24,6 @@ export default {
   env: env,
   dev: isDev,
   timestamp: timestamp,
-  id: timestamp.valueOf(),
+  id: uuidv7(),
   naked: isCSSNakedDay(),
 };
