@@ -18,7 +18,7 @@
     "remark-gfm": "npm:remark-gfm@^4.0.1",
     "remark-smartypants": "npm:remark-smartypants@^3.0.3",
     "remark-toc": "npm:remark-toc@^9.0.0",
-    "sharp": "npm:sharp@^0.35.3",
+    "sharp": "npm:sharp@^0.35.4",
     "shiki": "npm:shiki@^4.4.3",
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@babfcbd6550cd8cf0069b6ca53f2558a2d9566fc/typst/mod.ts",
     "serwist": "npm:serwist@^9.5.12",
