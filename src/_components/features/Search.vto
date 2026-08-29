@@ -20,8 +20,9 @@
   class="search {{ it.classes || " " }}"
   id="search-root-{{ id }}"
   data-search-id="{{ id }}"
-  data-search-mode="{{ it.mode || " pagefind" }}"
-  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : " " }}"
+  data-search-mode="{{ it.mode || "pagefind" }}"
+  data-search-filters="{{ it.filters ? JSON.stringify(it.filters) : "" }}"
+  data-search-cache-tag="{{ it.build?.id || "" }}"
 >
   {{# --- 1. THE INPUT --- #}}
   <div class="search__field">

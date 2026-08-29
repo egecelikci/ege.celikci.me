@@ -118,12 +118,6 @@ export default function () {
           rootSelector: "html",
           verbose: false,
         },
-        ui: {
-          containerId: "#search",
-          showImages: false,
-          showEmptyFilters: true,
-          resetStyles: true,
-        },
       }))
       .use(googleFonts({
         fonts:

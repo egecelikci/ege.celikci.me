@@ -10,16 +10,28 @@ export async function initSearch() {
   const pagefindPath = "/pagefind/pagefind.js";
   let pagefind: any = null;
 
-  async function ensurePagefind() {
+  async function ensurePagefind(cacheTag?: string) {
     if (pagefind) return pagefind;
     try {
       pagefind = await import(pagefindPath);
+      if (cacheTag) {
+        await pagefind.options({ metaCacheTag: cacheTag });
+      }
       await pagefind.init({});
       return pagefind;
     } catch (e) {
       console.error("Pagefind failed to load:", e);
       return null;
     }
+  }
+
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   containers.forEach(async (root) => {
@@ -34,6 +46,7 @@ export async function initSearch() {
         filters = null;
       }
     }
+    const cacheTag = root.getAttribute("data-search-cache-tag") || undefined;
 
     const input = root.querySelector(
       `#site-search-input-${id}`,
@@ -126,7 +139,7 @@ export async function initSearch() {
         return;
       }
 
-      const pf = await ensurePagefind();
+      const pf = await ensurePagefind(cacheTag);
       if (!pf) return;
 
       clearBtn?.classList.remove("is-active");
@@ -177,15 +190,20 @@ export async function initSearch() {
         resultsContainer.innerHTML = results
           .map((item, index) => {
             const isAnchor = item.url.startsWith("#");
+            const safeTitle = escapeHtml(item.meta.title || "Untitled");
+            const safeUrl = escapeHtml(item.url);
+            const safeDate = item.meta.date
+              ? escapeHtml(item.meta.date)
+              : "";
             return `
-          <a href="${item.url}"
+          <a href="${safeUrl}"
              class="search__result"
              data-index="${index}"
              ${isAnchor ? 'data-anchor-jump="true"' : ""}>
             <div class="search__result__body">
               <div class="search__result__head">
                 <h3 class="search__result__title">
-                  <span>${item.meta.title || "Untitled"}</span>
+                  <span>${safeTitle}</span>
                   ${
               isAnchor
                 ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="search__result__arrow"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>'
@@ -193,8 +211,8 @@ export async function initSearch() {
             }
                 </h3>
                 ${
-              item.meta.date
-                ? `<time class="search__result__date">${item.meta.date}</time>`
+              safeDate
+                ? `<time class="search__result__date">${safeDate}</time>`
                 : ""
             }
               </div>
@@ -239,6 +257,14 @@ export async function initSearch() {
 
       activeIndex = -1;
     }
+    input.addEventListener(
+      "focus",
+      () => {
+        if (mode !== "filter" && mode !== "local") {
+          ensurePagefind(cacheTag);
+        }
+      },
+    );
     input.addEventListener(
       "input",
       (e) => handleSearch((e.target as HTMLInputElement).value),
