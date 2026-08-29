@@ -192,9 +192,7 @@ export async function initSearch() {
             const isAnchor = item.url.startsWith("#");
             const safeTitle = escapeHtml(item.meta.title || "Untitled");
             const safeUrl = escapeHtml(item.url);
-            const safeDate = item.meta.date
-              ? escapeHtml(item.meta.date)
-              : "";
+            const safeDate = item.meta.date ? escapeHtml(item.meta.date) : "";
             return `
           <a href="${safeUrl}"
              class="search__result"
