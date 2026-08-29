@@ -48,4 +48,14 @@
       }
     }
   }
+
+  .media-credits__name-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.375rem;
+    row-gap: 0.25rem;
+    min-width: 0;
+  }
 }

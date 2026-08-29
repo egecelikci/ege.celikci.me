@@ -3,7 +3,7 @@ import xss from "xss";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
 import gitData from "../src/_data/git.ts";
-import { getLinkInfo } from "./links.ts";
+import { getLinkInfo, linkPriority } from "./links.ts";
 
 const SITE_URL = siteData.url;
 const OWN_URLS = [
@@ -127,7 +127,107 @@ export const filters = {
     return getLinkInfo(type, url);
   },
 
-  // Check if content has images
+  linkItems: function (
+    links: { type: string; url: string }[] | undefined,
+    options: { showFallbacks?: boolean; max?: number } = {},
+  ) {
+    const showFallbacks = options.showFallbacks ?? true;
+    const max = options.max ?? 4;
+    const hostOf = (url: string) => {
+      try {
+        return new URL(url).hostname.replace(/^www\./, "").toLowerCase();
+      } catch {
+        return "";
+      }
+    };
+    const GENERIC_SEGMENTS = new Set([
+      "channel",
+      "artist",
+      "album",
+      "track",
+      "playlist",
+      "browse",
+      "event",
+      "user",
+      "setlist",
+      "watch",
+      "video",
+      "post",
+      "posts",
+      "photo",
+      "photos",
+      "shop",
+      "page",
+      "search",
+      "explore",
+      "reels",
+      "story",
+      "feed",
+      "music",
+      "profile",
+      "home",
+      "tr",
+      "en",
+      "de",
+      "fr",
+      "settings",
+      "about",
+    ]);
+    const handleOf = (url: string): string => {
+      try {
+        const seg = new URL(url).pathname.split("/").filter(Boolean)[0] ?? "";
+        if (!seg || GENERIC_SEGMENTS.has(seg.toLowerCase())) return "";
+        return seg.replace(/^@/, "");
+      } catch {
+        return "";
+      }
+    };
+
+    const all = (links || [])
+      .map((link) => ({
+        link,
+        info: getLinkInfo(link.type, link.url),
+      }))
+      .filter(({ info }) => showFallbacks || !info.isFallback)
+      .map((item) => ({
+        ...item,
+        host: hostOf(item.link.url),
+        handle: handleOf(item.link.url),
+        isFediverse: item.info.label === "Fediverse",
+      }))
+      .sort(
+        (a, b) => linkPriority(a.info.label) - linkPriority(b.info.label),
+      );
+
+    // Disambiguate rows that share the same label + host (e.g. two
+    // Instagram accounts) by showing their username instead of the host.
+    const pairCount = new Map<string, number>();
+    for (const item of all) {
+      const key = `${item.info.label}\u0000${item.host}`;
+      pairCount.set(key, (pairCount.get(key) ?? 0) + 1);
+    }
+    const items = all.map((item) => ({
+      ...item,
+      disambiguate:
+        (pairCount.get(`${item.info.label}\u0000${item.host}`) ?? 1) > 1,
+    }));
+
+    const quick: typeof items = [];
+    const seen = new Set<string>();
+    for (const item of items) {
+      if (quick.length >= max) break;
+      if (seen.has(item.info.label)) continue;
+      seen.add(item.info.label);
+      quick.push(item);
+    }
+
+    return {
+      all: items,
+      quick,
+      rest: items.filter((item) => !quick.includes(item)),
+    };
+  },
+
   hasImages: (content: string) => {
     return filters.extractImages(content).length > 0;
   },

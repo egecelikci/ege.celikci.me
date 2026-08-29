@@ -11,6 +11,31 @@ export interface AssetOptions {
   esbuild?: Partial<EsbuildOptions>;
 }
 
+const REMIXICON_VERSION = "4.9.1";
+
+/**
+ * RemixIcon names are flat but files live under icons/{Category}/{name}.svg.
+ * Build a name → category map from the package's flat file listing.
+ */
+async function loadRemixCategories(): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  try {
+    const res = await fetch(
+      `https://data.jsdelivr.com/v1/packages/npm/remixicon@${REMIXICON_VERSION}?structure=flat`,
+    );
+    const data = await res.json();
+    for (const file of data.files ?? []) {
+      const m = file.name.match(/^\/icons\/([^/]+)\/([^/]+)\.svg$/);
+      if (m) map.set(m[2], m[1]);
+    }
+  } catch (error) {
+    console.warn("[assets] Failed to load RemixIcon categories:", error);
+  }
+  return map;
+}
+
+const remixCategories = await loadRemixCategories();
+
 export default function (options: AssetOptions = {}) {
   const isDev = Deno.env.get("MODE") !== "production";
 
@@ -50,6 +75,12 @@ export default function (options: AssetOptions = {}) {
           {
             id: "simpleicons",
             src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
+          },
+          {
+            id: "remixicon",
+            src:
+              `https://cdn.jsdelivr.net/npm/remixicon@${REMIXICON_VERSION}/icons/{name}.svg`,
+            name: (name) => `${remixCategories.get(name) ?? "Others"}/${name}`,
           },
         ],
         spriteFile: "/assets/icons/icons.sprite.svg",

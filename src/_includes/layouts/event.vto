@@ -159,13 +159,24 @@ extraStyles:
               {{ for credit of posterCredits }}
                 <div class="media-credits__row">
                   <span class="media-credits__label">{{ credit.role }}</span>
-                  <a
-                    href="{{ credit.url }}"
-                    target="_blank"
-                    class="media-credits__name"
-                  >
-                    {{ credit.name }}
-                  </a>
+                  <span class="media-credits__name-wrap">
+                    <a
+                      href="{{ credit.url }}"
+                      target="_blank"
+                      class="media-credits__name"
+                    >
+                      {{ credit.name }}
+                    </a>
+                    {{ if credit.links?.length > 1 }}
+                      {{
+                        comp.base.ExternalLinks({
+                          links: credit.links,
+                          showFallbacks: false,
+                          chips: false,
+                        })
+                      }}
+                    {{ /if }}
+                  </span>
                 </div>
               {{ /for }}
             </div>
@@ -214,7 +225,22 @@ extraStyles:
                   </div>
                 </div>
 
-                <div class="event-page__map-nav">
+                <details class="event-page__map-nav">
+                  <summary
+                    class="event-page__map-trigger"
+                    aria-label="Get directions to {{ event.venueName }}"
+                  >
+                    {{
+                      comp.base.Icon({
+                        name: "compass",
+                        catalog: "lucide",
+                        classes: "w-4 h-4",
+                      })
+                    }}
+                    <span class="typography-sublabel"
+                    >Directions</span>
+                  </summary>
+
                   <div
                     class="event-page__map-menu menu menu--divided"
                     role="menu"
@@ -266,24 +292,7 @@ extraStyles:
                       <span class="typography-sublabel">Google Maps</span>
                     </a>
                   </div>
-
-                  <button
-                    type="button"
-                    class="event-page__map-trigger"
-                    aria-label="Get directions to {{ event.venueName }}"
-                    aria-haspopup="true"
-                  >
-                    {{
-                      comp.base.Icon({
-                        name: "compass",
-                        catalog: "lucide",
-                        classes: "w-4 h-4",
-                      })
-                    }}
-                    <span class="typography-sublabel"
-                    >Directions</span>
-                  </button>
-                </div>
+                </details>
               </div>
             {{ /if }}
           </div>

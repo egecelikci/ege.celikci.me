@@ -1,36 +1,86 @@
 {{#
   Component: ExternalLinks (UI Primitive)
-  Renders a row of minimal icon links for external services.
+  Curated "quick strip" of the most valuable links as quiet icon chips,
+  plus a typographic expander listing every link as a labeled row.
 
   Props:
     - links: Array of { type, url }
-    - size: string (default: "w-3 h-3")
     - showFallbacks: boolean (default: true)
+    - max: number (default: 4) — quick strip size
+    - chips: boolean (default: true) — false hides the quick strip and
+      only renders the "All N links" expander
 #}}
 
-{{ if it.links && it.links.length > 0 }}
+{{ set items = it.links |> linkItems({ showFallbacks: it.showFallbacks !== false, max: it.max ?? 4 }) }}
+
+{{ set showAll = it.chips === false ? items.all.length > 0 : items.rest.length > 0 }}
+
+{{ if items.all.length > 0 }}
   <div class="external-links">
-    {{ for link of it.links }}
-      {{ set info = link.type |> getLinkInfo(link.url) }}
-      {{ if it.showFallbacks !== false || !info.isFallback }}
+    {{ if it.chips !== false }}
+      {{ for item of items.quick }}
         <a
-          href="{{ link.url }}"
+          href="{{ item.link.url }}"
           target="_blank"
-          class="external-links__link"
-          aria-label="{{ info.label }}"
-          title="{{ info.label }}"
+          rel="noopener noreferrer"
+          class="external-links__chip"
+          aria-label="{{ item.info.label }}"
+          title="{{ item.info.label }}"
         >
-          <span class="external-links__icon">
-            {{
-              comp.base.Icon({
-                name: info.icon,
-                catalog: info.catalog,
-                classes: it.size || "w-3 h-3",
-              })
-            }}
-          </span>
+          {{
+            comp.base.Icon({
+              name: item.info.icon,
+              catalog: item.info.catalog,
+              classes: "w-3.5 h-3.5",
+            })
+          }}
         </a>
-      {{ /if }}
-    {{ /for }}
+      {{ /for }}
+    {{ /if }}
+
+    {{ if showAll }}
+      <details class="external-links__more">
+        <summary class="external-links__more-trigger">
+          <span>All {{ items.all.length }} links</span>
+          {{
+            comp.base.Icon({
+              name: "chevron-down",
+              catalog: "lucide",
+              classes: "w-3 h-3",
+            })
+          }}
+        </summary>
+
+        <div class="menu external-links__rows" role="menu">
+          {{ for item of items.all }}
+            <a
+              href="{{ item.link.url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              role="menuitem"
+              class="menu__item"
+            >
+              <span class="external-links__row-icon">
+                {{
+                  comp.base.Icon({
+                    name: item.info.icon,
+                    catalog: item.info.catalog,
+                    classes: "w-4 h-4",
+                  })
+                }}
+              </span>
+              <span class="external-links__row-label">{{ item.info.label }}</span>
+              {{ if item.isFediverse && item.handle }}
+                <span class="external-links__row-host">@{{ item.handle }}@{{ item.host }}</span>
+              {{ else if item.disambiguate && item.handle }}
+                <span class="external-links__row-host">@{{ item.handle }}</span>
+              {{ else }}
+                <span class="external-links__row-host">{{ item.host }}</span>
+              {{ /if }}
+            </a>
+          {{ /for }}
+        </div>
+      </details>
+    {{ /if }}
   </div>
 {{ /if }}

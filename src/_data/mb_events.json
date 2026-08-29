@@ -21,8 +21,20 @@
     ],
     "08c9ac33-dd3e-4ce0-9ede-54b80b0157bd": [
       {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/1869889979"
+      },
+      {
         "type": "free streaming",
         "url": "https://open.spotify.com/artist/02uksECGhpQ1WCYAtSgaUC"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/30577713"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/159916472"
       },
       {
         "type": "social network",
@@ -96,8 +108,32 @@
         "url": "https://artdiktator.bandcamp.com/"
       },
       {
+        "type": "streaming",
+        "url": "https://music.apple.com/gb/artist/502227526"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://open.qobuz.com/artist/2996672"
+      },
+      {
+        "type": "streaming",
+        "url": "https://open.qobuz.com/artist/2996672"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/18YIpH14GBgVnitn9CEVyl"
+      },
+      {
         "type": "soundcloud",
         "url": "https://soundcloud.com/artdiktator"
+      },
+      {
+        "type": "streaming",
+        "url": "https://tidal.com/artist/5783033"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://www.deezer.com/artist/1622215"
       },
       {
         "type": "discogs",
@@ -206,16 +242,24 @@
     ],
     "2bfa1d83-63e4-433b-9b9a-17ef5dcc8964": [
       {
+        "type": "social network",
+        "url": "https://ieji.de/@uncivilization"
+      },
+      {
+        "type": "social network",
+        "url": "https://metapixl.com/uncivilization"
+      },
+      {
+        "type": "social network",
+        "url": "https://s.basspistol.org/@uncivilization"
+      },
+      {
         "type": "soundcloud",
         "url": "https://soundcloud.com/uncvl"
       },
       {
         "type": "social network",
         "url": "https://twitter.com/uncivilizationr"
-      },
-      {
-        "type": "official site",
-        "url": "https://uncvl.com/"
       },
       {
         "type": "social network",
@@ -321,10 +365,6 @@
         "url": "https://twitter.com/vanillaice"
       },
       {
-        "type": "streaming",
-        "url": "https://us.napster.com/artist/vanilla-ice"
-      },
-      {
         "type": "bandcamp",
         "url": "https://vanillaicebaby.bandcamp.com/"
       },
@@ -413,6 +453,14 @@
       {
         "type": "myspace",
         "url": "https://myspace.com/cemiyettepisiyorum"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://open.qobuz.com/artist/2273410"
+      },
+      {
+        "type": "streaming",
+        "url": "https://open.qobuz.com/artist/2273410"
       },
       {
         "type": "free streaming",
@@ -766,6 +814,10 @@
       {
         "type": "social network",
         "url": "https://ieji.de/@Wanderfool_experimental"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/wanderfool_experimental/"
       }
     ],
     "5cc24ee3-c273-4e1e-8b6c-593eafbf558f": [
@@ -940,6 +992,22 @@
       {
         "type": "streaming",
         "url": "https://music.apple.com/gb/artist/1540926202"
+      },
+      {
+        "type": "streaming",
+        "url": "https://music.apple.com/tr/artist/1540926202"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://open.qobuz.com/artist/8226808"
+      },
+      {
+        "type": "streaming",
+        "url": "https://open.qobuz.com/artist/8226808"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/79m8TbKxx4eO0G80RgmZox"
       },
       {
         "type": "streaming",
@@ -1244,7 +1312,7 @@
     "9e449f51-7164-456c-bf5b-408e227e627a": [
       {
         "type": "social network",
-        "url": "https://www.instagram.com/audiodarizm/"
+        "url": "https://www.instagram.com/audiodarist/"
       }
     ],
     "9eaa048b-b1d1-4b11-ad01-fb4ca54b0ab6": [],
@@ -1395,6 +1463,14 @@
         "url": "https://music.youtube.com/channel/UCNgorPVroeaCRpC8INDNcdg"
       },
       {
+        "type": "purchase for download",
+        "url": "https://open.qobuz.com/artist/777781"
+      },
+      {
+        "type": "streaming",
+        "url": "https://open.qobuz.com/artist/777781"
+      },
+      {
         "type": "free streaming",
         "url": "https://open.spotify.com/artist/5ixQSDvAMa5O758xG8MWXT"
       },
@@ -1411,16 +1487,8 @@
         "url": "https://twitter.com/mvoofficial"
       },
       {
-        "type": "streaming",
-        "url": "https://us.napster.com/artist/mor-ve-otesi"
-      },
-      {
         "type": "video channel",
         "url": "https://vimeo.com/morveotesi"
-      },
-      {
-        "type": "streaming",
-        "url": "https://web.napster.com/artist/art.15448652"
       },
       {
         "type": "allmusic",
@@ -1497,6 +1565,14 @@
       {
         "type": "social network",
         "url": "https://www.instagram.com/tamarrecords/"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://www.qobuz.com/gb-en/label/tamar-records-1/download-streaming-albums/1270017"
+      },
+      {
+        "type": "streaming",
+        "url": "https://www.qobuz.com/gb-en/label/tamar-records-1/download-streaming-albums/1270017"
       },
       {
         "type": "official site",
@@ -1702,19 +1778,35 @@
     "c663d22b-618b-43b2-b99b-1d912c6b4bfc": [
       {
         "type": "social network",
-        "url": "https://kolektiva.social/@ri"
+        "url": "https://cyberpunk.lol/@random"
       },
       {
         "type": "social network",
-        "url": "https://mastodon.art/@randominput"
+        "url": "https://kolektiva.social/@ri"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://mirlo.space/randominput"
       },
       {
         "type": "social network",
         "url": "https://pixey.org/random"
       },
       {
+        "type": "bandcamp",
+        "url": "https://randominput.bandcamp.com/"
+      },
+      {
         "type": "social network",
         "url": "https://ravenation.club/@randominput"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/randominput"
+      },
+      {
+        "type": "purchase for download",
+        "url": "https://www.artcore.com/randominput"
       },
       {
         "type": "social network",
@@ -1939,6 +2031,10 @@
       {
         "type": "social network",
         "url": "https://ieji.de/@Oxomo"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/oxomoxomo/"
       }
     ],
     "f15a4701-7d9d-4089-a75a-ff183d8f17fb": [],
@@ -1977,6 +2073,10 @@
     ],
     "facdb799-a153-483f-a850-04a9c015b627": [],
     "fb212bf9-c95d-43b6-9139-c60310025609": [
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/1m772YHVJ2dSV4XFsyxff0"
+      },
       {
         "type": "social network",
         "url": "https://www.instagram.com/mhmtdnzc/"
@@ -6194,8 +6294,8 @@
         "ended": true
       },
       "name": "Synth Sessions & Punk Concert",
-      "posterThumb": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46014328643-500.jpg",
-      "posterUrl": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46014328643.jpg",
+      "posterThumb": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46015633504-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46015633504.jpg",
       "relations": [
         {
           "attribute-ids": {},

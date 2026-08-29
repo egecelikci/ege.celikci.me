@@ -148,6 +148,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
         type: rel.type,
         icon: info.icon,
         catalog: info.catalog,
+        links: entityLinks.filter((l) => l.url !== primaryLink?.url),
       };
     });
 
