@@ -1650,6 +1650,7 @@
         "url": "https://www.instagram.com/mouthpiece34hc/"
       }
     ],
+    "c23f16e6-e01a-4d21-a837-294523895586": [],
     "c33ecbda-b075-4206-8055-2e882b1a8f53": [
       {
         "type": "social network",
@@ -6321,6 +6322,24 @@
           "target-type": "artist",
           "type": "main performer",
           "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "url",
+          "type": "social network",
+          "type-id": "68f5fcaa-b58c-3bfe-9b7c-75c2b56e839a",
+          "url": {
+            "id": "c23f16e6-e01a-4d21-a837-294523895586",
+            "resource": "https://do.basspistol.org/event/uncivilization-synth-sessions-and-punk-concert"
+          }
         },
         {
           "artist": {
