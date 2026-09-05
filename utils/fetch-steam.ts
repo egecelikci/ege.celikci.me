@@ -1,18 +1,3 @@
-/**
- * utils/fetch-steam.ts
- *
- * Fetches Steam family libraries via the Steam Web API and consolidates
- * them into src/_data/games.json for Lume to pick up.
- *
- * Run manually: `deno run -A utils/fetch-steam.ts`
- *
- * Requires STEAM_API_KEY (https://steamcommunity.com/dev/apikey) in .env
- * or the environment (Netlify: site settings → environment variables).
- * The key stays build-time only and is never shipped to the client.
- * Every profile must have a public games list, otherwise Steam returns
- * an empty library for that user instead of an error.
- */
-
 import "@std/dotenv/load";
 import { join } from "@std/path";
 import type {
@@ -45,8 +30,7 @@ const CONFIG = {
     apiKey: Deno.env.get("STEAM_API_KEY") ?? "",
   },
 
-  steamIds: (Deno.env.get("STEAM_USER_IDS") ??
-    "76561198847289673,76561199224416508,76561198418118004")
+  steamIds: (Deno.env.get("STEAM_USER_IDS") ?? "")
     .split(",")
     .map((id) => id.trim())
     .filter((id) => id.length > 0),
@@ -110,8 +94,6 @@ async function getSteamData() {
   );
 
   if (!CONFIG.credentials.apiKey) {
-    // Seed the initial store so the file exists in git and the page builds.
-    // An existing (even stale) cache is always preserved instead.
     if (cachedData.players.length === 0 && cachedData.games.length === 0) {
       try {
         await Deno.stat(CONFIG.paths.cacheFile);
@@ -132,6 +114,13 @@ async function getSteamData() {
     }
     console.warn(
       "[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache",
+    );
+    return { players: cachedData.players, games: cachedData.games };
+  }
+
+  if (CONFIG.steamIds.length === 0) {
+    console.warn(
+      "[steam] ⚠️ STEAM_USER_IDS is not set, keeping existing cache",
     );
     return { players: cachedData.players, games: cachedData.games };
   }
