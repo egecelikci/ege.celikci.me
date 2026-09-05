@@ -114,6 +114,17 @@ export async function initSearch() {
           if (isMatch) visibleCount++;
         });
 
+        // Hide letter groups with no visible rows (games page only;
+        // scoped to .game-list so other filter-mode pages are unaffected).
+        document.querySelectorAll(".game-list").forEach((list) => {
+          list.querySelectorAll<HTMLElement>(".game-group").forEach((group) => {
+            const anyVisible = Array.from(
+              group.querySelectorAll<HTMLElement>("[data-search-item]"),
+            ).some((row) => row.style.display !== "none");
+            group.style.display = anyVisible ? "" : "none";
+          });
+        });
+
         if (noResults) {
           noResults.hidden = visibleCount > 0;
         }
@@ -174,6 +185,9 @@ export async function initSearch() {
       if (mode === "filter") {
         const items = document.querySelectorAll("[data-search-item]");
         items.forEach((el) => ((el as HTMLElement).style.display = ""));
+        document.querySelectorAll(".game-list .game-group").forEach((
+          el,
+        ) => ((el as HTMLElement).style.display = ""));
       }
 
       activeIndex = -1;

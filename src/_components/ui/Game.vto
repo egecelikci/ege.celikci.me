@@ -1,0 +1,18 @@
+{{#
+  Component: Game
+  One row of the Steam family library: game name linking to the store page.
+
+  Props:
+    - game: SteamGameEntry (required)
+#}}
+
+<a
+  href="https://store.steampowered.com/app/{{ it.game.appid }}/"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="game-item"
+  data-search-item
+  data-search-data="{{ it.game.name }}"
+>
+  <span class="game-item__title">{{ it.game.name }}</span>
+</a>

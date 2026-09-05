@@ -1,0 +1,60 @@
+@layer components {
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-block-start: 0;
+  }
+
+  .game-group {
+    position: relative;
+  }
+
+  .game-group__ghost {
+    position: absolute;
+    top: -1rem;
+    left: -0.5rem;
+    font-family: var(--font-mono);
+    font-size: clamp(5rem, 12vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: color-mix(in srgb, var(--color-text) 7%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .game-group__title {
+    position: relative;
+    margin-block: 0 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-dim);
+  }
+
+  .game-group__rows {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    column-gap: 2rem;
+  }
+
+  .game-item {
+    display: block;
+    min-width: 0;
+    padding-block: 0.375rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover .game-item__title {
+      color: var(--color-primary);
+    }
+
+    &__title {
+      transition: color 0.3s ease;
+    }
+  }
+}

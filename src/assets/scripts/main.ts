@@ -173,6 +173,11 @@ async function init() {
     const { initVenueMaps } = await import("./common/map.ts");
     initVenueMaps();
   }
+
+  for (const rail of document.querySelectorAll<HTMLElement>(".rail")) {
+    const { initRailNav } = await import("./common/rail-nav.ts");
+    initRailNav(rail);
+  }
 }
 
 if (document.readyState === "loading") {

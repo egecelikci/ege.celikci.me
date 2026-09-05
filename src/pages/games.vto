@@ -1,0 +1,104 @@
+---
+title: games
+description: "la biblioteca de juegos de la familia"
+searchable: false
+prose: false
+search_bar:
+  placeholder: "filter games…"
+  mode: "filter"
+menu:
+  group: collections
+  label: games
+  order: 3
+headerExtension:
+  comp: "layout.SourceMeta"
+  props:
+    label: Steam
+    icon: steam
+    catalog: simpleicons
+    url: https://store.steampowered.com
+navigation:
+  parent: /
+  title: games
+crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
+  aria-hidden="true"><span class="breadcrumb__drum"><span
+  class="breadcrumb__letter-face">A</span><span
+  class="breadcrumb__letter-face">A</span></span></span>'
+---
+
+{{ set letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("") }}
+{{ set rest = (games?.games || []).filter((g) => !/^[A-Za-z]/.test(g.name || "")) }}
+
+{{ if games?.games?.length }}
+  <nav class="rail" aria-label="jump to letter">
+    {{ for letter of letters }}
+      {{ if games.games.some((g) => (g.name[0] || "").toUpperCase() === letter) }}
+        <a
+          href="#{{ letter }}"
+          class="rail__link"
+          data-target="{{ letter }}"
+          data-label="{{ letter }}"
+          aria-label="games starting with {{ letter }}"
+        >{{ letter }}</a>
+      {{ else }}
+        <span
+          class="rail__link rail__link--empty"
+          aria-hidden="true"
+        >{{ letter }}</span>
+      {{ /if }}
+    {{ /for }}
+    {{ if rest.length }}
+      <a
+        href="#other"
+        class="rail__link"
+        data-target="other"
+        data-label="#"
+        aria-label="games starting with other characters"
+      >#</a>
+    {{ /if }}
+  </nav>
+
+  <div class="game-list">
+    {{ for letter of letters }}
+      {{ set group = games.games.filter((g) => (g.name[0] || "").toUpperCase() === letter) }}
+      {{ if group.length }}
+        <section
+          class="game-group"
+          id="{{ letter }}"
+          aria-label="games starting with {{ letter }}"
+        >
+          <span class="game-group__ghost" aria-hidden="true">{{ letter }}</span>
+          <h2 class="game-group__title">{{ letter }}</h2>
+          <div class="game-group__rows">
+            {{ for game of group }}
+              {{ comp.ui.Game({ game: game }) }}
+            {{ /for }}
+          </div>
+        </section>
+      {{ /if }}
+    {{ /for }}
+    {{ if rest.length }}
+      <section
+        class="game-group"
+        id="other"
+        aria-label="games starting with other characters"
+      >
+        <span class="game-group__ghost" aria-hidden="true">#</span>
+        <h2 class="game-group__title">#</h2>
+        <div class="game-group__rows">
+          {{ for game of rest }}
+            {{ comp.ui.Game({ game: game }) }}
+          {{ /for }}
+        </div>
+      </section>
+    {{ /if }}
+  </div>
+{{ else }}
+  {{
+    await it.comp.base.EmptyState({
+      icon: "gamepad-2",
+      title: "no games synced yet",
+      description: "run the steam fetcher to populate the library",
+    })
+  }}
+{{ /if }}

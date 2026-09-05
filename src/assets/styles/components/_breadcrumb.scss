@@ -86,5 +86,57 @@
         opacity: 0.5;
       }
     }
+
+    &__letter {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+      height: 1.4rem;
+      border: 1px solid var(--aperture-border);
+      border-radius: 2px;
+      background-color: var(--aperture-bg);
+      box-shadow: inset 0 1px 2px var(--aperture-inset);
+      overflow: hidden;
+      flex-shrink: 0;
+
+      /* fake the curvature of a calendar drum: glyphs dim near the edges */
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(
+          180deg,
+          rgb(0 0 0 / 14%),
+          transparent 30% 70%,
+          rgb(0 0 0 / 14%)
+        );
+        pointer-events: none;
+      }
+    }
+
+    /* the date wheel: two stacked glyphs, rolls one step per letter change */
+    &__drum {
+      position: absolute;
+      inset: 1px;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(0);
+      transition: transform 0.22s cubic-bezier(0.3, 1.3, 0.5, 1);
+      will-change: transform;
+    }
+
+    &__letter-face {
+      flex: 1 0 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
   }
 }

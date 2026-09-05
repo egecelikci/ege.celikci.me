@@ -1,9 +1,19 @@
 @layer components {
   .notes-index {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
     margin-block-start: 2.5rem;
 
     &__empty {
       margin-block-start: 2rem;
     }
+  }
+
+  .notes-month {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-margin-top: 1rem;
   }
 }

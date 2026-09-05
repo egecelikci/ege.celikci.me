@@ -25,7 +25,7 @@
     "@serwist/cli": "npm:@serwist/cli@^9.5.12",
     "xss": "npm:xss@^1.0.15",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
-    "zod": "npm:zod@^4.4.3"
+    "zod": "npm:zod@^4.5.4"
   },
   "tasks": {
     "lume": {

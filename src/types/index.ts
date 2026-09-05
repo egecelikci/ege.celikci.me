@@ -58,6 +58,63 @@ export interface CritiqueBrainzResponse {
 }
 
 // ============================================================================
+// STEAM TYPES
+// ============================================================================
+
+/** Raw game entry from IPlayerService/GetOwnedGames (include_appinfo=1) */
+export interface SteamOwnedGame {
+  appid: number;
+  name: string;
+  playtime_forever: number;
+  playtime_2weeks?: number;
+  img_icon_url?: string;
+  img_logo_url?: string;
+  has_community_visible_stats?: boolean;
+}
+
+export interface SteamOwnedGamesResponse {
+  game_count: number;
+  games?: SteamOwnedGame[];
+}
+
+/** Raw player entry from ISteamUser/GetPlayerSummaries */
+export interface SteamPlayerSummary {
+  steamid: string;
+  personaname: string;
+  profileurl: string;
+  avatar: string;
+  avatarmedium: string;
+  avatarfull: string;
+}
+
+export interface SteamPlayerSummariesResponse {
+  players: SteamPlayerSummary[];
+}
+
+/** One game in the consolidated family library, keyed by appid */
+export interface SteamGameEntry {
+  appid: number;
+  name: string;
+}
+
+export interface SteamPlayerEntry {
+  steamid: string;
+  name: string;
+  profileUrl: string;
+  avatar: string;
+  gameCount: number;
+}
+
+/** Persisted Steam cache shape (src/_data/games.json) */
+export interface GamesStore {
+  /** Bumped whenever the persisted format changes; stale caches are rejected */
+  schemaVersion: number;
+  fetchedAt: string;
+  players: SteamPlayerEntry[];
+  games: SteamGameEntry[];
+}
+
+// ============================================================================
 // WEBMENTION TYPES
 // ============================================================================
 

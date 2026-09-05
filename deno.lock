@@ -93,7 +93,7 @@
     "npm:svgo@4.0.2": "4.0.2",
     "npm:unified@11.0.5": "11.0.5",
     "npm:xss@^1.0.15": "1.0.15",
-    "npm:zod@^4.4.3": "4.4.3"
+    "npm:zod@^4.5.4": "4.5.4"
   },
   "jsr": {
     "@cliffy/command@1.2.1": {
@@ -1141,7 +1141,7 @@
         "source-map",
         "type-fest@5.8.0",
         "typescript",
-        "zod"
+        "zod@4.4.3"
       ],
       "optionalPeers": [
         "typescript"
@@ -1162,7 +1162,7 @@
         "pretty-bytes",
         "stringify-object",
         "update-notifier",
-        "zod"
+        "zod@4.4.3"
       ],
       "optionalPeers": [
         "esbuild"
@@ -3112,6 +3112,9 @@
     "zod@4.4.3": {
       "integrity": "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="
     },
+    "zod@4.5.4": {
+      "integrity": "sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA=="
+    },
     "zwitch@2.0.4": {
       "integrity": "sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A=="
     }
@@ -3510,7 +3513,7 @@
       "npm:sharp@~0.35.4",
       "npm:shiki@^4.4.3",
       "npm:xss@^1.0.15",
-      "npm:zod@^4.4.3"
+      "npm:zod@^4.5.4"
     ]
   }
 }

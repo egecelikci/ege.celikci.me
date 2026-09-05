@@ -6,6 +6,8 @@
     - it.url: string (required)
     - it.classes: additional classes
     - it.navigation: optional structure override
+    - it.crumbSuffix: optional raw HTML appended after the trail
+      (e.g. a live section indicator)
 #}}
 
 {{ set breadcrumbItems = nav.breadcrumb(it.url) }}
@@ -120,5 +122,13 @@
         {{ /if }}
       </li>
     {{ /for }}
+    {{# Optional live suffix (e.g. games page section indicator).
+        Rendered inside the list so it inherits the item gap/spacing. #}}
+    {{ if it.crumbSuffix }}
+      <li class="breadcrumb__item">
+        <span class="breadcrumb__sep">/</span>
+        {{ it.crumbSuffix |> safe }}
+      </li>
+    {{ /if }}
   </ol>
 </nav>
