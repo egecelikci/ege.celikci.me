@@ -55,7 +55,10 @@ export function initRail(rail: HTMLElement) {
   }
 
   function update() {
-    const line = headerHeightPx() + 1;
+    // must match the html scroll-padding the anchors land on (plus a few px
+    // of slack for sub-pixel landing jitter), so rail jumps seat their
+    // letter exactly centered in the aperture
+    const line = headerHeightPx() + 4;
     let idx = -1;
     for (let i = 0; i < order.length; i++) {
       if (sections.get(order[i])!.getBoundingClientRect().top - line <= 0) {

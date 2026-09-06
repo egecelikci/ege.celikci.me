@@ -30,35 +30,37 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
 {{ set rest = (games?.games || []).filter((g) => !/^[A-Za-z]/.test(g.name || "")) }}
 
 {{ if games?.games?.length }}
+  <div class="rail-layout">
   <nav class="rail" aria-label="jump to letter">
-    {{ for letter of letters }}
-      {{ if games.games.some((g) => (g.name[0] || "").toUpperCase() === letter) }}
+      {{ for letter of letters }}
+        {{ if games.games.some((g) => (g.name[0] || "").toUpperCase() === letter) }}
+          <a
+            href="#{{ letter }}"
+            class="rail__link"
+            data-target="{{ letter }}"
+            data-label="{{ letter }}"
+            aria-label="games starting with {{ letter }}"
+          >{{ letter }}</a>
+        {{ else }}
+          <span
+            class="rail__link rail__link--empty"
+            aria-hidden="true"
+          >{{ letter }}</span>
+        {{ /if }}
+      {{ /for }}
+      {{ if rest.length }}
         <a
-          href="#{{ letter }}"
+          href="#other"
           class="rail__link"
-          data-target="{{ letter }}"
-          data-label="{{ letter }}"
-          aria-label="games starting with {{ letter }}"
-        >{{ letter }}</a>
-      {{ else }}
-        <span
-          class="rail__link rail__link--empty"
-          aria-hidden="true"
-        >{{ letter }}</span>
+          data-target="other"
+          data-label="#"
+          aria-label="games starting with other characters"
+        >#</a>
       {{ /if }}
-    {{ /for }}
-    {{ if rest.length }}
-      <a
-        href="#other"
-        class="rail__link"
-        data-target="other"
-        data-label="#"
-        aria-label="games starting with other characters"
-      >#</a>
-    {{ /if }}
-  </nav>
+    </nav>
 
-  <div class="game-list">
+  <div class="rail-layout__main">
+    <div class="game-list">
     {{ for letter of letters }}
       {{ set group = games.games.filter((g) => (g.name[0] || "").toUpperCase() === letter) }}
       {{ if group.length }}
@@ -92,7 +94,9 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
         </div>
       </section>
     {{ /if }}
+      </div>
   </div>
+</div>
 {{ else }}
   {{
     await it.comp.base.EmptyState({

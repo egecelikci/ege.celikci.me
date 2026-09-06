@@ -23,29 +23,31 @@ navigation:
 {{ set years = [...new Set(monthKeys.map((k) => k.slice(0, 4)))] }}
 
 {{ if notes.length }}
+  <div class="rail-layout">
   <nav class="rail" aria-label="jump to month">
-    {{ for year of years }}
-      {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
-      <a
-        href="#{{ yKeys[0] }}"
-        class="rail__link rail__link--primary"
-        data-target="{{ yKeys[0] }}"
-        data-year="{{ year }}"
-        aria-label="notes from {{ year }}"
-      >{{ year }}</a>
-      {{ for mk of yKeys }}
+      {{ for year of years }}
+        {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
         <a
-          href="#{{ mk }}"
-          class="rail__link rail__link--sub"
-          data-target="{{ mk }}"
+          href="#{{ yKeys[0] }}"
+          class="rail__link rail__link--primary"
+          data-target="{{ yKeys[0] }}"
           data-year="{{ year }}"
-          aria-label="notes from {{ monthNames[Number(mk.slice(5)) - 1] }} {{ year }}"
-        >{{ monthNames[Number(mk.slice(5)) - 1] }}</a>
+          aria-label="notes from {{ year }}"
+        >{{ year }}</a>
+        {{ for mk of yKeys }}
+          <a
+            href="#{{ mk }}"
+            class="rail__link rail__link--sub"
+            data-target="{{ mk }}"
+            data-year="{{ year }}"
+            aria-label="notes from {{ monthNames[Number(mk.slice(5)) - 1] }} {{ year }}"
+          >{{ monthNames[Number(mk.slice(5)) - 1] }}</a>
+        {{ /for }}
       {{ /for }}
-    {{ /for }}
-  </nav>
+    </nav>
 
-  <div class="h-feed notes-index">
+  <div class="rail-layout__main">
+    <div class="h-feed notes-index">
     {{ for mk of monthKeys }}
       <section
         class="notes-month"
@@ -69,7 +71,9 @@ navigation:
         {{ /for }}
       </section>
     {{ /for }}
+      </div>
   </div>
+</div>
 {{ else }}
   <div class="notes-index__empty">
     {{
