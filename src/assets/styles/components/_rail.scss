@@ -1,8 +1,4 @@
 @layer components {
-  /* The rail lives in the content flow — between the page header and the
-     site footer — as a sticky column beside the page content. Pure CSS:
-     the header keeps its full width, the rail never covers it, and it
-     rides out with the content at the end. No JS needed for any of this. */
   .rail-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 3rem;
@@ -21,7 +17,6 @@
     grid-row: 1;
     position: sticky;
     top: max(4rem, calc(50vh - 11rem));
-    margin-top: 50vh; /* starts below the page-header zone, rides up, parks */
     z-index: 90;
     width: 100%;
     padding-inline-end: 0.25rem;
