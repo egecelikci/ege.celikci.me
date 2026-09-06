@@ -20,8 +20,31 @@ navigation:
     `${n.date.getFullYear()}-${String(n.date.getMonth() + 1).padStart(2, "0")}`)
 }}
 {{ set monthKeys = Object.keys(byMonth) }}
+{{ set years = [...new Set(monthKeys.map((k) => k.slice(0, 4)))] }}
 
 {{ if notes.length }}
+  <nav class="rail" aria-label="jump to month">
+    {{ for year of years }}
+      {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
+      <a
+        href="#{{ yKeys[0] }}"
+        class="rail__link rail__link--primary"
+        data-target="{{ yKeys[0] }}"
+        data-year="{{ year }}"
+        aria-label="notes from {{ year }}"
+      >{{ year }}</a>
+      {{ for mk of yKeys }}
+        <a
+          href="#{{ mk }}"
+          class="rail__link rail__link--sub"
+          data-target="{{ mk }}"
+          data-year="{{ year }}"
+          aria-label="notes from {{ monthNames[Number(mk.slice(5)) - 1] }} {{ year }}"
+        >{{ monthNames[Number(mk.slice(5)) - 1] }}</a>
+      {{ /for }}
+    {{ /for }}
+  </nav>
+
   <div class="h-feed notes-index">
     {{ for mk of monthKeys }}
       <section
