@@ -74,7 +74,6 @@
     --color-text-muted: #aaa;
     --color-border: #222;
     --bg-color: #000;
-    --header-height: 0;
 
     body {
       padding-right: var(--pswp-sw, 0px) !important;
@@ -82,15 +81,6 @@
 
     #site-header {
       padding-right: var(--pswp-sw, 0px) !important;
-      background-color: #000 !important;
-      border-bottom-color: #222 !important;
-      opacity: 0 !important;
-      transform: translateY(-4px) !important;
-      visibility: hidden;
-      pointer-events: none !important;
-      transition:
-        opacity 0.25s ease,
-        transform 0.25s ease !important;
     }
   }
 }

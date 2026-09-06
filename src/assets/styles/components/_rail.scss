@@ -16,14 +16,17 @@
     grid-column: 2;
     grid-row: 1;
     position: sticky;
-    top: max(4rem, calc(50vh - 11rem));
+    /* park exactly on the anchor landing line (html scroll-padding-top),
+       so #A/#month jumps seat the rail's top edge on the same rule as the
+       target heading pinned under the header */
+    top: calc(var(--header-height) + 1px);
     z-index: 90;
     width: 100%;
     padding-inline-end: 0.25rem;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    max-height: calc(100vh - 7rem);
+    max-height: calc(100vh - var(--header-height) - 1px);
     overflow-y: auto;
     scrollbar-width: none;
     touch-action: none;
@@ -88,10 +91,6 @@
   @media (max-width: 40rem) {
     .rail-layout {
       grid-template-columns: minmax(0, 1fr) 2.5rem;
-    }
-
-    .rail {
-      top: max(4rem, calc(50vh - 8rem));
     }
 
     .rail__link {
