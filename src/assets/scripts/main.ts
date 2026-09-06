@@ -175,7 +175,7 @@ async function init() {
   }
 
   for (const rail of document.querySelectorAll<HTMLElement>(".rail")) {
-    const { initRailNav } = await import("./common/rail-nav.ts");
+    const { initRailNav } = await import("./common/aperture.ts");
     initRailNav(rail);
   }
 }
