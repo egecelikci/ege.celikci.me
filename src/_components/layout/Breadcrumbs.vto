@@ -126,7 +126,7 @@
         Rendered inside the list so it inherits the item gap/spacing. #}}
     {{ if it.crumbSuffix }}
       <li class="breadcrumb__item">
-        <span class="breadcrumb__sep">/</span>
+        <span class="breadcrumb__sep breadcrumb__sep--faded">#</span>
         {{ it.crumbSuffix |> safe }}
       </li>
     {{ /if }}
