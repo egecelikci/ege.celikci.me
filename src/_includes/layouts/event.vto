@@ -32,7 +32,7 @@ extraStyles:
           <div class="event-page__organizers">
             {{ for labelRel of event.labels }}
               <div class="event-page__organizer">
-                <span class="event-page__organizer-label typography-label">Presented by</span>
+                {{ comp.ui.SectionHeader({ title: "Presented by" }) }}
                 <div class="event-page__organizer-main">
                   <span class="event-page__organizer-name">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
                   <div class="event-page__organizer-links">
