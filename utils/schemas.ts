@@ -234,8 +234,7 @@ export const SteamGameEntrySchema: z.ZodType<SteamGameEntry> = z.object({
 }).passthrough();
 
 export const GamesStoreSchema: z.ZodType<GamesStore> = z.object({
-  schemaVersion: z.literal(3),
-  fetchedAt: z.string(),
+  schemaVersion: z.literal(4),
   games: z.array(SteamGameEntrySchema),
 }).passthrough();
 

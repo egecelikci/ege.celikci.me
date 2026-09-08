@@ -1,5 +1,4 @@
 {
-  "fetchedAt": "2026-09-08T20:38:11.242Z",
   "games": [
     {
       "appid": 282800,
@@ -75,11 +74,11 @@
     },
     {
       "appid": 208650,
-      "name": "Batman™: Arkham Knight"
+      "name": "Batman\u2122: Arkham Knight"
     },
     {
       "appid": 209000,
-      "name": "Batman™: Arkham Origins"
+      "name": "Batman\u2122: Arkham Origins"
     },
     {
       "appid": 2623090,
@@ -87,7 +86,7 @@
     },
     {
       "appid": 2807960,
-      "name": "Battlefield™ 6"
+      "name": "Battlefield\u2122 6"
     },
     {
       "appid": 504370,
@@ -195,7 +194,7 @@
     },
     {
       "appid": 1938090,
-      "name": "Call of Duty®"
+      "name": "Call of Duty\u00ae"
     },
     {
       "appid": 204450,
@@ -271,15 +270,15 @@
     },
     {
       "appid": 335300,
-      "name": "DARK SOULS™ II: Scholar of the First Sin"
+      "name": "DARK SOULS\u2122 II: Scholar of the First Sin"
     },
     {
       "appid": 374320,
-      "name": "DARK SOULS™ III"
+      "name": "DARK SOULS\u2122 III"
     },
     {
       "appid": 570940,
-      "name": "DARK SOULS™: REMASTERED"
+      "name": "DARK SOULS\u2122: REMASTERED"
     },
     {
       "appid": 381210,
@@ -363,7 +362,7 @@
     },
     {
       "appid": 249050,
-      "name": "Dungeon of the ENDLESS™"
+      "name": "Dungeon of the ENDLESS\u2122"
     },
     {
       "appid": 239140,
@@ -375,7 +374,7 @@
     },
     {
       "appid": 289130,
-      "name": "ENDLESS Legend™"
+      "name": "ENDLESS Legend\u2122"
     },
     {
       "appid": 311690,
@@ -647,7 +646,7 @@
     },
     {
       "appid": 3215660,
-      "name": "Late Homework | 遅れた宿題"
+      "name": "Late Homework | \u9045\u308c\u305f\u5bbf\u984c"
     },
     {
       "appid": 500,
@@ -663,7 +662,7 @@
     },
     {
       "appid": 319630,
-      "name": "Life is Strange™"
+      "name": "Life is Strange\u2122"
     },
     {
       "appid": 1507190,
@@ -791,7 +790,7 @@
     },
     {
       "appid": 2357570,
-      "name": "Overwatch®"
+      "name": "Overwatch\u00ae"
     },
     {
       "appid": 444090,
@@ -1119,7 +1118,7 @@
     },
     {
       "appid": 1237970,
-      "name": "Titanfall® 2"
+      "name": "Titanfall\u00ae 2"
     },
     {
       "appid": 206440,
@@ -1286,5 +1285,5 @@
       "name": "Zuma's Revenge"
     }
   ],
-  "schemaVersion": 3
+  "schemaVersion": 4
 }

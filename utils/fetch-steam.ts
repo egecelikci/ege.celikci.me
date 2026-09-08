@@ -32,8 +32,7 @@ const CONFIG = {
 } as const;
 
 const EMPTY_STORE: GamesStore = {
-  schemaVersion: 3,
-  fetchedAt: new Date(0).toISOString(),
+  schemaVersion: 4,
   games: [],
 };
 
@@ -89,7 +88,7 @@ async function getSteamData() {
       } catch {
         await saveState(
           CONFIG.paths.cacheFile,
-          { ...EMPTY_STORE, fetchedAt: new Date().toISOString() },
+          { ...EMPTY_STORE },
           GamesStoreSchema,
         );
         console.log("[steam] ℹ️ Wrote initial empty store");
@@ -129,8 +128,7 @@ async function getSteamData() {
     console.log(`[steam] 🔍 Consolidated ${games.length} games…`);
 
     const store: GamesStore = {
-      schemaVersion: 3,
-      fetchedAt: new Date().toISOString(),
+      schemaVersion: 4,
       games,
     };
 

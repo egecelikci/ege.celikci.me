@@ -87,7 +87,6 @@ export interface SteamGameEntry {
 export interface GamesStore {
   /** Bumped whenever the persisted format changes; stale caches are rejected */
   schemaVersion: number;
-  fetchedAt: string;
   games: SteamGameEntry[];
 }
 
