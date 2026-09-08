@@ -6,14 +6,14 @@
   instagram_url:
     - "https://www.instagram.com/p/DXcEwVUimWJ/"
     - "https://www.instagram.com/p/DXwDPLgtL2E/"
-  price: "350₺"
+  price: "₺350"
   video:
     src: "https://v.basspistol.org/videos/embed/tSAy9STuRyrbDaHX8J7mAF?warningTitle=0&peertubeLink=0&p2p=0"
     title: "Event Promo: infüze-archonGrid"
 
 9724e4c1-1fe5-4ce8-9c12-3d8e3926319d:
   instagram_url: "https://www.instagram.com/p/DXFDUfgCCv9/"
-  price: "250₺"
+  price: "₺250"
   exclude_labels: ["2bfa1d83-63e4-433b-9b9a-17ef5dcc8964"]
   photographers:
     efekaraboga:
@@ -28,7 +28,7 @@
       url: "https://www.instagram.com/seheraaltintas"
 
 e1161be5-d189-42b7-9862-10168f8c4e4b:
-  price: "250₺"
+  price: "₺250"
   instagram_url:
     - "https://www.instagram.com/p/DXe4jtZDFkA/"
     - "https://www.instagram.com/p/DXRxmtZDKyS/"
@@ -40,12 +40,12 @@ e1161be5-d189-42b7-9862-10168f8c4e4b:
     - "https://www.instagram.com/p/DXe4sf5jJvF/"
 
 776932af-1bec-4e96-ae1f-e7bf9ac49cf3:
-  price: "400₺"
+  price: "₺400"
   instagram_url:
     - "https://www.instagram.com/p/DWRaY4DCiO2/"
 
 22de1977-fd0c-4e0e-a519-61871adf2bf6:
-  price: "350₺"
+  price: "₺350"
   instagram_url:
     - "https://www.instagram.com/p/DXKH668iISJ/"
 
@@ -54,12 +54,12 @@ b58fa0c1-0445-49aa-8be5-fc0bf6c5c113:
     - "https://www.instagram.com/p/DXhLJPHDMCw/"
 
 58f3365a-3aa2-40a6-8fa9-97805b1e913c:
-  price: "200₺"
+  price: "₺200"
   instagram_url:
     - "https://www.instagram.com/p/DW9ON1WEWvW/"
 
 12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4:
-  price: "450₺"
+  price: "₺450"
   instagram_url:
     - "https://www.instagram.com/p/DX7TIhuDYZV/"
 
@@ -77,7 +77,7 @@ d0941f03-d2fa-4fce-90e3-6a051d163906:
   instagram_url: "https://www.instagram.com/p/DZCVcteqYu2/"
 
 f32d2722-35f3-4416-b08c-5a83c5d91ab4:
-  price: "250₺"
+  price: "₺250"
   photographers:
     kuduruk:
       name: "Kuduruk"
@@ -89,23 +89,26 @@ cf6e5d51-b113-4ab9-b658-4fc1c5357cb0:
 
 7898ad7f-55e4-45d6-9044-634668656a38:
   instagram_url: "https://www.instagram.com/p/DZiCcCms9QE/"
-  price: "250₺"
+  price: "₺250"
 
 6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b:
   instagram_url: "https://www.instagram.com/p/DaN1vSQIoBA/"
-  price: "300₺"
+  price: "₺300"
 
 964a7f09-5d7d-4deb-a17d-313c90a5294d:
-  price: "300₺"
+  price: "₺300"
   instagram_url: "https://www.instagram.com/p/DbGpi_TOB-n/"
 
 30bf3a19-b22f-4c0d-832c-f91fac6d0586:
-  price: "350₺"
+  price: "₺350"
   instagram_url: "https://www.instagram.com/p/DbggFxFKGiF/"
 
 e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d:
-  price: "300₺"
+  price: "₺300"
   instagram_url: "https://www.instagram.com/p/DcL_nQ4o60L/"
 
 6d833b76-47c8-469b-a3c7-12a8c0839167:
   instagram_url: "https://www.instagram.com/p/Dcd48XxtaN7/"
+
+1584c1f1-fe61-4760-9029-851c90a85ebd:
+  instagram_url: "https://www.instagram.com/p/Dc8l-IoAjOL/"

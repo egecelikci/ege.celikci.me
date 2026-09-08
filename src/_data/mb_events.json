@@ -2082,6 +2082,20 @@
         "url": "https://www.instagram.com/mhmtdnzc/"
       }
     ],
+    "fb5b8637-8b1b-4436-a618-7e319597177a": [
+      {
+        "type": "social network",
+        "url": "https://www.facebook.com/volumealsancak"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/volumealsancak/"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://www.volumealsancak.com/"
+      }
+    ],
     "fb99e314-eda3-4a02-b440-d7d9e1096f6e": [
       {
         "type": "social network",
@@ -2673,6 +2687,152 @@
       ],
       "setlist": "",
       "time": "21:00",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "1584c1f1-fe61-4760-9029-851c90a85ebd",
+      "imagePath": "/assets/images/posters/1584c1f1-fe61-4760-9029-851c90a85ebd.jpg",
+      "life-span": {
+        "begin": "2026-10-24",
+        "end": "2026-10-24",
+        "ended": true
+      },
+      "name": "Kaptan Kadavra, Scenes We Have Missed & CONCRETE at Volume Alsancak",
+      "posterThumb": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46137074887-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46137074887.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "563baa1a-a6a5-4f17-b54e-356160830ea6",
+            "name": "Scenes We Have Missed",
+            "sort-name": "Scenes We Have Missed",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "Turkish hardcore",
+            "id": "98dbeb42-4ab8-4fc8-a7c9-391eca4ab166",
+            "name": "CONCRETE",
+            "sort-name": "CONCRETE",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "label": {
+            "disambiguation": "",
+            "id": "b2f337d9-11d7-4f53-8d3f-572673a94dc7",
+            "label-code": null,
+            "name": "Rootless Records",
+            "sort-name": "Rootless Records",
+            "type": null,
+            "type-id": null
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "label",
+          "type": "presented",
+          "type-id": "09bd2cba-6160-408b-b191-afef7480ce54"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "de4b2785-a9a0-497f-b789-16cd023f978f",
+            "name": "Kaptan Kadavra",
+            "sort-name": "Kaptan Kadavra",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, 1482. Sok. No:18, 35220 Konak/İzmir",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437599,
+              "longitude": 27.142999
+            },
+            "disambiguation": "",
+            "id": "fb5b8637-8b1b-4436-a618-7e319597177a",
+            "name": "Volume Alsancak",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        }
+      ],
+      "setlist": "",
+      "time": "19:30",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
