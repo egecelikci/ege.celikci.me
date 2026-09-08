@@ -1,15 +1,10 @@
 import "@std/dotenv/load";
 import { join } from "@std/path";
-import type {
-  GamesStore,
-  SteamOwnedGame,
-  SteamPlayerSummary,
-} from "../src/types/index.ts";
+import type { GamesStore, SteamOwnedGame } from "../src/types/index.ts";
 import { loadState, saveState, sortObjectKeys } from "./cache.ts";
 import {
   GamesStoreSchema,
   SteamOwnedGamesResponseSchema,
-  SteamPlayerSummariesResponseSchema,
   validateOrThrow,
 } from "./schemas.ts";
 import { consolidateSteamLibraries } from "./steam.ts";
@@ -36,6 +31,12 @@ const CONFIG = {
     .filter((id) => id.length > 0),
 } as const;
 
+const EMPTY_STORE: GamesStore = {
+  schemaVersion: 3,
+  fetchedAt: new Date(0).toISOString(),
+  games: [],
+};
+
 class SteamFetcher {
   constructor(private httpClient: HttpClient, private apiKey: string) {}
 
@@ -47,17 +48,6 @@ class SteamFetcher {
       url.searchParams.set(name, value);
     }
     return url.toString();
-  }
-
-  async getPlayerSummaries(): Promise<SteamPlayerSummary[]> {
-    const data = await this.httpClient.fetch<unknown>(
-      this.url("/ISteamUser/GetPlayerSummaries/v0002/", {
-        steamids: CONFIG.steamIds.join(","),
-      }),
-      "json",
-      "no-cache",
-    );
-    return validateOrThrow(SteamPlayerSummariesResponseSchema, data).players;
   }
 
   async getOwnedGames(steamid: string): Promise<SteamOwnedGame[]> {
@@ -84,45 +74,39 @@ async function getSteamData() {
 
   const cachedData = await loadState<GamesStore>(
     CONFIG.paths.cacheFile,
-    {
-      schemaVersion: 2,
-      fetchedAt: new Date(0).toISOString(),
-      players: [],
-      games: [],
-    },
+    EMPTY_STORE,
     GamesStoreSchema,
   );
 
   if (!CONFIG.credentials.apiKey) {
-    if (cachedData.players.length === 0 && cachedData.games.length === 0) {
+    if (cachedData.games.length === 0) {
       try {
         await Deno.stat(CONFIG.paths.cacheFile);
         console.warn(
           "[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache",
         );
-        return { players: cachedData.players, games: cachedData.games };
+        return cachedData.games;
       } catch {
-        await saveState(CONFIG.paths.cacheFile, {
-          schemaVersion: 2,
-          fetchedAt: new Date().toISOString(),
-          players: [],
-          games: [],
-        }, GamesStoreSchema);
+        await saveState(
+          CONFIG.paths.cacheFile,
+          { ...EMPTY_STORE, fetchedAt: new Date().toISOString() },
+          GamesStoreSchema,
+        );
         console.log("[steam] ℹ️ Wrote initial empty store");
-        return { players: [], games: [] };
+        return [];
       }
     }
     console.warn(
       "[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache",
     );
-    return { players: cachedData.players, games: cachedData.games };
+    return cachedData.games;
   }
 
   if (CONFIG.steamIds.length === 0) {
     console.warn(
       "[steam] ⚠️ STEAM_USER_IDS is not set, keeping existing cache",
     );
-    return { players: cachedData.players, games: cachedData.games };
+    return cachedData.games;
   }
 
   const fetcher = new SteamFetcher(httpClient, CONFIG.credentials.apiKey);
@@ -130,34 +114,23 @@ async function getSteamData() {
   console.log("[steam] ℹ️ Syncing family libraries…");
 
   try {
-    const summaries = await fetcher.getPlayerSummaries();
-    if (summaries.length === 0 && cachedData.games.length > 0) {
-      console.warn(
-        "[steam] ⚠️ Empty player response, keeping existing cache",
-      );
-      return { players: cachedData.players, games: cachedData.games };
-    }
-
     const libraries = new Map<string, SteamOwnedGame[]>();
-    for (const summary of summaries) {
-      const owned = await fetcher.getOwnedGames(summary.steamid);
-      libraries.set(summary.steamid, owned);
+    for (const steamid of CONFIG.steamIds) {
+      const owned = await fetcher.getOwnedGames(steamid);
+      libraries.set(steamid, owned);
       if (owned.length === 0) {
         console.warn(
-          `[steam] ⚠️ No games returned for ${summary.personaname} — profile may be private`,
+          `[steam] ⚠️ No games returned for ${steamid} — profile may be private`,
         );
       }
     }
 
-    const { players, games } = consolidateSteamLibraries(summaries, libraries);
-    console.log(
-      `[steam] 🔍 Consolidated ${games.length} games across ${players.length} players…`,
-    );
+    const games = consolidateSteamLibraries(libraries);
+    console.log(`[steam] 🔍 Consolidated ${games.length} games…`);
 
     const store: GamesStore = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       fetchedAt: new Date().toISOString(),
-      players,
       games,
     };
 
@@ -170,10 +143,10 @@ async function getSteamData() {
     } else {
       console.log("[steam] ℹ️ No changes detected, skipping save.");
     }
-    return { players, games };
+    return games;
   } catch (err) {
     console.error("[steam] ❌ Sync failed, keeping existing cache:", err);
-    return { players: cachedData.players, games: cachedData.games };
+    return cachedData.games;
   }
 }
 

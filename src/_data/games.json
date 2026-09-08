@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-08T13:23:57.065Z",
+  "fetchedAt": "2026-09-08T20:38:11.242Z",
   "games": [
     {
       "appid": 282800,
@@ -1286,35 +1286,5 @@
       "name": "Zuma's Revenge"
     }
   ],
-  "players": [
-    {
-      "avatar": "https://avatars.steamstatic.com/d35fbd64748a5e6708cf155a18e7791e45264e19_medium.jpg",
-      "gameCount": 95,
-      "name": "orca",
-      "profileUrl": "https://steamcommunity.com/id/kisewa/",
-      "steamid": "76561199224416508"
-    },
-    {
-      "avatar": "https://avatars.steamstatic.com/16376381a151d0ce58b4574095df13e8b2d15b6f_medium.jpg",
-      "gameCount": 123,
-      "name": "monocyte",
-      "profileUrl": "https://steamcommunity.com/profiles/76561198418118004/",
-      "steamid": "76561198418118004"
-    },
-    {
-      "avatar": "https://avatars.steamstatic.com/11f9887b7ae51b7e765e1c58514397b860d7037f_medium.jpg",
-      "gameCount": 96,
-      "name": "Rewire",
-      "profileUrl": "https://steamcommunity.com/id/eXizts/",
-      "steamid": "76561198263489464"
-    },
-    {
-      "avatar": "https://avatars.steamstatic.com/5db463a0e966c1ce0d61b744725af5cee6165cdf_medium.jpg",
-      "gameCount": 72,
-      "name": "eg",
-      "profileUrl": "https://steamcommunity.com/id/egecelikci/",
-      "steamid": "76561198847289673"
-    }
-  ],
-  "schemaVersion": 2
+  "schemaVersion": 3
 }

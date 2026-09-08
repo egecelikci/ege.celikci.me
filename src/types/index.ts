@@ -77,32 +77,10 @@ export interface SteamOwnedGamesResponse {
   games?: SteamOwnedGame[];
 }
 
-/** Raw player entry from ISteamUser/GetPlayerSummaries */
-export interface SteamPlayerSummary {
-  steamid: string;
-  personaname: string;
-  profileurl: string;
-  avatar: string;
-  avatarmedium: string;
-  avatarfull: string;
-}
-
-export interface SteamPlayerSummariesResponse {
-  players: SteamPlayerSummary[];
-}
-
 /** One game in the consolidated family library, keyed by appid */
 export interface SteamGameEntry {
   appid: number;
   name: string;
-}
-
-export interface SteamPlayerEntry {
-  steamid: string;
-  name: string;
-  profileUrl: string;
-  avatar: string;
-  gameCount: number;
 }
 
 /** Persisted Steam cache shape (src/_data/games.json) */
@@ -110,7 +88,6 @@ export interface GamesStore {
   /** Bumped whenever the persisted format changes; stale caches are rejected */
   schemaVersion: number;
   fetchedAt: string;
-  players: SteamPlayerEntry[];
   games: SteamGameEntry[];
 }
 

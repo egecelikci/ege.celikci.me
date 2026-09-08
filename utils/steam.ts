@@ -4,17 +4,7 @@
  * Kept side-effect free so `utils/steam.test.ts` can cover them.
  */
 
-import type {
-  SteamGameEntry,
-  SteamOwnedGame,
-  SteamPlayerEntry,
-  SteamPlayerSummary,
-} from "../src/types/index.ts";
-
-export interface ConsolidatedLibrary {
-  players: SteamPlayerEntry[];
-  games: SteamGameEntry[];
-}
+import type { SteamGameEntry, SteamOwnedGame } from "../src/types/index.ts";
 
 /**
  * Merge per-user owned-games lists into one deduplicated family library.
@@ -22,9 +12,8 @@ export interface ConsolidatedLibrary {
  * Sorted alphabetically since no playtime is tracked.
  */
 export function consolidateSteamLibraries(
-  summaries: SteamPlayerSummary[],
   libraries: Map<string, SteamOwnedGame[]>,
-): ConsolidatedLibrary {
+): SteamGameEntry[] {
   const games = new Map<number, SteamGameEntry>();
 
   for (const owned of libraries.values()) {
@@ -35,20 +24,5 @@ export function consolidateSteamLibraries(
     }
   }
 
-  const sortedGames = [...games.values()].sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-
-  const players: SteamPlayerEntry[] = summaries.map((s) => {
-    const owned = libraries.get(s.steamid) ?? [];
-    return {
-      steamid: s.steamid,
-      name: s.personaname,
-      profileUrl: s.profileurl,
-      avatar: s.avatarmedium || s.avatar,
-      gameCount: owned.length,
-    };
-  });
-
-  return { players, games: sortedGames };
+  return [...games.values()].sort((a, b) => a.name.localeCompare(b.name));
 }

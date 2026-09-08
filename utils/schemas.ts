@@ -29,9 +29,6 @@ import type {
   SteamGameEntry,
   SteamOwnedGame,
   SteamOwnedGamesResponse,
-  SteamPlayerEntry,
-  SteamPlayerSummariesResponse,
-  SteamPlayerSummary,
   Webmention,
   WebmentionApiResponse,
   WebmentionFeed,
@@ -231,40 +228,14 @@ export const SteamOwnedGamesResponseSchema: z.ZodType<SteamOwnedGamesResponse> =
     }).passthrough(),
   }).passthrough().transform((envelope) => envelope.response);
 
-const steamPlayerSummarySchema: z.ZodType<SteamPlayerSummary> = z.object({
-  steamid: z.string(),
-  personaname: z.string(),
-  profileurl: z.string(),
-  avatar: z.string(),
-  avatarmedium: z.string(),
-  avatarfull: z.string(),
-}).passthrough();
-
-export const SteamPlayerSummariesResponseSchema: z.ZodType<
-  SteamPlayerSummariesResponse
-> = z.object({
-  response: z.object({
-    players: z.array(steamPlayerSummarySchema),
-  }).passthrough(),
-}).passthrough().transform((envelope) => envelope.response);
-
 export const SteamGameEntrySchema: z.ZodType<SteamGameEntry> = z.object({
   appid: z.number(),
   name: z.string(),
 }).passthrough();
 
-export const SteamPlayerEntrySchema: z.ZodType<SteamPlayerEntry> = z.object({
-  steamid: z.string(),
-  name: z.string(),
-  profileUrl: z.string(),
-  avatar: z.string(),
-  gameCount: z.number(),
-}).passthrough();
-
 export const GamesStoreSchema: z.ZodType<GamesStore> = z.object({
-  schemaVersion: z.literal(2),
+  schemaVersion: z.literal(3),
   fetchedAt: z.string(),
-  players: z.array(SteamPlayerEntrySchema),
   games: z.array(SteamGameEntrySchema),
 }).passthrough();
 
