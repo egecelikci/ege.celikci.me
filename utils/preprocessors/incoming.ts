@@ -2,7 +2,7 @@
  * utils/preprocessors/incoming.ts
  * Feeds `backlinks` for the inline "incoming:" lines in page.vto:
  * the reverse index of the doc graph, built from tag memberships
- * and prose body links.
+ * and prose body links. Also audits orphans to the build log.
  */
 
 import {
@@ -84,9 +84,8 @@ export default function () {
       }
 
       for (const page of pages) {
-        if (page.data.url) {
-          page.data.backlinks = incoming.get(page.data.url) ?? [];
-        }
+        if (!page.data.url) continue;
+        page.data.backlinks = incoming.get(page.data.url) ?? [];
       }
     });
   };
