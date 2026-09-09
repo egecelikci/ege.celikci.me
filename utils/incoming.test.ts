@@ -58,3 +58,54 @@ Deno.test("buildIncoming never links a page to itself", () => {
   ]);
   assertEquals(result.has("/notes/"), false);
 });
+
+Deno.test("buildIncoming keeps only same-language backlinks", () => {
+  const result = buildIncoming(
+    [
+      { url: "/contact/", title: "contact" },
+      {
+        url: "/events/contribute/",
+        title: "How to Contribute to Events",
+        lang: "en",
+        bodyLinks: ["/contact/"],
+      },
+      {
+        url: "/tr/events/contribute/",
+        title: "Etkinliklere Nasıl Katkıda Bulunulur",
+        lang: "tr",
+        bodyLinks: ["/contact/"],
+      },
+    ],
+    { defaultLang: "en" },
+  );
+  assertEquals(result.get("/contact/"), [
+    { title: "How to Contribute to Events", url: "/events/contribute/" },
+  ]);
+});
+
+Deno.test("buildIncoming matches translated targets with their language", () => {
+  const result = buildIncoming(
+    [
+      { url: "/tr/iletisim/", title: "iletişim", lang: "tr" },
+      {
+        url: "/tr/events/contribute/",
+        title: "Etkinliklere Nasıl Katkıda Bulunulur",
+        lang: "tr",
+        bodyLinks: ["/tr/iletisim/"],
+      },
+      {
+        url: "/events/contribute/",
+        title: "How to Contribute to Events",
+        lang: "en",
+        bodyLinks: ["/tr/iletisim/"],
+      },
+    ],
+    { defaultLang: "en" },
+  );
+  assertEquals(result.get("/tr/iletisim/"), [
+    {
+      title: "Etkinliklere Nasıl Katkıda Bulunulur",
+      url: "/tr/events/contribute/",
+    },
+  ]);
+});

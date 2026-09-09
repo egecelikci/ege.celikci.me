@@ -3,13 +3,16 @@
  * Pure helpers for `incoming:` backlinks: the reverse index of the
  * doc graph. Edges come from tag memberships and prose body links
  * (absolute internal paths); listing pages and nav chrome are excluded
- * by construction — they never enter the graph.
+ * by construction — they never enter the graph. Edges are
+ * language-aware: only same-language pages link each other.
  * Kept side-effect free so `utils/incoming.test.ts` can cover them.
  */
 
 export interface IncomingEntry {
   url: string;
   title: string;
+  /** page language; missing means the site default language */
+  lang?: string;
   /** tags on the page itself */
   tags?: string[];
   /** absolute internal links found in the prose body, e.g. ["/music/"] */
@@ -46,22 +49,27 @@ export function normalizeUrl(url: string): string {
  * Build the reverse index: for every page, who links to it.
  * Tag edges: a tag page gains every page carrying that tag.
  * Body edges: prose links between existing pages.
+ * Language edges: only same-language pages link each other; a page
+ * without `lang` counts as the default language.
  */
 export function buildIncoming(
   entries: IncomingEntry[],
   options: {
     slugifyTag?: (tag: string) => string;
+    defaultLang?: string;
   } = {},
 ): Map<string, IncomingLink[]> {
-  const { slugifyTag = (t: string) => t } = options;
+  const { slugifyTag = (t: string) => t, defaultLang = "en" } = options;
   const known = new Map(entries.map((e) => [normalizeUrl(e.url), e]));
   const edges = new Map<string, Map<string, IncomingLink>>();
+  const effectiveLang = (lang?: string) => lang ?? defaultLang;
 
   const link = (from: IncomingEntry, toUrl: string) => {
     const to = normalizeUrl(toUrl);
     if (to === normalizeUrl(from.url)) return;
     const target = known.get(to);
     if (!target) return;
+    if (effectiveLang(from.lang) !== effectiveLang(target.lang)) return;
     if (!edges.has(to)) edges.set(to, new Map());
     edges.get(to)!.set(from.url, {
       title: from.title || "note",

@@ -17,6 +17,7 @@ function entryOf(page: Lume.Page): IncomingEntry {
   return {
     url: data.url as string,
     title: (data.title as string | undefined) ?? "",
+    lang: data.lang as string | undefined,
     tags: (data.tags as string[] | undefined) ?? [],
     bodyLinks: typeof source === "string" ? extractBodyLinks(source) : [],
   };
@@ -45,8 +46,14 @@ export default function () {
         }
       }
 
+      // untranslated pages render in the default language, so they
+      // match backlinks from it (site.lang in _config/metadata.ts)
+      const siteLang = pages
+        .map((p) => (p.data.site as { lang?: unknown } | undefined)?.lang)
+        .find((l): l is string => typeof l === "string");
       const incoming = buildIncoming([...seen.values()], {
         slugifyTag: (tag) => tagSlugs.get(tag) ?? tag,
+        defaultLang: siteLang ?? "en",
       });
 
       // oscean-style self-audit: report orphaned pages (zero incoming
