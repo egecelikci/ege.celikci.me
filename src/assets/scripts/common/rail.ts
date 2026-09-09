@@ -15,7 +15,7 @@ export function initRail(rail: HTMLElement) {
   }
   if (sections.size === 0) return;
 
-  const reducedMotion = window.matchMedia(
+  const reducedMotion = globalThis.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
 
@@ -78,7 +78,7 @@ export function initRail(rail: HTMLElement) {
     }
     if (idx === -1) idx = 0;
     if (
-      window.innerHeight + window.scrollY >=
+      globalThis.innerHeight + globalThis.scrollY >=
         document.documentElement.scrollHeight - 2
     ) {
       idx = order.length - 1;
@@ -105,8 +105,8 @@ export function initRail(rail: HTMLElement) {
       update();
     });
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
+  globalThis.addEventListener("scroll", onScroll, { passive: true });
+  globalThis.addEventListener("resize", onScroll);
 
   function jump(id: string, smooth: boolean) {
     const section = sections.get(id);
@@ -142,6 +142,7 @@ export function initRail(rail: HTMLElement) {
     try {
       rail.setPointerCapture(e.pointerId);
     } catch {
+      // pointer capture unsupported: scrub still works, just per-event
     }
     jump(id, false);
   });
