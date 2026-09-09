@@ -1,4 +1,10 @@
 {{>
+  const defaultCatalog = (icon) =>
+    (icon?.includes("musicbrainz") || icon?.includes("instagram") ||
+        icon?.includes("wikidata"))
+      ? "simpleicons"
+      : "lucide";
+
   const rawSources = it.sources || (it.label
     ? [{
       label: it.label,
@@ -20,6 +26,7 @@
       type: isFeed ? "feed" : "source",
       label: s.label || (isFeed ? "Feed" : "Source"),
       icon: s.icon || (isFeed ? "rss" : "database"),
+      catalog: s.catalog || defaultCatalog(s.icon),
     };
   });
 
@@ -33,22 +40,20 @@
 >
   {{ for source of nonFeeds }}
     {{> let targetUrl = source.url }}
+    {{> let isLocal = typeof targetUrl === "string" && targetUrl.startsWith("/") }}
 
     {{ if variantVal === "minimal" }}
       {{ if targetUrl }}
         <a
           href="{{ targetUrl }}"
-          target="_blank"
+          {{ if !isLocal }}target="_blank"{{ /if }}
           class="source-meta__icon-btn"
           title="{{ source.label }}"
         >
           {{
             await it.comp.base.Icon({
               name: source.icon,
-              catalog: source.catalog ||
-                (source.icon?.includes("musicbrainz") || source.icon?.includes("instagram")
-                  ? "simpleicons"
-                  : "lucide"),
+              catalog: source.catalog,
               classes: "w-4 h-4",
             })
           }}
@@ -61,7 +66,7 @@
           {{
             await it.comp.base.Icon({
               name: source.icon,
-              catalog: source.catalog || "lucide",
+              catalog: source.catalog,
               classes: "w-3 h-3 source-meta__icon",
             })
           }}
@@ -70,7 +75,7 @@
           {{ if targetUrl }}
             {{ source.prefix || "Synced from" }} <a
               href="{{ targetUrl }}"
-              target="_blank"
+              {{ if !isLocal }}target="_blank"{{ /if }}
               class="source-meta__link"
             >{{ source.label }}</a>
           {{ else }}

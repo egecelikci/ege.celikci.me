@@ -90,10 +90,18 @@
     {{ /if }}
   </div>
 
-  {{ if it.rightContent || extensionContent }}
+  {{ if it.rightContent || extensionContent || (it.sources && it.sources.length > 0) }}
     <div class="page-header__right">
       {{ it.rightContent |> safe }}
       {{ extensionContent |> safe }}
+      {{# frontmatter sources (e.g. taken-at places) render as SourceMeta #}}
+      {{ if it.sources && it.sources.length > 0 }}
+        {{
+          await comp.layout.SourceMeta({
+            sources: it.sources,
+          })
+        }}
+      {{ /if }}
     </div>
   {{ /if }}
 </section>

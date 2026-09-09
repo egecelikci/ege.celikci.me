@@ -71,10 +71,18 @@
 
       <div class="divider entry-row__divider"></div>
 
-      {{ if isNote || entry.stats || entry.syndication }}
+      {{
+        set hasStats = isNote && entry.stats &&
+          (entry.stats.replies > 0 || entry.stats.reposts > 0 || entry.stats.likes > 0)
+      }}
+      {{
+        set hasSyndication = entry.syndication &&
+          (entry.syndication.mastodon || entry.syndication.bluesky || entry.syndication.instagram)
+      }}
+      {{ if hasStats || hasSyndication }}
         {{
           await it.comp.ui.ActivityMeta({
-            stats: entry.stats,
+            stats: hasStats ? entry.stats : null,
             syndication: entry.syndication,
             classes: "entry-row__meta",
           })

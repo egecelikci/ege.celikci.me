@@ -79,6 +79,51 @@ const syndicationField: {
   ],
 };
 
+const sourcesField: {
+  type: "object-list";
+  label: string;
+  description: string;
+  transform: (
+    value: Record<string, unknown>[] | undefined,
+  ) => Record<string, unknown>[] | undefined;
+  fields: Lume.CMS.Field[];
+} = {
+  type: "object-list",
+  label: "Sources & places",
+  description: "Attribution rows under the note, e.g. taken at Komün",
+  transform: (value) => {
+    const rows = (value ?? []).filter((row) => row && (row.label || row.url));
+    return rows.length > 0 ? rows : undefined;
+  },
+  fields: [
+    { name: "label", type: "text", label: "Label", description: "e.g. Komün" },
+    {
+      name: "url",
+      type: "text",
+      label: "Path or URL",
+      description: "e.g. /komun — internal paths stay on this site",
+    },
+    {
+      name: "icon",
+      type: "text",
+      label: "Icon",
+      description: "lucide/simpleicons name, e.g. camera",
+    },
+    {
+      name: "catalog",
+      type: "text",
+      label: "Icon catalog",
+      description: "simpleicons for brand icons, else blank for lucide",
+    },
+    {
+      name: "prefix",
+      type: "text",
+      label: "Prefix",
+      description: "e.g. taken at",
+    },
+  ],
+};
+
 /**
  * LumeCMS's YAML writer fails on `undefined` values and field transforms are always assigned even when they return `undefined` (e.g. an empty syndication object).
  * Strip such keys so they never reach the front matter. Runs after all field changes are applied, before the document is written.
@@ -112,6 +157,7 @@ cms.collection(
         label: "Link",
         description: "Optional link if this note points to something",
       },
+      { name: "sources", ...sourcesField },
       { name: "syndication", ...syndicationField },
       {
         name: "content",
@@ -124,42 +170,6 @@ cms.collection(
     ],
     documentName: timestampName,
     rename: false,
-    transform: stripUndefined,
-  } satisfies Lume.CMS.CollectionOptions,
-);
-
-cms.collection(
-  {
-    name: "blog",
-    label: "Blog",
-    description: "Longer-form posts",
-    store: "src:blog/*.md",
-    fields: [
-      "title: text!",
-      "date: date",
-      {
-        name: "tags",
-        type: "list",
-        label: "Tags",
-      },
-      {
-        name: "description",
-        type: "textarea",
-        label: "Description",
-        description: "Short summary used in feeds and page metadata",
-      },
-      { name: "syndication", ...syndicationField },
-      {
-        name: "content",
-        type: "markdown",
-        label: "Content",
-        upload: "images",
-      },
-    ],
-    documentName(data) {
-      return data.title ? `${slugify(data.title)}.md` : undefined;
-    },
-    rename: "auto",
     transform: stripUndefined,
   } satisfies Lume.CMS.CollectionOptions,
 );
