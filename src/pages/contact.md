@@ -1,6 +1,8 @@
 ---
 title: contact
 description: preferred channels for reaching out to me
+tags:
+  - meta
 templateEngine: [vto, md]
 menu:
   group: meta
