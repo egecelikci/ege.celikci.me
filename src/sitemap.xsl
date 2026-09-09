@@ -49,12 +49,12 @@
         <details open="open">
           <summary>
             <xsl:text>pages · </xsl:text>
-            <xsl:value-of select="count(sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/notes/')) and not(contains(sitemap:loc, '/tags/')) and not(contains(sitemap:loc, '/event')) and not(contains(sitemap:loc, '/bookmarks/'))])"/>
+            <xsl:value-of select="count(sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/notes/')) and not(contains(sitemap:loc, '/tags/')) and not(contains(sitemap:loc, '/event'))])"/>
           </summary>
           <xsl:call-template name="rows">
             <xsl:with-param
               name="nodes"
-              select="sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/notes/')) and not(contains(sitemap:loc, '/tags/')) and not(contains(sitemap:loc, '/event')) and not(contains(sitemap:loc, '/bookmarks/'))]"
+              select="sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/notes/')) and not(contains(sitemap:loc, '/tags/')) and not(contains(sitemap:loc, '/event'))]"
             />
           </xsl:call-template>
         </details>
@@ -81,19 +81,6 @@
             <xsl:with-param
               name="nodes"
               select="sitemap:urlset/sitemap:url[contains(sitemap:loc, '/tags/')]"
-            />
-          </xsl:call-template>
-        </details>
-
-        <details>
-          <summary>
-            <xsl:text>bookmarks · </xsl:text>
-            <xsl:value-of select="count(sitemap:urlset/sitemap:url[contains(sitemap:loc, '/bookmarks/')])"/>
-          </summary>
-          <xsl:call-template name="rows">
-            <xsl:with-param
-              name="nodes"
-              select="sitemap:urlset/sitemap:url[contains(sitemap:loc, '/bookmarks/')]"
             />
           </xsl:call-template>
         </details>

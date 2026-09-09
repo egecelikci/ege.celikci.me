@@ -2,7 +2,7 @@ export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",
   description:
-    "Ege Çelikçi’s personal website: ephemeral notes, occasional writing, curated music, bookmarks, music events in İzmir and small tools.",
+    "Ege Çelikçi’s personal website: ephemeral notes, occasional writing, curated music, music events in İzmir and small tools.",
   lang: "en",
   locale: "en_US",
   url: "https://ege.celikci.me",

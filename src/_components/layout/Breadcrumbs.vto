@@ -26,7 +26,7 @@
 {{ if it.navigation?.parent }}
   {{ set parentTrail = nav.breadcrumb(it.navigation.parent) }}
 
-  {{# Manual fallback for generated intermediate pages (e.g. /bookmarks/) that aren't in Lume's nav tree #}}
+  {{# Manual fallback for generated intermediate pages (e.g. /tags/kedi/) that aren't in Lume's nav tree #}}
   {{ if parentTrail.length <= 1 && it.navigation.parent !== "/" }}
     {{ set rootNode = nav.breadcrumb("/")[0] }}
     {{
