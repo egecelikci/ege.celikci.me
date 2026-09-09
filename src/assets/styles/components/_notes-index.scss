@@ -9,22 +9,20 @@
     }
   }
 
+  /* year groups speak the same language as entry-timeline groups:
+     index gap (between years) = timeline gap, month gap
+     (header to rows) = timeline group gap */
+  .notes-year {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  /* month landmarks inside the year: same 1.5rem header-to-list
+     rhythm as entry-timeline__group, rows keep their own padding */
   .notes-month {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-
-    /* month headers speak the same language as the games group titles */
-    .section-header__title--label {
-      font-size: 1.25rem;
-      text-transform: none;
-      letter-spacing: normal;
-      color: var(--color-text-dim);
-    }
-
-    /* the month header leads straight into its first card */
-    .entry-row:first-of-type {
-      padding-block-start: 0;
-    }
   }
 }

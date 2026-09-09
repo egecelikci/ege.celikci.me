@@ -21,59 +21,76 @@ navigation:
 }}
 {{ set monthKeys = Object.keys(byMonth) }}
 {{ set years = [...new Set(monthKeys.map((k) => k.slice(0, 4)))] }}
+{{ set railItems = [] }}
+{{ for year of years }}
+  {{
+    set railItems = railItems.concat([{
+      target: `year-${year}`,
+      text: year,
+      variant: "primary",
+      year: year,
+      ariaLabel: `notes from ${year}`,
+    }])
+  }}
+  {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
+  {{ for mk of yKeys }}
+    {{
+      set railItems = railItems.concat([{
+        target: mk,
+        text: monthNames[Number(mk.slice(5)) - 1],
+        variant: "sub",
+        year: year,
+        ariaLabel: `notes from ${monthNames[Number(mk.slice(5)) - 1]} ${year}`,
+      }])
+    }}
+  {{ /for }}
+{{ /for }}
 
 {{ if notes.length }}
-  <div class="rail-layout">
-  <nav class="rail" aria-label="jump to month">
-      {{ for year of years }}
-        {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
-        <a
-          href="#{{ yKeys[0] }}"
-          class="rail__link rail__link--primary"
-          data-target="{{ yKeys[0] }}"
-          data-year="{{ year }}"
-          aria-label="notes from {{ year }}"
-        >{{ year }}</a>
-        {{ for mk of yKeys }}
-          <a
-            href="#{{ mk }}"
-            class="rail__link rail__link--sub"
-            data-target="{{ mk }}"
-            data-year="{{ year }}"
-            aria-label="notes from {{ monthNames[Number(mk.slice(5)) - 1] }} {{ year }}"
-          >{{ monthNames[Number(mk.slice(5)) - 1] }}</a>
-        {{ /for }}
-      {{ /for }}
-    </nav>
+  {{ await comp.ui.Rail({ label: "jump to month", items: railItems }) }}
 
-  <div class="rail-layout__main">
-    <div class="h-feed notes-index">
-    {{ for mk of monthKeys }}
+  <div class="h-feed notes-index">
+    {{ for year of years }}
       <section
-        class="notes-month"
-        id="{{ mk }}"
-        data-year="{{ mk.slice(0, 4) }}"
+        class="notes-year"
+        id="year-{{ year }}"
+        data-year="{{ year }}"
       >
         {{
           await comp.ui.SectionHeader({
-            title: `${monthNames[Number(mk.slice(5)) - 1]} ${mk.slice(0, 4)}`,
-            variant: "label",
+            title: year,
+            variant: "large",
           })
         }}
-        {{ for item of byMonth[mk] }}
-          {{
-            await comp.ui.EntryRow({
-              entry: item,
-              showDate: true,
-              hideLabel: true,
-            })
-          }}
+        {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
+        {{ for mk of yKeys }}
+          <section
+            class="notes-month"
+            id="{{ mk }}"
+            data-year="{{ year }}"
+          >
+            {{
+              await comp.ui.SectionHeader({
+                title: `${monthNames[Number(mk.slice(5)) - 1]} ${year}`,
+                variant: "label",
+                level: 3,
+              })
+            }}
+            {{ for item of byMonth[mk] }}
+              {{
+                await comp.ui.EntryRow({
+                  entry: item,
+                  showDate: true,
+                  hideLabel: true,
+                  hideYear: true,
+                })
+              }}
+            {{ /for }}
+          </section>
         {{ /for }}
       </section>
     {{ /for }}
-      </div>
   </div>
-</div>
 {{ else }}
   <div class="notes-index__empty">
     {{

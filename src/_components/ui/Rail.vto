@@ -1,0 +1,38 @@
+{{#
+  Component: Rail
+  Fixed overlay jump-navigation (notes years, games letters, ...).
+  Zero layout cost: no .rail-layout wrapper needed. JS (initRail)
+  picks up any `.rail a[data-target]` automatically.
+
+  Props:
+    - label: string (aria-label, e.g. "jump to month")
+    - items: array of {
+        target: string | null (section id; null renders empty placeholder),
+        text: string,
+        variant: "primary" | "sub" | "" (default ""),
+        year: string (optional, for cross-highlighting),
+        dataLabel: string (optional, aperture label override),
+        ariaLabel: string (optional),
+      }
+    - classes: string (optional extra classes)
+#}}
+
+{{ set items = it.items || [] }}
+
+<nav class="rail rail--overlay {{ it.classes || " " }}"
+  aria-label="{{ it.label || " jump to section" }}">
+  {{ for item of items }}
+    {{ if item.target }}
+      <a
+        href="#{{ item.target }}"
+        class="rail__link {{ if item.variant }}rail__link--{{ item.variant }}{{ /if }}"
+        data-target="{{ item.target }}"
+        {{ if item.year }}data-year="{{ item.year }}"{{ /if }}
+        {{ if item.dataLabel }}data-label="{{ item.dataLabel }}"{{ /if }}
+        {{ if item.ariaLabel }}aria-label="{{ item.ariaLabel }}"{{ /if }}
+      >{{ item.text }}</a>
+    {{ else }}
+      <span class="rail__link rail__link--empty" aria-hidden="true">{{ item.text }}</span>
+    {{ /if }}
+  {{ /for }}
+</nav>

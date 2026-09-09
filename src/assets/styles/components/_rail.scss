@@ -1,34 +1,21 @@
 @layer components {
-  .rail-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 3rem;
-    column-gap: 0.5rem;
-    align-items: start;
-  }
-
-  .rail-layout__main {
-    grid-column: 1;
-    grid-row: 1;
-    min-width: 0;
-  }
+  /* The rail is a fixed overlay — zero layout cost. No .rail-layout
+     wrapper needed: render <Rail> anywhere inside the page and it
+     floats at the viewport edge. JS (initRail) wires it up by class. */
 
   .rail {
-    grid-column: 2;
-    grid-row: 1;
-    position: sticky;
-    /* park exactly on the anchor landing line (html scroll-padding-top),
-       so #A/#month jumps seat the rail's top edge on the same rule as the
-       target heading pinned under the header */
-    top: calc(var(--header-height) + 1px);
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
     z-index: 90;
-    width: 100%;
-    padding-inline-end: 0.25rem;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    max-height: calc(100vh - var(--header-height) - 1px);
+    max-height: calc(100vh - 7rem);
     overflow-y: auto;
     scrollbar-width: none;
+    padding-inline-end: 0.5rem;
     touch-action: none;
     user-select: none;
     -webkit-user-select: none;
@@ -89,13 +76,11 @@
   }
 
   @media (max-width: 40rem) {
-    .rail-layout {
-      grid-template-columns: minmax(0, 1fr) 2.5rem;
-    }
-
-    .rail__link {
-      width: 2.25rem;
-      font-size: 0.5625rem;
+    /* tuck the rail away on small screens: it would cover the text
+       it is meant to navigate, and month/year headers carry the
+       wayfinding there instead */
+    .rail {
+      display: none;
     }
   }
 }
