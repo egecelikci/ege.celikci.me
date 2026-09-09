@@ -27,33 +27,36 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
 ---
 
 {{ set letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("") }}
-{{ set rest = (games?.games || []).filter((g) => !/^[A-Za-z]/.test(g.name || "")) }}
-{{
-  set railItems = letters.map((letter) =>
-    games.games.some((g) => (g.name[0] || "").toUpperCase() === letter)
-      ? {
-        target: letter,
-        text: letter,
-        dataLabel: letter,
-        ariaLabel: `games starting with ${letter}`,
-      }
-      : { target: null, text: letter })
-}}
-{{ if rest.length }}
-  {{ set railItems = railItems.concat([{ target: "other", text: "#", dataLabel: "#", ariaLabel: "games starting with other characters" }]) }}
-{{ /if }}
+{{ set gameList = games?.games || [] }}
+{{ set rest = gameList.filter((g) => !/^[A-Za-z]/.test(g.name || "")) }}
 
-{{ if games?.games?.length }}
+{{ if gameList.length }}
+  {{
+    set railItems = letters.map((letter) =>
+      gameList.some((g) => (g.name[0] || "").toUpperCase() === letter)
+        ? {
+          target: letter,
+          text: letter,
+          dataLabel: letter,
+          ariaLabel: `games starting with ${letter}`,
+        }
+        : { target: null, text: letter })
+  }}
+  {{ if rest.length }}
+    {{ set railItems = railItems.concat([{ target: "other", text: "#", dataLabel: "#", ariaLabel: "games starting with other characters" }]) }}
+  {{ /if }}
+
   {{ await comp.ui.Rail({ label: "jump to letter", items: railItems }) }}
 
   <div class="game-list">
     {{ for letter of letters }}
-      {{ set group = games.games.filter((g) => (g.name[0] || "").toUpperCase() === letter) }}
+      {{ set group = gameList.filter((g) => (g.name[0] || "").toUpperCase() === letter) }}
       {{ if group.length }}
         <section
           class="game-group"
           id="{{ letter }}"
           aria-label="games starting with {{ letter }}"
+          tabindex="-1"
         >
           <span class="game-group__ghost" aria-hidden="true">{{ letter }}</span>
           <h2 class="game-group__title">{{ letter }}</h2>
@@ -70,6 +73,7 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
         class="game-group"
         id="other"
         aria-label="games starting with other characters"
+        tabindex="-1"
       >
         <span class="game-group__ghost" aria-hidden="true">#</span>
         <h2 class="game-group__title">#</h2>

@@ -19,7 +19,7 @@
 
 {{ set items = it.items || [] }}
 
-<nav class="rail rail--overlay {{ it.classes || " " }}"
+<nav class="rail{{ if it.classes }} {{ it.classes }}{{ /if }}"
   aria-label="{{ it.label || " jump to section" }}">
   {{ for item of items }}
     {{ if item.target }}

@@ -36,12 +36,15 @@ export function initRail(rail: HTMLElement) {
     const section = sections.get(id)!;
 
     for (const link of links) {
-      const on = link.dataset.target === id ||
-        (link.classList.contains("rail__link--primary") &&
-          link.dataset.year !== undefined &&
-          section.dataset.year === link.dataset.year);
-      link.classList.toggle("is-active", on);
-      if (on) link.setAttribute("aria-current", "true");
+      const exact = link.dataset.target === id;
+      // parent year links light up alongside their month, but only the
+      // exact target is announced as current (single aria-current per nav)
+      const grouped = !exact &&
+        link.classList.contains("rail__link--primary") &&
+        link.dataset.year !== undefined &&
+        section.dataset.year === link.dataset.year;
+      link.classList.toggle("is-active", exact || grouped);
+      if (exact) link.setAttribute("aria-current", "location");
       else link.removeAttribute("aria-current");
     }
   }
@@ -123,19 +126,21 @@ export function initRail(rail: HTMLElement) {
 
   rail.addEventListener("pointerdown", (e) => {
     const link = linkAt(e.clientX, e.clientY);
-    if (!link?.dataset.target) return;
+    const id = link?.dataset.target;
+    if (!id || !sections.has(id)) return;
     scrubbing = true;
     try {
       rail.setPointerCapture(e.pointerId);
     } catch {
     }
-    jump(link.dataset.target, false);
+    jump(id, false);
   });
 
   rail.addEventListener("pointermove", (e) => {
     if (!scrubbing) return;
     const link = linkAt(e.clientX, e.clientY);
-    if (link?.dataset.target) jump(link.dataset.target, false);
+    const id = link?.dataset.target;
+    if (id && sections.has(id)) jump(id, false);
   });
 
   const stop = () => {
@@ -149,10 +154,14 @@ export function initRail(rail: HTMLElement) {
     const link = (e.target as HTMLElement).closest(
       "a[data-target]",
     ) as HTMLAnchorElement | null;
-    if (!link?.dataset.target) return;
+    const id = link?.dataset.target;
+    // unknown target: don't intercept, let the native anchor do its job
+    if (!id || !sections.has(id)) return;
     e.preventDefault();
     if (Date.now() - draggedAt < 300) return;
-    jump(link.dataset.target, true);
+    jump(id, true);
+    // move context to the destination so keyboard/SR users land with it
+    sections.get(id)?.focus({ preventScroll: true });
   });
 
   update();

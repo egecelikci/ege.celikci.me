@@ -7,6 +7,7 @@
     - title: string | number (The main text, e.g. "2026", "Past Events")
     - variant: "large" | "label" (default: "label")
     - level: 2 | 3 | 4 (The heading level, default: 2)
+    - id: string (Optional id on the heading, for aria-labelledby)
     - sticky: boolean (default: false)
     - rightContent: html/string (Optional content for the right side)
     - classes: string (Optional wrapper classes)
@@ -22,7 +23,7 @@
   {{ if isLarge }}
     <{{ tag }}
     class="section-header__title--large"
-    aria-hidden="true" >
+    {{ if it.id }}id="{{ it.id }}"{{ /if }}>
     {{ it.title }}
     </{{ tag }}>
     <div
@@ -32,7 +33,8 @@
     </div>
   {{ else }}
     <{{ tag }}
-    class="section-header__title--label">
+    class="section-header__title--label"
+    {{ if it.id }}id="{{ it.id }}"{{ /if }}>
     {{ it.title }}
     </{{ tag }}>
     <div

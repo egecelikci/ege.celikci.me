@@ -55,11 +55,14 @@ navigation:
         class="notes-year"
         id="year-{{ year }}"
         data-year="{{ year }}"
+        tabindex="-1"
+        aria-labelledby="year-{{ year }}-title"
       >
         {{
           await comp.ui.SectionHeader({
             title: year,
             variant: "large",
+            id: `year-${year}-title`,
           })
         }}
         {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
@@ -68,12 +71,15 @@ navigation:
             class="notes-month"
             id="{{ mk }}"
             data-year="{{ year }}"
+            tabindex="-1"
+            aria-labelledby="{{ mk }}-title"
           >
             {{
               await comp.ui.SectionHeader({
                 title: `${monthNames[Number(mk.slice(5)) - 1]} ${year}`,
                 variant: "label",
                 level: 3,
+                id: `${mk}-title`,
               })
             }}
             {{ for item of byMonth[mk] }}
@@ -94,7 +100,7 @@ navigation:
 {{ else }}
   <div class="notes-index__empty">
     {{
-      comp.base.EmptyState({
+      await comp.base.EmptyState({
         icon: "message-square",
         title: "no notes found",
         description: "once you publish a note, it will appear on this timeline",

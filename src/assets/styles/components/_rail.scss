@@ -16,7 +16,9 @@
     overflow-y: auto;
     scrollbar-width: none;
     padding-inline-end: 0.5rem;
-    touch-action: none;
+    /* let touch users pan an overflowing rail; the scrub gesture only
+       takes over while a pointer is held down on a link */
+    touch-action: pan-y;
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -29,6 +31,8 @@
   .rail__link {
     display: block;
     width: 2.75rem;
+    /* WCAG 2.5.8: keep a 24px target even though the glyph is small */
+    min-height: 1.5rem;
     padding-block: 0.125rem;
     border-block-end: 1px solid var(--color-border-subtle);
     text-align: right;
@@ -46,6 +50,12 @@
 
     &:hover {
       opacity: 0.8;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+      opacity: 1;
     }
 
     &.is-active {
@@ -75,10 +85,10 @@
     }
   }
 
-  @media (max-width: 40rem) {
-    /* tuck the rail away on small screens: it would cover the text
-       it is meant to navigate, and month/year headers carry the
-       wayfinding there instead */
+  /* tuck the rail away below the md breakpoint: it would cover the
+     text it is meant to navigate, and month/year headers carry the
+     wayfinding there instead */
+  @media (max-width: 48em) {
     .rail {
       display: none;
     }
