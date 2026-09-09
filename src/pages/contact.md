@@ -21,8 +21,8 @@ Don't hesitate to reach out to me on any of these!
 
 {{ if matrix?.url }}
 
-- [Matrix]({{ matrix.url }}) — verify device IDs [first]({{ matrix.keyUrl ?? "/keys#matrix" }})
-  {{ /if }}
+- [Matrix]({{ matrix.url }}) — verify [device IDs]({{ matrix.keyUrl ?? "/keys#matrix" }})
+  {{ /if }} first
 
 {{ if email?.url || author.email }}
 

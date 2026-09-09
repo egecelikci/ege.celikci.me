@@ -18,4 +18,4 @@ additionally, some pages might be under a different license. please check the pa
 
 ### third-party assets
 
-please note that certain assets used on this site: such as event poster covers, album artwork and specific media elements (like reposts) **do not** belong to me. these items are the property of their respective owners and are **excluded** from the CC BY-SA 4.0 license. you must obtain permission from the original copyright holders before reusing third-party party assets.
+please note that certain assets used on this site: such as event poster covers, album artwork and specific media elements **do not** belong to me. these items are the property of their respective owners and are **excluded** from the CC BY-SA 4.0 license. you must obtain permission from the original copyright holders before reusing third-party party assets.

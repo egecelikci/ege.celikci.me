@@ -52,58 +52,17 @@
   {{ set displayTitle = "note" }}
 {{ /if }}
 
-{{ set backlinkData = it.backlink }}
-
-{{ if !backlinkData && it.navigation?.parent }}
-  {{
-    set backlinkData = {
-      href: it.navigation.parent,
-      text: it.navigation.parentTitle ||
-        it.navigation.parent.split("/").filter(Boolean).pop(),
-    }
-  }}
-{{ /if }}
-
-{{ if it.backlink === undefined || it.backlink === true }}
-  {{ if it.type === "post" }}
-    {{ set backlinkData = { href: "/blog/", text: "writing" } }}
-  {{ else if it.type === "note" }}
-    {{ set backlinkData = { href: "/notes/", text: "notes" } }}
-  {{ else if it.type === "tag" }}
-    {{ set backlinkData = { href: "/tags/", text: "topics" } }}
-  {{ /if }}
-{{ /if }}
-
 {{ set isCentered = it.centered || false }}
 
 <section
   class="page-header {{ if isCentered }}page-header--centered{{ /if }}"
 >
   <div class="page-header__body">
-    <div class="page-header__nav">
-      <div
-        class="page-header__nav-left {{ if isCentered }}page-header__nav-left--centered{{ /if }}"
-      >
-        {{ if backlinkData }}
-          {{
-            await it.comp.base.Backlink({
-              href: backlinkData.href,
-              text: backlinkData.text,
-              url: it.url,
-            })
-          }}
-        {{ else }}
-          <span class="page-header__nav-placeholder" aria-hidden="true"
-          >&nbsp;</span>
-        {{ /if }}
+    {{ if it.alternates && it.alternates.length > 1 }}
+      <div class="page-header__nav page-header__nav--actions">
+        {{ comp.layout.LanguageSwitcher(it) }}
       </div>
-
-      {{ if !isCentered }}
-        <div class="page-header__actions">
-          {{ comp.layout.LanguageSwitcher(it) }}
-        </div>
-      {{ /if }}
-    </div>
+    {{ /if }}
 
     <h1
       class="page-header__title p-name {{ if it.type === 'tag' }}page-header__title--tag{{ /if }}"

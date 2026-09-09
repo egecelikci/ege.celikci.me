@@ -62,10 +62,8 @@ export default function () {
 
         const isNote = page.src.path.startsWith("/notes/") ||
           page.data.type === "note";
-        const isPost = page.src.path.startsWith("/blog/") ||
-          page.data.type === "post";
 
-        if (!isNote && !isPost) continue;
+        if (!isNote) continue;
 
         const content = page.data.content;
         if (typeof content !== "string" || content.length === 0) continue;

@@ -4,8 +4,8 @@ export default [
   {
     id: "main",
     title: "site feed",
-    description: "this one includes blog posts and notes",
-    query: "type=post|note",
+    description: "this one includes notes",
+    query: "type=note",
     limit: 1000,
     output: ["/feed.atom", "/feed.json"],
     info: {
@@ -20,16 +20,6 @@ export default [
     output: ["/notes.atom", "/notes.json"],
     info: {
       title: `notes | ${siteData.host}`,
-      description: siteData.description,
-    },
-  },
-  {
-    id: "blog",
-    query: "type=post",
-    limit: 1000,
-    output: ["/blog.atom", "/blog.json"],
-    info: {
-      title: `blog | ${siteData.host}`,
       description: siteData.description,
     },
   },

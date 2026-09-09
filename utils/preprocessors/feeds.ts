@@ -53,7 +53,6 @@ function injectFeedSources(
         props: raw.props ?? { sources: [] },
       };
     } else {
-      // Shorthand: extension IS the props
       extension = {
         comp: "layout.SourceMeta",
         props: raw,
@@ -66,13 +65,11 @@ function injectFeedSources(
     };
   }
 
-  // Handle sources as array or single object shorthand
   let sources = extension.props.sources || [];
   if (!Array.isArray(sources)) {
     sources = [sources];
   }
 
-  // If no sources but there are root props (shorthand label/url), migrate them
   if (sources.length === 0 && extension.props.label && extension.props.url) {
     sources.push({
       label: extension.props.label,
@@ -80,14 +77,12 @@ function injectFeedSources(
       icon: extension.props.icon,
       catalog: extension.props.catalog,
     });
-    // Clean up migrated props to avoid double-rendering
     delete extension.props.label;
     delete extension.props.url;
     delete extension.props.icon;
     delete extension.props.catalog;
   }
 
-  // Add feeds if not already present
   if (!sources.find((s) => s.url === atomUrl)) {
     sources.push({ label: "Atom Feed", url: atomUrl });
   }
@@ -111,22 +106,16 @@ export default function () {
         const pageUrl = page.data.url as string;
         if (!pageUrl) continue;
 
-        // --- AUTOMATIC FEED PROMOTION ---
-        // 1. Index Pages
-        if (pageUrl === "/blog/") {
-          injectFeedSources(page, "/blog.atom", "/blog.json");
-        } else if (pageUrl === "/notes/") {
+        if (pageUrl === "/notes/") {
           injectFeedSources(page, "/notes.atom", "/notes.json");
         } else if (pageUrl === "/events/") {
           injectFeedSources(page, "/events.atom", "/events.json");
         }
 
-        // 2. Tag Pages
         if (page.data.type === "tag" && page.data.tag) {
           const slug = slugify(page.data.tag as string);
           injectFeedSources(page, `/tags/${slug}.atom`, `/tags/${slug}.json`);
 
-          // Custom override for 'kedi' tag: promote subversive.pics
           if (page.data.tag === "kedi") {
             const extension = page.data.headerExtension;
             if (

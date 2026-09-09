@@ -1,6 +1,7 @@
 @use "../utils/variables";
 @layer components {
   .page-header {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -22,6 +23,7 @@
     }
 
     &__body {
+      position: relative;
       flex-grow: 1;
       min-width: 0;
       display: flex;
@@ -33,30 +35,17 @@
       }
     }
 
-    &__nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 1.5rem;
-    }
-
-    &__nav-left {
-      display: flex;
-      align-items: center;
-
-      &--centered {
-        justify-content: center;
-        width: 100%;
-      }
-    }
-
-    &__nav-placeholder {
-      opacity: 0;
-      cursor: default;
-    }
-
-    &__actions {
+    &__nav--actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 10;
       view-transition-name: page-header-actions;
+    }
+
+    /* keep long titles from sliding under the floating switcher */
+    &__nav--actions ~ .page-header__title {
+      padding-inline-end: 7rem;
     }
 
     &__title {
