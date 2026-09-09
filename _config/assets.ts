@@ -90,6 +90,7 @@ export default function (options: AssetOptions = {}) {
       .use(transformImages())
       .add("assets/images")
       .add("assets/fonts")
+      .add("sitemap.xsl")
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
       .add("assets/styles/site.scss")

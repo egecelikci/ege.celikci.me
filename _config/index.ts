@@ -71,7 +71,9 @@ export default function () {
       .use(date({
         formats: { URL: "yyyyMMddHHmmss" },
       }))
-      .use(sitemap())
+      .use(sitemap({
+        stylesheet: "/sitemap.xsl",
+      }))
       .use(robots({
         rules: [
           {
