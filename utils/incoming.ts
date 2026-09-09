@@ -13,6 +13,8 @@ export interface IncomingEntry {
   title: string;
   /** page language; missing means the site default language */
   lang?: string;
+  /** page date; feeds the untitled-note fallback title */
+  date?: Date | string;
   /** tags on the page itself */
   tags?: string[];
   /** absolute internal links found in the prose body, e.g. ["/music/"] */
@@ -46,6 +48,50 @@ export function normalizeUrl(url: string): string {
 }
 
 /**
+ * Display title for a graph node. Untitled notes fall back to
+ * `note from <date>` — the same grammar as <title> and pagefind
+ * metadata — so every standalone reference is self-identifying.
+ */
+export function noteTitle(title: string, date?: Date | string): string {
+  if (title) return title;
+  const parsed = date instanceof Date ? date : date ? new Date(date) : null;
+  if (!parsed || isNaN(parsed.getTime())) return "note";
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Istanbul",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(parsed);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  // en-GB abbreviates September as "Sept"; the template `MMM` grammar
+  // (and every existing string) uses "Sep"
+  const month = get("month") === "Sept" ? "Sep" : get("month");
+  return `note from ${get("day")} ${month} ${get("year")} ${get("hour")}:${
+    get("minute")
+  }`;
+}
+
+/**
+ * Internal link targets declared in frontmatter `sources`
+ * (e.g. taken-at places on notes). Only absolute internal paths
+ * join the graph; external URLs stay display-only.
+ */
+export function frontmatterLinks(sources: unknown): string[] {
+  if (!Array.isArray(sources)) return [];
+  const found = new Set<string>();
+  for (const source of sources) {
+    const url = (source as { url?: unknown } | null)?.url;
+    if (typeof url === "string" && url.startsWith("/")) {
+      found.add(normalizeUrl(url));
+    }
+  }
+  return [...found];
+}
+
+/**
  * Build the reverse index: for every page, who links to it.
  * Tag edges: a tag page gains every page carrying that tag.
  * Body edges: prose links between existing pages.
@@ -72,7 +118,7 @@ export function buildIncoming(
     if (effectiveLang(from.lang) !== effectiveLang(target.lang)) return;
     if (!edges.has(to)) edges.set(to, new Map());
     edges.get(to)!.set(from.url, {
-      title: from.title || "note",
+      title: noteTitle(from.title, from.date),
       url: from.url,
     });
   };

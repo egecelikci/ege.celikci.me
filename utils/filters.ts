@@ -4,6 +4,7 @@ import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
 import gitData from "../src/_data/git.ts";
 import { getLinkInfo, linkPriority } from "./links.ts";
+import { noteTitle as buildNoteTitle } from "./incoming.ts";
 
 const SITE_URL = siteData.url;
 const OWN_URLS = [
@@ -105,6 +106,21 @@ export const filters = {
       return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
     }
     return num;
+  },
+
+  /**
+   * Display title for a page: authored title, or `note from <date>`
+   * for untitled notes. Single source of truth shared with the
+   * incoming graph (see utils/incoming.ts noteTitle).
+   */
+  noteTitle: function (
+    data: { title?: unknown; date?: unknown },
+  ): string {
+    const title = typeof data?.title === "string" ? data.title : "";
+    const date = data?.date instanceof Date || typeof data?.date === "string"
+      ? data.date
+      : undefined;
+    return buildNoteTitle(title, date);
   },
   extractImages: (content: string) => {
     if (!content) return [];

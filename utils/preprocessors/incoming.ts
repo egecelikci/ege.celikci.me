@@ -8,18 +8,21 @@
 import {
   buildIncoming,
   extractBodyLinks,
+  frontmatterLinks,
   type IncomingEntry,
 } from "../incoming.ts";
 
 function entryOf(page: Lume.Page): IncomingEntry {
   const data = page.data;
   const source = data.content;
+  const bodyLinks = typeof source === "string" ? extractBodyLinks(source) : [];
   return {
     url: data.url as string,
     title: (data.title as string | undefined) ?? "",
     lang: data.lang as string | undefined,
+    date: data.date as Date | undefined,
     tags: (data.tags as string[] | undefined) ?? [],
-    bodyLinks: typeof source === "string" ? extractBodyLinks(source) : [],
+    bodyLinks: [...bodyLinks, ...frontmatterLinks(data.sources)],
   };
 }
 

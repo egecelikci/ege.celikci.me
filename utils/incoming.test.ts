@@ -4,7 +4,13 @@
  */
 
 import { assertEquals } from "@std/assert";
-import { buildIncoming, extractBodyLinks, normalizeUrl } from "./incoming.ts";
+import {
+  buildIncoming,
+  extractBodyLinks,
+  frontmatterLinks,
+  normalizeUrl,
+  noteTitle,
+} from "./incoming.ts";
 
 Deno.test("extractBodyLinks finds markdown and html links", () => {
   assertEquals(
@@ -15,6 +21,21 @@ Deno.test("extractBodyLinks finds markdown and html links", () => {
     ).sort(),
     ["/music/page/", "/notes/", "/tags/coffee/"],
   );
+});
+
+Deno.test("frontmatterLinks keeps internal source paths only", () => {
+  assertEquals(
+    frontmatterLinks([
+      { label: "Komün", url: "/komun" },
+      { label: "Elsewhere", url: "https://example.com/" },
+      { label: "No link" },
+      "not-an-object",
+      null,
+    ]),
+    ["/komun/"],
+  );
+  assertEquals(frontmatterLinks(undefined), []);
+  assertEquals(frontmatterLinks("nope"), []);
 });
 
 Deno.test("normalizeUrl unifies trailing slashes and drops fragments", () => {
@@ -106,6 +127,51 @@ Deno.test("buildIncoming matches translated targets with their language", () => 
     {
       title: "Etkinliklere Nasıl Katkıda Bulunulur",
       url: "/tr/events/contribute/",
+    },
+  ]);
+});
+
+Deno.test("noteTitle prefers the authored title", () => {
+  assertEquals(noteTitle("Hello", new Date()), "Hello");
+});
+
+Deno.test("noteTitle falls back to note from DATE", () => {
+  assertEquals(
+    noteTitle("", new Date("2026-08-24T21:33:00+03:00")),
+    "note from 24 Aug 2026 21:33",
+  );
+  assertEquals(
+    noteTitle("", "2026-08-24T21:33:00+03:00"),
+    "note from 24 Aug 2026 21:33",
+  );
+});
+
+Deno.test("noteTitle degrades to bare note without a usable date", () => {
+  assertEquals(noteTitle(""), "note");
+  assertEquals(noteTitle("", "not-a-date"), "note");
+});
+
+Deno.test("noteTitle abbreviates September like the template grammar", () => {
+  assertEquals(
+    noteTitle("", new Date("2025-09-05T21:22:00+03:00")),
+    "note from 05 Sep 2025 21:22",
+  );
+});
+
+Deno.test("buildIncoming labels untitled linkers by date", () => {
+  const result = buildIncoming([
+    { url: "/komun/", title: "Komün" },
+    {
+      url: "/notes/20260824213331/",
+      title: "",
+      date: new Date("2026-08-24T21:33:00+03:00"),
+      bodyLinks: ["/komun/"],
+    },
+  ]);
+  assertEquals(result.get("/komun/"), [
+    {
+      title: "note from 24 Aug 2026 21:33",
+      url: "/notes/20260824213331/",
     },
   ]);
 });
