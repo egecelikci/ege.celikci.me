@@ -2,6 +2,7 @@
 {{#
   Component: Video (Universal Wrapper)
   Displays a video (YouTube, PeerTube, etc.) with click-to-load functionality.
+  Requires `id` or `src`; renders nothing without either.
 #}}
 {{- set safeTitle = title || "video" -}}
 
@@ -56,8 +57,10 @@
 {{- /if }}
 {{- /set -}}
 
+{{- if id || src -}}
 {{- await it.comp.ui.Card({
     classes: "ledger-card--flush " + (it.classes || ""),
     attributes: it.attributes,
     content: cardContent,
   }) -}}
+{{- /if -}}

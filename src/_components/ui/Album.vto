@@ -11,7 +11,7 @@
 #}}
 
 {{>
-  const artistNames = it.album["artist-credit"].map((ac) => ac.name).join(
+  const artistNames = (it.album["artist-credit"] ?? []).map((ac) => ac.name).join(
     " · ",
   )
 }}

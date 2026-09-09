@@ -17,5 +17,5 @@ class="tag {{ it.classes }}"
 {{ it.attributes |> attr |> safe }}
 >
 <span class="tag__hash">#</span>
-<span>{{ it.content |> safe }}</span>
+<span>{{ it.content |> escape }}</span>
 </{{ tag }}>

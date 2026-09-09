@@ -1,13 +1,15 @@
 {{ if it.entries && it.entries.length > 0 }}
   {{>
     const groupBy = it.groupBy || "month";
+    // dates may arrive as strings (frontmatter) or Date objects (Lume)
+    const dateOf = (item) => item.date instanceof Date ? item.date : new Date(item.date);
     const grouped = groupBy === "none" ? { "all": it.entries } : Object.groupBy(
       it.entries,
       (item) => {
         if (groupBy === "year") {
-          return item.date.getFullYear().toString();
+          return dateOf(item).getFullYear().toString();
         }
-        return item.date.toLocaleDateString("en-GB", {
+        return dateOf(item).toLocaleDateString("en-GB", {
           month: "long",
           year: "numeric",
         });

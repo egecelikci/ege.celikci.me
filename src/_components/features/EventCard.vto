@@ -9,7 +9,7 @@
 {{
   set artistNames = it.event.relations
   ?.filter((r) => r["target-type"] === "artist")
-  ?.map((r) => r["target-credit"] || r.artist.name)
+  ?.map((r) => r["target-credit"] || r.artist?.name)
   ?.join(" ") || ""
 }}
 {{ set cardClass = "event-card ledger-card" }}
