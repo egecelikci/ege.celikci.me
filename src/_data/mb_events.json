@@ -622,6 +622,16 @@
         "url": "https://www.instagram.com/hatemossband/"
       }
     ],
+    "48db8435-187e-4b09-86c0-f733427acbfe": [
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/user-585014573"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/kozmos.wav/"
+      }
+    ],
     "491a69b3-f2af-4009-9e25-fe7904cab4a8": [
       {
         "type": "youtube music",
@@ -1117,6 +1127,20 @@
     "7e8567c3-8655-45a6-b404-36c4174604ca": [],
     "7ed3bedf-7ac7-4ec6-a65a-84c77cef8bfc": [],
     "829ed655-63f4-4b79-9b62-8dbc4d25f754": [],
+    "82a1ea23-79a9-4fbc-9d65-37f89c7ef7fa": [
+      {
+        "type": "bandcamp",
+        "url": "https://cohds.bandcamp.com/"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/cohds9"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/cohds_/"
+      }
+    ],
     "82d3e17c-b01f-426d-b139-57c40833cea9": [],
     "835fbaf8-9fb6-4434-8b3e-9aedc5e3222d": [
       {
@@ -1128,6 +1152,36 @@
       {
         "type": "social network",
         "url": "https://www.instagram.com/edaddincer.ink/"
+      }
+    ],
+    "85791849-64cb-45ba-9a89-a3d37b8f0261": [
+      {
+        "type": "bandcamp",
+        "url": "https://berenalp.bandcamp.com/"
+      },
+      {
+        "type": "official homepage",
+        "url": "https://berenalp.com/"
+      },
+      {
+        "type": "free streaming",
+        "url": "https://open.spotify.com/artist/5nc4w0Og51sLsGyfwvl46o"
+      },
+      {
+        "type": "other databases",
+        "url": "https://ra.co/dj/berenalp"
+      },
+      {
+        "type": "soundcloud",
+        "url": "https://soundcloud.com/berenalp"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/berenalp____________/"
+      },
+      {
+        "type": "youtube",
+        "url": "https://www.youtube.com/channel/UCk6Nj1zGmB8-P7DxlPblyAQ"
       }
     ],
     "85cf2dea-d08f-4593-b6b3-1cb1dd2e05f6": [],
@@ -1212,6 +1266,12 @@
       {
         "type": "social network",
         "url": "https://www.instagram.com/underthehorn/"
+      }
+    ],
+    "92317cdc-2b78-4441-8569-918b82cc2af7": [
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/ozanbydmr/"
       }
     ],
     "948ad07f-4106-41c3-a32f-9fb83e375395": [
@@ -1759,6 +1819,16 @@
         "url": "https://www.discogs.com/artist/11241608"
       }
     ],
+    "c3de5bf4-24d5-4bd7-8885-2699496dca31": [
+      {
+        "type": "official site",
+        "url": "https://inbasswetrust.club/"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/inbasswetrust_______/"
+      }
+    ],
     "c4e951f9-de18-459e-a940-928dcff2f637": [
       {
         "type": "social network",
@@ -1813,6 +1883,7 @@
         "url": "https://www.instagram.com/randominputx/"
       }
     ],
+    "c680c5ae-7b0d-4988-ba01-224e32d3bd03": [],
     "c882a74f-8eac-40b1-8b85-6883e6e29446": [
       {
         "type": "soundcloud",
@@ -1920,6 +1991,7 @@
       }
     ],
     "d12440ab-46cf-4699-8018-b6a0535e7cf6": [],
+    "d381be74-f302-42a2-917e-ea3c47e4e016": [],
     "d673fb77-9d2d-4f93-8e32-270958b40ea2": [
       {
         "type": "social network",
@@ -3624,6 +3696,257 @@
       ],
       "setlist": "@ [aedd8552-370c-4db0-b0d4-e20d219ab16d|Mor ve Ötesi]\r\n* Adamın Dibi\r\n* Dünyaya Bedel\r\n* Linç\r\n* Hazinende\r\n* Re\r\n* Az Çok\r\n* Forsa\r\n* Kaptan\r\n* Tünel\r\n* İstiklal\r\n* Aşk İçinde\r\n* Daha Mutlu Olamam\r\n* Yaz Yaz Yaz\r\n* Melekler Ölmez\r\n* Deli\r\n* Araf\r\n* Bir Derdim Var\r\n* Cambaz\r\n* Sevda Çiçeği\r\n* Oyunbozan\r\n\r\n# Encore:\r\n* Sultan-ı Yegâh\r\n* Küçük Sevgilim\r\n* Park",
       "time": "21:15",
+      "type": "Concert",
+      "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
+    },
+    {
+      "cancelled": false,
+      "disambiguation": "",
+      "id": "2a76c9db-fdf0-4a00-83f2-f0611b718024",
+      "imagePath": "/assets/images/posters/2a76c9db-fdf0-4a00-83f2-f0611b718024.jpg",
+      "life-span": {
+        "begin": "2026-09-11",
+        "end": "2026-09-11",
+        "ended": true
+      },
+      "name": "İzmir Undercurrent",
+      "posterThumb": "https://eventartarchive.org/event/2a76c9db-fdf0-4a00-83f2-f0611b718024/46144619375-500.jpg",
+      "posterUrl": "https://eventartarchive.org/event/2a76c9db-fdf0-4a00-83f2-f0611b718024/46144619375.jpg",
+      "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "İzmir based DJ",
+            "id": "48db8435-187e-4b09-86c0-f733427acbfe",
+            "name": "Kozmos",
+            "sort-name": "Kozmos",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "place": {
+            "address": "Alsancak, Muzaffer İzgü Sk. No:26, 35220",
+            "area": {
+              "disambiguation": "",
+              "id": "73ce7563-7ff6-4aec-afb6-6eb7f67ab767",
+              "name": "İzmir",
+              "sort-name": "İzmir",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+            },
+            "coordinates": {
+              "latitude": 38.437542,
+              "longitude": 27.143214
+            },
+            "disambiguation": "",
+            "id": "6e81cc99-3132-448c-888d-6f6930e04b2d",
+            "name": "NØMADS-36",
+            "type": "Venue",
+            "type-id": "cd92781a-a73f-30e8-a430-55d7521338db"
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "place",
+          "type": "held at",
+          "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "82a1ea23-79a9-4fbc-9d65-37f89c7ef7fa",
+            "name": "cohds",
+            "sort-name": "cohds",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "85791849-64cb-45ba-9a89-a3d37b8f0261",
+            "name": "BERENALP",
+            "sort-name": "BERENALP",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "",
+            "id": "92317cdc-2b78-4441-8569-918b82cc2af7",
+            "name": "Pineal Juice",
+            "sort-name": "Pineal Juice",
+            "type": null,
+            "type-id": null
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "abab7daf-c631-4836-991b-1fed96a10250",
+            "name": "Lizrith",
+            "sort-name": "Lizrith",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "label": {
+            "disambiguation": "",
+            "id": "c3de5bf4-24d5-4bd7-8885-2699496dca31",
+            "label-code": null,
+            "name": "in bass we trust",
+            "sort-name": "in bass we trust",
+            "type": null,
+            "type-id": null
+          },
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "label",
+          "type": "presented",
+          "type-id": "09bd2cba-6160-408b-b191-afef7480ce54"
+        },
+        {
+          "artist": {
+            "country": null,
+            "disambiguation": "Breakcore DJ",
+            "id": "c663d22b-618b-43b2-b99b-1d912c6b4bfc",
+            "name": "Random Input",
+            "sort-name": "Random Input",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "main performer",
+          "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946"
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "url",
+          "type": "other databases",
+          "type-id": "1e06fb0b-831d-49cf-abfd-52acb5b56e05",
+          "url": {
+            "id": "c680c5ae-7b0d-4988-ba01-224e32d3bd03",
+            "resource": "https://ra.co/events/2531450"
+          }
+        },
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "forward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "url",
+          "type": "social network",
+          "type-id": "68f5fcaa-b58c-3bfe-9b7c-75c2b56e839a",
+          "url": {
+            "id": "d381be74-f302-42a2-917e-ea3c47e4e016",
+            "resource": "https://do.basspistol.org/event/izmir-undercurrent"
+          }
+        }
+      ],
+      "setlist": "",
+      "time": "22:00",
       "type": "Concert",
       "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b"
     },
