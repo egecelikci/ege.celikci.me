@@ -29,6 +29,12 @@ layout: layouts/base.vto
   class="{{ (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : "" }} {{ it.hide_title !== true ? "page-content" : "page-content page-content--bare" }} {{ it.article_classes || "" }}"
   {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
+  {{# "incoming:" line — content/doc pages only (xxiivv grammar) #}}
+  {{
+    set showIncoming = backlinks?.length > 0 && it.type !== "tag" &&
+      it.type !== "index" && it.prose !== false
+  }}
+
   {{ if it.type === "note" }}
     {{ if !it.title }}
       <span
@@ -53,6 +59,15 @@ layout: layouts/base.vto
         hideHeader: true,
       })
     }}
+    {{ if showIncoming }}
+      <p class="incoming-line">content ends</p>
+      <hr>
+      <p class="incoming-line"><b>incoming:</b>
+        {{ for link of backlinks }}
+          <a href="{{ link.url }}">{{ link.title || "note" }}</a>
+        {{ /for }}
+      </p>
+    {{ /if }}
   {{ else if it.type === "tag" }}
     <div class="sr-only" data-pagefind-body>
       {{ it.title }} tag topic index. collection of items related to {{ it.tag }}.
@@ -62,6 +77,14 @@ layout: layouts/base.vto
     <div class="{{ (it.prose !== false) ? " e-content" : "" }}">
       {{ content |> safe }}
     </div>
+    {{ if showIncoming }}
+      <hr>
+      <p class="incoming-line"><b>incoming:</b>
+        {{ for link of backlinks }}
+          <a href="{{ link.url }}">{{ link.title || "note" }}</a>
+        {{ /for }}
+      </p>
+    {{ /if }}
   {{ /if }}
 
   <div
@@ -71,10 +94,6 @@ layout: layouts/base.vto
   <a href="/" class="u-url p-name">{{ it.author.name }}</a>
 </div>
   </{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}>
-
-  {{
-    set backlinksBlock = await comp.ui.IncomingLinks({ backlinks: backlinks })
-  }}
 
   {{ set mentionsData = [] }}
   {{ if show_webmentions }}
@@ -90,7 +109,6 @@ layout: layouts/base.vto
     await comp.layout.PageFooter({
       ...it,
       interactions: mentionsData,
-      backlinks: backlinksBlock,
     })
   }}
 {{ /set }}

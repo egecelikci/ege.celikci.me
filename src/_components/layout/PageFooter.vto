@@ -21,13 +21,12 @@
   set hasExtension = extensionContent && String(extensionContent).trim() !== ""
 }}
 {{ set hasRelated = it.related && String(it.related).trim() !== "" }}
-{{ set hasBacklinks = it.backlinks && String(it.backlinks).trim() !== "" }}
 {{
   set hasSyndication = it.syndication && (it.syndication.mastodon || it.syndication.bluesky || it.syndication.instagram)
 }}
 {{ set hasActivity = showInteractions || showStats || hasSyndication }}
 {{ set hasMetaRow = hasExtension || hasActivity }}
-{{ set shouldRenderFooter = hasMetaRow || hasRelated || hasBacklinks }}
+{{ set shouldRenderFooter = hasMetaRow || hasRelated }}
 
 {{ if shouldRenderFooter }}
   <footer
@@ -35,7 +34,7 @@
 >
     {{ if hasMetaRow }}
       <div
-        class="page-footer__meta {{ if hasRelated || hasBacklinks }}page-footer__meta--divided{{ /if }}"
+        class="page-footer__meta {{ if hasRelated }}page-footer__meta--divided{{ /if }}"
       >
         {{ if hasExtension }}
           <div class="page-footer__extension">
@@ -102,19 +101,11 @@
       </div>
     {{ /if }}
 
-    {{ if hasRelated || hasBacklinks }}
+    {{ if hasRelated }}
       <div class="page-footer__supplemental">
-        {{ if hasRelated }}
-          <div id="related">
-            {{ it.related |> safe }}
-          </div>
-        {{ /if }}
-
-        {{ if hasBacklinks }}
-          <div id="backlinks">
-            {{ it.backlinks |> safe }}
-          </div>
-        {{ /if }}
+        <div id="related">
+          {{ it.related |> safe }}
+        </div>
       </div>
     {{ /if }}
   </footer>

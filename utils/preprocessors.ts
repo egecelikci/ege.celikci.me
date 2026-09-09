@@ -4,6 +4,7 @@ import feeds from "./preprocessors/feeds.ts";
 import stats from "./preprocessors/stats.ts";
 import dates from "./preprocessors/dates.ts";
 import edited from "./preprocessors/edited.ts";
+import incoming from "./preprocessors/incoming.ts";
 
 /**
  * Modular preprocessor registration.
@@ -16,4 +17,5 @@ export default function registerPreprocessors(site: Lume.Site) {
   site.use(stats());
   site.use(dates());
   site.use(edited());
+  site.use(incoming());
 }
