@@ -61,6 +61,8 @@
 @use "components/feeds";
 @use "base/utilities";
 
+/* layer priority (must sit after all @use rules); individual
+   background/foreground declarations live in their partials */
 @layer reset, base, components, utilities;
 
 /* google-fonts */

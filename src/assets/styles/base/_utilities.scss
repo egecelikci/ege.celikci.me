@@ -320,22 +320,3 @@
     --flow-space: 0.75em;
   }
 }
-
-[role="doc-tip"] {
-  margin-block: 1.5rem;
-  padding: 1rem;
-  border-left: 4px solid color-mix(in srgb, var(--color-primary) 40%,
-    transparent);
-  border-radius: 0 0.5rem 0.5rem 0;
-  background-color: var(--color-surface-subtle);
-  font-size: 0.875rem;
-  font-style: italic;
-}
-
-svg[inline].fill-current path,
-svg[inline].fill-current circle,
-svg[inline].fill-current rect,
-svg[inline].fill-current polygon,
-svg[inline].fill-current ellipse {
-  fill: currentColor !important;
-}

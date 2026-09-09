@@ -77,14 +77,15 @@ layout: layouts/base.vto
     <div class="{{ (it.prose !== false) ? " e-content" : "" }}">
       {{ content |> safe }}
     </div>
-    {{ if showIncoming }}
-      <hr>
-      <p class="incoming-line"><b>incoming:</b>
-        {{ for link of backlinks }}
-          <a href="{{ link.url }}">{{ link.title || "note" }}</a>
-        {{ /for }}
-      </p>
-    {{ /if }}
+  {{ /if }}
+
+  {{ if showIncoming && it.type !== "note" }}
+    <hr>
+    <p class="incoming-line"><b>incoming:</b>
+      {{ for link of backlinks }}
+        <a href="{{ link.url }}">{{ link.title || "note" }}</a>
+      {{ /for }}
+    </p>
   {{ /if }}
 
   <div
