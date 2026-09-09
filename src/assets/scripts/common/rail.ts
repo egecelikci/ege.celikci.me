@@ -49,12 +49,20 @@ export function initRail(rail: HTMLElement) {
     }
   }
 
+  // measured header wins over the --header-height variable so zoom
+  // and custom root font sizes stay aligned with scroll-padding
+  const headerEl = document.getElementById("site-header");
   function headerHeightPx(): number {
+    if (headerEl) return headerEl.getBoundingClientRect().height;
     const raw = getComputedStyle(document.documentElement)
       .getPropertyValue("--header-height")
       .trim();
     const num = parseFloat(raw) || 3.5;
-    return raw.endsWith("rem") ? num * 16 : num;
+    if (!raw.endsWith("rem")) return num;
+    const root = parseFloat(
+      getComputedStyle(document.documentElement).fontSize,
+    ) || 16;
+    return num * root;
   }
 
   function update() {
@@ -117,6 +125,8 @@ export function initRail(rail: HTMLElement) {
 
   let scrubbing = false;
   let draggedAt = 0;
+  let scrubQueued: string | null = null;
+  let scrubRaf = 0;
 
   function linkAt(x: number, y: number): HTMLAnchorElement | null {
     const el = document.elementFromPoint(x, y);
@@ -140,12 +150,26 @@ export function initRail(rail: HTMLElement) {
     if (!scrubbing) return;
     const link = linkAt(e.clientX, e.clientY);
     const id = link?.dataset.target;
-    if (id && sections.has(id)) jump(id, false);
+    if (!id || !sections.has(id)) return;
+    // coalesce rapid moves into one jump per frame: each jump forces
+    // layout (scroll + elementFromPoint), so unthrottled scrub thrashes
+    scrubQueued = id;
+    if (!scrubRaf) {
+      scrubRaf = requestAnimationFrame(() => {
+        scrubRaf = 0;
+        const next = scrubQueued;
+        scrubQueued = null;
+        if (next) jump(next, false);
+      });
+    }
   });
 
   const stop = () => {
     if (scrubbing) draggedAt = Date.now();
     scrubbing = false;
+    if (scrubRaf) cancelAnimationFrame(scrubRaf);
+    scrubRaf = 0;
+    scrubQueued = null;
   };
   rail.addEventListener("pointerup", stop);
   rail.addEventListener("pointercancel", stop);

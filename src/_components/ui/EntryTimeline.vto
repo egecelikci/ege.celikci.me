@@ -20,12 +20,18 @@
 
   <div class="h-feed entry-timeline">
     {{ for dateKey of dateKeys }}
-      <section class="entry-timeline__group">
+      {{ set keySlug = dateKey |> slugify }}
+      {{ set groupId = keySlug + "-title" }}
+      <section
+        class="entry-timeline__group"
+        {{ if groupBy !== "none" }}aria-labelledby="{{ groupId }}"{{ /if }}
+      >
         {{ if groupBy !== "none" }}
           {{
             await it.comp.ui.SectionHeader({
               title: dateKey,
               variant: groupBy === "year" ? "large" : "label",
+              id: groupId,
             })
           }}
         {{ /if }}

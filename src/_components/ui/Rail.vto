@@ -21,18 +21,22 @@
 
 <nav class="rail{{ if it.classes }} {{ it.classes }}{{ /if }}"
   aria-label="{{ it.label || " jump to section" }}">
-  {{ for item of items }}
-    {{ if item.target }}
-      <a
-        href="#{{ item.target }}"
-        class="rail__link {{ if item.variant }}rail__link--{{ item.variant }}{{ /if }}"
-        data-target="{{ item.target }}"
-        {{ if item.year }}data-year="{{ item.year }}"{{ /if }}
-        {{ if item.dataLabel }}data-label="{{ item.dataLabel }}"{{ /if }}
-        {{ if item.ariaLabel }}aria-label="{{ item.ariaLabel }}"{{ /if }}
-      >{{ item.text }}</a>
-    {{ else }}
-      <span class="rail__link rail__link--empty" aria-hidden="true">{{ item.text }}</span>
-    {{ /if }}
-  {{ /for }}
+  <ul class="rail__list">
+    {{ for item of items }}
+      <li class="rail__item">
+        {{ if item.target }}
+          <a
+            href="#{{ item.target }}"
+            class="rail__link {{ if item.variant }}rail__link--{{ item.variant }}{{ /if }}"
+            data-target="{{ item.target }}"
+            {{ if item.year }}data-year="{{ item.year }}"{{ /if }}
+            {{ if item.dataLabel }}data-label="{{ item.dataLabel }}"{{ /if }}
+            {{ if item.ariaLabel }}aria-label="{{ item.ariaLabel }}"{{ /if }}
+          >{{ item.text }}</a>
+        {{ else }}
+          <span class="rail__link rail__link--empty" aria-hidden="true">{{ item.text }}</span>
+        {{ /if }}
+      </li>
+    {{ /for }}
+  </ul>
 </nav>
