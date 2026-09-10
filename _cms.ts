@@ -174,29 +174,63 @@ cms.collection(
   } satisfies Lume.CMS.CollectionOptions,
 );
 
+cms.collection(
+  {
+    name: "pages",
+    label: "Pages",
+    description: "Standalone content pages (places, recipes, meta)",
+    store: "src:pages/*.md",
+    fields: [
+      "title: text!",
+      {
+        name: "tags",
+        type: "list",
+        label: "Tags",
+        description: "e.g. places, venues",
+      },
+      {
+        name: "description",
+        type: "textarea",
+        label: "Description",
+        description: "Short summary used in feeds and page metadata",
+      },
+      { name: "sources", ...sourcesField },
+      {
+        name: "content",
+        type: "markdown",
+        label: "Content",
+        description: "Prose body; link other pages to join the wiki graph",
+        upload: "images",
+      },
+    ],
+    documentName(data) {
+      const slug = data.title ? slugify(String(data.title)) : "";
+      return slug || timestampName().replace(/-/g, "").slice(0, 14);
+    },
+    rename: false,
+    transform: stripUndefined,
+  } satisfies Lume.CMS.CollectionOptions,
+);
+
 for (
   const page of [
-    { name: "keys", store: "src:pages/keys.md", label: "Keys" },
-    { name: "contact", store: "src:pages/contact.md", label: "Contact" },
-    { name: "colophon", store: "src:pages/colophon.md", label: "Colophon" },
     {
-      name: "cookies",
-      store: "src:pages/chocolate-chip-cookies.md",
-      label: "Chocolate chip cookies",
+      name: "data-webrings",
+      store: "src:_data/webrings.yml",
+      label: "Data: webrings",
     },
     {
-      name: "iced-coffee",
-      store: "src:pages/iced-filter-coffee.md",
-      label: "Iced filter coffee",
+      name: "data-miniflux",
+      store: "src:_data/miniflux.yml",
+      label: "Data: miniflux sources",
     },
-    { name: "offline", store: "src:pages/offline.md", label: "Offline" },
   ]
 ) {
   cms.document(
     {
       name: page.name,
       label: page.label,
-      description: "Edit the content of this page",
+      description: "Edit this data file",
       store: page.store,
     } satisfies Lume.CMS.DocumentOptions,
   );

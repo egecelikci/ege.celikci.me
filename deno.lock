@@ -3354,6 +3354,7 @@
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/paginate.ts": "29ff5d5b749f986d08e19ec509b1b2c61cb91b7a6fb9347b7aea51faf7efbdaa",
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/picture.ts": "029fd4caf8ea01adaf02a2acded9a5c179587a2d31571cb825adb520b6c397fb",
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/pwa.ts": "97ea499a828102564d9a4f8cd68d430e8e8a0d7c23b5aa5a4d9bacb1d80a87ad",
+    "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/redirects.ts": "8158a0cdbeb5961c429ebe320ec1a347508c739068b3ae31922daa017385c5cd",
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/remark.ts": "d48f05303fd06fa4112dcfbcebee5c281a6117e3261197a4156d20057b10d93c",
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/robots.ts": "2ce1a92d36276193bf91652f1992a3dc942c4781a44cb5f47d46e840b5030a37",
     "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/plugins/sass.ts": "c936aa0dc76da1b6fc784abb7fa096ffad6e2692de813b9aed8f772de9e36cac",

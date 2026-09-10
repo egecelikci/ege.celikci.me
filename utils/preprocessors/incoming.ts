@@ -1,10 +1,3 @@
-/**
- * utils/preprocessors/incoming.ts
- * Feeds `backlinks` for the inline "incoming:" lines in page.vto:
- * the reverse index of the doc graph, built from tag memberships
- * and prose body links. Also audits orphans to the build log.
- */
-
 import {
   buildIncoming,
   extractBodyLinks,
@@ -27,8 +20,6 @@ function entryOf(page: Lume.Page): IncomingEntry {
 }
 
 export default function () {
-  // Preprocessors run twice per build (source pages, then generated
-  // pages). Accumulate across runs so the graph always sees the union.
   const seen = new Map<string, IncomingEntry>();
 
   return (site: Lume.Site) => {
@@ -37,7 +28,6 @@ export default function () {
         if (page.data.url) seen.set(page.data.url, entryOf(page));
       }
 
-      // tag slug lookup: tag pages exist only for tags with content
       const tagSlugs = new Map<string, string>();
       for (const page of pages) {
         const tag = page.data.tag;
@@ -49,8 +39,6 @@ export default function () {
         }
       }
 
-      // untranslated pages render in the default language, so they
-      // match backlinks from it (site.lang in _config/metadata.ts)
       const siteLang = pages
         .map((p) => (p.data.site as { lang?: unknown } | undefined)?.lang)
         .find((l): l is string => typeof l === "string");
@@ -58,33 +46,6 @@ export default function () {
         slugifyTag: (tag) => tagSlugs.get(tag) ?? tag,
         defaultLang: siteLang ?? "en",
       });
-
-      // oscean-style self-audit: report orphaned pages (zero incoming
-      // links, not linked by tags or prose). Listing pages and the home
-      // are exempt: they are entry points, not content.
-      // notes live in the stream; assets, feeds and well-known files
-      // are not content. Everything else with zero incoming links is
-      // worth reporting.
-      const orphanSkip = [
-        /^\/assets\//,
-        /^\/notes\//,
-        /^\/event\//,
-        /^\/tags\//,
-        /^\/.well-known/,
-        /\.(xml|txt|ics|json|html|ico|woff2?)$/,
-      ];
-      const orphans = [...seen.values()].filter((e) =>
-        !incoming.has(e.url) && e.url !== "/" &&
-        !orphanSkip.some((re) => re.test(e.url)) &&
-        !e.tags?.includes("meta")
-      );
-      if (orphans.length > 0) {
-        console.warn(
-          `[incoming] orphaned pages (no incoming links): ${
-            orphans.map((o) => o.url).join(", ")
-          }`,
-        );
-      }
 
       for (const page of pages) {
         if (!page.data.url) continue;
