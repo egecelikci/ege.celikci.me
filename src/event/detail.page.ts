@@ -162,10 +162,13 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       ["design", "engineer"].includes(c.type)
     );
 
-    // Robustness: If no video is present, default all credits back to the poster
     if (!local.video) {
       posterCredits = allCredits;
       videoCredits = [];
+    }
+
+    if (local.ai_poster) {
+      posterCredits = [{ role: "Artwork", name: "Clanker", links: [] }];
     }
 
     yield {

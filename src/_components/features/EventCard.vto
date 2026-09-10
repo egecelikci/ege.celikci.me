@@ -13,6 +13,7 @@
   ?.join(" ") || ""
 }}
 {{ set cardClass = "event-card ledger-card" }}
+{{ set isAiPoster = it.event.local?.ai_poster ?? false }}
 {{ if isPast }}
   {{ set cardClass = cardClass + " event-card--past" }}
 {{ else }}
@@ -28,7 +29,7 @@
   class="{{ cardClass }}"
 >
   <div class="event-card__poster">
-    {{ if posterUrl }}
+    {{ if posterUrl && !isAiPoster }}
       <img
         src="{{ if isPast && posterMonoUrl }}{{ posterMonoUrl }}{{ else }}{{ posterUrl }}{{ /if }}"
         alt="{{ displayTitle |> escape }}"
@@ -44,10 +45,15 @@
         />
       {{ /if }}
     {{ else }}
-      <div class="event-card__poster-fallback">
-        {{ await it.comp.base.Icon({ name: "image", catalog: "lucide" }) }}
-        <span>No Poster</span>
-      </div>
+      {{
+        await it.comp.base.EmptyState({
+          icon: isAiPoster ? "bot" : "image",
+          title: isAiPoster ? "AI-generated poster" : "No poster",
+          tag: isAiPoster ? "neverslop" : null,
+          size: "sm",
+          classes: "empty-state--fill",
+        })
+      }}
     {{ /if }}
   </div>
 

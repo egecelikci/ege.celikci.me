@@ -1,34 +1,71 @@
 {{#
   Component: EmptyState (Primitive)
-  A refined, minimal placeholder for empty lists or results.
-  Aligned with the site's "slim" design language.
+  A refined, minimal placeholder for empty lists, results, veiled media,
+  and poster fallbacks. Aligned with the site's "slim" design language:
+  lowercase mono, centered stack.
 
   Props:
-    - icon: string (optional)
-    - title: string (optional)
-    - description: string (optional)
+    - icon: string (optional, lucide name)
+    - iconAlt: string (optional second icon, shown in an alternate state
+      via .empty-state__icon-alt while .empty-state__icon hides)
+    - iconCatalog: string (default: "lucide")
+    - iconClasses: string (default: "w-5 h-5")
+    - title: string (optional, default: "no results")
+    - description: string (optional, rendered as HTML)
+    - tag: string (optional hashtag slug, Tag-styled)
+    - hint: string (optional small action caption)
+    - size: "md" | "sm" (default: "md")
+    - as: "div" | "span" (default: "div"; "span" for overlays nested
+      in links, where divs and buttons are invalid)
+    - classes: additional classes
+    - attributes: object of HTML attributes (e.g. ARIA for veils)
 #}}
 
-<div class="empty-state">
+{{ set rootTag = it.as || "div" }}
+
+<{{ rootTag }}
+class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.classes }}"
+{{ if it.attributes }}{{ it.attributes |> attr |> safe }}{{ /if }}
+>
   {{ if it.icon }}
     <span class="empty-state__icon">
       {{
         await it.comp.base.Icon({
           name: it.icon,
-          catalog: "lucide",
-          classes: "w-5 h-5",
+          catalog: it.iconCatalog || "lucide",
+          classes: it.iconClasses || "w-5 h-5",
+        })
+      }}
+    </span>
+  {{ /if }}
+
+  {{ if it.iconAlt }}
+    <span class="empty-state__icon-alt" aria-hidden="true">
+      {{
+        await it.comp.base.Icon({
+          name: it.iconAlt,
+          catalog: it.iconCatalog || "lucide",
+          classes: it.iconClasses || "w-5 h-5",
         })
       }}
     </span>
   {{ /if }}
 
   <span class="empty-state__title">
-    {{ it.title || "no results" }}
+    {{ (it.title || "no results") |> escape }}
   </span>
+
+  {{ if it.tag }}
+    {{ await it.comp.base.Tag({ content: it.tag }) }}
+  {{ /if }}
 
   {{ if it.description }}
     <p class="empty-state__desc">
       {{ it.description |> safe }}
     </p>
   {{ /if }}
-</div>
+
+  {{ if it.hint }}
+    <span class="empty-state__hint">{{ it.hint |> escape }}</span>
+  {{ /if }}
+</{{ rootTag }}>

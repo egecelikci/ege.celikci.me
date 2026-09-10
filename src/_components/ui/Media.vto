@@ -9,6 +9,13 @@
     - static: boolean (default: false)
     - card: boolean (default: false; true renders the ledger-card chrome)
     - postUrl: link the +N tile (and media) to a note
+    - sizes: sizes attribute (default: narrow-column value; sidebar
+      callers must pass their own, e.g. "(max-width: 48rem) 100vw, 20rem")
+    - eager: boolean (default: false; true marks the image(s) as LCP:
+      loading eager + fetchpriority high; only for above-fold singles)
+    - spoiler: { label, tag?, icon?, iconAlt? } | null (default: null; veils every
+      tile behind click-to-reveal. Images carrying their own spoiler
+      (note `{spoiler:}` syntax) veil individually regardless)
     - classes: additional classes
 #}}
 
@@ -20,6 +27,8 @@
   {{ set hasMore = remaining > 0 }}
   {{ set isAuto = it.aspect === "auto" }}
   {{ set isFlow = !isAuto && count > 4 }}
+  {{ set shown = it.images |> slice(0, count) }}
+  {{ set isEager = it.eager ?? false }}
   {{
     set gridClass = isAuto
       ? "media-grid--auto"
@@ -37,7 +46,7 @@
   class="media-grid {{ gridClass }}{{ if it.card }} ledger-card{{ /if }}"
   data-lightbox-group="{{ it.images[0].src |> slugify }}"
 >
-    {{ for i, image of it.images |> slice(0, count) }}
+    {{ for i, image of shown }}
       {{
         set isPanoramic = image.width && image.height && (image.width / image.height > 2)
       }}
@@ -51,10 +60,12 @@
       {{ set isMore = hasMore && i === count - 1 }}
       {{ set isMoreLink = isMore && it.postUrl }}
       {{ set tileHref = it.postUrl || image.src }}
+      {{ set tileSpoiler = it.spoiler || image.spoiler || null }}
+      {{ set tileEager = isEager && !tileSpoiler }}
 
       <a
         href="{{ tileHref |> url }}"
-        class="media {{ if !isMoreLink }}lightbox-trigger {{ /if }}{{ if isAuto }}media--auto {{ /if }}{{ if isMore }}media--more {{ /if }}{{ itemClass }}"
+        class="media {{ if !isMoreLink }}lightbox-trigger {{ /if }}{{ if isAuto }}media--auto {{ /if }}{{ if isMore }}media--more {{ /if }}{{ if tileSpoiler }}media--spoiled {{ /if }}{{ itemClass }}"
         {{ if isMore }}
           aria-label="View {{ remaining }} more {{ remaining === 1 ? "photo" : "photos" }}"
         {{ else }}
@@ -75,7 +86,9 @@
           alt="{{ image.alt |> escape }}"
           image-size
           transform-images="avif webp jpg 640 1280 1920"
-          loading="lazy"
+          sizes="{{ it.sizes || "(max-width: 48rem) 100vw, 46rem" }}"
+          {{ if !tileEager }}loading="lazy"{{ /if }}
+          {{ if tileEager }}fetchpriority="high"{{ /if }}
           decoding="async"
           class="media__img"
         />
@@ -95,6 +108,30 @@
           <div class="media-more" aria-hidden="true">
             <span class="media-more__count">+{{ remaining }}</span>
           </div>
+        {{ /if }}
+
+        {{ if tileSpoiler }}
+          {{
+            set veilIcon = tileSpoiler.icon || "eye-off"
+          }}
+          {{
+            await it.comp.base.EmptyState({
+              as: "span",
+              icon: veilIcon,
+              iconAlt: tileSpoiler.iconAlt || (veilIcon === "bot" ? "bot-off" : "eye"),
+              iconClasses: "w-4 h-4",
+              title: tileSpoiler.label,
+              tag: tileSpoiler.tag || null,
+              size: "sm",
+              classes: "spoiler-veil",
+              attributes: {
+                tabindex: "0",
+                role: "button",
+                "aria-expanded": "false",
+                "aria-label": `Show hidden media: ${tileSpoiler.label}`,
+              },
+            })
+          }}
         {{ /if }}
       </a>
     {{ /for }}

@@ -7,6 +7,8 @@
     - static: boolean (default: false)
     - classes: additional classes
     - aspect: "square" | "video" (default: "square")
+    - spoiler: { label, tag?, icon?, iconAlt? } | null (default: null; veils every
+      tile behind click-to-reveal)
 #}}
 
 {{ if it.images && it.images.length > 0 }}
@@ -21,7 +23,8 @@
   {{ if !it.static }} data-lightbox-group="{{ gid }}" {{ /if }}
 >
     {{ for i, image of it.images }}
-      <div class="gallery__item">
+      {{ set tileSpoiler = it.spoiler || image.spoiler || null }}
+      <div class="gallery__item{{ if tileSpoiler }} gallery__item--spoiled{{ /if }}">
         {{# 1. WRAPPER ELEMENT #}}
         {{ if !it.static }}
           <a
@@ -40,6 +43,7 @@
               alt="{{ image.alt |> escape }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
+              sizes="(max-width: 48rem) 100vw, 46rem"
               class="gallery__img"
               loading="lazy"
               decoding="async"
@@ -60,6 +64,7 @@
               alt="{{ image.alt |> escape }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
+              sizes="(max-width: 48rem) 100vw, 46rem"
               class="gallery__img"
               loading="lazy"
               decoding="async"
@@ -84,6 +89,30 @@
           <span class="gallery__credit">
             {{- image.photographer.name -}}
           </span>
+        {{ /if }}
+
+        {{ if tileSpoiler }}
+          {{
+            set veilIcon = tileSpoiler.icon || "eye-off"
+          }}
+          {{
+            await it.comp.base.EmptyState({
+              as: "span",
+              icon: veilIcon,
+              iconAlt: tileSpoiler.iconAlt || (veilIcon === "bot" ? "bot-off" : "eye"),
+              iconClasses: "w-4 h-4",
+              title: tileSpoiler.label,
+              tag: tileSpoiler.tag || null,
+              size: "sm",
+              classes: "spoiler-veil",
+              attributes: {
+                tabindex: "0",
+                role: "button",
+                "aria-expanded": "false",
+                "aria-label": `Show hidden media: ${tileSpoiler.label}`,
+              },
+            })
+          }}
         {{ /if }}
       </div>
     {{ /for }}

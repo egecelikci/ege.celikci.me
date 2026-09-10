@@ -151,8 +151,13 @@ extraStyles:
 
     <aside class="event-page__sidebar">
       {{ if posterImages.length > 0 }}
+        {{
+          set posterSpoiler = it.event.local?.ai_poster
+            ? { label: "AI-generated poster", tag: "neverslop", icon: "bot-off", iconAlt: "bot" }
+            : null
+        }}
         <div>
-          {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true }) }}
+          {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true, sizes: "(max-width: 48rem) 100vw, 20rem", eager: true, spoiler: posterSpoiler }) }}
 
           {{ if posterCredits?.length > 0 }}
             <div class="media-credits media-credits--poster">
@@ -160,13 +165,17 @@ extraStyles:
                 <div class="media-credits__row">
                   <span class="media-credits__label">{{ credit.role }}</span>
                   <span class="media-credits__name-wrap">
-                    <a
-                      href="{{ credit.url }}"
-                      target="_blank"
-                      class="media-credits__name"
-                    >
-                      {{ credit.name }}
-                    </a>
+                    {{ if credit.url }}
+                      <a
+                        href="{{ credit.url }}"
+                        target="_blank"
+                        class="media-credits__name"
+                      >
+                        {{ credit.name }}
+                      </a>
+                    {{ else }}
+                      <span class="media-credits__name">{{ credit.name }}</span>
+                    {{ /if }}
                     {{ if credit.links?.length > 1 }}
                       {{
                         comp.base.ExternalLinks({

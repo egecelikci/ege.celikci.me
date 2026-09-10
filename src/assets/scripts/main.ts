@@ -1,4 +1,5 @@
 import { initLazyLoad } from "./common/lazyload.ts";
+import { initSpoiler } from "./common/spoiler.ts";
 
 let loadingPromise: Promise<void> | null = null;
 let isLightboxReady = false;
@@ -33,6 +34,15 @@ window.addEventListener(
     if (isLightboxReady) return;
 
     const target = e.target as HTMLElement;
+    // Unrevealed spoiler tiles reveal in place; never preload the
+    // lightbox for them (see common/spoiler.ts).
+    if (
+      target.closest(
+        ".media--spoiled:not(.is-revealed), .gallery__item--spoiled:not(.is-revealed)",
+      )
+    ) {
+      return;
+    }
     const trigger = target.closest(
       "a.lightbox-trigger, .markdown img, [data-lightbox-group] img",
     );
@@ -57,6 +67,7 @@ window.addEventListener(
 
 async function init() {
   initLazyLoad();
+  initSpoiler();
 
   document.addEventListener("click", (e) => {
     const card = (e.target as HTMLElement).closest<HTMLElement>(

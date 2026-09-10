@@ -10,7 +10,21 @@
     text-align: center;
   }
 
-  .empty-state__icon {
+  .empty-state--sm {
+    gap: 0.625rem;
+    padding: 1rem;
+    border: 0;
+    background-color: transparent;
+  }
+
+  .empty-state--fill {
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+  }
+
+  .empty-state__icon,
+  .empty-state__icon-alt {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,6 +35,10 @@
       width: 1.25rem;
       height: 1.25rem;
     }
+  }
+
+  .empty-state__icon-alt {
+    display: none;
   }
 
   .empty-state__title {
@@ -41,5 +59,14 @@
     font-style: italic;
     text-transform: lowercase;
     color: color-mix(in srgb, var(--color-text-muted) 60%, transparent);
+  }
+
+  .empty-state__hint {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
   }
 }

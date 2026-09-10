@@ -1,0 +1,96 @@
+@layer components {
+  .spoiler-veil {
+    display: none;
+  }
+
+  html.has-spoiler .media--spoiled:not(.is-revealed) .media__img,
+  html.has-spoiler .gallery__item--spoiled:not(.is-revealed) .gallery__img {
+    filter: blur(24px) saturate(1.1);
+  }
+
+  html.has-spoiler .media--spoiled:not(.is-revealed) .media-caption,
+  html.has-spoiler .media--spoiled:not(.is-revealed) .alt-badge {
+    opacity: 0;
+  }
+
+  html.has-spoiler .spoiler-veil {
+    display: flex;
+  }
+
+  .spoiler-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+    background-color: color-mix(in srgb, var(--color-bg) 45%, transparent);
+    color: var(--color-text);
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+    }
+
+    .empty-state__title {
+      color: var(--color-text);
+    }
+  }
+
+  .spoiler-veil .empty-state__icon,
+  .spoiler-veil .empty-state__icon-alt {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    opacity: 1;
+    color: var(--color-text);
+  }
+
+  .spoiler-veil:hover .empty-state__icon,
+  .spoiler-veil:hover .empty-state__icon-alt {
+    border-color: var(--color-primary);
+  }
+
+  .spoiler-veil .empty-state__icon-alt {
+    display: none;
+  }
+
+  .is-revealed .spoiler-veil {
+    background-color: transparent;
+    pointer-events: none;
+  }
+
+  .is-revealed .spoiler-veil:focus-visible {
+    outline: none;
+  }
+
+  .is-revealed .spoiler-veil:focus-visible .empty-state__icon-alt {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .is-revealed .spoiler-veil .empty-state__icon {
+    display: none;
+  }
+
+  .is-revealed .spoiler-veil .empty-state__icon-alt {
+    display: flex;
+    pointer-events: auto;
+  }
+
+  .is-revealed .spoiler-veil > :not(.empty-state__icon-alt) {
+    display: none;
+  }
+
+  .gallery__item--spoiled .gallery__overlay {
+    top: auto;
+    bottom: 1rem;
+  }
+}

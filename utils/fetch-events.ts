@@ -131,6 +131,11 @@ export interface LocalEventData {
   setlist?: string;
   photographers?: Record<string, { name: string; url?: string }>;
   photographer?: { name: string; url?: string };
+  /**
+   * The event poster is AI-generated. Listing cards show a disclosure
+   * tile instead of the image; the detail page veils it as a spoiler.
+   */
+  ai_poster?: boolean;
 }
 
 /** An event after the events preprocessor has enriched it at build time */

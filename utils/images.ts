@@ -1,13 +1,16 @@
-/**
- * utils/images.ts
- * Image processing utilities using Sharp (loaded dynamically to avoid HMR worker conflicts).
- */
-
 import { Buffer } from "node:buffer";
 
 /**
- * Saves a resized, color DITHERED version of the cover.
- * OPTIMIZATION: High compression, low color count.
+ * Save a resized, color-dithered version of a cover image.
+ *
+ * Downscales to a square, reduces to a 16-color palette with full
+ * Floyd-Steinberg dithering, then losslessly encodes as WebP. Failures
+ * are logged and swallowed so cover fetching never breaks the build.
+ *
+ * @param inputPath - Filesystem path or in-memory buffer of the source image.
+ * @param outputPath - Filesystem path for the resulting `.webp` file.
+ * @param width - Square edge length in pixels. Defaults to `290`.
+ * @returns A promise resolving once the file is written or an error is logged.
  */
 export async function saveColorVersion(
   inputPath: string | Buffer,
@@ -40,8 +43,17 @@ export async function saveColorVersion(
 }
 
 /**
- * Process image with Floyd-Steinberg dithering (Transparent Mono)
- * OUTPUT: Transparent PNG (Black Ink + Transparent Background)
+ * Dither an image to transparent monochrome (black ink on transparency).
+ *
+ * Downscales to a square, grayscales, then applies Floyd-Steinberg
+ * error diffusion with a 128 threshold: dark pixels become opaque black,
+ * light pixels become fully transparent. Encodes as 2-color PNG.
+ *
+ * @param inputPath - Filesystem path or in-memory buffer of the source image.
+ * @param outputPath - Filesystem path for the resulting `.png` file.
+ * @param width - Square edge length in pixels. Defaults to `290`.
+ * @returns A promise resolving once the file is written. Rejects on
+ * Sharp or filesystem errors; callers must handle that.
  */
 export async function ditherWithSharp(
   inputPath: string | Buffer,

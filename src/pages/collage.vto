@@ -423,17 +423,14 @@ menu:
           id="empty-state"
           class="collage-tool__empty"
         >
-          <div class="collage-tool__empty-inner">
-            <div class="collage-tool__empty-icon">
-              {{ comp.base.Icon({ name: "image", classes: "" }) }}
-            </div>
-            <div>
-              <h2 class="collage-tool__empty-title">Ready to Create</h2>
-              <p class="collage-tool__empty-desc">
-                Enter your username to generate your collage
-              </p>
-            </div>
-          </div>
+          {{
+            await comp.base.EmptyState({
+              icon: "image",
+              title: "Ready to Create",
+              description: "Enter your username to generate your collage",
+              size: "sm",
+            })
+          }}
         </div>
       </div>
       <div class="collage-tool__actions">
