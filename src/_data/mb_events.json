@@ -194,6 +194,20 @@
       }
     ],
     "18722b4b-6680-43f5-a99d-49d29d305647": [],
+    "191644bf-21b6-4fc6-9435-9c540c9ac8bb": [
+      {
+        "type": "video channel",
+        "url": "https://vimeo.com/gurkangurler"
+      },
+      {
+        "type": "art gallery",
+        "url": "https://www.behance.net/gurkangurl5210"
+      },
+      {
+        "type": "social network",
+        "url": "https://www.instagram.com/gurkan.gurler/"
+      }
+    ],
     "19c8fbae-8c9c-47ba-a663-1fdf365b843e": [],
     "1b69fc96-8c50-4201-bf5e-22b4fde21b11": [
       {
@@ -2776,6 +2790,29 @@
       "posterThumb": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46137074887-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46137074887.jpg",
       "relations": [
+        {
+          "artist": {
+            "country": "TR",
+            "disambiguation": "",
+            "id": "191644bf-21b6-4fc6-9435-9c540c9ac8bb",
+            "name": "Gürkan Gürler",
+            "sort-name": "Gürler, Gürkan",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "begin": null,
+          "direction": "backward",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-credit": "",
+          "target-type": "artist",
+          "type": "artwork",
+          "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc"
+        },
         {
           "artist": {
             "country": "TR",
