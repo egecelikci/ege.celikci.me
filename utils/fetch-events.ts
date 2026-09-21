@@ -1,11 +1,3 @@
-/**
- * src/utils/fetch-events.ts
- *
- * Fetches and caches MusicBrainz events for the İzmir area.
- * Saves results to src/_data/mb_events.json for Lume to pick up.
- * Downloads event posters locally for archival and reliability.
- */
-
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs/ensure-dir";
 import { loadState, saveState, sortObjectKeys } from "./cache.ts";
@@ -19,10 +11,6 @@ import {
   validate,
   validateOrThrow,
 } from "./schemas.ts";
-
-// ============================================================================
-// CONFIGURATION
-// ============================================================================
 
 const IZMIR_AREA_MBID = "f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5";
 const MB_API = "https://musicbrainz.org/ws/2";
@@ -38,10 +26,6 @@ const CONFIG = {
     posters: "src/assets/images/posters",
   },
 } as const;
-
-// ============================================================================
-// TYPES
-// ============================================================================
 
 /** An external link harvested for a MusicBrainz entity (homepage, instagram, ...) */
 export interface MBEntityLink {
@@ -113,10 +97,12 @@ export interface MBEvent {
   disambiguation?: string;
   setlist?: string;
   relations?: MBRelation[];
-  // Poster fields saved by the sync script
-  posterUrl?: string; // Remote original URL
-  posterThumb?: string; // Remote thumbnail URL
-  imagePath?: string; // Local relative path
+  /** Remote original poster URL saved by the sync script */
+  posterUrl?: string;
+  /** Remote thumbnail poster URL saved by the sync script */
+  posterThumb?: string;
+  /** Local relative poster path saved by the sync script */
+  imagePath?: string;
 }
 
 /** Local event metadata from src/_data/events.yml */
@@ -168,7 +154,10 @@ export interface RawIzmirEvents {
   entities: Record<string, MBEntityLink[]>;
 }
 
-// Built at build time by preprocessors/events.ts — never saved to disk
+/**
+ * Enriched events built at build time by the events preprocessor; never saved
+ * to disk.
+ */
 export interface EnrichedIzmirEvents extends RawIzmirEvents {
   events: EnrichedMBEvent[];
   all: EnrichedMBEvent[];
@@ -176,13 +165,14 @@ export interface EnrichedIzmirEvents extends RawIzmirEvents {
   past: EnrichedMBEvent[];
 }
 
-// ============================================================================
-// POSTER DOWNLOADER
-// ============================================================================
-
+/**
+ * Downloads event posters and tracks the filenames already present on disk so
+ * unchanged posters are not re-fetched.
+ */
 class PosterDownloader {
   private existingPosters = new Set<string>();
 
+  /** Rebuilds the set of poster filenames already present on disk. */
   async inventory() {
     this.existingPosters.clear();
     if (await exists(CONFIG.paths.posters)) {
@@ -194,14 +184,27 @@ class PosterDownloader {
     }
   }
 
+  /**
+   * @param fileName - Poster filename to look up.
+   * @returns Whether the poster already exists locally.
+   */
   hasPoster(fileName: string): boolean {
     return this.existingPosters.has(fileName);
   }
 
+  /**
+   * Downloads a poster, or returns its public path when it already exists.
+   * @param httpClient - HTTP client used for the download.
+   * @param eventId - MusicBrainz event id, used as the filename stem.
+   * @param remoteUrl - Remote poster URL to download.
+   * @param force - Re-download even when a local file already exists.
+   * @returns The public path, or null when the download fails.
+   */
   async download(
     httpClient: HttpClient,
     eventId: string,
     remoteUrl: string,
+    force = false,
   ): Promise<string | null> {
     const extension = remoteUrl.split(".").pop()?.split(/[?#]/)[0] || "jpg";
     const fileName = `${eventId}.${extension}`;
@@ -211,13 +214,11 @@ class PosterDownloader {
     try {
       await ensureDir(CONFIG.paths.posters);
 
-      // Check if already exists in inventory
-      if (this.existingPosters.has(fileName)) {
+      if (!force && this.existingPosters.has(fileName)) {
         return publicPath;
       }
 
       console.log(`[mb_events] 📥 Downloading poster: ${eventId}`);
-      // Image downloads are NOT rate limited by MusicBrainz
       const buffer = await httpClient.fetch<ArrayBuffer>(
         remoteUrl,
         "buffer",
@@ -240,10 +241,11 @@ class PosterDownloader {
   }
 }
 
-// ============================================================================
-// SYNC LOGIC
-// ============================================================================
-
+/**
+ * Fetches every İzmir-area event from MusicBrainz, following pagination.
+ * @param httpClient - Rate-limited HTTP client.
+ * @returns The raw events for all pages.
+ */
 async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   const events: MBEvent[] = [];
   const firstUrl = new URL(`${MB_API}/event`);
@@ -261,7 +263,7 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
     firstUrl.toString(),
     "json",
     "no-cache",
-    true, // Bypassing rate limit for the main area browse (usually 1-2 pages)
+    true,
   );
 
   if (!firstData) return [];
@@ -291,17 +293,24 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   return events;
 }
 
+/**
+ * Resolves the current front poster from the Event Art Archive. It is
+ * revalidated on every run because the front image can change, for example a
+ * corrected poster replacing one with a wrong date.
+ * @param httpClient - HTTP client used for the request.
+ * @param eventId - MusicBrainz event id.
+ * @returns The original and thumbnail URLs, or empty when none is set.
+ */
 async function fetchEventPosterInfo(
   httpClient: HttpClient,
   eventId: string,
 ): Promise<{ url?: string; thumb?: string }> {
   const url = `${EAA_API}/event/${eventId}/`;
 
-  // EAA API calls are NOT rate limited like MusicBrainz
   const data = await httpClient.fetch<unknown>(
     url,
     "json",
-    "force-cache",
+    "no-cache",
     true,
   );
 
@@ -318,13 +327,20 @@ async function fetchEventPosterInfo(
   return {};
 }
 
+/**
+ * Harvests external links for a MusicBrainz entity. Rate limited because it
+ * hits the MusicBrainz API.
+ * @param httpClient - Rate-limited HTTP client.
+ * @param entityId - MusicBrainz entity id.
+ * @param type - Entity type to query.
+ * @returns The entity's links, or null when the response is invalid.
+ */
 async function fetchEntityDetails(
   httpClient: HttpClient,
   entityId: string,
   type: "artist" | "place" | "label" | "url",
 ): Promise<MBEntityLink[] | null> {
   const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
-  // These MUST be rate limited as they hit MusicBrainz
   const data = await httpClient.fetch<unknown>(
     url,
     "json",
@@ -350,6 +366,10 @@ async function fetchEntityDetails(
   return links;
 }
 
+/**
+ * Syncs cached events and posters with MusicBrainz and the Event Art Archive,
+ * writing the result to the mb_events.json cache.
+ */
 async function syncEvents() {
   const httpClient = new HttpClient({
     userAgent: USER_AGENT,
@@ -387,7 +407,6 @@ async function syncEvents() {
       raw.map(async (event: MBEvent) => {
         const cachedEvent = eventsMap.get(event.id);
 
-        // Collect entity IDs for enrichment (always do this to ensure entities map is fresh)
         (event.relations || []).forEach((rel: MBRelation) => {
           if (rel["target-type"] === "artist" && rel.artist?.id) {
             entityIds.set(rel.artist.id, "artist");
@@ -400,7 +419,6 @@ async function syncEvents() {
           }
         });
 
-        // Sort relations for determinism
         if (event.relations) {
           event.relations.sort((a: MBRelation, b: MBRelation) => {
             const idA = a.artist?.id || a.place?.id || a.url?.id ||
@@ -411,23 +429,9 @@ async function syncEvents() {
           });
         }
 
-        // If we have it in cache AND the local image exists, skip expensive info fetch
-        if (
-          cachedEvent?.imagePath &&
-          posterDownloader.hasPoster(
-            cachedEvent.imagePath.split("/").pop() || "",
-          )
-        ) {
-          return {
-            ...event,
-            posterUrl: cachedEvent.posterUrl,
-            posterThumb: cachedEvent.posterThumb,
-            imagePath: cachedEvent.imagePath,
-          };
-        }
-
-        // Otherwise, fetch fresh poster info
         const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
+        const remoteChanged = !!posterInfo.url &&
+          posterInfo.url !== cachedEvent?.posterUrl;
         let imagePath: string | undefined;
 
         if (posterInfo.url || posterInfo.thumb) {
@@ -437,6 +441,7 @@ async function syncEvents() {
               httpClient,
               event.id,
               imageUrl,
+              remoteChanged,
             )) || undefined;
           }
         }
@@ -450,7 +455,6 @@ async function syncEvents() {
       }),
     );
 
-    // 4. Enrich entities (All links)
     const entities: Record<string, MBEntityLink[]> = {};
     console.log(
       `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities…`,
@@ -469,7 +473,6 @@ async function syncEvents() {
 
     for (const [id, data] of harvestResults) {
       if (data) {
-        // Sort links by URL for stability
         entities[id] = data.sort((a, b) => a.url.localeCompare(b.url));
       }
     }
@@ -480,7 +483,6 @@ async function syncEvents() {
       entities,
     };
 
-    // Deep compare core data to avoid unnecessary writes
     const hasChanged = JSON.stringify(sortObjectKeys(newData)) !==
       JSON.stringify(sortObjectKeys(cachedData));
 
