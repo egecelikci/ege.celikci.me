@@ -11,7 +11,7 @@
     "instant.page": "npm:instant.page@^5.2.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/",
-    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.8/",
+    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.9/",
     "photoswipe": "npm:photoswipe@^5.4.4",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
     "rehype-slug": "npm:rehype-slug@^6.0.0",
@@ -25,7 +25,7 @@
     "@serwist/cli": "npm:@serwist/cli@^9.5.12",
     "xss": "npm:xss@^1.0.15",
     "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
-    "zod": "npm:zod@^4.5.4"
+    "zod": "npm:zod@^4.6.5"
   },
   "tasks": {
     "lume": {
