@@ -10,7 +10,7 @@
     "@types/leaflet": "npm:@types/leaflet@^1.9.22",
     "instant.page": "npm:instant.page@^5.2.0",
     "leaflet": "npm:leaflet@^1.9.4",
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.2/",
     "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.9/",
     "photoswipe": "npm:photoswipe@^5.4.4",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
@@ -87,7 +87,7 @@
   ],
   "lint": {
     "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/lint.ts"
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.2/lint.ts"
     ],
     "rules": {
       "exclude": [
