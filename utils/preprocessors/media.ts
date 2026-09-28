@@ -1,4 +1,4 @@
-import { remarkParse, unified } from "lume/deps/remark.ts";
+import { type MdastNode, parseMarkdown, walk } from "../mdast.ts";
 
 export interface PostImage {
   src: string;
@@ -62,9 +62,7 @@ export async function probeLocalImageSize(
 
   let size: ImageDimensions | undefined;
   try {
-    const { imageDimensionsFromStream } = await import(
-      "lume/deps/image_dimmensions.ts"
-    );
+    const { imageDimensionsFromStream } = await loadImageDimmensions();
     using file = await Deno.open(`src${clean}`, { read: true });
     const dims = await imageDimensionsFromStream(file.readable);
     if (dims) size = { width: dims.width, height: dims.height };
@@ -94,27 +92,19 @@ export async function enrichImagesWithDimensions(
   }));
 }
 
-interface MdastNode {
-  type: string;
-  url?: string;
-  alt?: string;
-  value?: string;
-  children?: MdastNode[];
-  position?: {
-    start: { offset?: number };
-    end: { offset?: number };
-  };
-}
-
-interface MdastRoot extends MdastNode {
-  type: "root";
-  children: MdastNode[];
-}
-
 const IMG_REGEX_SRC =
   /!\[[^\]]*\]\(([^)\s=]+)(?:\s+=(\d+)?x(\d+)?)?(?:\s+"[^"]*")?\)/;
 
-const parser = unified.unified().use(remarkParse);
+/** Single sticky instance; `lastIndex` is set before every `exec`. */
+const IMG_REGEX_STICKY = new RegExp(IMG_REGEX_SRC.source, "y");
+
+/** Lazily-loaded dimension reader, memoized across probes. */
+type ImageDimmensions = typeof import("lume/deps/image_dimmensions.ts");
+let imageDimmensions: ImageDimmensions | undefined;
+
+async function loadImageDimmensions(): Promise<ImageDimmensions> {
+  return imageDimmensions ??= await import("lume/deps/image_dimmensions.ts");
+}
 
 /**
  * Images extracted from note Markdown plus the source ranges they
@@ -123,13 +113,6 @@ const parser = unified.unified().use(remarkParse);
 export interface ExtractedMedia {
   images: PostImage[];
   ranges: Array<[number, number]>;
-}
-
-function walk(node: MdastNode, visit: (node: MdastNode) => void): void {
-  visit(node);
-  for (const child of node.children ?? []) {
-    walk(child, visit);
-  }
 }
 
 /**
@@ -147,13 +130,13 @@ function walk(node: MdastNode, visit: (node: MdastNode) => void): void {
  * (spoiler suffixes included, so stripping removes them from the body).
  */
 export function extractMediaImages(content: string): ExtractedMedia {
-  const tree = parser.parse(content) as MdastRoot;
-
+  const tree = parseMarkdown(content);
   const entries: Array<{
     image: PostImage;
     start: number | null;
     range: [number, number] | null;
   }> = [];
+  if (!tree) return { images: [], ranges: [] };
 
   walk(tree, (node) => {
     if (node.type !== "image" || !node.url) return;
@@ -245,24 +228,27 @@ function nodeText(node: MdastNode): string {
   if (node.value) return node.value;
   return (node.children ?? []).map(nodeText).join("");
 }
-
 function isSupportedSrc(src: string): boolean {
   return src.startsWith("/") || src.startsWith("http") ||
     /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(src);
 }
 
 function matchAt(content: string, start: number) {
-  const regex = new RegExp(IMG_REGEX_SRC.source, "y");
-  regex.lastIndex = start;
-  return regex.exec(content);
+  IMG_REGEX_STICKY.lastIndex = start;
+  return IMG_REGEX_STICKY.exec(content);
 }
 
 export default function () {
   return (site: Lume.Site) => {
+    site.addEventListener("beforeUpdate", ({ files }) => {
+      if ([...files].some((file) => PROBEABLE_EXT.test(file))) {
+        dimensionCache.clear();
+      }
+    });
+
     site.preprocess([".md"], async (pages) => {
       for (const page of pages) {
-        const pageUrl = page.data.url as string;
-        if (!pageUrl) continue;
+        if (!page.data.url) continue;
 
         const isNote = page.src.path.startsWith("/notes/") ||
           page.data.type === "note";
@@ -272,15 +258,11 @@ export default function () {
         const content = page.data.content;
         if (typeof content !== "string" || content.length === 0) continue;
 
-        const { images, ranges: imageRanges } = extractMediaImages(content);
-
-        const stripped = isNote && imageRanges.length > 0
-          ? stripMediaRanges(content, imageRanges)
+        const { images, ranges } = extractMediaImages(content);
+        const stripped = ranges.length > 0
+          ? stripMediaRanges(content, ranges)
           : content;
-
-        if (isNote) {
-          page.data.content = stripped;
-        }
+        page.data.content = stripped;
 
         if (images.length === 0) continue;
 
@@ -295,21 +277,19 @@ export default function () {
           page.data.metaImage = page.data.coverImage;
         }
 
-        if (isNote) {
-          if (!page.data.description && cover.alt) {
-            page.data.description = cover.alt;
-          }
-          if (!page.data.description || page.data.description.length < 10) {
-            const cleanTree = parser.parse(stripped) as MdastRoot;
-            const teaser = cleanTree.children.map(nodeText).join(" ")
-              .replace(/\s+/g, " ")
-              .trim();
+        if (!page.data.description && cover.alt) {
+          page.data.description = cover.alt;
+        }
+        if (!page.data.description || page.data.description.length < 10) {
+          const cleanTree = parseMarkdown(stripped);
+          const teaser = (cleanTree?.children.map(nodeText).join(" ") ?? "")
+            .replace(/\s+/g, " ")
+            .trim();
 
-            if (teaser) {
-              page.data.description = teaser.length > 200
-                ? teaser.substring(0, 197) + "…"
-                : teaser;
-            }
+          if (teaser) {
+            page.data.description = teaser.length > 200
+              ? teaser.substring(0, 197) + "…"
+              : teaser;
           }
         }
       }
