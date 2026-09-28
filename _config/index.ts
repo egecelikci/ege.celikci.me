@@ -193,11 +193,7 @@ export default function () {
         }));
     }
 
-    /** Global default configurations */
-    site.data("templateEngine", ["vto", "md"], ".md");
-    site.data("templateEngine", "typ", ".typ");
     site.data("jsonLd", jsonLdData);
-
     site.data("site", siteMetadata);
     site.data("author", author);
     site.data("git", gitMetadata);
