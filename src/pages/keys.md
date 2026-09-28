@@ -19,22 +19,6 @@ age1vryy7ntgdxrvr4lcevvhqr78yp4wpud42ahcdn0ah7ggtuqxfymq9hw07s
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)
 - [meta.sr.ht/~{{ author.username }}.keys](https://meta.sr.ht/~{{ author.username }}.keys)
 
-### authentication
-
-#### public authentication key of bilgisayar
-
-```text
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPaYomkrkg+WhBBuHrrPqCxqB2GRhqmLt5DJzQkjwalD
-SHA256:TWsRn9tVypISAdtSi1OgpmEuGIEEGVZHpOpp8oW7W+g
-```
-
-#### public authentication key of telefon
-
-```text
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOLDNi3uml+sIXth4B9rQslnqW3gc+yi6HesuveBisVs
-SHA256:ib7FCqCTFCAbsqZMh2f/HO0oAEVuhUN14AnkYSwbkz0
-```
-
 ### signing
 
 This info is also available at [Forgejo](https://{{ git.host }}/{{ author.username }}/{{ author.username }}), [Codeberg](https://codeberg.org/{{ author.username }}/{{ author.username }}), [GitHub](https://github.com/{{ author.username }}/{{ author.username }}) & [sourcehut](https://git.sr.ht/~{{ author.username }}/{{ author.username }}). All four repositories should be identical and show commits signed with one of the keys below.
