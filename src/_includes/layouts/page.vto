@@ -60,9 +60,9 @@ layout: layouts/base.vto
       })
     }}
     {{ if showIncoming }}
-      <p class="incoming-line">content ends</p>
+      <p class="incoming-line" data-pagefind-ignore="">content ends</p>
       <hr>
-      <p class="incoming-line"><b>incoming:</b>
+      <p class="incoming-line" data-pagefind-ignore=""><b>incoming:</b>
         {{ for link of backlinks }}
           <a href="{{ link.url }}">{{ link.title || "note" }}</a>
         {{ /for }}
@@ -81,7 +81,7 @@ layout: layouts/base.vto
 
   {{ if showIncoming && it.type !== "note" }}
     <hr>
-    <p class="incoming-line"><b>incoming:</b>
+    <p class="incoming-line" data-pagefind-ignore=""><b>incoming:</b>
       {{ for link of backlinks }}
         <a href="{{ link.url }}">{{ link.title || "note" }}</a>
       {{ /for }}
