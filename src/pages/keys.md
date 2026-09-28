@@ -57,6 +57,13 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF2XufuZr7u5/Yj4/qbkOBr7pbM3kCYQ6rlIKCPST5q3
 SHA256:jxjLBvJOoot2eFpcwjjD8uyolNQjWwWEJhKzrmN95ew
 ```
 
+#### public signing key of sunucu
+
+```text
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINm7ctoYtcljx4VxOkyBR6Hd7LTeYcKXeSoCHBurN9Li
+SHA256:nX5UW7ppJ0ZxjVSU2zjz5mTks/Pv4GxfDJYDcLcGy5Y
+```
+
 For the HTML page, you can [clone the site source](https://{{ git.host }}/{{ author.username }}/{{ site.host }}) and verify the commit history for the [`./src{{ page.src.path }}{{ page.src.ext }}`](https://{{ git.host }}/{{ author.username }}/{{ site.host }}/src/branch/main/src{{ page.src.path }}{{ page.src.ext }}) file.
 
 ## Matrix
