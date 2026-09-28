@@ -65,7 +65,7 @@ export default function () {
       .use(metas())
       .use(multilanguage({
         languages: ["en", "tr"],
-        defaultLanguage: "en",
+        defaultLanguage: siteMetadata.lang,
       }))
       .use(extractDate())
       .use(date({
