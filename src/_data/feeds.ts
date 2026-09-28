@@ -10,7 +10,6 @@ export default [
     output: ["/feed.atom", "/feed.json"],
     info: {
       title: siteData.host,
-      description: siteData.description,
     },
   },
   {
@@ -20,7 +19,6 @@ export default [
     output: ["/notes.atom", "/notes.json"],
     info: {
       title: `notes | ${siteData.host}`,
-      description: siteData.description,
     },
   },
   {

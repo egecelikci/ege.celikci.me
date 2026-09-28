@@ -3,7 +3,7 @@ import site from "./site.ts";
 
 export default {
   site: site.title,
-  description: "=description || " + `${site.description}`,
+  description: "=description",
   lang: site.lang,
   url: site.url,
   author: author.name,

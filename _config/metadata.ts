@@ -1,8 +1,6 @@
 export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",
-  description:
-    "Ege Çelikçi’s personal website: ephemeral notes, occasional writing, curated music, music events in İzmir and small tools.",
   lang: "en",
   locale: "en_US",
   url: "https://ege.celikci.me",
@@ -133,7 +131,7 @@ export const jsonLd = {
   "@type": "WebSite",
   url: "=url",
   name: author.name,
-  description: "=description || " + site.description,
+  description: "=description",
   author: {
     "@type": "Person",
     name: author.name,
