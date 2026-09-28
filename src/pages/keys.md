@@ -1,10 +1,6 @@
 ---
 title: "keys"
 templateEngine: [vto, md]
-menu:
-  group: meta
-  label: cryptographic keys
-  order: 2
 ---
 
 ## age

@@ -4,10 +4,6 @@ description: preferred channels for reaching out to me
 tags:
   - meta
 templateEngine: [vto, md]
-menu:
-  group: meta
-  label: reach out to me
-  order: 1
 ---
 
 Don't hesitate to reach out to me on any of these!
