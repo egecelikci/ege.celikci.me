@@ -26,7 +26,7 @@ export interface NoteGridData {
 
 const TIMEZONE = "Europe/Istanbul";
 
-// Native date helpers
+/** Native date helpers */
 function formatDate(date: Date, format: string): string {
   const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE };
 
@@ -51,7 +51,7 @@ function dateFromISOString(iso: string): Date {
   return new Date(iso);
 }
 
-// Helper interfaces
+/** Helper interfaces */
 interface Post {
   data: {
     url?: string;
@@ -215,8 +215,10 @@ export const filters = {
         (a, b) => linkPriority(a.info.label) - linkPriority(b.info.label),
       );
 
-    // Disambiguate rows that share the same label + host (e.g. two
-    // Instagram accounts) by showing their username instead of the host.
+    /**
+     * Disambiguate rows that share the same label + host (e.g. two
+     * Instagram accounts) by showing their username instead of the host.
+     */
     const pairCount = new Map<string, number>();
     for (const item of all) {
       const key = `${item.info.label}\u0000${item.host}`;
@@ -425,7 +427,7 @@ export const filters = {
       const trimmed = line.trim();
       if (!trimmed) return "";
 
-      // 1. Artist Header (@)
+      /** 1. Artist Header (@) */
       if (trimmed.startsWith("@")) {
         const text = trimmed.substring(1).trim();
         return `**${
@@ -436,11 +438,11 @@ export const filters = {
         }**  `;
       }
 
-      // 2. Song Line (*)
+      /** 2. Song Line (*) */
       if (trimmed.startsWith("*")) {
         const text = trimmed.substring(1).trim();
 
-        // Split by parenthetical groups to distinguish context
+        /** Split by parenthetical groups to distinguish context */
         const parts = text.split(/(\([^\)]+\))/g);
         const processed = parts.map((part) => {
           if (part.startsWith("(") && part.endsWith(")")) {
@@ -459,7 +461,7 @@ export const filters = {
         return `- ${processed}`;
       }
 
-      // 3. Info Line (#)
+      /** 3. Info Line (#) */
       if (trimmed.startsWith("#")) {
         const text = trimmed.substring(1).trim();
         return `*${
@@ -470,7 +472,7 @@ export const filters = {
         }*  `;
       }
 
-      // 4. Default: Handle escaping
+      /** 4. Default: Handle escaping */
       const escaped = trimmed
         .replace(/&lsqb;/g, "[")
         .replace(/&rsqb;/g, "]")
@@ -482,7 +484,7 @@ export const filters = {
       );
     };
 
-    // Support single-line setlists using '*' as a separator
+    /** Support single-line setlists using '*' as a separator */
     if (!content.includes("\n") && content.includes("*")) {
       const parts = content.split("*");
       return parts.map((p) => processLine(p.trim())).join(" * ");
@@ -499,13 +501,13 @@ export const filters = {
 
   teaser: function (content: unknown, length = 160): string {
     let text = String(content || "");
-    // 1. Remove HTML tags
+    /** 1. Remove HTML tags */
     text = text.replace(/<[^>]*>?/gm, "");
-    // 2. Remove Markdown links [text](url) -> text
+    /** 2. Remove Markdown links [text](url) -> text */
     text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-    // 3. Remove other Markdown artifacts (backticks, etc.)
+    /** 3. Remove other Markdown artifacts (backticks, etc.) */
     text = text.replace(/[`*#_]/g, "");
-    // 4. Normalize whitespace
+    /** 4. Normalize whitespace */
     text = text.replace(/\s+/g, " ").trim();
 
     if (text.length <= length) return text;
@@ -519,12 +521,12 @@ export const filters = {
     );
   },
 
-  // Specialized teaser for notes that preserves some formatting/components
+  /** Specialized teaser for notes that preserves some formatting/components */
   renderNoteTeaser: function (content: string, length = 400): string {
     if (!content) return "";
     let text = content;
 
-    // Remove images from teaser
+    /** Remove images from teaser */
     text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "");
 
     if (text.length <= length) return text;
@@ -559,7 +561,7 @@ export const filters = {
   },
 
   findFile: function (filename: string): string {
-    // Simple recursive search of project root
+    /** Simple recursive search of project root */
     const search = (dir: string): string | null => {
       try {
         for (const entry of Deno.readDirSync(dir)) {

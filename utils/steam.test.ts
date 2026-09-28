@@ -1,5 +1,4 @@
 /**
- * utils/steam.test.ts
  * Unit tests for the pure Steam library helpers.
  */
 

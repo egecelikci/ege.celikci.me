@@ -21,7 +21,7 @@ function jsonError(message: string, status: number): Response {
 }
 
 export default async (req: Request): Promise<Response> => {
-  // Handle CORS preflight
+  /** Handle CORS preflight */
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
@@ -32,8 +32,10 @@ export default async (req: Request): Promise<Response> => {
   const period = url.searchParams.get("period") ?? "week";
   const mbid = url.searchParams.get("mbid");
 
-  // ── SOURCE: cover ─────────────────────────────────────────────────────────────
-  // Proxy Cover Art Archive to avoid mixed-content and CORS issues in the worker.
+  /**
+   * SOURCE: cover
+   * Proxy Cover Art Archive to avoid mixed-content and CORS issues in the worker.
+   */
   if (source === "cover") {
     if (!mbid || !/^[0-9a-f-]{36}$/i.test(mbid)) {
       return jsonError("Valid MBID required", 400);
@@ -70,16 +72,18 @@ export default async (req: Request): Promise<Response> => {
     }
   }
 
-  // ── SOURCE: font ──────────────────────────────────────────────────────────────
-  // Proxy Google Fonts to get binary font files usable in OffscreenCanvas workers.
-  // Uses a modern UA to receive WOFF2, with fallback to weight-less and any-weight.
+  /**
+   * SOURCE: font
+   * Proxy Google Fonts to get binary font files usable in OffscreenCanvas workers.
+   * Uses a modern UA to receive WOFF2, with fallback to weight-less and any-weight.
+   */
   if (source === "font") {
     const family = url.searchParams.get("family");
     const weight = url.searchParams.get("weight") ?? "400";
 
     if (!family) return jsonError("Font family required", 400);
 
-    // Modern Chrome UA → Google Fonts returns WOFF2
+    /** Modern Chrome UA → Google Fonts returns WOFF2 */
     const UA =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
@@ -104,7 +108,7 @@ export default async (req: Request): Promise<Response> => {
       while ((match = urlRegex.exec(css)) !== null) urls.push(match[1]);
       if (urls.length === 0) return null;
 
-      // Google Fonts puts the base Latin subset last
+      /** Google Fonts puts the base Latin subset last */
       const fontRes = await fetch(urls[urls.length - 1], {
         headers: { "User-Agent": UA },
         signal: AbortSignal.timeout(15000),
@@ -114,7 +118,7 @@ export default async (req: Request): Promise<Response> => {
     }
 
     try {
-      // Try requested weight → 400 fallback → no-weight fallback
+      /** Try requested weight → 400 fallback → no-weight fallback */
       let fontBuffer = await fetchFontBuffer(weight);
       if (!fontBuffer && weight !== "400") {
         fontBuffer = await fetchFontBuffer("400");
@@ -127,8 +131,10 @@ export default async (req: Request): Promise<Response> => {
       }
 
       const magic = new DataView(fontBuffer).getUint32(0, false);
-      // Accepted magic bytes: wOFF (0x774F4646), wOF2 (0x774F4632),
-      //   TrueType (0x00010000), 'true' (0x74727565), OTTO (0x4F54544F)
+      /**
+       * Accepted magic bytes: wOFF (0x774F4646), wOF2 (0x774F4632),
+       *   TrueType (0x00010000), 'true' (0x74727565), OTTO (0x4F54544F)
+       */
       const validMagics = new Set([
         0x774f4646,
         0x774f4632,
@@ -164,7 +170,7 @@ export default async (req: Request): Promise<Response> => {
     }
   }
 
-  // ── SOURCE: lb / lfm ─────────────────────────────────────────────────────────
+  /** SOURCE: lb / lfm */
   if (!user) return jsonError("Username required", 400);
 
   try {

@@ -97,14 +97,14 @@ async function fetchCover(
 ): Promise<{ album: Album; bitmap: ImageBitmap | null }> {
   let res: Response | undefined;
 
-  // 1. Try direct image URL first (Last.fm provides these)
+  /** 1. Try direct image URL first (Last.fm provides these) */
   if (album.img) {
     try {
       res = await fetch(album.img);
     } catch (_e) {}
   }
 
-  // 2. Fall back to CAA via proxy if direct URL missing or failed
+  /** 2. Fall back to CAA via proxy if direct URL missing or failed */
   if ((!res || !res.ok) && album.mbid) {
     try {
       res = await fetch(`/api/collage-proxy?source=cover&mbid=${album.mbid}`);
@@ -192,7 +192,7 @@ self.onmessage = async (e: MessageEvent) => {
   } = options as Options;
 
   try {
-    // ── PHASE 1: FONTS ──────────────────────────────────────────────────────────
+    /** PHASE 1: FONTS */
 
     if (!defaultFontsLoaded) {
       self.postMessage({ type: "status", text: "loading default fonts" });
@@ -208,7 +208,7 @@ self.onmessage = async (e: MessageEvent) => {
       await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
     }
 
-    // ── PHASE 2: LAYOUT + COVER FETCHING ────────────────────────────────────────
+    /** PHASE 2: LAYOUT + COVER FETCHING */
 
     self.postMessage({
       type: "status",
@@ -241,13 +241,13 @@ self.onmessage = async (e: MessageEvent) => {
         text: `fetching cover art ${finalAlbums.length}/${targetCount}`,
       });
     }
-    // Pad with empty slots if we ran out of source albums
+    /** Pad with empty slots if we ran out of source albums */
     while (finalAlbums.length < targetCount) {
       finalAlbums.push({ name: "", artist: "", count: 0 });
       finalImages.push(null);
     }
 
-    // ── PHASE 3: COLOR SAMPLING + THERMAL CLAMPING ──────────────────────────────
+    /** PHASE 3: COLOR SAMPLING + THERMAL CLAMPING */
 
     self.postMessage({
       type: "status",
@@ -263,23 +263,25 @@ self.onmessage = async (e: MessageEvent) => {
       gridColors[i * 3 + 2] = colors[i].b;
     }
 
-    // Thermal: clamp vibrant colors into stark thermal-camera palette BEFORE
-    // passing to WASM, so the mesh gradient uses the harsh banded colors.
+    /**
+     * Thermal: clamp vibrant colors into stark thermal-camera palette BEFORE
+     * passing to WASM, so the mesh gradient uses the harsh banded colors.
+     */
     if (bgMode === "thermal") {
       for (let i = 0; i < gridColors.length; i += 3) {
         const avg = (gridColors[i] + gridColors[i + 1] + gridColors[i + 2]) / 3;
         if (avg < 85) {
-          // Cold → deep electric blue
+          /** Cold → deep electric blue */
           gridColors[i] = 10;
           gridColors[i + 1] = 20;
           gridColors[i + 2] = 180;
         } else if (avg < 170) {
-          // Warm → vibrant red
+          /** Warm → vibrant red */
           gridColors[i] = 235;
           gridColors[i + 1] = 35;
           gridColors[i + 2] = 15;
         } else {
-          // Hot → bright yellow
+          /** Hot → bright yellow */
           gridColors[i] = 255;
           gridColors[i + 1] = 215;
           gridColors[i + 2] = 20;
@@ -287,7 +289,7 @@ self.onmessage = async (e: MessageEvent) => {
       }
     }
 
-    // ── PHASE 4: WASM BACKGROUND RENDER ─────────────────────────────────────────
+    /** PHASE 4: WASM BACKGROUND RENDER */
 
     self.postMessage({
       type: "status",
@@ -301,8 +303,10 @@ self.onmessage = async (e: MessageEvent) => {
     else if (bgMode === "thermal") bgModeNum = 4;
     else if (bgMode === "dark") bgModeNum = 5;
 
-    // Terminal gets structural scanline grain regardless of applyGrain toggle;
-    // Silver gets heavier grain for its analog-film character.
+    /**
+     * Terminal gets structural scanline grain regardless of applyGrain toggle;
+     * Silver gets heavier grain for its analog-film character.
+     */
     const grainAmount = bgMode === "terminal"
       ? 0.22
       : bgMode === "silver"
@@ -322,12 +326,14 @@ self.onmessage = async (e: MessageEvent) => {
       : 0.0;
 
     const imageData = ctx.createImageData(W, H);
-    // Pass the underlying ArrayBuffer directly — zero extra copies.
+    /** Pass the underlying ArrayBuffer directly — zero extra copies. */
     const pixelData = new Uint8Array(imageData.data.buffer);
 
-    // Rust now handles ALL layers: gaussian splat aura, glass frosted tint,
-    // velvet gradient, silver desat+sheen, terminal phosphor, vignette,
-    // and darkenBottom.
+    /**
+     * Rust now handles ALL layers: gaussian splat aura, glass frosted tint,
+     * velvet gradient, silver desat+sheen, terminal phosphor, vignette,
+     * and darkenBottom.
+     */
     render_background(
       pixelData,
       W,
@@ -345,8 +351,10 @@ self.onmessage = async (e: MessageEvent) => {
     imageData.data.set(pixelData);
     ctx.putImageData(imageData, 0, 0);
 
-    // ── PHASE 5: GRID TILES ──────────────────────────────────────────────────────
-    // Covers are always drawn at full opacity, full saturation, no blending effects.
+    /**
+     * PHASE 5: GRID TILES
+     * Covers are always drawn at full opacity, full saturation, no blending effects.
+     */
 
     self.postMessage({
       type: "status",
@@ -380,7 +388,7 @@ self.onmessage = async (e: MessageEvent) => {
       }
       ctx.restore();
 
-      // Subtle border to lift tiles off the background
+      /** Subtle border to lift tiles off the background */
       ctx.save();
       ctx.strokeStyle = "rgba(255,255,255,0.08)";
       ctx.lineWidth = 1;
@@ -396,9 +404,11 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.restore();
     }
 
-    // ── PHASE 6: ALBUM LIST ──────────────────────────────────────────────────────
-    // Text is strictly high-contrast white/zinc. Terminal gets phosphor green
-    // on the text itself, matching the CRT aesthetic, but never warm/cool tinting.
+    /**
+     * PHASE 6: ALBUM LIST
+     * Text is strictly high-contrast white/zinc. Terminal gets phosphor green
+     * on the text itself, matching the CRT aesthetic, but never warm/cool tinting.
+     */
 
     const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9);
     self.postMessage({
@@ -459,7 +469,7 @@ self.onmessage = async (e: MessageEvent) => {
       }
     }
 
-    // ── PHASE 7: FOOTER / BRANDING ──────────────────────────────────────────────
+    /** PHASE 7: FOOTER / BRANDING */
     let footerText = footer || "";
     if (!footerText) {
       const now = new Date();
@@ -505,7 +515,7 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.fillText(transformText("EGE.CELIKCI.ME", textCase), W / 2, H - 72);
     }
 
-    // ── PHASE 11: ENCODE ─────────────────────────────────────────────────────────
+    /** PHASE 11: ENCODE */
     self.postMessage({ type: "status", text: "encoding canvas to JPEG" });
     const blob = await offscreen.convertToBlob({
       type: "image/jpeg",

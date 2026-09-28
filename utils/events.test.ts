@@ -1,5 +1,4 @@
 /**
- * utils/events.test.ts
  * Unit tests for the pure event enrichment helpers.
  */
 

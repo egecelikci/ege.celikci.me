@@ -34,8 +34,10 @@ window.addEventListener(
     if (isLightboxReady) return;
 
     const target = e.target as HTMLElement;
-    // Unrevealed spoiler tiles reveal in place; never preload the
-    // lightbox for them (see common/spoiler.ts).
+    /**
+     * Unrevealed spoiler tiles reveal in place; never preload the
+     * lightbox for them (see common/spoiler.ts).
+     */
     if (
       target.closest(
         ".media--spoiled:not(.is-revealed), .gallery__item--spoiled:not(.is-revealed)",
@@ -76,11 +78,13 @@ async function init() {
     if (!card) return;
     card.innerHTML = card.dataset.embed || "";
   });
-  // Disclosure popovers (external-links, map directions): native <details>,
-  // one open at a time, close on outside click / Escape, card clamped to
-  // the viewport. (The card is anchored absolutely; see the removed
-  // view-transition-name on .event-page__content to keep it above the
-  // sticky sidebar.)
+  /**
+   * Disclosure popovers (external-links, map directions): native <details>,
+   * one open at a time, close on outside click / Escape, card clamped to
+   * the viewport. (The card is anchored absolutely; see the removed
+   * view-transition-name on .event-page__content to keep it above the
+   * sticky sidebar.)
+   */
   const POPOVER_SELECTOR =
     "details.external-links__more, details.event-page__map-nav";
   const closePopovers = () => {
@@ -114,7 +118,7 @@ async function init() {
       card.style.bottom = "calc(100% + 0.5rem)";
     }
   };
-  // toggle does not bubble — listen in capture phase
+  /** toggle does not bubble — listen in capture phase */
   document.addEventListener(
     "toggle",
     (e) => {

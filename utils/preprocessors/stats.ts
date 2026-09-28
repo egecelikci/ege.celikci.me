@@ -1,5 +1,4 @@
 /**
- * utils/preprocessors/stats.ts
  * Processes Webmention statistics for pages.
  */
 
@@ -14,7 +13,7 @@ export default function () {
         const pageUrl = page.data.url;
         if (!pageUrl) continue;
 
-        // Webmention stats logic
+        /** Webmention stats logic */
         const stats = computeWebmentionStats(
           page.data.webmentions,
           settings.url,

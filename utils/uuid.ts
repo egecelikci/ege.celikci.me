@@ -6,9 +6,11 @@ export function uuidv7(timestamp: number = Date.now()): string {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   const ms = timestamp;
 
-  // unix_ts_ms: 48 bits, big-endian, bytes[0..5]
-  const tsHigh = Math.floor(ms / 0x10000); // top 32 bits
-  const tsLow = ms % 0x10000; // bottom 16 bits
+  /** unix_ts_ms: 48 bits, big-endian, bytes[0..5] */
+  /** top 32 bits */
+  const tsHigh = Math.floor(ms / 0x10000);
+  /** bottom 16 bits */
+  const tsLow = ms % 0x10000;
 
   bytes[0] = (tsHigh >>> 24) & 0xff;
   bytes[1] = (tsHigh >>> 16) & 0xff;
@@ -17,8 +19,10 @@ export function uuidv7(timestamp: number = Date.now()): string {
   bytes[4] = (tsLow >>> 8) & 0xff;
   bytes[5] = tsLow & 0xff;
 
-  bytes[6] = (bytes[6] & 0x0f) | 0x70; // version 7, preserve random rand_a nibble
-  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant
+  /** version 7, preserve random rand_a nibble */
+  bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  /** variant */
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
 
   const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-` +

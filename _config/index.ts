@@ -1,5 +1,4 @@
 /**
- * _config/index.ts
  * Main configuration orchestrator.
  */
 
@@ -170,7 +169,7 @@ export default function () {
         },
       }));
 
-    // Production-only optimizations and checks
+    /** Production-only optimizations and checks */
     if (!isDev) {
       site
         .use(minifyHTML())
@@ -194,7 +193,7 @@ export default function () {
         }));
     }
 
-    // Global default configurations
+    /** Global default configurations */
     site.data("templateEngine", ["vto", "md"], ".md");
     site.data("templateEngine", "typ", ".typ");
     site.data("jsonLd", jsonLdData);

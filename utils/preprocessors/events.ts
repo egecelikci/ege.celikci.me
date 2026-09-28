@@ -1,5 +1,4 @@
 /**
- * utils/preprocessors/events.ts
  * Enriches MusicBrainz event data with local metadata and performers.
  * Pure logic lives in utils/events.ts for unit testing.
  */

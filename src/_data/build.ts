@@ -7,7 +7,7 @@ import { uuidv7 } from "../../utils/uuid.ts";
 function isCSSNakedDay(): boolean {
   const now = Date.now();
   const currentYear = new Date().getFullYear();
-  // CSS Naked Day is April 9th
+  /** CSS Naked Day is April 9th */
   const startEpoch = new Date(`${currentYear}-04-09T00:00:00+1400`).getTime();
   const endEpoch = new Date(`${currentYear}-04-09T23:59:59-1200`).getTime();
   return startEpoch <= now && now <= endEpoch;

@@ -31,9 +31,11 @@ export function initTouchReveal(selector: string) {
       }
     });
   }, {
-    // The "active" zone is the central 40% of the screen.
-    // This allows multiple rows of items to be active at once,
-    // making the experience feel natural and responsive.
+    /**
+     * The "active" zone is the central 40% of the screen.
+     * This allows multiple rows of items to be active at once,
+     * making the experience feel natural and responsive.
+     */
     rootMargin: "-30% 0px -30% 0px",
     threshold: 0.1,
   });

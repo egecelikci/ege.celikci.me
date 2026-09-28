@@ -1,5 +1,4 @@
 /**
- * utils/events.ts
  * Pure helpers for enriching MusicBrainz event data.
  * Kept free of side effects so they can be unit tested.
  */

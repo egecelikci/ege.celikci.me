@@ -1,6 +1,4 @@
 /**
- * utils/cache.ts
- *
  * Minimal persistence layer for Lume data files.
  * Provides stable JSON file management with key sorting.
  */

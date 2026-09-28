@@ -1,6 +1,4 @@
 /**
- * src/_data/webmentions.ts
- *
  * Webmentions Data Fetcher
  * Uses native Deno HTTP Cache API and simplified state management.
  */
@@ -17,9 +15,7 @@ import {
 import type { Webmention, WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 
-// ============================================================================
 // CONFIGURATION
-// ============================================================================
 
 const CONFIG = {
   perPage: 1000,
@@ -101,9 +97,7 @@ class WebmentionFetcher {
   }
 }
 
-// ============================================================================
 // WEBMENTION PROCESSOR
-// ============================================================================
 
 class WebmentionProcessor {
   mergeMentions(
@@ -185,9 +179,7 @@ class WebmentionProcessor {
   }
 }
 
-// ============================================================================
 // MAIN ORCHESTRATOR
-// ============================================================================
 
 async function getWebmentionsData(): Promise<WebmentionFeed> {
   const startTime = performance.now();
@@ -260,8 +252,6 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   }
 }
 
-// ============================================================================
 // EXPORT
-// ============================================================================
 
 export default await getWebmentionsData();

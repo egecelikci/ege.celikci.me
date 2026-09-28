@@ -12,8 +12,10 @@
 
 let isSpoilerReady = false;
 
-// Runs at bundle evaluation, before first paint in practice: veils and
-// blur only exist while this bundle is alive to toggle them.
+/**
+ * Runs at bundle evaluation, before first paint in practice: veils and
+ * blur only exist while this bundle is alive to toggle them.
+ */
 document.documentElement.classList.add("has-spoiler");
 
 /**

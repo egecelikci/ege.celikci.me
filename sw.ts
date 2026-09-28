@@ -1,5 +1,4 @@
 /**
- * sw.ts
  * Service worker built with Serwist. Bundled and manifest-injected by
  * `@serwist/cli build` in the `afterBuild` hook.
  */

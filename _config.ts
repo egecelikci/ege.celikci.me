@@ -8,10 +8,10 @@ const site = lume({
   location: new URL("https://ege.celikci.me"),
 });
 
-// Modular configuration
+/** Modular configuration */
 site.use(config());
 
-// Preprocessors
+/** Preprocessors */
 registerPreprocessors(site);
 
 const runFetch = async (script: string, label: string) => {
@@ -41,7 +41,7 @@ const runFetch = async (script: string, label: string) => {
 const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
 const isDev = Deno.env.get("LUME_ENV") === "development" || isServe;
 
-// Skip heavy data fetching scripts during local development serve
+/** Skip heavy data fetching scripts during local development serve */
 site.addEventListener("beforeBuild", () => {
   if (isDev) {
     console.log("[build] Skipping network fetch scripts in development.");
@@ -54,7 +54,7 @@ site.addEventListener("beforeBuild", () => {
   ]);
 });
 
-// Service Worker generation (bundled + precache manifest injected)
+/** Service Worker generation (bundled + precache manifest injected) */
 site.addEventListener("afterBuild", async () => {
   const command = new Deno.Command("deno", {
     args: ["run", "-A", "@serwist/cli", "build"],

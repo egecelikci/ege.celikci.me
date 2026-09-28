@@ -1,5 +1,4 @@
 /**
- * utils/preprocessors/media.test.ts
  * Unit tests for build-time image dimension probing.
  */
 

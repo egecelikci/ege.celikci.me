@@ -44,7 +44,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
   for (const event of rawEvents) {
     const local = events?.[event.id] || {};
 
-    // Check for local gallery images
+    /** Check for local gallery images */
     const galleryPath = `src/assets/images/events/${event.id}`;
     const gallery = await collectGalleryImages(
       event.id,
@@ -56,8 +56,10 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       return [];
     });
 
-    // 2. Header Extension Setup (Sources)
-    // ONLY event-related links: MB Event Page and Local Instagram URLs
+    /**
+     * 2. Header Extension Setup (Sources)
+     * ONLY event-related links: MB Event Page and Local Instagram URLs
+     */
     const headerSources: Array<{
       label: string;
       url: string;
@@ -72,7 +74,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       },
     ];
 
-    // Add local Instagram URLs from events.yml
+    /** Add local Instagram URLs from events.yml */
     if (local.instagram_url) {
       const igUrls = Array.isArray(local.instagram_url)
         ? local.instagram_url
@@ -88,11 +90,11 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       });
     }
 
-    // Add all event-level URL relations from MusicBrainz (homepages, ticketing, etc.)
+    /** Add all event-level URL relations from MusicBrainz (homepages, ticketing, etc.) */
     (event.relations || []).forEach((rel: MBRelation) => {
       if (rel["target-type"] === "url" && rel.url?.resource) {
         const info = getLinkInfo(rel.type, rel.url.resource);
-        // Exclude generic fallbacks from the header to keep it high-quality
+        /** Exclude generic fallbacks from the header to keep it high-quality */
         if (!info.isFallback) {
           headerSources.push({
             label: info.label,
@@ -104,7 +106,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       }
     });
 
-    // Gather all credits from MB relations
+    /** Gather all credits from MB relations */
     const allCredits = (event.relations || []).filter((rel: MBRelation) =>
       ["illustration", "graphic design", "artwork", "design", "engineer"]
         .includes(rel.type)
@@ -113,7 +115,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       const entityLinks = (artistId && mb_events.entities[artistId]) || [];
       const artistName = rel["target-credit"] || rel.artist?.name;
 
-      // Find primary link for the credit (homepage > instagram > MB)
+      /** Find primary link for the credit (homepage > instagram > MB) */
       const homepage = entityLinks.find((l: MBEntityLink) =>
         l.type.toLowerCase().includes("homepage") ||
         l.type.toLowerCase().includes("site")
@@ -152,9 +154,11 @@ export default async function* ({ mb_events, events }: Lume.Data) {
       };
     });
 
-    // Split credits by logic:
-    // 1. Static visual roles -> Poster
-    // 2. Technical/Motion roles -> Video
+    /**
+     * Split credits by logic:
+     * 1. Static visual roles → Poster
+     * 2. Technical/Motion roles → Video
+     */
     let posterCredits = allCredits.filter((c) =>
       ["illustration", "graphic design", "artwork"].includes(c.type)
     );

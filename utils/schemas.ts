@@ -1,5 +1,4 @@
 /**
- * utils/schemas.ts
  * Zod schemas for validating external API responses and cached state.
  *
  * Each schema is annotated with the interface it must satisfy, so a schema

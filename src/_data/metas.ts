@@ -1,4 +1,3 @@
-// src/_data/metas.ts
 import author from "./author.ts";
 import site from "./site.ts";
 
@@ -16,5 +15,6 @@ export default {
   type: "=type || website",
   keywords: "=tags",
   robots: "=robots",
-  color: ["#fef6e4", "#463366"], // Light and dark theme colors
+  /** Light and dark theme colors */
+  color: ["#fef6e4", "#463366"],
 };

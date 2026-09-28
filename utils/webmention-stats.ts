@@ -1,5 +1,4 @@
 /**
- * utils/webmention-stats.ts
  * Pure helpers for computing webmention statistics for a page.
  * Kept free of side effects so they can be unit tested.
  */

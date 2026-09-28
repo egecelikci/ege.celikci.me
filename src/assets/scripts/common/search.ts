@@ -1,5 +1,4 @@
 /**
- * search.ts
  * Pagefind-powered search functionality for Lume.
  */
 
@@ -114,8 +113,10 @@ export async function initSearch() {
           if (isMatch) visibleCount++;
         });
 
-        // Hide letter groups with no visible rows (games page only;
-        // scoped to .game-list so other filter-mode pages are unaffected).
+        /**
+         * Hide letter groups with no visible rows (games page only;
+         * scoped to .game-list so other filter-mode pages are unaffected).
+         */
         document.querySelectorAll(".game-list").forEach((list) => {
           list.querySelectorAll<HTMLElement>(".game-group").forEach((group) => {
             const anyVisible = Array.from(
@@ -239,7 +240,7 @@ export async function initSearch() {
 
       resultsContainer.classList.add("is-visible");
 
-      // Handle anchor jumps manually for smooth UX
+      /** Handle anchor jumps manually for smooth UX */
       resultsContainer.querySelectorAll('[data-anchor-jump="true"]').forEach(
         (el) => {
           el.addEventListener("click", (e) => {
@@ -251,7 +252,7 @@ export async function initSearch() {
               clearSearch();
               target.scrollIntoView({ behavior: "smooth", block: "center" });
 
-              // Visual Flash highlight
+              /** Visual Flash highlight */
               target.classList.add(
                 "reveal:bg-primary-muted/20",
                 "reveal:border-primary-muted",
@@ -310,7 +311,7 @@ export async function initSearch() {
     input.addEventListener("keydown", handleKeyNav);
     resultsContainer.addEventListener("keydown", handleKeyNav);
 
-    // Handle clicks outside to close results
+    /** Handle clicks outside to close results */
     document.addEventListener("click", (e) => {
       if (!root.contains(e.target as Node)) {
         resultsContainer.classList.remove("is-visible");
@@ -320,10 +321,12 @@ export async function initSearch() {
     });
   });
 
-  // Global Keyboard (/)
+  /** Global Keyboard (/) */
   document.addEventListener("keydown", (e) => {
-    // If multiple search boxes exist, we just focus the first one for the "/" shortcut
-    // unless one is specifically targeted (e.g. by being in the viewport).
+    /**
+     * If multiple search boxes exist, we just focus the first one for the "/" shortcut
+     * unless one is specifically targeted (e.g. by being in the viewport).
+     */
     const mainInput = document.querySelector(
       'input[type="search"]',
     ) as HTMLInputElement;

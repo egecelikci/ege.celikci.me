@@ -1,5 +1,4 @@
 /**
- * utils/links.ts
  * Centralized mapping for external links to icons and labels.
  */
 
@@ -15,8 +14,10 @@ export interface LinkMapping {
  * so detection is an explicit allowlist — add new instances here.
  */
 export const FEDIVERSE_HOSTS = [
-  "do.basspistol.org", // Gancio
-  "ieji.de", // Mastodon
+  /** Gancio */
+  "do.basspistol.org",
+  /** Mastodon */
+  "ieji.de",
   "mastodon.social",
   "mastodon.art",
   "kolektiva.social",

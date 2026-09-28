@@ -1,5 +1,4 @@
 /**
- * utils/webmention-stats.test.ts
  * Unit tests for the pure webmention statistics helpers.
  */
 

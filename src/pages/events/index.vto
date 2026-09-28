@@ -23,7 +23,7 @@ headerExtension:
         type: feed
 ---
 
-{{# ── CALENDAR VIEW ──────────────────────────────────────────────────── #}}
+{{# CALENDAR VIEW #}}
 {{ if mb_events?.upcoming?.length > 0 }}
   {{ set pastLink }}
     {{ if mb_events?.past?.length > 0 }}
@@ -54,7 +54,7 @@ headerExtension:
   }}
 {{ /if }}
 
-{{# ─── EMPTY STATE ────────────────────────────────────────────────────── #}}
+{{# EMPTY STATE #}}
 {{ if mb_events?.upcoming?.length === 0 }}
   <div class="event-empty">
     {{
@@ -68,7 +68,7 @@ headerExtension:
   </div>
 {{ /if }}
 
-{{# ─── FOOTER ACTIONS & INFO ───────────────────────────────────────────── #}}
+{{# FOOTER ACTIONS & INFO #}}
 {{ set customFooterContent }}
   <div class="event-actions">
   <div class="event-actions__bar">

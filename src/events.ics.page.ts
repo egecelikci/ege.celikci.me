@@ -25,7 +25,7 @@ export default function ({ mb_events }: Lume.Data) {
     const d = new Date(date);
     if (isNaN(d.getTime())) return "";
 
-    // MusicBrainz dates (YYYY-MM-DD) are parsed as UTC 00:00 by new Date()
+    /** MusicBrainz dates (YYYY-MM-DD) are parsed as UTC 00:00 by new Date() */
     const y = d.getUTCFullYear();
     const m = String(d.getUTCMonth() + 1).padStart(2, "0");
     const dateDay = String(d.getUTCDate()).padStart(2, "0");
@@ -34,7 +34,7 @@ export default function ({ mb_events }: Lume.Data) {
       const [hh, mm] = timeStr.split(":").map((s) => s.padStart(2, "0"));
       return `${y}${m}${dateDay}T${hh}${mm}00`;
     }
-    // All day event if no time
+    /** All day event if no time */
     return `${y}${m}${dateDay}`;
   };
 
@@ -54,11 +54,11 @@ export default function ({ mb_events }: Lume.Data) {
     icsLines.push(`DTSTAMP:${dtstamp}`);
 
     if (event.time) {
-      // Use duration for timed events to avoid midnight rollover rendering issues
+      /** Use duration for timed events to avoid midnight rollover rendering issues */
       icsLines.push(`DTSTART;TZID=Europe/Istanbul:${startStr}`);
       icsLines.push("DURATION:PT3H");
     } else {
-      // All day events use VALUE=DATE with DTEND
+      /** All day events use VALUE=DATE with DTEND */
       const nextDay = new Date(startDate);
       nextDay.setUTCDate(nextDay.getUTCDate() + 1);
       icsLines.push(`DTSTART;VALUE=DATE:${startStr}`);
@@ -87,7 +87,7 @@ export default function ({ mb_events }: Lume.Data) {
 
   icsLines.push("END:VCALENDAR");
 
-  // iCal line folding (75 octets)
+  /** iCal line folding (75 octets) */
   const fold = (line: string): string => {
     const encoder = new TextEncoder();
     const bytes = encoder.encode(line);
@@ -99,10 +99,12 @@ export default function ({ mb_events }: Lume.Data) {
     const decoder = new TextDecoder();
 
     while (offset < bytes.length) {
-      const max = first ? 75 : 74; // continuation lines start with a space (1 octet)
-      // Find safe split point (don't cut mid-multibyte-sequence)
+      /** continuation lines start with a space (1 octet) */
+      const max = first ? 75 : 74;
+      /** Find safe split point (don't cut mid-multibyte-sequence) */
       let end = Math.min(offset + max, bytes.length);
-      while (end > offset && (bytes[end] & 0xC0) === 0x80) end--; // back off from continuation bytes
+      /** back off from continuation bytes */
+      while (end > offset && (bytes[end] & 0xC0) === 0x80) end--;
       parts.push((first ? "" : " ") + decoder.decode(bytes.slice(offset, end)));
       offset = end;
       first = false;

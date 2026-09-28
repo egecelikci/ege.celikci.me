@@ -1,5 +1,4 @@
 /**
- * brew-calculator.ts
  * Simple coffee brewing calculator logic.
  */
 

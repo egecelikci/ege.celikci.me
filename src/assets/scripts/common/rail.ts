@@ -37,8 +37,10 @@ export function initRail(rail: HTMLElement) {
 
     for (const link of links) {
       const exact = link.dataset.target === id;
-      // parent year links light up alongside their month, but only the
-      // exact target is announced as current (single aria-current per nav)
+      /**
+       * parent year links light up alongside their month, but only the
+       * exact target is announced as current (single aria-current per nav)
+       */
       const grouped = !exact &&
         link.classList.contains("rail__link--primary") &&
         link.dataset.year !== undefined &&
@@ -49,8 +51,10 @@ export function initRail(rail: HTMLElement) {
     }
   }
 
-  // measured header wins over the --header-height variable so zoom
-  // and custom root font sizes stay aligned with scroll-padding
+  /**
+   * measured header wins over the --header-height variable so zoom
+   * and custom root font sizes stay aligned with scroll-padding
+   */
   const headerEl = document.getElementById("site-header");
   function headerHeightPx(): number {
     if (headerEl) return headerEl.getBoundingClientRect().height;
@@ -66,9 +70,11 @@ export function initRail(rail: HTMLElement) {
   }
 
   function update() {
-    // must match the html scroll-padding the anchors land on (plus a few px
-    // of slack for sub-pixel landing jitter), so rail jumps seat their
-    // letter exactly centered in the aperture
+    /**
+     * must match the html scroll-padding the anchors land on (plus a few px
+     * of slack for sub-pixel landing jitter), so rail jumps seat their
+     * letter exactly centered in the aperture
+     */
     const line = headerHeightPx() + 4;
     let idx = -1;
     for (let i = 0; i < order.length; i++) {
@@ -142,7 +148,7 @@ export function initRail(rail: HTMLElement) {
     try {
       rail.setPointerCapture(e.pointerId);
     } catch {
-      // pointer capture unsupported: scrub still works, just per-event
+      /** pointer capture unsupported: scrub still works, just per-event */
     }
     jump(id, false);
   });
@@ -152,8 +158,10 @@ export function initRail(rail: HTMLElement) {
     const link = linkAt(e.clientX, e.clientY);
     const id = link?.dataset.target;
     if (!id || !sections.has(id)) return;
-    // coalesce rapid moves into one jump per frame: each jump forces
-    // layout (scroll + elementFromPoint), so unthrottled scrub thrashes
+    /**
+     * coalesce rapid moves into one jump per frame: each jump forces
+     * layout (scroll + elementFromPoint), so unthrottled scrub thrashes
+     */
     scrubQueued = id;
     if (!scrubRaf) {
       scrubRaf = requestAnimationFrame(() => {
@@ -180,12 +188,12 @@ export function initRail(rail: HTMLElement) {
       "a[data-target]",
     ) as HTMLAnchorElement | null;
     const id = link?.dataset.target;
-    // unknown target: don't intercept, let the native anchor do its job
+    /** unknown target: don't intercept, let the native anchor do its job */
     if (!id || !sections.has(id)) return;
     e.preventDefault();
     if (Date.now() - draggedAt < 300) return;
     jump(id, true);
-    // move context to the destination so keyboard/SR users land with it
+    /** move context to the destination so keyboard/SR users land with it */
     sections.get(id)?.focus({ preventScroll: true });
   });
 

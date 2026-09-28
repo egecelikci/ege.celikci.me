@@ -1,5 +1,4 @@
 /**
- * collage-tool.ts
  * Logic for the album collage generator tool.
  */
 

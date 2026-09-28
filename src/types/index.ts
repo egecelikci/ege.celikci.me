@@ -1,8 +1,4 @@
-// src/types/index.ts
-
-// ============================================================================
 // MUSIC TYPES
-// ============================================================================
 
 export interface MusicBrainzArtist {
   id: string;
@@ -57,9 +53,7 @@ export interface CritiqueBrainzResponse {
   count: number;
 }
 
-// ============================================================================
 // STEAM TYPES
-// ============================================================================
 
 /** Raw game entry from IPlayerService/GetOwnedGames (include_appinfo=1) */
 export interface SteamOwnedGame {
@@ -90,9 +84,7 @@ export interface GamesStore {
   games: SteamGameEntry[];
 }
 
-// ============================================================================
 // WEBMENTION TYPES
-// ============================================================================
 
 /**
  * Individual webmention entry
@@ -197,9 +189,7 @@ export interface WebmentionStats {
   mentions: number;
 }
 
-// ============================================================================
 // PAGE TYPES (Lume)
-// ============================================================================
 
 export interface PageImage {
   src: string;
@@ -222,9 +212,7 @@ export interface PageData {
   wordCount?: number;
 }
 
-// ============================================================================
 // COMPONENT PROPS
-// ============================================================================
 
 export interface CardProps {
   variant?: "default" | "elevated" | "flat";

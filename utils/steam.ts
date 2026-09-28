@@ -1,5 +1,4 @@
 /**
- * utils/steam.ts
  * Pure helpers for the Steam family library.
  * Kept side-effect free so `utils/steam.test.ts` can cover them.
  */
