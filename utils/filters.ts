@@ -413,7 +413,7 @@ export const filters = {
     const idRegex = /([a-f0-9-]{36})/;
 
     const processLink = (
-      match: string,
+      _match: string,
       rawId: string,
       name: string,
       type: "artist" | "work",
