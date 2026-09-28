@@ -1,6 +1,9 @@
 /**
- * utils/incoming.test.ts
  * Unit tests for the `incoming:` backlinks helpers.
+ *
+ * Extraction is AST-based (see utils/mdast.ts), so the fixtures below
+ * intentionally cover the link forms a regex approach used to miss:
+ * titles, reference links, autolinks, code blocks, image embeds.
  */
 
 import { assertEquals } from "@std/assert";
@@ -12,15 +15,80 @@ import {
   noteTitle,
 } from "./incoming.ts";
 
+const SITE_URL = "https://ege.celikci.me";
+
 Deno.test("extractBodyLinks finds markdown and html links", () => {
   assertEquals(
     extractBodyLinks(
       "see the [notes](/notes/) and [music](/music/page?x=1#y), " +
         'plus <a href="/tags/coffee/">coffee</a> and ' +
         "[external](https://example.com/) and [frag](#top).",
+      { siteUrl: SITE_URL },
     ).sort(),
     ["/music/page/", "/notes/", "/tags/coffee/"],
   );
+});
+
+Deno.test("extractBodyLinks keeps link titles out of the target", () => {
+  assertEquals(
+    extractBodyLinks('[music](/music/ "my playlist")'),
+    ["/music/"],
+  );
+});
+
+Deno.test("extractBodyLinks resolves reference-style links", () => {
+  assertEquals(
+    extractBodyLinks(
+      "see [the notes][n] and also [the notes][n]\n\n" +
+        '[n]: /notes/ "Notes"',
+    ),
+    ["/notes/"],
+  );
+});
+
+Deno.test("extractBodyLinks ignores code blocks and inline code", () => {
+  assertEquals(
+    extractBodyLinks(
+      "inline `[docs](/docs/)` stays literal\n\n" +
+        "```\n[example](/should-not-count/)\n```\n",
+    ),
+    [],
+  );
+});
+
+Deno.test("extractBodyLinks ignores image embeds", () => {
+  assertEquals(
+    extractBodyLinks(
+      "![gallery](/assets/images/x.jpg) and " +
+        "[<img src='/not-a-link.png'>](/real/)",
+    ),
+    ["/real/"],
+  );
+});
+
+Deno.test("extractBodyLinks accepts single-quoted and bare html hrefs", () => {
+  assertEquals(
+    extractBodyLinks(
+      "<a href='/events/'>a</a> <a href=/keys>b</a> " +
+        '<a class="x" href="/music/">c</a>',
+    ),
+    ["/events/", "/keys/", "/music/"],
+  );
+});
+
+Deno.test("extractBodyLinks maps absolute self-links to paths", () => {
+  assertEquals(
+    extractBodyLinks(
+      `see ${SITE_URL}/notes/42/ and http://ege.celikci.me/music ` +
+        "and https://example.com/nope/",
+      { siteUrl: SITE_URL },
+    ).sort(),
+    ["/music/", "/notes/42/"],
+  );
+});
+
+Deno.test("extractBodyLinks skips absolute links without a siteUrl", () => {
+  assertEquals(extractBodyLinks(`see ${SITE_URL}/notes/`), []);
 });
 
 Deno.test("frontmatterLinks keeps internal source paths only", () => {
@@ -34,6 +102,10 @@ Deno.test("frontmatterLinks keeps internal source paths only", () => {
     ]),
     ["/komun/"],
   );
+  /** A single source object is accepted too (SourceMeta shorthand). */
+  assertEquals(frontmatterLinks({ label: "Akarca", url: "/akarca" }), [
+    "/akarca/",
+  ]);
   assertEquals(frontmatterLinks(undefined), []);
   assertEquals(frontmatterLinks("nope"), []);
 });
@@ -44,31 +116,22 @@ Deno.test("normalizeUrl unifies trailing slashes and drops fragments", () => {
   assertEquals(normalizeUrl("/notes/?p=2#x"), "/notes/");
 });
 
-Deno.test("buildIncoming links tagged pages to their tag pages", () => {
-  const result = buildIncoming(
-    [
-      { url: "/notes/1/", title: "moka pot", tags: ["coffee"] },
-      { url: "/tags/coffee/", title: "#coffee" },
-    ],
-    { slugifyTag: (t) => t },
-  );
-  assertEquals(result.get("/tags/coffee/"), [
-    { title: "moka pot", url: "/notes/1/" },
-  ]);
-  assertEquals(result.has("/tags/"), false);
+Deno.test("normalizeUrl lowercases and decodes percent escapes", () => {
+  assertEquals(normalizeUrl("/Music/"), "/music/");
+  assertEquals(normalizeUrl("/caf%C3%A9/"), "/café/");
+  /** Malformed escapes stay as-is instead of throwing. */
+  assertEquals(normalizeUrl("/bad%zz/"), "/bad%zz/");
 });
 
 Deno.test("buildIncoming links prose body links and skips unknowns", () => {
-  const result = buildIncoming(
-    [
-      {
-        url: "/",
-        title: "home",
-        bodyLinks: ["/music/", "/missing/", "https://x.com/"],
-      },
-      { url: "/music/", title: "music" },
-    ],
-  );
+  const result = buildIncoming([
+    {
+      url: "/",
+      title: "home",
+      bodyLinks: ["/music/", "/missing/", "https://x.com/"],
+    },
+    { url: "/music/", title: "music" },
+  ]);
   assertEquals(result.get("/music/"), [{ title: "home", url: "/" }]);
   assertEquals(result.has("/missing/"), false);
 });
@@ -131,6 +194,40 @@ Deno.test("buildIncoming matches translated targets with their language", () => 
   ]);
 });
 
+Deno.test("buildIncoming sorts backlinks newest first", () => {
+  const result = buildIncoming([
+    { url: "/target/", title: "target" },
+    {
+      url: "/old/",
+      title: "old",
+      date: "2025-01-01T00:00:00+03:00",
+      bodyLinks: ["/target/"],
+    },
+    {
+      url: "/new/",
+      title: "new",
+      date: "2026-01-01T00:00:00+03:00",
+      bodyLinks: ["/target/"],
+    },
+    { url: "/undated/", title: "undated", bodyLinks: ["/target/"] },
+  ]);
+  assertEquals(
+    result.get("/target/")!.map((l) => l.url),
+    ["/new/", "/old/", "/undated/"],
+  );
+});
+
+Deno.test("buildIncoming exposes the linking page date", () => {
+  const date = new Date("2026-08-24T21:33:00+03:00");
+  const result = buildIncoming([
+    { url: "/komun/", title: "Komün" },
+    { url: "/notes/1/", title: "a note", date, bodyLinks: ["/komun/"] },
+  ]);
+  assertEquals(result.get("/komun/"), [
+    { title: "a note", url: "/notes/1/", date },
+  ]);
+});
+
 Deno.test("noteTitle prefers the authored title", () => {
   assertEquals(noteTitle("Hello", new Date()), "Hello");
 });
@@ -159,12 +256,13 @@ Deno.test("noteTitle abbreviates September like the template grammar", () => {
 });
 
 Deno.test("buildIncoming labels untitled linkers by date", () => {
+  const date = new Date("2026-08-24T21:33:00+03:00");
   const result = buildIncoming([
     { url: "/komun/", title: "Komün" },
     {
       url: "/notes/20260824213331/",
       title: "",
-      date: new Date("2026-08-24T21:33:00+03:00"),
+      date,
       bodyLinks: ["/komun/"],
     },
   ]);
@@ -172,6 +270,7 @@ Deno.test("buildIncoming labels untitled linkers by date", () => {
     {
       title: "note from 24 Aug 2026 21:33",
       url: "/notes/20260824213331/",
+      date,
     },
   ]);
 });

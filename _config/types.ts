@@ -55,6 +55,8 @@ export interface WebmentionStats {
 export interface Backlink {
   url: string;
   title: string;
+  /** date of the linking page; incoming list renders newest-first */
+  date?: Date | string;
 }
 
 declare global {
@@ -89,6 +91,8 @@ declare global {
       noindex?: boolean;
       prose?: boolean;
       backlink?: Backlink;
+      /** reverse link index built by utils/preprocessors/incoming.ts */
+      backlinks?: Backlink[];
       openGraphLayout?: string | false;
     }
   }
