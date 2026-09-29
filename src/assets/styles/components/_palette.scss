@@ -1,0 +1,128 @@
+@use "../utils/variables";
+
+/* A palette reference, split per scheme: each scheme is a collapsible panel painted in its own frame colors (a light panel stays light on a dark page), holding one row per token.
+
+   Every row is painted in its own token color and its text color is chosen for contrast at build time (see `onColor` in src/_data/motif.ts), so the row *is* the swatch — nothing has to be judged from a 16px dot, and no chip or border chrome competes with the colors. The scheme is named once, in the panel title, instead of trailing every value as a repeated word.
+
+   Not a table on purpose — a table needs a sideways scroll on a phone or `display` overrides that put its semantics at risk, while these rows reflow by construction. One grid per panel holds every row as a subgrid, so token, description and value line up down the page. */
+@layer components {
+  .palette-scheme {
+    margin-block: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+
+    &__title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+      padding: 0.875rem 1.25rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+
+      /* Our own chevron stands in for the native marker. */
+      list-style: none;
+
+      /* A real heading inside <summary>: valid HTML gives the panels a place in the document outline. Fixed width so the preview dots line up between panels despite `light` and `dark` being different lengths. */
+      h3 {
+        min-inline-size: 5.5ch;
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 1rem;
+        font-weight: 700;
+      }
+    }
+
+    &__chevron {
+      inline-size: 1rem;
+      block-size: 1rem;
+      transition: rotate 200ms ease;
+    }
+
+    &[open] &__chevron {
+      rotate: 180deg;
+    }
+
+    /* The scheme has to read while the panel is closed, so its title carries every one of its colors. */
+    &__preview {
+      display: inline-flex;
+      gap: 0.25rem;
+    }
+
+    &__dot {
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      border-radius: 50%;
+      border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    }
+
+    &__count {
+      margin-inline-start: auto;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+  }
+
+  .palette {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.375rem;
+    margin: 0;
+    padding: 0 1.25rem 1.25rem;
+    list-style: none;
+
+    @include variables.bp(md) {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+  }
+
+  .palette__row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto auto;
+    gap: 0.125rem 0.875rem;
+    align-items: baseline;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+
+    @include variables.bp(md) {
+      grid-template-rows: auto;
+    }
+  }
+
+  .palette__token {
+    grid-row: 1;
+    grid-column: 1;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+
+  .palette__desc {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    margin: 0;
+    opacity: 0.8;
+
+    @include variables.bp(md) {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+
+  .palette__value {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+
+    @include variables.bp(md) {
+      grid-column: 3;
+    }
+  }
+}

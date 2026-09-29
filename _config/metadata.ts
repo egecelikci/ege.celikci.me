@@ -1,3 +1,5 @@
+export const MOTIF_SHA = "ee8cbd0eeeb52c402bfa0c7eed3c89df69c3a0cb";
+
 export const site = {
   title: "ege.celikci.me",
   host: "ege.celikci.me",

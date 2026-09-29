@@ -6,6 +6,7 @@ import picture from "lume/plugins/picture.ts";
 import sass from "lume/plugins/sass.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
+import { MOTIF_SHA } from "./metadata.ts";
 
 export interface AssetOptions {
   esbuild?: Partial<EsbuildOptions>;
@@ -88,11 +89,10 @@ export default function (options: AssetOptions = {}) {
       .use(inline())
       .use(picture())
       .use(transformImages())
-      // Palette for `@use "motif"` in styles/utils/_variables.scss. Pinned
-      // commit: a local file at the same path wins over this remote fallback.
+      /** Palette partial, so `utils/_variables.scss` can `@use "motif"`. A local file at the same path wins over this remote fallback.*/
       .remoteFile(
         "assets/styles/utils/_motif.scss",
-        "https://cdn.jsdelivr.net/gh/egecelikci/motif@0807b64850fe6c151cc7943d1788af5c44eafd8a/website/_motif.scss",
+        `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/website/_motif.scss`,
       )
       .add("assets/images")
       .add("assets/fonts")

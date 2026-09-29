@@ -58,6 +58,7 @@
 @use "components/webmention-comments";
 @use "components/map";
 @use "components/feeds";
+@use "components/palette";
 @use "base/utilities";
 
 /* layer priority (must sit after all @use rules); individual background/foreground declarations live in their partials */
