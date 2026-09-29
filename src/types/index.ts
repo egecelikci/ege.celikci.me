@@ -206,7 +206,7 @@ export interface PageData {
   edited?: boolean;
   description?: string;
   tags?: string[];
-  type?: "post" | "note" | "entry" | "index";
+  type?: "note" | "entry" | "index";
   images?: PageImage[];
   content?: string;
   wordCount?: number;

@@ -41,7 +41,6 @@ import {
   atproto,
   author,
   git as gitMetadata,
-  jsonLd as jsonLdData,
   site as siteMetadata,
 } from "./metadata.ts";
 
@@ -193,7 +192,6 @@ export default function () {
         }));
     }
 
-    site.data("jsonLd", jsonLdData);
     site.data("site", siteMetadata);
     site.data("author", author);
     site.data("git", gitMetadata);

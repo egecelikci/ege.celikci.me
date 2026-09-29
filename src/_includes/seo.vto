@@ -2,25 +2,10 @@
 {{ set absolutePageUrl = url |> url(true) }}
 
 {{# Determine Layout Type #}}
-{{ set isPost = type === "post" }}
 {{ set isNote = type === "note" }}
 
 {{# Auto Description Logic #}}
 {{ set autoDescription = "" }}
-{{ if isPost && content }}
-  {{ set cleanContent = content |> replace(/<[^>]+>/g, '') }}
-  {{ if cleanContent }}
-    {{ set autoDescription = cleanContent.substring(0, 200) + "…" }}
-  {{ /if }}
-{{ /if }}
-
-{{ if isPost }}
-  <meta property="og:type" content="article" />
-  <meta
-  property="article:published_time"
-  content="{{ date |> date('ATOM') }}"
-/>
-{{ /if }}
 
 {{# General Metadata #}}
 

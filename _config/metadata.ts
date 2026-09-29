@@ -128,19 +128,3 @@ export const socialProfiles = [
   `https://${git.host}/${USERNAME}`,
   `https://listenbrainz.org/user/${USERNAME}`,
 ];
-
-export const jsonLd = {
-  "@type": "WebSite",
-  url: "=url",
-  name: author.name,
-  description: "=description",
-  author: {
-    "@type": "Person",
-    name: author.name,
-    email: EMAIL,
-    url: site.url,
-    sameAs: socialProfiles,
-  },
-  headline: "=title || " + site.title,
-  sameAs: socialProfiles,
-};
