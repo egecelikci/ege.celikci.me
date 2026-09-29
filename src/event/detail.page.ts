@@ -195,13 +195,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
         image: event.imagePath || event.posterThumb || event.posterUrl,
       },
       prose: false,
-      headerExtension: {
-        comp: "layout.SourceMeta",
-        props: {
-          sources: headerSources,
-          variant: "minimal",
-        },
-      },
+      links: headerSources,
       coverImage: event.imagePath || event.posterThumb || event.posterUrl,
       description: local.description || event.disambiguation,
     };

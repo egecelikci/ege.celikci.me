@@ -1,7 +1,11 @@
 ---
 title: colophon
+description: consists of the documentation of the site
 tags: ["meta"]
 templateEngine: [vto, md]
+links:
+  - label: IndieWeb
+    url: https://indieweb.org/colophon
 ---
 
 This page will be a living documentation of how site is built and what are the current standards I try to apply are. Even though I have just started this type of documentation (you might want to check the page footer to see the last time I edited this page), I want to store and share information about each part of the site is built as components on this page.
@@ -12,6 +16,7 @@ This page will be a living documentation of how site is built and what are the c
 - **ssg:** [Lume](https://lume.deno.dev/)
 - **templating:** [Vento](https://vento.js.org/)
 - **styling:** [Sass](https://sass-lang.com/)
+- **palette:** [Motif](/motif/)
 - **fonts:** [DM Sans](https://fonts.google.com/specimen/DM+Sans) & [DM Mono](https://fonts.google.com/specimen/DM+Mono)
 - **icons:** [Lucide](https://lucide.dev/) & [Simple Icons](https://simpleicons.org/)
 - **lightbox:** [PhotoSwipe](https://photoswipe.com/)

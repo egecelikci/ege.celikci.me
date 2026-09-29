@@ -78,6 +78,10 @@ export default function (options: AssetOptions = {}) {
             src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
           },
           {
+            id: "solar",
+            src: "https://api.iconify.design/solar/{name}.svg",
+          },
+          {
             id: "remixicon",
             src:
               `https://cdn.jsdelivr.net/npm/remixicon@${REMIXICON_VERSION}/icons/{name}.svg`,

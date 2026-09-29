@@ -47,28 +47,22 @@
             <div class="page-footer__activity-left">
               <div class="page-footer__interactions">
                 {{ if showInteractions }}
-                  <span class="typography-sublabel text-text-muted">
-                    {{ it.interactions.length }} {{ it.interactions.length == 1 ? "interaction" : "interactions" }}
-                  </span>
-                {{ /if }}
-
-                {{ if showInteractions }}
-                  <a
-                    href="https://indieweb.org/Webmention"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="page-footer__whats-this"
-                    title="Learn about Webmentions"
-                  >
-                    {{
-                      await it.comp.base.Icon({
-                        name: "badge-question-mark",
+                  {{ await it.comp.layout.LinkLine({
+                    label: "mentions",
+                    items: [
+                      {
+                        icon: "message-square",
                         catalog: "lucide",
-                        classes: "w-3.5 h-3.5 stroke-1.5",
-                      })
-                    }}
-                    What’s this?
-                  </a>
+                        label: `${it.interactions.length} ${it.interactions.length == 1 ? "interaction" : "interactions"}`,
+                      },
+                      {
+                        icon: "badge-question-mark",
+                        catalog: "lucide",
+                        url: "https://indieweb.org/Webmention",
+                        label: "What’s this?",
+                      },
+                    ],
+                  }) }}
                 {{ /if }}
               </div>
             </div>

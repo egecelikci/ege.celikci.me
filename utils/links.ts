@@ -9,10 +9,7 @@ export interface LinkMapping {
   isFallback?: boolean;
 }
 
-/**
- * Known fediverse (ActivityPub) instance hosts. Domains are arbitrary,
- * so detection is an explicit allowlist — add new instances here.
- */
+/** Known fediverse (ActivityPub) instance hosts. Domains are arbitrary, so detection is an explicit allowlist—add new instances here. */
 export const FEDIVERSE_HOSTS = [
   /** Gancio */
   "do.basspistol.org",
@@ -145,6 +142,31 @@ export const HOST_MAPPINGS: Record<string, LinkMapping> = {
   "music.amazon.com": LINK_MAPPINGS["amazon music"],
   "imdb.com": LINK_MAPPINGS.imdb,
   "bandsintown.com": LINK_MAPPINGS.bandsintown,
+  "musicbrainz.org": {
+    icon: "musicbrainz",
+    catalog: "simpleicons",
+    label: "MusicBrainz",
+  },
+  "store.steampowered.com": {
+    icon: "steam",
+    catalog: "simpleicons",
+    label: "Steam",
+  },
+  "indieweb.org": {
+    icon: "indieweb",
+    catalog: "simpleicons",
+    label: "IndieWeb",
+  },
+  "eventartarchive.org": {
+    icon: "image",
+    catalog: "lucide",
+    label: "Event Art Archive",
+  },
+  "critiquebrainz.org": {
+    icon: "music",
+    catalog: "lucide",
+    label: "CritiqueBrainz",
+  },
 };
 
 const FEDIVERSE: LinkMapping = {
@@ -154,56 +176,16 @@ const FEDIVERSE: LinkMapping = {
 };
 
 /**
- * Display priority for the quick strip: most valuable platforms first.
- * Unknown labels sort last.
+ * Display priority for the quick strip: the declaration order of `LINK_MAPPINGS` is the curation (most valuable platforms first), so reorder that object to change it. Fediverse is matched by host rather than by a type key, so it is placed next to Twitter. Unknown labels sort last.
  */
-const PRIORITY: Record<string, number> = {};
-[
-  "Official Homepage",
-  "Spotify",
-  "Apple Music",
-  "Instagram",
-  "Bandcamp",
-  "SoundCloud",
-  "YouTube",
-  "Deezer",
-  "TIDAL",
-  "Twitter",
-  "Fediverse",
-  "YouTube Music",
-  "Discogs",
-  "Songkick",
-  "Last.fm",
-  "Setlist.fm",
-  "Amazon Music",
-  "Napster",
-  "MySpace",
-  "Genius",
-  "TikTok",
-  "Vimeo",
-  "Facebook",
-  "Bandsintown",
-  "Wikipedia",
-  "Wikidata",
-  "IMDb",
-  "Discord",
-  "AllMusic",
-  "VIAF",
-  "Image",
-  "Social",
-  "Streaming",
-  "Download",
-  "Database",
-  "Lyrics",
-  "Blog",
-  "Fan page",
-  "Video",
-  "Tickets",
-  "Poster",
-].forEach((label, i) => PRIORITY[label] = i);
+const QUICK_STRIP: Record<string, number> = {};
+Object.values(LINK_MAPPINGS).forEach((mapping, index) => {
+  QUICK_STRIP[mapping.label] = index;
+});
+QUICK_STRIP.Fediverse = QUICK_STRIP.Twitter ?? 0;
 
 export function linkPriority(label: string): number {
-  return PRIORITY[label] ?? 999;
+  return QUICK_STRIP[label] ?? Number.MAX_SAFE_INTEGER;
 }
 
 function hostOf(url: string): string {

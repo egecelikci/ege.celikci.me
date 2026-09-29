@@ -99,18 +99,5 @@
         justify-content: center;
       }
     }
-
-    &__right {
-      flex-shrink: 0;
-      display: flex;
-      align-items: flex-end;
-      width: 100%;
-      margin-top: auto;
-      view-transition-name: page-header-right;
-
-      @include variables.bp(md) {
-        width: auto;
-      }
-    }
   }
 }

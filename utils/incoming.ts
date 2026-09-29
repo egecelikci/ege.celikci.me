@@ -1,10 +1,7 @@
 /**
- * Pure helpers for `incoming:` backlinks: the reverse index of the
- * doc graph. Edges come from prose body links (resolved from the
- * remark AST exactly as the engine parses them) and frontmatter
- * `sources`; listing pages and nav chrome are excluded by
- * construction — they never enter the graph. Edges are
- * language-aware: only same-language pages link each other.
+ * Pure helpers for `incoming:` backlinks: the reverse index of the doc graph.
+ * Edges come from prose body links (resolved from the remark AST exactly as the engine parses them) and frontmatter `links`; listing pages and nav chrome are excluded by construction — they never enter the graph.
+ * Edges are language-aware: only same-language pages link each other.
  * Kept side-effect free so `utils/incoming.test.ts` can cover them.
  */
 
@@ -17,8 +14,14 @@ export interface IncomingEntry {
   lang?: string;
   /** page date; feeds the untitled-note fallback title and ordering */
   date?: Date | string;
-  /** absolute internal links found in the prose body + frontmatter */
+  /** icon for the page, from its kind (see utils/page-icons.ts) */
+  icon?: string;
+  /** catalog the icon comes from */
+  catalog?: string;
+  /** absolute internal links found in the prose body (the page's outgoing) */
   bodyLinks?: string[];
+  /** internal targets declared in frontmatter `links` (provenance, still edges) */
+  declaredLinks?: string[];
 }
 
 export interface IncomingLink {
@@ -26,13 +29,15 @@ export interface IncomingLink {
   url: string;
   /** date of the linking page; renders newest-first */
   date?: Date | string;
+  /** icon for the linking page, from its kind */
+  icon?: string;
+  /** catalog the icon comes from */
+  catalog?: string;
 }
 
 export interface ExtractLinksOptions {
   /**
-   * Absolute site origin (e.g. `https://ege.celikci.me`). Absolute
-   * links to this host count as internal; without it, only paths
-   * starting with `/` do.
+   * Absolute site origin (e.g. `https://ege.celikci.me`). Absolute links to this host count as internal; without it, only paths starting with `/` do.
    */
   siteUrl?: string;
 }
@@ -46,8 +51,7 @@ function referenceKey(identifier: string): string {
 }
 
 /**
- * Resolve a raw href to an internal `/path/` target, or `null` when
- * the href is external, relative, or otherwise not a site path.
+ * Resolve a raw href to an internal `/path/` target, or `null` when the href is external, relative, or otherwise not a site path.
  */
 function toInternalPath(
   raw: string | null | undefined,
@@ -76,11 +80,7 @@ function toInternalPath(
 /**
  * Extract internal link targets from Markdown source.
  *
- * The source is parsed with the same remark pipeline that renders the
- * site, so titles, reference-style links, and autolinks resolve
- * exactly as written, while code blocks, image embeds, and external
- * links never enter the graph. Raw inline HTML `<a>` nodes are picked
- * up as a fallback (Vento templates and hand-written HTML in Markdown).
+ * The source is parsed with the same remark pipeline that renders the site, so titles, reference-style links, and autolinks resolve exactly as written, while code blocks, image embeds, and external links never enter the graph. Raw inline HTML `<a>` nodes are picked up as a fallback (Vento templates and hand-written HTML in Markdown).
  *
  * @param source - Raw Markdown source (frontmatter already stripped).
  * @param options - See {@link ExtractLinksOptions}.
@@ -100,8 +100,7 @@ export function extractBodyLinks(
   if (!tree) return [];
 
   /**
-   * Reference-style links resolve through `[ref]: /target` definitions,
-   * which may appear after (or without) the referencing link.
+   * Reference-style links resolve through `[ref]: /target` definitions, which may appear after (or without) the referencing link.
    */
   const definitions = new Map<string, string>();
   walk(tree, (node) => {
@@ -147,9 +146,7 @@ export function normalizeUrl(url: string): string {
 }
 
 /**
- * Display title for a graph node. Untitled notes fall back to
- * `note from <date>` — the same grammar as <title> and pagefind
- * metadata — so every standalone reference is self-identifying.
+ * Display title for a graph node. Untitled notes fall back to `note from <date>` — the same grammar as <title> and pagefind metadata — so every standalone reference is self-identifying.
  */
 export function noteTitle(title: string, date?: Date | string): string {
   if (title) return title;
@@ -176,22 +173,24 @@ export function noteTitle(title: string, date?: Date | string): string {
 }
 
 /**
- * Internal link targets declared in frontmatter `sources`
- * (e.g. taken-at places on notes). Accepts a single source object or
- * an array of them. Only absolute internal paths join the graph;
- * external URLs stay display-only.
+ * Internal link targets declared in frontmatter `links` (e.g. taken-at places on notes).
+ * Accepts a single link object or an array of them.
+ * Only absolute internal paths join the graph; external URLs stay display-only.
  */
-export function frontmatterLinks(sources: unknown): string[] {
-  const list = Array.isArray(sources)
-    ? sources
-    : sources && typeof sources === "object"
-    ? [sources]
+export function frontmatterLinks(
+  links: unknown,
+  siteUrl?: string,
+): string[] {
+  const list = Array.isArray(links)
+    ? links
+    : links && typeof links === "object"
+    ? [links]
     : [];
   const found = new Set<string>();
-  for (const source of list) {
-    const url = (source as { url?: unknown } | null)?.url;
+  for (const link of list) {
+    const url = (link as { url?: unknown } | null)?.url;
     if (typeof url === "string") {
-      const internal = toInternalPath(url);
+      const internal = toInternalPath(url, siteUrl);
       if (internal) found.add(internal);
     }
   }
@@ -217,13 +216,10 @@ function timeOf(date?: Date | string): number {
 
 /**
  * Build the reverse index: for every page, who links to it.
- * Body edges: prose links and frontmatter sources between existing
- * pages. Language edges: only same-language pages link each other; a
- * page without `lang` counts as the default language.
+ * Body edges: prose links and frontmatter links between existing pages.
+ * Language edges: only same-language pages link each other; a page without `lang` counts as the default language.
  *
- * Tags deliberately stay out of the graph: tag membership is a
- * listing mechanism rendered by TagDetail, not a content link, and
- * tag pages never display `incoming:`.
+ * Tags deliberately stay out of the graph: tag membership is a listing mechanism rendered by TagDetail, not a content link, and tag pages never display `incoming:`.
  */
 export function buildIncoming(
   entries: IncomingEntry[],
@@ -249,11 +245,16 @@ export function buildIncoming(
       url: from.url,
     };
     if (from.date) incoming.date = from.date;
+    if (from.icon) incoming.icon = from.icon;
+    if (from.catalog) incoming.catalog = from.catalog;
     edges.get(to)!.set(from.url, incoming);
   };
 
   for (const entry of entries) {
     for (const target of entry.bodyLinks ?? []) {
+      link(entry, target);
+    }
+    for (const target of entry.declaredLinks ?? []) {
       link(entry, target);
     }
   }
@@ -262,5 +263,49 @@ export function buildIncoming(
   for (const [url, links] of edges) {
     result.set(url, [...links.values()].sort(compareLinks));
   }
+  return result;
+}
+
+/**
+ * Build the forward index: for every page, the pages it links to, in the order it links to them.
+ * Same language rule and same exclusions as `buildIncoming` (unknown targets, self-links and repeats drop out), so both directions describe the same graph.
+ */
+export function buildOutgoing(
+  entries: IncomingEntry[],
+  options: {
+    defaultLang?: string;
+  } = {},
+): Map<string, IncomingLink[]> {
+  const { defaultLang = "en" } = options;
+  const known = new Map(entries.map((e) => [normalizeUrl(e.url), e]));
+  const effectiveLang = (lang?: string) => lang ?? defaultLang;
+  const result = new Map<string, IncomingLink[]>();
+
+  for (const entry of entries) {
+    const links: IncomingLink[] = [];
+    const seen = new Set<string>();
+
+    for (const raw of entry.bodyLinks ?? []) {
+      const url = normalizeUrl(raw);
+      if (url === normalizeUrl(entry.url) || seen.has(url)) continue;
+
+      const target = known.get(url);
+      if (!target) continue;
+      if (effectiveLang(entry.lang) !== effectiveLang(target.lang)) continue;
+      seen.add(url);
+
+      const link: IncomingLink = {
+        title: noteTitle(target.title, target.date),
+        url: target.url,
+      };
+      if (target.date) link.date = target.date;
+      if (target.icon) link.icon = target.icon;
+      if (target.catalog) link.catalog = target.catalog;
+      links.push(link);
+    }
+
+    if (links.length) result.set(entry.url, links);
+  }
+
   return result;
 }

@@ -7,8 +7,17 @@ import type {
   MBRelationPlace,
 } from "../utils/fetch-events.ts";
 import type { PostImage } from "../utils/preprocessors/media.ts";
-import type { HeaderExtension } from "../utils/preprocessors/feeds.ts";
 import type { WebmentionFeed } from "../src/types/index.ts";
+
+/** A link a page declares: provenance, a related page, or syndication. */
+export interface PageLink {
+  label: string;
+  url?: string;
+  icon?: string;
+  catalog?: string;
+  /** how the link relates to the page, e.g. "taken at"; rendered inline */
+  relation?: string;
+}
 
 export interface SiteData {
   site: {
@@ -57,6 +66,10 @@ export interface Backlink {
   title: string;
   /** date of the linking page; incoming list renders newest-first */
   date?: Date | string;
+  /** icon for the linking page, from its kind */
+  icon?: string;
+  /** catalog the icon comes from */
+  catalog?: string;
 }
 
 declare global {
@@ -83,7 +96,7 @@ declare global {
       coverImage?: string;
       coverImageAlt?: string;
       metaImage?: string;
-      headerExtension?: HeaderExtension;
+      links?: PageLink[];
       alternateFeeds?: Array<{ type: string; url: string; label: string }>;
       tag?: string;
       navigation?: { parent?: string };
@@ -93,6 +106,8 @@ declare global {
       backlink?: Backlink;
       /** reverse link index built by utils/preprocessors/incoming.ts */
       backlinks?: Backlink[];
+      /** the pages this one links to, same graph read forwards */
+      outgoing?: Backlink[];
       openGraphLayout?: string | false;
     }
   }

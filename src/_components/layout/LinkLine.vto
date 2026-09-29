@@ -1,0 +1,67 @@
+{{#
+  Props:
+  - items: [{ label | title, url?, icon?, catalog?, relation? }]
+  - label?: string — a muted lead-in, e.g. "incoming"
+  - attributes?: object
+
+  One line of links, each an icon plus a name.
+  It serves two callers that are the same shape: a page's `links` (where its material comes from, or a related page) and the links pointing back at it (`incoming`), so both read identically.
+
+  Icons come from the central vocabulary (utils/links.ts) unless the caller supplies them — the incoming links arrive with an icon already resolved from the linking page's kind (utils/page-icons.ts).
+  A link the vocabulary does not know renders a generic icon, so that gap is reported at build time instead of shipping quietly.
+#}}
+
+{{>
+  const links = (it.items || []).map((source) => {
+    const name = source.label || source.title || "";
+    const info = it.icons.getLinkInfo(name, source.url ?? "");
+
+    if (!source.icon && info.isFallback) {
+      console.warn(
+        `[link-line] no icon mapping for "${name}" (${source.url})`,
+      );
+    }
+
+    /* The vocabulary gives icon and catalog as a pair, so an explicit icon with no catalog is taken to be a lucide name rather than borrowing the mapping's catalog (which would ask simple-icons for a lucide icon). */
+    return {
+      label: name,
+      url: source.url,
+      relation: source.relation,
+      icon: source.icon || info.icon,
+      catalog: source.catalog || (source.icon ? "lucide" : info.catalog),
+    };
+  });
+}}
+
+{{ if links.length > 0 }}
+  <div class="link-line" {{ it.attributes |> attr |> safe }}>
+    {{ if it.label }}
+      <span class="link-line__label">{{ it.label }}</span>
+    {{ /if }}
+
+    {{ for link of links }}
+      {{ set icon = await it.comp.base.Icon({
+        name: link.icon,
+        catalog: link.catalog,
+        classes: "w-4 h-4",
+      }) }}
+
+      {{ if link.url }}
+        {{> let isExternal = /^https?:\/\//.test(link.url) && !link.url.startsWith(site.url) }}
+        <a
+          class="link-line__item"
+          href="{{ link.url }}"
+          {{ if isExternal }}target="_blank" rel="noopener noreferrer"{{ /if }}
+        >
+          {{ icon |> safe }}
+          <span>{{ link.relation ? link.relation + " " : "" }}{{ link.label }}</span>
+        </a>
+      {{ else }}
+        <span class="link-line__item">
+          {{ icon |> safe }}
+          <span>{{ link.relation ? link.relation + " " : "" }}{{ link.label }}</span>
+        </span>
+      {{ /if }}
+    {{ /for }}
+  </div>
+{{ /if }}

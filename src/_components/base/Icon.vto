@@ -3,7 +3,8 @@
   Lume-native icon loader using the icons plugin's SVG sprite feature.
 #}}
 {{- set defaultClasses = "icon" -}}
-{{- set strokeClasses = !it.filled && (it.catalog === "lucide" || !it.catalog) ? "icon--stroke" : "icon--fill" -}}
+{{- set strokeCatalogs = ["lucide", "solar"] -}}
+{{- set strokeClasses = !it.filled && strokeCatalogs.includes(it.catalog || "lucide") ? "icon--stroke" : "icon--fill" -}}
 {{- set spriteHref = it.name |> spriteIcon(it.catalog || 'lucide') -}}
 {{- set spriteUrl = spriteHref |> split("#") -}}
 {{- set cacheBusted = spriteUrl[0] + "?v=" + (it.build?.id || "") + "#" + spriteUrl[1] -}}

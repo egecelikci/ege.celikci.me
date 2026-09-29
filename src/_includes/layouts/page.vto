@@ -29,10 +29,10 @@ layout: layouts/base.vto
   class="{{ (it.type !== "note" && it.prose !== false) ? "h-entry markdown" : "" }} {{ it.hide_title !== true ? "page-content" : "page-content page-content--bare" }} {{ it.article_classes || "" }}"
   {{ if it.searchable !== false }}data-pagefind-body{{ /if }}
   >
-  {{# "incoming:" line — content/doc pages only (xxiivv grammar) #}}
+  {{# link lines: the doc graph read backwards (incoming) and forwards #}}
   {{
-    set showIncoming = backlinks?.length > 0 && it.type !== "tag" &&
-      it.type !== "index" && it.prose !== false
+    set showLinkLines = (backlinks?.length > 0 || outgoing?.length > 0) &&
+      it.type !== "tag" && it.type !== "index" && it.prose !== false
   }}
 
   {{ if it.type === "note" }}
@@ -59,15 +59,6 @@ layout: layouts/base.vto
         hideHeader: true,
       })
     }}
-    {{ if showIncoming }}
-      <p class="incoming-line" data-pagefind-ignore="">content ends</p>
-      <hr>
-      <p class="incoming-line" data-pagefind-ignore=""><b>incoming:</b>
-        {{ for link of backlinks }}
-          <a href="{{ link.url }}">{{ link.title || "note" }}</a>
-        {{ /for }}
-      </p>
-    {{ /if }}
   {{ else if it.type === "tag" }}
     <div class="sr-only" data-pagefind-body>
       {{ it.title }} tag topic index. collection of items related to {{ it.tag }}.
@@ -79,13 +70,22 @@ layout: layouts/base.vto
     </div>
   {{ /if }}
 
-  {{ if showIncoming && it.type !== "note" }}
+  {{ if showLinkLines }}
     <hr>
-    <p class="incoming-line" data-pagefind-ignore=""><b>incoming:</b>
-      {{ for link of backlinks }}
-        <a href="{{ link.url }}">{{ link.title || "note" }}</a>
-      {{ /for }}
-    </p>
+    {{ if backlinks?.length > 0 }}
+      {{ await comp.layout.LinkLine({
+        items: backlinks,
+        label: "incoming",
+        attributes: { "data-pagefind-ignore": "" },
+      }) }}
+    {{ /if }}
+    {{ if outgoing?.length > 0 }}
+      {{ await comp.layout.LinkLine({
+        items: outgoing,
+        label: "outgoing",
+        attributes: { "data-pagefind-ignore": "" },
+      }) }}
+    {{ /if }}
   {{ /if }}
 
   <div

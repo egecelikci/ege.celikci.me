@@ -5,29 +5,12 @@
   - backlink?: { href: string, text: string } | boolean
   - centered?: boolean (default: false)
   - metadata?: { tags?: string[], date?: Date }
-  - rightContent?: html
-  - headerExtension?: any
   - breadcrumbs?: boolean
 #}}
 
-{{ set extensionContent }}
-  {{ if it.headerExtension }}
-    {{ if it.headerExtension.comp }}
-      {{ set resolvedComp = it.headerExtension.comp |> resolveComp(comp) }}
-      {{ if resolvedComp }}
-        {{ await resolvedComp({ ...it.headerExtension.props, ...author }) }}
-      {{ /if }}
-    {{ else }}
-      {{ it.headerExtension |> safe }}
-    {{ /if }}
-  {{ /if }}
-{{ /set }}
-
 {{ set displaySubtitle = it.subtitle || it.description }}
 {{ if !it.subtitle }}
-  {{ if it.type === "post" && it.date }}
-    {{ set displaySubtitle = it.date |> date("dd MMMM yyyy") }}
-  {{ else if it.type === "note" && it.date }}
+  {{ if it.type === "note" && it.date }}
     {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
     {{ set updatedStr = "" }}
     {{ if it.edited && it.updated }}
@@ -66,6 +49,7 @@
 
     <h1
       class="page-header__title p-name {{ if it.type === 'tag' }}page-header__title--tag{{ /if }}"
+      itemprop="name"
     >
       {{ displayTitle }}<span class="page-header__period">.</span>
     </h1>
@@ -73,6 +57,7 @@
     {{ if displaySubtitle }}
       <div
         class="page-header__subtitle {{ if isCentered }}page-header__subtitle--centered{{ /if }}"
+        {{ if displaySubtitle === (it.subtitle || it.description) }}itemprop="description"{{ /if }}
       >
         {{ displaySubtitle |> safe }}
       </div>
@@ -88,20 +73,9 @@
         {{ /for }}
       </div>
     {{ /if }}
-  </div>
 
-  {{ if it.rightContent || extensionContent || (it.sources && it.sources.length > 0) }}
-    <div class="page-header__right">
-      {{ it.rightContent |> safe }}
-      {{ extensionContent |> safe }}
-      {{# frontmatter sources (e.g. taken-at places) render as SourceMeta #}}
-      {{ if it.sources && it.sources.length > 0 }}
-        {{
-          await comp.layout.SourceMeta({
-            sources: it.sources,
-          })
-        }}
-      {{ /if }}
-    </div>
-  {{ /if }}
+    {{ if it.links && it.links.length > 0 }}
+      {{ await comp.layout.LinkLine({ items: it.links }) }}
+    {{ /if }}
+  </div>
 </section>

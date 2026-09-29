@@ -1,4 +1,4 @@
-{{ set links = it.links || it.author?.links || [] }}
+{{ set links = it.author?.links ?? [] }}
 
 <div class="hidden">
   {{ for link of links }}

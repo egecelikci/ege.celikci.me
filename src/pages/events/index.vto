@@ -4,19 +4,11 @@ description: music events in İzmir
 searchable: false
 noindex: true
 prose: false
-headerExtension:
-  comp: "layout.SourceMeta"
-  props:
-    sources:
-      - label: MusicBrainz
-        icon: calendar
-        url: "https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
-      - label: Event Art Archive
-        icon: image
-        url: "https://eventartarchive.org/"
-      - label: Calendar
-        url: "webcal://ege.celikci.me/events.ics"
-        type: feed
+links:
+  - label: MusicBrainz
+    url: "https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events"
+  - label: Event Art Archive
+    url: "https://eventartarchive.org/"
 ---
 
 {{# CALENDAR VIEW #}}
@@ -81,6 +73,21 @@ headerExtension:
           })
         }}
         <span>How to contribute to events</span>
+      </a>
+
+      {{# Middle: Subscribe #}}
+      <a
+        href="webcal://{{ site.host }}/events.ics"
+        class="btn-minimal"
+      >
+        {{
+          comp.base.Icon({
+            name: "calendar-plus",
+            catalog: "lucide",
+            classes: "w-4 h-4",
+          })
+        }}
+        <span>Subscribe to calendar</span>
       </a>
 
       {{# Right: Archive #}}

@@ -1,14 +1,13 @@
 /**
  * Unit tests for the `incoming:` backlinks helpers.
  *
- * Extraction is AST-based (see utils/mdast.ts), so the fixtures below
- * intentionally cover the link forms a regex approach used to miss:
- * titles, reference links, autolinks, code blocks, image embeds.
+ * Extraction is AST-based (see utils/mdast.ts), so the fixtures below intentionally cover the link forms a regex approach used to miss: titles, reference links, autolinks, code blocks, image embeds.
  */
 
 import { assertEquals } from "@std/assert";
 import {
   buildIncoming,
+  buildOutgoing,
   extractBodyLinks,
   frontmatterLinks,
   normalizeUrl,
@@ -273,4 +272,38 @@ Deno.test("buildIncoming labels untitled linkers by date", () => {
       date,
     },
   ]);
+});
+
+Deno.test("buildOutgoing lists a page's targets in document order", () => {
+  const result = buildOutgoing([
+    { url: "/first/", title: "first" },
+    { url: "/second/", title: "second" },
+    { url: "/third/", title: "third" },
+    {
+      url: "/from/",
+      title: "from",
+      bodyLinks: ["/third/", "/first/", "/missing/", "/third/", "/from/"],
+    },
+  ]);
+  assertEquals(
+    result.get("/from/")!.map((link) => link.url),
+    ["/third/", "/first/"],
+  );
+});
+
+Deno.test("buildOutgoing keeps the language rule and drops outsiders", () => {
+  const result = buildOutgoing([
+    { url: "/en/", title: "english page" },
+    { url: "/tr/", title: "türkçe sayfa", lang: "tr" },
+    {
+      url: "/from/",
+      title: "from",
+      bodyLinks: ["/tr/", "/en/", "https://example.com/"],
+    },
+  ]);
+  assertEquals(
+    result.get("/from/")!.map((link) => link.url),
+    ["/en/"],
+  );
+  assertEquals(result.has("/en/"), false);
 });

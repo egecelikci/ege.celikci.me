@@ -1,9 +1,5 @@
 /**
- * Glue tests for the incoming preprocessor: the seam between Lume's
- * page lifecycle and the pure graph helpers. Uses a fake Site that
- * captures the registered callbacks, so the multi-pass behavior
- * (regular pages → generators → watch updates) is exercised without
- * running a real build.
+ * Glue tests for the incoming preprocessor: the seam between Lume's page lifecycle and the pure graph helpers. Uses a fake Site that captures the registered callbacks, so the multi-pass behavior (regular pages → generators → watch updates) is exercised without running a real build.
  */
 
 import { assertEquals } from "@std/assert";
@@ -43,7 +39,11 @@ function page(data: Record<string, unknown>): Lume.Page {
 function backlinksOf(
   target: Lume.Page,
 ): Array<{ title: string; url: string }> {
-  return (target.data.backlinks ?? []) as Array<{ title: string; url: string }>;
+  const links = (target.data.backlinks ?? []) as Array<{
+    title: string;
+    url: string;
+  }>;
+  return links.map(({ title, url }) => ({ title, url }));
 }
 
 /** Run every registered processor once over the given pages. */
@@ -62,46 +62,23 @@ Deno.test("preprocessor assigns backlinks from prose links", () => {
 
   run(site, [music, home]);
 
-  assertEquals(music.data.backlinks, [{ title: "home", url: "/" }]);
-  assertEquals(home.data.backlinks, []);
+  assertEquals(backlinksOf(music), [{ title: "home", url: "/" }]);
+  assertEquals(backlinksOf(home), []);
 });
 
-Deno.test("preprocessor reads sources from the header extension", () => {
-  const site = fakeSite();
-  const place = page({ url: "/komun/", title: "Komün", content: "" });
-  const note = page({
-    url: "/notes/1/",
-    title: "a note",
-    content: "",
-    headerExtension: {
-      comp: "layout.SourceMeta",
-      props: {
-        sources: [
-          { label: "Elsewhere", url: "https://example.com/" },
-          { label: "Komün", url: "/komun" },
-        ],
-      },
-    },
-  });
-
-  run(site, [place, note]);
-
-  assertEquals(place.data.backlinks, [{ title: "a note", url: "/notes/1/" }]);
-});
-
-Deno.test("preprocessor reads top-level frontmatter sources", () => {
+Deno.test("preprocessor reads top-level frontmatter links", () => {
   const site = fakeSite();
   const place = page({ url: "/akarca/", title: "Akarca", content: "" });
   const note = page({
     url: "/notes/2/",
     title: "swimming",
     content: "",
-    sources: [{ label: "Akarca", url: "/akarca" }],
+    links: [{ label: "Akarca", url: "/akarca" }],
   });
 
   run(site, [place, note]);
 
-  assertEquals(place.data.backlinks, [{ title: "swimming", url: "/notes/2/" }]);
+  assertEquals(backlinksOf(place), [{ title: "swimming", url: "/notes/2/" }]);
 });
 
 Deno.test("later passes reassign backlinks of earlier pages", () => {
@@ -110,7 +87,7 @@ Deno.test("later passes reassign backlinks of earlier pages", () => {
 
   // First pass: only the target exists (regular pages).
   run(site, [target]);
-  assertEquals(target.data.backlinks, []);
+  assertEquals(backlinksOf(target), []);
 
   // Second pass: generator output links to the target.
   const generated = page({
@@ -120,11 +97,11 @@ Deno.test("later passes reassign backlinks of earlier pages", () => {
   });
   run(site, [generated]);
 
-  assertEquals(target.data.backlinks, [
+  assertEquals(backlinksOf(target), [
     { title: "generated", url: "/generated/" },
   ]);
   // The generated page keeps its (empty) assignment from this pass too.
-  assertEquals(generated.data.backlinks, []);
+  assertEquals(backlinksOf(generated), []);
 });
 
 Deno.test("beforeUpdate drops pages that no longer exist", () => {
@@ -143,7 +120,7 @@ Deno.test("beforeUpdate drops pages that no longer exist", () => {
   site.listeners.get("beforeUpdate")!();
   run(site, [target]);
 
-  assertEquals(target.data.backlinks, []);
+  assertEquals(backlinksOf(target), []);
 });
 
 Deno.test("beforeBuild resets accumulated state", () => {
@@ -161,7 +138,7 @@ Deno.test("beforeBuild resets accumulated state", () => {
   site.listeners.get("beforeBuild")!();
   run(site, [target]);
 
-  assertEquals(target.data.backlinks, []);
+  assertEquals(backlinksOf(target), []);
 });
 
 Deno.test("pages without url or content are skipped safely", () => {
@@ -171,5 +148,46 @@ Deno.test("pages without url or content are skipped safely", () => {
 
   run(site, [noUrl, generator]);
 
-  assertEquals(generator.data.backlinks, []);
+  assertEquals(backlinksOf(generator), []);
+});
+
+Deno.test("backlinks carry the linking page's icon", () => {
+  const site = fakeSite();
+  const place = page({ url: "/komun/", title: "Komün", content: "" });
+  const note = page({
+    url: "/notes/3/",
+    title: "a cat",
+    tags: ["kedi"],
+    content: "see [Komün](/komun/)",
+  });
+
+  run(site, [place, note]);
+
+  const links = place.data.backlinks as Array<{
+    icon?: string;
+    catalog?: string;
+  }>;
+  assertEquals(links[0].icon, "cat-broken");
+  assertEquals(links[0].catalog, "solar");
+});
+
+Deno.test("preprocessor sends links to incoming but not outgoing", () => {
+  const site = fakeSite();
+  const place = page({ url: "/komun/", title: "Komün", content: "" });
+  const other = page({ url: "/akarca/", title: "Akarca", content: "" });
+  const note = page({
+    url: "/notes/4/",
+    title: "a note",
+    content: "see [Akarca](/akarca/)",
+    links: [{ label: "Komün", url: "/komun" }],
+  });
+
+  run(site, [place, other, note]);
+
+  /* Prose link is outgoing; the declared link is provenance — still an edge (Komün sees the backlink) but not repeated in the note's outgoing list. */
+  const outgoing = note.data.outgoing as Array<{ title: string; url: string }>;
+  assertEquals(outgoing.map(({ title, url }) => ({ title, url })), [
+    { title: "Akarca", url: "/akarca/" },
+  ]);
+  assertEquals(backlinksOf(place), [{ title: "a note", url: "/notes/4/" }]);
 });
