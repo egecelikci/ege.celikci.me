@@ -74,5 +74,37 @@ export default function (options: FeedOptions = {}) {
         };
       });
     }));
+
+    /** Advertise each page's own feeds in <head> (`alternateFeeds`), derived from the configs above rather than hardcoding the pages. Feeds are deliberately not added to `sources`: a feed is a machine-readable copy of the page, not where its material comes from. */
+    const feedsByPage = new Map<string, [string, string]>();
+    for (const config of feedConfigs) {
+      if (config.id === "main") continue;
+      const atom = config.output.find((out) => out.endsWith(".atom"));
+      const json = config.output.find((out) => out.endsWith(".json"));
+      if (atom && json) feedsByPage.set(`/${config.id}/`, [atom, json]);
+    }
+
+    const alternates = (atom: string, json: string) => [
+      { type: "application/atom+xml", url: atom, label: "Atom Feed" },
+      { type: "application/feed+json", url: json, label: "JSON Feed" },
+    ];
+
+    site.preprocess("*", (pages) => {
+      for (const page of pages) {
+        const url = page.data.url as string;
+        if (!url) continue;
+
+        const own = feedsByPage.get(url);
+        if (own) {
+          page.data.alternateFeeds = alternates(own[0], own[1]);
+        } else if (page.data.type === "tag" && page.data.tag) {
+          const slug = slugify(page.data.tag as string);
+          page.data.alternateFeeds = alternates(
+            `/tags/${slug}.atom`,
+            `/tags/${slug}.json`,
+          );
+        }
+      }
+    });
   };
 }
