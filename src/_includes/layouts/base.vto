@@ -51,12 +51,17 @@
     {{ include "meta.vto" }}
   </head>
   <body
+    itemscope
+    itemtype="{{ it |> pageType }}"
     {{ if it.disable_animation }} data-disable-animation="true" {{ /if }}
     {{ if it.searchable === false || it.noindex }} data-pagefind-ignore="all" {{
       /if
     }}
   >
     <a href="#main" class="skip-link">skip to main content</a>
+
+    <meta itemprop="url" content="{{ it.url |> url(true) }}">
+    <meta itemprop="inLanguage" content="{{ lang || site.lang }}">
 
     {{ include "header.vto" }}
 
@@ -66,22 +71,8 @@
 
     {{ await it.comp.layout.Footer({ page: page }) }}
 
-    {{# Representative h-card (IndieWeb Identity Consolidation) #}}
-    <div
-      class="h-card hidden"
-      itemscope
-      itemtype="https://schema.org/Person"
-    >
-      <a class="p-name u-url u-uid" rel="me" href="/" itemprop="url">
-        <span itemprop="name">{{ author.name }}</span>
-      </a>
-      <a class="u-email" href="mailto:{{ author.email }}" itemprop="email">{{ author.email }}</a>
-    </div>
-
-    {{# Hidden Verification Links (rel="me") managed by SocialLinks #}}
     {{ await it.comp.features.SocialLinks({ variant: "hidden" }) }}
 
-    {{# Media Modal (Phanpy-style) #}}
     {{ await it.comp.ui.Lightbox() }}
 
     <script

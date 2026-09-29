@@ -5,6 +5,7 @@ import siteData from "../src/_data/site.ts";
 import gitData from "../src/_data/git.ts";
 import { getLinkInfo, linkPriority } from "./links.ts";
 import { noteTitle as buildNoteTitle } from "./incoming.ts";
+import { pageType as schemaPageType } from "./schema.ts";
 
 const SITE_URL = siteData.url;
 const OWN_URLS = [
@@ -85,6 +86,9 @@ interface Webmention {
 }
 
 export const filters = {
+  /** schema.org type for the page wrapper (see utils/schema.ts). */
+  pageType: (page: { url?: string; type?: string }) => schemaPageType(page),
+
   dirname: function (filePath: string): string {
     return path.dirname(filePath);
   },
@@ -109,9 +113,7 @@ export const filters = {
   },
 
   /**
-   * Display title for a page: authored title, or `note from <date>`
-   * for untitled notes. Single source of truth shared with the
-   * incoming graph (see utils/incoming.ts noteTitle).
+   * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see utils/incoming.ts noteTitle).
    */
   noteTitle: function (
     data: { title?: unknown; date?: unknown },

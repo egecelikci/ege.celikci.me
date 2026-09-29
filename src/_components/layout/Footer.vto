@@ -3,11 +3,28 @@
   <div class="site-footer__meta">
       <div class="site-footer__copyright">
         <span role="img" aria-label="Copyright">&copy;</span>
-        {{ it.build.timestamp |> date("yyyy") }}
-        <a
-          href="{{ it.site.url }}"
-          class="site-footer__author"
-        >{{ it.author.name }}</a>
+        <time
+          itemprop="copyrightYear"
+          datetime="{{ it.build.timestamp |> date('yyyy') }}"
+        >{{ it.build.timestamp |> date("yyyy") }}</time>
+        <span
+          class="h-card p-author"
+          itemprop="author copyrightHolder"
+          itemscope
+          itemtype="https://schema.org/Person"
+          itemid="{{ it.site.url }}/#person"
+        >
+          <a
+            href="{{ it.site.url }}"
+            class="site-footer__author u-url u-uid p-name"
+            rel="me author"
+            itemprop="url"
+          ><span itemprop="name">{{ it.author.name }}</span></a>
+          <link
+            itemprop="email"
+            href="mailto:{{ it.author.email }}"
+          >
+        </span>
       </div>
 
       <span class="site-footer__sep">|</span>
@@ -21,6 +38,7 @@
         href="https://creativecommons.org/licenses/by-sa/4.0/"
         class="site-footer__link"
         rel="license"
+        itemprop="license"
       >
         CC BY-SA 4.0
       </a>

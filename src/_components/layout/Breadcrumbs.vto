@@ -12,21 +12,14 @@
 
 {{ set breadcrumbItems = nav.breadcrumb(it.url) }}
 
-{{# Filter out language segments (e.g., /tr/, /en/) from the breadcrumb trail #}}
 {{
   set breadcrumbItems = breadcrumbItems
   |> filter((item) => !['en', 'tr'].includes(item.slug))
 }}
 
-{{#
-  BRIDGE LOGIC:
-  If navigation.parent is provided, we use it to construct the trail
-  to bypass virtual paths (e.g. singular /event/ vs plural /events/).
-#}}
 {{ if it.navigation?.parent }}
   {{ set parentTrail = nav.breadcrumb(it.navigation.parent) }}
 
-  {{# Manual fallback for generated intermediate pages (e.g. /tags/kedi/) that aren't in Lume's nav tree #}}
   {{ if parentTrail.length <= 1 && it.navigation.parent !== "/" }}
     {{ set rootNode = nav.breadcrumb("/")[0] }}
     {{
@@ -44,10 +37,8 @@
     }}
   {{ /if }}
 
-  {{# Find the page item (it might not be in Lume's nav yet if generator) #}}
   {{ set currentItem = breadcrumbItems[breadcrumbItems.length - 1] }}
 
-  {{# If Lume couldn't find the item or it's a virtual node, create a fake one for the trail #}}
   {{ if !currentItem || currentItem.data?.url !== it.url }}
     {{
       set currentItem = {
@@ -63,12 +54,20 @@
 <nav
   aria-label="Breadcrumb"
   class="breadcrumb {{ it.classes }}"
+  itemprop="breadcrumb"
+  itemscope
+  itemtype="https://schema.org/BreadcrumbList"
 >
   <ol class="breadcrumb__list">
-    {{# 1. SITE ROOT (Always shown) #}}
-    <li class="breadcrumb__item">
+    <li
+      class="breadcrumb__item"
+      itemprop="itemListElement"
+      itemscope
+      itemtype="https://schema.org/ListItem"
+    >
+      <meta itemprop="position" content="1">
       {{ if it.url === "/" }}
-        <span class="breadcrumb__root">
+        <span class="breadcrumb__root" itemprop="name">
           {{ site.host }}
         </span>
       {{ else }}
@@ -76,8 +75,9 @@
           href="/"
           rel="home"
           class="breadcrumb__root"
+          itemprop="url"
         >
-          {{ site.host }}
+          <span itemprop="name">{{ site.host }}</span>
         </a>
       {{ /if }}
 
@@ -86,12 +86,9 @@
       {{ /if }}
     </li>
 
-    {{# 2. CONTEXTUAL ITEMS (Excluding root which is handled above) #}}
     {{ for index, item of breadcrumbItems }}
       {{ if item.data?.url === "/" }}{{ continue }}{{ /if }}
-
       {{ set itemData = item.data || {} }}
-      {{# Use item title, falling back to slug if missing. Only use it.title for the very last item if it has no data title. #}}
       {{ set isLast = index === breadcrumbItems.length - 1 }}
       {{
         set itemTitle = (isLast ? (it.title || itemData.title) : itemData.title) ||
@@ -100,11 +97,16 @@
 
       <li
         class="breadcrumb__item {{ if isLast }}breadcrumb__item--current{{ /if }}"
+        itemprop="itemListElement"
+        itemscope
+        itemtype="https://schema.org/ListItem"
       >
+        <meta itemprop="position" content="{{ index + 1 }}">
         {{ if isLast }}
           <span
             class="breadcrumb__current"
             title="{{ itemTitle }}"
+            itemprop="name"
           >
             {{ itemTitle }}
           </span>
@@ -112,8 +114,9 @@
           <a
             href='{{ itemData.url || "#" }}'
             class="breadcrumb__link"
+            itemprop="url"
           >
-            {{ itemTitle }}
+            <span itemprop="name">{{ itemTitle }}</span>
           </a>
         {{ /if }}
 
@@ -122,8 +125,6 @@
         {{ /if }}
       </li>
     {{ /for }}
-    {{# Optional live suffix (e.g. games page section indicator).
-        Rendered inside the list so it inherits the item gap/spacing. #}}
     {{ if it.crumbSuffix }}
       <li class="breadcrumb__item">
         <span class="breadcrumb__sep breadcrumb__sep--faded">#</span>
