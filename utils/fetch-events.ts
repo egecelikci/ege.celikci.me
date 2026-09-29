@@ -118,8 +118,7 @@ export interface LocalEventData {
   photographers?: Record<string, { name: string; url?: string }>;
   photographer?: { name: string; url?: string };
   /**
-   * The event poster is AI-generated. Listing cards show a disclosure
-   * tile instead of the image; the detail page veils it as a spoiler.
+   * The event poster is AI-generated. Listing cards show a disclosure tile instead of the image; the detail page veils it as a spoiler.
    */
   ai_poster?: boolean;
 }
@@ -155,8 +154,7 @@ export interface RawIzmirEvents {
 }
 
 /**
- * Enriched events built at build time by the events preprocessor; never saved
- * to disk.
+ * Enriched events built at build time by the events preprocessor; never saved to disk.
  */
 export interface EnrichedIzmirEvents extends RawIzmirEvents {
   events: EnrichedMBEvent[];
@@ -166,8 +164,7 @@ export interface EnrichedIzmirEvents extends RawIzmirEvents {
 }
 
 /**
- * Downloads event posters and tracks the filenames already present on disk so
- * unchanged posters are not re-fetched.
+ * Downloads event posters and tracks the filenames already present on disk so unchanged posters are not re-fetched.
  */
 class PosterDownloader {
   private existingPosters = new Set<string>();
@@ -219,10 +216,11 @@ class PosterDownloader {
       }
 
       console.log(`[mb_events] 📥 Downloading poster: ${eventId}`);
+      // no-cache: a forced re-download must reach the network. force-cache here would replay old bytes for an unchanged URL, so a replaced cover with a stable url never refreshed.
       const buffer = await httpClient.fetch<ArrayBuffer>(
         remoteUrl,
         "buffer",
-        "force-cache",
+        "no-cache",
         true,
       );
 
@@ -294,17 +292,15 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
 }
 
 /**
- * Resolves the current front poster from the Event Art Archive. It is
- * revalidated on every run because the front image can change, for example a
- * corrected poster replacing one with a wrong date.
+ * Resolves the current front poster from the Event Art Archive. It is revalidated on every run because the front image can change, for example a corrected poster replacing one with a wrong date.
  * @param httpClient - HTTP client used for the request.
  * @param eventId - MusicBrainz event id.
- * @returns The original and thumbnail URLs, or empty when none is set.
+ * @returns The original and thumbnail URLs, `{}` when the event has no front image, or `null` when Event Art Archive could not be reached. Callers must treat null as "unknown", not "no poster".
  */
 async function fetchEventPosterInfo(
   httpClient: HttpClient,
   eventId: string,
-): Promise<{ url?: string; thumb?: string }> {
+): Promise<{ url?: string; thumb?: string } | null> {
   const url = `${EAA_API}/event/${eventId}/`;
 
   const data = await httpClient.fetch<unknown>(
@@ -314,8 +310,11 @@ async function fetchEventPosterInfo(
     true,
   );
 
+  // EAA 5xx / timeout: leave the existing poster untouched.
+  if (data === null) return null;
+
   const validated = validate(EAAPosterInfoSchema, data);
-  if (!validated) return {};
+  if (!validated) return null;
   const frontImage = validated.images?.find((img) => img.front);
 
   if (frontImage) {
@@ -328,8 +327,7 @@ async function fetchEventPosterInfo(
 }
 
 /**
- * Harvests external links for a MusicBrainz entity. Rate limited because it
- * hits the MusicBrainz API.
+ * Harvests external links for a MusicBrainz entity. Rate limited because it hits the MusicBrainz API.
  * @param httpClient - Rate-limited HTTP client.
  * @param entityId - MusicBrainz entity id.
  * @param type - Entity type to query.
@@ -367,8 +365,7 @@ async function fetchEntityDetails(
 }
 
 /**
- * Syncs cached events and posters with MusicBrainz and the Event Art Archive,
- * writing the result to the mb_events.json cache.
+ * Syncs cached events and posters with MusicBrainz and the Event Art Archive, writing the result to the mb_events.json cache.
  */
 async function syncEvents() {
   const httpClient = new HttpClient({
@@ -430,6 +427,20 @@ async function syncEvents() {
         }
 
         const posterInfo = await fetchEventPosterInfo(httpClient, event.id);
+
+        // Event Art Archive is unreachable. Keep whatever poster we already cached instead of wiping it on a transient 5xx.
+        if (posterInfo === null) {
+          const cachedFile = cachedEvent?.imagePath?.split("/").pop() ?? "";
+          return {
+            ...event,
+            posterUrl: cachedEvent?.posterUrl,
+            posterThumb: cachedEvent?.posterThumb,
+            imagePath: cachedFile && posterDownloader.hasPoster(cachedFile)
+              ? cachedEvent?.imagePath
+              : undefined,
+          };
+        }
+
         const remoteChanged = !!posterInfo.url &&
           posterInfo.url !== cachedEvent?.posterUrl;
         let imagePath: string | undefined;
@@ -442,7 +453,7 @@ async function syncEvents() {
               event.id,
               imageUrl,
               remoteChanged,
-            )) || undefined;
+            )) || cachedEvent?.imagePath;
           }
         }
 
