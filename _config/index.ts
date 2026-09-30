@@ -142,7 +142,7 @@ export default function () {
           links: [
             {
               rel: "http://openid.net/specs/connect/1.0/issuer",
-              href: "https://id.balcova.online",
+              href: `https://id.${siteMetadata.domain}`,
             },
           ],
         },
@@ -155,16 +155,6 @@ export default function () {
           social: author.social.mastodon.url,
           contact: `mailto:${author.email}`,
           dataTrainingAllowed: false,
-        },
-        matrix: {
-          server: {
-            "m.server": "matrix.balcova.online:443",
-          },
-          client: {
-            "m.homeserver": {
-              base_url: "https://matrix.balcova.online",
-            },
-          },
         },
       }));
 
