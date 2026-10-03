@@ -61,6 +61,10 @@
       "name": "As Dusk Falls"
     },
     {
+      "appid": 244210,
+      "name": "Assetto Corsa"
+    },
+    {
       "appid": 2379780,
       "name": "Balatro"
     },
@@ -213,6 +217,10 @@
       "name": "CHAOS;HEAD NOAH"
     },
     {
+      "appid": 330020,
+      "name": "Children of Morta"
+    },
+    {
       "appid": 231430,
       "name": "Company of Heroes 2"
     },
@@ -225,8 +233,24 @@
       "name": "Control Ultimate Edition"
     },
     {
+      "appid": 10,
+      "name": "Counter-Strike"
+    },
+    {
       "appid": 730,
       "name": "Counter-Strike 2"
+    },
+    {
+      "appid": 80,
+      "name": "Counter-Strike: Condition Zero"
+    },
+    {
+      "appid": 100,
+      "name": "Counter-Strike: Condition Zero Deleted Scenes"
+    },
+    {
+      "appid": 240,
+      "name": "Counter-Strike: Source"
     },
     {
       "appid": 293780,
@@ -295,6 +319,10 @@
     {
       "appid": 1422450,
       "name": "Deadlock"
+    },
+    {
+      "appid": 894020,
+      "name": "Death's Door"
     },
     {
       "appid": 2507950,
@@ -635,6 +663,10 @@
     {
       "appid": 379430,
       "name": "Kingdom Come: Deliverance"
+    },
+    {
+      "appid": 701160,
+      "name": "Kingdom Two Crowns"
     },
     {
       "appid": 2955840,
@@ -983,6 +1015,10 @@
     {
       "appid": 2868840,
       "name": "Slay the Spire 2"
+    },
+    {
+      "appid": 307690,
+      "name": "Sleeping Dogs: Definitive Edition"
     },
     {
       "appid": 740240,
