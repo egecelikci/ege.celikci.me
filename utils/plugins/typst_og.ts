@@ -18,6 +18,7 @@ export default function typstOg({
       engine = e;
     });
 
+    const { cache } = site;
     const templateCache = new Map<string, string>();
     async function getTemplate(path: string): Promise<string> {
       let src = templateCache.get(path);
@@ -36,6 +37,19 @@ export default function typstOg({
         : layout;
 
       try {
+        const urlPath = page.data.url === "/"
+          ? "/index"
+          : page.data.url.replace(/\/$/, "");
+        const output = `/assets/images/og${urlPath}.png`;
+
+        function emit(content: Uint8Array) {
+          site.pages.push(Page.create({ url: output, content }));
+          page.data.metas = {
+            ...(page.data.metas || {}),
+            image: site.url(output, true),
+          };
+        }
+
         const typstSource = await getTemplate(template);
 
         let title = page.data.title ? String(page.data.title) : "";
@@ -68,6 +82,7 @@ export default function typstOg({
         }
 
         let imagePath = "";
+        let imageKey = "";
         if (typeof imgUrl === "string" && imgUrl.length > 0) {
           const isRemote = /^([a-z]+:)?\/\//i.test(imgUrl) ||
             imgUrl.startsWith("data:");
@@ -75,7 +90,8 @@ export default function typstOg({
             const local = imgUrl.startsWith("/") ? imgUrl : `/${imgUrl}`;
             try {
               imagePath = site.src(local);
-              await Deno.stat(imagePath);
+              // ponytail: size rather than content, and git does not preserve mtimes, so a poster replaced by a file of the exact same size needs a manual _cache wipe. Hash the bytes here if that ever bites.
+              imageKey = `${local}:${(await Deno.stat(imagePath)).size}`;
             } catch {
               console.warn(
                 `[typst-og] Image not found for ${page.data.url}: ${local}`,
@@ -83,6 +99,14 @@ export default function typstOg({
               imagePath = "";
             }
           }
+        }
+
+        const key = [typstSource, title, desc, imageKey, output];
+        const cached = await cache?.getBytes(key);
+
+        if (cached) {
+          emit(cached);
+          return;
         }
 
         const svg = engine!.render(typstSource, {
@@ -109,16 +133,8 @@ export default function typstOg({
             .toBuffer(),
         );
 
-        const urlPath = page.data.url === "/"
-          ? "/index"
-          : page.data.url.replace(/\/$/, "");
-        const output = `/assets/images/og${urlPath}.png`;
-
-        site.pages.push(Page.create({ url: output, content: png }));
-        page.data.metas = {
-          ...(page.data.metas || {}),
-          image: site.url(output, true),
-        };
+        await cache?.set(key, png);
+        emit(png);
       } catch (error) {
         console.error(
           `[typst-og] Failed to generate for ${page.data.url}:`,
