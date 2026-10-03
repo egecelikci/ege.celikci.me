@@ -47,6 +47,13 @@ export class HttpClient {
         if (response.ok || (response.status >= 400 && response.status < 500)) {
           return response;
         }
+
+        // A 500 is an application error for this specific request, so the same GET usually fails again and retrying only burns the exponential backoff. 502/503/504 are the upstream-backend statuses that do clear up, so they keep retrying.
+        if (response.status === 500) {
+          console.warn(`[http] HTTP 500 for ${url}, giving up`);
+          return response;
+        }
+
         lastError = new Error(
           `HTTP ${response.status}: ${response.statusText}`,
         );
