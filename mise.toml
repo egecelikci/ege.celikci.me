@@ -1,0 +1,3 @@
+# Pin Deno so the Netlify build image runs the same version as local.
+[tools]
+deno = "2.9.7"
