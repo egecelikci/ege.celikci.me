@@ -1,5 +1,6 @@
 import lume from "lume/mod.ts";
 import config from "./_config/index.ts";
+import FastCache from "./utils/fast-cache.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
 
 const site = lume({
@@ -7,6 +8,11 @@ const site = lume({
   dest: "./dist",
   location: new URL("https://ege.celikci.me"),
 });
+
+/** Before any plugin captures `site.cache`. */
+if (site.cache) {
+  site.cache = new FastCache({ folder: site.root("_cache") });
+}
 
 /** Modular configuration */
 site.use(config());
