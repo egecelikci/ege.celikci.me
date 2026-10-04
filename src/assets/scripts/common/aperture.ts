@@ -7,7 +7,7 @@ export function initAperture(
     aperture.querySelectorAll<HTMLElement>(".breadcrumb__letter-face"),
   );
   const wheel = !!drum && faces.length === 2 &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    !globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (drum) drum.style.transition = "none";
 
