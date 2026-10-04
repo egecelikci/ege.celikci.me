@@ -1,5 +1,10 @@
 import L from "leaflet";
 
+/**
+ * Every event the site lists is in the İzmir area, so the map is pinned to the province: panning and zooming out stop at its edges instead of drifting into the world.
+ */
+const IZMIR_BOUNDS = L.latLngBounds([38.2, 26.8], [38.65, 27.45]);
+
 export function initVenueMaps() {
   const mapContainers = document.querySelectorAll(".venue-map");
   if (!mapContainers.length) return;
@@ -15,6 +20,9 @@ export function initVenueMaps() {
       const map = L.map(element, {
         center: [lat, lng],
         zoom: 15,
+        minZoom: 12,
+        maxBounds: IZMIR_BOUNDS,
+        maxBoundsViscosity: 1,
         zoomControl: false,
         attributionControl: false,
       });
