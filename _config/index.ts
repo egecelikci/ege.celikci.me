@@ -158,11 +158,18 @@ export default function () {
         },
       }));
 
-    /** Production-only optimizations and checks */
+    /** Production-only optimizations */
     if (!isDev) {
       site
         .use(minifyHTML())
-        .use(checkUrls())
+        .use(checkUrls());
+    }
+
+    /**
+     * SEO and HTML validation parse every page and only report findings, so they cost seconds of CPU per build and are opt-in via `LUME_CHECKS=1`.
+     */
+    if (Deno.env.get("LUME_CHECKS") === "1") {
+      site
         .use(seo({
           options: {
             body: false,
