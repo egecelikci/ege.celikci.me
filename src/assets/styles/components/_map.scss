@@ -26,17 +26,17 @@
   }
 
   .leaflet-control-attribution {
-    background: transparent !important;
+    // The basemap is a grayscale, label-dense raster, so the attribution cannot borrow contrast from the tiles and carries its own surface instead. The previous text-shadow was invalid CSS, since `rgb()` cannot take a hex token, so the text sat directly on the map with nothing behind it.
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent) !important;
     box-shadow: none !important;
-    text-shadow: 0 1px 2px rgb(var(--color-bg) / 0.8);
+    color: var(--color-text-muted) !important;
     font-family: var(--font-mono) !important;
     font-size: 0.6875rem !important;
     font-weight: 700 !important;
-    color: var(--color-text-dim) !important;
+    padding: 0.125rem 0.375rem !important;
+    border-radius: 0.25rem !important;
     margin: 1rem 1rem 0 0 !important;
-    transition:
-      opacity 0.5s ease,
-      color 0.3s ease;
+    transition: color 0.3s ease;
 
     a {
       color: inherit !important;
