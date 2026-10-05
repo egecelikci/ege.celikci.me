@@ -22,7 +22,6 @@ export default function () {
       if (!globalData?.mb_events) return;
 
       const { events } = globalData;
-      const mbEntities = globalData.mb_events.entities || {};
       const rawEvents = globalData.mb_events.events || [];
 
       const now = new Date();
@@ -67,13 +66,6 @@ export default function () {
 
         const excludeLabels: string[] = local.exclude_labels ?? [];
         event.labels = filterLabels(event.relations, excludeLabels);
-
-        (event.relations || []).forEach((rel: MBRelation) => {
-          const entity = rel.artist || rel.place || rel.label;
-          if (entity?.id && mbEntities[entity.id]) {
-            entity.externalLinks = mbEntities[entity.id];
-          }
-        });
 
         event._enriched = true;
       };

@@ -33,17 +33,10 @@ extraStyles:
             {{ for labelRel of event.labels }}
               <div class="event-page__organizer">
                 {{ comp.ui.SectionHeader({ title: "Presented by" }) }}
-                <div class="event-page__organizer-main">
-                  <span class="event-page__organizer-name">{{ labelRel["target-credit"] || labelRel.label.name }}</span>
-                  <div class="event-page__organizer-links">
-                    {{
-                      comp.base.ExternalLinks({
-                        links: labelRel.label.externalLinks,
-                        showFallbacks: false,
-                      })
-                    }}
-                  </div>
-                </div>
+                <a
+                  href="https://musicbrainz.org/label/{{ labelRel.label.id }}"
+                  class="event-page__organizer-name event-page__entity-link"
+                >{{ labelRel["target-credit"] || labelRel.label.name }}</a>
               </div>
             {{ /for }}
           </div>
@@ -111,19 +104,10 @@ extraStyles:
                   <div class="event-page__artist-name">
                     <a
                       href="https://musicbrainz.org/artist/{{ rel.artist.id }}"
-                      class="event-page__artist-link"
+                      class="event-page__entity-link"
                     >
                       {{ rel["target-credit"] || rel.artist.name }}
                     </a>
-
-                    <div class="event-page__artist-links">
-                      {{
-                        comp.base.ExternalLinks({
-                          links: rel.artist.externalLinks,
-                          showFallbacks: false,
-                        })
-                      }}
-                    </div>
                   </div>
                   <span class="event-page__artist-role typography-label">
                     {{ rel.type }}
@@ -164,28 +148,17 @@ extraStyles:
               {{ for credit of posterCredits }}
                 <div class="media-credits__row">
                   <span class="media-credits__label">{{ credit.role }}</span>
-                  <span class="media-credits__name-wrap">
-                    {{ if credit.url }}
-                      <a
-                        href="{{ credit.url }}"
-                        target="_blank"
-                        class="media-credits__name"
-                      >
-                        {{ credit.name }}
-                      </a>
-                    {{ else }}
-                      <span class="media-credits__name">{{ credit.name }}</span>
-                    {{ /if }}
-                    {{ if credit.links?.length > 1 }}
-                      {{
-                        comp.base.ExternalLinks({
-                          links: credit.links,
-                          showFallbacks: false,
-                          chips: false,
-                        })
-                      }}
-                    {{ /if }}
-                  </span>
+                  {{ if credit.url }}
+                    <a
+                      href="{{ credit.url }}"
+                      target="_blank"
+                      class="media-credits__name"
+                    >
+                      {{ credit.name }}
+                    </a>
+                  {{ else }}
+                    <span class="media-credits__name">{{ credit.name }}</span>
+                  {{ /if }}
                 </div>
               {{ /for }}
             </div>
@@ -202,16 +175,10 @@ extraStyles:
           <div class="event-page__venue-body">
             <div class="event-page__venue-header">
               <div class="event-page__venue-name">
-                <span class="event-page__venue-name-text">{{ event.venueName }}</span>
-
-                <div class="event-page__venue-links">
-                  {{
-                    comp.base.ExternalLinks({
-                      links: venueRel.place.externalLinks,
-                      showFallbacks: false,
-                    })
-                  }}
-                </div>
+                <a
+                  href="https://musicbrainz.org/place/{{ venueRel.place.id }}"
+                  class="event-page__entity-link"
+                >{{ event.venueName }}</a>
               </div>
               {{ if venueRel.place.address }}
                 <p class="event-page__venue-address">

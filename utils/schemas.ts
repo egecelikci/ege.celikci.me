@@ -9,7 +9,6 @@
 import { z } from "zod";
 import type {
   EAAPosterInfo,
-  MBEntityLink,
   MBEvent,
   MBEventList,
   MBRelation,
@@ -32,11 +31,6 @@ import type {
   WebmentionApiResponse,
   WebmentionFeed,
 } from "../src/types/index.ts";
-
-const entityLinkSchema: z.ZodType<MBEntityLink> = z.object({
-  type: z.string(),
-  url: z.string(),
-}).passthrough();
 
 const artistTargetSchema: z.ZodType<MBRelationArtist> = z.object({
   id: z.string(),
@@ -119,15 +113,9 @@ export const EAAPosterInfoSchema: z.ZodType<EAAPosterInfo> = z.object({
   ).optional(),
 }).passthrough();
 
-export const EntityDetailsSchema: z.ZodType<{ relations?: MBRelation[] }> = z
-  .object({
-    relations: z.array(relationSchema).optional(),
-  }).passthrough();
-
 export const RawIzmirEventsSchema: z.ZodType<RawIzmirEvents> = z.object({
   schemaVersion: z.literal(1).default(1),
   events: z.array(mbEventSchema),
-  entities: z.record(z.string(), z.array(entityLinkSchema)),
 }).passthrough();
 
 const webmentionSchema: z.ZodType<Webmention> = z.object({

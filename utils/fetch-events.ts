@@ -5,7 +5,6 @@ import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
 import {
   EAAPosterInfoSchema,
-  EntityDetailsSchema,
   MBEventListSchema,
   RawIzmirEventsSchema,
   validate,
@@ -27,20 +26,12 @@ const CONFIG = {
   },
 } as const;
 
-/** An external link harvested for a MusicBrainz entity (homepage, instagram, ...) */
-export interface MBEntityLink {
-  type: string;
-  url: string;
-}
-
 /** Common fields shared by MusicBrainz relation targets */
 interface MBEntityBase {
   id: string;
   name: string;
   "sort-name"?: string;
   disambiguation?: string;
-  /** Links harvested for this entity, merged by the events preprocessor */
-  externalLinks?: MBEntityLink[];
 }
 
 export interface MBRelationArtist extends MBEntityBase {
@@ -150,7 +141,6 @@ export interface RawIzmirEvents {
   /** Bumped whenever the persisted format changes; stale caches are rejected */
   schemaVersion: number;
   events: MBEvent[];
-  entities: Record<string, MBEntityLink[]>;
 }
 
 /**
@@ -327,44 +317,6 @@ async function fetchEventPosterInfo(
 }
 
 /**
- * Harvests external links for a MusicBrainz entity. Rate limited because it hits the MusicBrainz API.
- * @param httpClient - Rate-limited HTTP client.
- * @param entityId - MusicBrainz entity id.
- * @param type - Entity type to query.
- * @returns The entity's links, or null when the response is invalid.
- */
-async function fetchEntityDetails(
-  httpClient: HttpClient,
-  entityId: string,
-  type: "artist" | "place" | "label" | "url",
-): Promise<MBEntityLink[] | null> {
-  const url = `${MB_API}/${type}/${entityId}?inc=url-rels&fmt=json`;
-  const data = await httpClient.fetch<unknown>(
-    url,
-    "json",
-    "force-cache",
-    false,
-  );
-
-  const validated = validate(EntityDetailsSchema, data);
-  if (validated === null) return null;
-  if (!validated.relations) return [];
-
-  const links: MBEntityLink[] = [];
-  validated.relations.forEach((rel) => {
-    if (
-      rel["target-type"] === "url" &&
-      rel.url?.resource &&
-      rel.ended !== true
-    ) {
-      links.push({ type: rel.type, url: rel.url.resource });
-    }
-  });
-
-  return links;
-}
-
-/**
  * Syncs cached events and posters with MusicBrainz and the Event Art Archive, writing the result to the mb_events.json cache.
  */
 async function syncEvents() {
@@ -379,7 +331,7 @@ async function syncEvents() {
 
   const cachedData = await loadState<RawIzmirEvents>(
     CONFIG.paths.cacheFile,
-    { schemaVersion: 1, events: [], entities: {} },
+    { schemaVersion: 1, events: [] },
     RawIzmirEventsSchema,
   );
   const eventsMap = new Map(cachedData.events.map((e) => [e.id, e]));
@@ -396,25 +348,11 @@ async function syncEvents() {
       return;
     }
 
-    const entityIds = new Map<string, "artist" | "place" | "label" | "url">();
-
     console.log(`[mb_events] 🖼️ Processing ${raw.length} event posters…`);
 
     const events = await Promise.all(
       raw.map(async (event: MBEvent) => {
         const cachedEvent = eventsMap.get(event.id);
-
-        (event.relations || []).forEach((rel: MBRelation) => {
-          if (rel["target-type"] === "artist" && rel.artist?.id) {
-            entityIds.set(rel.artist.id, "artist");
-          } else if (rel["target-type"] === "place" && rel.place?.id) {
-            entityIds.set(rel.place.id, "place");
-          } else if (rel["target-type"] === "url" && rel.url?.id) {
-            entityIds.set(rel.url.id, "url");
-          } else if (rel["target-type"] === "label" && rel.label?.id) {
-            entityIds.set(rel.label.id, "label");
-          }
-        });
 
         if (event.relations) {
           event.relations.sort((a: MBRelation, b: MBRelation) => {
@@ -466,32 +404,9 @@ async function syncEvents() {
       }),
     );
 
-    const entities: Record<string, MBEntityLink[]> = {};
-    console.log(
-      `[mb_events] 🔍 Harvesting ${entityIds.size} unique entities…`,
-    );
-
-    const harvestResults = await Promise.all(
-      Array.from(entityIds.entries()).map(async ([id, type]) => {
-        if (id in cachedData.entities) {
-          return [id, cachedData.entities[id]] as const;
-        }
-
-        const details = await fetchEntityDetails(httpClient, id, type);
-        return [id, details] as const;
-      }),
-    );
-
-    for (const [id, data] of harvestResults) {
-      if (data) {
-        entities[id] = data.sort((a, b) => a.url.localeCompare(b.url));
-      }
-    }
-
     const newData = {
       schemaVersion: 1,
       events: events.sort((a, b) => a.id.localeCompare(b.id)),
-      entities,
     };
 
     const hasChanged = JSON.stringify(sortObjectKeys(newData)) !==

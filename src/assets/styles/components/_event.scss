@@ -76,27 +76,12 @@
       }
     }
 
-    &__organizer-main {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem 1rem;
-      min-width: 0;
-    }
-
     &__organizer-name {
       min-width: 0;
       font-family: var(--font-mono);
       font-size: 1.125rem;
       font-weight: 700;
       color: var(--color-text);
-    }
-
-    &__organizer-links {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
     }
 
     &__meta-row {
@@ -192,7 +177,7 @@
       }
     }
 
-    &__artist-link {
+    &__entity-link {
       color: inherit;
       text-decoration: none;
       transition: color 300ms ease;
@@ -200,11 +185,6 @@
       &:hover {
         color: var(--color-primary);
       }
-    }
-
-    &__artist-links {
-      display: inline-block;
-      margin-left: 0.5rem;
     }
 
     &__artist-role {
@@ -262,15 +242,6 @@
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--color-text);
-    }
-
-    &__venue-name-text {
-      display: inline-block;
-    }
-
-    &__venue-links {
-      display: inline-block;
-      margin-left: 0.5rem;
     }
 
     &__venue-address {

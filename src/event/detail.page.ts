@@ -1,6 +1,6 @@
 import { exists } from "@std/fs/exists";
 import { getLinkInfo } from "../../utils/links.ts";
-import type { MBEntityLink, MBRelation } from "../../utils/fetch-events.ts";
+import type { MBRelation } from "../../utils/fetch-events.ts";
 
 async function collectGalleryImages(
   eventId: string,
@@ -112,23 +112,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
         .includes(rel.type)
     ).map((rel: MBRelation) => {
       const artistId = rel.artist?.id;
-      const entityLinks = (artistId && mb_events.entities[artistId]) || [];
       const artistName = rel["target-credit"] || rel.artist?.name;
-
-      /** Find primary link for the credit (homepage > instagram > MB) */
-      const homepage = entityLinks.find((l: MBEntityLink) =>
-        l.type.toLowerCase().includes("homepage") ||
-        l.type.toLowerCase().includes("site")
-      );
-      const instagram = entityLinks.find((l: MBEntityLink) =>
-        l.type.toLowerCase() === "instagram" ||
-        l.url.includes("instagram.com")
-      );
-
-      const primaryLink = homepage || instagram;
-      const info = primaryLink
-        ? getLinkInfo(primaryLink.type, primaryLink.url)
-        : { icon: "person", catalog: "lucide", label: "Artist" };
 
       let role = "Artwork";
       if (rel.type === "illustration") role = "Illustration";
@@ -145,12 +129,11 @@ export default async function* ({ mb_events, events }: Lume.Data) {
 
       return {
         name: artistName,
-        url: primaryLink?.url || `https://musicbrainz.org/artist/${artistId}`,
+        url: artistId
+          ? `https://musicbrainz.org/artist/${artistId}`
+          : undefined,
         role,
         type: rel.type,
-        icon: info.icon,
-        catalog: info.catalog,
-        links: entityLinks.filter((l) => l.url !== primaryLink?.url),
       };
     });
 
@@ -172,7 +155,7 @@ export default async function* ({ mb_events, events }: Lume.Data) {
     }
 
     if (local.ai_poster) {
-      posterCredits = [{ role: "Artwork", name: "Clanker", links: [] }];
+      posterCredits = [{ role: "Artwork", name: "Clanker" }];
     }
 
     yield {
