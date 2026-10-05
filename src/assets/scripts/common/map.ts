@@ -1,9 +1,15 @@
 import L from "leaflet";
+import { leafletLayer } from "protomaps-leaflet";
 
 /**
- * Every event the site lists is in the İzmir area, so the map is pinned to the province: panning and zooming out stop at its edges instead of drifting into the world.
+ * Bounds of every venue the site has listed, plus a margin: panning and zooming out stop at the province instead of drifting into the world. Çeşme (26.31E) and Bergama (39.12N) are the far corners, so the box is province-wide rather than just the metro area.
  */
-const IZMIR_BOUNDS = L.latLngBounds([38.2, 26.8], [38.65, 27.45]);
+const IZMIR_BOUNDS = L.latLngBounds([38.22, 26.21], [39.22, 27.32]);
+
+/**
+ * Vector extract covering those bounds, built from OpenStreetMap data. Regenerating it means a new file, since `/assets/*` is cached immutably.
+ */
+const TILES = "/assets/tiles/izmir-20261003.pmtiles";
 
 export function initVenueMaps() {
   const mapContainers = document.querySelectorAll(".venue-map");
@@ -32,8 +38,11 @@ export function initVenueMaps() {
         prefix: false,
       }).addTo(map);
 
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
+      // The flavor supplies both paint and label rules, and `labelRules` is ignored whenever `flavor` is set. Going fully label-free means dropping `flavor` and passing `paintRules(namedFlavor("grayscale"))` with `labelRules: []` instead.
+      leafletLayer({
+        url: TILES,
+        flavor: "grayscale",
+        maxDataZoom: 15,
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);

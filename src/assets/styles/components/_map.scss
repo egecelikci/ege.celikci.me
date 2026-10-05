@@ -13,16 +13,6 @@
     &.map-ready {
       opacity: 1;
     }
-
-    .leaflet-tile-pane {
-      // order matters: apply brightness/contrast before grayscale, otherwise the enhancement runs on desaturated pixels and the map looks washed out.
-      filter: brightness(0.9) contrast(1.25) grayscale(1);
-      transition: all 700ms ease;
-    }
-
-    &:hover .leaflet-tile-pane {
-      opacity: 1;
-    }
   }
 
   .leaflet-control-attribution {

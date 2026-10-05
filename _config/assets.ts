@@ -98,8 +98,9 @@ export default function (options: AssetOptions = {}) {
         "assets/styles/utils/_motif.scss",
         `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/website/_motif.scss`,
       )
-      .add("assets/images")
       .add("assets/fonts")
+      .add("assets/images")
+      .add("assets/tiles")
       .add("sitemap.xsl")
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
