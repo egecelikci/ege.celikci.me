@@ -25,7 +25,7 @@ export function initVenueMaps() {
     setTimeout(() => {
       const map = L.map(element, {
         center: [lat, lng],
-        zoom: 15,
+        zoom: 16,
         minZoom: 12,
         maxBounds: IZMIR_BOUNDS,
         maxBoundsViscosity: 1,
