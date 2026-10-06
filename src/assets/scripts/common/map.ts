@@ -9,7 +9,7 @@ const IZMIR_BOUNDS = L.latLngBounds([38.22, 26.21], [39.22, 27.32]);
 /**
  * Vector extract covering those bounds, built from OpenStreetMap data. Regenerating it means a new file, since `/assets/*` is cached immutably.
  */
-const TILES = "/assets/tiles/izmir-20261003.pmtiles";
+const TILES = "/assets/tiles/izmir-20261006.pmtiles";
 
 export function initVenueMaps() {
   const mapContainers = document.querySelectorAll(".venue-map");
