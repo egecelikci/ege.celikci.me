@@ -33,6 +33,7 @@ import wellKnown from "lume/plugins/well_known.ts";
 import typst from "typst";
 
 import { isProduction } from "../utils/env.ts";
+import typstOgImages from "../utils/plugins/typst_og.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -48,18 +49,15 @@ import {
 export default function () {
   const isDev = !isProduction;
 
-  return async (site: Lume.Site) => {
+  return (site: Lume.Site) => {
     site
       .use(attributes())
       .use(imageSize())
       .use(slugifyPlugin())
       .use(typst());
 
-    if (!isDev) {
-      const typstOgImages =
-        (await import("../utils/plugins/typst_og.ts")).default;
-      site.use(typstOgImages());
-    }
+    // Imported statically: Lume does not await an async plugin, so the plugins registered after an await would land after the config returned.
+    if (!isDev) site.use(typstOgImages());
 
     site
       .use(metas())
