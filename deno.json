@@ -8,7 +8,6 @@
     "@std/path": "jsr:@std/path@^1.1.6",
     "@std/yaml": "jsr:@std/yaml@^1.2.0",
     "@types/leaflet": "npm:@types/leaflet@^1.9.22",
-    "instant.page": "npm:instant.page@^5.2.0",
     "leaflet": "npm:leaflet@^1.9.4",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.2/",
     "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.9/",

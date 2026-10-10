@@ -70,7 +70,6 @@
     "npm:ico-endec@0.1.6": "0.1.6",
     "npm:image-dimensions@2.5.1": "2.5.1",
     "npm:image-dimensions@2.6.0": "2.6.0",
-    "npm:instant.page@^5.2.0": "5.2.0",
     "npm:leaflet@^1.9.4": "1.9.4",
     "npm:lightningcss-wasm@1.33.0": "1.33.0",
     "npm:lightningcss@*": "1.33.0",
@@ -1976,9 +1975,6 @@
     },
     "ini@4.1.1": {
       "integrity": "sha512-QQnnxNyfvmHFIsj7gkPcYymR8Jdw/o7mp5ZFihxn6h8Ci6fh3Dx4E1gPjpQEpIuPo9XVNY/ZUwh4BPMjGyL01g=="
-    },
-    "instant.page@5.2.0": {
-      "integrity": "sha512-DUSwWyoHFOQnmEwJtg9vzDx8Ef8uNNvTxTmHjd0vN9/XEIb5EQkm/itpZMypoH3dJLJvtkrD97WOCKuMqDdMHQ=="
     },
     "is-extglob@2.1.1": {
       "integrity": "sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ=="
@@ -4178,7 +4174,6 @@
       "npm:@shikijs/rehype@^4.4.3",
       "npm:@shikijs/themes@^4.4.3",
       "npm:@types/leaflet@^1.9.22",
-      "npm:instant.page@^5.2.0",
       "npm:leaflet@^1.9.4",
       "npm:photoswipe@^5.4.4",
       "npm:protomaps-leaflet@5.1.0",
