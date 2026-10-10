@@ -1,9 +1,10 @@
 export default {
   globDirectory: "dist/",
+  // Only what the shell needs offline; feeds, tag JSON, and the sitemap are for other clients and cost about 1.5 MB on a first visit.
   globPatterns: [
-    "**/*.{css,js,mjs,json,xml,ico,svg,woff2,woff}",
+    "**/*.{css,js,mjs,ico,svg,woff2,woff}",
+    "manifest.json",
     "assets/images/favicon/*.png",
-    "assets/images/88x31/*.png",
     "offline/index.html",
   ],
   globIgnores: [
