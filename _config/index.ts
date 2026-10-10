@@ -32,6 +32,7 @@ import wellKnown from "lume/plugins/well_known.ts";
 
 import typst from "typst";
 
+import { isProduction } from "../utils/env.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";
 import filters from "./filters.ts";
@@ -45,7 +46,7 @@ import {
 } from "./metadata.ts";
 
 export default function () {
-  const isDev = Deno.env.get("MODE") !== "production";
+  const isDev = !isProduction;
 
   return async (site: Lume.Site) => {
     site

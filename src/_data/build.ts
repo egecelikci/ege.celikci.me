@@ -1,6 +1,6 @@
-const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
-const systemEnv = Deno.env.get("LUME_ENV") || Deno.env.get("DENO_ENV");
-const env = systemEnv || (isServe ? "development" : "production");
+import { isProduction } from "../../utils/env.ts";
+
+const env = isProduction ? "production" : "development";
 
 export default {
   env: env,

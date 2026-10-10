@@ -2,6 +2,7 @@ import lume from "lume/mod.ts";
 import config from "./_config/index.ts";
 import FastCache from "./utils/fast-cache.ts";
 import registerPreprocessors from "./utils/preprocessors.ts";
+import { isProduction } from "./utils/env.ts";
 
 const site = lume({
   src: "./src",
@@ -47,12 +48,9 @@ const runFetch = async (script: string, label: string) => {
   }
 };
 
-const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
-const isDev = Deno.env.get("LUME_ENV") === "development" || isServe;
-
-/** Skip heavy data fetching scripts during local development serve */
+/** Only production builds refresh data from the network. */
 site.addEventListener("beforeBuild", () => {
-  if (isDev) {
+  if (!isProduction) {
     console.log("[build] Skipping network fetch scripts in development.");
     return Promise.resolve();
   }
