@@ -36,6 +36,22 @@
         Content-Type = "application/octet-stream"
         Cache-Control = "public, max-age=31536000, immutable"
 
+# Pagefind names these chunks by content hash, so they never change in place.
+[[headers]]
+    for = "/pagefind/fragment/*"
+    [headers.values]
+        Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+    for = "/pagefind/index/*"
+    [headers.values]
+        Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+    for = "/pagefind/filter/*"
+    [headers.values]
+        Cache-Control = "public, max-age=31536000, immutable"
+
 [[headers]]
     for = "/sw.js"
     [headers.values]
