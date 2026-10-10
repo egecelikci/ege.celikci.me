@@ -386,23 +386,27 @@ async function syncEvents() {
         const remoteChanged = !!posterInfo.url &&
           posterInfo.url !== cachedEvent?.posterUrl;
         let imagePath: string | undefined;
+        let downloaded = true;
 
         if (posterInfo.url || posterInfo.thumb) {
           const imageUrl = posterInfo.thumb || posterInfo.url;
           if (imageUrl) {
-            imagePath = (await posterDownloader.download(
+            const saved = await posterDownloader.download(
               httpClient,
               event.id,
               imageUrl,
               remoteChanged,
-            )) || cachedEvent?.imagePath;
+            );
+            downloaded = saved !== null;
+            imagePath = saved || cachedEvent?.imagePath;
           }
         }
 
+        // When the new poster failed to download, keep the old URLs too, so the next run still sees a change and retries instead of trusting the stale file.
         return {
           ...event,
-          posterUrl: posterInfo.url,
-          posterThumb: posterInfo.thumb,
+          posterUrl: downloaded ? posterInfo.url : cachedEvent?.posterUrl,
+          posterThumb: downloaded ? posterInfo.thumb : cachedEvent?.posterThumb,
           imagePath,
         };
       }),
