@@ -36,6 +36,11 @@ layout: layouts/base.vto
   }}
 
   {{ if it.type === "note" }}
+    <span
+  data-pagefind-meta="date:{{ it.date |> date('yyyy-MM-dd') }}"
+  data-pagefind-sort="date:{{ it.date |> date('yyyy-MM-dd') }}"
+  class="sr-only"
+></span>
     {{ if !it.title }}
       <span
   data-pagefind-meta="title:{{ it |> noteTitle }}"

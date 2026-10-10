@@ -363,3 +363,10 @@ extraStyles:
     </section>
   {{ /if }}
 </div>
+
+{{ if it.event.beginDate }}
+  <span
+    data-pagefind-meta="date:{{ it.event.beginDate |> date('yyyy-MM-dd') }}"
+    class="sr-only"
+  ></span>
+{{ /if }}
