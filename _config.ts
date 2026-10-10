@@ -25,7 +25,8 @@ site.use(config());
 registerPreprocessors(site);
 
 const runFetch = async (script: string, label: string) => {
-  const cmd = new Deno.Command("deno", {
+  // Deno.execPath() is the deno running this build, which a bare "deno" on PATH may not be (mise, NixOS).
+  const cmd = new Deno.Command(Deno.execPath(), {
     args: [
       "run",
       "--allow-net",
@@ -36,7 +37,6 @@ const runFetch = async (script: string, label: string) => {
       "--allow-run",
       script,
     ],
-    env: { NODE_ENV: "production" },
     stdout: "inherit",
     stderr: "inherit",
   });
@@ -63,13 +63,17 @@ site.addEventListener("beforeBuild", () => {
 
 /** Service Worker generation (bundled + precache manifest injected) */
 site.addEventListener("afterBuild", async () => {
-  const command = new Deno.Command("deno", {
+  const command = new Deno.Command(Deno.execPath(), {
     args: ["run", "-A", "@serwist/cli", "build"],
     env: { NODE_ENV: "production" },
     stdout: "inherit",
     stderr: "inherit",
   });
-  await command.spawn().status;
+  const status = await command.spawn().status;
+  // A stale or missing sw.js would serve old pages offline, so a failed bundle fails the build.
+  if (!status.success) {
+    throw new Error(`service worker build exited with code ${status.code}`);
+  }
 });
 
 export default site;
