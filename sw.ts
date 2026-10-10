@@ -29,8 +29,8 @@ const serwist = new Serwist({
         cacheName: "pages",
         plugins: [
           {
-            handlerDidError: async () => {
-              return await caches.match("/offline/index.html");
+            handlerDidError: async (): Promise<Response | undefined> => {
+              return await serwist.matchPrecache("/offline/index.html");
             },
           },
         ],
