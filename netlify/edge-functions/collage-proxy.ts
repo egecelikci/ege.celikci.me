@@ -5,7 +5,35 @@
  */
 
 const LASTFM_API_KEY = Deno.env.get("LASTFM_API_KEY");
-const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
+const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN");
+/** ListenBrainz asks for `App/<version> ( contact )` and may block requests without it. */
+const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
+
+/** Ranges accepted by ListenBrainz `stats/user/{user}/release-groups`. */
+const LISTENBRAINZ_RANGES = new Set([
+  "this_week",
+  "this_month",
+  "this_year",
+  "week",
+  "month",
+  "quarter",
+  "half_yearly",
+  "year",
+  "all_time",
+]);
+
+/** Our period names mapped to Last.fm's `user.getTopAlbums` periods. */
+const LASTFM_PERIODS: Record<string, string> = {
+  week: "7day",
+  month: "1month",
+  quarter: "3month",
+  half_year: "6month",
+  year: "12month",
+  all_time: "overall",
+};
+
+/** Stats change at most daily, so serve a cached copy while refreshing it. */
+const STATS_CACHE = "public, s-maxage=3600, stale-while-revalidate=86400";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -73,6 +101,12 @@ export default async (req: Request): Promise<Response> => {
   const source = url.searchParams.get("source") ?? "lb";
   const user = url.searchParams.get("user");
   const period = url.searchParams.get("period") ?? "week";
+  if (source === "lb" && !LISTENBRAINZ_RANGES.has(period)) {
+    return jsonError(`Unknown ListenBrainz range: ${period}`, 400);
+  }
+  if (source === "lfm" && !(period in LASTFM_PERIODS)) {
+    return jsonError(`Unknown Last.fm period: ${period}`, 400);
+  }
 
   /**
    * SOURCE: cover
@@ -105,11 +139,8 @@ export default async (req: Request): Promise<Response> => {
           ...CORS_HEADERS,
         },
       });
-    } catch (err: unknown) {
-      return jsonError(
-        err instanceof Error ? err.message : "Unknown error",
-        500,
-      );
+    } catch {
+      return jsonError("Cover Art Archive is unreachable", 502);
     }
   }
 
@@ -203,11 +234,8 @@ export default async (req: Request): Promise<Response> => {
           ...CORS_HEADERS,
         },
       });
-    } catch (err: unknown) {
-      return jsonError(
-        err instanceof Error ? err.message : "Unknown error",
-        500,
-      );
+    } catch {
+      return jsonError("Google Fonts is unreachable", 502);
     }
   }
 
@@ -229,13 +257,41 @@ export default async (req: Request): Promise<Response> => {
         `https://api.listenbrainz.org/1/stats/user/${
           encodeURIComponent(user)
         }/release-groups?range=${period}&count=100`,
-        { headers: { "User-Agent": USER_AGENT } },
+        {
+          headers: {
+            "User-Agent": USER_AGENT,
+            Accept: "application/json",
+            ...(LISTENBRAINZ_TOKEN
+              ? { Authorization: `Token ${LISTENBRAINZ_TOKEN}` }
+              : {}),
+          },
+          signal: AbortSignal.timeout(10000),
+        },
       );
-      if (!res.ok) throw new Error(`ListenBrainz API error: ${res.status}`);
+      if (res.status === 204) {
+        return jsonError(
+          "ListenBrainz has not calculated stats for this range yet",
+          404,
+        );
+      }
+      if (res.status === 404) {
+        return jsonError("ListenBrainz user not found", 404);
+      }
+      if (res.status === 429) {
+        return jsonError(
+          "ListenBrainz rate limit reached, try again soon",
+          503,
+        );
+      }
+      if (!res.ok) {
+        await res.body?.cancel();
+        return jsonError(`ListenBrainz error ${res.status}`, 502);
+      }
 
-      // ListenBrainz answers 204 while stats are still being computed.
-      const data = res.status === 204 ? {} : await res.json().catch(() => null);
       // A bot check page arrives as HTML with status 200.
+      const data = res.headers.get("Content-Type")?.includes("json")
+        ? await res.json().catch(() => null)
+        : null;
       if (!data) {
         return jsonError(
           "ListenBrainz is unavailable right now, try again later",
@@ -259,25 +315,21 @@ export default async (req: Request): Promise<Response> => {
         return jsonError("Last.fm API key not configured", 500);
       }
 
-      const lfmPeriodMap: Record<string, string> = {
-        week: "7day",
-        month: "1month",
-        quarter: "3month",
-        half_year: "6month",
-        year: "12month",
-        all_time: "overall",
-      };
-
       const res = await fetch(
         `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums` +
           `&user=${encodeURIComponent(user)}&api_key=${LASTFM_API_KEY}` +
-          `&period=${lfmPeriodMap[period] ?? "7day"}&limit=100&format=json`,
-        { headers: { "User-Agent": USER_AGENT } },
+          `&period=${LASTFM_PERIODS[period]}&limit=100&format=json`,
+        {
+          headers: { "User-Agent": USER_AGENT },
+          signal: AbortSignal.timeout(10000),
+        },
       );
-      if (!res.ok) throw new Error(`Last.fm API error: ${res.status}`);
-
-      const data = await res.json();
-      if (data.error) throw new Error(data.message as string);
+      const data = await res.json().catch(() => null);
+      // Last.fm error 6 is "user not found"; it also answers some errors with a 200.
+      if (data?.error === 6) return jsonError("Last.fm user not found", 404);
+      if (!res.ok || !data || data.error) {
+        return jsonError(`Last.fm error ${data?.error ?? res.status}`, 502);
+      }
 
       albums = (data.topalbums?.album ?? [])
         .filter(
@@ -300,11 +352,12 @@ export default async (req: Request): Promise<Response> => {
     return new Response(JSON.stringify({ albums }), {
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "public, s-maxage=3600",
+        "Cache-Control": STATS_CACHE,
         ...CORS_HEADERS,
       },
     });
-  } catch (err: unknown) {
-    return jsonError(err instanceof Error ? err.message : "Unknown error", 500);
+  } catch {
+    // Upstream error messages can carry the request URL and with it the API key, so they stay server-side.
+    return jsonError("The stats service is unreachable", 502);
   }
 };
