@@ -80,8 +80,6 @@
 
   .album-item__mono-img {
     z-index: 10;
-    // The dither is computed in linear light; smooth resampling averages it in sRGB and darkens it by about 10 points, so keep every pixel pure ink or paper.
-    image-rendering: pixelated;
     opacity: var(--album-mono-opacity);
     filter: invert(var(--album-mono-invert))
       brightness(var(--album-mono-brightness))
