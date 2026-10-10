@@ -1,5 +1,5 @@
 [build]
-    command = "mise install && mise exec -- deno task build"
+    command = "mise install && mise exec -- deno task ci && mise exec -- deno task build"
     publish = "dist"
 
 [dev]
