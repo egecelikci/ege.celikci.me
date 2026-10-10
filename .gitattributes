@@ -14,3 +14,6 @@ src/assets/images/88x31/**.png !filter !diff !merge
 
 # for Typst
 *.ttf !filter !diff !merge
+
+# Tiny test fixtures; small enough to keep out of LFS so tests run on any clone
+utils/preprocessors/fixtures/** -text !filter !diff !merge

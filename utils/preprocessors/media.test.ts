@@ -11,68 +11,72 @@ import {
   stripMediaRanges,
 } from "./media.ts";
 
-const PORTRAIT_CAT =
-  "/assets/images/gallery/27ab1413-7b1e-44f1-a961-5d1dcac56fc4.jpg";
-const LANDSCAPE_FLOWERS =
-  "/assets/images/gallery/de1bd060-0801-4f96-af72-1a8ebfd53ce1.jpg";
+/** Tiny header-only images, kept out of Git LFS so the tests run on any clone. */
+const FIXTURES = new URL("./fixtures", import.meta.url).pathname;
 
-Deno.test("probeLocalImageSize reports portrait orientation for the cat", async () => {
-  const size = await probeLocalImageSize(PORTRAIT_CAT);
-  assert(size !== undefined, "expected dimensions for gallery file");
-  assert(size.width > 0 && size.height > 0, "dimensions must be positive");
-  assert(
-    size.height > size.width,
-    `expected portrait, got ${size.width}x${size.height}`,
-  );
+Deno.test("probeLocalImageSize reads PNG, JPEG, and GIF headers", async () => {
+  assertEquals(await probeLocalImageSize("/portrait.png", FIXTURES), {
+    width: 2,
+    height: 3,
+  });
+  assertEquals(await probeLocalImageSize("/landscape.jpg", FIXTURES), {
+    width: 3,
+    height: 2,
+  });
+  assertEquals(await probeLocalImageSize("/square.gif", FIXTURES), {
+    width: 5,
+    height: 5,
+  });
 });
 
-Deno.test("probeLocalImageSize reports landscape orientation for flowers", async () => {
-  const size = await probeLocalImageSize(LANDSCAPE_FLOWERS);
-  assert(size !== undefined, "expected dimensions for gallery file");
-  assert(
-    size.width > size.height,
-    `expected landscape, got ${size.width}x${size.height}`,
+Deno.test("probeLocalImageSize ignores query strings and fragments", async () => {
+  assertEquals(await probeLocalImageSize("/portrait.png?v=1#x", FIXTURES), {
+    width: 2,
+    height: 3,
+  });
+});
+
+Deno.test("probeLocalImageSize returns undefined for truncated and empty files", async () => {
+  assertEquals(
+    await probeLocalImageSize("/truncated.png", FIXTURES),
+    undefined,
   );
+  assertEquals(await probeLocalImageSize("/empty.webp", FIXTURES), undefined);
 });
 
 Deno.test("probeLocalImageSize refuses remote, missing, and hostile paths", async () => {
-  assertEquals(
-    await probeLocalImageSize("https://example.com/photo.jpg"),
-    undefined,
-  );
-  assertEquals(
-    await probeLocalImageSize("/assets/images/gallery/does-not-exist.jpg"),
-    undefined,
-  );
-  assertEquals(
-    await probeLocalImageSize("/assets/images/gallery/../../deno.json"),
-    undefined,
-  );
-  assertEquals(
-    await probeLocalImageSize("/assets/images/gallery//double-slash.jpg"),
-    undefined,
-  );
-  assertEquals(await probeLocalImageSize("/notes/"), undefined);
+  for (
+    const src of [
+      "https://example.com/photo.jpg",
+      "/does-not-exist.jpg",
+      "/../media.ts",
+      "/fixtures//portrait.png",
+      "/a\\b.png",
+      "/notes/",
+      "/portrait.txt",
+    ]
+  ) {
+    assertEquals(await probeLocalImageSize(src, FIXTURES), undefined, src);
+  }
 });
 
 Deno.test("enrichImagesWithDimensions fills gaps but never clobbers", async () => {
   const images: PostImage[] = [
-    { src: PORTRAIT_CAT, alt: "cat" },
-    { src: LANDSCAPE_FLOWERS, alt: "explicit", width: 4, height: 3 },
+    { src: "/portrait.png", alt: "probed" },
+    { src: "/landscape.jpg", alt: "explicit", width: 4, height: 3 },
     { src: "https://example.com/remote.jpg", alt: "remote" },
   ];
-  const enriched = await enrichImagesWithDimensions(images);
+  const snapshot = structuredClone(images);
+  const enriched = await enrichImagesWithDimensions(images, FIXTURES);
 
-  assert(
-    enriched[0].width !== undefined && enriched[0].height !== undefined,
-    "local image should gain dimensions",
-  );
+  assertEquals([enriched[0].width, enriched[0].height], [2, 3]);
   assertEquals(
     [enriched[1].width, enriched[1].height],
     [4, 3],
     "explicit author dimensions must survive",
   );
   assertEquals(enriched[2].width, undefined, "remote image stays unknown");
+  assertEquals(images, snapshot, "input is not mutated");
 });
 
 Deno.test("extractMediaImages finds standard and sized images once each", () => {
