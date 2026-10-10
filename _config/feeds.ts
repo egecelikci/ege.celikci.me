@@ -1,11 +1,11 @@
-import feed, { Options as FeedOptions } from "lume/plugins/feed.ts";
+import feed from "lume/plugins/feed.ts";
 import createSlugifier from "lume/core/slugifier.ts";
 import { site as siteData } from "./metadata.ts";
 import feedConfigs from "../src/_data/feeds.ts";
 
 const slugify = createSlugifier();
 
-export default function (options: FeedOptions = {}) {
+export default function () {
   return (site: Lume.Site) => {
     const items = {
       title: "=title",
@@ -44,7 +44,6 @@ export default function (options: FeedOptions = {}) {
 
     for (const config of feedConfigs) {
       site.use(feed({
-        ...options,
         output: config.output,
         query: config.query,
         limit: config.limit,

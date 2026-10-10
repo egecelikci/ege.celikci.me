@@ -1,4 +1,4 @@
-import remark, { Options as RemarkOptions } from "lume/plugins/remark.ts";
+import remark from "lume/plugins/remark.ts";
 import rehypeShiki from "@shikijs/rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
@@ -20,10 +20,9 @@ const shikiConfig = {
   defaultColor: "light-dark()",
 };
 
-export const remarkPlugin = (options: RemarkOptions = {}) => {
+export const remarkPlugin = () => {
   return (site: Lume.Site) => {
     site.use(remark({
-      ...options,
       remarkPlugins: [
         [remarkToc, {
           heading: "([iİIı]ç[iİIı]ndek[iİIı]ler|contents|table of contents)",
@@ -31,7 +30,6 @@ export const remarkPlugin = (options: RemarkOptions = {}) => {
         }],
         remarkGfm,
         remarkSmartypants,
-        ...(options.remarkPlugins || []),
       ],
       rehypePlugins: [
         rehypeSlug,
@@ -42,7 +40,6 @@ export const remarkPlugin = (options: RemarkOptions = {}) => {
           },
         }],
         [rehypeShiki, shikiConfig],
-        ...(options.rehypePlugins || []),
       ],
     }));
   };

@@ -1,17 +1,10 @@
 import { Page } from "lume/core/file.ts";
 import type { TypstEngine } from "typst";
 
-export interface TypstOgOptions {
-  layout?: string;
-}
+const LAYOUT = "/_includes/layouts/og.typ";
 
-export default function typstOg({
-  layout = "/_includes/layouts/og.typ",
-}: TypstOgOptions = {}) {
+export default function typstOg() {
   return (site: Lume.Site) => {
-    const isDev = Deno.env.get("MODE") !== "production";
-    if (isDev) return;
-
     let engine: TypstEngine | undefined;
 
     site.hooks.typst?.((e: TypstEngine) => {
@@ -34,7 +27,7 @@ export default function typstOg({
 
       const template = typeof page.data.openGraphLayout === "string"
         ? page.data.openGraphLayout
-        : layout;
+        : LAYOUT;
 
       try {
         const urlPath = page.data.url === "/"
