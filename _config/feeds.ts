@@ -11,7 +11,7 @@ export default function (options: FeedOptions = {}) {
       title: "=title",
       description: "=excerpt || =description",
       content: (data: Lume.Data<Lume.GlobalData>) => {
-        let html = (data.content || data.description || "") as string;
+        let html = (data.children || data.description || "") as string;
 
         if (
           data.images && Array.isArray(data.images) && data.images.length > 0
