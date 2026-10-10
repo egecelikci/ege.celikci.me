@@ -27,6 +27,7 @@ export function initVenueMaps() {
         center: [lat, lng],
         zoom: 16,
         minZoom: 12,
+        maxZoom: 19,
         maxBounds: IZMIR_BOUNDS,
         maxBoundsViscosity: 1,
         zoomControl: false,
