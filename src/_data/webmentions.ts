@@ -1,257 +1,84 @@
 /**
- * Webmentions Data Fetcher
- * Uses native Deno HTTP Cache API and simplified state management.
+ * Webmentions for the build, synced incrementally from webmention.io into `_cache/webmentions_store.json`.
+ * @module
  */
 
 import "@std/dotenv/load";
 import { join } from "@std/path";
 import { loadState, saveState } from "../../utils/cache.ts";
-import { HttpClient } from "../../utils/fetch-base.ts";
-import {
-  validate,
-  WebmentionApiResponseSchema,
-  WebmentionFeedSchema,
-} from "../../utils/schemas.ts";
-import type { Webmention, WebmentionFeed } from "../types/index.ts";
+import { WebmentionFeedSchema } from "../../utils/schemas.ts";
+import { type FetchPage, syncWebmentions } from "../../utils/webmentions.ts";
+import type { WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 
-// CONFIGURATION
+const CACHE_FILE = join(Deno.cwd(), "_cache", "webmentions_store.json");
+const API = "https://webmention.io/api/mentions.jf2";
+const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
-const CONFIG = {
-  perPage: 1000,
-  rateLimitMs: 1000,
-
-  paths: {
-    cacheFile: join(Deno.cwd(), "_cache", "webmentions_store.json"),
-  },
-
-  api: {
-    base: "https://webmention.io/api",
-  },
-
-  credentials: {
-    token: Deno.env.get("WEBMENTION_IO_TOKEN"),
-    host: site.host,
-  },
-
-  userAgent: "ege.celikci.me/1.0 (ege@celikci.me)",
-} as const;
-
-class WebmentionFetcher {
-  constructor(private httpClient: HttpClient) {}
-
-  async fetchNew(since?: string | null): Promise<Webmention[]> {
-    const { token, host } = CONFIG.credentials;
-
-    if (!host || !token) {
-      console.warn(
-        "[webmentions] ⚠️ Missing configuration (HOST or TOKEN). Skipping fetch.",
-      );
-      return [];
-    }
-
-    const url = this.buildUrl(host, token, since);
-    const sinceLabel = since
-      ? new Date(since).toLocaleDateString()
-      : "the beginning";
-
-    console.log(`[webmentions] 🌐 Checking for updates since ${sinceLabel}…`);
-
-    const data = await this.httpClient.fetch<unknown>(
-      url,
-      "json",
-      "force-cache",
-    );
-
-    const validated = validate(WebmentionApiResponseSchema, data);
-    if (!validated) {
-      console.warn(
-        "[webmentions] ⚠️ API response failed validation, treating as no updates",
-      );
-      return [];
-    }
-
-    const count = validated.children.length;
-    if (count > 0) {
-      console.log(
-        `[webmentions] ✅ Fetched ${count} new webmention${
-          count === 1 ? "" : "s"
-        }`,
-      );
-    } else {
-      console.log("[webmentions] ℹ️ No new webmentions found");
-    }
-
-    return validated.children;
-  }
-
-  private buildUrl(
-    host: string,
-    token: string,
-    since?: string | null,
-  ): string {
-    let url =
-      `${CONFIG.api.base}/mentions.jf2?domain=${host}&token=${token}&per-page=${CONFIG.perPage}`;
-    if (since) url += `&since=${encodeURIComponent(since)}`;
-    return url;
-  }
-}
-
-// WEBMENTION PROCESSOR
-
-class WebmentionProcessor {
-  mergeMentions(
-    existing: Webmention[],
-    incoming: Webmention[],
-  ): Webmention[] {
-    if (incoming.length === 0) return existing;
-
-    console.log(
-      `[webmentions] ♻️ Merging ${incoming.length} new entries with ${existing.length} existing…`,
-    );
-
-    const byId = new Map<number, Webmention>(
-      existing.map((m) => [m["wm-id"], m]),
-    );
-
-    let added = 0;
-    let updated = 0;
-
-    for (const mention of incoming) {
-      const prior = byId.get(mention["wm-id"]);
-      if (prior) {
-        if (JSON.stringify(prior) !== JSON.stringify(mention)) {
-          byId.set(mention["wm-id"], mention);
-          updated++;
-        }
-      } else {
-        byId.set(mention["wm-id"], mention);
-        added++;
+/**
+ * Fetch one page straight from the network.
+ *
+ * The HTTP client's on-disk cache is skipped on purpose: it would replay a stale page forever and store the token in its URL.
+ */
+function pageFetcher(token: string, domain: string): FetchPage {
+  return async (params) => {
+    params.set("domain", domain);
+    params.set("token", token);
+    try {
+      const res = await fetch(`${API}?${params}`, {
+        headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (!res.ok) {
+        console.warn(`[webmentions] ⚠️ HTTP ${res.status}`);
+        await res.body?.cancel();
+        return null;
       }
+      return await res.json();
+    } catch (error) {
+      console.warn(`[webmentions] ⚠️ ${(error as Error).name}`);
+      return null;
     }
-
-    if (added > 0 || updated > 0) {
-      console.log(
-        `[webmentions] ℹ️ Added ${added} new, updated ${updated} existing mention${
-          added + updated === 1 ? "" : "s"
-        }`,
-      );
-    }
-
-    return Array.from(byId.values()).sort((a, b) => {
-      return (
-        new Date(b["wm-received"]).getTime() -
-        new Date(a["wm-received"]).getTime()
-      );
-    });
-  }
-
-  validateMention(mention: Webmention): boolean {
-    return !!(
-      mention["wm-id"] &&
-      mention["wm-received"] &&
-      mention["wm-property"] &&
-      mention["wm-source"] &&
-      mention["wm-target"]
-    );
-  }
-
-  filterInvalid(mentions: Webmention[]): Webmention[] {
-    const valid = mentions.filter((m) => this.validateMention(m));
-    const dropped = mentions.length - valid.length;
-    if (dropped > 0) {
-      console.warn(
-        `[webmentions] ⚠️ Filtered out ${dropped} invalid mention${
-          dropped === 1 ? "" : "s"
-        }`,
-      );
-    }
-    return valid;
-  }
-
-  getStatsByType(mentions: Webmention[]): Record<string, number> {
-    const stats: Record<string, number> = {};
-    for (const mention of mentions) {
-      const type = mention["wm-property"];
-      if (type) stats[type] = (stats[type] ?? 0) + 1;
-    }
-    return stats;
-  }
+  };
 }
-
-// MAIN ORCHESTRATOR
 
 async function getWebmentionsData(): Promise<WebmentionFeed> {
-  const startTime = performance.now();
-  console.log("[webmentions] ℹ️ Starting webmentions sync…");
+  const stored = await loadState<WebmentionFeed>(
+    CACHE_FILE,
+    { schemaVersion: 1, children: [], lastFetched: null },
+    WebmentionFeedSchema,
+  );
 
-  const httpClient = new HttpClient({
-    userAgent: CONFIG.userAgent,
-    rateLimitMs: CONFIG.rateLimitMs,
-    cacheName: "webmentions-api-cache",
-  });
-
-  const fetcher = new WebmentionFetcher(httpClient);
-  const processor = new WebmentionProcessor();
+  const token = Deno.env.get("WEBMENTION_IO_TOKEN");
+  if (!token || !site.host) {
+    console.warn("[webmentions] ⚠️ No token configured, using the cache");
+    return stored;
+  }
 
   try {
-    const cachedFeed = await loadState<WebmentionFeed>(
-      CONFIG.paths.cacheFile,
-      { schemaVersion: 1, children: [], lastFetched: null },
-      WebmentionFeedSchema,
-    );
-
-    if (!CONFIG.credentials.token) {
+    const result = await syncWebmentions(stored, pageFetcher(token, site.host));
+    if (result.dropped > 0) {
       console.warn(
-        "[webmentions] ⚠️ No token configured, returning cached data only",
+        `[webmentions] ⚠️ Skipped ${result.dropped} unsupported or malformed mentions`,
       );
-      return cachedFeed;
     }
-
-    const newMentions = await fetcher.fetchNew(cachedFeed.lastFetched);
-
-    if (newMentions.length === 0) {
-      const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-      console.log(`[webmentions] ✅ Completed in ${elapsed}s (no updates)`);
-      return cachedFeed;
+    if (result.feed === stored) {
+      console.log("[webmentions] ℹ️ No new webmentions");
+      return stored;
     }
-
-    const validMentions = processor.filterInvalid(newMentions);
-    const mergedMentions = processor.mergeMentions(
-      cachedFeed.children,
-      validMentions,
-    );
-
-    const updatedFeed: WebmentionFeed = {
-      schemaVersion: 1,
-      children: mergedMentions,
-      lastFetched: new Date().toISOString(),
-    };
-
-    await saveState(CONFIG.paths.cacheFile, updatedFeed, WebmentionFeedSchema);
-
-    const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-    const typeStats = processor.getStatsByType(mergedMentions);
-
-    console.log(`[webmentions] ✅ Completed in ${elapsed}s`);
+    await saveState(CACHE_FILE, result.feed, WebmentionFeedSchema);
     console.log(
-      `[webmentions] ℹ️ Total: ${mergedMentions.length} webmentions ` +
-        `(${typeStats["like-of"] ?? 0} likes, ` +
-        `${typeStats["repost-of"] ?? 0} reposts, ` +
-        `${typeStats["in-reply-to"] ?? 0} replies, ` +
-        `${typeStats["mention-of"] ?? 0} mentions)`,
+      `[webmentions] ✅ Added ${result.added}, updated ${result.updated}; ${result.feed.children.length} total`,
     );
-
-    return updatedFeed;
+    return result.feed;
   } catch (error) {
-    console.error(
-      "[webmentions] ❌ Fatal error during webmentions sync:",
-      (error as Error).message,
+    console.warn(
+      `[webmentions] ⚠️ Sync failed, keeping the cache: ${
+        (error as Error).message
+      }`,
     );
-    return { schemaVersion: 1, children: [], lastFetched: null };
+    return stored;
   }
 }
-
-// EXPORT
 
 export default await getWebmentionsData();
