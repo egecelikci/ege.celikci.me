@@ -140,10 +140,10 @@ class ImageProcessor {
   async process(rgid: string, imageBuffer: ArrayBuffer): Promise<void> {
     const colorPath = join(CONFIG.paths.coverColor, `${rgid}.webp`);
     const monoPath = join(CONFIG.paths.coverMono, `${rgid}.png`);
-    const uint8 = new Uint8Array(imageBuffer);
+    const bytes = new Uint8Array(imageBuffer);
     await Promise.all([
-      saveColorVersion(Buffer.from(uint8), colorPath),
-      ditherWithSharp(Buffer.from(uint8), monoPath),
+      saveColorVersion(bytes, colorPath),
+      ditherWithSharp(bytes, monoPath),
     ]);
   }
 
@@ -197,7 +197,20 @@ async function getMusicData() {
             if (!imagesExist) {
               console.log(`[music] 📥 Fetching cover for: ${metadata.title}`);
               const buf = await fetcher.fetchCoverImage(id);
-              if (buf) await imageProcessor.process(id, buf);
+              // Without a cover the album would point at missing images, so leave it out; with no cover file, the next run tries again.
+              const saved = buf &&
+                await imageProcessor.process(id, buf).then(
+                  () => true,
+                  (error) => {
+                    console.warn(
+                      `[music] ⚠️ Cover failed for ${metadata.title}: ${
+                        (error as Error).message
+                      }`,
+                    );
+                    return false;
+                  },
+                );
+              if (!saved) return album;
             }
 
             const paths = imageProcessor.buildPaths(id);
