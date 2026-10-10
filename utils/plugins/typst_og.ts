@@ -42,13 +42,13 @@ export default function typstOg({
           : page.data.url.replace(/\/$/, "");
         const output = `/assets/images/og${urlPath}.png`;
 
-        function emit(content: Uint8Array) {
+        const emit = (content: Uint8Array) => {
           site.pages.push(Page.create({ url: output, content }));
           page.data.metas = {
             ...(page.data.metas || {}),
             image: site.url(output, true),
           };
-        }
+        };
 
         const typstSource = await getTemplate(template);
 

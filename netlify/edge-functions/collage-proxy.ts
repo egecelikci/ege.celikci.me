@@ -87,9 +87,9 @@ export default async (req: Request): Promise<Response> => {
     const UA =
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
-    async function fetchFontBuffer(
+    const fetchFontBuffer = async (
       requestedWeight: string | null,
-    ): Promise<ArrayBuffer | null> {
+    ): Promise<ArrayBuffer | null> => {
       const encoded = family!.replace(/\s+/g, "+");
       const apiUrl = requestedWeight
         ? `https://fonts.googleapis.com/css2?family=${encoded}:wght@${requestedWeight}&display=swap`
@@ -115,7 +115,7 @@ export default async (req: Request): Promise<Response> => {
       });
       if (!fontRes.ok) return null;
       return fontRes.arrayBuffer();
-    }
+    };
 
     try {
       /** Try requested weight → 400 fallback → no-weight fallback */

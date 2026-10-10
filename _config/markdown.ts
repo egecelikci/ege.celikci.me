@@ -21,7 +21,7 @@ const shikiConfig = {
 };
 
 export const remarkPlugin = (options: RemarkOptions = {}) => {
-  return async (site: Lume.Site) => {
+  return (site: Lume.Site) => {
     site.use(remark({
       ...options,
       remarkPlugins: [
