@@ -2,7 +2,9 @@ import lumeCMS from "lume/cms/mod.ts";
 import "@std/dotenv/load";
 
 const user = Deno.env.get("CMS_USER") ?? "admin";
-const password = Deno.env.get("CMS_PASSWORD") ?? "";
+const password = Deno.env.get("CMS_PASSWORD");
+// LumeCMS accepts an empty password, and the CMS can commit to main, so refuse to start without one.
+if (!password) throw new Error("Set CMS_PASSWORD before starting the CMS");
 const gitName = Deno.env.get("CMS_GIT_NAME") ?? user;
 const gitEmail = Deno.env.get("CMS_GIT_EMAIL") ??
   `${user}@noreply.git.celikci.me`;
