@@ -1,5 +1,5 @@
 import * as path from "@std/path";
-import xss from "xss";
+import xss, { escapeHtml } from "xss";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
 import gitData from "../src/_data/git.ts";
@@ -279,9 +279,12 @@ export const filters = {
 
         if (html) {
           if (html.length > 2000) {
-            entry.content.value = `mentioned this in <a href="${
-              entry["wm-source"]
-            }">${entry["wm-source"]}</a>`;
+            // The source URL comes from whoever sent the webmention, so it is escaped and the link still goes through xss to drop javascript: URLs.
+            const source = escapeHtml(entry["wm-source"] || "");
+            entry.content.value = xss(
+              `mentioned this in <a href="${source}">${source}</a>`,
+              xssOptions,
+            );
           } else {
             entry.content.value = xss(html, xssOptions);
           }
