@@ -12,6 +12,16 @@ export default function ({ mb_events }: Lume.Data) {
     "METHOD:PUBLISH",
     "X-WR-CALNAME:Events in İzmir",
     "X-WR-TIMEZONE:Europe/Istanbul",
+    // RFC 5545 requires a VTIMEZONE for every TZID used; Turkey has stayed on UTC+3 without daylight saving since September 2016.
+    "BEGIN:VTIMEZONE",
+    "TZID:Europe/Istanbul",
+    "BEGIN:STANDARD",
+    "DTSTART:20160907T000000",
+    "TZOFFSETFROM:+0300",
+    "TZOFFSETTO:+0300",
+    "TZNAME:+03",
+    "END:STANDARD",
+    "END:VTIMEZONE",
   ];
 
   const escape = (str: string) =>
@@ -112,5 +122,6 @@ export default function ({ mb_events }: Lume.Data) {
     return parts.join("\r\n");
   };
 
-  return icsLines.map(fold).join("\r\n");
+  // Every content line, the last included, ends with CRLF.
+  return icsLines.map(fold).join("\r\n") + "\r\n";
 }
