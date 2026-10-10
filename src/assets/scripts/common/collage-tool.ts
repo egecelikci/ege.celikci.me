@@ -349,20 +349,8 @@ export function initCollageTool(defaultUsername: string) {
     generate();
   });
 
+  // The worker loads the font through the proxy; a page-level Google Fonts link would only trip the CSP.
   fontFamilyInput.addEventListener("input", () => {
-    if (fontFamilyInput.value.trim()) {
-      const linkId = "dynamic-google-font";
-      let link = document.getElementById(linkId) as HTMLLinkElement;
-      if (!link) {
-        link = document.createElement("link");
-        link.id = linkId;
-        link.rel = "stylesheet";
-        document.head.appendChild(link);
-      }
-      link.href = `https://fonts.googleapis.com/css2?family=${
-        fontFamilyInput.value.trim().replace(/ /g, "+")
-      }&display=swap`;
-    }
     saveSettings();
     if (debounceTimeout) clearTimeout(debounceTimeout);
     debounceTimeout = globalThis.setTimeout(generate, 1000);
