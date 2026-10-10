@@ -2,21 +2,40 @@
  * Pagefind-powered search functionality for Lume.
  */
 
-export async function initSearch() {
+/** One result as Pagefind's `data()` returns it; `excerpt` is HTML with `<mark>` highlights. */
+interface PagefindResult {
+  url: string;
+  excerpt: string;
+  meta: Record<string, string | undefined>;
+}
+
+/** The subset of the Pagefind JS API this script uses. */
+interface Pagefind {
+  options(options: Record<string, unknown>): Promise<void>;
+  init(): Promise<void>;
+  preload(term: string): Promise<void>;
+  debouncedSearch(
+    term: string,
+    options: Record<string, unknown>,
+    debounceMs: number,
+  ): Promise<{ results: { data(): Promise<PagefindResult> }[] } | null>;
+}
+
+export function initSearch() {
   const containers = document.querySelectorAll<HTMLElement>("[data-search-id]");
   if (!containers.length) return;
 
   const pagefindPath = "/pagefind/pagefind.js";
-  let pagefind: any = null;
+  let pagefind: Pagefind | null = null;
 
-  async function ensurePagefind(cacheTag?: string) {
+  async function ensurePagefind(cacheTag?: string): Promise<Pagefind | null> {
     if (pagefind) return pagefind;
     try {
       pagefind = await import(pagefindPath);
       if (cacheTag) {
-        await pagefind.options({ metaCacheTag: cacheTag });
+        await pagefind!.options({ metaCacheTag: cacheTag });
       }
-      await pagefind.init({});
+      await pagefind!.init();
       return pagefind;
     } catch (e) {
       console.error("Pagefind failed to load:", e);
@@ -33,11 +52,11 @@ export async function initSearch() {
       .replace(/'/g, "&#39;");
   }
 
-  containers.forEach(async (root) => {
+  containers.forEach((root) => {
     const id = root.getAttribute("data-search-id");
     const mode = root.getAttribute("data-search-mode") || "pagefind";
     const filtersStr = root.getAttribute("data-search-filters");
-    let filters: any = null;
+    let filters: Record<string, unknown> | null = null;
     if (filtersStr) {
       try {
         filters = JSON.parse(filtersStr);
@@ -124,7 +143,7 @@ export async function initSearch() {
       if (search === null) return;
 
       const results = await Promise.all(
-        search.results.slice(0, 5).map((r: any) => r.data()),
+        search.results.slice(0, 5).map((r) => r.data()),
       );
 
       spinner?.classList.remove("is-active");
@@ -151,7 +170,7 @@ export async function initSearch() {
       activeIndex = -1;
     }
 
-    function renderResults(results: any[]) {
+    function renderResults(results: PagefindResult[]) {
       if (noResults) {
         noResults.hidden = results.length > 0;
       }
