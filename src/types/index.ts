@@ -1,15 +1,5 @@
 // MUSIC TYPES
 
-export interface MusicBrainzArtist {
-  id: string;
-  name: string;
-  "sort-name": string;
-  disambiguation?: string;
-  type?: string;
-  "type-id"?: string;
-  country?: string | null;
-}
-
 export interface ArtistCredit {
   name: string;
   artist: {
@@ -159,81 +149,4 @@ export interface WebmentionFeed {
 
   /** ISO timestamp of last successful fetch */
   lastFetched: string | null;
-}
-
-/**
- * Webmentions grouped by target URL
- */
-export interface WebmentionsByUrl {
-  [targetUrl: string]: Webmention[];
-}
-
-/**
- * Webmentions grouped by type
- */
-export interface WebmentionsByType {
-  likes: Webmention[];
-  reposts: Webmention[];
-  replies: Webmention[];
-  mentions: Webmention[];
-}
-
-/**
- * Statistics about webmentions
- */
-export interface WebmentionStats {
-  total: number;
-  likes: number;
-  reposts: number;
-  replies: number;
-  mentions: number;
-}
-
-// PAGE TYPES (Lume)
-
-export interface PageImage {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
-
-export interface PageData {
-  url: string;
-  title: string;
-  date?: Date;
-  updated?: Date;
-  edited?: boolean;
-  description?: string;
-  tags?: string[];
-  type?: "note" | "entry" | "index";
-  images?: PageImage[];
-  content?: string;
-  wordCount?: number;
-}
-
-// COMPONENT PROPS
-
-export interface CardProps {
-  variant?: "default" | "elevated" | "flat";
-  href?: string;
-  hover?: boolean;
-  padding?: string;
-  classes?: string;
-  content: string;
-}
-
-export interface NoteProps {
-  note: PageData & {
-    stats: {
-      replies: number;
-      reposts: number;
-      likes: number;
-    };
-    syndication?: {
-      bluesky?: string;
-      mastodon?: string;
-      instagram?: string;
-    };
-  };
 }
