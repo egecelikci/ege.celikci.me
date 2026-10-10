@@ -25,7 +25,7 @@
         limit: null,
         aspect: it.note.images.length === 1 ? "auto" : undefined,
         eager: it.note.images.length === 1,
-      })
+      }) |> safe
     }}
   {{ /if }}
 

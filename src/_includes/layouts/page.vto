@@ -4,7 +4,7 @@ layout: layouts/base.vto
 
 {{ set pageBody }}
   {{ if it.hide_title !== true }}
-    {{ await comp.layout.PageHeader(it) }}
+    {{ await comp.layout.PageHeader(it) |> safe }}
   {{ /if }}
 
   {{ if it.search_bar && !it.hide_layout_search }}
@@ -20,7 +20,7 @@ layout: layouts/base.vto
         await comp.features.Search({
           compId: it.search_bar.id || "page-search",
           ...it.search_bar,
-        })
+        }) |> safe
       }}
     </div>
   {{ /if }}
@@ -62,13 +62,13 @@ layout: layouts/base.vto
         },
         variant: "full",
         hideHeader: true,
-      })
+      }) |> safe
     }}
   {{ else if it.type === "tag" }}
     <div class="sr-only" data-pagefind-body>
       {{ it.title }} tag topic index. collection of items related to {{ it.tag }}.
     </div>
-    {{ await comp.ui.TagDetail({ tag: it.tag }) }}
+    {{ await comp.ui.TagDetail({ tag: it.tag }) |> safe }}
   {{ else }}
     <div class="{{ (it.prose !== false) ? 'e-content' : '' }}">
       {{ content |> safe }}
@@ -82,14 +82,14 @@ layout: layouts/base.vto
         items: backlinks,
         label: "incoming",
         attributes: { "data-pagefind-ignore": "" },
-      }) }}
+      }) |> safe }}
     {{ /if }}
     {{ if outgoing?.length > 0 }}
       {{ await comp.layout.LinkLine({
         items: outgoing,
         label: "outgoing",
         attributes: { "data-pagefind-ignore": "" },
-      }) }}
+      }) |> safe }}
     {{ /if }}
   {{ /if }}
 
@@ -115,7 +115,7 @@ layout: layouts/base.vto
     await comp.layout.PageFooter({
       ...it,
       interactions: mentionsData,
-    })
+    }) |> safe
   }}
 {{ /set }}
 
@@ -124,5 +124,5 @@ layout: layouts/base.vto
     width: it.container_width || "narrow",
     classes: "page-body",
     content: pageBody,
-  })
+  }) |> safe
 }}

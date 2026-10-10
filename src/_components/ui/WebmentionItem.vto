@@ -30,7 +30,7 @@
           />
         {{ else }}
           <div class="webmention-item__avatar-fallback">
-            {{ await it.comp.base.Icon({ name: "user", classes: "w-4 h-4" }) }}
+            {{ await it.comp.base.Icon({ name: "user", classes: "w-4 h-4" }) |> safe }}
           </div>
         {{ /if }}
       </div>

@@ -21,7 +21,7 @@
       <ol class="webmentions-comments__items">
         {{ for mention of comments }}
           <li class="webmentions-comments__item">
-            {{ await it.comp.ui.WebmentionItem({ webmention: mention }) }}
+            {{ await it.comp.ui.WebmentionItem({ webmention: mention }) |> safe }}
           </li>
         {{ /for }}
       </ol>

@@ -37,7 +37,7 @@
 <div class="video-card" data-embed="{{ iframe |> escape }}">
 <div class="video-card__title">{{ safeTitle }}</div>
 <div class="video-card__play">
-{{ await it.comp.base.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) -}}
+{{ await it.comp.base.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) |> safe -}}
 <span>Click to load video from {{ providerName }}</span>
 </div>
 </div>
@@ -62,5 +62,5 @@
     classes: "ledger-card--flush " + (it.classes || ""),
     attributes: it.attributes,
     content: cardContent,
-  }) -}}
+  }) |> safe -}}
 {{- /if -}}

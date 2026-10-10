@@ -32,7 +32,7 @@ extraStyles:
           <div class="event-page__organizers">
             {{ for labelRel of event.labels }}
               <div class="event-page__organizer">
-                {{ comp.ui.SectionHeader({ title: "Presented by" }) }}
+                {{ comp.ui.SectionHeader({ title: "Presented by" }) |> safe }}
                 <a
                   href="https://musicbrainz.org/label/{{ labelRel.label.id }}"
                   class="event-page__organizer-name event-page__entity-link"
@@ -44,7 +44,7 @@ extraStyles:
 
         <div class="event-page__meta-row">
           <div class="event-page__meta-col">
-            {{ comp.ui.SectionHeader({ title: "Date & Time" }) }}
+            {{ comp.ui.SectionHeader({ title: "Date & Time" }) |> safe }}
             <div class="event-page__meta-value">
               {{ if it.event.beginDate }}
                 {{ it.event.beginDate |> date("EEE, MMM dd") }}
@@ -59,7 +59,7 @@ extraStyles:
 
           {{ if event.local?.price }}
             <div class="event-page__meta-col event-page__meta-col--fee">
-              {{ comp.ui.SectionHeader({ title: "Entry Fee" }) }}
+              {{ comp.ui.SectionHeader({ title: "Entry Fee" }) |> safe }}
               <div class="event-page__meta-value event-page__meta-value--fee">
                 {{ event.local.price }}
               </div>
@@ -80,7 +80,7 @@ extraStyles:
                 src: event.local.video.src,
                 title: event.local.video.title,
                 credits: videoCredits,
-              })
+              }) |> safe
             }}
           </div>
         {{ /if }}
@@ -88,7 +88,7 @@ extraStyles:
 
       <div class="event-page__lineup">
         <section class="event-page__section">
-          {{ comp.ui.SectionHeader({ title: "Lineup" }) }}
+          {{ comp.ui.SectionHeader({ title: "Lineup" }) |> safe }}
           {{
             set artistRels = (event.relations || []).filter((r) =>
               r["target-type"] === "artist" &&
@@ -122,11 +122,11 @@ extraStyles:
 
         {{ if event.setlist }}
           <section class="event-page__section">
-            {{ comp.ui.SectionHeader({ title: "Setlist" }) }}
+            {{ comp.ui.SectionHeader({ title: "Setlist" }) |> safe }}
             {{
               await it.comp.ui.Setlist({
                 content: event.setlist,
-              })
+              }) |> safe
             }}
           </section>
         {{ /if }}
@@ -141,7 +141,7 @@ extraStyles:
             : null
         }}
         <div>
-          {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true, sizes: "(max-width: 48rem) 100vw, 20rem", eager: true, spoiler: posterSpoiler }) }}
+          {{ await comp.ui.Media({ images: posterImages, aspect: "auto", card: true, sizes: "(max-width: 48rem) 100vw, 20rem", eager: true, spoiler: posterSpoiler }) |> safe }}
 
           {{ if posterCredits?.length > 0 }}
             <div class="media-credits media-credits--poster">
@@ -167,7 +167,7 @@ extraStyles:
       {{ /if }}
 
       <section class="event-page__section">
-        {{ comp.ui.SectionHeader({ title: "Venue" }) }}
+        {{ comp.ui.SectionHeader({ title: "Venue" }) |> safe }}
         {{
           set venueRel = (event.relations || []).find((r) => r["target-type"] === "place")
         }}
@@ -211,7 +211,7 @@ extraStyles:
                         name: "compass",
                         catalog: "lucide",
                         classes: "w-4 h-4",
-                      })
+                      }) |> safe
                     }}
                     <span class="typography-sublabel"
                     >Directions</span>
@@ -231,7 +231,7 @@ extraStyles:
                           name: "navigation",
                           catalog: "lucide",
                           classes: "w-4 h-4",
-                        })
+                        }) |> safe
                       }}
                       <span class="typography-sublabel">Native App</span>
                     </a>
@@ -247,7 +247,7 @@ extraStyles:
                           name: "map",
                           catalog: "lucide",
                           classes: "w-4 h-4",
-                        })
+                        }) |> safe
                       }}
                       <span class="typography-sublabel">OpenStreetMap</span>
                     </a>
@@ -263,7 +263,7 @@ extraStyles:
                           name: "map-pin",
                           catalog: "lucide",
                           classes: "w-4 h-4",
-                        })
+                        }) |> safe
                       }}
                       <span class="typography-sublabel">Google Maps</span>
                     </a>
@@ -298,7 +298,7 @@ extraStyles:
                   name: "ticket",
                   catalog: "lucide",
                   classes: "w-4 h-4",
-                })
+                }) |> safe
               }}
               Tickets
             </a>
@@ -322,7 +322,7 @@ extraStyles:
                     name: "instagram",
                     catalog: "simpleicons",
                     classes: "w-4 h-4",
-                  })
+                  }) |> safe
                 }}
                 {{ if igUrls.length > 1 }}
                   Instagram Post #{{ index + 1 }}
@@ -346,7 +346,7 @@ extraStyles:
                   name: info.icon,
                   catalog: info.catalog,
                   classes: "w-4 h-4",
-                })
+                }) |> safe
               }}
               {{ info.label }}
             </a>
@@ -358,8 +358,8 @@ extraStyles:
 
   {{ if gallery && gallery.length > 0 }}
     <section class="event-page__gallery">
-      {{ comp.ui.SectionHeader({ title: "Photographs" }) }}
-      {{ await comp.ui.Gallery({ images: gallery }) }}
+      {{ comp.ui.SectionHeader({ title: "Photographs" }) |> safe }}
+      {{ await comp.ui.Gallery({ images: gallery }) |> safe }}
     </section>
   {{ /if }}
 </div>

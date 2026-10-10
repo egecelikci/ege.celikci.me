@@ -19,7 +19,7 @@
         {{
           await it.comp.base.Icon({
             name: "message-square",
-          })
+          }) |> safe
         }}
         <span>{{ it.stats.replies |> humanizeNumber }}</span>
       </li>
@@ -27,14 +27,14 @@
         class="activity-meta__stat"
         title="{{ it.stats.reposts }} reposts"
       >
-        {{ await it.comp.base.Icon({ name: "repeat-2" }) }}
+        {{ await it.comp.base.Icon({ name: "repeat-2" }) |> safe }}
         <span>{{ it.stats.reposts |> humanizeNumber }}</span>
       </li>
       <li
         class="activity-meta__stat"
         title="{{ it.stats.likes }} likes"
       >
-        {{ await it.comp.base.Icon({ name: "heart" }) }}
+        {{ await it.comp.base.Icon({ name: "heart" }) |> safe }}
         <span>{{ it.stats.likes |> humanizeNumber }}</span>
       </li>
     </ul>
@@ -59,7 +59,7 @@
               name: "bluesky",
               catalog: "simpleicons",
               classes: "w-4 h-4 fill-current",
-            })
+            }) |> safe
           }}
         </a>
       {{ /if }}
@@ -78,7 +78,7 @@
               name: "mastodon",
               catalog: "simpleicons",
               classes: "w-4 h-4 fill-current",
-            })
+            }) |> safe
           }}
         </a>
       {{ /if }}
@@ -97,7 +97,7 @@
               name: "instagram",
               catalog: "simpleicons",
               classes: "w-4 h-4 fill-current",
-            })
+            }) |> safe
           }}
         </a>
       {{ /if }}

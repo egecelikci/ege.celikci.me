@@ -40,7 +40,7 @@
 
     {{# Search Icon #}}
     <div class="search__icon" aria-hidden="true">
-      {{ await it.comp.base.Icon({ name: "search", classes: "w-3.5 h-3.5" }) }}
+      {{ await it.comp.base.Icon({ name: "search", classes: "w-3.5 h-3.5" }) |> safe }}
     </div>
 
     <input
@@ -66,7 +66,7 @@
             await it.comp.base.Icon({
               name: "loader-circle",
               classes: "w-3.5 h-3.5 animate-spin-smart text-primary",
-            })
+            }) |> safe
           }}
         </div>
 
@@ -77,7 +77,7 @@
           class="search__clear"
           aria-label="Clear search"
         >
-          {{ await it.comp.base.Icon({ name: "x", classes: "w-3.5 h-3.5" }) }}
+          {{ await it.comp.base.Icon({ name: "x", classes: "w-3.5 h-3.5" }) |> safe }}
         </button>
       </div>
     </div>
@@ -101,7 +101,7 @@
         icon: "search-x",
         title: "no matches found",
         description: "try adjusting your search terms or filters",
-      })
+      }) |> safe
     }}
   </div>
 </div>

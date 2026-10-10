@@ -1,7 +1,7 @@
 {{ set headerContent }}
   <div class="site-header__bar">
   <div class="reveal-self">
-      {{ comp.layout.Breadcrumbs(it) }}
+      {{ comp.layout.Breadcrumbs(it) |> safe }}
     </div>
 </div>
 {{ /set }}
@@ -15,6 +15,6 @@
     comp.layout.Container({
       width: "narrow",
       content: headerContent,
-    })
+    }) |> safe
   }}
 </header>

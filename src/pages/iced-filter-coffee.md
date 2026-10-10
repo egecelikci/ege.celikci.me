@@ -14,7 +14,7 @@ name: "James Hoffmann",
 role: "Author",
 url: "https://www.youtube.com/channel/UCMb0O2CdPBNi-QqPk5T3gsQ"
 }]
-})
+}) |> safe
 }}
 
 ## ingredients
@@ -34,4 +34,4 @@ url: "https://www.youtube.com/channel/UCMb0O2CdPBNi-QqPk5T3gsQ"
 
 ### calculator
 
-{{ comp.features.BrewCalculator() }}
+{{ comp.features.BrewCalculator() |> safe }}

@@ -8,6 +8,6 @@
   </div>
   <div class="listing-footer__action reveal-slide-right">
     <span class="typography-sublabel">{{ it.text || "details" }}</span>
-    {{ await it.comp.base.Icon({ name: "arrow-right", classes: "w-3 h-3" }) }}
+    {{ await it.comp.base.Icon({ name: "arrow-right", classes: "w-3 h-3" }) |> safe }}
   </div>
 </footer>

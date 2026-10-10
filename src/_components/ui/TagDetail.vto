@@ -10,7 +10,7 @@
   {{# 1. ENTRIES #}}
   {{ if matchingEntries.length > 0 }}
     <div>
-      {{ await it.comp.ui.EntryTimeline({ entries: matchingEntries, groupBy: "none" }) }}
+      {{ await it.comp.ui.EntryTimeline({ entries: matchingEntries, groupBy: "none" }) |> safe }}
     </div>
   {{ else }}
     {{
@@ -18,7 +18,7 @@
         icon: "inbox",
         title: "no entries found",
         description: "no pages found tagged with #" + it.tag,
-      })
+      }) |> safe
     }}
   {{ /if }}
 
@@ -40,7 +40,7 @@
         await it.comp.ui.SectionHeader({
           title: "related topics",
           level: 3,
-        })
+        }) |> safe
       }}
       <div class="tag-detail__related-list">
         {{ for t of relatedTags }}
@@ -52,7 +52,7 @@
                 content: t,
                 href: "/tags/" + tagSlug + "/",
                 classes: "text-base",
-              })
+              }) |> safe
             }}
             <span class="tag-detail__tag-count">
               {{ tagCount }}

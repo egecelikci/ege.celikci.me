@@ -52,7 +52,7 @@
           tag: isAiPoster ? "neverslop" : null,
           size: "sm",
           classes: "empty-state--fill",
-        })
+        }) |> safe
       }}
     {{ /if }}
   </div>
@@ -105,7 +105,7 @@
         compact: true,
         leftText: it.event.type || "event",
         text: "details",
-      })
+      }) |> safe
     }}
   </div>
 </a>

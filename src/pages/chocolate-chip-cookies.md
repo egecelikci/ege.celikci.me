@@ -14,7 +14,7 @@ name: "Burcu Eminoğlu",
 role: "Author",
 url: "https://www.youtube.com/channel/UCFyBxypd4vKjD4gzeykyz1w"
 }]
-})
+}) |> safe
 }}
 
 ## ingredients

@@ -15,7 +15,7 @@
       await it.comp.ui.SectionHeader({
         title: it.primary_label,
         level: 2,
-      })
+      }) |> safe
     }}
     <div class="feeds__list">
       <div class="feeds__row">
@@ -32,7 +32,7 @@
                 await it.comp.base.Icon({
                   name: "external-link",
                   classes: "w-3 h-3",
-                })
+                }) |> safe
               }}
             </a>
           {{ /for }}
@@ -47,7 +47,7 @@
       await it.comp.ui.SectionHeader({
         title: "other feeds",
         level: 2,
-      })
+      }) |> safe
     }}
     <div class="feeds__list">
       {{ for cat of it.filtered_feeds }}
@@ -68,7 +68,7 @@
                   await it.comp.base.Icon({
                     name: "external-link",
                     classes: "w-3 h-3",
-                  })
+                  }) |> safe
                 }}
               </a>
             {{ /for }}
@@ -84,7 +84,7 @@
       await it.comp.ui.SectionHeader({
         title: "topic feeds",
         level: 2,
-      })
+      }) |> safe
     }}
     <div class="feeds__list">
       {{ set allTags = it.search.values("tags") }}
@@ -97,7 +97,7 @@
                 await it.comp.base.Tag({
                   content: tag,
                   href: "/tags/" + slug + "/",
-                })
+                }) |> safe
               }}
               <span class="feeds__count">
                 {{ it.search.pages("'" + tag + "'").length }} entries
@@ -114,7 +114,7 @@
                   await it.comp.base.Icon({
                     name: "external-link",
                     classes: "w-3 h-3",
-                  })
+                  }) |> safe
                 }}
               </a>
               <a
@@ -127,7 +127,7 @@
                   await it.comp.base.Icon({
                     name: "external-link",
                     classes: "w-3 h-3",
-                  })
+                  }) |> safe
                 }}
               </a>
             </div>
@@ -139,7 +139,7 @@
             icon: "tag",
             title: "no topics found",
             description: "tags will appear here once you add them to your content",
-          })
+          }) |> safe
         }}
       {{ /if }}
     </div>

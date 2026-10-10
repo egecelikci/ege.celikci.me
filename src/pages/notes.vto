@@ -43,7 +43,7 @@ navigation:
 {{ /for }}
 
 {{ if notes.length }}
-  {{ await comp.ui.Rail({ label: "jump to month", items: railItems }) }}
+  {{ await comp.ui.Rail({ label: "jump to month", items: railItems }) |> safe }}
 
   <div class="h-feed notes-index">
     {{ for year of years }}
@@ -59,7 +59,7 @@ navigation:
             title: year,
             variant: "large",
             id: `year-${year}-title`,
-          })
+          }) |> safe
         }}
         {{ set yKeys = monthKeys.filter((k) => k.startsWith(`${year}-`)) }}
         {{ for mk of yKeys }}
@@ -76,7 +76,7 @@ navigation:
                 variant: "label",
                 level: 3,
                 id: `${mk}-title`,
-              })
+              }) |> safe
             }}
             {{ for item of byMonth[mk] }}
               {{
@@ -86,7 +86,7 @@ navigation:
                   hideLabel: true,
                   hideYear: true,
                   titleLevel: 3,
-                })
+                }) |> safe
               }}
             {{ /for }}
           </section>
@@ -101,7 +101,7 @@ navigation:
         icon: "message-square",
         title: "no notes found",
         description: "once you publish a note, it will appear on this timeline",
-      })
+      }) |> safe
     }}
   </div>
 {{ /if }}

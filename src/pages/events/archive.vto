@@ -38,7 +38,7 @@ navigation:
         rightContent:
           `<span class="typography-label text-text-muted">${mb_events.past.length}</span>`,
         classes: "mb-8",
-      })
+      }) |> safe
     }}
 
     <div class="event-archive__years">
@@ -48,12 +48,12 @@ navigation:
             await it.comp.ui.SectionHeader({
               title: year,
               variant: "large",
-            })
+            }) |> safe
           }}
 
           <div class="event-grid">
             {{ for event of eventsByYear.get(year) }}
-              {{ await comp.features.EventCard({ event }) }}
+              {{ await comp.features.EventCard({ event }) |> safe }}
             {{ /for }}
           </div>
         </div>
@@ -67,7 +67,7 @@ navigation:
         icon: "calendar-x",
         title: "no past events found",
         description: "the archive is currently empty",
-      })
+      }) |> safe
     }}
   </div>
 {{ /if }}

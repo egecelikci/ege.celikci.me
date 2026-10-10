@@ -43,7 +43,7 @@
   <div class="page-header__body">
     {{ if it.alternates && it.alternates.length > 1 }}
       <div class="page-header__nav page-header__nav--actions">
-        {{ comp.layout.LanguageSwitcher(it) }}
+        {{ comp.layout.LanguageSwitcher(it) |> safe }}
       </div>
     {{ /if }}
 
@@ -69,13 +69,13 @@
       >
         {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}
-          {{ await it.comp.base.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) }}
+          {{ await it.comp.base.Tag({ content: tag, href: "/tags/" + tagSlug + "/" }) |> safe }}
         {{ /for }}
       </div>
     {{ /if }}
 
     {{ if it.links && it.links.length > 0 }}
-      {{ await comp.layout.LinkLine({ items: it.links }) }}
+      {{ await comp.layout.LinkLine({ items: it.links }) |> safe }}
     {{ /if }}
   </div>
 </section>

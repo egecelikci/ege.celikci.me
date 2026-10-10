@@ -62,7 +62,7 @@
                         label: "What’s this?",
                       },
                     ],
-                  }) }}
+                  }) |> safe }}
                 {{ /if }}
               </div>
             </div>
@@ -72,13 +72,13 @@
                 await it.comp.ui.ActivityMeta({
                   stats: showInteractions ? null : it.stats,
                   syndication: it.syndication,
-                })
+                }) |> safe
               }}
             </div>
           </div>
           {{ if showInteractions }}
             <div id="interactions" class="page-footer__faces">
-              {{ await it.comp.ui.WebmentionFaces({ mentions: it.interactions }) }}
+              {{ await it.comp.ui.WebmentionFaces({ mentions: it.interactions }) |> safe }}
             </div>
           {{ /if }}
 
@@ -87,7 +87,7 @@
               {{
                 await it.comp.ui.WebmentionComments({
                   mentions: it.interactions,
-                })
+                }) |> safe
               }}
             </div>
           {{ /if }}

@@ -18,10 +18,10 @@ prose: false
   follow.
 {{ /set }}
 
-{{ intro |> md }}
+{{ intro |> md |> safe }}
 
 <div class="miniflux-index">
   {{ for index, item of miniflux }}
-    {{ comp.ui.MinifluxItem({ index, item }) }}
+    {{ comp.ui.MinifluxItem({ index, item }) |> safe }}
   {{ /for }}
 </div>

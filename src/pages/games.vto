@@ -39,7 +39,7 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
     {{ set railItems = railItems.concat([{ target: "other", text: "#", dataLabel: "#", ariaLabel: "games starting with other characters" }]) }}
   {{ /if }}
 
-  {{ await comp.ui.Rail({ label: "jump to letter", items: railItems }) }}
+  {{ await comp.ui.Rail({ label: "jump to letter", items: railItems }) |> safe }}
 
   <div class="game-list">
     {{ for letter of letters }}
@@ -55,7 +55,7 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
           <h2 class="game-group__title">{{ letter }}</h2>
           <div class="game-group__rows">
             {{ for game of group }}
-              {{ comp.ui.Game({ game: game }) }}
+              {{ comp.ui.Game({ game: game }) |> safe }}
             {{ /for }}
           </div>
         </section>
@@ -72,7 +72,7 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
         <h2 class="game-group__title">#</h2>
         <div class="game-group__rows">
           {{ for game of rest }}
-            {{ comp.ui.Game({ game: game }) }}
+            {{ comp.ui.Game({ game: game }) |> safe }}
           {{ /for }}
         </div>
       </section>
@@ -84,6 +84,6 @@ crumbSuffix: '<span class="breadcrumb__letter" id="game-current-letter"
       icon: "gamepad-2",
       title: "no games synced yet",
       description: "run the steam fetcher to populate the library",
-    })
+    }) |> safe
   }}
 {{ /if }}

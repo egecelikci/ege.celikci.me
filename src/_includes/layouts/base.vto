@@ -69,11 +69,11 @@
       {{ content |> safe }}
     </main>
 
-    {{ await it.comp.layout.Footer({ page: page }) }}
+    {{ await it.comp.layout.Footer({ page: page }) |> safe }}
 
-    {{ await it.comp.features.SocialLinks({ variant: "hidden" }) }}
+    {{ await it.comp.features.SocialLinks({ variant: "hidden" }) |> safe }}
 
-    {{ await it.comp.ui.Lightbox() }}
+    {{ await it.comp.ui.Lightbox() |> safe }}
 
     <script
       type="module"

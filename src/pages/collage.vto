@@ -24,7 +24,7 @@ prose: false
                 class="collage-tool__source"
                 aria-label="Use ListenBrainz"
               >
-                {{ comp.base.Icon({ name: "brain-circuit" }) }}
+                {{ comp.base.Icon({ name: "brain-circuit" }) |> safe }}
                 <span>ListenBrainz</span>
               </button>
               <button
@@ -33,7 +33,7 @@ prose: false
                 class="collage-tool__source"
                 aria-label="Use Last.fm"
               >
-                {{ comp.base.Icon({ name: "music" }) }}
+                {{ comp.base.Icon({ name: "music" }) |> safe }}
                 <span>Last.fm</span>
               </button>
             </div>
@@ -55,7 +55,7 @@ prose: false
                   name: "at-sign",
                   classes:
                     "collage-tool__input-icon",
-                })
+                }) |> safe
               }}
             </div>
             <p id="username-hint" class="collage-tool__hint">
@@ -73,7 +73,7 @@ prose: false
                 comp.base.Icon({
                   name: "chevron-down",
                   classes: "collage-tool__chevron",
-                })
+                }) |> safe
               }}
             </summary>
 
@@ -93,7 +93,7 @@ prose: false
                       comp.base.Icon({
                         name: "chevron-down",
                         classes: "collage-tool__select-icon",
-                      })
+                      }) |> safe
                     }}
                   </div>
                 </div>
@@ -117,7 +117,7 @@ prose: false
                       comp.base.Icon({
                         name: "sparkles",
                         classes: "collage-tool__select-icon",
-                      })
+                      }) |> safe
                     }}
                   </div>
                 </div>
@@ -138,7 +138,7 @@ prose: false
                       comp.base.Icon({
                         name: "grid-3x3",
                         classes: "collage-tool__select-icon",
-                      })
+                      }) |> safe
                     }}
                   </div>
                 </div>
@@ -159,7 +159,7 @@ prose: false
                       comp.base.Icon({
                         name: "type",
                         classes: "collage-tool__select-icon",
-                      })
+                      }) |> safe
                     }}
                   </div>
                 </div>
@@ -224,7 +224,7 @@ prose: false
                 comp.base.Icon({
                   name: "chevron-down",
                   classes: "collage-tool__chevron",
-                })
+                }) |> safe
               }}
             </summary>
 
@@ -235,7 +235,7 @@ prose: false
                     comp.base.Icon({
                       name: "image-off",
                       classes: "collage-tool__toggle-icon",
-                    })
+                    }) |> safe
                   }}
                   <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
@@ -259,7 +259,7 @@ prose: false
                     comp.base.Icon({
                       name: "hash",
                       classes: "collage-tool__toggle-icon",
-                    })
+                    }) |> safe
                   }}
                   <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
@@ -280,7 +280,7 @@ prose: false
                     comp.base.Icon({
                       name: "globe",
                       classes: "collage-tool__toggle-icon",
-                    })
+                    }) |> safe
                   }}
                   <span class="collage-tool__toggle-text">
                     <span class="collage-tool__toggle-title"
@@ -307,7 +307,7 @@ prose: false
                 comp.base.Icon({
                   name: "chevron-down",
                   classes: "collage-tool__chevron",
-                })
+                }) |> safe
               }}
             </summary>
 
@@ -332,7 +332,7 @@ prose: false
                     variant: "action",
                     icon: "badge-info",
                     content: calloutText,
-                  })
+                  }) |> safe
                 }}
               </div>
               <div class="collage-tool__field">
@@ -397,7 +397,7 @@ prose: false
         ></canvas>
         <div class="collage-tool__overlay">
           <div class="collage-tool__dimensions">
-            {{ comp.base.Icon({ name: "maximize", classes: "" }) }}
+            {{ comp.base.Icon({ name: "maximize", classes: "" }) |> safe }}
             <span class="collage-tool__dimension-text">1080 × 1920</span>
           </div>
         </div>
@@ -425,7 +425,7 @@ prose: false
               title: "Ready to Create",
               description: "Enter your username to generate your collage",
               size: "sm",
-            })
+            }) |> safe
           }}
         </div>
       </div>
@@ -442,7 +442,7 @@ prose: false
               comp.base.Icon({
                 name: "download",
                 classes: "",
-              })
+              }) |> safe
             }}
             <span class="typography-label">Download</span>
           </button>
@@ -457,14 +457,14 @@ prose: false
               comp.base.Icon({
                 name: "share-2",
                 classes: "",
-              })
+              }) |> safe
             }}
             <span class="typography-label">Share</span>
           </button>
         </div>
 
         <div class="collage-tool__action-hint">
-          {{ comp.base.Icon({ name: "info", classes: "" }) }}
+          {{ comp.base.Icon({ name: "info", classes: "" }) |> safe }}
           <span>Changes auto-save and regenerate your collage</span>
         </div>
       </div>

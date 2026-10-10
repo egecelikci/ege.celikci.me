@@ -14,7 +14,7 @@
         class="btn-icon pswp-close-btn"
         aria-label="Close media viewer"
       >
-        {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) }}
+        {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) |> safe }}
       </button>
     </div>
 
@@ -45,7 +45,7 @@
           aria-label="More options"
           aria-haspopup="menu"
         >
-          {{ await it.comp.base.Icon({ name: "more-horizontal", classes: "w-5 h-5" }) }}
+          {{ await it.comp.base.Icon({ name: "more-horizontal", classes: "w-5 h-5" }) |> safe }}
         </button>
 
         <div
@@ -57,7 +57,7 @@
             class="menu__item pswp-view-post hidden"
             role="menuitem"
           >
-            {{ await it.comp.base.Icon({ name: "message-square", classes: "w-4 h-4" }) }}
+            {{ await it.comp.base.Icon({ name: "message-square", classes: "w-4 h-4" }) |> safe }}
             <span>View post</span>
           </a>
           <a
@@ -67,7 +67,7 @@
             class="menu__item pswp-open-original"
             role="menuitem"
           >
-            {{ await it.comp.base.Icon({ name: "external-link", classes: "w-4 h-4" }) }}
+            {{ await it.comp.base.Icon({ name: "external-link", classes: "w-4 h-4" }) |> safe }}
             <span>Open original</span>
           </a>
           <button
@@ -75,7 +75,7 @@
             class="menu__item pswp-download"
             role="menuitem"
           >
-            {{ await it.comp.base.Icon({ name: "download", classes: "w-4 h-4" }) }}
+            {{ await it.comp.base.Icon({ name: "download", classes: "w-4 h-4" }) |> safe }}
             <span>Download</span>
           </button>
         </div>
@@ -124,7 +124,7 @@
           class="btn-icon pswp-sheet-close"
           aria-label="Close description"
         >
-          {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) }}
+          {{ await it.comp.base.Icon({ name: "x", classes: "w-5 h-5" }) |> safe }}
         </button>
       </div>
       <div
@@ -155,14 +155,14 @@
       class="btn-icon pswp-prev"
       aria-label="Previous image"
     >
-      {{ await it.comp.base.Icon({ name: "chevron-left", classes: "w-6 h-6" }) }}
+      {{ await it.comp.base.Icon({ name: "chevron-left", classes: "w-6 h-6" }) |> safe }}
     </button>
     <button
       type="button"
       class="btn-icon pswp-next"
       aria-label="Next image"
     >
-      {{ await it.comp.base.Icon({ name: "chevron-right", classes: "w-6 h-6" }) }}
+      {{ await it.comp.base.Icon({ name: "chevron-right", classes: "w-6 h-6" }) |> safe }}
     </button>
   </div>
 </template>

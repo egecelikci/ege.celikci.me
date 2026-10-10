@@ -78,7 +78,7 @@
             class="gallery__overlay"
           >
             <div class="gallery__overlay-row">
-              {{ await it.comp.base.Icon({ name: "layers", classes: "w-3 h-3" }) }}
+              {{ await it.comp.base.Icon({ name: "layers", classes: "w-3 h-3" }) |> safe }}
               <span>{{ i + 1 }} / {{ it.images.length }}</span>
             </div>
           </div>
@@ -111,7 +111,7 @@
                 "aria-expanded": "false",
                 "aria-label": `Show hidden media: ${tileSpoiler.label}`,
               },
-            })
+            }) |> safe
           }}
         {{ /if }}
       </div>

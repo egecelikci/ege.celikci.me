@@ -16,7 +16,7 @@ Bu sayfanın arkasındaki sistem, İzmir’deki etkinlikleri MusicBrainz üzerin
 
 Bir etkinliğin [events](/events) sayfasında görüntülenmesini istiyor ve bu konuda neler yapabileceğinizi merak ediyorsanız; süreç hakkında genel bir fikir edinip kendi kendinize katkıda bulunabilmeniz için olabildiğince detaylandırılmış ama aynı zamanda takip etmesi kolay bir rehber hazırlamak istedim.
 
-{{ comp.base.Callout({ variant: "info", content: "Süreç hakkında daha fazla İngilizce detaya ve resmî dokümantasyona ulaşmak için [How to Add an Event to MusicBrainz](https://musicbrainz.org/doc/How_to_Add_an_Event) sayfasına göz atabilirsiniz." }) }}
+{{ comp.base.Callout({ variant: "info", content: "Süreç hakkında daha fazla İngilizce detaya ve resmî dokümantasyona ulaşmak için [How to Add an Event to MusicBrainz](https://musicbrainz.org/doc/How_to_Add_an_Event) sayfasına göz atabilirsiniz." }) |> safe }}
 
 ## İçindekiler
 
@@ -33,7 +33,7 @@ name: "MetaBrainz",
 role: "Author",
 url: "https://metabrainz.org"
 }]
-})
+}) |> safe
 }}
 
 ### 1. Bir Hesap Açın
@@ -61,7 +61,7 @@ MusicBrainz, veritabanının kalitesini korumak için belirli standartlara sahip
 - **Type**: Etkinliğin türünü belirtir. **Concert** (Konser) dışında bir etkinlik tipine nadiren ihtiyaç duyulur. (Her etkinlik bir konser değildir, farklı bir konsept varsa MusicBrainz'deki uygun türü seçebilirsiniz).
 - **Date period**: Etkinliğin başladığı ve bittiği tarihler ile başlangıç saati. Kapı açılış veya konser başlangıç saatinden hangisi size daha mantıklı geliyorsa onu tercih edebilirsiniz.
 
-{{ comp.base.Callout({ variant: "danger", content: "Formu doldururken doğruluğundan emin olmadığınız veya bilmediğiniz verileri zorlamak yerine lütfen **boş bırakın**. Hatalı veri girmektense eksik veri bırakmak veritabanının sağlığı açısından çok daha iyidir." }) }}
+{{ comp.base.Callout({ variant: "danger", content: "Formu doldururken doğruluğundan emin olmadığınız veya bilmediğiniz verileri zorlamak yerine lütfen **boş bırakın**. Hatalı veri girmektense eksik veri bırakmak veritabanının sağlığı açısından çok daha iyidir." }) |> safe }}
 
 ---
 
@@ -73,7 +73,7 @@ Bu kısım oldukça önemlidir. Buraya girdiğiniz veriler sayesinde İzmir'deki
 
 ![İlişki Ekleme Bölümü](/assets/images/docs/events/8be0c907-526b-4234-a7d5-7f52197e6d3f.png)
 
-{{ comp.base.Callout({ variant: "warning", content: 'Hiçbir ilişkisi (sanatçı veya mekan bağlantısı) olmayan bir etkinlik, “boş” olduğu gerekçesiyle MusicBrainz tarafından bir süre sonra silinir.' }) }}
+{{ comp.base.Callout({ variant: "warning", content: 'Hiçbir ilişkisi (sanatçı veya mekan bağlantısı) olmayan bir etkinlik, “boş” olduğu gerekçesiyle MusicBrainz tarafından bir süre sonra silinir.' }) |> safe }}
 
 #### Sanatçılar ve Görevliler (Artist-Event)
 
@@ -122,7 +122,7 @@ Aynı form üzerinde, **Relationships** bölümünün hemen altında **External 
 
 {{ comp.base.Callout({ variant: "info", content: `Bu tarz katkılar sanatçıların bağlantılarını tek bir sayfada sergilemesi için bir altyapı görevi görebilir. Örneğin:
 
-- [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` }) }}
+- [SPRAY · Achordion](https://achordion.xyz/artist/9c27db9d-890c-4c14-bf43-3d371380a8d4)` }) |> safe }}
 
 ---
 
@@ -136,7 +136,7 @@ Her şey tamamlandığında sayfanın en altındaki **Enter edit** butonuna tık
 
 ![“Enter edit” Butonu](/assets/images/docs/events/6ee2c777-6bf9-4e18-83d1-3a1fa9bab8b9.png)
 
-{{ comp.base.Callout({ variant: "info", content: "Formu doldururken ilişkileri veya alanları nasıl yapılandıracağınızdan tam emin olamazsanız, [MusicBrainz İzmir Etkinlik Listesi](https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events) sayfasına göz atabilirsiniz. Orada önceden açılmış, onaylanmış ve başarıyla listelenen onlarca etkinlik örneği mevcut olduğundan, burayı kendinize pratik bir şablon rehber olarak kullanabilirsiniz.", icon: "lightbulb" }) }}
+{{ comp.base.Callout({ variant: "info", content: "Formu doldururken ilişkileri veya alanları nasıl yapılandıracağınızdan tam emin olamazsanız, [MusicBrainz İzmir Etkinlik Listesi](https://musicbrainz.org/area/f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5/events) sayfasına göz atabilirsiniz. Orada önceden açılmış, onaylanmış ve başarıyla listelenen onlarca etkinlik örneği mevcut olduğundan, burayı kendinize pratik bir şablon rehber olarak kullanabilirsiniz.", icon: "lightbulb" }) |> safe }}
 
 ---
 

@@ -23,7 +23,7 @@ navigation:
             comp.base.Tag({
               content: tag,
               href: "/tags/" + tagSlug + "/",
-            })
+            }) |> safe
           }}
           <span class="tag-cloud__count">{{ tagCount }}</span>
         </li>
@@ -35,7 +35,7 @@ navigation:
             icon: "tag",
             title: "no topics found",
             description: "tags will appear here once you add them to your posts or notes",
-          })
+          }) |> safe
         }}
       </div>
     {{ /if }}

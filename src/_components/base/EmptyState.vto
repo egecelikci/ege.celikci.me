@@ -34,7 +34,7 @@ class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.class
           name: it.icon,
           catalog: it.iconCatalog || "lucide",
           classes: it.iconClasses || "w-5 h-5",
-        })
+        }) |> safe
       }}
     </span>
   {{ /if }}
@@ -46,7 +46,7 @@ class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.class
           name: it.iconAlt,
           catalog: it.iconCatalog || "lucide",
           classes: it.iconClasses || "w-5 h-5",
-        })
+        }) |> safe
       }}
     </span>
   {{ /if }}
@@ -56,7 +56,7 @@ class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.class
   </span>
 
   {{ if it.tag }}
-    {{ await it.comp.base.Tag({ content: it.tag }) }}
+    {{ await it.comp.base.Tag({ content: it.tag }) |> safe }}
   {{ /if }}
 
   {{ if it.description }}

@@ -59,7 +59,7 @@
             name: kind.icon,
             catalog: kind.catalog,
             classes: "w-3 h-3",
-          })
+          }) |> safe
         }}
         {{ if !showDate && !it.hideLabel }}{{ typeLabel }}{{ /if }}
       </span>
@@ -88,7 +88,7 @@
             stats: hasStats ? entry.stats : null,
             syndication: entry.syndication,
             classes: "entry-row__meta",
-          })
+          }) |> safe
         }}
       {{ /if }}
     </header>
@@ -122,7 +122,7 @@
             static: false,
             postUrl: entry.url,
             limit: 4,
-          })
+          }) |> safe
         }}
       </div>
     {{ /if }}

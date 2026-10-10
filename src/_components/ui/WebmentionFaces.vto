@@ -35,7 +35,7 @@
               />
             {{ else }}
               <div class="wm-face__placeholder">
-                {{ await it.comp.base.Icon({ name: "user" }) }}
+                {{ await it.comp.base.Icon({ name: "user" }) |> safe }}
               </div>
             {{ /if }}
           </div>

@@ -26,7 +26,7 @@ links:
               name: "arrow-right",
               classes: "w-3 h-3 stroke-1.5",
               attributes: { "aria-hidden": "true" },
-            })
+            }) |> safe
           }}
         </span>
 </a>
@@ -38,7 +38,7 @@ links:
       events: mb_events.upcoming,
       title: "Upcoming",
       titleRight: pastLink,
-    })
+    }) |> safe
   }}
 {{ /if }}
 
@@ -51,7 +51,7 @@ links:
         title: "No upcoming events found",
         description:
           `There are currently no events listed for İzmir in the database.`,
-      })
+      }) |> safe
     }}
   </div>
 {{ /if }}
@@ -70,7 +70,7 @@ links:
             name: "plus-circle",
             catalog: "lucide",
             classes: "w-4 h-4",
-          })
+          }) |> safe
         }}
         <span>How to contribute to events</span>
       </a>
@@ -85,7 +85,7 @@ links:
             name: "calendar-plus",
             catalog: "lucide",
             classes: "w-4 h-4",
-          })
+          }) |> safe
         }}
         <span>Subscribe to calendar</span>
       </a>
@@ -103,7 +103,7 @@ links:
                 name: "arrow-right",
                 classes: "w-4 h-4",
                 attributes: { "aria-hidden": "true" },
-              })
+              }) |> safe
             }}
           </span>
         </a>
@@ -115,5 +115,5 @@ links:
 {{
   await comp.layout.PageFooter({
     footerExtension: customFooterContent,
-  })
+  }) |> safe
 }}
