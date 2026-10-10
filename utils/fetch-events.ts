@@ -25,6 +25,7 @@ export type {
   RawIzmirEvents,
 };
 
+import { posterPlan } from "./posters.ts";
 import {
   EAAPosterInfoSchema,
   MBEventListSchema,
@@ -320,30 +321,27 @@ async function syncEvents() {
           };
         }
 
-        const remoteChanged = !!posterInfo.url &&
-          posterInfo.url !== cachedEvent?.posterUrl;
+        const plan = posterPlan(posterInfo, cachedEvent);
         let imagePath: string | undefined;
         let downloaded = true;
 
-        if (posterInfo.url || posterInfo.thumb) {
-          const imageUrl = posterInfo.thumb || posterInfo.url;
-          if (imageUrl) {
-            const saved = await posterDownloader.download(
-              httpClient,
-              event.id,
-              imageUrl,
-              remoteChanged,
-            );
-            downloaded = saved !== null;
-            imagePath = saved || cachedEvent?.imagePath;
-          }
+        if (plan.imageUrl) {
+          const saved = await posterDownloader.download(
+            httpClient,
+            event.id,
+            plan.imageUrl,
+            plan.force,
+          );
+          downloaded = saved !== null;
+          imagePath = saved || cachedEvent?.imagePath;
         }
 
-        // When the new poster failed to download, keep the old URLs too, so the next run still sees a change and retries instead of trusting the stale file.
+        // When the new poster failed to download, keep the old URLs and source too, so the next run still sees a change and retries instead of trusting the stale file.
         return {
           ...event,
           posterUrl: downloaded ? posterInfo.url : cachedEvent?.posterUrl,
           posterThumb: downloaded ? posterInfo.thumb : cachedEvent?.posterThumb,
+          posterSource: downloaded ? plan.source : cachedEvent?.posterSource,
           imagePath,
         };
       }),

@@ -244,6 +244,8 @@ const mbEventSchema = z.object({
   posterUrl: z.string().optional(),
   /** Remote thumbnail poster URL saved by the sync script. */
   posterThumb: z.string().optional(),
+  /** Which Event Art Archive image the saved poster came from; absent on caches from before originals were saved. */
+  posterSource: z.enum(["original", "thumb"]).optional(),
   /** Local relative poster path saved by the sync script. */
   imagePath: z.string().optional(),
 }).passthrough();
