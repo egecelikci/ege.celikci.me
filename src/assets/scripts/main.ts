@@ -3,22 +3,28 @@ import { initSpoiler } from "./common/spoiler.ts";
 let loadingPromise: Promise<void> | null = null;
 let isLightboxReady = false;
 
-const loadLightbox = async () => {
-  if (loadingPromise) return loadingPromise;
-  loadingPromise = (async () => {
-    const { initLightbox } = await import("./common/lightbox.ts");
-    initLightbox();
-    isLightboxReady = true;
-  })();
+/** Load the lightbox once; a failed import is forgotten so the next interaction can retry it. */
+const loadLightbox = (): Promise<void> => {
+  loadingPromise ??= import("./common/lightbox.ts")
+    .then(({ initLightbox }) => {
+      initLightbox();
+      isLightboxReady = true;
+    })
+    .catch((error) => {
+      loadingPromise = null;
+      throw error;
+    });
   return loadingPromise;
 };
 
-globalThis.addEventListener("mouseover", () => loadLightbox(), {
+const preloadLightbox = () => loadLightbox().catch(() => {});
+
+globalThis.addEventListener("mouseover", preloadLightbox, {
   once: true,
   passive: true,
 });
 
-globalThis.addEventListener("touchstart", () => loadLightbox(), {
+globalThis.addEventListener("touchstart", preloadLightbox, {
   once: true,
   passive: true,
 });
@@ -52,7 +58,15 @@ globalThis.addEventListener(
       e.preventDefault();
       e.stopImmediatePropagation();
 
-      await loadLightbox();
+      try {
+        await loadLightbox();
+      } catch {
+        // Offline or a stale chunk after a deploy: fall back to opening the full image.
+        const href = trigger.getAttribute("href") ??
+          trigger.getAttribute("src");
+        if (href) globalThis.location.assign(href);
+        return;
+      }
 
       trigger.dispatchEvent(
         new MouseEvent("click", {
