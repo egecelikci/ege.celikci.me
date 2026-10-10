@@ -25,7 +25,7 @@ export type {
   RawIzmirEvents,
 };
 
-import { posterPlan } from "./posters.ts";
+import { localPosterFile, posterPlan } from "./posters.ts";
 import {
   EAAPosterInfoSchema,
   MBEventListSchema,
@@ -110,11 +110,18 @@ class PosterDownloader {
   }
 
   /**
-   * @param fileName - Poster filename to look up.
-   * @returns Whether the poster already exists locally.
+   * Public path of this event's poster if one is on disk, whatever its extension.
+   * @param eventId - MusicBrainz event id.
+   * @param cachedFile - The filename the cache recorded, if any.
+   * @returns The public path, or undefined when no poster is on disk.
    */
-  hasPoster(fileName: string): boolean {
-    return this.existingPosters.has(fileName);
+  localPath(eventId: string, cachedFile?: string): string | undefined {
+    const file = localPosterFile(
+      [...this.existingPosters],
+      eventId,
+      cachedFile,
+    );
+    return file ? `/assets/images/posters/${file}` : undefined;
   }
 
   /**
@@ -310,14 +317,16 @@ async function syncEvents() {
 
         // Event Art Archive is unreachable. Keep whatever poster we already cached instead of wiping it on a transient 5xx.
         if (posterInfo === null) {
-          const cachedFile = cachedEvent?.imagePath?.split("/").pop() ?? "";
+          // Keep the poster already on disk, found by id even when the cache lost its path, and keep the record of where it came from.
           return {
             ...event,
             posterUrl: cachedEvent?.posterUrl,
             posterThumb: cachedEvent?.posterThumb,
-            imagePath: cachedFile && posterDownloader.hasPoster(cachedFile)
-              ? cachedEvent?.imagePath
-              : undefined,
+            posterSource: cachedEvent?.posterSource,
+            imagePath: posterDownloader.localPath(
+              event.id,
+              cachedEvent?.imagePath?.split("/").pop(),
+            ),
           };
         }
 

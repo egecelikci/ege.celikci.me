@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { posterPlan } from "./posters.ts";
+import { localPosterFile, posterPlan } from "./posters.ts";
 
 Deno.test("a new event saves the original, not the thumbnail", () => {
   assertEquals(posterPlan({ url: "o.jpg", thumb: "t.jpg" }), {
@@ -49,4 +49,12 @@ Deno.test("the thumbnail is the fallback when there is no original, and is not r
 
 Deno.test("no poster means nothing to download", () => {
   assertEquals(posterPlan({}), { force: false });
+});
+
+Deno.test("localPosterFile prefers the cached file, then any extension for the event", () => {
+  const names = ["abc.jpg", "def.png", "abc.webp.part"];
+  assertEquals(localPosterFile(names, "abc", "abc.jpg"), "abc.jpg");
+  assertEquals(localPosterFile(names, "def"), "def.png");
+  assertEquals(localPosterFile(names, "abc", "gone.jpg"), "abc.jpg");
+  assertEquals(localPosterFile(names, "xyz"), undefined);
 });

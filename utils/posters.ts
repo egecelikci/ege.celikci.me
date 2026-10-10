@@ -61,3 +61,22 @@ export function posterPlan(
   }
   return { force: false };
 }
+
+/**
+ * Find an event's poster among the files on disk.
+ *
+ * Prefers the file the cache names; otherwise finds `<eventId>.<ext>` whatever the extension, so a cache that lost its path still reuses the file.
+ *
+ * @param names - Filenames in the posters folder.
+ * @param eventId - MusicBrainz event id.
+ * @param cachedFile - The filename the cache recorded, if any.
+ * @returns The filename to use, or undefined when no poster is on disk.
+ */
+export function localPosterFile(
+  names: string[],
+  eventId: string,
+  cachedFile?: string,
+): string | undefined {
+  if (cachedFile && names.includes(cachedFile)) return cachedFile;
+  return names.find((name) => name.startsWith(`${eventId}.`));
+}
