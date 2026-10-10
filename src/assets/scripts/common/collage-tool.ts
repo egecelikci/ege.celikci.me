@@ -70,6 +70,8 @@ export function initCollageTool(defaultUsername: string) {
 
   let currentSource = "lb";
   let currentWorker: Worker | null = null;
+  /** Bumped on every run, so a slow earlier response cannot replace a newer collage. */
+  let generation = 0;
   let latestBlob: Blob | null = null;
   let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -200,7 +202,17 @@ export function initCollageTool(defaultUsername: string) {
     }
   }
 
+  /** One album as the proxy returns it. */
+  interface Album {
+    name: string;
+    artist: string;
+    count: number | string;
+    mbid?: string;
+    img?: string;
+  }
+
   async function generate() {
+    const run = ++generation;
     const user = usernameInput.value.trim();
     if (!user) {
       if (emptyState) emptyState.style.opacity = "1";
@@ -215,14 +227,19 @@ export function initCollageTool(defaultUsername: string) {
     setActionsEnabled(false);
 
     try {
-      const proxyUrl =
-        `/api/collage-proxy?source=${currentSource}&user=${user}&period=${periodSelect.value}`;
-      const res = await fetch(proxyUrl);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      const query = new URLSearchParams({
+        source: currentSource,
+        user,
+        period: periodSelect.value,
+      });
+      const res = await fetch(`/api/collage-proxy?${query}`);
+      const data = await res.json().catch(() => null);
+      if (run !== generation) return;
+      if (!res.ok || !data || data.error) {
+        throw new Error(data?.error ?? `HTTP ${res.status}`);
+      }
 
-      let albums = data.albums;
+      let albums: Album[] = data.albums;
       if (!albums?.length) throw new Error("No data found");
 
       updateStatus(`Retrieved ${albums.length} albums from service`);
@@ -234,17 +251,17 @@ export function initCollageTool(defaultUsername: string) {
           const [from, to] = line.split("->").map((s) => s.trim());
           if (from && to) aliasMap.set(from.toUpperCase(), to.toUpperCase());
         });
-        const merged = new Map();
-        albums.forEach((album: any) => {
+        const merged = new Map<string, Album & { count: number }>();
+        albums.forEach((album) => {
           const artist = aliasMap.get(album.artist.toUpperCase()) ||
             album.artist.toUpperCase();
           const name = aliasMap.get(album.name.toUpperCase()) ||
             album.name.toUpperCase();
           const key = `${artist}|${name}`;
-          const count = parseInt(album.count) || 0;
+          const count = Number(album.count) || 0;
 
-          if (merged.has(key)) {
-            const existing = merged.get(key);
+          const existing = merged.get(key);
+          if (existing) {
             existing.count += count;
             if (!existing.mbid && album.mbid) existing.mbid = album.mbid;
             if (!existing.img && album.img) existing.img = album.img;
@@ -252,9 +269,7 @@ export function initCollageTool(defaultUsername: string) {
             merged.set(key, { ...album, artist, name, count });
           }
         });
-        albums = Array.from(merged.values()).sort((a: any, b: any) =>
-          b.count - a.count
-        );
+        albums = Array.from(merged.values()).sort((a, b) => b.count - a.count);
       }
 
       if (currentWorker) currentWorker.terminate();
@@ -266,7 +281,6 @@ export function initCollageTool(defaultUsername: string) {
         type: "module",
       });
 
-      // @ts-ignore
       const offscreen = canvas.transferControlToOffscreen();
 
       currentWorker.onmessage = (e) => {
@@ -309,8 +323,9 @@ export function initCollageTool(defaultUsername: string) {
           rows,
         },
       }, [offscreen]);
-    } catch (err: any) {
-      updateStatus(`Error: ${err.message}`);
+    } catch (err) {
+      if (run !== generation) return;
+      updateStatus(`Error: ${(err as Error).message}`);
       previewWrapper?.classList.remove("is-loading");
       setActionsEnabled(false);
     }
