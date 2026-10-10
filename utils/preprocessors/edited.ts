@@ -2,17 +2,20 @@ import { log } from "lume/core/utils/log.ts";
 
 export default function () {
   return (site: Lume.Site) => {
+    let counts = new Map<string, number>();
+
+    // Recount on every build so serve picks up new commits, but register the preprocessor once; registering it here would add another copy on every rebuild.
     site.addEventListener("beforeBuild", () => {
-      const counts = countCommits(site.src());
+      counts = countCommits(site.src());
+    });
 
-      site.preprocess((pages) => {
-        for (const page of pages) {
-          if (page.data.type !== "note") continue;
+    site.preprocess((pages) => {
+      for (const page of pages) {
+        if (page.data.type !== "note") continue;
 
-          const path = site.src(page.sourcePath);
-          page.data.edited = (counts.get(path) ?? 0) > 1;
-        }
-      });
+        const path = site.src(page.sourcePath);
+        page.data.edited = (counts.get(path) ?? 0) > 1;
+      }
     });
   };
 }
