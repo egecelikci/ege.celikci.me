@@ -12,27 +12,12 @@ import { isProduction } from "../utils/env.ts";
 const REMIXICON_VERSION = "4.9.1";
 
 /**
- * RemixIcon names are flat but files live under icons/{Category}/{name}.svg.
- * Build a name → category map from the package's flat file listing.
+ * RemixIcon files live under icons/{Category}/{name}.svg while names are flat.
+ * Map the few icons the site uses instead of downloading the whole package listing on every build.
  */
-async function loadRemixCategories(): Promise<Map<string, string>> {
-  const map = new Map<string, string>();
-  try {
-    const res = await fetch(
-      `https://data.jsdelivr.com/v1/packages/npm/remixicon@${REMIXICON_VERSION}?structure=flat`,
-    );
-    const data = await res.json();
-    for (const file of data.files ?? []) {
-      const m = file.name.match(/^\/icons\/([^/]+)\/([^/]+)\.svg$/);
-      if (m) map.set(m[2], m[1]);
-    }
-  } catch (error) {
-    console.warn("[assets] Failed to load RemixIcon categories:", error);
-  }
-  return map;
-}
-
-const remixCategories = await loadRemixCategories();
+const REMIX_CATEGORIES: Record<string, string> = {
+  "fediverse-fill": "Logos",
+};
 
 export default function () {
   const isDev = !isProduction;
@@ -80,7 +65,7 @@ export default function () {
             id: "remixicon",
             src:
               `https://cdn.jsdelivr.net/npm/remixicon@${REMIXICON_VERSION}/icons/{name}.svg`,
-            name: (name) => `${remixCategories.get(name) ?? "Others"}/${name}`,
+            name: (name) => `${REMIX_CATEGORIES[name] ?? "Others"}/${name}`,
           },
         ],
         spriteFile: "/assets/icons/icons.sprite.svg",
