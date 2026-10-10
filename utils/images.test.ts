@@ -10,12 +10,15 @@ import {
   assertAlmostEquals,
   assertEquals,
   assertNotEquals,
+  assertRejects,
   assertThrows,
 } from "@std/assert";
 import {
   ditherWithSharp,
   floydSteinberg,
+  levels,
   linearLuminance,
+  linearToSrgb,
   srgbToLinear,
 } from "./images.ts";
 
@@ -83,6 +86,107 @@ Deno.test("srgbToLinear rejects codes outside 0..255", () => {
   for (const code of [-1, 256, 1.5, NaN, Infinity]) {
     assertThrows(() => srgbToLinear(code), RangeError);
   }
+});
+
+Deno.test("linearToSrgb inverts srgbToLinear for every 8-bit code", () => {
+  for (let code = 0; code < 256; code++) {
+    assertAlmostEquals(linearToSrgb(srgbToLinear(code)), code / 255, 1e-6);
+  }
+});
+
+Deno.test("linearToSrgb clamps out-of-range values and rejects non-finite ones", () => {
+  assertEquals(linearToSrgb(-0.1), 0);
+  assertAlmostEquals(linearToSrgb(1.0000001), 1, 1e-12);
+  for (const value of [NaN, Infinity, -Infinity]) {
+    assertThrows(() => linearToSrgb(value), RangeError);
+  }
+});
+
+Deno.test("levels stretches the clipped range onto 0..1 when the gain is uncapped", () => {
+  const out = levels(new Float32Array([0.25, 0.5, 0.75]), {
+    clip: 0,
+    maxGain: Infinity,
+  });
+  assertEquals(Array.from(out), [0, 0.5, 1]);
+});
+
+Deno.test("levels clips the requested fraction at each end of the histogram", () => {
+  // 1000 values from 0.3 to 0.7 plus a lone outlier at each end; 0.5% clipping must ignore the outliers.
+  const values = new Float32Array(1002);
+  for (let i = 0; i < 1000; i++) values[i + 1] = 0.3 + 0.4 * i / 999;
+  values[0] = 0;
+  values[1001] = 1;
+  const out = levels(values, { clip: 0.005, maxGain: Infinity });
+  assertEquals(out[0], 0);
+  assertEquals(out[1001], 1);
+  // The 0.5th and 99.5th percentiles sit about 0.002 inside 0.3 and 0.7, so the gain is a little above 2.5.
+  const gain = (out[800] - out[200]) / (values[800] - values[200]);
+  assert(gain > 2.5 && gain < 2.6, `gain ${gain}`);
+  const unclipped = levels(values, { clip: 0, maxGain: Infinity });
+  assertAlmostEquals(unclipped[500], values[500], 1e-6);
+});
+
+Deno.test("levels caps the gain about the full stretch's fixed point", () => {
+  // A light, low-contrast field: the full stretch of 0.6..0.9 needs gain 3.33 and fixes 0.6 / (1 − 0.3) ≈ 0.857.
+  const values = new Float32Array([0.6, 0.7, 0.8, 0.9]);
+  const out = levels(values, { clip: 0, maxGain: 1.5 });
+  const pivot = 0.6 / 0.7;
+  for (let i = 0; i < values.length; i++) {
+    assertAlmostEquals(out[i], pivot + (values[i] - pivot) * 1.5, 1e-6);
+  }
+  assertAlmostEquals((out[3] - out[0]) / 0.3, 1.5, 1e-5);
+  assert(out[0] > 0.4, `the cover stays light: ${out[0]}`);
+});
+
+Deno.test("levels leaves a field alone when the stretch needs no more than gain 1", () => {
+  const values = new Float32Array([0, 0.2, 0.9, 1]);
+  assertEquals(levels(values, { clip: 0 }), values);
+});
+
+Deno.test("levels returns a flat field unchanged, without NaN", () => {
+  for (const level of [0, 0.3, 0.5, 1]) {
+    for (const maxGain of [1.5, Infinity]) {
+      const out = levels(field(8, 8, level), { maxGain });
+      assert(out.every((value) => value === Math.fround(level)), `${level}`);
+    }
+  }
+  assertEquals(levels(new Float32Array(0)).length, 0);
+});
+
+Deno.test("levels is monotonic and stays in 0..1", () => {
+  const values = noise(4096, 13).map((v) => 0.2 + 0.5 * v);
+  for (const maxGain of [1, 1.5, 2, Infinity]) {
+    const out = levels(values, { maxGain });
+    const order = Array.from(values.keys()).sort((a, b) =>
+      values[a] - values[b]
+    );
+    for (let k = 1; k < order.length; k++) {
+      assert(out[order[k]] >= out[order[k - 1]], `maxGain ${maxGain}`);
+    }
+    assert(out.every((value) => value >= 0 && value <= 1));
+  }
+});
+
+Deno.test("levels does not mutate its input", () => {
+  const values = noise(100, 17);
+  const copy = values.slice();
+  levels(values);
+  assertEquals(values, copy);
+});
+
+Deno.test("levels rejects invalid input", () => {
+  assertThrows(
+    () => levels([0.5] as unknown as Float32Array),
+    TypeError,
+  );
+  const ok = new Float32Array([0.2, 0.8]);
+  for (const clip of [-0.1, 0.5, NaN]) {
+    assertThrows(() => levels(ok, { clip }), RangeError);
+  }
+  for (const maxGain of [0.5, 0, NaN]) {
+    assertThrows(() => levels(ok, { maxGain }), RangeError);
+  }
+  assertThrows(() => levels(new Float32Array([0, NaN])), RangeError);
 });
 
 Deno.test("linearLuminance weights linear RGB with Rec. 709 coefficients", () => {
@@ -284,9 +388,13 @@ Deno.test({
     const sharp = (await import("sharp")).default;
     const dir = await Deno.makeTempDir();
     /** Dither an encoded image and return its decoded size, PNG metadata, and ink mask. */
-    async function run(input: Uint8Array, width: number) {
+    async function run(
+      input: Uint8Array,
+      width: number,
+      tone: "gamma" | "linear" = "gamma",
+    ) {
       const out = `${dir}/out-${crypto.randomUUID()}.png`;
-      await ditherWithSharp(input, out, width);
+      await ditherWithSharp(input, out, width, { tone });
       const meta = await sharp(out).metadata();
       const { data, info } = await sharp(out).ensureAlpha().raw()
         .toBuffer({ resolveWithObject: true });
@@ -332,12 +440,48 @@ Deno.test({
         },
       );
 
-      await t.step("mid grey gets linear-light coverage", async () => {
-        const { mask } = await run(await grey(3).png().toBuffer(), 40);
-        assertAlmostEquals(
-          inkCount(mask) / mask.length,
-          1 - srgbToLinear(128),
-          0.002,
+      await t.step("defaults to a 320 px square", async () => {
+        const out = `${dir}/default.png`;
+        await ditherWithSharp(await grey(3).png().toBuffer(), out);
+        const { width, height } = await sharp(out).metadata();
+        assertEquals([width, height], [320, 320]);
+      });
+
+      await t.step(
+        "mid grey gets gamma-space coverage by default",
+        async () => {
+          const { mask } = await run(await grey(3).png().toBuffer(), 40);
+          assertAlmostEquals(
+            inkCount(mask) / mask.length,
+            1 - 128 / 255,
+            0.003,
+          );
+        },
+      );
+
+      await t.step(
+        "mid grey gets linear-light coverage with tone: linear",
+        async () => {
+          const { mask } = await run(
+            await grey(3).png().toBuffer(),
+            40,
+            "linear",
+          );
+          assertAlmostEquals(
+            inkCount(mask) / mask.length,
+            1 - srgbToLinear(128),
+            0.003,
+          );
+        },
+      );
+
+      await t.step("rejects an unknown tone", async () => {
+        await assertRejects(
+          () =>
+            ditherWithSharp(new Uint8Array(), `${dir}/x.png`, 8, {
+              tone: "log" as "gamma",
+            }),
+          RangeError,
         );
       });
 
@@ -370,7 +514,7 @@ Deno.test({
             const { mask } = await run(input, 20);
             assertAlmostEquals(
               inkCount(mask) / mask.length,
-              1 - linearLuminance(srgb.subarray(0, 3), 3)[0],
+              1 - linearToSrgb(linearLuminance(srgb.subarray(0, 3), 3)[0]),
               0.01,
             );
           }
@@ -398,13 +542,20 @@ Deno.test({
           Uint8Array.from(noise(64 * 64 * 3, 9), (v) => Math.round(v * 255)),
           { raw: { width: 64, height: 64, channels: 3 } },
         ).png().toBuffer();
-        const { mask } = await run(input, 64);
-        const expected = floydSteinberg(
-          linearLuminance(await sharp(input).raw().toBuffer(), 3),
-          64,
-          64,
+        const luma = levels(
+          linearLuminance(
+            await sharp(input).sharpen({ sigma: 0.9 }).raw().toBuffer(),
+            3,
+          ).map(linearToSrgb),
         );
-        assertEquals(mask, expected);
+        assertEquals((await run(input, 64)).mask, floydSteinberg(luma, 64, 64));
+        const linear = luma.map((v) =>
+          v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+        );
+        assertEquals(
+          (await run(input, 64, "linear")).mask,
+          floydSteinberg(linear, 64, 64),
+        );
       });
     } finally {
       await Deno.remove(dir, { recursive: true });
