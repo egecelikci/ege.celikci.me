@@ -5,7 +5,6 @@
   Props:
     - images: Array of { src, alt, width, height, photographer? }
     - classes: additional classes
-    - aspect: "square" | "video" (default: "square")
 #}}
 
 {{ if it.images && it.images.length > 0 }}
@@ -30,7 +29,7 @@
           target="_blank"
           rel="noopener noreferrer"
           aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
-          class="lightbox-trigger ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
+          class="lightbox-trigger ledger-card gallery__link gallery__link--square"
         >
           {{# 2. THE IMAGE #}}
           <img
