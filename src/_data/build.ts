@@ -1,29 +1,10 @@
-import { uuidv7 } from "../../utils/uuid.ts";
-
-/**
- * Checks if it is currently CSS Naked Day.
- * @see https://css-naked-day.org/
- */
-function isCSSNakedDay(): boolean {
-  const now = Date.now();
-  const currentYear = new Date().getFullYear();
-  /** CSS Naked Day is April 9th */
-  const startEpoch = new Date(`${currentYear}-04-09T00:00:00+1400`).getTime();
-  const endEpoch = new Date(`${currentYear}-04-09T23:59:59-1200`).getTime();
-  return startEpoch <= now && now <= endEpoch;
-}
-
 const isServe = Deno.args.includes("-s") || Deno.args.includes("--serve");
 const systemEnv = Deno.env.get("LUME_ENV") || Deno.env.get("DENO_ENV");
 const env = systemEnv || (isServe ? "development" : "production");
-const isDev = env === "development";
-
-const timestamp = new Date();
 
 export default {
   env: env,
-  dev: isDev,
-  timestamp: timestamp,
-  id: uuidv7(),
-  naked: isCSSNakedDay(),
+  timestamp: new Date(),
+  /** Cache-busting query for assets; changes on every build. */
+  id: crypto.randomUUID(),
 };
