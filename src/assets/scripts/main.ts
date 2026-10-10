@@ -108,53 +108,13 @@ async function init() {
     card.replaceWith(player);
     iframe.focus();
   });
-  /**
-   * Map directions popover: native <details>, one open at a time, close on
-   * outside click / Escape, card clamped to the viewport. (The card is
-   * anchored absolutely; see the removed view-transition-name on
-   * .event-page__content to keep it above the sticky sidebar.)
-   */
+  /** Map directions popover: native <details>, closed on outside click or Escape. */
   const POPOVER_SELECTOR = "details.event-page__map-nav";
   const closePopovers = () => {
     document.querySelectorAll(`${POPOVER_SELECTOR}[open]`).forEach(
       (el) => (el as HTMLDetailsElement).removeAttribute("open"),
     );
   };
-  const clampPopover = (details: HTMLDetailsElement) => {
-    const card = details.querySelector<HTMLElement>(".event-page__map-menu");
-    const offsetParent = card?.offsetParent as HTMLElement | null;
-    if (!card || !offsetParent) return;
-    const pad = 8;
-    const vw = document.documentElement.clientWidth;
-    const rect = card.getBoundingClientRect();
-    const parentRect = offsetParent.getBoundingClientRect();
-    let left = rect.left;
-    if (rect.right > vw - pad) left = vw - pad - rect.width;
-    if (left < pad) left = pad;
-    card.style.left = `${left - parentRect.left}px`;
-    card.style.right = "auto";
-  };
-  /** toggle does not bubble — listen in capture phase */
-  document.addEventListener(
-    "toggle",
-    (e) => {
-      const details = e.target as HTMLDetailsElement;
-      if (!details.matches(POPOVER_SELECTOR)) return;
-      if (details.open) {
-        document.querySelectorAll(`${POPOVER_SELECTOR}[open]`).forEach(
-          (el) => {
-            if (el !== details) {
-              (el as HTMLDetailsElement).removeAttribute("open");
-            }
-          },
-        );
-        requestAnimationFrame(() => {
-          if (details.open) clampPopover(details);
-        });
-      }
-    },
-    true,
-  );
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     if (target.closest(POPOVER_SELECTOR)) return;
@@ -162,11 +122,6 @@ async function init() {
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePopovers();
-  });
-  globalThis.addEventListener("resize", () => {
-    document.querySelectorAll(`${POPOVER_SELECTOR}[open]`).forEach(
-      (el) => clampPopover(el as HTMLDetailsElement),
-    );
   });
 
   if (process.env.MODE === "production") {
