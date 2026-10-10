@@ -3,7 +3,7 @@
   Content-aware media grid for notes and listings.
 
   Props:
-    - images: Array of { src, alt, width?, height?, type? }
+    - images: Array of { src, alt, width?, height? }
     - aspect: "auto" | "eq1" | "eq2" | "eq3" | "eq4" (default: auto-derived from count)
     - limit: number | null (default: null = show all; listings pass 4)
     - static: boolean (default: false)
@@ -77,7 +77,6 @@
           {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
           data-cropped="true"
           data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
-          data-media-type="{{ image.type || "image" }}"
           {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}
         {{ /if }}
       >

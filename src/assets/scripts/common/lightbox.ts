@@ -10,7 +10,6 @@ interface PswpItem {
   alt?: string;
   type?: string;
   postUrl?: string | null;
-  mediaType?: string;
   cropped?: boolean;
 }
 
@@ -85,7 +84,6 @@ export function initLightbox() {
       itemData.height = h ? parseInt(h, 10) : (img?.naturalHeight || 0);
 
       itemData.postUrl = anchor.getAttribute("data-post-url");
-      itemData.mediaType = anchor.getAttribute("data-media-type") || "image";
     } else if (el.tagName === "IMG") {
       const img = el as HTMLImageElement;
       itemData.src = img.src;
@@ -107,33 +105,6 @@ export function initLightbox() {
 
   lightbox.addFilter("placeholderSrc", (placeholderSrc, content) => {
     return (content.data as PswpItem).msrc || placeholderSrc;
-  });
-
-  lightbox.on("contentLoad", (e) => {
-    const { content } = e;
-    const data = content.data as PswpItem;
-    if (data.mediaType === "video" || data.mediaType === "gifv") {
-      e.preventDefault();
-      content.element = document.createElement("div");
-      content.element.className = "pswp__content-video";
-
-      const video = document.createElement("video");
-      video.className = "pswp__content-video-el";
-      video.setAttribute("aria-label", data.alt || "Video");
-      video.src = data.src || "";
-
-      if (data.mediaType === "gifv") {
-        video.autoplay = true;
-        video.loop = true;
-        video.muted = true;
-        video.playsInline = true;
-      } else {
-        video.controls = true;
-      }
-
-      content.element.appendChild(video);
-      content.state = "loaded";
-    }
   });
 
   lightbox.on("uiRegister", () => {
@@ -266,8 +237,6 @@ export function initLightbox() {
           if (!data) return;
 
           closeMoreMenu();
-
-          pswp.element?.querySelectorAll("video").forEach((v) => v.pause());
 
           showControls();
 
