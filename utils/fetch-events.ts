@@ -3,6 +3,28 @@ import { ensureDir } from "@std/fs/ensure-dir";
 import { loadState, saveState, sortObjectKeys } from "./cache.ts";
 import { HttpClient } from "./fetch-base.ts";
 import { exists } from "@std/fs/exists";
+import type {
+  EAAPosterInfo,
+  MBEvent,
+  MBEventList,
+  MBRelation,
+  MBRelationArtist,
+  MBRelationLabel,
+  MBRelationPlace,
+  RawIzmirEvents,
+} from "./schemas.ts";
+
+export type {
+  EAAPosterInfo,
+  MBEvent,
+  MBEventList,
+  MBRelation,
+  MBRelationArtist,
+  MBRelationLabel,
+  MBRelationPlace,
+  RawIzmirEvents,
+};
+
 import {
   EAAPosterInfoSchema,
   MBEventListSchema,
@@ -25,75 +47,6 @@ const CONFIG = {
     posters: "src/assets/images/posters",
   },
 } as const;
-
-/** Common fields shared by MusicBrainz relation targets */
-interface MBEntityBase {
-  id: string;
-  name: string;
-  "sort-name"?: string;
-  disambiguation?: string;
-}
-
-export interface MBRelationArtist extends MBEntityBase {
-  "sort-name": string;
-  country?: string | null;
-  type?: string | null;
-  "type-id"?: string | null;
-}
-
-export interface MBRelationPlace extends MBEntityBase {
-  address?: string;
-  coordinates?: { latitude: number; longitude: number } | null;
-  area?: MBRelationArtist;
-}
-
-export interface MBRelationLabel extends MBEntityBase {
-  "sort-name": string;
-  "label-code"?: string | null;
-  type?: string | null;
-  "type-id"?: string | null;
-}
-
-export interface MBRelation {
-  type: string;
-  "target-type": "artist" | "place" | "url" | "label";
-  "target-credit"?: string;
-  "attribute-values"?: Record<string, string>;
-  artist?: MBRelationArtist;
-  place?: MBRelationPlace;
-  url?: { id: string; resource: string };
-  label?: MBRelationLabel;
-}
-
-/** A page of events as returned by the MusicBrainz browse endpoint */
-export interface MBEventList {
-  events: MBEvent[];
-  "event-count": number;
-}
-
-/** A raw event as returned by the MusicBrainz API and cached to disk */
-export interface MBEvent {
-  id: string;
-  name: string;
-  type?: string | null;
-  "type-id"?: string | null;
-  "life-span": {
-    begin?: string | null;
-    end?: string | null;
-    ended: boolean;
-  };
-  time?: string;
-  cancelled: boolean;
-  disambiguation?: string;
-  setlist?: string;
-  relations?: MBRelation[];
-  /** Remote original poster URL saved by the sync script */
-  posterUrl?: string;
-  /** Remote thumbnail poster URL saved by the sync script */
-  posterThumb?: string;
-  /** Local relative poster path saved by the sync script */
-  imagePath?: string;
-}
 
 /** Local event metadata from src/_data/events.yml */
 export interface LocalEventData {
@@ -125,21 +78,6 @@ export interface EnrichedMBEvent extends MBEvent {
   labels?: MBRelation[];
   /** Set by the events preprocessor to guard against double enrichment */
   _enriched?: boolean;
-}
-
-/** Event Art Archive poster metadata */
-export interface EAAPosterInfo {
-  images?: Array<{
-    front: boolean;
-    image: string;
-    thumbnails?: Record<string, string>;
-  }>;
-}
-
-export interface RawIzmirEvents {
-  /** Bumped whenever the persisted format changes; stale caches are rejected */
-  schemaVersion: number;
-  events: MBEvent[];
 }
 
 /**
@@ -411,7 +349,7 @@ async function syncEvents() {
       }),
     );
 
-    const newData = {
+    const newData: RawIzmirEvents = {
       schemaVersion: 1,
       events: events.sort((a, b) => a.id.localeCompare(b.id)),
     };

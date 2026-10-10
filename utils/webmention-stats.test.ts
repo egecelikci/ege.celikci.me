@@ -82,7 +82,7 @@ Deno.test("computeWebmentionStats ignores own webmentions", () => {
         "wm-source": "https://example.com/1",
         "wm-target": "https://ege.celikci.me/notes/a",
         "wm-received": "2026-01-01T00:00:00.000Z",
-        author: { name: "me", url: "https://ege.celikci.me" },
+        author: { name: "me", url: "https://ege.celikci.me", photo: null },
       },
     ],
   };
