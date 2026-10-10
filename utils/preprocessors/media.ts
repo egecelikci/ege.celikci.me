@@ -43,12 +43,14 @@ const PROBEABLE_EXT = /\.(jpg|jpeg|png|webp|avif|gif)$/i;
  * final `<img>`. Only the file header is read; images are never decoded.
  *
  * @param src - Site-absolute image URL path (e.g. `/assets/images/gallery/x.jpg`).
+ * @param root - Folder the URL path resolves against; tests point it at fixtures.
  * @returns The intrinsic dimensions, or `undefined` when dimensions are
  * unknowable: remote URLs, non-image paths, path-traversal attempts,
  * missing/unreadable files, and unsupported formats. Never throws.
  */
 export async function probeLocalImageSize(
   src: string,
+  root = "src",
 ): Promise<ImageDimensions | undefined> {
   if (!src.startsWith("/")) return undefined;
   const clean = src.split(/[?#]/)[0];
@@ -57,19 +59,20 @@ export async function probeLocalImageSize(
     return undefined;
   }
 
-  const cached = dimensionCache.get(clean);
+  const path = `${root}${clean}`;
+  const cached = dimensionCache.get(path);
   if (cached !== undefined) return cached ?? undefined;
 
   let size: ImageDimensions | undefined;
   try {
     const { imageDimensionsFromStream } = await loadImageDimmensions();
-    using file = await Deno.open(`src${clean}`, { read: true });
+    using file = await Deno.open(path, { read: true });
     const dims = await imageDimensionsFromStream(file.readable);
     if (dims) size = { width: dims.width, height: dims.height };
   } catch {
     size = undefined;
   }
-  dimensionCache.set(clean, size ?? null);
+  dimensionCache.set(path, size ?? null);
   return size;
 }
 
@@ -77,16 +80,18 @@ export async function probeLocalImageSize(
  * Fill in missing `width`/`height` for note images.
  *
  * @param images - Images extracted from note Markdown.
+ * @param root - Folder image URL paths resolve against.
  * @returns A new array where images lacking dimensions gain probed ones.
  * Explicit `=WxH` author overrides are preserved as-is; unprobable
  * sources are returned untouched. Never throws.
  */
 export async function enrichImagesWithDimensions(
   images: PostImage[],
+  root = "src",
 ): Promise<PostImage[]> {
   return await Promise.all(images.map(async (image) => {
     if (image.width && image.height) return image;
-    const size = await probeLocalImageSize(image.src);
+    const size = await probeLocalImageSize(image.src, root);
     if (!size) return image;
     return { ...image, width: size.width, height: size.height };
   }));
