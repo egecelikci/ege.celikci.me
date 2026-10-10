@@ -11,6 +11,7 @@ export default {
     "assets/images/events/**/*",
     "assets/images/covers/**/*",
     "assets/images/posters/**/*",
+    "pagefind/**/*",
     "sw.js",
     "sw.js.map",
   ],

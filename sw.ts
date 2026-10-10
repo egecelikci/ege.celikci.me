@@ -28,6 +28,10 @@ const serwist = new Serwist({
       handler: new NetworkFirst({
         cacheName: "pages",
         plugins: [
+          new ExpirationPlugin({
+            maxEntries: 100,
+            maxAgeSeconds: 30 * 24 * 60 * 60,
+          }),
           {
             handlerDidError: async (): Promise<Response | undefined> => {
               return await serwist.matchPrecache("/offline/index.html");
@@ -63,6 +67,30 @@ const serwist = new Serwist({
             maxAgeSeconds: 60 * 60,
           }),
         ],
+      }),
+    },
+    {
+      // Index chunks, fragments, and filters have content-hashed names, so a cached copy is never stale.
+      matcher: ({ url }) =>
+        /^\/pagefind\/(fragment|index|filter)\//.test(url.pathname) ||
+        url.pathname.endsWith(".pf_meta"),
+      handler: new CacheFirst({
+        cacheName: "pagefind-chunks",
+        plugins: [
+          new ExpirationPlugin({
+            maxEntries: 300,
+            maxAgeSeconds: 30 * 24 * 60 * 60,
+          }),
+        ],
+      }),
+    },
+    {
+      // The loader, wasm, worker, and entry file keep their names across builds, so prefer the network.
+      matcher: ({ url }) => url.pathname.startsWith("/pagefind/"),
+      handler: new NetworkFirst({
+        cacheName: "pagefind",
+        networkTimeoutSeconds: 3,
+        plugins: [new ExpirationPlugin({ maxEntries: 20 })],
       }),
     },
     {
