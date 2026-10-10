@@ -32,7 +32,7 @@ function proxiedLastfmCover(img: string | undefined): string | undefined {
 /**
  * Pick the upstream image for a cover request.
  *
- * @param params - `lfm` for a Last.fm cover, or `mbid` for a release group's Cover Art Archive front.
+ * @param params - `lfm` for a Last.fm cover, `release` and `caa` for an exact Cover Art Archive image, or `mbid` for a release group's front.
  * @returns The upstream URL, or `null` when the parameters are invalid.
  */
 function coverUpstream(params: URLSearchParams): string | null {
@@ -40,6 +40,14 @@ function coverUpstream(params: URLSearchParams): string | null {
   if (lfm) {
     return LASTFM_COVER.test(lfm)
       ? `https://lastfm.freetls.fastly.net/i/u/300x300/${lfm}`
+      : null;
+  }
+  const release = params.get("release");
+  const caa = params.get("caa");
+  if (release || caa) {
+    return release && /^[0-9a-f-]{36}$/i.test(release) && caa &&
+        /^\d+$/.test(caa)
+      ? `https://coverartarchive.org/release/${release}/${caa}-500.jpg`
       : null;
   }
   const mbid = params.get("mbid");
@@ -241,6 +249,10 @@ export default async (req: Request): Promise<Response> => {
           artist: a.artist_name as string,
           count: a.listen_count as number,
           mbid: a.release_group_mbid as string | undefined,
+          // ListenBrainz names the exact cover image, which skips the release-group lookup and redirect.
+          img: a.caa_release_mbid && a.caa_id
+            ? `/api/collage-proxy?source=cover&release=${a.caa_release_mbid}&caa=${a.caa_id}`
+            : undefined,
         }));
     } else {
       if (!LASTFM_API_KEY) {
