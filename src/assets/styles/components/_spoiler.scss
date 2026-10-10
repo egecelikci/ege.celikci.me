@@ -3,8 +3,7 @@
     display: none;
   }
 
-  html.has-spoiler .media--spoiled:not(.is-revealed) .media__img,
-  html.has-spoiler .gallery__item--spoiled:not(.is-revealed) .gallery__img {
+  html.has-spoiler .media--spoiled:not(.is-revealed) .media__img {
     filter: blur(24px) saturate(1.1);
   }
 
@@ -87,10 +86,5 @@
 
   .is-revealed .spoiler-veil > :not(.empty-state__icon-alt) {
     display: none;
-  }
-
-  .gallery__item--spoiled .gallery__overlay {
-    top: auto;
-    bottom: 1rem;
   }
 }

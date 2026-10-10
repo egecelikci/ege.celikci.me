@@ -4,7 +4,7 @@
 
   Props:
     - images: Array of { src, alt, width?, height? }
-    - aspect: "auto" | "eq1" | "eq2" | "eq3" | "eq4" (default: auto-derived from count)
+    - aspect: "auto" | undefined (default: grid derived from count)
     - limit: number | null (default: null = show all; listings pass 4)
     - static: boolean (default: false)
     - card: boolean (default: false; true renders the ledger-card chrome)
@@ -34,12 +34,12 @@
       ? "media-grid--auto"
       : (isFlow
         ? "media-grid--flow"
-        : (it.aspect || {
+        : {
           "eq1": "media-grid--eq1",
           "eq2": "media-grid--eq2",
           "eq3": "media-grid--eq3",
           "eq4": "media-grid--eq4",
-        }["eq" + count]))
+        }["eq" + count])
   }}
 
   <div
@@ -76,7 +76,6 @@
           {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
           {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
           data-cropped="true"
-          data-orientation="{{ (image.width && image.height) ? (image.width > image.height ? 'landscape' : 'portrait') : 'landscape' }}"
           {{ if it.postUrl }}data-post-url="{{ it.postUrl |> url }}"{{ /if }}
         {{ /if }}
       >

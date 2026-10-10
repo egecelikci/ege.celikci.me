@@ -4,11 +4,8 @@
 
   Props:
     - images: Array of { src, alt, width, height, photographer? }
-    - static: boolean (default: false)
     - classes: additional classes
     - aspect: "square" | "video" (default: "square")
-    - spoiler: { label, tag?, icon?, iconAlt? } | null (default: null; veils every
-      tile behind click-to-reveal)
 #}}
 
 {{ if it.images && it.images.length > 0 }}
@@ -20,57 +17,38 @@
 
   <div
   class="{{ gridClasses }} {{ it.classes }}"
-  {{ if !it.static }} data-lightbox-group="{{ gid }}" {{ /if }}
+  data-lightbox-group="{{ gid }}"
 >
     {{ for i, image of it.images }}
-      {{ set tileSpoiler = it.spoiler || image.spoiler || null }}
-      <div class="gallery__item{{ if tileSpoiler }} gallery__item--spoiled{{ /if }}">
+      <div class="gallery__item">
         {{# 1. WRAPPER ELEMENT #}}
-        {{ if !it.static }}
-          <a
-            href="{{ image.src |> url }}"
-            {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
-            {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
-            data-cropped="true"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
-            class="lightbox-trigger note-gallery__link ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
-          >
-            {{# 2. THE IMAGE #}}
-            <img
-              src="{{ image.src |> url }}"
-              alt="{{ image.alt }}"
-              image-size
-              transform-images="avif webp jpg 640 1280 1920"
-              sizes="(max-width: 48rem) 100vw, 46rem"
-              class="gallery__img"
-              loading="lazy"
-              decoding="async"
-            />
+        <a
+          href="{{ image.src |> url }}"
+          {{ if image.width }}data-pswp-width="{{ image.width }}"{{ /if }}
+          {{ if image.height }}data-pswp-height="{{ image.height }}"{{ /if }}
+          data-cropped="true"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
+          class="lightbox-trigger ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
+        >
+          {{# 2. THE IMAGE #}}
+          <img
+            src="{{ image.src |> url }}"
+            alt="{{ image.alt }}"
+            image-size
+            transform-images="avif webp jpg 640 1280 1920"
+            sizes="(max-width: 48rem) 100vw, 46rem"
+            class="gallery__img"
+            loading="lazy"
+            decoding="async"
+          />
 
-            {{# 4. CAPTION (Optional) #}}
-            {{ if image.alt?.trim() }}
-              <span class="sr-only">{{ image.alt }}</span>
-            {{ /if }}
-          </a>
-        {{ else }}
-          <div
-            class="note-gallery__link ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
-          >
-            {{# 2. THE IMAGE #}}
-            <img
-              src="{{ image.src |> url }}"
-              alt="{{ image.alt }}"
-              image-size
-              transform-images="avif webp jpg 640 1280 1920"
-              sizes="(max-width: 48rem) 100vw, 46rem"
-              class="gallery__img"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        {{ /if }}
+          {{# 4. CAPTION (Optional) #}}
+          {{ if image.alt?.trim() }}
+            <span class="sr-only">{{ image.alt }}</span>
+          {{ /if }}
+        </a>
 
         {{# 3. MINIMALIST OVERLAY #}}
         {{ if it.images.length > 1 }}
@@ -89,30 +67,6 @@
           <span class="gallery__credit">
             {{- image.photographer.name -}}
           </span>
-        {{ /if }}
-
-        {{ if tileSpoiler }}
-          {{
-            set veilIcon = tileSpoiler.icon || "eye-off"
-          }}
-          {{
-            await it.comp.base.EmptyState({
-              as: "span",
-              icon: veilIcon,
-              iconAlt: tileSpoiler.iconAlt || (veilIcon === "bot" ? "bot-off" : "eye"),
-              iconClasses: "w-4 h-4",
-              title: tileSpoiler.label,
-              tag: tileSpoiler.tag || null,
-              size: "sm",
-              classes: "spoiler-veil",
-              attributes: {
-                tabindex: "0",
-                role: "button",
-                "aria-expanded": "false",
-                "aria-label": `Show hidden media: ${tileSpoiler.label}`,
-              },
-            }) |> safe
-          }}
         {{ /if }}
       </div>
     {{ /for }}

@@ -45,7 +45,7 @@ globalThis.addEventListener(
      */
     if (
       target.closest(
-        ".media--spoiled:not(.is-revealed), .gallery__item--spoiled:not(.is-revealed)",
+        ".media--spoiled:not(.is-revealed)",
       )
     ) {
       return;
