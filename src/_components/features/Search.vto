@@ -10,11 +10,12 @@
     - placeholder: string (default: "search")
     - mode: "search" | "filter" (default: "search")
     - filters: object (Pagefind filter object, e.g. { type: "note" })
-    - variant: "default" | "minimal" (currently both map to the slim style)
+
+  In search mode the field is a GET form to /search/, so Enter works without JavaScript and results can be linked as /search/?q=term.
 #}}
 
 {{ set id = it.compId || "main" }}
-{{ set isMinimal = it.variant === "minimal" }}
+{{ set isFilter = it.mode === 'filter' }}
 
 <div
   class="search {{ it.classes || '' }}"
@@ -25,7 +26,10 @@
   data-search-cache-tag="{{ it.build?.id || '' }}"
 >
   {{# --- 1. THE INPUT --- #}}
-  <div class="search__field">
+  <{{ isFilter ? 'div' : 'form' }}
+    class="search__field"
+    {{ if !isFilter }}action="/search/" method="get" role="search"{{ /if }}
+  >
     {{# Autocomplete Trap (Cryptee Pattern) #}}
     <input
       type="text"
@@ -42,7 +46,8 @@
     <input
       type="search"
       id="site-search-input-{{ id }}"
-      placeholder="{{ it.placeholder || "search…" }}"
+      {{ if !isFilter }}name="q"{{ /if }}
+      placeholder="{{ it.placeholder || 'search…' }}"
       class="search__input"
       autocomplete="off"
       spellcheck="false"
@@ -76,7 +81,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </{{ isFilter ? 'div' : 'form' }}>
 
   {{# --- 2. THE RESULTS --- #}}
   <div
