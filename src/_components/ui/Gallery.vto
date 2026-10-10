@@ -34,13 +34,13 @@
             data-cropped="true"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt |> escape }}{{ /if }}"
+            aria-label="View larger image{{ if image.alt?.trim() }}: {{ image.alt }}{{ /if }}"
             class="lightbox-trigger note-gallery__link ledger-card gallery__link gallery__link--{{ it.aspect || "square" }}"
           >
             {{# 2. THE IMAGE #}}
             <img
               src="{{ image.src |> url }}"
-              alt="{{ image.alt |> escape }}"
+              alt="{{ image.alt }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
               sizes="(max-width: 48rem) 100vw, 46rem"
@@ -51,7 +51,7 @@
 
             {{# 4. CAPTION (Optional) #}}
             {{ if image.alt?.trim() }}
-              <span class="sr-only">{{ image.alt |> escape }}</span>
+              <span class="sr-only">{{ image.alt }}</span>
             {{ /if }}
           </a>
         {{ else }}
@@ -61,7 +61,7 @@
             {{# 2. THE IMAGE #}}
             <img
               src="{{ image.src |> url }}"
-              alt="{{ image.alt |> escape }}"
+              alt="{{ image.alt }}"
               image-size
               transform-images="avif webp jpg 640 1280 1920"
               sizes="(max-width: 48rem) 100vw, 46rem"

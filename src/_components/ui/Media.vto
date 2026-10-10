@@ -69,7 +69,7 @@
         {{ if isMore }}
           aria-label="View {{ remaining }} more {{ remaining === 1 ? "photo" : "photos" }}"
         {{ else }}
-          aria-label="{{ (image.alt || 'view image') |> escape }}"
+          aria-label="{{ (image.alt || 'view image') }}"
           target="_blank"
           rel="noopener noreferrer"
           data-src="{{ image.src |> url }}"
@@ -83,7 +83,7 @@
       >
         <img
           src="{{ image.src |> url }}"
-          alt="{{ image.alt |> escape }}"
+          alt="{{ image.alt }}"
           image-size
           transform-images="avif webp jpg 640 1280 1920"
           sizes="{{ it.sizes || "(max-width: 48rem) 100vw, 46rem" }}"
@@ -97,7 +97,7 @@
           {{ set caption = (image.alt || "").split("\n")[0] |> trim }}
           {{ if caption }}
             <div class="media-caption">
-              <p>{{ caption |> escape }}</p>
+              <p>{{ caption }}</p>
             </div>
 
             <div class="alt-badge" data-pagefind-ignore>ALT</div>

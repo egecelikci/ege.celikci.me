@@ -52,7 +52,7 @@ class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.class
   {{ /if }}
 
   <span class="empty-state__title">
-    {{ (it.title || "no results") |> escape }}
+    {{ (it.title || "no results") }}
   </span>
 
   {{ if it.tag }}
@@ -66,6 +66,6 @@ class="empty-state{{ if it.size === "sm" }} empty-state--sm{{ /if }} {{ it.class
   {{ /if }}
 
   {{ if it.hint }}
-    <span class="empty-state__hint">{{ it.hint |> escape }}</span>
+    <span class="empty-state__hint">{{ it.hint }}</span>
   {{ /if }}
 </{{ rootTag }}>

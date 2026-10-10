@@ -7,6 +7,9 @@ const site = lume({
   src: "./src",
   dest: "./dist",
   location: new URL("https://ege.celikci.me"),
+}, {
+  // Templates print MusicBrainz and webmention text, so escape by default and opt trusted HTML in with `|> safe`.
+  vento: { options: { autoescape: true } },
 });
 
 /** Before any plugin captures `site.cache`. */

@@ -34,7 +34,7 @@
 -}}
 
 {{- set cardContent -}}
-<div class="video-card" data-embed="{{ iframe |> escape }}">
+<div class="video-card" data-embed="{{ iframe }}">
 <div class="video-card__title">{{ safeTitle }}</div>
 <div class="video-card__play">
 {{ await it.comp.base.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) |> safe -}}

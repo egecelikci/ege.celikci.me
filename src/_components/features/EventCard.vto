@@ -32,14 +32,14 @@
     {{ if posterUrl && !isAiPoster }}
       <img
         src="{{ if isPast && posterMonoUrl }}{{ posterMonoUrl }}{{ else }}{{ posterUrl }}{{ /if }}"
-        alt="{{ displayTitle |> escape }}"
+        alt="{{ displayTitle }}"
         class="event-card__poster-image"
         loading="lazy"
       />
       {{ if !isPast && posterMonoUrl }}
         <img
           src="{{ posterMonoUrl }}"
-          alt="{{ displayTitle |> escape }} (monochrome)"
+          alt="{{ displayTitle }} (monochrome)"
           class="event-card__poster-image event-card__poster-image--mono"
           loading="lazy"
         />
