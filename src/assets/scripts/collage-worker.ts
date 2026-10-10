@@ -481,6 +481,7 @@ self.onmessage = async (e: MessageEvent) => {
         month: `top albums • ${mY}`,
         quarter: `top albums • past quarter (${mY})`,
         half_year: `top albums • past 6 months (${mY})`,
+        half_yearly: `top albums • past 6 months (${mY})`,
         year: `top albums • ${now.getFullYear()}`,
         all_time: "top albums • all time",
       };

@@ -133,6 +133,8 @@ export function initCollageTool(defaultUsername: string) {
       { v: "this_year", l: "This Year" },
       { v: "week", l: "Last Week" },
       { v: "month", l: "Last Month" },
+      { v: "quarter", l: "Last Quarter" },
+      { v: "half_yearly", l: "Last Half Year" },
       { v: "year", l: "Last Year" },
       { v: "all_time", l: "All Time" },
     ],
@@ -165,7 +167,10 @@ export function initCollageTool(defaultUsername: string) {
       usernameInput.value = settings.user || defaultUsername;
       applySourceStyles();
       updatePeriods();
-      if (settings.period) periodSelect.value = settings.period;
+      // A period saved under the other source may not exist here; keep the first option then.
+      if (PERIODS[currentSource].some((p) => p.v === settings.period)) {
+        periodSelect.value = settings.period;
+      }
       if (settings.gridSize) gridSizeSelect.value = settings.gridSize;
       if (settings.bgMode) bgModeSelect.value = settings.bgMode;
       if (settings.textCase) textCaseSelect.value = settings.textCase;
