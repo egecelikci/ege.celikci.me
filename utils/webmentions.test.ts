@@ -47,6 +47,20 @@ Deno.test("parseMentions drops unsupported and malformed entries instead of the 
   assertEquals(parsed?.dropped, 2);
 });
 
+Deno.test("parseMentions drops author links that are not http(s)", () => {
+  const parsed = parseMentions(jf2([
+    mention(1, "2026-01-01T00:00:00Z", {
+      author: {
+        name: "x",
+        url: "javascript:alert(1)",
+        photo: "https://a.example/p.png",
+      },
+    }),
+  ]));
+  assertEquals(parsed?.mentions[0].author?.url, null);
+  assertEquals(parsed?.mentions[0].author?.photo, "https://a.example/p.png");
+});
+
 Deno.test("parseMentions rejects bodies that are not a jf2 feed", () => {
   assertEquals(parseMentions(null), null);
   assertEquals(parseMentions("<html>"), null);

@@ -118,6 +118,11 @@ export const RawIzmirEventsSchema: z.ZodType<RawIzmirEvents> = z.object({
   events: z.array(mbEventSchema),
 }).passthrough();
 
+/** Author links and avatars come from strangers; anything but http(s) (`javascript:`, `data:`) is dropped rather than rendered. */
+const webUrl = z.string().nullable().optional().transform((value) =>
+  value && /^https?:\/\//i.test(value) ? value : null
+);
+
 export const WebmentionSchema: z.ZodType<Webmention> = z.object({
   "wm-id": z.number(),
   "wm-property": z.enum(["like-of", "repost-of", "in-reply-to", "mention-of"]),
@@ -127,8 +132,8 @@ export const WebmentionSchema: z.ZodType<Webmention> = z.object({
   author: z.object({
     name: z.string(),
     type: z.string().optional(),
-    url: z.string().nullable().optional(),
-    photo: z.string().nullable().optional(),
+    url: webUrl,
+    photo: webUrl,
   }).passthrough().nullable().optional(),
   url: z.union([z.string(), z.array(z.string())]).nullable().optional(),
   published: z.string().nullable().optional(),
