@@ -118,7 +118,7 @@ export const RawIzmirEventsSchema: z.ZodType<RawIzmirEvents> = z.object({
   events: z.array(mbEventSchema),
 }).passthrough();
 
-const webmentionSchema: z.ZodType<Webmention> = z.object({
+export const WebmentionSchema: z.ZodType<Webmention> = z.object({
   "wm-id": z.number(),
   "wm-property": z.enum(["like-of", "repost-of", "in-reply-to", "mention-of"]),
   "wm-source": z.string(),
@@ -144,13 +144,13 @@ const webmentionSchema: z.ZodType<Webmention> = z.object({
 export const WebmentionApiResponseSchema: z.ZodType<WebmentionApiResponse> = z
   .object({
     type: z.literal("feed"),
-    children: z.array(webmentionSchema),
+    children: z.array(WebmentionSchema),
     name: z.string().optional(),
   }).passthrough();
 
 export const WebmentionFeedSchema: z.ZodType<WebmentionFeed> = z.object({
   schemaVersion: z.literal(1).default(1),
-  children: z.array(webmentionSchema),
+  children: z.array(WebmentionSchema),
   lastFetched: z.string().nullable(),
 }).passthrough();
 
