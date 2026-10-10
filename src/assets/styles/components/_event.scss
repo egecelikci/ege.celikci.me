@@ -165,8 +165,6 @@
     }
 
     &__artist-name {
-      display: flex;
-      align-items: center;
       font-size: 1.25rem;
       font-weight: 700;
       line-height: 1.25;
@@ -231,8 +229,6 @@
     }
 
     &__venue-name {
-      display: flex;
-      align-items: center;
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--color-text);
