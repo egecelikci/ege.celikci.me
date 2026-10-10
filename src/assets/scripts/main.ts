@@ -132,7 +132,7 @@ async function init() {
     ".album-item, .h-entry",
   );
 
-  if (revealItems && !document.body.dataset.disableAnimation) {
+  if (revealItems) {
     const { initTouchReveal } = await import("./common/touch.ts");
     initTouchReveal(".album-item, .h-entry");
   }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ lang || site.lang }}" class="{{ htmlClass }}">
+<html lang="{{ lang || site.lang }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -53,7 +53,6 @@
   <body
     itemscope
     itemtype="{{ it |> pageType }}"
-    {{ if it.disable_animation }} data-disable-animation="true" {{ /if }}
     {{ if it.searchable === false || it.noindex }} data-pagefind-ignore="all" {{
       /if
     }}
