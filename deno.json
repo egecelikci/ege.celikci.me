@@ -42,13 +42,18 @@
       "command": "MODE=development deno task lume -s"
     },
     "deploy": {
-      "description": "Build locally and publish to Netlify",
-      "command": "deno task build && netlify deploy --prod"
+      "description": "Run the checks, build locally, and publish to Netlify",
+      "command": "deno task ci && deno task build && netlify deploy --prod"
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
     "check": "deno check _config.ts _config/ _cms.ts sw.ts utils/ src/ netlify/",
     "test": "deno test --allow-read utils/",
+    "lint": "deno lint",
+    "ci": {
+      "description": "Formatting, lint, types, and tests, fastest first; the pre-commit hook and deploys run this",
+      "command": "deno task fmt:check && deno task lint && deno task check && deno task test"
+    },
     "tiles": {
       "description": "Refresh the map tile extract from Protomaps",
       "command": "deno run -A utils/tiles.ts"
