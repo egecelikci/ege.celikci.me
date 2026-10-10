@@ -35,12 +35,6 @@ const LASTFM_PERIODS: Record<string, string> = {
 /** Stats change at most daily, so serve a cached copy while refreshing it. */
 const STATS_CACHE = "public, s-maxage=3600, stale-while-revalidate=86400";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-} as const;
-
 /** Last.fm cover file names: a 32-hex hash and an image extension. */
 const LASTFM_COVER = /^[0-9a-f]{32}\.(?:png|jpe?g|gif|webp)$/;
 
@@ -87,15 +81,13 @@ function coverUpstream(params: URLSearchParams): string | null {
 function jsonError(message: string, status: number): Response {
   return new Response(JSON.stringify({ error: message }), {
     status,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
+    headers: { "Content-Type": "application/json" },
   });
 }
 
 export default async (req: Request): Promise<Response> => {
-  /** Handle CORS preflight */
-  if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS_HEADERS });
-  }
+  // Only the same-origin collage tool calls this, so no CORS headers: other sites' pages cannot read the responses and spend the API quota.
+  if (req.method !== "GET") return jsonError("Method not allowed", 405);
 
   const url = new URL(req.url);
   const source = url.searchParams.get("source") ?? "lb";
@@ -136,7 +128,6 @@ export default async (req: Request): Promise<Response> => {
         headers: {
           "Content-Type": res.headers.get("Content-Type") ?? "image/jpeg",
           "Cache-Control": "public, s-maxage=31536000, immutable",
-          ...CORS_HEADERS,
         },
       });
     } catch {
@@ -231,7 +222,6 @@ export default async (req: Request): Promise<Response> => {
         headers: {
           "Content-Type": contentType,
           "Cache-Control": "public, s-maxage=31536000, immutable",
-          ...CORS_HEADERS,
         },
       });
     } catch {
@@ -353,7 +343,6 @@ export default async (req: Request): Promise<Response> => {
       headers: {
         "Content-Type": "application/json",
         "Cache-Control": STATS_CACHE,
-        ...CORS_HEADERS,
       },
     });
   } catch {
