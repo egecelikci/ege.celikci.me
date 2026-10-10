@@ -1,4 +1,3 @@
-import * as path from "@std/path";
 import xss, { escapeHtml } from "xss";
 import authorData from "../src/_data/author.ts";
 import siteData from "../src/_data/site.ts";
@@ -14,55 +13,6 @@ const OWN_URLS = [
   authorData.social.bluesky.url,
   ...authorData.links.map((l) => l.url),
 ].map((u) => u.replace(/\/+$/, ""));
-
-export interface NoteGridData {
-  hasImage: boolean;
-  src?: string | null;
-  srcset?: string | null;
-  alt?: string | null;
-  caption?: string;
-  title?: string;
-  hasMultipleImages?: boolean;
-}
-
-const TIMEZONE = "Europe/Istanbul";
-
-/** Native date helpers */
-function formatDate(date: Date, format: string): string {
-  const opts: Intl.DateTimeFormatOptions = { timeZone: TIMEZONE };
-
-  if (format.includes("yyyy")) {
-    opts.year = "numeric";
-    opts.month = "2-digit";
-    opts.day = "2-digit";
-  }
-  if (format.includes("HH")) {
-    opts.hour = "2-digit";
-    opts.minute = "2-digit";
-  }
-
-  return new Intl.DateTimeFormat("en-US", opts).format(date);
-}
-
-function dateToISOString(date: Date): string {
-  return new Date(date).toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-function dateFromISOString(iso: string): Date {
-  return new Date(iso);
-}
-
-/** Helper interfaces */
-interface Post {
-  data: {
-    url?: string;
-    [key: string]: unknown;
-  };
-  src: {
-    path: string;
-  };
-  [key: string]: unknown;
-}
 
 interface Webmention {
   author?: {
@@ -89,22 +39,6 @@ export const filters = {
   /** schema.org type for the page wrapper (see utils/schema.ts). */
   pageType: (page: { url?: string; type?: string }) => schemaPageType(page),
 
-  dirname: function (filePath: string): string {
-    return path.dirname(filePath);
-  },
-
-  dateToFormat: function (date: Date, format: string): string {
-    return formatDate(date, String(format));
-  },
-
-  dateToISO: function (date: Date): string | null {
-    return dateToISOString(date);
-  },
-
-  dateFromISO: function (timestamp: string): Date {
-    return dateFromISOString(timestamp);
-  },
-
   humanizeNumber: function (num: number): string | number {
     if (num > 999) {
       return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
@@ -124,103 +58,13 @@ export const filters = {
       : undefined;
     return buildNoteTitle(title, date);
   },
-  extractImages: (content: string) => {
-    if (!content) return [];
-
-    const imgRegex = /<img[^>]+src="([^">]+)"[^>]*(?:alt="([^">]*)")?[^>]*>/gi;
-    const images = [];
-    let match;
-
-    while ((match = imgRegex.exec(content)) !== null) {
-      images.push({
-        src: match[1],
-        alt: match[2] || "",
-      });
-    }
-
-    return images;
-  },
 
   getLinkInfo: function (type: string, url: string) {
     return getLinkInfo(type, url);
   },
 
-  hasImages: (content: string) => {
-    return filters.extractImages(content).length > 0;
-  },
-
-  obfuscate: function (str: string): string {
-    const chars: string[] = [];
-    for (let i = str.length - 1; i >= 0; i--) {
-      chars.unshift(["&#", str[i].charCodeAt(0).toString(), ";"].join(""));
-    }
-    return chars.join("");
-  },
-
   slice: function <T>(array: T[], start: number, end?: number): T[] {
     return end ? array.slice(start, end) : array.slice(start);
-  },
-
-  stringify: function (json: unknown): string {
-    return JSON.stringify(json);
-  },
-
-  excludePost: function (allPosts: Post[], currentPost: Post): Post[] {
-    return allPosts.filter((post) => post.src.path !== currentPost.src.path);
-  },
-
-  currentPage: function (allPages: Post[], currentPage: Post): Post | null {
-    const matches = allPages.filter(
-      (page) => page.src.path === currentPage.src.path,
-    );
-    if (matches && matches.length) {
-      return matches[0];
-    }
-    return null;
-  },
-
-  randomItem: function <T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)];
-  },
-
-  shuffle: function <T>(arr: T[] | null | undefined): T[] {
-    if (!arr) return [];
-    const newArr = [...arr];
-    let m = newArr.length,
-      t,
-      i;
-
-    while (m) {
-      i = Math.floor(Math.random() * m--);
-      t = newArr[m];
-      newArr[m] = newArr[i];
-      newArr[i] = t;
-    }
-
-    return newArr;
-  },
-
-  findById: function <T extends { id: unknown }>(
-    array: T[],
-    id: unknown,
-  ): T | undefined {
-    return array.find((i) => i.id === id);
-  },
-
-  decodeBase64: function (string: string): string {
-    return atob(string);
-  },
-
-  getKeys: function (target: object): string[] {
-    return Object.keys(target);
-  },
-
-  filterTagList: function (tags: string[] | undefined): string[] {
-    return (tags || []).filter((tag) => ["all", "posts"].indexOf(tag) === -1);
-  },
-
-  sortAlphabetically: function (array: string[]): string[] {
-    return (array || []).sort((b, a) => b.localeCompare(a));
   },
 
   isOwnWebmention: function (webmention: Webmention): boolean {
@@ -308,114 +152,6 @@ export const filters = {
       .sort(orderByDate);
   },
 
-  mb_setlist: function (content: string): string {
-    if (!content) return "";
-
-    const linkRegex = /\[([^|\]]+)\|([^\]]+)\]/g;
-    const idRegex = /([a-f0-9-]{36})/;
-
-    const processLink = (
-      _match: string,
-      rawId: string,
-      name: string,
-      type: "artist" | "work",
-    ) => {
-      const mbidMatch = rawId.match(idRegex);
-      const mbid = mbidMatch ? mbidMatch[1] : rawId;
-      return `[${name}](https://musicbrainz.org/${type}/${mbid})`;
-    };
-
-    const processLine = (line: string) => {
-      const trimmed = line.trim();
-      if (!trimmed) return "";
-
-      /** 1. Artist Header (@) */
-      if (trimmed.startsWith("@")) {
-        const text = trimmed.substring(1).trim();
-        return `**${
-          text.replace(
-            linkRegex,
-            (m, id, n) => processLink(m, id, n, "artist"),
-          )
-        }**  `;
-      }
-
-      /** 2. Song Line (*) */
-      if (trimmed.startsWith("*")) {
-        const text = trimmed.substring(1).trim();
-
-        /** Split by parenthetical groups to distinguish context */
-        const parts = text.split(/(\([^\)]+\))/g);
-        const processed = parts.map((part) => {
-          if (part.startsWith("(") && part.endsWith(")")) {
-            return part.replace(
-              linkRegex,
-              (m, id, n) => processLink(m, id, n, "artist"),
-            );
-          } else {
-            return part.replace(
-              linkRegex,
-              (m, id, n) => processLink(m, id, n, "work"),
-            );
-          }
-        }).join("");
-
-        return `- ${processed}`;
-      }
-
-      /** 3. Info Line (#) */
-      if (trimmed.startsWith("#")) {
-        const text = trimmed.substring(1).trim();
-        return `*${
-          text.replace(
-            linkRegex,
-            (m, id, n) => processLink(m, id, n, "artist"),
-          )
-        }*  `;
-      }
-
-      /** 4. Default: Handle escaping */
-      const escaped = trimmed
-        .replace(/&lsqb;/g, "[")
-        .replace(/&rsqb;/g, "]")
-        .replace(/&amp;/g, "&");
-
-      return escaped.replace(
-        linkRegex,
-        (m, id, n) => processLink(m, id, n, "artist"),
-      );
-    };
-
-    /** Support single-line setlists using '*' as a separator */
-    if (!content.includes("\n") && content.includes("*")) {
-      const parts = content.split("*");
-      return parts.map((p) => processLine(p.trim())).join(" * ");
-    }
-
-    return content.split(/\r?\n/).map(processLine).join("\n");
-  },
-
-  truncate: function (str: unknown, length: number, suffix = "…"): string {
-    const s = String(str || "");
-    if (s.length <= length) return s;
-    return s.substring(0, length).trim() + suffix;
-  },
-
-  teaser: function (content: unknown, length = 160): string {
-    let text = String(content || "");
-    /** 1. Remove HTML tags */
-    text = text.replace(/<[^>]*>?/gm, "");
-    /** 2. Remove Markdown links [text](url) -> text */
-    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
-    /** 3. Remove other Markdown artifacts (backticks, etc.) */
-    text = text.replace(/[`*#_]/g, "");
-    /** 4. Normalize whitespace */
-    text = text.replace(/\s+/g, " ").trim();
-
-    if (text.length <= length) return text;
-    return text.substring(0, length).trim() + "…";
-  },
-
   resolveComp: (compPath: string, compRoot: Record<string, unknown>) => {
     return compPath.split(".").reduce(
       (obj, part) => obj?.[part] as Record<string, unknown>,
@@ -423,70 +159,8 @@ export const filters = {
     );
   },
 
-  /** Specialized teaser for notes that preserves some formatting/components */
-  renderNoteTeaser: function (content: string, length = 400): string {
-    if (!content) return "";
-    let text = content;
-
-    /** Remove images from teaser */
-    text = text.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]+)")?\)/g, "");
-
-    if (text.length <= length) return text;
-    return text.substring(0, length).trim() + "…";
-  },
-
-  webmentionCountByType: function (
-    webmentions: Webmention[] | undefined,
-    url: string,
-    ...types: string[]
-  ): string {
-    if (!webmentions) return "0";
-
-    const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
-    const cleanUrl = (u: string) => u.replace(/\/+$/, "");
-    const targetUrl = cleanUrl(absoluteUrl);
-
-    const isUrlMatch = (entry: Webmention) =>
-      cleanUrl(entry["wm-target"] || "") === targetUrl;
-
-    return String(
-      webmentions
-        .filter(isUrlMatch)
-        .filter((entry) => types.includes(entry["wm-property"] || ""))
-        .filter((entry) => !filters.isOwnWebmention(entry)).length,
-    );
-  },
-
   resolveSourceUrl: function (path: string): string {
     const repoPath = path.startsWith("/") ? path.slice(1) : path;
     return `https://${gitData.host}/${authorData.username}/${siteData.host}/src/branch/main/${repoPath}`;
-  },
-
-  findFile: function (filename: string): string {
-    /** Simple recursive search of project root */
-    const search = (dir: string): string | null => {
-      try {
-        for (const entry of Deno.readDirSync(dir)) {
-          if (entry.name === filename) {
-            return dir === "." ? entry.name : `${dir}/${entry.name}`;
-          }
-          if (
-            entry.isDirectory &&
-            !["dist", ".git", "node_modules", "_cache", ".netlify"].includes(
-              entry.name,
-            )
-          ) {
-            const found = search(
-              dir === "." ? entry.name : `${dir}/${entry.name}`,
-            );
-            if (found) return found;
-          }
-        }
-      } catch {
-        return null;
-      }
-      return null;
-    };
-    return search(".") || filename;
   },
 };

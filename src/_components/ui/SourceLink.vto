@@ -4,19 +4,12 @@
 
   Props:
   - path?: string (Direct path, e.g., "utils/posse.ts")
-  - name?: string (Filename to search for, e.g., "posse.ts")
   - text?: string (Optional custom text)
   - classes?: string (Optional custom classes)
   - title?: string (Optional title attribute)
 #}}
 
 {{ set finalPath = it.path || "" }}
-{{ if !finalPath && it.name }}
-  {{ set finalPath = it.name |> findFile }}
-  {{ if !finalPath }}
-    {{ set finalPath = "" }}
-  {{ /if }}
-{{ /if }}
 
 {{ if finalPath }}
 {{# Prepend 'src' if it's a page-relative sourcePath (starts with /) #}}
