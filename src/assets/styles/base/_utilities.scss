@@ -55,11 +55,6 @@
     background-color: var(--color-border-subtle);
   }
 
-  .glassy {
-    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
-    backdrop-filter: blur(12px);
-  }
-
   .ledger-card {
     border-radius: 1rem;
     border: 1px solid var(--color-border-subtle);
@@ -211,10 +206,6 @@
     fill: currentColor;
   }
 
-  .w-2 {
-    width: 0.5rem;
-  }
-
   .w-3 {
     width: 0.75rem;
   }
@@ -233,14 +224,6 @@
 
   .w-6 {
     width: 1.5rem;
-  }
-
-  .w-7 {
-    width: 1.75rem;
-  }
-
-  .w-8 {
-    width: 2rem;
   }
 
   .h-3 {
@@ -263,24 +246,12 @@
     height: 1.5rem;
   }
 
-  .h-7 {
-    height: 1.75rem;
-  }
-
-  .h-8 {
-    height: 2rem;
-  }
-
   .stroke-1\.5 {
     stroke-width: 1.5;
   }
 
   .text-text-muted {
     color: var(--color-text-muted);
-  }
-
-  .text-text-dim {
-    color: var(--color-text-dim);
   }
 
   .text-primary {
@@ -297,19 +268,6 @@
 
   .animate-spin-smart {
     animation: var(--animate-spin-smart);
-  }
-
-  .link-underline {
-    text-decoration: underline;
-    transition: color 300ms ease;
-
-    &:hover {
-      color: var(--color-primary);
-    }
-  }
-
-  .flow > * + * {
-    margin-block-start: var(--flow-space, 1.5em);
   }
 
   :is(h1, h2, h3) {
