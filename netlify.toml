@@ -21,6 +21,7 @@
         X-Frame-Options = "DENY"
         X-Content-Type-Options = "nosniff"
         Referrer-Policy = "strict-origin-when-cross-origin"
+        Speculation-Rules = "\"/speculation-rules.json\""
         Permissions-Policy = "browsing-topics=(), attribution-reporting=(), run-ad-auction=(), join-ad-interest-group=()"
         Content-Security-Policy = "default-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://webmention.io https://avatars.webmention.io https://cdn.bsky.app https://cdn.bsky.social; connect-src 'self' https://webmention.io https://avatars.webmention.io https://cdn.bsky.app https://cdn.bsky.social; frame-src 'self' https://www.youtube-nocookie.com https://v.basspistol.org; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
 
@@ -56,6 +57,12 @@
     [headers.values]
         Cache-Control = "max-age=0, no-cache, no-store, must-revalidate"
         Service-Worker-Allowed = "/"
+
+# Browsers ignore speculation rules served with any other type.
+[[headers]]
+    for = "/speculation-rules.json"
+    [headers.values]
+        Content-Type = "application/speculationrules+json"
 
 [[headers]]
     for = "/sitemap.xsl"

@@ -96,6 +96,7 @@ export default function () {
       .add("assets/images")
       .add("assets/tiles")
       .add("sitemap.xsl")
+      .add("speculation-rules.json")
       .add("assets/scripts/main.ts")
       .add("assets/scripts/collage-worker.ts")
       .add("assets/styles/site.scss")
