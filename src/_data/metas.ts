@@ -12,7 +12,8 @@ export default {
   image: "=metaImage || =image || =coverImage",
   icon: "/assets/images/favicon/favicon.svg",
   generator: true,
-  type: "=type || website",
+  // `type` is our page kind (note, event, tag), not an Open Graph type, so pages opt in with `ogType`.
+  type: "=ogType || website",
   keywords: "=tags",
   robots: "=robots",
 };

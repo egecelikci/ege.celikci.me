@@ -1,6 +1,7 @@
 export const layout = "layouts/page.vto";
 export const templateEngine = ["vto", "md"];
 export const type = "note";
+export const ogType = "article";
 export const show_webmentions = true;
 export const navigation = { parent: "/notes/" };
 
