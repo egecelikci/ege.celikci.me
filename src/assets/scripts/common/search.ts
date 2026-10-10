@@ -21,6 +21,9 @@ interface Pagefind {
   ): Promise<{ results: { data(): Promise<PagefindResult> }[] } | null>;
 }
 
+/** Enough to scan on a dedicated page without loading every fragment for a one-letter query. */
+const MAX_RESULTS = 20;
+
 export function initSearch() {
   const containers = document.querySelectorAll<HTMLElement>("[data-search-id]");
   if (!containers.length) return;
@@ -143,7 +146,7 @@ export function initSearch() {
       if (search === null) return;
 
       const results = await Promise.all(
-        search.results.slice(0, 5).map((r) => r.data()),
+        search.results.slice(0, MAX_RESULTS).map((r) => r.data()),
       );
 
       spinner?.classList.remove("is-active");
@@ -250,6 +253,25 @@ export function initSearch() {
     };
 
     input.addEventListener("keydown", handleKeyNav);
+
+    if (mode !== "filter") {
+      const form = input.form;
+      // On the search page itself, search in place and keep the URL shareable instead of reloading.
+      form?.addEventListener("submit", (e) => {
+        if (new URL(form.action).pathname !== location.pathname) return;
+        e.preventDefault();
+        const url = new URL(location.href);
+        url.searchParams.set("q", input.value);
+        history.replaceState(null, "", url);
+        handleSearch(input.value);
+      });
+
+      const query = new URLSearchParams(location.search).get("q");
+      if (query) {
+        input.value = query;
+        handleSearch(query);
+      }
+    }
     resultsContainer.addEventListener("keydown", handleKeyNav);
 
     /** Handle clicks outside to close results */
