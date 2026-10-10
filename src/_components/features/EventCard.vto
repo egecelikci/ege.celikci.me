@@ -1,8 +1,7 @@
 {{ set detailUrl = `/event/${it.event.id}/` }}
 {{ set isPast = !it.event.isUpcoming }}
-{{
-  set posterUrl = it.event.imagePath || it.event.posterThumb || it.event.posterUrl
-}}
+{{# Only the local poster is rendered: a remote URL here would be fetched at build time, so a flaky Event Art Archive would fail the build. #}}
+{{ set posterUrl = it.event.imagePath }}
 {{ set posterMonoUrl = it.event.imagePathMono }}
 {{ set isCustomTitle = it.event.isCustomTitle ?? false }}
 {{ set displayTitle = it.event.displayTitle || it.event.name || "Event" }}

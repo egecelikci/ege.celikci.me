@@ -5,11 +5,10 @@ extraStyles:
 ---
 
 {{>
+  // Local posters only; see EventCard.vto for why remote URLs are not rendered.
   const posterImages = it.event.imagePath
     ? [{ src: it.event.imagePath, alt: it.event.name }]
-    : (it.event.posterUrl
-      ? [{ src: it.event.posterUrl, alt: it.event.name }]
-      : [])
+    : []
 }}
 
 <div class="event-page">
