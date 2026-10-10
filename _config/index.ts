@@ -116,9 +116,13 @@ export default function () {
       .use(pwa())
       .use(pagefind({
         outputPath: "/pagefind",
+        // search.ts drives the JS API; the default UI injects an inline script that the CSP blocks.
+        ui: false,
         indexing: {
           rootSelector: "html",
           verbose: false,
+          // One Turkish page would otherwise get its own index that English pages never search.
+          forceLanguage: "en",
         },
       }))
       .use(googleFonts({
