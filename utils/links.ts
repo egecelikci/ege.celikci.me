@@ -10,12 +10,6 @@ export interface LinkMapping {
   isFallback?: boolean;
 }
 
-/** Known fediverse (ActivityPub) instance hosts. Domains are arbitrary, so detection is an explicit allowlist—add new instances here. */
-export const FEDIVERSE_HOSTS = [
-  /** Gancio */
-  "do.basspistol.org",
-];
-
 export const LINK_MAPPINGS: Record<string, LinkMapping> = {
   instagram: { icon: "instagram", catalog: "simpleicons", label: "Instagram" },
   lastdotfm: { icon: "lastdotfm", catalog: "simpleicons", label: "Last.fm" },
@@ -30,6 +24,13 @@ export const LINK_MAPPINGS: Record<string, LinkMapping> = {
   poster: { icon: "image", catalog: "lucide", label: "Poster" },
   "social network": { icon: "users", catalog: "lucide", label: "Social" },
   "other databases": { icon: "database", catalog: "lucide", label: "Database" },
+};
+
+/** Fediverse (ActivityPub) instances; domains are arbitrary, so each one gets its own host entry. */
+const FEDIVERSE: LinkMapping = {
+  icon: "fediverse-fill",
+  catalog: "remixicon",
+  label: "Fediverse",
 };
 
 /**
@@ -66,12 +67,8 @@ export const HOST_MAPPINGS: Record<string, LinkMapping> = {
     catalog: "lucide",
     label: "CritiqueBrainz",
   },
-};
-
-const FEDIVERSE: LinkMapping = {
-  icon: "fediverse-fill",
-  catalog: "remixicon",
-  label: "Fediverse",
+  /** Gancio */
+  "do.basspistol.org": FEDIVERSE,
 };
 
 function hostOf(url: string): string {
@@ -84,7 +81,7 @@ function hostOf(url: string): string {
 
 /**
  * Normalizes a URL and its type to a standard set of keys.
- * Resolution order: hostname match, fediverse allowlist, type match, fallback.
+ * Resolution order: hostname match, type match, fallback.
  */
 export function getLinkInfo(type: string, url: string): LinkMapping {
   const typeLower = type.toLowerCase();
@@ -92,10 +89,6 @@ export function getLinkInfo(type: string, url: string): LinkMapping {
   const host = hostOf(url);
   if (host && HOST_MAPPINGS[host]) {
     return { ...HOST_MAPPINGS[host], isFallback: false };
-  }
-
-  if (host && FEDIVERSE_HOSTS.includes(host)) {
-    return { ...FEDIVERSE, isFallback: false };
   }
 
   if (LINK_MAPPINGS[typeLower]) {
