@@ -50,6 +50,10 @@
     "check": "deno check _config.ts _config/ _cms.ts sw.ts utils/ src/ netlify/",
     "test": "deno test --allow-read utils/",
     "lint": "deno lint",
+    "hooks": {
+      "description": "Install the pre-commit hook that runs the ci checks",
+      "command": "deno run --allow-run=git --allow-read --allow-write utils/install-hooks.ts"
+    },
     "ci": {
       "description": "Formatting, lint, types, and tests, fastest first; the pre-commit hook and deploys run this",
       "command": "deno task fmt:check && deno task lint && deno task check && deno task test"

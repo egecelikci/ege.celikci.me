@@ -1,0 +1,65 @@
+#!/bin/sh
+# Runs the same checks as `deno task ci` before a commit, fastest first.
+# Install with `deno task hooks`; skip once with `git commit --no-verify` or `SKIP_CHECKS=1`.
+set -u
+
+[ "${SKIP_CHECKS:-0}" = 1 ] && exit 0
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+fail() {
+  printf '\npre-commit: %s\n  skip once: git commit --no-verify\n' "$1" >&2
+  exit 1
+}
+
+# Non-interactive shells (GUI clients, NixOS, mise) often lack deno on PATH.
+if [ -z "${DENO:-}" ]; then
+  if command -v deno >/dev/null 2>&1; then
+    DENO=deno
+  elif command -v mise >/dev/null 2>&1 && DENO=$(mise which deno 2>/dev/null); then
+    :
+  elif [ -x /run/current-system/sw/bin/deno ]; then
+    DENO=/run/current-system/sw/bin/deno
+  elif [ -x "$HOME/.deno/bin/deno" ]; then
+    DENO="$HOME/.deno/bin/deno"
+  else
+    fail "deno not found; set DENO=/path/to/deno"
+  fi
+fi
+# Tasks call `deno` by name, so the binary we found must come first on PATH.
+case $DENO in */*) PATH="$(dirname "$DENO"):$PATH" && export PATH ;; esac
+
+pinned=$(sed -n 's/^deno *= *"\([^"]*\)".*/\1/p' mise.toml 2>/dev/null)
+current=$("$DENO" --version | sed -n '1s/^deno \([^ ]*\).*/\1/p')
+if [ -n "$pinned" ] && [ "$pinned" != "$current" ]; then
+  echo "pre-commit: warning: deno $current, mise.toml pins $pinned" >&2
+fi
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -n "$staged" ] || exit 0
+
+code=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|mjs|vto|jsonc?|scss|rs)$|^(deno\.json|deno\.lock|mise\.toml|netlify\.toml)$' || true)
+
+# The checks read the working tree, so a half-staged file would be checked in a state that is not being committed.
+if [ -n "$code" ]; then
+  partial=$(git diff --name-only | grep -Fx "$code" || true)
+  if [ -n "$partial" ]; then
+    fail "these files have unstaged changes, stage or stash them first:
+$partial"
+  fi
+fi
+
+run() {
+  name=$1
+  shift
+  printf '› %s\n' "$name" >&2
+  "$@" || fail "$name failed"
+}
+
+run fmt "$DENO" task fmt:check
+if [ -z "$code" ]; then
+  echo "pre-commit: content only, skipped lint, check, and test" >&2
+  exit 0
+fi
+run lint "$DENO" task lint
+run check "$DENO" task check
+run test "$DENO" task test
