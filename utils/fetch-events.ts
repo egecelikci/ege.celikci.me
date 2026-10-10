@@ -247,11 +247,11 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   firstUrl.searchParams.set("offset", "0");
 
   console.log(`[mb_events] 🌐 Fetching initial events...`);
+  // MusicBrainz allows one request per second, so these go through the client's rate limiter.
   const firstData = await httpClient.fetch<unknown>(
     firstUrl.toString(),
     "json",
     "no-cache",
-    true,
   );
 
   if (!firstData) return [];
@@ -268,13 +268,17 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
     ) {
       const url = new URL(firstUrl.toString());
       url.searchParams.set("offset", String(offset));
-      pages.push(
-        httpClient.fetch<unknown>(url.toString(), "json", "no-cache", true),
-      );
+      pages.push(httpClient.fetch<unknown>(url.toString(), "json", "no-cache"));
     }
     const results = await Promise.all(pages);
-    results.forEach((data) => {
-      if (data) events.push(...validateOrThrow(MBEventListSchema, data).events);
+    results.forEach((data, index) => {
+      // A missing page would save a shorter list over the cache and drop events, so the whole sync gives up instead.
+      if (!data) {
+        throw new Error(
+          `MusicBrainz page ${index + 2} failed; keeping the cache`,
+        );
+      }
+      events.push(...validateOrThrow(MBEventListSchema, data).events);
     });
   }
 
