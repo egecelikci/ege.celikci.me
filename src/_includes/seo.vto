@@ -1,12 +1,6 @@
 {{# Calculate Absolute Page URL #}}
 {{ set absolutePageUrl = url |> url(true) }}
 
-{{# Determine Layout Type #}}
-{{ set isNote = type === "note" }}
-
-{{# Auto Description Logic #}}
-{{ set autoDescription = "" }}
-
 {{# General Metadata #}}
 
 <link rel="canonical" href="{{ canonicalUrl || absolutePageUrl }}" />

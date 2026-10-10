@@ -120,12 +120,3 @@ export const author = {
     },
   ],
 };
-
-export const socialProfiles = [
-  "https://ieji.de/@eg",
-  `https://bsky.app/profile/${atproto.did}`,
-  `https://github.com/${USERNAME}`,
-  `https://codeberg.org/${USERNAME}`,
-  `https://${git.host}/${USERNAME}`,
-  `https://listenbrainz.org/user/${USERNAME}`,
-];
