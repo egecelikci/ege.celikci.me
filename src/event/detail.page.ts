@@ -37,6 +37,14 @@ async function collectGalleryImages(
   return images;
 }
 
+/** A poster or video credit; hand-written credits have no MusicBrainz link or relation type. */
+interface Credit {
+  name?: string;
+  url?: string;
+  role: string;
+  type?: string;
+}
+
 export default async function* ({ mb_events, events }: Lume.Data) {
   const rawEvents = mb_events?.events || mb_events?.all;
   if (!rawEvents) return;
@@ -107,7 +115,9 @@ export default async function* ({ mb_events, events }: Lume.Data) {
     });
 
     /** Gather all credits from MB relations */
-    const allCredits = (event.relations || []).filter((rel: MBRelation) =>
+    const allCredits: Credit[] = (event.relations || []).filter((
+      rel: MBRelation,
+    ) =>
       ["illustration", "graphic design", "artwork", "design", "engineer"]
         .includes(rel.type)
     ).map((rel: MBRelation) => {
@@ -143,10 +153,10 @@ export default async function* ({ mb_events, events }: Lume.Data) {
      * 2. Technical/Motion roles → Video
      */
     let posterCredits = allCredits.filter((c) =>
-      ["illustration", "graphic design", "artwork"].includes(c.type)
+      ["illustration", "graphic design", "artwork"].includes(c.type ?? "")
     );
     let videoCredits = allCredits.filter((c) =>
-      ["design", "engineer"].includes(c.type)
+      ["design", "engineer"].includes(c.type ?? "")
     );
 
     if (!local.video) {
