@@ -85,10 +85,28 @@ async function init() {
 
   document.addEventListener("click", (e) => {
     const card = (e.target as HTMLElement).closest<HTMLElement>(
-      ".video-card[data-embed]",
+      ".video-card[data-embed-src]",
     );
-    if (!card) return;
-    card.innerHTML = card.dataset.embed || "";
+    if (!card?.dataset.embedSrc) return;
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "video-iframe";
+    iframe.src = card.dataset.embedSrc;
+    iframe.title = card.dataset.embedTitle || "video";
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
+    iframe.setAttribute(
+      "sandbox",
+      "allow-same-origin allow-scripts allow-popups allow-forms",
+    );
+    iframe.allowFullscreen = true;
+
+    // An iframe cannot live inside a button, so the player takes the card's place in a plain wrapper.
+    const player = document.createElement("div");
+    player.className = "video-card video-card--playing";
+    player.append(iframe);
+    card.replaceWith(player);
+    iframe.focus();
   });
   /**
    * Map directions popover: native <details>, one open at a time, close on

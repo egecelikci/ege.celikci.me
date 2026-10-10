@@ -29,18 +29,15 @@
   {{- /if -}}
 {{- /if -}}
 
-{{-
-  set iframe = `<iframe class='video-iframe' src='${embedUrl}' title='${safeTitle}' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen' sandbox='allow-same-origin allow-scripts allow-popups allow-forms' allowfullscreen></iframe>`
--}}
-
 {{- set cardContent -}}
-<div class="video-card" data-embed="{{ iframe }}">
-<div class="video-card__title">{{ safeTitle }}</div>
-<div class="video-card__play">
+{{# A button so keyboards can start it; main.ts builds the iframe from these attributes with DOM calls, never from an HTML string. #}}
+<button type="button" class="video-card" data-embed-src="{{ embedUrl }}" data-embed-title="{{ safeTitle }}">
+<span class="video-card__title">{{ safeTitle }}</span>
+<span class="video-card__play">
 {{ await it.comp.base.Icon({ name: "play", catalog: "lucide", classes: "w-4 h-4" }) |> safe -}}
 <span>Click to load video from {{ providerName }}</span>
-</div>
-</div>
+</span>
+</button>
 {{- if credits?.length > 0 }}
 <div class="media-credits media-credits--card">
 {{- for credit of credits }}

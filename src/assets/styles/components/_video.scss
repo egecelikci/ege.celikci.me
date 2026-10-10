@@ -10,6 +10,17 @@
     gap: 1rem;
     text-align: center;
     cursor: pointer;
+    // Reset the button defaults so the card keeps its look.
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
 
     &:hover .video-card__title {
       color: var(--color-primary);
@@ -27,6 +38,14 @@
     color: var(--color-text);
     padding-inline: 1rem;
     transition: color 300ms ease;
+  }
+
+  .video-card--playing {
+    cursor: auto;
+  }
+
+  .video-card__title {
+    display: block;
   }
 
   .video-card__play {
