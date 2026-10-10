@@ -192,7 +192,15 @@ export default async (req: Request): Promise<Response> => {
       );
       if (!res.ok) throw new Error(`ListenBrainz API error: ${res.status}`);
 
-      const data = await res.json();
+      // ListenBrainz answers 204 while stats are still being computed.
+      const data = res.status === 204 ? {} : await res.json().catch(() => null);
+      // A bot check page arrives as HTML with status 200.
+      if (!data) {
+        return jsonError(
+          "ListenBrainz is unavailable right now, try again later",
+          502,
+        );
+      }
       albums = (data.payload?.release_groups ?? [])
         .filter((a: Record<string, unknown>) => a.release_group_name)
         .map((a: Record<string, unknown>) => ({
