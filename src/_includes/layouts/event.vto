@@ -286,24 +286,6 @@ extraStyles:
         }}
 
         <div class="event-page__actions-links">
-          {{ if event.local?.tickets_url }}
-            <a
-              href="{{ event.local.tickets_url }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-minimal"
-            >
-              {{
-                comp.base.Icon({
-                  name: "ticket",
-                  catalog: "lucide",
-                  classes: "w-4 h-4",
-                }) |> safe
-              }}
-              Tickets
-            </a>
-          {{ /if }}
-
           {{ if event.local?.instagram_url }}
             {{>
               const igUrls = Array.isArray(event.local.instagram_url)
