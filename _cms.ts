@@ -81,7 +81,8 @@ const syndicationField: {
   ],
 };
 
-const sourcesField: {
+/** Edits the front matter `links` rows that `LinkLine` renders under a page. */
+const linksField: {
   type: "object-list";
   label: string;
   description: string;
@@ -91,8 +92,8 @@ const sourcesField: {
   fields: Lume.CMS.Field[];
 } = {
   type: "object-list",
-  label: "Sources & places",
-  description: "Attribution rows under the note, e.g. taken at Komün",
+  label: "Links",
+  description: "Rows under the page, e.g. taken at Komün",
   transform: (value) => {
     const rows = (value ?? []).filter((row) => row && (row.label || row.url));
     return rows.length > 0 ? rows : undefined;
@@ -118,10 +119,10 @@ const sourcesField: {
       description: "simpleicons for brand icons, else blank for lucide",
     },
     {
-      name: "prefix",
+      name: "relation",
       type: "text",
-      label: "Prefix",
-      description: "e.g. taken at",
+      label: "Relation",
+      description: "e.g. taken at, synced from",
     },
   ],
 };
@@ -153,13 +154,7 @@ cms.collection(
         label: "Tags",
         description: "e.g. kedi, coffee",
       },
-      {
-        name: "link",
-        type: "url",
-        label: "Link",
-        description: "Optional link if this note points to something",
-      },
-      { name: "sources", ...sourcesField },
+      { name: "links", ...linksField },
       { name: "syndication", ...syndicationField },
       {
         name: "content",
@@ -196,7 +191,7 @@ cms.collection(
         label: "Description",
         description: "Short summary used in feeds and page metadata",
       },
-      { name: "sources", ...sourcesField },
+      { name: "links", ...linksField },
       {
         name: "content",
         type: "markdown",
