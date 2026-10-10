@@ -1,4 +1,3 @@
-import { initLazyLoad } from "./common/lazyload.ts";
 import { initSpoiler } from "./common/spoiler.ts";
 
 let loadingPromise: Promise<void> | null = null;
@@ -68,7 +67,6 @@ globalThis.addEventListener(
 );
 
 async function init() {
-  initLazyLoad();
   initSpoiler();
 
   document.addEventListener("click", (e) => {
