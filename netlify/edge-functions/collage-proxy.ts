@@ -13,6 +13,41 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type",
 } as const;
 
+/** Last.fm cover file names: a 32-hex hash and an image extension. */
+const LASTFM_COVER = /^[0-9a-f]{32}\.(?:png|jpe?g|gif|webp)$/;
+
+/**
+ * Turn a Last.fm image URL into a same-origin proxy URL, so the browser never contacts Last.fm.
+ *
+ * @param img - The image URL from `user.getTopAlbums`.
+ * @returns The proxy URL, or `undefined` when the URL is not a Last.fm cover.
+ */
+function proxiedLastfmCover(img: string | undefined): string | undefined {
+  const file = img?.split("/").pop() ?? "";
+  return LASTFM_COVER.test(file)
+    ? `/api/collage-proxy?source=cover&lfm=${file}`
+    : undefined;
+}
+
+/**
+ * Pick the upstream image for a cover request.
+ *
+ * @param params - `lfm` for a Last.fm cover, or `mbid` for a release group's Cover Art Archive front.
+ * @returns The upstream URL, or `null` when the parameters are invalid.
+ */
+function coverUpstream(params: URLSearchParams): string | null {
+  const lfm = params.get("lfm");
+  if (lfm) {
+    return LASTFM_COVER.test(lfm)
+      ? `https://lastfm.freetls.fastly.net/i/u/300x300/${lfm}`
+      : null;
+  }
+  const mbid = params.get("mbid");
+  return mbid && /^[0-9a-f-]{36}$/i.test(mbid)
+    ? `https://coverartarchive.org/release-group/${mbid}/front-500`
+    : null;
+}
+
 function jsonError(message: string, status: number): Response {
   return new Response(JSON.stringify({ error: message }), {
     status,
@@ -30,20 +65,18 @@ export default async (req: Request): Promise<Response> => {
   const source = url.searchParams.get("source") ?? "lb";
   const user = url.searchParams.get("user");
   const period = url.searchParams.get("period") ?? "week";
-  const mbid = url.searchParams.get("mbid");
 
   /**
    * SOURCE: cover
-   * Proxy Cover Art Archive to avoid mixed-content and CORS issues in the worker.
+   * Proxy Cover Art Archive and Last.fm covers, so the worker only ever talks to this origin.
    */
   if (source === "cover") {
-    if (!mbid || !/^[0-9a-f-]{36}$/i.test(mbid)) {
-      return jsonError("Valid MBID required", 400);
-    }
+    const upstream = coverUpstream(url.searchParams);
+    if (!upstream) return jsonError("Valid cover id required", 400);
 
     try {
       const res = await fetch(
-        `https://coverartarchive.org/release-group/${mbid}/front-500`,
+        upstream,
         {
           headers: { "User-Agent": USER_AGENT },
           signal: AbortSignal.timeout(8000),
@@ -247,7 +280,7 @@ export default async (req: Request): Promise<Response> => {
             artist: (a.artist as Record<string, string>).name,
             count: a.playcount as number,
             mbid: a.mbid as string | undefined,
-            img: img && img.length > 0 ? img : undefined,
+            img: proxiedLastfmCover(img),
           };
         });
     }
