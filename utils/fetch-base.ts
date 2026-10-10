@@ -1,3 +1,24 @@
+/** Query parameters that carry credentials and must never reach the build log. */
+const SECRET_PARAMS = /^(key|api_key|token|access_token|password)$/i;
+
+/**
+ * Hide credential values in a URL before logging it.
+ *
+ * @param url - The request URL.
+ * @returns The URL with secret query values replaced by `***`, or the input when it is not a valid URL.
+ */
+export function redactUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    for (const name of [...parsed.searchParams.keys()]) {
+      if (SECRET_PARAMS.test(name)) parsed.searchParams.set(name, "***");
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 export type CachePolicy = "no-cache" | "force-cache" | "only-if-cached";
 
 interface HttpClientOptions {
@@ -50,7 +71,7 @@ export class HttpClient {
 
         // A 500 is an application error for this specific request, so the same GET usually fails again and retrying only burns the exponential backoff. 502/503/504 are the upstream-backend statuses that do clear up, so they keep retrying.
         if (response.status === 500) {
-          console.warn(`[http] HTTP 500 for ${url}, giving up`);
+          console.warn(`[http] HTTP 500 for ${redactUrl(url)}, giving up`);
           return response;
         }
 
@@ -65,7 +86,10 @@ export class HttpClient {
       await new Promise((r) => setTimeout(r, delay));
     }
 
-    console.warn(`[http] Max retries reached for ${url}:`, lastError?.message);
+    console.warn(
+      `[http] Max retries reached for ${redactUrl(url)}:`,
+      lastError?.message,
+    );
     return null;
   }
 
@@ -97,7 +121,9 @@ export class HttpClient {
             return JSON.parse(text) as T;
           } catch {
             console.warn(
-              `[http] Corrupt cached JSON for ${url}, falling back to network`,
+              `[http] Corrupt cached JSON for ${
+                redactUrl(url)
+              }, falling back to network`,
             );
           }
         } else {
@@ -153,7 +179,7 @@ export class HttpClient {
       if (type === "json") {
         if (!contentType.includes("application/json")) {
           console.warn(
-            `[http] Expected JSON but got ${contentType} for ${url}`,
+            `[http] Expected JSON but got ${contentType} for ${redactUrl(url)}`,
           );
           return null;
         }
@@ -165,7 +191,10 @@ export class HttpClient {
         return buffer as T;
       }
     } catch (err) {
-      console.warn(`[http] Fetch failed for ${url}:`, (err as Error).message);
+      console.warn(
+        `[http] Fetch failed for ${redactUrl(url)}:`,
+        (err as Error).message,
+      );
       return null;
     }
   }
