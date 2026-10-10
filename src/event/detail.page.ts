@@ -175,6 +175,8 @@ export default async function* ({ mb_events, events }: Lume.Data) {
         parent: "/events/",
       },
       title: local.title || event.name || event.displayTitle,
+      // Without this every event inherits this generator file's date, so feeds and sitemaps date them all the same.
+      ...(event.beginDate ? { date: new Date(event.beginDate) } : {}),
       event: { ...event, local },
       gallery,
       posterCredits,
