@@ -19,6 +19,23 @@ export function redactUrl(url: string): string {
   }
 }
 
+/**
+ * Read a `Retry-After` header, which may be seconds or an HTTP date.
+ *
+ * @param header - The header value, or `null` when absent.
+ * @param now - Current time in milliseconds, injectable for tests.
+ * @returns The wait in milliseconds, between 0 and 60 seconds; 5 seconds when the header is missing or unreadable.
+ */
+export function retryAfterMs(header: string | null, now = Date.now()): number {
+  const fallback = 5_000;
+  if (!header) return fallback;
+  const seconds = Number(header);
+  const ms = Number.isFinite(seconds)
+    ? seconds * 1_000
+    : Date.parse(header) - now;
+  return Number.isFinite(ms) ? Math.min(Math.max(ms, 0), 60_000) : fallback;
+}
+
 export type CachePolicy = "no-cache" | "force-cache" | "only-if-cached";
 
 interface HttpClientOptions {
@@ -56,11 +73,10 @@ export class HttpClient {
         });
 
         if (response.status === 429) {
-          const retryAfter = parseInt(
-            response.headers.get("Retry-After") ?? "5",
-            10,
+          await response.body?.cancel();
+          await new Promise<void>((r) =>
+            setTimeout(r, retryAfterMs(response.headers.get("Retry-After")))
           );
-          await new Promise<void>((r) => setTimeout(r, retryAfter * 1_000));
           lastError = new Error("Rate limited (429)");
           continue;
         }
