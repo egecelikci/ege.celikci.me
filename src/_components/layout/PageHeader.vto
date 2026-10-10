@@ -9,6 +9,8 @@
 #}}
 
 {{ set displaySubtitle = it.subtitle || it.description }}
+{{# Only the note date line is markup we build; subtitles and descriptions can be MusicBrainz text, so they stay escaped. #}}
+{{ set subtitleIsHtml = false }}
 {{ if !it.subtitle }}
   {{ if it.type === "note" && it.date }}
     {{ set dateStr = it.date |> date("dd LLL yyyy HH:mm") }}
@@ -21,6 +23,7 @@
       }}
     {{ /if }}
     {{ set displaySubtitle = dateStr + updatedStr }}
+    {{ set subtitleIsHtml = true }}
   {{ else if it.type === "tag" }}
     {{
       set matchingEntries = search.pages("'" + it.tag + "' type!=index", "date=desc")
@@ -59,7 +62,7 @@
         class="page-header__subtitle {{ if isCentered }}page-header__subtitle--centered{{ /if }}"
         {{ if displaySubtitle === (it.subtitle || it.description) }}itemprop="description"{{ /if }}
       >
-        {{ displaySubtitle |> safe }}
+        {{ if subtitleIsHtml }}{{ displaySubtitle |> safe }}{{ else }}{{ displaySubtitle }}{{ /if }}
       </div>
     {{ /if }}
 
