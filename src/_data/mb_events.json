@@ -406,6 +406,7 @@
         "ended": true
       },
       "name": "glide.org:sesler",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/0d1f3ed7-deb9-41d7-ba52-5d3da800afe9/46351926051-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/0d1f3ed7-deb9-41d7-ba52-5d3da800afe9/46351926051.jpg",
       "relations": [
@@ -575,6 +576,7 @@
         "ended": true
       },
       "name": "Rektal Tuşe, Primitive Call & Taarruz at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4/45049060725-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/12f8f8ee-12f4-4a3a-8dc9-1a06da788bb4/45049060725.jpg",
       "relations": [
@@ -762,6 +764,7 @@
         "ended": true
       },
       "name": "Kaptan Kadavra, Scenes We Have Missed & CONCRETE at Volume Alsancak",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46188857830-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/1584c1f1-fe61-4760-9029-851c90a85ebd/46188857830.jpg",
       "relations": [
@@ -1055,6 +1058,7 @@
         "ended": true
       },
       "name": "Cemiyette Pişiyorum & SPRAY at Sold Out Performance Hall",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/19938fd4-4455-493b-945c-89f8d1eab559/46352001616-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/19938fd4-4455-493b-945c-89f8d1eab559/46352001616.jpg",
       "relations": [
@@ -1219,6 +1223,7 @@
         "ended": true
       },
       "name": "bun6, Düz Mantık, Ruff Crux & SPRAY at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/1a1eddd8-fdbe-481e-a784-b35ca460a5d2/43812956459-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/1a1eddd8-fdbe-481e-a784-b35ca460a5d2/43812956459.jpg",
       "relations": [
@@ -1531,6 +1536,7 @@
         "ended": true
       },
       "name": "Düz Mantık, SPRAY & Psychodramas @ NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/22de1977-fd0c-4e0e-a519-61871adf2bf6/45018060552-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/22de1977-fd0c-4e0e-a519-61871adf2bf6/45018060552.jpg",
       "relations": [
@@ -1797,6 +1803,7 @@
         "ended": true
       },
       "name": "Sansar Salvo at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/24d5042a-f594-40bc-b500-758520dcae34/46413122524-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/24d5042a-f594-40bc-b500-758520dcae34/46413122524.jpg",
       "relations": [
@@ -1963,6 +1970,7 @@
         "ended": true
       },
       "name": "İzmir Undercurrent",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/2a76c9db-fdf0-4a00-83f2-f0611b718024/46144619375-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/2a76c9db-fdf0-4a00-83f2-f0611b718024/46144619375.jpg",
       "relations": [
@@ -2207,7 +2215,6 @@
       "cancelled": false,
       "disambiguation": "",
       "id": "2a941e38-da1c-4b94-a922-ec62422a5667",
-      "imagePath": "/assets/images/posters/2a941e38-da1c-4b94-a922-ec62422a5667.jpg",
       "life-span": {
         "begin": "2026-05-20",
         "end": "2026-05-20",
@@ -2337,6 +2344,7 @@
         "ended": true
       },
       "name": "Scenes We Have Missed, Goblin Daycare & SPRAY at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/30634793-b64b-48eb-aa5f-c4b584ecef19/39232713436-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/30634793-b64b-48eb-aa5f-c4b584ecef19/39232713436.jpg",
       "relations": [
@@ -2460,6 +2468,7 @@
         "ended": true
       },
       "name": "Krizünlem & SPRAY at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/30bf3a19-b22f-4c0d-832c-f91fac6d0586/45815597181-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/30bf3a19-b22f-4c0d-832c-f91fac6d0586/45815597181.jpg",
       "relations": [
@@ -2823,6 +2832,7 @@
         "ended": true
       },
       "name": "Kanvas & Anhedoni at f.loki",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/36a345b4-1542-4935-b884-4c6a72a9452a/42730443795-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/36a345b4-1542-4935-b884-4c6a72a9452a/42730443795.jpg",
       "relations": [
@@ -2923,6 +2933,7 @@
         "ended": true
       },
       "name": "infuse_archonGrid",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/3a488e0b-ee8b-4599-9ad8-410f318ae32a/44994080510-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/3a488e0b-ee8b-4599-9ad8-410f318ae32a/44994080510.jpg",
       "relations": [
@@ -3325,6 +3336,7 @@
         "ended": true
       },
       "name": "Krayat, Ruff Crux, Moko & HUSH at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/3cc7e4e2-382e-45d5-9067-43352e5d89c0/41015231894-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/3cc7e4e2-382e-45d5-9067-43352e5d89c0/41015231894.jpg",
       "relations": [
@@ -3699,6 +3711,7 @@
         "ended": true
       },
       "name": "ACOUSTIC SESSION: SPRAY & PUDDIN @ THE ELVIS",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/436a495d-9456-47ee-99ad-90f7fb290a15/41584558539-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/436a495d-9456-47ee-99ad-90f7fb290a15/41584558539.jpg",
       "relations": [
@@ -4012,6 +4025,7 @@
         "ended": true
       },
       "name": "VCO2, Doğa Sultan & Boneless at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/58f3365a-3aa2-40a6-8fa9-97805b1e913c/45049157275-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/58f3365a-3aa2-40a6-8fa9-97805b1e913c/45049157275.jpg",
       "relations": [
@@ -4176,6 +4190,7 @@
         "ended": true
       },
       "name": "konoha 木ノ葉, Scenes We Have Missed, pembe & Slave Training at Tato Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/5cc427d3-4bcb-4535-92f1-806f3249aaf3/41877553747-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/5cc427d3-4bcb-4535-92f1-806f3249aaf3/41877553747.jpg",
       "relations": [
@@ -4554,6 +4569,7 @@
         "ended": true
       },
       "name": "She Past Away + Kana Kana + Hakan Tamar at Hangout PSM",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/6afee270-a51c-4917-913b-e809fbff95b8/39627963575-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/6afee270-a51c-4917-913b-e809fbff95b8/39627963575.jpg",
       "relations": [
@@ -4731,6 +4747,7 @@
         "ended": true
       },
       "name": "Fry Day",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b/45537884602-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/6d6bf1b8-c95b-4f3e-9c5c-bae8e0e6a64b/45537884602.jpg",
       "relations": [
@@ -5030,6 +5047,7 @@
         "ended": true
       },
       "name": "Synth Sessions & Punk Concert",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46015633504-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/6d833b76-47c8-469b-a3c7-12a8c0839167/46015633504.jpg",
       "relations": [
@@ -5464,6 +5482,7 @@
         "ended": true
       },
       "name": "hardcore fest izmir",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/776932af-1bec-4e96-ae1f-e7bf9ac49cf3/45011586896-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/776932af-1bec-4e96-ae1f-e7bf9ac49cf3/45011586896.jpg",
       "relations": [
@@ -5702,6 +5721,7 @@
         "ended": true
       },
       "name": "Yamaç & bun6 at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/7898ad7f-55e4-45d6-9044-634668656a38/45452327425-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/7898ad7f-55e4-45d6-9044-634668656a38/45452327425.jpg",
       "relations": [
@@ -5891,6 +5911,7 @@
         "ended": true
       },
       "name": "Yamaç, Under the Thorn & For the Crisis at Che",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/841d7447-fb46-4ea1-bfb1-e8bda12963fe/45011467679-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/841d7447-fb46-4ea1-bfb1-e8bda12963fe/45011467679.jpg",
       "relations": [
@@ -6103,6 +6124,7 @@
         "ended": true
       },
       "name": "Byzantion Show Series #55",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/85d6a022-804e-4751-8491-6ac4afc89b8a/39233130353-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/85d6a022-804e-4751-8491-6ac4afc89b8a/39233130353.jpg",
       "relations": [
@@ -6349,6 +6371,7 @@
         "ended": true
       },
       "name": "Byzantion Show Series #58",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/8a5b924c-32c7-46f3-8af8-e2dd6cd936c3/40958354150-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/8a5b924c-32c7-46f3-8af8-e2dd6cd936c3/40958354150.jpg",
       "relations": [
@@ -6651,6 +6674,7 @@
         "ended": true
       },
       "name": "SPRAY at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/93afc35f-49f6-45b3-b13f-156413071c80/39381170997-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/93afc35f-49f6-45b3-b13f-156413071c80/39381170997.jpg",
       "relations": [
@@ -6728,6 +6752,7 @@
         "ended": true
       },
       "name": "Cemiyette Pişiyorum, Deli Gömleği & SPRAY at Sold Out Performance Hall",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/958b7ebf-163c-4d1b-a9bc-de394a2880be/45009324156-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/958b7ebf-163c-4d1b-a9bc-de394a2880be/45009324156.jpg",
       "relations": [
@@ -6933,6 +6958,7 @@
         "ended": true
       },
       "name": "Asimptot & Yamaç at Che",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/964a7f09-5d7d-4deb-a17d-313c90a5294d/45815560411-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/964a7f09-5d7d-4deb-a17d-313c90a5294d/45815560411.jpg",
       "relations": [
@@ -7033,6 +7059,7 @@
         "ended": true
       },
       "name": "Kanvas, baharsız & histeri at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/9724e4c1-1fe5-4ce8-9c12-3d8e3926319d/45002123834-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/9724e4c1-1fe5-4ce8-9c12-3d8e3926319d/45002123834.jpg",
       "relations": [
@@ -7245,6 +7272,7 @@
         "ended": true
       },
       "name": "Düz Mantık, SPRAY & Ufuk Sinkil at Jazzgır Live",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/9b88204e-8c54-41e7-bfc8-a665ca3a0a32/39637130017-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/9b88204e-8c54-41e7-bfc8-a665ca3a0a32/39637130017.jpg",
       "relations": [
@@ -7457,6 +7485,7 @@
         "ended": true
       },
       "name": "SPRAY, voidspell & Urban Divine at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/a349d0bf-f031-4ffa-9b25-07265407d389/45140006958-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/a349d0bf-f031-4ffa-9b25-07265407d389/45140006958.jpg",
       "relations": [
@@ -7715,6 +7744,7 @@
         "ended": true
       },
       "name": "Fake Fun & SPRAY at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/aa50cb47-e0e3-4257-9f73-5d7ada9cb61d/39605356701-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/aa50cb47-e0e3-4257-9f73-5d7ada9cb61d/39605356701.jpg",
       "relations": [
@@ -7815,6 +7845,7 @@
         "ended": true
       },
       "name": "Kaptan Kadavra & Oculos at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/b0bdda5a-159e-4db6-918b-06f7b8f2a931/39671616788-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/b0bdda5a-159e-4db6-918b-06f7b8f2a931/39671616788.jpg",
       "relations": [
@@ -8004,6 +8035,7 @@
         "ended": true
       },
       "name": "straygaze & Asimptot at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/b58fa0c1-0445-49aa-8be5-fc0bf6c5c113/45048866820-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/b58fa0c1-0445-49aa-8be5-fc0bf6c5c113/45048866820.jpg",
       "relations": [
@@ -8282,6 +8314,7 @@
         "ended": true
       },
       "name": "Tampon, Düz Mantık & Marina Poison at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/cf6e5d51-b113-4ab9-b658-4fc1c5357cb0/45452314066-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/cf6e5d51-b113-4ab9-b658-4fc1c5357cb0/45452314066.jpg",
       "relations": [
@@ -8428,6 +8461,7 @@
         "ended": true
       },
       "name": "lütfen beni öldürmeyin at Berlin Coffee Shop",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/d0941f03-d2fa-4fce-90e3-6a051d163906/45312599573-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/d0941f03-d2fa-4fce-90e3-6a051d163906/45312599573.jpg",
       "relations": [
@@ -8551,6 +8585,7 @@
         "ended": true
       },
       "name": "frame25 & Sharp 4th at Che",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/e1161be5-d189-42b7-9862-10168f8c4e4b/45011357905-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/e1161be5-d189-42b7-9862-10168f8c4e4b/45011357905.jpg",
       "relations": [
@@ -8651,6 +8686,7 @@
         "ended": true
       },
       "name": "PANG, sleepwalk capsule, histeri & Lizrith at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d/45980554502-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/e54a7ec0-bc3c-4fb9-8c8f-afdcd76b736d/45980554502.jpg",
       "relations": [
@@ -8909,6 +8945,7 @@
         "ended": true
       },
       "name": "Hate Moss, Scenes We Have Missed & Ruff Crux at Dinozor Bar",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/e93e678f-399d-451a-b653-0ba95ecfbdee/39779719051-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/e93e678f-399d-451a-b653-0ba95ecfbdee/39779719051.jpg",
       "relations": [
@@ -9032,6 +9069,7 @@
         "ended": true
       },
       "name": "Wanderfool, Oxomo & Random Input at NØMADS-36",
+      "posterSource": "original",
       "posterThumb": "https://eventartarchive.org/event/f32d2722-35f3-4416-b08c-5a83c5d91ab4/45443773205-500.jpg",
       "posterUrl": "https://eventartarchive.org/event/f32d2722-35f3-4416-b08c-5a83c5d91ab4/45443773205.jpg",
       "relations": [
