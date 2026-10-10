@@ -8,7 +8,6 @@
     - variant: "large" | "label" (default: "label")
     - level: 2 | 3 | 4 (The heading level, default: 2)
     - id: string (Optional id on the heading, for aria-labelledby)
-    - sticky: boolean (default: false)
     - rightContent: html/string (Optional content for the right side)
     - classes: string (Optional wrapper classes)
 #}}
@@ -18,7 +17,7 @@
 {{ set tag = `h${level}` }}
 
 <div
-  class="section-header {{ if it.sticky }}section-header--sticky{{ /if }} {{ it.classes }}"
+  class="section-header {{ it.classes }}"
 >
   {{ if isLarge }}
     <{{ tag }}

@@ -6,17 +6,6 @@
     gap: 1rem;
   }
 
-  .section-header--sticky {
-    position: sticky;
-    top: var(--header-height, 3.5rem);
-    z-index: 40;
-    padding-block: 1rem;
-    margin-block: -1rem;
-    background-color: color-mix(in srgb, var(--color-bg) 95%, transparent);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
   .section-header__title--large {
     font-size: 2.25rem;
     font-weight: 700;
