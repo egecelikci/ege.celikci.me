@@ -78,11 +78,9 @@ async function ensureDefaultFonts() {
         const res = await fetch(url);
         if (!res.ok) throw new Error(`Local font fetch failed: ${res.status}`);
         const buffer = await res.arrayBuffer();
-        // @ts-ignore
         const font = new FontFace(family, buffer, { weight });
         await font.load();
-        // @ts-ignore
-        self.fonts.add(font);
+        workerFonts().add(font);
         console.log(`[worker] local font loaded: ${family}`);
       } catch (e) {
         console.error(`[worker] local font failed: ${family}`, e);
@@ -92,38 +90,36 @@ async function ensureDefaultFonts() {
   defaultFontsLoaded = true;
 }
 
+/** The worker's font set; TypeScript's DOM lib does not declare it on `self`. */
+const workerFonts = () => (self as unknown as { fonts: FontFaceSet }).fonts;
+
 async function fetchCover(
   album: Album,
 ): Promise<{ album: Album; bitmap: ImageBitmap | null }> {
   let res: Response | undefined;
 
-  /** 1. Try direct image URL first (Last.fm provides these) */
-  if (album.img) {
-    try {
-      res = await fetch(album.img);
-    } catch (_e) {}
-  }
+  /** The proxy URL the stats came with first, then the release group's front cover. */
+  const candidates = [
+    album.img,
+    album.mbid && `/api/collage-proxy?source=cover&mbid=${album.mbid}`,
+  ].filter((url): url is string => !!url);
 
-  /** 2. Fall back to CAA via proxy if direct URL missing or failed */
-  if ((!res || !res.ok) && album.mbid) {
-    try {
-      res = await fetch(`/api/collage-proxy?source=cover&mbid=${album.mbid}`);
-    } catch (_e) {}
+  for (const url of candidates) {
+    res = await fetch(url).catch(() => undefined);
+    if (res?.ok) break;
   }
 
   let bitmap: ImageBitmap | null = null;
-  if (res && res.ok) {
-    try {
-      const blob = await res.blob();
-      bitmap = await createImageBitmap(blob);
-    } catch (_e) {}
+  if (res?.ok) {
+    // A corrupt or unsupported image leaves the tile empty instead of failing the collage.
+    bitmap = await res.blob().then(createImageBitmap).catch(() => null);
   }
   return { album, bitmap };
 }
 
-async function getVibrantColor(
+function getVibrantColor(
   img: ImageBitmap | null,
-): Promise<{ r: number; g: number; b: number }> {
+): { r: number; g: number; b: number } {
   if (!img) return { r: 30, g: 27, b: 75 };
   const mini = new OffscreenCanvas(20, 20);
   const mctx = mini.getContext("2d");
@@ -155,11 +151,9 @@ async function loadFont(family: string, weight = "400") {
       return;
     }
     const buffer = await res.arrayBuffer();
-    // @ts-ignore
     const font = new FontFace(family, buffer, { weight });
     await font.load();
-    // @ts-ignore
-    self.fonts.add(font);
+    workerFonts().add(font);
     console.log(`[worker] font loaded: ${family} w${weight}`);
   } catch (e) {
     console.error(`[worker] font loading failed: ${family} w${weight}`, e);
@@ -254,9 +248,7 @@ self.onmessage = async (e: MessageEvent) => {
       text: "sampling dominant colors from covers",
     });
     const gridColors = new Uint8Array(targetCount * 3);
-    const colors = await Promise.all(
-      finalImages.map((img) => getVibrantColor(img)),
-    );
+    const colors = finalImages.map((img) => getVibrantColor(img));
     for (let i = 0; i < targetCount; i++) {
       gridColors[i * 3] = colors[i].r;
       gridColors[i * 3 + 1] = colors[i].g;
