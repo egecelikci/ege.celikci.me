@@ -74,7 +74,7 @@ export default function () {
       });
     }));
 
-    /** Advertise each page's own feeds in <head> (`alternateFeeds`), derived from the configs above rather than hardcoding the pages. Feeds are deliberately not added to `sources`: a feed is a machine-readable copy of the page, not where its material comes from. */
+    /** Advertise each page's own feeds in <head> (`alternateFeeds`), derived from the configs above rather than hardcoding the pages. */
     const feedsByPage = new Map<string, [string, string]>();
     for (const config of feedConfigs) {
       if (config.id === "main") continue;

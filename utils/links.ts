@@ -1,6 +1,6 @@
 /**
  * Centralized mapping for external links to icons and labels.
- * Entries are pruned to what the content actually links to; a link with no mapping renders a generic icon and warns at build time, so add an entry when one shows up.
+ * Entries are pruned to what the content actually links to; a link with no mapping falls back to a generic globe icon (only LinkLine warns about it at build time), so add an entry when one shows up.
  */
 
 export interface LinkMapping {

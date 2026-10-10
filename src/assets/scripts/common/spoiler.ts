@@ -1,12 +1,10 @@
 /**
  * Click-to-toggle for spoiler-veiled media tiles.
  *
- * Tiles rendered with a spoiler carry `.media--spoiled` plus a
- * `.spoiler-veil` cover acting as a `role="button"`. Activating the veil toggles `.is-revealed` on the
- * tile: the image unblurs and the veil collapses to a slim bar that
- * hides it back. Later clicks anywhere else fall through to the
- * lightbox anchor. No-JS clients ignore the veil via a `<noscript>`
- * style in the base layout and always see the image.
+ * Tiles rendered with a spoiler carry `.media--spoiled` plus a `.spoiler-veil` cover acting as a `role="button"`.
+ * Activating the veil toggles `.is-revealed` on the tile: the image unblurs and the veil collapses to a slim bar that hides it back.
+ * Later clicks anywhere else fall through to the lightbox anchor.
+ * No-JS clients never get the `has-spoiler` class, so the veil stays hidden and they always see the image.
  */
 
 let isSpoilerReady = false;

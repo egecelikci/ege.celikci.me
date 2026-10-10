@@ -268,7 +268,7 @@ export function buildIncoming(
 
 /**
  * Build the forward index: for every page, the pages it links to, in the order it links to them.
- * Same language rule and same exclusions as `buildIncoming` (unknown targets, self-links and repeats drop out), so both directions describe the same graph.
+ * Same language rule and same exclusions as `buildIncoming` (unknown targets, self-links and repeats drop out), but only prose body links count: frontmatter `links` reach backlinks without appearing here.
  */
 export function buildOutgoing(
   entries: IncomingEntry[],
