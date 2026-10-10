@@ -124,6 +124,13 @@ async function getSteamData() {
       }
     }
 
+    // An empty library is far more likely a private profile or an API hiccup than a sold-off collection, and consolidating it would drop that member's games.
+    const empty = [...libraries.values()].some((owned) => owned.length === 0);
+    if (empty && cachedData.games.length > 0) {
+      console.warn("[steam] ⚠️ A library came back empty, keeping the cache");
+      return cachedData.games;
+    }
+
     const games = consolidateSteamLibraries(libraries);
     console.log(`[steam] 🔍 Consolidated ${games.length} games…`);
 
