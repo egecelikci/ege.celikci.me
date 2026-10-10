@@ -16,13 +16,6 @@ import {
   normalizeUrl,
 } from "../incoming.ts";
 
-function linksOf(data: Lume.Page["data"]): unknown {
-  const links = data.links;
-  return Array.isArray(links) || (links && typeof links === "object")
-    ? links
-    : undefined;
-}
-
 function entryOf(page: Lume.Page): IncomingEntry {
   const data = page.data;
   const source = data.content;
@@ -36,7 +29,7 @@ function entryOf(page: Lume.Page): IncomingEntry {
     date: data.date as Date | undefined,
     ...pageIcon({ type: data.type as string | undefined, tags: data.tags }),
     bodyLinks,
-    declaredLinks: frontmatterLinks(linksOf(data), settings.url),
+    declaredLinks: frontmatterLinks(data.links, settings.url),
   };
 }
 
