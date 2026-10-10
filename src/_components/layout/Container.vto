@@ -1,9 +1,8 @@
 {{#
   Universal Container Component
   Props:
-    - width: "narrow" | "default" | "wide" | "full" | custom class
+    - width: "narrow" | custom class (default: "narrow")
     - as: HTML tag (default: "div")
-    - centered: boolean (default: true)
     - padding: boolean | string (default: true)
     - classes: additional classes
     - attributes: object of HTML attributes (e.g. { "aria-label": "nav" })
@@ -13,12 +12,9 @@
 {{ set tag = it.as || "div" }}
 
 {{
-  set widthClass = {
-    "narrow": "container--narrow",
-    "default": "container--default",
-    "wide": "container--wide",
-    "full": "container--full",
-  }[it.width] || it.width || "container--default"
+  set widthClass = !it.width || it.width === "narrow"
+  ? "container--narrow"
+  : it.width
 }}
 
 {{
