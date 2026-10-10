@@ -61,37 +61,11 @@ export async function initSearch() {
 
     if (!input || !resultsContainer) return;
 
-    let localIndex: any[] = [];
     let activeIndex = -1;
 
     function normalize(str: string) {
       return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[\s\-_.]/g, "");
-    }
-
-    async function ensureLocalIndex() {
-      const items = document.querySelectorAll("[data-search-item]");
-      const currentHash = `${items.length}-${items[0]?.id || ""}`;
-
-      if (localIndex.length > 0 && root.dataset.indexHash === currentHash) {
-        return;
-      }
-
-      root.dataset.indexHash = currentHash;
-      localIndex = Array.from(items).map((el) => {
-        const item = el as HTMLElement;
-        const title =
-          item.querySelector("h3, .p-name, font-bold")?.textContent?.trim() ||
-          "Untitled";
-        const desc = item.querySelector(".markdown, p, .text-sm")?.textContent
-          ?.trim() || "";
-        return {
-          id: item.id,
-          title,
-          desc,
-          haystack: normalize(item.dataset.searchData || ""),
-        };
-      });
     }
 
     async function handleSearch(term: string) {
@@ -130,23 +104,6 @@ export async function initSearch() {
           noResults.hidden = visibleCount > 0;
         }
 
-        clearBtn?.classList.add("is-active");
-        return;
-      }
-
-      if (mode === "local") {
-        await ensureLocalIndex();
-        const q = normalize(term.trim());
-        const results = localIndex
-          .filter((item) => item.haystack.includes(q))
-          .slice(0, 10)
-          .map((item) => ({
-            url: `#${item.id}`,
-            meta: { title: item.title },
-            excerpt: item.desc,
-          }));
-
-        renderResults(results);
         clearBtn?.classList.add("is-active");
         return;
       }
@@ -204,24 +161,17 @@ export async function initSearch() {
       } else {
         resultsContainer.innerHTML = results
           .map((item, index) => {
-            const isAnchor = item.url.startsWith("#");
             const safeTitle = escapeHtml(item.meta.title || "Untitled");
             const safeUrl = escapeHtml(item.url);
             const safeDate = item.meta.date ? escapeHtml(item.meta.date) : "";
             return `
           <a href="${safeUrl}"
              class="search__result"
-             data-index="${index}"
-             ${isAnchor ? 'data-anchor-jump="true"' : ""}>
+             data-index="${index}">
             <div class="search__result__body">
               <div class="search__result__head">
                 <h3 class="search__result__title">
                   <span>${safeTitle}</span>
-                  ${
-              isAnchor
-                ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="search__result__arrow"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>'
-                : ""
-            }
                 </h3>
                 ${
               safeDate
@@ -240,40 +190,12 @@ export async function initSearch() {
 
       resultsContainer.classList.add("is-visible");
 
-      /** Handle anchor jumps manually for smooth UX */
-      resultsContainer.querySelectorAll('[data-anchor-jump="true"]').forEach(
-        (el) => {
-          el.addEventListener("click", (e) => {
-            e.preventDefault();
-            const targetId = (el as HTMLAnchorElement).getAttribute("href")
-              ?.slice(1);
-            const target = document.getElementById(targetId || "");
-            if (target) {
-              clearSearch();
-              target.scrollIntoView({ behavior: "smooth", block: "center" });
-
-              /** Visual Flash highlight */
-              target.classList.add(
-                "reveal:bg-primary-muted/20",
-                "reveal:border-primary-muted",
-              );
-              setTimeout(() => {
-                target.classList.remove(
-                  "reveal:bg-primary-muted/20",
-                  "reveal:border-primary-muted",
-                );
-              }, 1500);
-            }
-          });
-        },
-      );
-
       activeIndex = -1;
     }
     input.addEventListener(
       "focus",
       () => {
-        if (mode !== "filter" && mode !== "local") {
+        if (mode !== "filter") {
           ensurePagefind(cacheTag);
         }
       },
