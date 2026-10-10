@@ -95,7 +95,7 @@
   }
 }}
 
-<div class="index-list {{ it.classes || " " }}">
+<div class="index-list {{ it.classes || '' }}">
   <ul class="index-list__group">
     {{ for item of items }}
       {{ if item.type === "section" }}

@@ -20,7 +20,7 @@
 {{ set items = it.items || [] }}
 
 <nav class="rail{{ if it.classes }} {{ it.classes }}{{ /if }}"
-  aria-label="{{ it.label || " jump to section" }}">
+  aria-label="{{ it.label || 'jump to section' }}">
   <ul class="rail__list">
     {{ for item of items }}
       <li class="rail__item">
