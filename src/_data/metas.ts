@@ -7,7 +7,7 @@ export default {
   lang: site.lang,
   url: site.url,
   author: author.name,
-  fediverse: author.social.mastodon.url,
+  fediverse: author.social.mastodon.name,
   title: "=title",
   image: "=metaImage || =image || =coverImage",
   icon: "/assets/images/favicon/favicon.svg",
@@ -15,6 +15,4 @@ export default {
   type: "=type || website",
   keywords: "=tags",
   robots: "=robots",
-  /** Light and dark theme colors */
-  color: ["#fef6e4", "#463366"],
 };
