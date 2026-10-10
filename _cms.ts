@@ -1,5 +1,6 @@
 import lumeCMS from "lume/cms/mod.ts";
 import "@std/dotenv/load";
+import { slugify } from "./utils/slugify.ts";
 
 const user = Deno.env.get("CMS_USER") ?? "admin";
 const password = Deno.env.get("CMS_PASSWORD");
@@ -49,15 +50,6 @@ function timestampName(): string {
   }-${pad(now.getUTCHours())}-${pad(now.getUTCMinutes())}-${
     pad(now.getUTCSeconds())
   }.md`;
-}
-
-/**
- * converts a title into a URL and filename safe slug.
- * @param {string} title - the source title.
- * @returns {string} lowercased slug, non-alphanumeric runs collapsed to "-".
- */
-function slugify(title: string): string {
-  return title.toLocaleLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
 const syndicationField: {
