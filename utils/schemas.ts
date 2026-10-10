@@ -69,7 +69,6 @@ const relationSchema: z.ZodType<MBRelation> = z.object({
   type: z.string(),
   "target-type": z.enum(["artist", "place", "url", "label"]),
   "target-credit": z.string().optional(),
-  ended: z.boolean().optional(),
   "attribute-values": z.record(z.string(), z.string()).optional(),
   artist: artistTargetSchema.optional(),
   place: placeTargetSchema.optional(),

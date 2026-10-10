@@ -58,7 +58,6 @@ export interface MBRelation {
   type: string;
   "target-type": "artist" | "place" | "url" | "label";
   "target-credit"?: string;
-  ended?: boolean;
   "attribute-values"?: Record<string, string>;
   artist?: MBRelationArtist;
   place?: MBRelationPlace;
