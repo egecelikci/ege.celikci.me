@@ -18,6 +18,6 @@ if ("serviceWorker" in navigator) {
   if (document.readyState === "complete") {
     register();
   } else {
-    window.addEventListener("load", register);
+    globalThis.addEventListener("load", register);
   }
 }

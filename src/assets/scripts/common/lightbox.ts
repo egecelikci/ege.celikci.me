@@ -34,7 +34,7 @@ const downloadMedia = async (src: string) => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch {
-    window.open(src, "_blank");
+    globalThis.open(src, "_blank");
   }
 };
 
@@ -502,7 +502,7 @@ export function initLightbox() {
   lightbox.on("beforeOpen", () => {
     document.documentElement.style.setProperty(
       "--pswp-sw",
-      `${window.innerWidth - document.documentElement.clientWidth}px`,
+      `${globalThis.innerWidth - document.documentElement.clientWidth}px`,
     );
     document.documentElement.classList.add("pswp-open");
   });

@@ -14,17 +14,17 @@ const loadLightbox = async () => {
   return loadingPromise;
 };
 
-window.addEventListener("mouseover", () => loadLightbox(), {
+globalThis.addEventListener("mouseover", () => loadLightbox(), {
   once: true,
   passive: true,
 });
 
-window.addEventListener("touchstart", () => loadLightbox(), {
+globalThis.addEventListener("touchstart", () => loadLightbox(), {
   once: true,
   passive: true,
 });
 
-window.addEventListener(
+globalThis.addEventListener(
   "click",
   async (e) => {
     if (e.button !== 0 || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
@@ -133,7 +133,7 @@ async function init() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePopovers();
   });
-  window.addEventListener("resize", () => {
+  globalThis.addEventListener("resize", () => {
     document.querySelectorAll(`${POPOVER_SELECTOR}[open]`).forEach(
       (el) => clampPopover(el as HTMLDetailsElement),
     );

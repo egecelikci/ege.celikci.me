@@ -71,7 +71,7 @@ export function initCollageTool(defaultUsername: string) {
   let currentSource = "lb";
   let currentWorker: Worker | null = null;
   let latestBlob: Blob | null = null;
-  let debounceTimeout: number | null = null;
+  let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
   const STORAGE_KEY = "collage-settings-v9";
 
@@ -345,7 +345,7 @@ export function initCollageTool(defaultUsername: string) {
     }
     saveSettings();
     if (debounceTimeout) clearTimeout(debounceTimeout);
-    debounceTimeout = window.setTimeout(generate, 1000);
+    debounceTimeout = globalThis.setTimeout(generate, 1000);
   });
 
   inputs.forEach((input) => {
@@ -353,7 +353,7 @@ export function initCollageTool(defaultUsername: string) {
     input.addEventListener("input", () => {
       saveSettings();
       if (debounceTimeout) clearTimeout(debounceTimeout);
-      debounceTimeout = window.setTimeout(generate, 600);
+      debounceTimeout = globalThis.setTimeout(generate, 600);
     });
   });
 
