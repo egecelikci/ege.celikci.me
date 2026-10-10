@@ -195,6 +195,9 @@
     pointer-events: none;
     width: 1em;
     height: 1em;
+    // The reset caps media at max-width: 100%, which lets a tight flex row squeeze an icon to a sliver; icons keep their set size.
+    flex-shrink: 0;
+    max-width: none;
   }
 
   .icon--stroke {
