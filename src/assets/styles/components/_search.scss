@@ -249,17 +249,4 @@
   input[type="search"]::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
-
-  .search-result-item mark {
-    background-color: #fde047;
-    color: #000;
-    padding: 0 2px;
-    border-radius: 2px;
-  }
-
-  .search-action-active {
-    opacity: 1 !important;
-    scale: 1 !important;
-    pointer-events: auto !important;
-  }
 }
