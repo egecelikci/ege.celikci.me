@@ -243,7 +243,7 @@
         }
       ],
       "disambiguation": "",
-      "first-release-date": "2005",
+      "first-release-date": "2005-01-16",
       "id": "0edc8786-4aeb-404b-8160-a98424d271ed",
       "imagePath": "/assets/images/covers/colored/0edc8786-4aeb-404b-8160-a98424d271ed.webp",
       "imagePathMono": "/assets/images/covers/monochrome/0edc8786-4aeb-404b-8160-a98424d271ed.png",
@@ -1117,7 +1117,7 @@
         }
       ],
       "disambiguation": "",
-      "first-release-date": "2012-10-21",
+      "first-release-date": "2012-10-22",
       "id": "499c19c8-0dab-4824-884b-6191d145e95b",
       "imagePath": "/assets/images/covers/colored/499c19c8-0dab-4824-884b-6191d145e95b.webp",
       "imagePathMono": "/assets/images/covers/monochrome/499c19c8-0dab-4824-884b-6191d145e95b.png",
@@ -1795,13 +1795,13 @@
         },
         {
           "artist": {
-            "country": null,
+            "country": "US",
             "disambiguation": "Sphere Records artist",
             "id": "67c6a03d-3476-419c-bb90-74cd4d2ab647",
             "name": "Anthony James",
             "sort-name": "James, Anthony",
-            "type": null,
-            "type-id": null
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
           },
           "joinphrase": "",
           "name": "Anthony James"
@@ -2325,7 +2325,7 @@
         }
       ],
       "disambiguation": "",
-      "first-release-date": "2016-09-30",
+      "first-release-date": "2016-09-27",
       "id": "88f4f8e5-ee88-4050-84ad-cf73f7c2b19a",
       "imagePath": "/assets/images/covers/colored/88f4f8e5-ee88-4050-84ad-cf73f7c2b19a.webp",
       "imagePathMono": "/assets/images/covers/monochrome/88f4f8e5-ee88-4050-84ad-cf73f7c2b19a.png",
@@ -2605,7 +2605,7 @@
         }
       ],
       "disambiguation": "",
-      "first-release-date": "2012",
+      "first-release-date": "2012-01-06",
       "id": "999a91f9-05c7-4207-aff4-2c5ce488b868",
       "imagePath": "/assets/images/covers/colored/999a91f9-05c7-4207-aff4-2c5ce488b868.webp",
       "imagePathMono": "/assets/images/covers/monochrome/999a91f9-05c7-4207-aff4-2c5ce488b868.png",
@@ -3384,7 +3384,7 @@
       "artist-credit": [
         {
           "artist": {
-            "country": null,
+            "country": "US",
             "disambiguation": "rapper",
             "id": "175a1b69-7a19-4881-b1ca-fe6b84ff3a2d",
             "name": "MAVI",
@@ -4670,8 +4670,12 @@
       "primary-type": "Album",
       "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
       "ratedAt": "Sat, 27 Sep 2025 17:27:22 GMT",
-      "secondary-type-ids": [],
-      "secondary-types": [],
+      "secondary-type-ids": [
+        "15c1b1f5-d893-3375-a1db-e180c5ae15ed"
+      ],
+      "secondary-types": [
+        "Mixtape/Street"
+      ],
       "title": "Trinity"
     },
     {
