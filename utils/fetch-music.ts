@@ -99,7 +99,6 @@ class AlbumFetcher {
       url.toString(),
       "json",
       policy,
-      policy !== "only-if-cached",
     );
     return validate(AlbumSchema, data);
   }
@@ -158,7 +157,7 @@ class ImageProcessor {
 
 async function getMusicData() {
   const httpClient = new HttpClient({
-    userAgent: "ege.celikci.me/1.0",
+    userAgent: "ege.celikci.me/1.0 ( https://ege.celikci.me )",
     rateLimitMs: CONFIG.rateLimitDelayMs,
     cacheName: "music-api-cache",
   });
