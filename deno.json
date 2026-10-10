@@ -47,7 +47,7 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "check": "deno check _config.ts utils/**/*.ts src/*.page.ts src/_data/**/*.ts",
+    "check": "deno check _config.ts _config/ _cms.ts sw.ts utils/ src/ netlify/",
     "test": "deno test --allow-read utils/",
     "tiles": {
       "description": "Refresh the map tile extract from Protomaps",
