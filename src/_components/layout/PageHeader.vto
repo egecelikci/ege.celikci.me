@@ -3,7 +3,6 @@
   - title: string
   - subtitle?: string
   - backlink?: { href: string, text: string } | boolean
-  - centered?: boolean (default: false)
   - metadata?: { tags?: string[], date?: Date }
   - breadcrumbs?: boolean
 #}}
@@ -38,10 +37,8 @@
   {{ set displayTitle = "note" }}
 {{ /if }}
 
-{{ set isCentered = it.centered || false }}
-
 <section
-  class="page-header {{ if isCentered }}page-header--centered{{ /if }}"
+  class="page-header"
 >
   <div class="page-header__body">
     {{ if it.alternates && it.alternates.length > 1 }}
@@ -59,7 +56,7 @@
 
     {{ if displaySubtitle }}
       <div
-        class="page-header__subtitle {{ if isCentered }}page-header__subtitle--centered{{ /if }}"
+        class="page-header__subtitle"
         {{ if displaySubtitle === (it.subtitle || it.description) }}itemprop="description"{{ /if }}
       >
         {{ if subtitleIsHtml }}{{ displaySubtitle |> safe }}{{ else }}{{ displaySubtitle }}{{ /if }}
@@ -68,7 +65,7 @@
 
     {{ if it.tags && it.tags.length > 0 }}
       <div
-        class="page-header__tags {{ if isCentered }}page-header__tags--centered{{ /if }}"
+        class="page-header__tags"
       >
         {{ for tag of it.tags }}
           {{ set tagSlug = tag |> slugify }}

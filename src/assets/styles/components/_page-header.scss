@@ -18,10 +18,6 @@
       padding-top: 6rem;
     }
 
-    &--centered {
-      text-align: center;
-    }
-
     &__body {
       position: relative;
       flex-grow: 1;
@@ -82,10 +78,6 @@
       text-wrap: balance;
       font-style: italic;
       view-transition-name: page-subtitle;
-
-      &--centered {
-        margin-inline: auto;
-      }
     }
 
     &__tags {
@@ -94,10 +86,6 @@
       gap: 1rem;
       margin-top: 0.5rem;
       view-transition-name: page-tags;
-
-      &--centered {
-        justify-content: center;
-      }
     }
   }
 }
