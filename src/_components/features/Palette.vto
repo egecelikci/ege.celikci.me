@@ -2,10 +2,21 @@
 <details id="{{ panel.scheme }}" class="palette-scheme"
   style="{{ panel.vars }}; background: var(--color-surface); color: var(--color-text)">
   <summary
-    class="palette-scheme__title">{{ await it.comp.base.Icon({ name: "chevron-down", catalog: "lucide", classes: "palette-scheme__chevron" }) |> safe }}<h3>{{ panel.scheme }}</h3><span class="palette-scheme__preview" aria-hidden="true">{{ for token of panel.tokens }}<span class="palette-scheme__dot" style="background:{{ token.value }}"></span>{{ /for }}</span><span class="palette-scheme__count">{{ panel.count }} {{ panel.count === 1 ? "token" : "tokens" }}</span></summary>
+    class="palette-scheme__title">{{ await it.comp.base.Icon({ name: "chevron-down", catalog: "lucide", classes: "palette-scheme__chevron" }) |> safe }}<h3>{{ panel.scheme }}</h3><span class="palette-scheme__preview" aria-hidden="true">{{ for token of panel.preview }}<span class="palette-scheme__dot" style="background:{{ token.value }}"></span>{{ /for }}</span><span class="palette-scheme__count">{{ panel.count }} tokens</span></summary>
   <ul class="palette">
-{{ for row of panel.tokens }}
-<li class="palette__row" style="background: {{ row.value }}; color: {{ row.text }}"><p class="palette__token">{{ row.token }}</p>{{ if row.role }}<p class="palette__desc">{{ row.role }}</p>{{ /if }}<p class="palette__value">{{ row.value }}</p></li>
+{{ for section of panel.rows }}
+{{ if section.role }}<li class="palette__group">{{ await it.comp.ui.SectionHeader({ title: section.group, level: 4 }) |> safe }}<span class="palette__group-role">{{ section.role }}</span></li>
+{{ /if }}
+{{ for row of section.tokens }}
+<li class="palette__row" style="background: {{ row.value }}; color: {{ row.text }}"><span class="palette__token">{{ row.token }}</span>{{ if row.role }}<span class="palette__desc">{{ row.role }}</span>{{ /if }}<span class="palette__value">{{ row.value }}</span></li>
+{{ /for }}
+{{ /for }}
+  </ul>
+  {{ await it.comp.ui.SectionHeader({ title: panel.terminal.group, level: 4, classes: "palette-scheme__group" }) |> safe }}
+  <span class="palette-scheme__group-role">{{ panel.terminal.role }}</span>
+  <ul class="palette-terminal">
+{{ for row of panel.terminal.tokens }}
+    <li class="palette-terminal__slot" style="background: {{ row.value }}; color: {{ row.text }}" title="{{ row.token }}"><span class="palette-terminal__value">{{ row.value }}</span><span class="sr-only">{{ row.token }}</span></li>
 {{ /for }}
   </ul>
 </details>

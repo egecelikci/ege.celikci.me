@@ -4,7 +4,11 @@
 
    Every row is painted in its own token color and its text color is chosen for contrast at build time (see `onColor` in src/_data/motif.ts), so the row *is* the swatch — nothing has to be judged from a 16px dot, and no chip or border chrome competes with the colors. The scheme is named once, in the panel title, instead of trailing every value as a repeated word.
 
-   Not a table on purpose — a table needs a sideways scroll on a phone or `display` overrides that put its semantics at risk, while these rows reflow by construction. One grid per panel holds every row as a subgrid, so token, description and value line up down the page. */
+   Not a table on purpose — a table needs a sideways scroll on a phone or `display` overrides that put its semantics at risk, while these rows reflow by construction. One grid per panel holds every row as a subgrid, so token, description and value line up down the page, and a set that shares one description gets a heading row inside that same grid rather than a grid of its own, which would misalign its value column against the rest.
+
+   The ANSI slots are the exception: a terminal palette is read as a block of touching squares, so they get that grid instead of rows.
+
+   The text inside the rows is spans, not `p`: a markdown page styles every `p` and `li` it renders, and those rules outrank a bare class. */
 @layer components {
   .palette-scheme {
     margin-block: 1rem;
@@ -43,7 +47,7 @@
       rotate: 180deg;
     }
 
-    /* The scheme has to read while the panel is closed, so its title carries every one of its colors. */
+    /* The scheme has to read while the panel is closed, so its title carries the colors that set the mood: the base tokens and the hues, not the brights derived from them. */
     &__preview {
       display: inline-flex;
       gap: 0.25rem;
@@ -61,6 +65,19 @@
       font-size: 0.75rem;
       opacity: 0.7;
     }
+
+    &__group {
+      margin-block-start: 1.25rem;
+      padding-inline: 1.25rem;
+    }
+
+    &__group-role {
+      display: block;
+      max-inline-size: 70ch;
+      margin: 0.25rem 0 0.75rem;
+      padding-inline: 1.25rem;
+      opacity: 0.8;
+    }
   }
 
   .palette {
@@ -73,6 +90,31 @@
 
     @include variables.bp(md) {
       grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+  }
+
+  /* A heading row: it spans the grid the token rows below it are aligned in. */
+  .palette__group {
+    grid-column: 1 / -1;
+    display: block;
+    padding-block-start: 1rem;
+    margin: 0;
+  }
+
+  .palette__group-role {
+    display: block;
+    max-inline-size: 70ch;
+    margin: 0.25rem 0 0.5rem;
+    opacity: 0.8;
+  }
+
+  /* `SectionHeader` is styled for sections of a page, so its label reads from the page's muted token and reacts to hover. Inside a painted panel it follows the scheme's own text color instead, and being static, does not react at all. */
+  .palette__group,
+  .palette-scheme__group {
+    .section-header__title--label,
+    &:hover .section-header__title--label {
+      color: inherit;
+      opacity: 0.7;
     }
   }
 
@@ -124,5 +166,28 @@
     @include variables.bp(md) {
       grid-column: 3;
     }
+  }
+
+  /* The ANSI slots as a terminal shows them: sixteen touching squares in two lines of eight, each carrying its own hex. The hex is sized against its own slot, so the two lines survive a phone where a slot is only ~38px wide. */
+  .palette-terminal {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    margin: 0;
+    padding: 0 1.25rem 1.25rem;
+    list-style: none;
+  }
+
+  .palette-terminal__slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    container-type: inline-size;
+    font-family: var(--font-mono);
+  }
+
+  .palette-terminal__value {
+    font-size: min(0.75rem, 20cqi);
+    font-variant-numeric: tabular-nums;
   }
 }

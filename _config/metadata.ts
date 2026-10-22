@@ -1,4 +1,4 @@
-export const MOTIF_SHA = "ee8cbd0eeeb52c402bfa0c7eed3c89df69c3a0cb";
+export const MOTIF_SHA = "63ce050e4c6cea7edfe48f845ed4349b7a2abab8";
 
 export const site = {
   title: "ege.celikci.me",
