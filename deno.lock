@@ -112,7 +112,7 @@
     "npm:svgo@4.0.2": "4.0.2",
     "npm:svgo@4.1.0": "4.1.0",
     "npm:unified@11.0.5": "11.0.5",
-    "npm:xss@^1.0.16": "1.0.16",
+    "npm:xss@^1.0.17": "1.0.17",
     "npm:zod@^4.6.7": "4.6.7"
   },
   "jsr": {
@@ -3301,8 +3301,8 @@
     "xdg-basedir@5.1.0": {
       "integrity": "sha512-GCPAHLvrIH13+c0SuacwvRYj2SxJXQ4kaVTT5xgL3kPrz56XxkF21IGhjSE1+W0aw7gpBWRGXLCPnPby6lSpmQ=="
     },
-    "xss@1.0.16": {
-      "integrity": "sha512-CsEvZ0QNH9vVgf3qldg+mJmmIwreZZEu/JS1SgldJrJqZgwyMrmIfENt1BJlkj/cPxO0c+R80kB5OMRtUPgqpQ==",
+    "xss@1.0.17": {
+      "integrity": "sha512-+SEr5IDSgTBnhT6bnnf0mVRHT91+HU517zkahLNhkWLz8retCgeR1YDT4OknLiExA5+chn2Wy7z3KyjvnD8A2w==",
       "dependencies": [
         "commander@2.20.3",
         "cssfilter"
@@ -4296,7 +4296,7 @@
       "npm:remark-toc@9",
       "npm:serwist@^9.5.13",
       "npm:sharp@~0.35.5",
-      "npm:xss@^1.0.16",
+      "npm:xss@^1.0.17",
       "npm:zod@^4.6.7"
     ]
   }

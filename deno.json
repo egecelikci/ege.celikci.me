@@ -20,7 +20,7 @@
     "typst": "https://cdn.jsdelivr.net/gh/lumeland/experimental-plugins@babfcbd6550cd8cf0069b6ca53f2558a2d9566fc/typst/mod.ts",
     "serwist": "npm:serwist@^9.5.13",
     "@serwist/cli": "npm:@serwist/cli@^9.5.13",
-    "xss": "npm:xss@^1.0.16",
+    "xss": "npm:xss@^1.0.17",
     "zod": "npm:zod@^4.6.7"
   },
   "tasks": {
