@@ -41,12 +41,76 @@ pub fn render_background(
 
     let aspect = width as f32 / height as f32;
 
-    for y in 0..height {
+    // The Gaussian splat is separable: exp(-(dx^2 + dy^2) * 5) = exp(-dx^2 * 5) * exp(-dy^2 * 5).
+    // Evaluating the two 1D falloffs once per axis turns the per-pixel mesh sum into a handful of
+    // multiply-adds, instead of an `exp` per mesh cell per pixel (millions per collage).
+    let w = width as usize;
+    let h = height as usize;
+    let mcols = mesh_cols as usize;
+    let mrows = mesh_rows as usize;
+
+    // Only the mesh modes need these; thermal and dark would otherwise allocate ~130 KB per call for nothing.
+    let mut col_weight: Vec<f32> = Vec::new();
+    let mut col_total: Vec<f32> = Vec::new();
+    if bg_mode != 4 && bg_mode != 5 {
+        col_weight = vec![0f32; mcols * w];
+        col_total = vec![0f32; w];
+        for mc in 0..mcols {
+            let cx = (mc as f32 + 0.5) / mesh_cols as f32;
+            for x in 0..w {
+                let u = x as f32 * inv_w;
+                let dx = (u - cx) * aspect;
+                let weight = (-dx * dx * 5.0).exp();
+                col_weight[mc * w + x] = weight;
+                col_total[x] += weight;
+            }
+        }
+    }
+
+    // Column sums per mesh row: `mesh_sum[mr][x] = sum over mc of colour * falloff`, so the pixel loop
+    // only has to fold in the row falloff instead of walking the whole mesh again.
+    let mut mesh_sum: Vec<f32> = Vec::new();
+    if bg_mode != 4 && bg_mode != 5 {
+        mesh_sum = vec![0f32; mrows * w * 3];
+        for mr in 0..mrows {
+            for x in 0..w {
+                let mut sr = 0.0;
+                let mut sg = 0.0;
+                let mut sb = 0.0;
+                for mc in 0..mcols {
+                    let (cr, cg, cb) = get_mesh_color(grid_colors, mr, mc, mcols);
+                    let cw = col_weight[mc * w + x];
+                    sr += cr * cw;
+                    sg += cg * cw;
+                    sb += cb * cw;
+                }
+                let base = (mr * w + x) * 3;
+                mesh_sum[base] = sr;
+                mesh_sum[base + 1] = sg;
+                mesh_sum[base + 2] = sb;
+            }
+        }
+    }
+
+    let mut row_weight: Vec<f32> = Vec::new();
+    let mut row_total: Vec<f32> = Vec::new();
+    if bg_mode != 4 && bg_mode != 5 {
+        row_weight = vec![0f32; mrows * h];
+        row_total = vec![0f32; h];
+        for mr in 0..mrows {
+            let cy = (mr as f32 + 0.5) / mesh_rows as f32;
+            for y in 0..h {
+                let v = y as f32 * inv_h;
+                let dy = v - cy;
+                let weight = (-dy * dy * 5.0).exp();
+                row_weight[mr * h + y] = weight;
+                row_total[y] += weight;
+            }
+        }
+    }
+
+    for y in 0..h {
         let v = y as f32 * inv_h;
-        let row_f = v * (mesh_rows - 1) as f32;
-        let r_idx = (row_f.floor() as usize).min(mesh_rows as usize - 2);
-        let r_next = r_idx + 1;
-        let row_fract = row_f.fract();
 
         let scanline_noise = if bg_mode == 3 {
             if y % 3 == 0 {
@@ -58,7 +122,7 @@ pub fn render_background(
             0.0
         };
 
-        for x in 0..width {
+        for x in 0..width as usize {
             let u = x as f32 * inv_w;
 
             let mut r = bg_r;
@@ -69,47 +133,37 @@ pub fn render_background(
                 if bg_mode == 4 {
                     // Restore blocky mesh grid for thermal mode ("chessboard / square shaped thingy")
                     let col_f = u * (mesh_cols - 1) as f32;
-                    let c_idx = (col_f.floor() as usize).min(mesh_cols as usize - 2);
+                    let c_idx = (col_f.floor() as usize).min(mcols - 2);
                     let c_next = c_idx + 1;
-
-                    // Stepped weights for the blocky / chessboard effect
-                    let block_r_weight = (row_fract * 4.0).floor() / 4.0;
+                    let row_f = v * (mesh_rows - 1) as f32;
+                    let r_idx = (row_f.floor() as usize).min(mrows - 2);
+                    let r_next = r_idx + 1;
+                    let block_r_weight = (row_f.fract() * 4.0).floor() / 4.0;
                     let block_c_weight = (col_f.fract() * 4.0).floor() / 4.0;
 
-                    let c_tl = get_mesh_color(grid_colors, r_idx, c_idx, mesh_cols as usize);
-                    let c_tr = get_mesh_color(grid_colors, r_idx, c_next, mesh_cols as usize);
-                    let c_bl = get_mesh_color(grid_colors, r_next, c_idx, mesh_cols as usize);
-                    let c_br = get_mesh_color(grid_colors, r_next, c_next, mesh_cols as usize);
+                    let c_tl = get_mesh_color(grid_colors, r_idx, c_idx, mcols);
+                    let c_tr = get_mesh_color(grid_colors, r_idx, c_next, mcols);
+                    let c_bl = get_mesh_color(grid_colors, r_next, c_idx, mcols);
+                    let c_br = get_mesh_color(grid_colors, r_next, c_next, mcols);
 
                     r = lerp(lerp(c_tl.0, c_tr.0, block_c_weight), lerp(c_bl.0, c_br.0, block_c_weight), block_r_weight);
                     g = lerp(lerp(c_tl.1, c_tr.1, block_c_weight), lerp(c_bl.1, c_br.1, block_c_weight), block_r_weight);
                     b = lerp(lerp(c_tl.2, c_tr.2, block_c_weight), lerp(c_bl.2, c_br.2, block_c_weight), block_r_weight);
                 } else {
+                    // Separable form: the column sums are already weighted, so each row only needs its own falloff.
                     let mut sum_r = 0.0;
                     let mut sum_g = 0.0;
                     let mut sum_b = 0.0;
-                    let mut sum_w = 0.0;
 
-                    for mr in 0..mesh_rows {
-                        for mc in 0..mesh_cols {
-                            let cx = (mc as f32 + 0.5) / mesh_cols as f32;
-                            let cy = (mr as f32 + 0.5) / mesh_rows as f32;
-
-                            let dx = (u - cx) * aspect;
-                            let dy = v - cy;
-                            let dist_sq = dx*dx + dy*dy;
-
-                            // Premium Gaussian falloff for organic, fluid splats
-                            let weight = (-dist_sq * 5.0).exp();
-
-                            let (cr, cg, cb) = get_mesh_color(grid_colors, mr as usize, mc as usize, mesh_cols as usize);
-                            sum_r += cr * weight;
-                            sum_g += cg * weight;
-                            sum_b += cb * weight;
-                            sum_w += weight;
-                        }
+                    for mr in 0..mrows {
+                        let weight = row_weight[mr * h + y];
+                        let base = (mr * w + x) * 3;
+                        sum_r += mesh_sum[base] * weight;
+                        sum_g += mesh_sum[base + 1] * weight;
+                        sum_b += mesh_sum[base + 2] * weight;
                     }
 
+                    let sum_w = col_total[x] * row_total[y];
                     if sum_w > 0.0 {
                         r = sum_r / sum_w;
                         g = sum_g / sum_w;
@@ -172,17 +226,17 @@ pub fn render_background(
             let noise = if bg_mode == 3 {
                 scanline_noise
             } else if bg_mode == 4 {
-                let h = wang_hash(y * width + x);
+                let h = wang_hash((y * w + x) as u32);
                 if h > 0.0 { 0.4 * grain_mul } else { -0.4 * grain_mul }
             } else if bg_mode == 1 {
                 let bx = x / 8;
                 let by = y / 8;
-                wang_hash(by * block_cols + bx) * grain_mul
+                wang_hash((by * block_cols as usize + bx) as u32) * grain_mul
             } else {
-                wang_hash(y * width + x) * grain_mul
+                wang_hash((y * w + x) as u32) * grain_mul
             };
 
-            let idx = (y as usize * width as usize + x as usize) * 4;
+            let idx = (y * w + x) * 4;
             data[idx]     = (r + noise).clamp(0.0, 255.0) as u8;
             data[idx + 1] = (g + noise).clamp(0.0, 255.0) as u8;
             data[idx + 2] = (b + noise).clamp(0.0, 255.0) as u8;
