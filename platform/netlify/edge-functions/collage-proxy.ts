@@ -145,6 +145,13 @@ export default async (req: Request): Promise<Response> => {
     const weight = url.searchParams.get("weight") ?? "400";
 
     if (!family) return jsonError("Font family required", 400);
+    // Interpolated into a Google Fonts query, so anything beyond a family name would inject parameters.
+    if (!/^[A-Za-z0-9 +-]{1,64}$/.test(family)) {
+      return jsonError("Invalid font family", 400);
+    }
+    if (!/^\d{1,4}(\.\.\d{1,4})?$/.test(weight)) {
+      return jsonError("Invalid font weight", 400);
+    }
 
     /** Modern Chrome UA → Google Fonts returns WOFF2 */
     const UA =
@@ -231,6 +238,9 @@ export default async (req: Request): Promise<Response> => {
 
   /** SOURCE: lb / lfm */
   if (!user) return jsonError("Username required", 400);
+  if (!/^[A-Za-z0-9_.+-]{1,64}$/.test(user)) {
+    return jsonError("Invalid username", 400);
+  }
 
   try {
     type AlbumEntry = {

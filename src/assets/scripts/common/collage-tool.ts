@@ -79,6 +79,8 @@ export function initCollageTool(defaultUsername: string) {
   let currentWorker: Worker | null = null;
   /** Bumped on every run, so a slow earlier response cannot replace a newer collage. */
   let generation = 0;
+  /** Cancels the stats request of a run that has been superseded. */
+  let statsRequest: AbortController | null = null;
   let latestBlob: Blob | null = null;
   let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -233,7 +235,12 @@ export function initCollageTool(defaultUsername: string) {
         user,
         period: periodSelect.value,
       });
-      const res = await fetch(`/api/collage-proxy?${query}`);
+      // A new run makes the previous request pointless; abort it instead of letting it finish.
+      statsRequest?.abort();
+      statsRequest = new AbortController();
+      const res = await fetch(`/api/collage-proxy?${query}`, {
+        signal: statsRequest.signal,
+      });
       const data = await res.json().catch(() => null);
       if (run !== generation) return;
       if (!res.ok || !data || data.error) {
@@ -335,6 +342,8 @@ export function initCollageTool(defaultUsername: string) {
       currentWorker.postMessage(request, [offscreen]);
     } catch (err) {
       if (run !== generation) return;
+      // An aborted request is the user starting another run, not a failure worth showing.
+      if ((err as Error).name === "AbortError") return;
       updateStatus(`Error: ${(err as Error).message}`);
       previewWrapper?.classList.remove("is-loading");
       setActionsEnabled(false);
