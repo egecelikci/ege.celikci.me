@@ -3,29 +3,9 @@ import { ensureDir } from "@std/fs/ensure-dir";
 import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
 import { HttpClient } from "../lib/fetch-base.ts";
 import { exists } from "@std/fs/exists";
-import type {
-  EAAPosterInfo,
-  MBEvent,
-  MBEventList,
-  MBRelation,
-  MBRelationArtist,
-  MBRelationLabel,
-  MBRelationPlace,
-  RawIzmirEvents,
-} from "../lib/schemas.ts";
+import type { MBEvent, MBRelation, RawIzmirEvents } from "../lib/schemas.ts";
 
-export type {
-  EAAPosterInfo,
-  MBEvent,
-  MBEventList,
-  MBRelation,
-  MBRelationArtist,
-  MBRelationLabel,
-  MBRelationPlace,
-  RawIzmirEvents,
-};
-
-import { localPosterFile, posterPlan } from "./posters.ts";
+import { localPosterFile, posterPlan } from "./_lib/posters.ts";
 import {
   EAAPosterInfoSchema,
   MBEventListSchema,
@@ -48,48 +28,6 @@ const CONFIG = {
     posters: "src/assets/images/posters",
   },
 } as const;
-
-/** Local event metadata from src/_data/events.yml */
-export interface LocalEventData {
-  title?: string;
-  description?: string;
-  instagram_url?: string | string[];
-  venue_name?: string;
-  price?: string;
-  video?: { src: string; title?: string };
-  exclude_labels?: string[];
-  setlist?: string;
-  photographers?: Record<string, { name: string; url?: string }>;
-  photographer?: { name: string; url?: string };
-  /**
-   * The event poster is AI-generated. Listing cards show a disclosure tile instead of the image; the detail page veils it as a spoiler.
-   */
-  ai_poster?: boolean;
-}
-
-/** An event after the events preprocessor has enriched it at build time */
-export interface EnrichedMBEvent extends MBEvent {
-  beginDate: string | null;
-  isUpcoming: boolean;
-  displayTitle: string;
-  artists: string[];
-  isCustomTitle: boolean;
-  local: LocalEventData;
-  venueName?: string;
-  labels?: MBRelation[];
-  /** Set by the events preprocessor to guard against double enrichment */
-  _enriched?: boolean;
-}
-
-/**
- * Enriched events built at build time by the events preprocessor; never saved to disk.
- */
-export interface EnrichedIzmirEvents extends RawIzmirEvents {
-  events: EnrichedMBEvent[];
-  all: EnrichedMBEvent[];
-  upcoming: EnrichedMBEvent[];
-  past: EnrichedMBEvent[];
-}
 
 /**
  * Downloads event posters and tracks the filenames already present on disk so unchanged posters are not re-fetched.

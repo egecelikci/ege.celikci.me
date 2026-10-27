@@ -3,7 +3,7 @@
  * Kept free of side effects so they can be unit tested.
  */
 
-import type { LocalEventData, MBRelation } from "../utils/fetch-events.ts";
+import type { MBEvent, MBRelation, RawIzmirEvents } from "./schemas.ts";
 
 /** Roles that aren't performers (posters, design, etc.) */
 export const NON_PERFORMER_ROLES = [
@@ -109,4 +109,46 @@ export function filterLabels(
       r["target-type"] === "label" &&
       !excludeLabels.includes(r.label?.id ?? "")
     );
+}
+
+/** Local event metadata from src/_data/events.yml */
+export interface LocalEventData {
+  title?: string;
+  description?: string;
+  instagram_url?: string | string[];
+  venue_name?: string;
+  price?: string;
+  video?: { src: string; title?: string };
+  exclude_labels?: string[];
+  setlist?: string;
+  photographers?: Record<string, { name: string; url?: string }>;
+  photographer?: { name: string; url?: string };
+  /**
+   * The event poster is AI-generated. Listing cards show a disclosure tile instead of the image; the detail page veils it as a spoiler.
+   */
+  ai_poster?: boolean;
+}
+
+/** An event after the events preprocessor has enriched it at build time */
+export interface EnrichedMBEvent extends MBEvent {
+  beginDate: string | null;
+  isUpcoming: boolean;
+  displayTitle: string;
+  artists: string[];
+  isCustomTitle: boolean;
+  local: LocalEventData;
+  venueName?: string;
+  labels?: MBRelation[];
+  /** Set by the events preprocessor to guard against double enrichment */
+  _enriched?: boolean;
+}
+
+/**
+ * Enriched events built at build time by the events preprocessor; never saved to disk.
+ */
+export interface EnrichedIzmirEvents extends RawIzmirEvents {
+  events: EnrichedMBEvent[];
+  all: EnrichedMBEvent[];
+  upcoming: EnrichedMBEvent[];
+  past: EnrichedMBEvent[];
 }

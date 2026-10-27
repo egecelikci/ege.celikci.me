@@ -3,7 +3,8 @@
  * Pure logic lives in lib/events.ts for unit testing.
  */
 
-import type { EnrichedMBEvent, MBRelation } from "../../utils/fetch-events.ts";
+import type { EnrichedMBEvent } from "../../lib/events.ts";
+import type { MBRelation } from "../../lib/schemas.ts";
 import {
   buildDisplayTitle,
   detectCustomTitle,

@@ -4,8 +4,8 @@ import type {
   EnrichedIzmirEvents,
   EnrichedMBEvent,
   LocalEventData,
-  MBRelationPlace,
-} from "../utils/fetch-events.ts";
+} from "../lib/events.ts";
+import type { MBRelationPlace } from "../lib/schemas.ts";
 import type { PostImage } from "../plugins/preprocessors/media.ts";
 import type { WebmentionFeed } from "../src/types/index.ts";
 

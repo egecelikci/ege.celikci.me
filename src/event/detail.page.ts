@@ -1,6 +1,6 @@
 import { exists } from "@std/fs/exists";
 import { getLinkInfo } from "../../lib/links.ts";
-import type { MBRelation } from "../../utils/fetch-events.ts";
+import type { MBRelation } from "../../lib/schemas.ts";
 
 async function collectGalleryImages(
   eventId: string,

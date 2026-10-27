@@ -13,7 +13,7 @@ import {
   resolveVenueName,
   sortByDate,
 } from "./events.ts";
-import type { MBRelation } from "../utils/fetch-events.ts";
+import type { MBRelation } from "./schemas.ts";
 
 Deno.test("parseEventDate parses ISO strings", () => {
   assertEquals(parseEventDate("2026-08-15"), new Date("2026-08-15"));

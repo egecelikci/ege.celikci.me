@@ -56,7 +56,7 @@ site.addEventListener("beforeBuild", () => {
   }
   return Promise.all([
     runFetch("jobs/music.ts", "music"),
-    runFetch("utils/fetch-events.ts", "events"),
+    runFetch("jobs/events.ts", "events"),
     runFetch("jobs/steam.ts", "steam"),
   ]);
 });
