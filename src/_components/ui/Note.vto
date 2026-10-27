@@ -34,7 +34,7 @@
       <h2 class="p-name note__title">{{ it.note.title }}</h2>
     {{ /if }}
     <div class="e-content markdown">
-      {{ it.note.content |> vto(vtoContext) |> md |> safe }}
+      {{ it.note.content |> vto(vtoContext) |> safe }}
     </div>
   </div>
 </article>
