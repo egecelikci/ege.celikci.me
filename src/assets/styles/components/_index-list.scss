@@ -153,14 +153,5 @@
       text-align: right;
       transition: color 0.3s ease;
     }
-
-    &__extra {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-left: 1rem;
-      position: relative;
-      z-index: 30;
-    }
   }
 }

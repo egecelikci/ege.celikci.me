@@ -73,7 +73,7 @@
       scroll-margin-top: 1.5rem;
     }
 
-    & a:not(.btn, .heading-anchor, .no-underline) {
+    & a:not(.btn, .heading-anchor) {
       color: var(--color-primary);
       text-decoration: none;
       border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,

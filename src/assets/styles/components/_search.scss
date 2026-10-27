@@ -202,15 +202,6 @@
         transition: color 0.3s ease;
       }
 
-      &__arrow {
-        opacity: 0;
-        transition: opacity 0.3s ease;
-
-        .search__result:hover & {
-          opacity: 0.5;
-        }
-      }
-
       &__date {
         font-family: var(--font-mono);
         font-weight: 700;
