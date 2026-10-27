@@ -4,7 +4,7 @@
 
 import { assertEquals } from "@std/assert";
 import { consolidateSteamLibraries } from "./steam.ts";
-import type { SteamOwnedGame } from "../../src/types/index.ts";
+import type { SteamOwnedGame } from "../src/types/index.ts";
 
 function game(appid: number, name: string): SteamOwnedGame {
   return { appid, name, playtime_forever: 600, playtime_2weeks: 60 };

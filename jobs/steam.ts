@@ -7,7 +7,7 @@ import {
   SteamOwnedGamesResponseSchema,
   validateOrThrow,
 } from "../utils/schemas.ts";
-import { consolidateSteamLibraries } from "./_lib/steam.ts";
+import { consolidateSteamLibraries } from "../lib/steam.ts";
 import { HttpClient } from "../utils/fetch-base.ts";
 
 const CONFIG = {
