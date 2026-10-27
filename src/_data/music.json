@@ -455,6 +455,34 @@
         {
           "artist": {
             "country": "US",
+            "disambiguation": "",
+            "id": "60e8e938-365e-4429-a141-4c79eb49588d",
+            "name": "Chelsea Wolfe",
+            "sort-name": "Wolfe, Chelsea",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "joinphrase": "",
+          "name": "Chelsea Wolfe"
+        }
+      ],
+      "disambiguation": "",
+      "first-release-date": "2010",
+      "id": "2b6c81bb-5dc1-4af9-8be0-e6b9e9db5965",
+      "imagePath": "/assets/images/covers/colored/2b6c81bb-5dc1-4af9-8be0-e6b9e9db5965.webp",
+      "imagePathMono": "/assets/images/covers/monochrome/2b6c81bb-5dc1-4af9-8be0-e6b9e9db5965.png",
+      "primary-type": "Album",
+      "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+      "ratedAt": "Tue, 27 Oct 2026 07:03:51 GMT",
+      "secondary-type-ids": [],
+      "secondary-types": [],
+      "title": "Ἀποκάλυψις"
+    },
+    {
+      "artist-credit": [
+        {
+          "artist": {
+            "country": "US",
             "disambiguation": "US depressive black metal band",
             "id": "2ef8e9b2-5f7d-4cfb-899a-bc4544755371",
             "name": "Sadness",
