@@ -128,11 +128,7 @@ $breakpoints: (
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not(.theme-light) {
+  :root {
     @include dark-palette;
   }
-}
-
-:root.theme-dark {
-  @include dark-palette;
 }
