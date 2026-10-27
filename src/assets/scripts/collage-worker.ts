@@ -326,7 +326,7 @@ self.onmessage = async (e: MessageEvent) => {
      * velvet gradient, silver desat+sheen, terminal phosphor, vignette,
      * and darkenBottom.
      */
-    render_background(
+    const rendered = render_background(
       pixelData,
       W,
       H,
@@ -340,7 +340,13 @@ self.onmessage = async (e: MessageEvent) => {
       rows,
     );
 
-    imageData.data.set(pixelData);
+    // The kernel rejects sizes or meshes it cannot honour instead of trapping, so a false here is a real error rather than a blank background.
+    if (!rendered) {
+      throw new Error(
+        `background kernel rejected ${W}x${H} with a ${cols}x${rows} mesh`,
+      );
+    }
+
     ctx.putImageData(imageData, 0, 0);
 
     /**

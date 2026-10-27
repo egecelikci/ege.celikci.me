@@ -92,3 +92,76 @@ for (const mode of ["aura", "terminal"] as const) {
 Deno.test("kernel output is stable across calls", async () => {
   assertEquals(await render(96, 192, 0), await render(96, 192, 0));
 });
+
+Deno.test("kernel rejects a mesh it cannot interpolate", () => {
+  const pixels = () => new Uint8Array(64 * 64 * 4);
+  const grid = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+
+  for (const [cols, rows] of [[0, 2], [2, 0], [1, 1], [1, 2], [2, 1]]) {
+    const data = pixels();
+    const rendered = render_background(
+      data,
+      64,
+      64,
+      grid,
+      0.6,
+      0.05,
+      0,
+      false,
+      false,
+      cols,
+      rows,
+    );
+    assertEquals(rendered, false, `mesh ${cols}x${rows}`);
+    assertEquals(
+      data.some((v) => v !== 0),
+      false,
+      `mesh ${cols}x${rows} wrote`,
+    );
+  }
+});
+
+Deno.test("kernel rejects a buffer that is too small for the canvas", () => {
+  const grid = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  const short = new Uint8Array(64 * 64 * 4 - 4);
+  assertEquals(
+    render_background(short, 64, 64, grid, 0.6, 0.05, 0, false, false, 2, 2),
+    false,
+  );
+  const shortGrid = new Uint8Array(11);
+  assertEquals(
+    render_background(
+      new Uint8Array(64 * 64 * 4),
+      64,
+      64,
+      shortGrid,
+      0.6,
+      0.05,
+      0,
+      false,
+      false,
+      2,
+      2,
+    ),
+    false,
+  );
+});
+
+Deno.test("kernel accepts a valid call", () => {
+  assertEquals(
+    render_background(
+      new Uint8Array(64 * 64 * 4),
+      64,
+      64,
+      new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+      0.6,
+      0.05,
+      0,
+      false,
+      false,
+      2,
+      2,
+    ),
+    true,
+  );
+});

@@ -95,6 +95,11 @@ pub fn get_vibrant_color(data: &[u8]) -> Color {
     }
 }
 
+/// Fill `data` (RGBA, `width * height * 4` bytes) with the background for `bg_mode`.
+///
+/// `grid_colors` is the mesh in row-major RGB, `mesh_cols * mesh_rows * 3` bytes. `bg_mode` selects the palette: 0 aura, 1 silver, 2 velvet, 3 terminal, 4 thermal, 5 dark; anything else renders as aura.
+///
+/// Returns `false` and leaves `data` untouched when the size or mesh invariants do not hold, which is the only failure mode a caller has to handle.
 #[wasm_bindgen]
 pub fn render_background(
     data: &mut [u8],
@@ -108,11 +113,17 @@ pub fn render_background(
     darken_bottom: bool,
     mesh_cols: u32,
     mesh_rows: u32,
-) {
-    let expected_grid = (mesh_rows * mesh_cols * 3) as usize;
-    let expected_data = (width * height * 4) as usize;
+) -> bool {
+    // A mesh needs at least 2x2 corners to interpolate between; the loops below subtract 2 without checking, which used to wrap and read out of bounds.
+    if width < 2 || height < 2 || mesh_cols < 2 || mesh_rows < 2 {
+        return false;
+    }
+
+    // Compare in usize: the u32 products overflow for large canvases long before the buffers would.
+    let expected_grid = mesh_cols as usize * mesh_rows as usize * 3;
+    let expected_data = width as usize * height as usize * 4;
     if grid_colors.len() < expected_grid || data.len() < expected_data {
-        return;
+        return false;
     }
 
     let bg_r = 9.0f32;
@@ -273,6 +284,8 @@ pub fn render_background(
             data[idx + 3] = 255;
         }
     }
+
+    true
 }
 
 #[inline(always)]
