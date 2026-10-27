@@ -2,6 +2,7 @@ import xss, { escapeHtml } from "xss";
 import { getLinkInfo } from "./links.ts";
 import { noteTitle as buildNoteTitle } from "./incoming.ts";
 import { pageType as schemaPageType } from "./schema.ts";
+import { isOwnWebmention as isOwn, ownUrls } from "./webmentions.ts";
 
 /** The site metadata these filters need. Passed in so this module stays a leaf: it never reads `src/_data` itself. */
 export interface FilterMeta {
@@ -40,12 +41,7 @@ interface Webmention {
 
 export function createFilters({ site, author, git }: FilterMeta) {
   const SITE_URL = site.url;
-  const OWN_URLS = [
-    SITE_URL,
-    author.social.mastodon.url,
-    author.social.bluesky.url,
-    ...author.links.map((l) => l.url),
-  ].map((u) => u.replace(/\/+$/, ""));
+  const OWN_URLS = ownUrls(site.url, author);
 
   const filters = {
     /** schema.org type for the page wrapper (see lib/schema.ts). */
@@ -79,12 +75,8 @@ export function createFilters({ site, author, git }: FilterMeta) {
       return end ? array.slice(start, end) : array.slice(start);
     },
 
-    isOwnWebmention: function (webmention: Webmention): boolean {
-      const authorUrl = webmention && webmention.author
-        ? webmention.author.url?.replace(/\/+$/, "")
-        : undefined;
-      return !!(authorUrl && OWN_URLS.includes(authorUrl));
-    },
+    isOwnWebmention: (webmention: Webmention): boolean =>
+      isOwn(webmention, OWN_URLS),
 
     webmentionsByUrl: function (
       webmentions: Webmention[] | undefined,

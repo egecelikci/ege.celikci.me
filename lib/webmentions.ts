@@ -5,6 +5,7 @@
 
 import type { Webmention, WebmentionFeed } from "../src/types/index.ts";
 import { WebmentionSchema } from "./schemas.ts";
+import { normalizeUrl } from "./webmention-stats.ts";
 
 /** One page of the webmention.io `mentions.jf2` API, or `null` when the request failed. */
 export type FetchPage = (params: URLSearchParams) => Promise<unknown | null>;
@@ -131,4 +132,49 @@ export async function syncWebmentions(
     updated: merged.updated,
     dropped,
   };
+}
+
+/** The author fields these helpers read; webmention.io sends `null` for both. */
+export interface MentionAuthor {
+  readonly author?: { readonly url?: string | null } | null;
+}
+
+/** The site metadata needed to decide what counts as "ours". */
+export interface OwnSiteMeta {
+  readonly social: {
+    readonly mastodon: { readonly url: string };
+    readonly bluesky: { readonly url: string };
+  };
+  readonly links: readonly { readonly url: string }[];
+}
+
+/**
+ * Normalised URLs that belong to this site: the site itself, the author's fediverse accounts, and every profile linked from the about data.
+ *
+ * @param siteUrl - The site's canonical URL.
+ * @param author - The author metadata carrying the social accounts and links.
+ * @returns The URLs without trailing slashes, ready for comparison with `author.url`.
+ */
+export function ownUrls(siteUrl: string, author: OwnSiteMeta): string[] {
+  return [
+    siteUrl,
+    author.social.mastodon.url,
+    author.social.bluesky.url,
+    ...author.links.map((link) => link.url),
+  ].map(normalizeUrl);
+}
+
+/**
+ * Whether a mention came from this site or one of the author's own accounts.
+ *
+ * @param mention - The mention to test.
+ * @param own - URLs from {@link ownUrls}.
+ * @returns `true` when the author URL is one of `own`; a mention with no author URL is never its own.
+ */
+export function isOwnWebmention(
+  mention: MentionAuthor,
+  own: readonly string[],
+): boolean {
+  const authorUrl = mention.author?.url;
+  return !!authorUrl && own.includes(normalizeUrl(authorUrl));
 }

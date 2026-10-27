@@ -2,7 +2,9 @@ import { assertEquals, assertRejects, assertStrictEquals } from "@std/assert";
 import type { Webmention, WebmentionFeed } from "../src/types/index.ts";
 import {
   type FetchPage,
+  isOwnWebmention,
   mergeMentions,
+  ownUrls,
   parseMentions,
   syncWebmentions,
 } from "./webmentions.ts";
@@ -158,4 +160,36 @@ Deno.test("syncWebmentions stops at maxPages", async () => {
   const api = fakeApi([full, full, full, full]);
   await syncWebmentions(empty, api.fetchPage, { perPage: 1, maxPages: 3 });
   assertEquals(api.calls.length, 3);
+});
+
+Deno.test("ownUrls normalises the site and every author profile", () => {
+  const own = ownUrls("https://ege.celikci.me/", {
+    social: {
+      mastodon: { url: "https://ieji.de/@eg/" },
+      bluesky: { url: "https://bsky.app/profile/did:plc:test" },
+    },
+    links: [{ url: "https://git.celikci.me/egecelikci/" }],
+  });
+  assertEquals(own, [
+    "https://ege.celikci.me",
+    "https://ieji.de/@eg",
+    "https://bsky.app/profile/did:plc:test",
+    "https://git.celikci.me/egecelikci",
+  ]);
+});
+
+Deno.test("isOwnWebmention compares normalised urls and ignores missing authors", () => {
+  const own = ["https://ege.celikci.me"];
+  assertEquals(
+    isOwnWebmention({ author: { url: "https://ege.celikci.me/" } }, own),
+    true,
+  );
+  assertEquals(
+    isOwnWebmention({ author: { url: "https://other.example" } }, own),
+    false,
+  );
+  assertEquals(isOwnWebmention({}, own), false);
+  assertEquals(isOwnWebmention({ author: null }, own), false);
+  assertEquals(isOwnWebmention({ author: { url: null } }, own), false);
+  assertEquals(isOwnWebmention({ author: { url: "" } }, own), false);
 });
