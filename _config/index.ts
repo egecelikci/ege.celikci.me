@@ -174,6 +174,8 @@ export default function () {
     if (Deno.env.get("LUME_CHECKS") === "1") {
       site
         .use(seo({
+          // The reports are only worth having on disk: the console line just says how many there were.
+          output: "_reports/seo.json",
           options: {
             body: false,
             imgAlt: { min: 0, max: 1500, unit: "character" },
@@ -181,11 +183,14 @@ export default function () {
           },
         }))
         .use(validateHTML({
+          output: "_reports/html.json",
           rules: {
             "attribute-empty-style": "off",
             "attribute-boolean-style": "off",
             "no-inline-style": "off",
             "no-implicit-input-type": "off",
+            // `minify_html` drops attributes that only restate the default, `type` on forms included.
+            "no-implicit-button-type": "off",
             "long-title": "off",
             "valid-id": "off",
           },
