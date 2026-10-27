@@ -38,6 +38,9 @@
       tabindex="-1"
     />
 
+    {{# The form needs a submit control to work without JavaScript; the visible affordance is the icon. #}}
+    {{ if !isFilter }}<button type="submit" class="sr-only">Search</button>{{ /if }}
+
     {{# Search Icon #}}
     <div class="search__icon" aria-hidden="true">
       {{ await it.comp.base.Icon({ name: "search", classes: "w-3.5 h-3.5" }) |> safe }}
