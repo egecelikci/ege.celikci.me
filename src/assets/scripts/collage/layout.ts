@@ -9,7 +9,7 @@ export const CANVAS_WIDTH = 1080;
 /** Canvas height. Only the caller needs it; the layout itself is width-driven. */
 export const CANVAS_HEIGHT = 1920;
 /** Space between the canvas edge and the grid. */
-const MARGIN = 80;
+export const MARGIN = 80;
 /**
  * Vertical space the grid may occupy, above the album list.
  *

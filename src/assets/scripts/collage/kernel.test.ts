@@ -79,8 +79,8 @@ const GOLDEN_SMALL: Record<string, string> = {
  *
  * These moved twice: once when the mesh sum was made separable, and once when the kernel was ported from wasm
  * to TypeScript. Both rewrites were checked against the previous build pixel by pixel — max channel delta 1,
- * mean delta 0.0000 — and the five small-size vectors are unchanged. Hold future changes to that standard
- * rather than to these hashes alone.
+ * mean delta 0.0000 — and the five small-size vectors are unchanged. A later block-colour cache for the thermal
+ * mode left every vector untouched. Hold future changes to that standard rather than to these hashes alone.
  */
 const GOLDEN_FULL: Record<string, string> = {
   aura: "6e76847ace8dd47c",

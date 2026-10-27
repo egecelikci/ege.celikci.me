@@ -18,7 +18,7 @@
 
 import { renderBackground } from "./collage/kernel.ts";
 import { FALLBACK_COLOR, type Rgb, vibrantColor } from "./collage/color.ts";
-import { calculateLayout, gridCoordinates } from "./collage/layout.ts";
+import { calculateLayout, gridCoordinates, MARGIN } from "./collage/layout.ts";
 import {
   type Album,
   bgModeIndex,
@@ -30,7 +30,6 @@ import {
 
 const W = 1080;
 const H = 1920;
-const MARGIN = 80;
 const FONT_SANS = "'DM Sans', 'Inter', system-ui, -apple-system, sans-serif";
 const FONT_MONO = "'DM Mono', monospace";
 

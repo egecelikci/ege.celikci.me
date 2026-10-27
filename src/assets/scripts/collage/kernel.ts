@@ -139,9 +139,9 @@ export function renderBackground(input: BackgroundInput): boolean {
       const rowF = y * invH * (meshRows - 1);
       const rIdx = Math.min(Math.floor(rowF), meshRows - 2);
       const at = y * 3;
-      thermalRows[at] = rIdx;
+      thermalRows[at] = (rIdx * meshCols) * 3;
       thermalRows[at + 1] = Math.floor((rowF % 1) * 4) / 4;
-      thermalRows[at + 2] = (rIdx * meshCols) * 3;
+      thermalRows[at + 2] = 0;
     }
     thermalCols = new Float32Array(width * 3);
     for (let x = 0; x < width; x++) {
@@ -153,6 +153,15 @@ export function renderBackground(input: BackgroundInput): boolean {
       thermalCols[at + 2] = 0;
     }
   }
+
+  // Thermal quantises the mesh weights into quarters, so the blended colour is identical for every
+  // pixel inside a block. Recomputing it per pixel cost 14 reads and 6 lerps for nothing; the block
+  // key only changes every few pixels.
+  let cachedRowKey = Number.NaN;
+  let cachedColKey = Number.NaN;
+  let blockR = 0;
+  let blockG = 0;
+  let blockB = 0;
 
   for (let y = 0; y < height; y++) {
     const v = y * invH;
@@ -171,31 +180,42 @@ export function renderBackground(input: BackgroundInput): boolean {
 
       if (bgMode !== BG_MODE.dark) {
         if (bgMode === BG_MODE.thermal) {
-          // Blocky mesh: quantise the mesh weights into quarters for a chessboard look.
           const rowAt = y * 3;
           const colAt = x * 3;
-          const blockR = thermalRows![rowAt + 1];
-          const blockC = thermalCols![colAt + 1];
+          const rowOffset = thermalRows![rowAt];
+          const colOffset = thermalCols![colAt];
+          const rowKey = rowOffset + thermalRows![rowAt + 1];
+          const colKey = colOffset + thermalCols![colAt + 1];
 
-          const tl = thermalRows![rowAt + 2] + thermalCols![colAt];
-          const tr = tl + 3;
-          const bl = tl + meshCols * 3;
-          const br = bl + 3;
-          r = mix(
-            mix(gridColors[tl], gridColors[tr], blockC),
-            mix(gridColors[bl], gridColors[br], blockC),
-            blockR,
-          );
-          g = mix(
-            mix(gridColors[tl + 1], gridColors[tr + 1], blockC),
-            mix(gridColors[bl + 1], gridColors[br + 1], blockC),
-            blockR,
-          );
-          b = mix(
-            mix(gridColors[tl + 2], gridColors[tr + 2], blockC),
-            mix(gridColors[bl + 2], gridColors[br + 2], blockC),
-            blockR,
-          );
+          if (rowKey !== cachedRowKey || colKey !== cachedColKey) {
+            const weightR = rowKey - rowOffset;
+            const weightC = colKey - colOffset;
+            const tl = rowOffset + colOffset;
+            const tr = tl + 3;
+            const bl = tl + meshCols * 3;
+            const br = bl + 3;
+            blockR = mix(
+              mix(gridColors[tl], gridColors[tr], weightC),
+              mix(gridColors[bl], gridColors[br], weightC),
+              weightR,
+            );
+            blockG = mix(
+              mix(gridColors[tl + 1], gridColors[tr + 1], weightC),
+              mix(gridColors[bl + 1], gridColors[br + 1], weightC),
+              weightR,
+            );
+            blockB = mix(
+              mix(gridColors[tl + 2], gridColors[tr + 2], weightC),
+              mix(gridColors[bl + 2], gridColors[br + 2], weightC),
+              weightR,
+            );
+            cachedRowKey = rowKey;
+            cachedColKey = colKey;
+          }
+
+          r = blockR;
+          g = blockG;
+          b = blockB;
         } else {
           let sr = 0;
           let sg = 0;
@@ -266,7 +286,7 @@ export function renderBackground(input: BackgroundInput): boolean {
       const noise = bgMode === BG_MODE.terminal
         ? scanlineNoise
         : bgMode === BG_MODE.thermal
-        ? (wangHash(y * width + x) > 0 ? 0.4 : -0.4) * grainMul
+        ? (wangHashPositive(y * width + x) ? 0.4 : -0.4) * grainMul
         : bgMode === BG_MODE.silver
         ? wangHash((y >> 3) * blockCols + (x >> 3)) * grainMul
         : wangHash(y * width + x) * grainMul;
@@ -290,6 +310,24 @@ function mix(a: number, b: number, t: number): number {
 /** Clamp to a byte. */
 function clamp(value: number): number {
   return value < 0 ? 0 : value > 255 ? 255 : value;
+}
+
+/**
+ * Sign of the Wang hash without the float conversion.
+ *
+ * `wangHash(seed) > 0` is the top bit of the mixed value being set, except for the single value
+ * `0x80000000`, which maps to exactly 0 and so is not greater. Testing that avoids a float division
+ * per pixel, which is what made the thermal mode the slowest path.
+ */
+function wangHashPositive(seed: number): boolean {
+  let x = seed >>> 0;
+  x = ((x ^ 61) ^ (x >>> 16)) >>> 0;
+  x = Math.imul(x, 0x9e3779b9) >>> 0;
+  x ^= x >>> 4;
+  x = Math.imul(x, 0x27d4eb2d) >>> 0;
+  x ^= x >>> 15;
+  x >>>= 0;
+  return x >= 0x80000000 && x !== 0x80000000;
 }
 
 /** Wang hash: a u32 seed to a float in [-0.5, 0.5], wrapping exactly as the Rust version does. */
