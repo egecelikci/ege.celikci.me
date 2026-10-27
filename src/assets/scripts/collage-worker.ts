@@ -16,7 +16,7 @@
  *  11. Encode to JPEG
  */
 
-import { render_background } from "../../../rust/collage/lib/rs_collage.js";
+import { renderBackground } from "./collage/kernel.ts";
 import { FALLBACK_COLOR, type Rgb, vibrantColor } from "./collage/color.ts";
 import { calculateLayout, gridCoordinates } from "./collage/layout.ts";
 import {
@@ -316,19 +316,19 @@ self.onmessage = async (e: MessageEvent) => {
      * velvet gradient, silver desat+sheen, terminal phosphor, vignette,
      * and darkenBottom.
      */
-    const rendered = render_background(
-      pixelData,
-      W,
-      H,
+    const rendered = renderBackground({
+      data: pixelData,
+      width: W,
+      height: H,
       gridColors,
+      meshCols: cols,
+      meshRows: rows,
       auraIntensity,
       grainAmount,
-      bgModeNum,
+      bgMode: bgModeNum,
       applyGlass,
       darkenBottom,
-      cols,
-      rows,
-    );
+    });
 
     // The kernel rejects sizes or meshes it cannot honour instead of trapping, so a false here is a real error rather than a blank background.
     if (!rendered) {

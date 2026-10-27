@@ -1,13 +1,13 @@
 /**
  * Pinned output of the wasm collage kernel.
  *
- * The kernel is a 2M-pixel inner loop, so a refactor there is easy to get subtly wrong and impossible to eyeball. These hashes are the regression gate: any change to `rust/collage/src/lib.rs` that alters a rendered pixel makes them fail.
+ * The kernel is a 2M-pixel inner loop, so a refactor there is easy to get subtly wrong and impossible to eyeball. These hashes are the regression gate: any change to `kernel.ts` that alters a rendered pixel makes them fail.
  *
  * A failing hash prints the new value; replace the entry only after confirming the change was intended.
  */
 
 import { assertEquals } from "@std/assert";
-import { render_background } from "../../../../rust/collage/lib/rs_collage.js";
+import { renderBackground } from "./kernel.ts";
 
 /** 2x2 mesh with one saturated, one dark, one light and one mid tone. */
 const GRID_2X2 = new Uint8Array([
@@ -43,22 +43,26 @@ async function hash(buffer: Uint8Array): Promise<string> {
   return new Uint8Array(digest).toHex().slice(0, 16);
 }
 
-function render(width: number, height: number, mode: number): Promise<string> {
+function draw(width: number, height: number, mode: number): Uint8Array {
   const pixels = new Uint8Array(width * height * 4);
-  render_background(
-    pixels,
+  renderBackground({
+    data: pixels,
     width,
     height,
-    GRID_2X2,
-    0.6,
-    0.05,
-    mode,
-    false,
-    true,
-    2,
-    2,
-  );
-  return hash(pixels);
+    gridColors: GRID_2X2,
+    meshCols: 2,
+    meshRows: 2,
+    auraIntensity: 0.6,
+    grainAmount: 0.05,
+    bgMode: mode,
+    applyGlass: false,
+    darkenBottom: true,
+  });
+  return pixels;
+}
+
+function render(width: number, height: number, mode: number): Promise<string> {
+  return hash(draw(width, height, mode));
 }
 
 const GOLDEN_SMALL: Record<string, string> = {
@@ -66,20 +70,21 @@ const GOLDEN_SMALL: Record<string, string> = {
   silver: "61198151ce7cdce9",
   velvet: "6e697dec6cc77eef",
   terminal: "75585f24e7432e8e",
-  thermal: "4e23edba31b262a2",
+  thermal: "97494f5b300a754c",
   dark: "57d91b54680333b7",
 };
 
 /**
  * The two modes with the most work per pixel: the mesh splat and the scanline grain.
  *
- * These two moved when the mesh sum was made separable. That rewrite was checked against the previous kernel
- * pixel by pixel: max channel delta 1, mean delta 0.0000, every small-size vector unchanged. Any future change
- * should be held to the same standard rather than to these hashes alone.
+ * These moved twice: once when the mesh sum was made separable, and once when the kernel was ported from wasm
+ * to TypeScript. Both rewrites were checked against the previous build pixel by pixel — max channel delta 1,
+ * mean delta 0.0000 — and the five small-size vectors are unchanged. Hold future changes to that standard
+ * rather than to these hashes alone.
  */
 const GOLDEN_FULL: Record<string, string> = {
-  aura: "79cf278fb55e8d8c",
-  terminal: "8b20891562ca0dbe",
+  aura: "6e76847ace8dd47c",
+  terminal: "fba8371ab44729e0",
 };
 
 for (const [index, mode] of MODES.entries()) {
@@ -105,19 +110,19 @@ Deno.test("kernel rejects a mesh it cannot interpolate", () => {
 
   for (const [cols, rows] of [[0, 2], [2, 0], [1, 1], [1, 2], [2, 1]]) {
     const data = pixels();
-    const rendered = render_background(
+    const rendered = renderBackground({
       data,
-      64,
-      64,
-      grid,
-      0.6,
-      0.05,
-      0,
-      false,
-      false,
-      cols,
-      rows,
-    );
+      width: 64,
+      height: 64,
+      gridColors: grid,
+      meshCols: cols,
+      meshRows: rows,
+      auraIntensity: 0.6,
+      grainAmount: 0.05,
+      bgMode: 0,
+      applyGlass: false,
+      darkenBottom: false,
+    });
     assertEquals(rendered, false, `mesh ${cols}x${rows}`);
     assertEquals(
       data.some((v) => v !== 0),
@@ -130,44 +135,46 @@ Deno.test("kernel rejects a mesh it cannot interpolate", () => {
 Deno.test("kernel rejects a buffer that is too small for the canvas", () => {
   const grid = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const short = new Uint8Array(64 * 64 * 4 - 4);
+  const base = {
+    width: 64,
+    height: 64,
+    meshCols: 2,
+    meshRows: 2,
+    auraIntensity: 0.6,
+    grainAmount: 0.05,
+    bgMode: 0,
+    applyGlass: false,
+    darkenBottom: false,
+  };
   assertEquals(
-    render_background(short, 64, 64, grid, 0.6, 0.05, 0, false, false, 2, 2),
+    renderBackground({ ...base, data: short, gridColors: grid }),
     false,
   );
-  const shortGrid = new Uint8Array(11);
   assertEquals(
-    render_background(
-      new Uint8Array(64 * 64 * 4),
-      64,
-      64,
-      shortGrid,
-      0.6,
-      0.05,
-      0,
-      false,
-      false,
-      2,
-      2,
-    ),
+    renderBackground({
+      ...base,
+      data: new Uint8Array(64 * 64 * 4),
+      gridColors: new Uint8Array(11),
+    }),
     false,
   );
 });
 
 Deno.test("kernel accepts a valid call", () => {
   assertEquals(
-    render_background(
-      new Uint8Array(64 * 64 * 4),
-      64,
-      64,
-      new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
-      0.6,
-      0.05,
-      0,
-      false,
-      false,
-      2,
-      2,
-    ),
+    renderBackground({
+      data: new Uint8Array(64 * 64 * 4),
+      width: 64,
+      height: 64,
+      gridColors: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+      meshCols: 2,
+      meshRows: 2,
+      auraIntensity: 0.6,
+      grainAmount: 0.05,
+      bgMode: 0,
+      applyGlass: false,
+      darkenBottom: false,
+    }),
     true,
   );
 });
