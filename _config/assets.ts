@@ -78,6 +78,7 @@ export default function () {
         "assets/styles/utils/_motif.scss",
         `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/website/_motif.scss`,
       )
+      /* The typst plugin feeds every font added to Lume into its compiler, and typst cannot read the woff2 files `google_fonts` downloads — `DMMono.ttf` in here is what gives the OG cards their "DM Mono". Deleting it silently falls back to generic monospace. */
       .add("assets/fonts")
       .add("assets/images")
       .add("assets/tiles")
