@@ -6,7 +6,7 @@ import type {
   LocalEventData,
   MBRelationPlace,
 } from "../utils/fetch-events.ts";
-import type { PostImage } from "../utils/preprocessors/media.ts";
+import type { PostImage } from "../plugins/preprocessors/media.ts";
 import type { WebmentionFeed } from "../src/types/index.ts";
 
 /** A link a page declares: provenance, a related page, or syndication. */
@@ -104,7 +104,7 @@ declare global {
       noindex?: boolean;
       prose?: boolean;
       backlink?: Backlink;
-      /** reverse link index built by utils/preprocessors/incoming.ts */
+      /** reverse link index built by plugins/preprocessors/incoming.ts */
       backlinks?: Backlink[];
       /** the pages this one links to, same graph read forwards */
       outgoing?: Backlink[];

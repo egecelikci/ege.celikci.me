@@ -3,7 +3,7 @@
  * Pure logic lives in utils/events.ts for unit testing.
  */
 
-import type { EnrichedMBEvent, MBRelation } from "../fetch-events.ts";
+import type { EnrichedMBEvent, MBRelation } from "../../utils/fetch-events.ts";
 import {
   buildDisplayTitle,
   detectCustomTitle,
@@ -13,7 +13,7 @@ import {
   parseEventDate,
   resolveVenueName,
   sortByDate,
-} from "../events.ts";
+} from "../../utils/events.ts";
 
 export default function () {
   return (site: Lume.Site) => {

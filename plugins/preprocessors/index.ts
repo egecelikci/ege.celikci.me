@@ -1,8 +1,8 @@
-import media from "./preprocessors/media.ts";
-import events from "./preprocessors/events.ts";
-import stats from "./preprocessors/stats.ts";
-import edited from "./preprocessors/edited.ts";
-import incoming from "./preprocessors/incoming.ts";
+import media from "./media.ts";
+import events from "./events.ts";
+import stats from "./stats.ts";
+import edited from "./edited.ts";
+import incoming from "./incoming.ts";
 
 /**
  * Modular preprocessor registration.
