@@ -305,7 +305,7 @@ export async function saveColorVersion(
       .toFile(outputPath);
   } catch (e: unknown) {
     console.error(
-      `[utils/images.ts] Failed to save color cover: ${(e as Error).message}`,
+      `[lib/images.ts] Failed to save color cover: ${(e as Error).message}`,
     );
   }
 }

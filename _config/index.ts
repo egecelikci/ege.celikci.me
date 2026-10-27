@@ -32,7 +32,7 @@ import wellKnown from "lume/plugins/well_known.ts";
 
 import typst from "typst";
 
-import { isProduction } from "../utils/env.ts";
+import { isProduction } from "../lib/env.ts";
 import typstOgImages from "../plugins/typst_og.ts";
 import assets from "./assets.ts";
 import feeds from "./feeds.ts";

@@ -6,7 +6,7 @@
  */
 
 import { site as settings } from "../../_config/metadata.ts";
-import { pageIcon } from "../../utils/page-icons.ts";
+import { pageIcon } from "../../lib/page-icons.ts";
 import {
   buildIncoming,
   buildOutgoing,
@@ -14,7 +14,7 @@ import {
   frontmatterLinks,
   type IncomingEntry,
   normalizeUrl,
-} from "../../utils/incoming.ts";
+} from "../../lib/incoming.ts";
 
 function entryOf(page: Lume.Page): IncomingEntry {
   const data = page.data;

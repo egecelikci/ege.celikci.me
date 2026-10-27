@@ -1,6 +1,6 @@
 /**
  * Enriches MusicBrainz event data with local metadata and performers.
- * Pure logic lives in utils/events.ts for unit testing.
+ * Pure logic lives in lib/events.ts for unit testing.
  */
 
 import type { EnrichedMBEvent, MBRelation } from "../../utils/fetch-events.ts";
@@ -13,7 +13,7 @@ import {
   parseEventDate,
   resolveVenueName,
   sortByDate,
-} from "../../utils/events.ts";
+} from "../../lib/events.ts";
 
 export default function () {
   return (site: Lume.Site) => {

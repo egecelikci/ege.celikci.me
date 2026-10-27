@@ -2,7 +2,7 @@
  * Pure helpers for `incoming:` backlinks: the reverse index of the doc graph.
  * Edges come from prose body links (resolved from the remark AST exactly as the engine parses them) and frontmatter `links`; listing pages and nav chrome are excluded by construction — they never enter the graph.
  * Edges are language-aware: only same-language pages link each other.
- * Kept side-effect free so `utils/incoming.test.ts` can cover them.
+ * Kept side-effect free so `lib/incoming.test.ts` can cover them.
  */
 
 import { parseMarkdown, walk } from "./mdast.ts";
@@ -14,7 +14,7 @@ export interface IncomingEntry {
   lang?: string;
   /** page date; feeds the untitled-note fallback title and ordering */
   date?: Date | string;
-  /** icon for the page, from its kind (see utils/page-icons.ts) */
+  /** icon for the page, from its kind (see lib/page-icons.ts) */
   icon?: string;
   /** catalog the icon comes from */
   catalog?: string;

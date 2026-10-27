@@ -1,5 +1,5 @@
 import { exists } from "@std/fs/exists";
-import { getLinkInfo } from "../../utils/links.ts";
+import { getLinkInfo } from "../../lib/links.ts";
 import type { MBRelation } from "../../utils/fetch-events.ts";
 
 async function collectGalleryImages(

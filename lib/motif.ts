@@ -1,5 +1,5 @@
 /**
- * Color maths for the palette page. Painting a row in a token color creates text/background pairs the palette never promised, so the text color is measured rather than guessed: the palette's own `text` token that reads best, falling back to plain black/white only when neither reaches the palette's own minimum contrast. Kept pure so `utils/motif.test.ts` can cover it.
+ * Color maths for the palette page. Painting a row in a token color creates text/background pairs the palette never promised, so the text color is measured rather than guessed: the palette's own `text` token that reads best, falling back to plain black/white only when neither reaches the palette's own minimum contrast. Kept pure so `lib/motif.test.ts` can cover it.
  */
 
 /** WCAG relative luminance of a `#rrggbb` color. */

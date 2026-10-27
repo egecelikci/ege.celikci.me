@@ -1,7 +1,7 @@
 /**
  * Types for the external data the site caches and renders.
  *
- * They are derived from the zod schemas in `utils/schemas.ts`, which also validate that data, so the types cannot drift from the validation.
+ * They are derived from the zod schemas in `lib/schemas.ts`, which also validate that data, so the types cannot drift from the validation.
  * @module
  */
 
@@ -18,4 +18,4 @@ export type {
   SteamOwnedGamesResponse,
   Webmention,
   WebmentionFeed,
-} from "../../utils/schemas.ts";
+} from "../../lib/schemas.ts";

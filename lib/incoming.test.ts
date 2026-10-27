@@ -1,7 +1,7 @@
 /**
  * Unit tests for the `incoming:` backlinks helpers.
  *
- * Extraction is AST-based (see utils/mdast.ts), so the fixtures below intentionally cover the link forms a regex approach used to miss: titles, reference links, autolinks, code blocks, image embeds.
+ * Extraction is AST-based (see lib/mdast.ts), so the fixtures below intentionally cover the link forms a regex approach used to miss: titles, reference links, autolinks, code blocks, image embeds.
  */
 
 import { assertEquals } from "@std/assert";

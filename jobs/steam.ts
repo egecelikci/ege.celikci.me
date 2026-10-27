@@ -1,14 +1,14 @@
 import "@std/dotenv/load";
 import { join } from "@std/path";
 import type { GamesStore, SteamOwnedGame } from "../src/types/index.ts";
-import { loadState, saveState, sortObjectKeys } from "../utils/cache.ts";
+import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
 import {
   GamesStoreSchema,
   SteamOwnedGamesResponseSchema,
   validateOrThrow,
-} from "../utils/schemas.ts";
+} from "../lib/schemas.ts";
 import { consolidateSteamLibraries } from "../lib/steam.ts";
-import { HttpClient } from "../utils/fetch-base.ts";
+import { HttpClient } from "../lib/fetch-base.ts";
 
 const CONFIG = {
   rateLimitDelayMs: 1000,

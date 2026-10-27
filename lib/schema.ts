@@ -2,7 +2,7 @@
  * schema.org classification for the page wrapper, used as microdata on `<body>`.
  *
  * Only the home page is a `WebSite` — that is where Google's site-name feature reads it — listings are `CollectionPage`s, everything else is a `WebPage`.
- * Kept pure so `utils/schema.test.ts` covers the classification.
+ * Kept pure so `lib/schema.test.ts` covers the classification.
  */
 
 /**

@@ -1,5 +1,5 @@
-import { HttpClient } from "../../utils/fetch-base.ts";
-import { onColor } from "../../utils/motif.ts";
+import { HttpClient } from "../../lib/fetch-base.ts";
+import { onColor } from "../../lib/motif.ts";
 import { MOTIF_SHA } from "../../_config/metadata.ts";
 
 const SPEC_URL =

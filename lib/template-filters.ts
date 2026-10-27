@@ -36,7 +36,7 @@ interface Webmention {
 }
 
 export const filters = {
-  /** schema.org type for the page wrapper (see utils/schema.ts). */
+  /** schema.org type for the page wrapper (see lib/schema.ts). */
   pageType: (page: { url?: string; type?: string }) => schemaPageType(page),
 
   humanizeNumber: function (num: number): string | number {
@@ -47,7 +47,7 @@ export const filters = {
   },
 
   /**
-   * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see utils/incoming.ts noteTitle).
+   * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see lib/incoming.ts noteTitle).
    */
   noteTitle: function (
     data: { title?: unknown; date?: unknown },

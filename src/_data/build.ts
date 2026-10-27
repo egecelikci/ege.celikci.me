@@ -1,4 +1,4 @@
-import { isProduction } from "../../utils/env.ts";
+import { isProduction } from "../../lib/env.ts";
 
 const env = isProduction ? "production" : "development";
 

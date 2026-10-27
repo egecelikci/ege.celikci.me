@@ -3,7 +3,7 @@
  * Kept free of side effects so they can be unit tested.
  */
 
-import type { LocalEventData, MBRelation } from "./fetch-events.ts";
+import type { LocalEventData, MBRelation } from "../utils/fetch-events.ts";
 
 /** Roles that aren't performers (posters, design, etc.) */
 export const NON_PERFORMER_ROLES = [

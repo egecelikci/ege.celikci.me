@@ -2,7 +2,7 @@
  * Central filter registration.
  */
 
-import { filters } from "../utils/filters.ts";
+import { filters } from "../lib/template-filters.ts";
 
 export default function () {
   return (site: Lume.Site) => {

@@ -5,9 +5,9 @@
 
 import "@std/dotenv/load";
 import { join } from "@std/path";
-import { loadState, saveState } from "../../utils/cache.ts";
-import { WebmentionFeedSchema } from "../../utils/schemas.ts";
-import { type FetchPage, syncWebmentions } from "../../utils/webmentions.ts";
+import { loadState, saveState } from "../../lib/cache.ts";
+import { WebmentionFeedSchema } from "../../lib/schemas.ts";
+import { type FetchPage, syncWebmentions } from "../../lib/webmentions.ts";
 import type { WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 

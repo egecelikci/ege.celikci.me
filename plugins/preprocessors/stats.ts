@@ -3,8 +3,8 @@
  */
 
 import { site as settings } from "../../_config/metadata.ts";
-import { filters } from "../../utils/filters.ts";
-import { computeWebmentionStats } from "../../utils/webmention-stats.ts";
+import { filters } from "../../lib/template-filters.ts";
+import { computeWebmentionStats } from "../../lib/webmention-stats.ts";
 
 export default function () {
   return (site: Lume.Site) => {

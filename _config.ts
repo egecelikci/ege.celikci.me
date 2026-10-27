@@ -1,8 +1,8 @@
 import lume from "lume/mod.ts";
 import config from "./_config/index.ts";
-import FastCache from "./utils/fast-cache.ts";
+import FastCache from "./lib/fast-cache.ts";
 import registerPreprocessors from "./plugins/preprocessors/index.ts";
-import { isProduction } from "./utils/env.ts";
+import { isProduction } from "./lib/env.ts";
 
 const site = lume({
   src: "./src",

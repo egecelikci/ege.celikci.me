@@ -1,6 +1,6 @@
 import lumeCMS from "lume/cms/mod.ts";
 import "@std/dotenv/load";
-import { slugify } from "./utils/slugify.ts";
+import { slugify } from "./lib/slugify.ts";
 
 const user = Deno.env.get("CMS_USER") ?? "admin";
 const password = Deno.env.get("CMS_PASSWORD");

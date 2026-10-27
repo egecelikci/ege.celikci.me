@@ -7,7 +7,7 @@ import sass from "lume/plugins/sass.ts";
 import svgo from "lume/plugins/svgo.ts";
 import transformImages from "lume/plugins/transform_images.ts";
 import { MOTIF_SHA } from "./metadata.ts";
-import { isProduction } from "../utils/env.ts";
+import { isProduction } from "../lib/env.ts";
 
 const REMIXICON_VERSION = "4.9.1";
 

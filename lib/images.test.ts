@@ -2,7 +2,7 @@
  * Unit tests for the monochrome dithering helpers.
  *
  * The pure tests need no permissions.
- * The Sharp end-to-end test loads native code and writes temp files, so it only runs with full permissions: `deno test -A utils/images.test.ts`.
+ * The Sharp end-to-end test loads native code and writes temp files, so it only runs with full permissions: `deno test -A lib/images.test.ts`.
  */
 
 import {

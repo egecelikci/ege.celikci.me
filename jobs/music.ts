@@ -6,7 +6,7 @@ import type {
   MusicStore,
   ProcessedAlbum,
 } from "../src/types/index.ts";
-import { loadState, saveState, sortObjectKeys } from "../utils/cache.ts";
+import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
 import {
   AlbumSchema,
   CritiqueBrainzResponseSchema,
@@ -14,10 +14,10 @@ import {
   ProcessedAlbumSchema,
   validate,
   validateOrThrow,
-} from "../utils/schemas.ts";
-import { ditherWithSharp, saveColorVersion } from "../utils/images.ts";
-import { HttpClient } from "../utils/fetch-base.ts";
-import type { CachePolicy } from "../utils/fetch-base.ts";
+} from "../lib/schemas.ts";
+import { ditherWithSharp, saveColorVersion } from "../lib/images.ts";
+import { HttpClient } from "../lib/fetch-base.ts";
+import type { CachePolicy } from "../lib/fetch-base.ts";
 import { exists } from "@std/fs/exists";
 
 const CONFIG = {

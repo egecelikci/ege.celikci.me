@@ -1,7 +1,7 @@
 import { join } from "@std/path";
 import { ensureDir } from "@std/fs/ensure-dir";
-import { loadState, saveState, sortObjectKeys } from "./cache.ts";
-import { HttpClient } from "./fetch-base.ts";
+import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
+import { HttpClient } from "../lib/fetch-base.ts";
 import { exists } from "@std/fs/exists";
 import type {
   EAAPosterInfo,
@@ -12,7 +12,7 @@ import type {
   MBRelationLabel,
   MBRelationPlace,
   RawIzmirEvents,
-} from "./schemas.ts";
+} from "../lib/schemas.ts";
 
 export type {
   EAAPosterInfo,
@@ -32,7 +32,7 @@ import {
   RawIzmirEventsSchema,
   validate,
   validateOrThrow,
-} from "./schemas.ts";
+} from "../lib/schemas.ts";
 
 const IZMIR_AREA_MBID = "f6a9a62a-23b1-4f2e-b2f0-ac36f113f0b5";
 const MB_API = "https://musicbrainz.org/ws/2";

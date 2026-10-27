@@ -1,4 +1,4 @@
-import { type MdastNode, parseMarkdown, walk } from "../../utils/mdast.ts";
+import { type MdastNode, parseMarkdown, walk } from "../../lib/mdast.ts";
 
 export interface PostImage {
   src: string;
