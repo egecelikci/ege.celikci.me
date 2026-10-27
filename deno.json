@@ -57,7 +57,7 @@
       "description": "Refresh the map tile extract from Protomaps",
       "command": "deno run -A jobs/tiles.ts"
     },
-    "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
+    "wasmbuild": "cd rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "new": {
       "description": "Create new content or code using artifacts",
       "command": "deno task lume new"

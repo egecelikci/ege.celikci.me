@@ -6,7 +6,7 @@ node_modules/
 .DS_Store
 
 # Rust
-src/_rust/**/target/
+rust/**/target/
 # Playwright MCP
 .playwright-mcp/
 

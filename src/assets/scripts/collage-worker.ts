@@ -21,7 +21,7 @@ import {
   get_grid_coordinates,
   get_vibrant_color,
   render_background,
-} from "../../_rust/collage/lib/rs_collage.js";
+} from "../../../rust/collage/lib/rs_collage.js";
 
 interface Album {
   name: string;
