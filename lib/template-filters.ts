@@ -1,18 +1,21 @@
 import xss, { escapeHtml } from "xss";
-import authorData from "../src/_data/author.ts";
-import siteData from "../src/_data/site.ts";
-import gitData from "../src/_data/git.ts";
 import { getLinkInfo } from "./links.ts";
 import { noteTitle as buildNoteTitle } from "./incoming.ts";
 import { pageType as schemaPageType } from "./schema.ts";
 
-const SITE_URL = siteData.url;
-const OWN_URLS = [
-  SITE_URL,
-  authorData.social.mastodon.url,
-  authorData.social.bluesky.url,
-  ...authorData.links.map((l) => l.url),
-].map((u) => u.replace(/\/+$/, ""));
+/** The site metadata these filters need. Passed in so this module stays a leaf: it never reads `src/_data` itself. */
+export interface FilterMeta {
+  readonly site: { readonly url: string; readonly host: string };
+  readonly author: {
+    readonly username: string;
+    readonly social: {
+      readonly mastodon: { readonly url: string };
+      readonly bluesky: { readonly url: string };
+    };
+    readonly links: readonly { readonly url: string }[];
+  };
+  readonly git: { readonly host: string };
+}
 
 interface Webmention {
   author?: {
@@ -35,132 +38,150 @@ interface Webmention {
   photo?: string | string[] | null;
 }
 
-export const filters = {
-  /** schema.org type for the page wrapper (see lib/schema.ts). */
-  pageType: (page: { url?: string; type?: string }) => schemaPageType(page),
+export function createFilters({ site, author, git }: FilterMeta) {
+  const SITE_URL = site.url;
+  const OWN_URLS = [
+    SITE_URL,
+    author.social.mastodon.url,
+    author.social.bluesky.url,
+    ...author.links.map((l) => l.url),
+  ].map((u) => u.replace(/\/+$/, ""));
 
-  humanizeNumber: function (num: number): string | number {
-    if (num > 999) {
-      return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
-    }
-    return num;
-  },
+  const filters = {
+    /** schema.org type for the page wrapper (see lib/schema.ts). */
+    pageType: (page: { url?: string; type?: string }) => schemaPageType(page),
 
-  /**
-   * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see lib/incoming.ts noteTitle).
-   */
-  noteTitle: function (
-    data: { title?: unknown; date?: unknown },
-  ): string {
-    const title = typeof data?.title === "string" ? data.title : "";
-    const date = data?.date instanceof Date || typeof data?.date === "string"
-      ? data.date
-      : undefined;
-    return buildNoteTitle(title, date);
-  },
+    humanizeNumber: function (num: number): string | number {
+      if (num > 999) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+      }
+      return num;
+    },
 
-  getLinkInfo: function (type: string, url: string) {
-    return getLinkInfo(type, url);
-  },
+    /**
+     * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see lib/incoming.ts noteTitle).
+     */
+    noteTitle: function (
+      data: { title?: unknown; date?: unknown },
+    ): string {
+      const title = typeof data?.title === "string" ? data.title : "";
+      const date = data?.date instanceof Date || typeof data?.date === "string"
+        ? data.date
+        : undefined;
+      return buildNoteTitle(title, date);
+    },
 
-  slice: function <T>(array: T[], start: number, end?: number): T[] {
-    return end ? array.slice(start, end) : array.slice(start);
-  },
+    getLinkInfo: function (type: string, url: string) {
+      return getLinkInfo(type, url);
+    },
 
-  isOwnWebmention: function (webmention: Webmention): boolean {
-    const authorUrl = webmention && webmention.author
-      ? webmention.author.url?.replace(/\/+$/, "")
-      : undefined;
-    return !!(authorUrl && OWN_URLS.includes(authorUrl));
-  },
+    slice: function <T>(array: T[], start: number, end?: number): T[] {
+      return end ? array.slice(start, end) : array.slice(start);
+    },
 
-  webmentionsByUrl: function (
-    webmentions: Webmention[] | undefined,
-    url: string,
-    syndication?: Record<string, string>,
-  ): Webmention[] {
-    if (!webmentions) return [];
-    const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
-    const cleanUrl = (u: string) => u.replace(/\/+$/, "");
-    const targetUrl = cleanUrl(absoluteUrl);
-    const allowedTypes = ["mention-of", "in-reply-to", "like-of", "repost-of"];
+    isOwnWebmention: function (webmention: Webmention): boolean {
+      const authorUrl = webmention && webmention.author
+        ? webmention.author.url?.replace(/\/+$/, "")
+        : undefined;
+      return !!(authorUrl && OWN_URLS.includes(authorUrl));
+    },
 
-    const xssOptions = {
-      whiteList: {
-        b: [],
-        i: [],
-        em: [],
-        strong: [],
-        a: ["href"],
-      },
-    };
+    webmentionsByUrl: function (
+      webmentions: Webmention[] | undefined,
+      url: string,
+      syndication?: Record<string, string>,
+    ): Webmention[] {
+      if (!webmentions) return [];
+      const absoluteUrl = url.startsWith("http") ? url : SITE_URL + url;
+      const cleanUrl = (u: string) => u.replace(/\/+$/, "");
+      const targetUrl = cleanUrl(absoluteUrl);
+      const allowedTypes = [
+        "mention-of",
+        "in-reply-to",
+        "like-of",
+        "repost-of",
+      ];
 
-    const syndicationUrls = syndication
-      ? Object.values(syndication).map(cleanUrl)
-      : [];
+      const xssOptions = {
+        whiteList: {
+          b: [],
+          i: [],
+          em: [],
+          strong: [],
+          a: ["href"],
+        },
+      };
 
-    const orderByDate = (a: Webmention, b: Webmention) =>
-      new Date(a.published || a["wm-received"] || "").getTime() -
-      new Date(b.published || b["wm-received"] || "").getTime();
+      const syndicationUrls = syndication
+        ? Object.values(syndication).map(cleanUrl)
+        : [];
 
-    const checkRequiredFields = (entry: Webmention) => {
-      const { author } = entry;
-      return !!author && !!author.name;
-    };
+      const orderByDate = (a: Webmention, b: Webmention) =>
+        new Date(a.published || a["wm-received"] || "").getTime() -
+        new Date(b.published || b["wm-received"] || "").getTime();
 
-    const isSyndicated = (entry: Webmention) => {
-      const source = cleanUrl(entry["wm-source"] || "");
-      const entryUrl = Array.isArray(entry.url)
-        ? (entry.url[0] || "")
-        : (entry.url || "");
-      const url = cleanUrl(entryUrl);
-      return syndicationUrls.includes(source) || syndicationUrls.includes(url);
-    };
+      const checkRequiredFields = (entry: Webmention) => {
+        const { author } = entry;
+        return !!author && !!author.name;
+      };
 
-    const clean = (entry: Webmention) => {
-      if (entry.content) {
-        const { html, text } = entry.content;
+      const isSyndicated = (entry: Webmention) => {
+        const source = cleanUrl(entry["wm-source"] || "");
+        const entryUrl = Array.isArray(entry.url)
+          ? (entry.url[0] || "")
+          : (entry.url || "");
+        const url = cleanUrl(entryUrl);
+        return syndicationUrls.includes(source) ||
+          syndicationUrls.includes(url);
+      };
 
-        if (html) {
-          if (html.length > 2000) {
-            // The source URL comes from whoever sent the webmention, so it is escaped and the link still goes through xss to drop javascript: URLs.
-            const source = escapeHtml(entry["wm-source"] || "");
-            entry.content.value = xss(
-              `mentioned this in <a href="${source}">${source}</a>`,
-              xssOptions,
-            );
+      const clean = (entry: Webmention) => {
+        if (entry.content) {
+          const { html, text } = entry.content;
+
+          if (html) {
+            if (html.length > 2000) {
+              // The source URL comes from whoever sent the webmention, so it is escaped and the link still goes through xss to drop javascript: URLs.
+              const source = escapeHtml(entry["wm-source"] || "");
+              entry.content.value = xss(
+                `mentioned this in <a href="${source}">${source}</a>`,
+                xssOptions,
+              );
+            } else {
+              entry.content.value = xss(html, xssOptions);
+            }
           } else {
-            entry.content.value = xss(html, xssOptions);
+            entry.content.value = xss(text || "", xssOptions);
           }
         } else {
-          entry.content.value = xss(text || "", xssOptions);
+          entry.content = { value: "" };
         }
-      } else {
-        entry.content = { value: "" };
-      }
 
-      return entry;
-    };
+        return entry;
+      };
 
-    return webmentions
-      .filter((entry) => cleanUrl(entry["wm-target"] || "") === targetUrl)
-      .filter((entry) => allowedTypes.includes(entry["wm-property"] || ""))
-      .filter((entry) => !isSyndicated(entry))
-      .filter((entry) => !filters.isOwnWebmention(entry))
-      .filter(checkRequiredFields)
-      .map(clean)
-      .sort(orderByDate);
-  },
+      return webmentions
+        .filter((entry) => cleanUrl(entry["wm-target"] || "") === targetUrl)
+        .filter((entry) => allowedTypes.includes(entry["wm-property"] || ""))
+        .filter((entry) => !isSyndicated(entry))
+        .filter((entry) => !filters.isOwnWebmention(entry))
+        .filter(checkRequiredFields)
+        .map(clean)
+        .sort(orderByDate);
+    },
 
-  resolveComp: (compPath: string, compRoot: Record<string, unknown>) => {
-    return compPath.split(".").reduce(
-      (obj, part) => obj?.[part] as Record<string, unknown>,
-      compRoot,
-    );
-  },
+    resolveComp: (compPath: string, compRoot: Record<string, unknown>) => {
+      return compPath.split(".").reduce(
+        (obj, part) => obj?.[part] as Record<string, unknown>,
+        compRoot,
+      );
+    },
 
-  resolveSourceUrl: function (path: string): string {
-    const repoPath = path.startsWith("/") ? path.slice(1) : path;
-    return `https://${gitData.host}/${authorData.username}/${siteData.host}/src/branch/main/${repoPath}`;
-  },
-};
+    resolveSourceUrl: function (path: string): string {
+      const repoPath = path.startsWith("/") ? path.slice(1) : path;
+      return `https://${git.host}/${author.username}/${site.host}/src/branch/main/${repoPath}`;
+    },
+  };
+
+  return filters;
+}

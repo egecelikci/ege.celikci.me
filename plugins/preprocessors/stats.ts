@@ -3,7 +3,7 @@
  */
 
 import { site as settings } from "../../_config/metadata.ts";
-import { filters } from "../../lib/template-filters.ts";
+import { filters } from "../../_config/filters.ts";
 import { computeWebmentionStats } from "../../lib/webmention-stats.ts";
 
 export default function () {
