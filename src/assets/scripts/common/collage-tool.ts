@@ -2,6 +2,13 @@
  * Logic for the album collage generator tool.
  */
 
+import {
+  type Album,
+  parseCollageOptions,
+  type WorkerRequest,
+  type WorkerResponse,
+} from "../collage/types.ts";
+
 export function initCollageTool(defaultUsername: string) {
   let canvas = document.getElementById("collage-canvas") as HTMLCanvasElement;
   const previewWrapper = document.getElementById("preview-wrapper");
@@ -202,14 +209,8 @@ export function initCollageTool(defaultUsername: string) {
     }
   }
 
-  /** One album as the proxy returns it. */
-  interface Album {
-    name: string;
-    artist: string;
-    count: number | string;
-    mbid?: string;
-    img?: string;
-  }
+  /** One album as the proxy returns it; `count` arrives as a string from ListenBrainz. */
+  type ProxyAlbum = Omit<Album, "count"> & { count: number | string };
 
   async function generate() {
     const run = ++generation;
@@ -239,7 +240,12 @@ export function initCollageTool(defaultUsername: string) {
         throw new Error(data?.error ?? `HTTP ${res.status}`);
       }
 
-      let albums: Album[] = data.albums;
+      const fromProxy: ProxyAlbum[] = data.albums;
+      // ListenBrainz sends counts as strings; the worker and the alias merge both want numbers.
+      let albums: Album[] = fromProxy.map((album) => ({
+        ...album,
+        count: Number(album.count) || 0,
+      }));
       if (!albums?.length) throw new Error("No data found");
 
       updateStatus(`Retrieved ${albums.length} albums from service`);
@@ -251,7 +257,7 @@ export function initCollageTool(defaultUsername: string) {
           const [from, to] = line.split("->").map((s) => s.trim());
           if (from && to) aliasMap.set(from.toUpperCase(), to.toUpperCase());
         });
-        const merged = new Map<string, Album & { count: number }>();
+        const merged = new Map<string, Album>();
         albums.forEach((album) => {
           const artist = aliasMap.get(album.artist.toUpperCase()) ||
             album.artist.toUpperCase();
@@ -283,18 +289,18 @@ export function initCollageTool(defaultUsername: string) {
 
       const offscreen = canvas.transferControlToOffscreen();
 
-      currentWorker.onmessage = (e) => {
-        const { type, text, blob, message } = e.data;
-        if (type === "status") {
-          updateStatus(text);
-        } else if (type === "done") {
-          latestBlob = blob;
+      currentWorker.onmessage = (e: MessageEvent<WorkerResponse>) => {
+        const message = e.data;
+        if (message.type === "status") {
+          updateStatus(message.text);
+        } else if (message.type === "done") {
+          latestBlob = message.blob;
           updateStatus("Complete");
           previewWrapper?.classList.remove("is-loading");
           previewWrapper?.classList.add("is-ready");
           setActionsEnabled(true);
-        } else if (type === "error") {
-          updateStatus(`Error: ${message}`);
+        } else if (message.type === "error") {
+          updateStatus(`Error: ${message.message}`);
           previewWrapper?.classList.remove("is-loading");
           setActionsEnabled(false);
         }
@@ -302,27 +308,31 @@ export function initCollageTool(defaultUsername: string) {
 
       const [cols, rows] = gridSizeSelect.value.split("x").map(Number);
 
-      currentWorker.postMessage({
+      // Validated here so a markup change cannot send NaN into the kernel.
+      const options = parseCollageOptions({
+        bgMode: bgModeSelect.value,
+        textCase: textCaseSelect.value,
+        applyGrain: grainCheckbox.checked,
+        applyGlass: glassCheckbox.checked,
+        darkenBottom: darkenBottomCheckbox.checked,
+        skipMissing: skipMissingCheckbox.checked,
+        showCounts: showCountsCheckbox.checked,
+        showSite: showSiteCheckbox.checked,
+        footer: footerAuto.checked ? "" : footerText.value,
+        fontFamily: fontFamilyInput.value,
+        user,
+        period: periodSelect.value,
+        cols,
+        rows,
+      });
+
+      const request: WorkerRequest = {
         type: "generate",
         canvas: offscreen,
         albums,
-        options: {
-          bgMode: bgModeSelect.value,
-          textCase: textCaseSelect.value,
-          applyGrain: grainCheckbox.checked,
-          applyGlass: glassCheckbox.checked,
-          darkenBottom: darkenBottomCheckbox.checked,
-          skipMissing: skipMissingCheckbox.checked,
-          showCounts: showCountsCheckbox.checked,
-          showSite: showSiteCheckbox.checked,
-          footer: footerAuto.checked ? "" : footerText.value,
-          fontFamily: fontFamilyInput.value,
-          user,
-          period: periodSelect.value,
-          cols,
-          rows,
-        },
-      }, [offscreen]);
+        options,
+      };
+      currentWorker.postMessage(request, [offscreen]);
     } catch (err) {
       if (run !== generation) return;
       updateStatus(`Error: ${(err as Error).message}`);

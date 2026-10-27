@@ -16,37 +16,17 @@
  *  11. Encode to JPEG
  */
 
+import { render_background } from "../../../rust/collage/lib/rs_collage.js";
+import { FALLBACK_COLOR, type Rgb, vibrantColor } from "./collage/color.ts";
+import { calculateLayout, gridCoordinates } from "./collage/layout.ts";
 import {
-  calculate_layout,
-  get_grid_coordinates,
-  get_vibrant_color,
-  render_background,
-} from "../../../rust/collage/lib/rs_collage.js";
-
-interface Album {
-  name: string;
-  artist: string;
-  count: number;
-  mbid?: string;
-  img?: string;
-}
-
-interface Options {
-  bgMode: "aura" | "silver" | "velvet" | "terminal" | "thermal" | "dark";
-  textCase: "none" | "upper" | "lower";
-  applyGrain: boolean;
-  applyGlass: boolean;
-  darkenBottom: boolean;
-  skipMissing: boolean;
-  showCounts: boolean;
-  showSite: boolean;
-  user: string;
-  period: string;
-  cols: number;
-  rows: number;
-  footer?: string;
-  fontFamily?: string;
-}
+  type Album,
+  bgModeIndex,
+  type CollageOptions,
+  parseCollageOptions,
+  type TextCase,
+  type WorkerResponse,
+} from "./collage/types.ts";
 
 const W = 1080;
 const H = 1920;
@@ -117,21 +97,20 @@ async function fetchCover(
   return { album, bitmap };
 }
 
-function getVibrantColor(
-  img: ImageBitmap | null,
-): { r: number; g: number; b: number } {
-  if (!img) return { r: 30, g: 27, b: 75 };
-  const mini = new OffscreenCanvas(20, 20);
-  const mctx = mini.getContext("2d");
-  if (!mctx) return { r: 30, g: 27, b: 75 };
-  mctx.drawImage(img, 0, 0, 20, 20);
-  const color = get_vibrant_color(
-    new Uint8Array(mctx.getImageData(0, 0, 20, 20).data),
-  );
-  return { r: color.r, g: color.g, b: color.b };
+/** One 20x20 scratch canvas for every cover; readback needs `willReadFrequently`. */
+const SAMPLE_SIZE = 20;
+const sampler = new OffscreenCanvas(SAMPLE_SIZE, SAMPLE_SIZE);
+const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+
+function getVibrantColor(img: ImageBitmap | null): Rgb {
+  if (!img || !samplerCtx) return FALLBACK_COLOR;
+  samplerCtx.clearRect(0, 0, SAMPLE_SIZE, SAMPLE_SIZE);
+  samplerCtx.drawImage(img, 0, 0, SAMPLE_SIZE, SAMPLE_SIZE);
+  const data = samplerCtx.getImageData(0, 0, SAMPLE_SIZE, SAMPLE_SIZE).data;
+  return vibrantColor(new Uint8Array(data.buffer));
 }
 
-function transformText(text: string, casing: Options["textCase"]): string {
+function transformText(text: string, casing: TextCase): string {
   if (casing === "upper") return text.toUpperCase();
   if (casing === "lower") return text.toLowerCase();
   return text;
@@ -160,13 +139,29 @@ async function loadFont(family: string, weight = "400") {
   }
 }
 
+/** Post a response the page can switch on, keeping the shape in one shared union. */
+function post(message: WorkerResponse) {
+  self.postMessage(message);
+}
+
 self.onmessage = async (e: MessageEvent) => {
   const { type, canvas, albums, options } = e.data;
   if (type !== "generate") return;
 
   const offscreen = canvas as OffscreenCanvas;
   const ctx = offscreen.getContext("2d", { alpha: false });
-  if (!ctx) return;
+  if (!ctx) {
+    post({ type: "error", message: "canvas has no 2d context" });
+    return;
+  }
+
+  let parsed: CollageOptions;
+  try {
+    parsed = parseCollageOptions(options);
+  } catch (error) {
+    post({ type: "error", message: (error as Error).message });
+    return;
+  }
 
   const {
     bgMode,
@@ -183,13 +178,13 @@ self.onmessage = async (e: MessageEvent) => {
     rows,
     footer,
     fontFamily,
-  } = options as Options;
+  } = parsed;
 
   try {
     /** PHASE 1: FONTS */
 
     if (!defaultFontsLoaded) {
-      self.postMessage({ type: "status", text: "loading default fonts" });
+      post({ type: "status", text: "loading default fonts" });
       await ensureDefaultFonts();
     }
 
@@ -198,25 +193,25 @@ self.onmessage = async (e: MessageEvent) => {
       fontFamily !== "DM Sans" &&
       fontFamily !== "DM Mono"
     ) {
-      self.postMessage({ type: "status", text: `loading font: ${fontFamily}` });
+      post({ type: "status", text: `loading font: ${fontFamily}` });
       await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
     }
 
     /** PHASE 2: LAYOUT + COVER FETCHING */
 
-    self.postMessage({
+    post({
       type: "status",
       text: `computing ${cols}×${rows} grid layout`,
     });
-    const layout = calculate_layout(cols, rows);
-    const gridCoords = get_grid_coordinates(cols, rows);
+    const layout = calculateLayout(cols, rows);
+    const gridCoords = gridCoordinates(cols, rows);
     const targetCount = cols * rows;
 
     const finalAlbums: Album[] = [];
     const finalImages: (ImageBitmap | null)[] = [];
     let sourceIndex = 0;
 
-    self.postMessage({ type: "status", text: "resolving artwork URLs" });
+    post({ type: "status", text: "resolving artwork URLs" });
     while (finalAlbums.length < targetCount && sourceIndex < albums.length) {
       const needed = targetCount - finalAlbums.length;
       const batchSize = Math.min(needed, 10);
@@ -230,7 +225,7 @@ self.onmessage = async (e: MessageEvent) => {
         }
         if (finalAlbums.length >= targetCount) break;
       }
-      self.postMessage({
+      post({
         type: "status",
         text: `fetching cover art ${finalAlbums.length}/${targetCount}`,
       });
@@ -243,7 +238,7 @@ self.onmessage = async (e: MessageEvent) => {
 
     /** PHASE 3: COLOR SAMPLING + THERMAL CLAMPING */
 
-    self.postMessage({
+    post({
       type: "status",
       text: "sampling dominant colors from covers",
     });
@@ -283,17 +278,12 @@ self.onmessage = async (e: MessageEvent) => {
 
     /** PHASE 4: WASM BACKGROUND RENDER */
 
-    self.postMessage({
+    post({
       type: "status",
       text: "compositing background layer natively",
     });
 
-    let bgModeNum = 0;
-    if (bgMode === "silver") bgModeNum = 1;
-    else if (bgMode === "velvet") bgModeNum = 2;
-    else if (bgMode === "terminal") bgModeNum = 3;
-    else if (bgMode === "thermal") bgModeNum = 4;
-    else if (bgMode === "dark") bgModeNum = 5;
+    const bgModeNum = bgModeIndex(bgMode);
 
     /**
      * Terminal gets structural scanline grain regardless of applyGrain toggle;
@@ -354,7 +344,7 @@ self.onmessage = async (e: MessageEvent) => {
      * Covers are always drawn at full opacity, full saturation, no blending effects.
      */
 
-    self.postMessage({
+    post({
       type: "status",
       text: `drawing ${targetCount} grid tiles`,
     });
@@ -367,9 +357,9 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.roundRect(
         x,
         y,
-        layout.item_size,
-        layout.item_size,
-        layout.corner_radius,
+        layout.itemSize,
+        layout.itemSize,
+        layout.cornerRadius,
       );
       ctx.clip();
       if (finalImages[i]) {
@@ -377,12 +367,12 @@ self.onmessage = async (e: MessageEvent) => {
           finalImages[i]!,
           x,
           y,
-          layout.item_size,
-          layout.item_size,
+          layout.itemSize,
+          layout.itemSize,
         );
       } else {
         ctx.fillStyle = "#18181b";
-        ctx.fillRect(x, y, layout.item_size, layout.item_size);
+        ctx.fillRect(x, y, layout.itemSize, layout.itemSize);
       }
       ctx.restore();
 
@@ -394,9 +384,9 @@ self.onmessage = async (e: MessageEvent) => {
       ctx.roundRect(
         x,
         y,
-        layout.item_size,
-        layout.item_size,
-        layout.corner_radius,
+        layout.itemSize,
+        layout.itemSize,
+        layout.cornerRadius,
       );
       ctx.stroke();
       ctx.restore();
@@ -409,7 +399,7 @@ self.onmessage = async (e: MessageEvent) => {
      */
 
     const listLimit = Math.min(finalAlbums.length, rows > 4 ? 12 : 9);
-    self.postMessage({
+    post({
       type: "status",
       text: `rendering album list (${listLimit} entries)`,
     });
@@ -432,7 +422,7 @@ self.onmessage = async (e: MessageEvent) => {
       : "rgba(255,255,255,0.30)";
 
     for (let i = 0; i < listLimit; i++) {
-      const y = layout.list_base_y + i * layout.list_row_height;
+      const y = layout.listBaseY + i * layout.listRowHeight;
 
       ctx.textAlign = "left";
       ctx.fillStyle = trackNumColor;
@@ -515,13 +505,13 @@ self.onmessage = async (e: MessageEvent) => {
     }
 
     /** PHASE 11: ENCODE */
-    self.postMessage({ type: "status", text: "encoding canvas to JPEG" });
+    post({ type: "status", text: "encoding canvas to JPEG" });
     const blob = await offscreen.convertToBlob({
       type: "image/jpeg",
       quality: 0.92,
     });
-    self.postMessage({ type: "done", blob });
+    post({ type: "done", blob });
   } catch (err: unknown) {
-    self.postMessage({ type: "error", message: String(err) });
+    post({ type: "error", message: (err as Error)?.message ?? String(err) });
   }
 };
