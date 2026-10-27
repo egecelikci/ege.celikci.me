@@ -42,12 +42,12 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "check": "deno check _config.ts _config/ _cms.ts sw.ts utils/ src/ netlify/",
-    "test": "deno test --allow-read utils/",
+    "check": "deno check _config.ts _config/ _cms.ts sw.ts utils/ jobs/ tools/ src/ netlify/",
+    "test": "deno test --allow-read utils/ jobs/",
     "lint": "deno lint",
     "hooks": {
       "description": "Install the pre-commit hook that runs the ci checks",
-      "command": "deno run --allow-run=git --allow-read --allow-write utils/install-hooks.ts"
+      "command": "deno run --allow-run=git --allow-read --allow-write tools/install-hooks.ts"
     },
     "ci": {
       "description": "Formatting, lint, types, and tests, fastest first; the pre-commit hook and deploys run this",
@@ -55,7 +55,7 @@
     },
     "tiles": {
       "description": "Refresh the map tile extract from Protomaps",
-      "command": "deno run -A utils/tiles.ts"
+      "command": "deno run -A jobs/tiles.ts"
     },
     "wasmbuild": "cd src/_rust/collage && deno run -A jsr:@deno/wasmbuild --inline --out lib",
     "new": {

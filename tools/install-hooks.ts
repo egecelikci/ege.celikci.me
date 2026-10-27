@@ -8,7 +8,9 @@
 import { join } from "@std/path";
 
 /** Marks shims this script wrote, so it never overwrites someone else's hook. */
-const MARKER = "# installed by utils/install-hooks.ts";
+const MARKER = "# installed by tools/install-hooks.ts";
+/** Earlier runs stamped their own path here, so any of our own markers still counts as ours. */
+const WRITTEN_BY_US = "# installed by ";
 const HOOKS = ["pre-commit"];
 
 /** Run git and return its trimmed stdout. */
@@ -35,7 +37,7 @@ if (import.meta.main) {
   for (const hook of HOOKS) {
     const path = join(hooksDir, hook);
     const existing = await readOrNull(path);
-    if (existing !== null && !existing.includes(MARKER)) {
+    if (existing !== null && !existing.includes(WRITTEN_BY_US)) {
       console.error(
         `✗ ${path} exists and was not written by this script; merge it by hand`,
       );

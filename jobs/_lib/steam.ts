@@ -1,9 +1,9 @@
 /**
  * Pure helpers for the Steam family library.
- * Kept side-effect free so `utils/steam.test.ts` can cover them.
+ * Kept side-effect free so `jobs/_lib/steam.test.ts` can cover them.
  */
 
-import type { SteamGameEntry, SteamOwnedGame } from "../src/types/index.ts";
+import type { SteamGameEntry, SteamOwnedGame } from "../../src/types/index.ts";
 
 /**
  * Merge per-user owned-games lists into one deduplicated family library.
