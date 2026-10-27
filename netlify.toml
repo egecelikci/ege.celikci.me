@@ -1,6 +1,7 @@
 [build]
     command = "mise install && mise exec -- deno task ci && mise exec -- deno task build"
     publish = "dist"
+    edge_functions = "platform/netlify/edge-functions"
 
 [dev]
     command = "deno task serve"
@@ -13,7 +14,7 @@
     function = "collage-proxy"
 
 [[plugins]]
-    package = "./plugins/cache"
+    package = "./platform/build-plugin"
 
 [[headers]]
     for = "/*"
