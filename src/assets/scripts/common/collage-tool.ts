@@ -214,6 +214,14 @@ export function initCollageTool(defaultUsername: string) {
   /** One album as the proxy returns it; `count` arrives as a string from ListenBrainz. */
   type ProxyAlbum = Omit<Album, "count"> & { count: number | string };
 
+  /**
+   * Albums for the last user/period/source asked for.
+   *
+   * Every control on the page triggers a render, so without this a tweak to the grain or the grid
+   * re-asked ListenBrainz for the same stats. Alias merging still runs each time, since that can change.
+   */
+  let statsCache: { key: string; albums: Album[] } | null = null;
+
   async function generate() {
     const run = ++generation;
     const user = usernameInput.value.trim();
@@ -224,38 +232,47 @@ export function initCollageTool(defaultUsername: string) {
     }
 
     if (emptyState) emptyState.style.opacity = "0";
-    updateStatus("fetching stats from service");
     previewWrapper?.classList.add("is-loading");
     previewWrapper?.classList.remove("is-ready");
     setActionsEnabled(false);
 
     try {
-      const query = new URLSearchParams({
-        source: currentSource,
-        user,
-        period: periodSelect.value,
-      });
-      // A new run makes the previous request pointless; abort it instead of letting it finish.
-      statsRequest?.abort();
-      statsRequest = new AbortController();
-      const res = await fetch(`/api/collage-proxy?${query}`, {
-        signal: statsRequest.signal,
-      });
-      const data = await res.json().catch(() => null);
-      if (run !== generation) return;
-      if (!res.ok || !data || data.error) {
-        throw new Error(data?.error ?? `HTTP ${res.status}`);
+      const statsKey = `${currentSource}|${user}|${periodSelect.value}`;
+      let albums: Album[];
+
+      if (statsCache?.key === statsKey) {
+        albums = statsCache.albums;
+        updateStatus(`Using ${albums.length} albums already loaded`);
+      } else {
+        updateStatus("fetching stats from service");
+        const query = new URLSearchParams({
+          source: currentSource,
+          user,
+          period: periodSelect.value,
+        });
+        // A new run makes the previous request pointless; abort it instead of letting it finish.
+        statsRequest?.abort();
+        statsRequest = new AbortController();
+        const res = await fetch(`/api/collage-proxy?${query}`, {
+          signal: statsRequest.signal,
+        });
+        const data = await res.json().catch(() => null);
+        if (run !== generation) return;
+        if (!res.ok || !data || data.error) {
+          throw new Error(data?.error ?? `HTTP ${res.status}`);
+        }
+
+        const fromProxy: ProxyAlbum[] = data.albums;
+        // ListenBrainz sends counts as strings; the worker and the alias merge both want numbers.
+        albums = fromProxy.map((album) => ({
+          ...album,
+          count: Number(album.count) || 0,
+        }));
+        if (!albums?.length) throw new Error("No data found");
+
+        statsCache = { key: statsKey, albums };
+        updateStatus(`Retrieved ${albums.length} albums from service`);
       }
-
-      const fromProxy: ProxyAlbum[] = data.albums;
-      // ListenBrainz sends counts as strings; the worker and the alias merge both want numbers.
-      let albums: Album[] = fromProxy.map((album) => ({
-        ...album,
-        count: Number(album.count) || 0,
-      }));
-      if (!albums?.length) throw new Error("No data found");
-
-      updateStatus(`Retrieved ${albums.length} albums from service`);
 
       const aliasesRaw = aliasesInput.value;
       if (aliasesRaw.trim()) {

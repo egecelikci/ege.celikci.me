@@ -33,7 +33,8 @@ const LASTFM_PERIODS: Record<string, string> = {
 };
 
 /** Stats change at most daily, so serve a cached copy while refreshing it. */
-const STATS_CACHE = "public, s-maxage=3600, stale-while-revalidate=86400";
+const STATS_CACHE =
+  "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
 
 /** Last.fm cover file names: a 32-hex hash and an image extension. */
 const LASTFM_COVER = /^[0-9a-f]{32}\.(?:png|jpe?g|gif|webp)$/;
@@ -124,10 +125,13 @@ export default async (req: Request): Promise<Response> => {
         return jsonError("Image too large", 502);
       }
 
+      // `s-maxage` alone left browsers re-fetching every cover: it applies to shared caches only.
+      // Both fields are needed, and the Netlify-specific one is what its CDN honours for edge responses.
       return new Response(res.body, {
         headers: {
           "Content-Type": res.headers.get("Content-Type") ?? "image/jpeg",
-          "Cache-Control": "public, s-maxage=31536000, immutable",
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Netlify-CDN-Cache-Control": "public, max-age=31536000, immutable",
         },
       });
     } catch {
@@ -228,7 +232,8 @@ export default async (req: Request): Promise<Response> => {
       return new Response(fontBuffer, {
         headers: {
           "Content-Type": contentType,
-          "Cache-Control": "public, s-maxage=31536000, immutable",
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Netlify-CDN-Cache-Control": "public, max-age=31536000, immutable",
         },
       });
     } catch {

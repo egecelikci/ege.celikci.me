@@ -177,6 +177,10 @@ export default function () {
           // The reports are only worth having on disk: the console line just says how many there were.
           output: "_reports/seo.json",
           options: {
+            // Lume's common-word checks count something other than the heading (they flag `a statue.`
+            // and `this is a note.` as over 45 words) and their message never interpolates `{count}`.
+            // An empty set makes the count zero everywhere, leaving the length and ordering checks.
+            commonWords: new Set<string>(),
             body: false,
             imgAlt: { min: 0, max: 1500, unit: "character" },
             duplicateDescription: false,
