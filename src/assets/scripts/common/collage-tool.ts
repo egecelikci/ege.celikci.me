@@ -54,8 +54,10 @@ export function initCollageTool(defaultUsername: string) {
 
   if (!canvas || !usernameInput) return;
 
-  const inputs = [
-    usernameInput,
+  /** Free-text and data-changing fields: wait for a pause so typing does not render on every keystroke. */
+  const typingInputs = [usernameInput, footerText, aliasesInput];
+  /** A select or a checkbox is one deliberate action, so it renders as soon as the click lands. */
+  const toggleInputs = [
     periodSelect,
     gridSizeSelect,
     bgModeSelect,
@@ -67,10 +69,14 @@ export function initCollageTool(defaultUsername: string) {
     showCountsCheckbox,
     showSiteCheckbox,
     footerAuto,
-    footerText,
-    fontFamilyInput,
-    aliasesInput,
   ];
+
+  /** Long enough to coalesce a double-click, short enough to feel immediate. */
+  const TOGGLE_DELAY = 120;
+  /** Typing needs a real pause before it is worth rendering. */
+  const TYPING_DELAY = 600;
+  /** A new font has to come through the proxy, so give the typing time to settle. */
+  const FONT_DELAY = 1000;
 
   const sourceLb = document.getElementById("source-lb");
   const sourceLfm = document.getElementById("source-lfm");
@@ -385,21 +391,22 @@ export function initCollageTool(defaultUsername: string) {
     generate();
   });
 
-  // The worker loads the font through the proxy; a page-level Google Fonts link would only trip the CSP.
-  fontFamilyInput.addEventListener("input", () => {
+  /** Persist the settings and schedule a render after `delay`. */
+  function scheduleRender(delay: number) {
     saveSettings();
     if (debounceTimeout) clearTimeout(debounceTimeout);
-    debounceTimeout = globalThis.setTimeout(generate, 1000);
-  });
+    debounceTimeout = globalThis.setTimeout(generate, delay);
+  }
 
-  inputs.forEach((input) => {
-    if (input === fontFamilyInput) return;
-    input.addEventListener("input", () => {
-      saveSettings();
-      if (debounceTimeout) clearTimeout(debounceTimeout);
-      debounceTimeout = globalThis.setTimeout(generate, 600);
-    });
-  });
+  for (const input of typingInputs) {
+    input.addEventListener("input", () => scheduleRender(TYPING_DELAY));
+  }
+  for (const input of toggleInputs) {
+    input.addEventListener("input", () => scheduleRender(TOGGLE_DELAY));
+    input.addEventListener("change", () => scheduleRender(TOGGLE_DELAY));
+  }
+  // The worker loads the font through the proxy; a page-level Google Fonts link would only trip the CSP.
+  fontFamilyInput.addEventListener("input", () => scheduleRender(FONT_DELAY));
 
   downloadBtn?.addEventListener("click", () => {
     if (!latestBlob) return;
