@@ -9,10 +9,6 @@
     port = 8888
     framework = "#custom"
 
-[[edge_functions]]
-    path = "/api/collage-proxy"
-    function = "collage-proxy"
-
 [[plugins]]
     package = "./platform/build-plugin"
 

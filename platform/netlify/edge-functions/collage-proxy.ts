@@ -86,6 +86,18 @@ function jsonError(message: string, status: number): Response {
   });
 }
 
+/**
+ * Route and caching declaration.
+ *
+ * Netlify only caches an edge function's response when it opts in with `cache: "manual"` *and* the
+ * response carries cache headers — doing one without the other leaves every request hitting the
+ * function. The route lives here rather than in `netlify.toml` so the two stay together.
+ */
+export const config = {
+  path: "/api/collage-proxy",
+  cache: "manual",
+};
+
 export default async (req: Request): Promise<Response> => {
   // Only the same-origin collage tool calls this, so no CORS headers: other sites' pages cannot read the responses and spend the API quota.
   if (req.method !== "GET") return jsonError("Method not allowed", 405);
