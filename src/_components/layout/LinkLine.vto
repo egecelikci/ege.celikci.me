@@ -7,7 +7,7 @@
   One line of links, each an icon plus a name.
   It serves two callers that are the same shape: a page's `links` (where its material comes from, or a related page) and the links pointing back at it (`incoming`), so both read identically.
 
-  Icons come from the central vocabulary (utils/links.ts) unless the caller supplies them — the incoming links arrive with an icon already resolved from the linking page's kind (utils/page-icons.ts).
+  Icons come from the central vocabulary (lib/links.ts) unless the caller supplies them — the incoming links arrive with an icon already resolved from the linking page's kind (lib/page-icons.ts).
   A link the vocabulary does not know renders a generic icon, so that gap is reported at build time instead of shipping quietly.
 #}}
 
