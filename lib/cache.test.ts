@@ -3,9 +3,9 @@
  * instead of throwing, because the build must survive a corrupt cache.
  */
 
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertRejects } from "@std/assert";
 import { z } from "zod";
-import { loadState, saveState, sortObjectKeys } from "./cache.ts";
+import { loadState, saveState, sortObjectKeys, StateError } from "./cache.ts";
 
 const DIR = "_cache/test-cache";
 const file = (name: string) => `${DIR}/${name}.json`;
@@ -19,19 +19,27 @@ Deno.test("loadState returns the parsed file", async () => {
   assertEquals(await loadState(file("ok"), { b: 0 }), { b: 2 });
 });
 
-Deno.test("loadState falls back to the default on corrupt json", async () => {
+Deno.test("loadState refuses corrupt json instead of returning the default", async () => {
   await Deno.mkdir(DIR, { recursive: true });
   await Deno.writeTextFile(file("corrupt"), "{ not json");
-  assertEquals(await loadState(file("corrupt"), { safe: true }), {
-    safe: true,
-  });
+  await assertRejects(
+    () => loadState(file("corrupt"), { safe: true }),
+    StateError,
+    "not valid JSON",
+  );
 });
 
-Deno.test("loadState rejects data the schema refuses", async () => {
+Deno.test("loadState refuses data the schema rejects, so a job cannot overwrite it", async () => {
   await saveState(file("stale"), { version: "old" });
   const schema = z.object({ version: z.literal("new") });
-  assertEquals(await loadState(file("stale"), { version: "new" }, schema), {
-    version: "new",
+  await assertRejects(
+    () => loadState(file("stale"), { version: "new" }, schema),
+    StateError,
+    "failed validation",
+  );
+  // The stale file is still there for a human to look at.
+  assertEquals(JSON.parse(await Deno.readTextFile(file("stale"))), {
+    version: "old",
   });
 });
 
@@ -69,4 +77,13 @@ Deno.test("sortObjectKeys sorts nested objects and maps arrays", () => {
   assertEquals(sortObjectKeys(null), null);
   assertEquals(sortObjectKeys(5), 5);
   assertEquals(sortObjectKeys("x"), "x");
+});
+
+Deno.test("saveState leaves no temporary file behind", async () => {
+  await saveState(file("atomic"), { a: 1 });
+  assertEquals(JSON.parse(await Deno.readTextFile(file("atomic"))), { a: 1 });
+  await assertRejects(
+    () => Deno.stat(file("atomic") + ".tmp"),
+    Deno.errors.NotFound,
+  );
 });

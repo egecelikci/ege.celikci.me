@@ -8,37 +8,53 @@ import { dirname } from "@std/path";
 import type { z } from "zod";
 
 /**
+ * A state file exists but cannot be trusted: it does not parse, or it fails its schema.
+ *
+ * Thrown instead of returning the default, because the jobs write their result back to the same tracked file: a silent default would let the next run overwrite good history with whatever partial set the API returned.
+ */
+export class StateError extends Error {
+  override name = "StateError";
+}
+
+/**
  * Load data from a JSON file.
- * Returns default value if file doesn't exist or is invalid.
- * When a schema is given, corrupt or stale data is rejected instead of being
- * passed to the caller as-is.
+ *
+ * @param filePath - The state file.
+ * @param defaultValue - Returned only when the file does not exist yet.
+ * @param schema - Validates the parsed data when given.
+ * @returns The stored data, or `defaultValue` for a missing file.
+ * @throws {StateError} When the file exists but does not parse or fails `schema`.
  */
 export async function loadState<T>(
   filePath: string,
   defaultValue: T,
   schema?: z.ZodType<T>,
 ): Promise<T> {
+  let text: string;
   try {
-    const text = await Deno.readTextFile(filePath);
-    const parsed: unknown = JSON.parse(text);
-    if (schema) {
-      const result = schema.safeParse(parsed);
-      if (!result.success) {
-        console.warn(
-          `[state] ⚠️ ${filePath} failed validation, using default: ${result.error.message}`,
-        );
-        return defaultValue;
-      }
-      return result.data;
-    }
-    return parsed as T;
+    text = await Deno.readTextFile(filePath);
   } catch (error) {
-    if (!(error instanceof Deno.errors.NotFound)) {
-      const message = error instanceof Error ? error.message : String(error);
-      console.warn(`[state] ⚠️ Failed to load ${filePath}:`, message);
-    }
-    return defaultValue;
+    if (error instanceof Deno.errors.NotFound) return defaultValue;
+    throw error;
   }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch (error) {
+    throw new StateError(
+      `${filePath} is not valid JSON: ${(error as Error).message}`,
+    );
+  }
+
+  if (!schema) return parsed as T;
+  const result = schema.safeParse(parsed);
+  if (!result.success) {
+    throw new StateError(
+      `${filePath} failed validation: ${result.error.message}`,
+    );
+  }
+  return result.data;
 }
 
 /**
@@ -63,7 +79,10 @@ export async function saveState<T>(
   try {
     await ensureDir(dirname(filePath));
     const sorted = sortObjectKeys(data);
-    await Deno.writeTextFile(filePath, JSON.stringify(sorted, null, 2));
+    // Write beside the target and rename over it: an interrupted write leaves the old file whole instead of a truncated one.
+    const temp = `${filePath}.tmp`;
+    await Deno.writeTextFile(temp, JSON.stringify(sorted, null, 2));
+    await Deno.rename(temp, filePath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[state] ❌ Failed to save ${filePath}:`, message);

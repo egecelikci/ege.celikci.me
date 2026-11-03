@@ -5,7 +5,7 @@
 
 import "@std/dotenv/load";
 import { join } from "@std/path";
-import { loadState, saveState } from "../../lib/cache.ts";
+import { loadState, saveState, StateError } from "../../lib/cache.ts";
 import { WebmentionFeedSchema } from "../../lib/schemas.ts";
 import {
   type FetchPage,
@@ -47,11 +47,20 @@ function pageFetcher(token: string, domain: string): FetchPage {
 }
 
 async function getWebmentionsData(): Promise<WebmentionFeed> {
-  const stored = await loadState<WebmentionFeed>(
-    CACHE_FILE,
-    { schemaVersion: 1, children: [], lastFetched: null },
-    WebmentionFeedSchema,
-  );
+  const empty: WebmentionFeed = {
+    schemaVersion: 1,
+    children: [],
+    lastFetched: null,
+  };
+  let stored: WebmentionFeed;
+  try {
+    stored = await loadState(CACHE_FILE, empty, WebmentionFeedSchema);
+  } catch (error) {
+    // Unlike the jobs' tracked files, this store lives in _cache and webmention.io can rebuild it, so starting over beats failing the build.
+    if (!(error instanceof StateError)) throw error;
+    console.warn(`[webmentions] ⚠️ ${error.message}; re-syncing from scratch`);
+    stored = empty;
+  }
 
   const token = Deno.env.get("WEBMENTION_IO_TOKEN");
   if (!token || !site.host) {
