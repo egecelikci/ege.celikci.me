@@ -1,5 +1,6 @@
 import lume from "@lumeland/lume";
 import { spawn } from "node:child_process";
+import { rm } from "node:fs/promises";
 import config from "./_config/index.ts";
 import serviceWorker from "./plugins/service-worker.ts";
 import FastCache from "./lib/fast-cache.ts";
@@ -14,6 +15,14 @@ const site = lume({
   // Templates print MusicBrainz and webmention text, so escape by default and opt trusted HTML in with `|> safe`.
   vento: { options: { autoescape: true } },
 });
+
+/**
+ * `emptyDest` deletes only the first entry of `dist/` in @lumeland/core 1.0.2 (`emptyDir` returns inside its loop), so stale chunks from earlier builds survive in Netlify's persisted checkout and end up in the service worker precache.
+ */
+site.addEventListener(
+  "beforeBuild",
+  () => rm(site.dest(), { recursive: true, force: true }),
+);
 
 /** Before any plugin captures `site.cache`. */
 if (site.cache) {
