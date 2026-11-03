@@ -55,10 +55,10 @@ layout: layouts/base.vto
           date: date,
           title: it.title,
           tags: tags,
-          images: images,
+          images: it.images,
           content: content,
           stats: stats,
-          syndication: syndication,
+          syndication: it.syndication,
         },
         variant: "full",
         hideHeader: true,
@@ -102,11 +102,11 @@ layout: layouts/base.vto
   </{{ (it.type === "note" || it.prose === false) ? "div" : "article" }}>
 
   {{ set mentionsData = [] }}
-  {{ if show_webmentions }}
+  {{ if it.show_webmentions }}
     {{ if webmentions }}
       {{
         set mentionsData = webmentions.children
-        |> webmentionsByUrl(url, syndication)
+        |> webmentionsByUrl(url, it.syndication)
       }}
     {{ /if }}
   {{ /if }}

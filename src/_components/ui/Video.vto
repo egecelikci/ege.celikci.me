@@ -1,22 +1,21 @@
-<!-- deno-fmt-ignore-file -->
 {{#
   Component: Video (Universal Wrapper)
   Displays a video (YouTube, PeerTube, etc.) with click-to-load functionality.
   Requires `id` or `src`; renders nothing without either.
 #}}
-{{- set safeTitle = title || "video" -}}
+{{- set safeTitle = it.title || "video" -}}
 
-{{- if id -}}
+{{- if it.id -}}
   {{-
-    set embedUrl = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1"
+    set embedUrl = "https://www.youtube-nocookie.com/embed/" + it.id + "?autoplay=1"
   -}}
   {{- set providerName = "YouTube" -}}
 {{- else -}}
-  {{- set embedUrl = src -}}
-  {{- if src && src.includes("youtube.com") -}}
+  {{- set embedUrl = it.src -}}
+  {{- if it.src && it.src.includes("youtube.com") -}}
     {{- set providerName = "YouTube" -}}
   {{-
-    else if src && (src.includes("peertube") || src.includes("v.basspistol.org"))
+    else if it.src && (it.src.includes("peertube") || it.src.includes("v.basspistol.org"))
   -}}
     {{- set providerName = "PeerTube" -}}
     {{- if !embedUrl.includes("autoplay=1") -}}
@@ -25,7 +24,7 @@
       -}}
     {{- /if -}}
   {{- else -}}
-    {{- set providerName = provider || "video" -}}
+    {{- set providerName = it.provider || "video" -}}
   {{- /if -}}
 {{- /if -}}
 
@@ -54,7 +53,7 @@
 {{- /if }}
 {{- /set -}}
 
-{{- if id || src -}}
+{{- if it.id || it.src -}}
 {{- await it.comp.ui.Card({
     classes: "ledger-card--flush " + (it.classes || ""),
     attributes: it.attributes,

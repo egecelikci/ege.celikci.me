@@ -12,7 +12,7 @@
     />
     <meta name="color-scheme" content="light dark">
     <title>
-      {{ if title && title !== site.title }}{{ title }} | {{ site.title }}{{
+      {{ if it.title && it.title !== site.title }}{{ it.title }} | {{ site.title }}{{
         else if type === "note"
       }}{{ it |> noteTitle }} | {{ site.title }}{{ else }}{{ site.title }}{{ /if }}
     </title>
@@ -44,7 +44,7 @@
     <link rel="modulepreload" href="/assets/scripts/main.js?v={{ build.id }}">
     <link rel="stylesheet" href="/assets/styles/site.css?v={{ build.id }}" />
     <link rel="stylesheet" href="/assets/styles/vendor/photoswipe.css?v={{ build.id }}" />
-    {{ for css of extraStyles }}
+    {{ for css of it.extraStyles ?? [] }}
     <link rel="stylesheet" href="/assets/styles/vendor/{{ css }}.css?v={{ build.id }}" />
     {{ /for }}
 
