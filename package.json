@@ -45,8 +45,9 @@
     "@lumeland/plugin-validate-html": "1.0.0",
     "@lumeland/plugin-well-known": "1.0.0",
     "@myriaddreamin/typst-ts-node-compiler": "0.8.0-rc3",
-    "@serwist/cli": "^9.5.13",
+    "@serwist/build": "9.5.13",
     "@shikijs/rehype": "^4.5.0",
+    "esbuild": "0.28.2",
     "image-dimensions": "2.6.0",
     "leaflet": "^1.9.4",
     "photoswipe": "^5.4.4",
@@ -69,6 +70,7 @@
   },
   "allowScripts": {
     "esbuild": false,
-    "@parcel/watcher": false
+    "@parcel/watcher": false,
+    "fsevents": false
   }
 }
