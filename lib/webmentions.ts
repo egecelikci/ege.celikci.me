@@ -3,7 +3,7 @@
  * @module
  */
 
-import type { Webmention, WebmentionFeed } from "../src/types/index.ts";
+import type { Webmention, WebmentionFeed } from "./schemas.ts";
 import { WebmentionSchema } from "./schemas.ts";
 import { normalizeUrl } from "./webmention-stats.ts";
 
@@ -177,4 +177,19 @@ export function isOwnWebmention(
 ): boolean {
   const authorUrl = mention.author?.url;
   return !!authorUrl && own.includes(normalizeUrl(authorUrl));
+}
+
+/**
+ * The feed as the site may show it: mentions marked `wm-private` removed.
+ *
+ * webmention.io only returns private mentions to the token holder, and the build fetches with the token, so the store holds them; they must never reach a page or a count. The store keeps them so incremental sync still advances past their ids.
+ *
+ * @param feed - The stored feed.
+ * @returns A copy without private mentions.
+ */
+export function publicFeed(feed: WebmentionFeed): WebmentionFeed {
+  return {
+    ...feed,
+    children: feed.children.filter((mention) => !mention["wm-private"]),
+  };
 }

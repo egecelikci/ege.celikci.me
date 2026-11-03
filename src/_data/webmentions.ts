@@ -7,7 +7,11 @@ import "@std/dotenv/load";
 import { join } from "@std/path";
 import { loadState, saveState } from "../../lib/cache.ts";
 import { WebmentionFeedSchema } from "../../lib/schemas.ts";
-import { type FetchPage, syncWebmentions } from "../../lib/webmentions.ts";
+import {
+  type FetchPage,
+  publicFeed,
+  syncWebmentions,
+} from "../../lib/webmentions.ts";
 import type { WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 
@@ -81,4 +85,4 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
   }
 }
 
-export default await getWebmentionsData();
+export default publicFeed(await getWebmentionsData());

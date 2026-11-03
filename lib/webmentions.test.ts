@@ -6,6 +6,7 @@ import {
   mergeMentions,
   ownUrls,
   parseMentions,
+  publicFeed,
   syncWebmentions,
 } from "./webmentions.ts";
 
@@ -192,4 +193,22 @@ Deno.test("isOwnWebmention compares normalised urls and ignores missing authors"
   assertEquals(isOwnWebmention({ author: null }, own), false);
   assertEquals(isOwnWebmention({ author: { url: null } }, own), false);
   assertEquals(isOwnWebmention({ author: { url: "" } }, own), false);
+});
+
+Deno.test("publicFeed drops private mentions and keeps the rest untouched", () => {
+  const visible = mention(1, "2026-01-01T00:00:00Z");
+  const hidden = mention(2, "2026-01-02T00:00:00Z", { "wm-private": true });
+  const flaggedPublic = mention(3, "2026-01-03T00:00:00Z", {
+    "wm-private": false,
+  });
+  const feed: WebmentionFeed = {
+    schemaVersion: 1,
+    children: [visible, hidden, flaggedPublic],
+    lastFetched: null,
+  };
+
+  const shown = publicFeed(feed);
+  assertEquals(shown.children.map((m) => m["wm-id"]), [1, 3]);
+  // The stored feed keeps the private one, so sync can still advance past its id.
+  assertEquals(feed.children.length, 3);
 });

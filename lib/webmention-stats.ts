@@ -3,7 +3,7 @@
  * Kept free of side effects so they can be unit tested.
  */
 
-import type { Webmention, WebmentionFeed } from "../src/types/index.ts";
+import type { Webmention, WebmentionFeed } from "./schemas.ts";
 
 /** Normalize a URL for comparison: strip trailing slashes. */
 export function normalizeUrl(url: string): string {
