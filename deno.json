@@ -8,7 +8,6 @@
     "@types/leaflet": "npm:@types/leaflet@^1.9.22",
     "leaflet": "npm:leaflet@^1.9.4",
     "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.3/",
-    "lume/cms/": "https://cdn.jsdelivr.net/gh/lumeland/cms@0.15.9/",
     "photoswipe": "npm:photoswipe@^5.4.4",
     "protomaps-leaflet": "npm:protomaps-leaflet@5.1.0",
     "rehype-autolink-headings": "npm:rehype-autolink-headings@^7.1.0",
@@ -42,7 +41,7 @@
     },
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "check": "deno check _config.ts _config/ _cms.ts sw.ts lib/ plugins/ jobs/ tools/ src/ platform/",
+    "check": "deno check _config.ts _config/ sw.ts lib/ plugins/ jobs/ tools/ src/ platform/",
     "test": "deno test --allow-read --allow-write=_cache lib/ plugins/ jobs/ src/assets/scripts/",
     "lint": "deno lint",
     "hooks": {

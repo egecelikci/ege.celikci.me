@@ -8,7 +8,9 @@ node_modules/
 # Playwright MCP
 .playwright-mcp/
 
-# CMS runtime state (the server working clone keeps these locally)
+# A server working clone keeps SSH keys and tool config here; they must never be committed
 .ssh/
 .config/
+
+# LUME_CHECKS reports
 _reports/
