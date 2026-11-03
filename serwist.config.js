@@ -1,20 +1,26 @@
+/**
+ * What the service worker precaches: exactly the offline page and what it loads, so it renders with no network.
+ *
+ * Everything else (feature chunks like the map or the lightbox, extra font weights, images) is cached at runtime when a page that needs it is visited. Precaching it all used to cost every first-time visitor about 860 kB of background downloads for files most of them never use.
+ */
 export default {
   globDirectory: "dist/",
-  // Only what the shell needs offline; feeds, tag JSON, and the sitemap are for other clients and cost about 1.5 MB on a first visit.
   globPatterns: [
-    "**/*.{css,js,mjs,ico,svg,woff2,woff}",
-    "manifest.json",
-    "assets/images/favicon/*.png",
     "offline/index.html",
-  ],
-  globIgnores: [
-    "assets/images/gallery/**/*",
-    "assets/images/events/**/*",
-    "assets/images/covers/**/*",
-    "assets/images/posters/**/*",
-    "pagefind/**/*",
-    "sw.js",
-    "sw.js.map",
+    "manifest.json",
+    "assets/styles/site.css",
+    "assets/styles/vendor/photoswipe.css",
+    "assets/scripts/main.js",
+    // Shared chunks `main.js` imports statically, plus the two it loads on every page.
+    "assets/scripts/chunks/chunk-*.js",
+    "assets/scripts/chunks/register-serviceworker-*.js",
+    "assets/scripts/chunks/touch-*.js",
+    "assets/icons/icons.sprite.svg",
+    // The weights the offline page preloads.
+    "assets/fonts/dm-sans-normal-100-1000-latin.woff2",
+    "assets/fonts/dm-sans-normal-100-1000-latin-ext.woff2",
+    "assets/fonts/dm-mono-normal-400-latin.woff2",
+    "assets/images/favicon/*",
   ],
   swSrc: "sw.ts",
   swDest: "dist/sw.js",

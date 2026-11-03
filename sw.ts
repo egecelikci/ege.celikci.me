@@ -1,6 +1,7 @@
 /**
- * Service worker built with Serwist. Bundled and manifest-injected by
- * `@serwist/cli build` in the `afterBuild` hook.
+ * The site's service worker, built with Serwist.
+ *
+ * `_config.ts` bundles it after every build and injects the precache list from `serwist.config.js`.
  */
 
 import { CacheFirst, ExpirationPlugin, NetworkFirst, Serwist } from "serwist";
@@ -18,6 +19,8 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: {
     cleanupOutdatedCaches: true,
+    // Pages request assets as `site.css?v=<build>`; the precache stores `site.css` with its own revision, so without ignoring `v` no precached asset ever matched and offline styling depended on the HTTP cache.
+    ignoreURLParametersMatching: [/^v$/, /^utm_/, /^fbclid$/],
   },
   skipWaiting: true,
   clientsClaim: true,
@@ -94,16 +97,24 @@ const serwist = new Serwist({
       }),
     },
     {
-      matcher: ({ request }) =>
-        request.destination === "style" ||
-        request.destination === "script" ||
-        request.destination === "worker",
+      // Workers are started by a fixed URL (`new Worker("/assets/scripts/collage-worker.js")`), so a cached copy could outlive a deploy and import chunks that no longer exist.
+      matcher: ({ request }) => request.destination === "worker",
       handler: new NetworkFirst({
+        cacheName: "workers",
+        networkTimeoutSeconds: 3,
+        plugins: [new ExpirationPlugin({ maxEntries: 5 })],
+      }),
+    },
+    {
+      // Every script and style URL in the pages is versioned (a hashed chunk name or `?v=<build>`), so a cached copy can never be stale and asking the network first only adds a round trip.
+      matcher: ({ request }) =>
+        request.destination === "style" || request.destination === "script",
+      handler: new CacheFirst({
         cacheName: "assets",
         plugins: [
           new ExpirationPlugin({
-            maxEntries: 50,
-            maxAgeSeconds: 24 * 60 * 60,
+            maxEntries: 60,
+            maxAgeSeconds: 30 * 24 * 60 * 60,
           }),
         ],
       }),
