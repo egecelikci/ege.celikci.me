@@ -14,7 +14,9 @@ export default function () {
         let html = (data.children || data.description || "") as string;
 
         if (
-          data.images && Array.isArray(data.images) && data.images.length > 0
+          data.images &&
+          Array.isArray(data.images) &&
+          data.images.length > 0
         ) {
           const timestamp = Math.floor(data.date.getTime() / 1000);
           const imagesHtml = data.images
@@ -43,36 +45,40 @@ export default function () {
     };
 
     for (const config of feedConfigs) {
-      site.use(feed({
-        output: config.output,
-        query: config.query,
-        limit: config.limit,
-        info: {
-          ...commonInfo,
-          ...config.info,
-        },
-        items,
-      }));
-    }
-
-    site.use(feed(() => {
-      const tags = site.search.values<string>("tags");
-
-      return tags.map((tag) => {
-        const slug = slugify(tag);
-        return {
-          output: [`/tags/${slug}.atom`, `/tags/${slug}.json`],
-
-          query: `'${tag}'`,
+      site.use(
+        feed({
+          output: config.output,
+          query: config.query,
+          limit: config.limit,
           info: {
             ...commonInfo,
-            title: `topic: ${tag} | ${siteData.host}`,
-            description: `all entries tagged with ${tag}`,
+            ...config.info,
           },
           items,
-        };
-      });
-    }));
+        }),
+      );
+    }
+
+    site.use(
+      feed(() => {
+        const tags = site.search.values<string>("tags");
+
+        return tags.map((tag) => {
+          const slug = slugify(tag);
+          return {
+            output: [`/tags/${slug}.atom`, `/tags/${slug}.json`],
+
+            query: `'${tag}'`,
+            info: {
+              ...commonInfo,
+              title: `topic: ${tag} | ${siteData.host}`,
+              description: `all entries tagged with ${tag}`,
+            },
+            items,
+          };
+        });
+      }),
+    );
 
     /** Advertise each page's own feeds in <head> (`alternateFeeds`), derived from the configs above rather than hardcoding the pages. */
     const feedsByPage = new Map<string, [string, string]>();

@@ -12,12 +12,12 @@ import {
 export function initCollageTool(defaultUsername: string) {
   let canvas = document.getElementById("collage-canvas") as HTMLCanvasElement;
   const previewWrapper = document.getElementById("preview-wrapper");
-  const downloadBtn = document.getElementById("download-btn") as
-    | HTMLButtonElement
-    | null;
-  const shareBtn = document.getElementById("share-btn") as
-    | HTMLButtonElement
-    | null;
+  const downloadBtn = document.getElementById(
+    "download-btn",
+  ) as HTMLButtonElement | null;
+  const shareBtn = document.getElementById(
+    "share-btn",
+  ) as HTMLButtonElement | null;
   const statusText = document.getElementById("status-text");
   const emptyState = document.getElementById("empty-state");
   const usernameInput = document.getElementById("username") as HTMLInputElement;
@@ -167,9 +167,9 @@ export function initCollageTool(defaultUsername: string) {
 
   function updatePeriods() {
     const list = PERIODS[currentSource];
-    periodSelect.innerHTML = list.map((p) =>
-      `<option value="${p.v}">${p.l}</option>`
-    ).join("");
+    periodSelect.innerHTML = list
+      .map((p) => `<option value="${p.v}">${p.l}</option>`)
+      .join("");
   }
 
   function loadSettings() {
@@ -192,22 +192,18 @@ export function initCollageTool(defaultUsername: string) {
       if (settings.bgMode) bgModeSelect.value = settings.bgMode;
       if (settings.textCase) textCaseSelect.value = settings.textCase;
 
-      grainCheckbox.checked = settings.grain !== undefined
-        ? settings.grain
-        : true;
+      grainCheckbox.checked =
+        settings.grain !== undefined ? settings.grain : true;
       glassCheckbox.checked = !!settings.glass;
       darkenBottomCheckbox.checked = !!settings.darkenBottom;
-      skipMissingCheckbox.checked = settings.skipMissing !== undefined
-        ? settings.skipMissing
-        : true;
+      skipMissingCheckbox.checked =
+        settings.skipMissing !== undefined ? settings.skipMissing : true;
       showCountsCheckbox.checked = !!settings.showCounts;
-      showSiteCheckbox.checked = settings.showSite !== undefined
-        ? settings.showSite
-        : true;
+      showSiteCheckbox.checked =
+        settings.showSite !== undefined ? settings.showSite : true;
 
-      footerAuto.checked = settings.footerAuto !== undefined
-        ? settings.footerAuto
-        : true;
+      footerAuto.checked =
+        settings.footerAuto !== undefined ? settings.footerAuto : true;
       footerText.value = settings.footer || "";
       footerText.disabled = footerAuto.checked;
       fontFamilyInput.value = settings.fontFamily || "";
@@ -289,10 +285,11 @@ export function initCollageTool(defaultUsername: string) {
         });
         const merged = new Map<string, Album>();
         albums.forEach((album) => {
-          const artist = aliasMap.get(album.artist.toUpperCase()) ||
+          const artist =
+            aliasMap.get(album.artist.toUpperCase()) ||
             album.artist.toUpperCase();
-          const name = aliasMap.get(album.name.toUpperCase()) ||
-            album.name.toUpperCase();
+          const name =
+            aliasMap.get(album.name.toUpperCase()) || album.name.toUpperCase();
           const key = `${artist}|${name}`;
           const count = Number(album.count) || 0;
 

@@ -167,9 +167,9 @@ export function noteTitle(title: string, date?: Date | string): string {
    * (and every existing string) uses "Sep"
    */
   const month = get("month") === "Sept" ? "Sep" : get("month");
-  return `note from ${get("day")} ${month} ${get("year")} ${get("hour")}:${
-    get("minute")
-  }`;
+  return `note from ${get("day")} ${month} ${get("year")} ${get("hour")}:${get(
+    "minute",
+  )}`;
 }
 
 /**
@@ -177,15 +177,12 @@ export function noteTitle(title: string, date?: Date | string): string {
  * Accepts a single link object or an array of them.
  * Only absolute internal paths join the graph; external URLs stay display-only.
  */
-export function frontmatterLinks(
-  links: unknown,
-  siteUrl?: string,
-): string[] {
+export function frontmatterLinks(links: unknown, siteUrl?: string): string[] {
   const list = Array.isArray(links)
     ? links
     : links && typeof links === "object"
-    ? [links]
-    : [];
+      ? [links]
+      : [];
   const found = new Set<string>();
   for (const link of list) {
     const url = (link as { url?: unknown } | null)?.url;

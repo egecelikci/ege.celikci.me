@@ -62,8 +62,11 @@
       &--secondary {
         bottom: -8rem;
         left: -8rem;
-        background-color: color-mix(in srgb, var(--color-secondary) 5%,
-          transparent);
+        background-color: color-mix(
+          in srgb,
+          var(--color-secondary) 5%,
+          transparent
+        );
       }
     }
 

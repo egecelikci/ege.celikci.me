@@ -26,20 +26,20 @@ export default function typstOg() {
     async function processPage(page: Lume.Page<Lume.GlobalData>) {
       if (page.data.openGraphLayout === false) return;
 
-      const template = typeof page.data.openGraphLayout === "string"
-        ? page.data.openGraphLayout
-        : LAYOUT;
+      const template =
+        typeof page.data.openGraphLayout === "string"
+          ? page.data.openGraphLayout
+          : LAYOUT;
 
       try {
-        const urlPath = page.data.url === "/"
-          ? "/index"
-          : page.data.url.replace(/\/$/, "");
+        const urlPath =
+          page.data.url === "/" ? "/index" : page.data.url.replace(/\/$/, "");
         const output = `/assets/images/og${urlPath}.png`;
 
         const emit = (content: Uint8Array) => {
           site.pages.push(Page.create({ url: output, content }));
           page.data.metas = {
-            ...(page.data.metas || {}),
+            ...page.data.metas,
             image: site.url(output, true),
           };
         };
@@ -50,13 +50,14 @@ export default function typstOg() {
         let desc = page.data.description ? String(page.data.description) : "";
 
         if (!title) {
-          const dateStr = page.data.date instanceof Date
-            ? page.data.date.toLocaleDateString("tr-TR", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })
-            : "";
+          const dateStr =
+            page.data.date instanceof Date
+              ? page.data.date.toLocaleDateString("tr-TR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+              : "";
           title = `${dateStr}`;
 
           if (!desc && typeof page.data.content === "string") {
@@ -64,22 +65,24 @@ export default function typstOg() {
           }
         }
 
-        let imgUrl = page.data.image ?? page.data.coverImage ??
-          page.data.images?.[0]?.src;
+        let imgUrl =
+          page.data.image ?? page.data.coverImage ?? page.data.images?.[0]?.src;
 
         if (!imgUrl && page.document) {
           const firstImg = page.document.querySelector(
             "[data-og-image], .e-content img",
           );
-          imgUrl = firstImg?.getAttribute("src") ??
-            firstImg?.getAttribute("data-src") ?? undefined;
+          imgUrl =
+            firstImg?.getAttribute("src") ??
+            firstImg?.getAttribute("data-src") ??
+            undefined;
         }
 
         let imagePath = "";
         let imageKey = "";
         if (typeof imgUrl === "string" && imgUrl.length > 0) {
-          const isRemote = /^([a-z]+:)?\/\//i.test(imgUrl) ||
-            imgUrl.startsWith("data:");
+          const isRemote =
+            /^([a-z]+:)?\/\//i.test(imgUrl) || imgUrl.startsWith("data:");
           if (!isRemote) {
             const local = imgUrl.startsWith("/") ? imgUrl : `/${imgUrl}`;
             try {
@@ -110,9 +113,10 @@ export default function typstOg() {
           "og-image-path": imagePath,
         });
 
-        const svgText = typeof svg === "string"
-          ? svg
-          : new TextDecoder().decode(svg as Uint8Array);
+        const svgText =
+          typeof svg === "string"
+            ? svg
+            : new TextDecoder().decode(svg as Uint8Array);
 
         if (!svgText.trim().startsWith("<svg")) {
           console.error(`[typst-og] Expected SVG output for ${page.data.url}`);

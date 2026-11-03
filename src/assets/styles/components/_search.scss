@@ -207,21 +207,13 @@
         font-weight: 700;
         font-size: 10px;
         line-height: calc(1 / 0.75);
-        color: color-mix(
-          in oklab,
-          var(--color-text-muted) 50%,
-          transparent
-        );
+        color: color-mix(in oklab, var(--color-text-muted) 50%, transparent);
       }
 
       &__excerpt {
         font-size: 0.75rem;
         line-height: 1.625;
-        color: color-mix(
-          in oklab,
-          var(--color-text-muted) 70%,
-          transparent
-        );
+        color: color-mix(in oklab, var(--color-text-muted) 70%, transparent);
         font-family: var(--font-mono);
         font-style: italic;
         margin: 0;

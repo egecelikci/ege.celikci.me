@@ -36,17 +36,17 @@ export function resolveVenueName(
   local?: LocalEventData,
   venueRel?: MBRelation,
 ): string | undefined {
-  return local?.venue_name || venueRel?.["target-credit"] ||
-    venueRel?.place?.name;
+  return (
+    local?.venue_name || venueRel?.["target-credit"] || venueRel?.place?.name
+  );
 }
 
 /** Extract performer names from artist relations, excluding non-performers. */
-export function extractArtists(
-  relations: MBRelation[] | undefined,
-): string[] {
+export function extractArtists(relations: MBRelation[] | undefined): string[] {
   return (relations || [])
-    .filter((r) =>
-      r["target-type"] === "artist" && !NON_PERFORMER_ROLES.includes(r.type)
+    .filter(
+      (r) =>
+        r["target-type"] === "artist" && !NON_PERFORMER_ROLES.includes(r.type),
     )
     .map((r) => r["target-credit"] || r.artist?.name)
     .filter((name): name is string => Boolean(name));
@@ -104,11 +104,11 @@ export function filterLabels(
   relations: MBRelation[] | undefined,
   excludeLabels: string[],
 ): MBRelation[] {
-  return (relations ?? [])
-    .filter((r) =>
+  return (relations ?? []).filter(
+    (r) =>
       r["target-type"] === "label" &&
-      !excludeLabels.includes(r.label?.id ?? "")
-    );
+      !excludeLabels.includes(r.label?.id ?? ""),
+  );
 }
 
 /** Local event metadata from src/_data/events.yml */

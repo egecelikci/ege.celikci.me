@@ -75,13 +75,13 @@ export function initLightbox() {
       itemData.alt = img?.alt || anchor.getAttribute("data-alt") || "";
       itemData.cropped = anchor.getAttribute("data-cropped") === "true";
 
-      const w = anchor.getAttribute("data-pswp-width") ||
-        img?.getAttribute("width");
-      const h = anchor.getAttribute("data-pswp-height") ||
-        img?.getAttribute("height");
+      const w =
+        anchor.getAttribute("data-pswp-width") || img?.getAttribute("width");
+      const h =
+        anchor.getAttribute("data-pswp-height") || img?.getAttribute("height");
 
-      itemData.width = w ? parseInt(w, 10) : (img?.naturalWidth || 0);
-      itemData.height = h ? parseInt(h, 10) : (img?.naturalHeight || 0);
+      itemData.width = w ? parseInt(w, 10) : img?.naturalWidth || 0;
+      itemData.height = h ? parseInt(h, 10) : img?.naturalHeight || 0;
 
       itemData.postUrl = anchor.getAttribute("data-post-url");
     } else if (el.tagName === "IMG") {
@@ -90,10 +90,12 @@ export function initLightbox() {
       itemData.msrc = img.src;
       itemData.srcset = img.getAttribute("srcset") || undefined;
       itemData.alt = img.alt || "";
-      itemData.width = parseInt(img.getAttribute("width") || "0", 10) ||
-        img.naturalWidth || 0;
-      itemData.height = parseInt(img.getAttribute("height") || "0", 10) ||
-        img.naturalHeight || 0;
+      itemData.width =
+        parseInt(img.getAttribute("width") || "0", 10) || img.naturalWidth || 0;
+      itemData.height =
+        parseInt(img.getAttribute("height") || "0", 10) ||
+        img.naturalHeight ||
+        0;
     }
 
     return itemData;
@@ -178,7 +180,8 @@ export function initLightbox() {
 
         moreBtn?.addEventListener("click", (e) => {
           e.stopPropagation();
-          isMenuOpen ? closeMoreMenu() : openMoreMenu();
+          if (isMenuOpen) closeMoreMenu();
+          else openMoreMenu();
         });
 
         download?.addEventListener("click", () => {
@@ -243,9 +246,9 @@ export function initLightbox() {
           if (viewPost) {
             const postPath = data.postUrl
               ? new URL(data.postUrl, location.href).pathname.replace(
-                /\/+$/,
-                "",
-              )
+                  /\/+$/,
+                  "",
+                )
               : null;
             const currentPath = location.pathname.replace(/\/+$/, "");
             const redundant = postPath !== null && postPath === currentPath;
@@ -364,27 +367,35 @@ export function initLightbox() {
         let startY = 0;
         let isDragging = false;
 
-        sheet.addEventListener("touchstart", (e) => {
-          startY = e.touches[0].clientY;
-          isDragging = true;
-          sheet.style.transition = "none";
-          e.stopPropagation();
-        }, { passive: true });
-
-        sheet.addEventListener("touchmove", (e) => {
-          if (!isDragging) return;
-          const diff = e.touches[0].clientY - startY;
-
-          if (diff > 0 && sheet.scrollTop === 0) {
-            sheet.style.transform = `translateY(${diff}px)`;
-            const opacity = Math.max(0, 1 - (diff / 300));
-            backdrop.style.opacity = opacity.toString();
-          } else if (sheet.scrollTop > 0) {
+        sheet.addEventListener(
+          "touchstart",
+          (e) => {
             startY = e.touches[0].clientY;
-          }
+            isDragging = true;
+            sheet.style.transition = "none";
+            e.stopPropagation();
+          },
+          { passive: true },
+        );
 
-          e.stopPropagation();
-        }, { passive: true });
+        sheet.addEventListener(
+          "touchmove",
+          (e) => {
+            if (!isDragging) return;
+            const diff = e.touches[0].clientY - startY;
+
+            if (diff > 0 && sheet.scrollTop === 0) {
+              sheet.style.transform = `translateY(${diff}px)`;
+              const opacity = Math.max(0, 1 - diff / 300);
+              backdrop.style.opacity = opacity.toString();
+            } else if (sheet.scrollTop > 0) {
+              startY = e.touches[0].clientY;
+            }
+
+            e.stopPropagation();
+          },
+          { passive: true },
+        );
 
         sheet.addEventListener("touchend", (e) => {
           if (!isDragging) return;

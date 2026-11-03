@@ -10,7 +10,8 @@ const SECRET_PARAMS = /^(key|api_key|token|access_token|password)$/i;
 export function redactUrl(url: string): string {
   try {
     const parsed = new URL(url);
-    for (const name of [...parsed.searchParams.keys()]) {
+    // A copy, because `set` drops duplicate keys and would shift the live iterator.
+    for (const name of Array.from(parsed.searchParams.keys())) {
       if (SECRET_PARAMS.test(name)) parsed.searchParams.set(name, "***");
     }
     return parsed.toString();
@@ -36,25 +37,20 @@ export function retryAfterMs(header: string | null, now = Date.now()): number {
   return Number.isFinite(ms) ? Math.min(Math.max(ms, 0), 60_000) : fallback;
 }
 
-export type CachePolicy = "no-cache" | "force-cache" | "only-if-cached";
-
 interface HttpClientOptions {
   userAgent: string;
   rateLimitMs?: number;
-  cacheName: string;
 }
 
 export class HttpClient {
   private userAgent: string;
   private rateLimitMs: number;
   private lastFetch: number = 0;
-  private cacheName: string;
   private queue: Promise<void> = Promise.resolve();
 
   constructor(options: HttpClientOptions) {
     this.userAgent = options.userAgent;
     this.rateLimitMs = options.rateLimitMs ?? 0;
-    this.cacheName = options.cacheName;
   }
 
   private async robustFetch(
@@ -75,7 +71,7 @@ export class HttpClient {
         if (response.status === 429) {
           await response.body?.cancel();
           await new Promise<void>((r) =>
-            setTimeout(r, retryAfterMs(response.headers.get("Retry-After")))
+            setTimeout(r, retryAfterMs(response.headers.get("Retry-After"))),
           );
           lastError = new Error("Rate limited (429)");
           continue;
@@ -110,78 +106,40 @@ export class HttpClient {
   }
 
   /**
-   * Main fetch method with rate-limiting and Web Cache API support.
+   * Fetch through the rate limiter, with retries.
+   *
+   * @param bypassRateLimit - Skip the queue, for hosts other than the one the limit protects.
+   * @returns The parsed JSON or the raw bytes, or `null` on any failure.
    */
   async fetch<T>(
     url: string,
     type: "json" | "buffer" = "json",
-    cachePolicy: CachePolicy = "force-cache",
     bypassRateLimit = false,
   ): Promise<T | null> {
-    // Node has no Web Cache API, so there every request goes to the network; Deno (the jobs) still caches.
-    const store = (globalThis as { caches?: CacheStorage }).caches;
-    const cache = store ? await store.open(this.cacheName) : undefined;
-    const request = new Request(url, {
-      headers: {
-        "User-Agent": this.userAgent,
-        "Accept": "application/json; charset=utf-8",
-        "Content-Type": "application/json; charset=utf-8",
-      },
-    });
-
-    if (cache && cachePolicy !== "no-cache") {
-      const cachedResponse = await cache.match(request);
-      if (cachedResponse) {
-        if (type === "json") {
-          try {
-            const buffer = await cachedResponse.arrayBuffer();
-            const text = new TextDecoder("utf-8").decode(buffer);
-            return JSON.parse(text) as T;
-          } catch {
-            console.warn(
-              `[http] Corrupt cached JSON for ${
-                redactUrl(url)
-              }, falling back to network`,
-            );
-          }
-        } else {
-          const buffer = await cachedResponse.arrayBuffer();
-          return buffer as T;
-        }
-      }
-    }
-
-    if (cachePolicy === "only-if-cached") {
-      return null;
-    }
-
     if (!bypassRateLimit && this.rateLimitMs > 0) {
       const result = this.queue.then(async () => {
-        const now = Date.now();
-        const elapsed = now - this.lastFetch;
+        const elapsed = Date.now() - this.lastFetch;
         if (elapsed < this.rateLimitMs) {
           await new Promise((r) => setTimeout(r, this.rateLimitMs - elapsed));
         }
-        return await this.performFetch<T>(url, type, cache, request);
+        return await this.performFetch<T>(url, type);
       });
       this.queue = result.then(() => {}).catch(() => {});
       return result;
     }
 
-    return await this.performFetch<T>(url, type, cache, request);
+    return await this.performFetch<T>(url, type);
   }
 
   private async performFetch<T>(
     url: string,
     type: "json" | "buffer",
-    cache: Cache | undefined,
-    request: Request,
   ): Promise<T | null> {
     try {
       const response = await this.robustFetch(url, {
         headers: {
           "User-Agent": this.userAgent,
-          "Accept": "application/json; charset=utf-8",
+          Accept: "application/json; charset=utf-8",
           "Content-Type": "application/json; charset=utf-8",
         },
       });
@@ -191,8 +149,6 @@ export class HttpClient {
       if (!response || !response.ok) return null;
 
       const contentType = response.headers.get("Content-Type") || "";
-
-      if (cache) await cache.put(request, response.clone());
 
       if (type === "json") {
         if (!contentType.includes("application/json")) {

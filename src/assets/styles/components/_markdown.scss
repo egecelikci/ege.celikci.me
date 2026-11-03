@@ -76,8 +76,8 @@
     & a:not(.btn, .heading-anchor) {
       color: var(--color-primary);
       text-decoration: none;
-      border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 20%,
-        transparent);
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--color-primary) 20%, transparent);
       padding-bottom: 1px;
       transition: all 300ms ease;
 
@@ -96,11 +96,14 @@
     & blockquote {
       max-width: 50ch;
       padding: 0.25rem 0 0.25rem 1.5rem;
-      border-left: 4px solid color-mix(in srgb, var(--color-primary) 20%,
-        transparent);
+      border-left: 4px solid
+        color-mix(in srgb, var(--color-primary) 20%, transparent);
       border-radius: 0 0.5rem 0.5rem 0;
-      background-color: color-mix(in srgb, var(--color-surface-subtle) 30%,
-        transparent);
+      background-color: color-mix(
+        in srgb,
+        var(--color-surface-subtle) 30%,
+        transparent
+      );
       font-weight: var(--font-weight-body);
       font-style: italic;
     }

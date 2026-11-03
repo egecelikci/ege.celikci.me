@@ -80,13 +80,11 @@ export default function ({ mb_events }: Lume.Data) {
 
     icsLines.push(`SUMMARY:${escape(displayTitle)}`);
     icsLines.push(
-      `DESCRIPTION:${
-        escape(
-          `Artists: ${
-            artists.join(", ")
-          }\n\nDetails: https://ege.celikci.me/event/${event.id}/`,
-        )
-      }`,
+      `DESCRIPTION:${escape(
+        `Artists: ${artists.join(
+          ", ",
+        )}\n\nDetails: https://ege.celikci.me/event/${event.id}/`,
+      )}`,
     );
     const venueName = event.venueName || "TBA";
 
@@ -114,7 +112,7 @@ export default function ({ mb_events }: Lume.Data) {
       /** Find safe split point (don't cut mid-multibyte-sequence) */
       let end = Math.min(offset + max, bytes.length);
       /** back off from continuation bytes */
-      while (end > offset && (bytes[end] & 0xC0) === 0x80) end--;
+      while (end > offset && (bytes[end] & 0xc0) === 0x80) end--;
       parts.push((first ? "" : " ") + decoder.decode(bytes.slice(offset, end)));
       offset = end;
       first = false;

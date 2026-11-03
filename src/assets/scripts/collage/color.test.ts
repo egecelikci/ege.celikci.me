@@ -4,12 +4,13 @@
  * The vectors come from the wasm original (`get_vibrant_color`) so the port is checked against real behaviour, including the cases where nothing qualifies and the fallback wins.
  */
 
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { FALLBACK_COLOR, vibrantColor } from "./color.ts";
 
 const pixels = (...values: number[]) => new Uint8Array(values);
 
-Deno.test("vibrantColor matches the wasm vectors", () => {
+test("vibrantColor matches the wasm vectors", () => {
   const cases: Array<[string, Uint8Array, [number, number, number]]> = [
     ["saturated red", pixels(255, 0, 0, 255, 255, 0, 0, 255), [255, 0, 0]],
     ["grey", pixels(128, 128, 128, 255), [30, 27, 75]],
@@ -22,29 +23,29 @@ Deno.test("vibrantColor matches the wasm vectors", () => {
 
   for (const [name, input, want] of cases) {
     const got = vibrantColor(input);
-    assertEquals([got.r, got.g, got.b], want, name);
+    assert.deepEqual([got.r, got.g, got.b], want, name);
   }
 });
 
-Deno.test("vibrantColor keeps the first pixel among equally saturated ones", () => {
+test("vibrantColor keeps the first pixel among equally saturated ones", () => {
   const got = vibrantColor(
     pixels(255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 128, 128, 128, 255),
   );
-  assertEquals([got.r, got.g, got.b], [255, 0, 0]);
+  assert.deepEqual([got.r, got.g, got.b], [255, 0, 0]);
 });
 
-Deno.test("vibrantColor prefers saturation over brightness", () => {
+test("vibrantColor prefers saturation over brightness", () => {
   // A pale tile first, then a saturated but dimmer one.
   const got = vibrantColor(pixels(230, 220, 210, 255, 200, 20, 20, 255));
-  assertEquals([got.r, got.g, got.b], [200, 20, 20]);
+  assert.deepEqual([got.r, got.g, got.b], [200, 20, 20]);
 });
 
-Deno.test("vibrantColor ignores a trailing partial pixel", () => {
+test("vibrantColor ignores a trailing partial pixel", () => {
   const got = vibrantColor(pixels(255, 0, 0, 255, 0, 255));
-  assertEquals([got.r, got.g, got.b], [255, 0, 0]);
+  assert.deepEqual([got.r, got.g, got.b], [255, 0, 0]);
 });
 
-Deno.test("vibrantColor never returns undefined fields", () => {
+test("vibrantColor never returns undefined fields", () => {
   const got = vibrantColor(pixels(0, 0, 0, 0));
-  assertEquals(got, FALLBACK_COLOR);
+  assert.deepEqual(got, FALLBACK_COLOR);
 });

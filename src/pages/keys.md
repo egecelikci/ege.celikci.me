@@ -14,6 +14,7 @@ age1vryy7ntgdxrvr4lcevvhqr78yp4wpud42ahcdn0ah7ggtuqxfymq9hw07s
 ## SSH
 
 <!-- deno-fmt-ignore -->
+
 - [{{ git.host }}/{{ author.username }}.keys](https://{{ git.host }}/{{ author.username }}.keys)
 - [codeberg.org/{{ author.username }}.keys](https://codeberg.org/{{ author.username }}.keys)
 - [github.com/{{ author.username }}.keys](https://github.com/{{ author.username }}.keys)

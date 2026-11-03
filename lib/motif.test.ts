@@ -2,23 +2,24 @@
  * Unit tests for the palette contrast helpers.
  */
 
-import { assert, assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { contrast, onColor } from "./motif.ts";
 
 const LIGHT_TEXT = "#172c66";
 const DARK_TEXT = "#e8e2f3";
 
-Deno.test("onColor prefers the palette's own text tokens", () => {
-  assertEquals(onColor("#fef6e4", LIGHT_TEXT, DARK_TEXT), LIGHT_TEXT);
-  assertEquals(onColor("#3a2a55", LIGHT_TEXT, DARK_TEXT), DARK_TEXT);
+test("onColor prefers the palette's own text tokens", () => {
+  assert.deepEqual(onColor("#fef6e4", LIGHT_TEXT, DARK_TEXT), LIGHT_TEXT);
+  assert.deepEqual(onColor("#3a2a55", LIGHT_TEXT, DARK_TEXT), DARK_TEXT);
 });
 
-Deno.test("onColor falls back to black when no palette text token reads", () => {
+test("onColor falls back to black when no palette text token reads", () => {
   /** Dark `primaryOffset`: 3.95:1 against the better palette token. */
-  assertEquals(onColor("#ef5a58", LIGHT_TEXT, DARK_TEXT), "#000000");
+  assert.deepEqual(onColor("#ef5a58", LIGHT_TEXT, DARK_TEXT), "#000000");
 });
 
-Deno.test("every palette color reaches the palette's own minimum", () => {
+test("every palette color reaches the palette's own minimum", () => {
   const minimum = 4.5;
   const modes = [
     [
@@ -48,7 +49,7 @@ Deno.test("every palette color reaches the palette's own minimum", () => {
   for (const hexes of modes) {
     for (const bg of hexes) {
       const text = onColor(bg, LIGHT_TEXT, DARK_TEXT, minimum);
-      assert(
+      assert.ok(
         contrast(bg, text) >= minimum,
         `${bg} with ${text} is ${contrast(bg, text).toFixed(2)}:1`,
       );

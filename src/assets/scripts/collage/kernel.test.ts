@@ -6,23 +6,13 @@
  * A failing hash prints the new value; replace the entry only after confirming the change was intended.
  */
 
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { renderBackground } from "./kernel.ts";
 
 /** 2x2 mesh with one saturated, one dark, one light and one mid tone. */
 const GRID_2X2 = new Uint8Array([
-  200,
-  40,
-  40,
-  30,
-  120,
-  200,
-  240,
-  220,
-  40,
-  60,
-  90,
-  180,
+  200, 40, 40, 30, 120, 200, 240, 220, 40, 60, 90, 180,
 ]);
 
 const MODES = [
@@ -88,27 +78,33 @@ const GOLDEN_FULL: Record<string, string> = {
 };
 
 for (const [index, mode] of MODES.entries()) {
-  Deno.test(`kernel renders ${mode} identically at 96x192`, async () => {
-    assertEquals(await render(96, 192, index), GOLDEN_SMALL[mode]);
+  test(`kernel renders ${mode} identically at 96x192`, async () => {
+    assert.deepEqual(await render(96, 192, index), GOLDEN_SMALL[mode]);
   });
 }
 
 for (const mode of ["aura", "terminal"] as const) {
   const index = MODES.indexOf(mode);
-  Deno.test(`kernel renders ${mode} identically at 1080x1920`, async () => {
-    assertEquals(await render(1080, 1920, index), GOLDEN_FULL[mode]);
+  test(`kernel renders ${mode} identically at 1080x1920`, async () => {
+    assert.deepEqual(await render(1080, 1920, index), GOLDEN_FULL[mode]);
   });
 }
 
-Deno.test("kernel output is stable across calls", async () => {
-  assertEquals(await render(96, 192, 0), await render(96, 192, 0));
+test("kernel output is stable across calls", async () => {
+  assert.deepEqual(await render(96, 192, 0), await render(96, 192, 0));
 });
 
-Deno.test("kernel rejects a mesh it cannot interpolate", () => {
+test("kernel rejects a mesh it cannot interpolate", () => {
   const pixels = () => new Uint8Array(64 * 64 * 4);
   const grid = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
-  for (const [cols, rows] of [[0, 2], [2, 0], [1, 1], [1, 2], [2, 1]]) {
+  for (const [cols, rows] of [
+    [0, 2],
+    [2, 0],
+    [1, 1],
+    [1, 2],
+    [2, 1],
+  ]) {
     const data = pixels();
     const rendered = renderBackground({
       data,
@@ -123,8 +119,8 @@ Deno.test("kernel rejects a mesh it cannot interpolate", () => {
       applyGlass: false,
       darkenBottom: false,
     });
-    assertEquals(rendered, false, `mesh ${cols}x${rows}`);
-    assertEquals(
+    assert.deepEqual(rendered, false, `mesh ${cols}x${rows}`);
+    assert.deepEqual(
       data.some((v) => v !== 0),
       false,
       `mesh ${cols}x${rows} wrote`,
@@ -132,7 +128,7 @@ Deno.test("kernel rejects a mesh it cannot interpolate", () => {
   }
 });
 
-Deno.test("kernel rejects a buffer that is too small for the canvas", () => {
+test("kernel rejects a buffer that is too small for the canvas", () => {
   const grid = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const short = new Uint8Array(64 * 64 * 4 - 4);
   const base = {
@@ -146,11 +142,11 @@ Deno.test("kernel rejects a buffer that is too small for the canvas", () => {
     applyGlass: false,
     darkenBottom: false,
   };
-  assertEquals(
+  assert.deepEqual(
     renderBackground({ ...base, data: short, gridColors: grid }),
     false,
   );
-  assertEquals(
+  assert.deepEqual(
     renderBackground({
       ...base,
       data: new Uint8Array(64 * 64 * 4),
@@ -160,8 +156,8 @@ Deno.test("kernel rejects a buffer that is too small for the canvas", () => {
   );
 });
 
-Deno.test("kernel accepts a valid call", () => {
-  assertEquals(
+test("kernel accepts a valid call", () => {
+  assert.deepEqual(
     renderBackground({
       data: new Uint8Array(64 * 64 * 4),
       width: 64,

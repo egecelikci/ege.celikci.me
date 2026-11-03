@@ -7,8 +7,8 @@
     overflow: hidden;
 
     &--divided .menu__item + .menu__item {
-      border-top: 1px solid color-mix(in srgb, var(--color-border) 5%,
-        transparent);
+      border-top: 1px solid
+        color-mix(in srgb, var(--color-border) 5%, transparent);
     }
   }
 

@@ -2,7 +2,8 @@
  * Unit tests for the pure event enrichment helpers.
  */
 
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import {
   buildDisplayTitle,
   detectCustomTitle,
@@ -15,55 +16,55 @@ import {
 } from "./events.ts";
 import type { MBRelation } from "./schemas.ts";
 
-Deno.test("parseEventDate parses ISO strings", () => {
-  assertEquals(parseEventDate("2026-08-15"), new Date("2026-08-15"));
+test("parseEventDate parses ISO strings", () => {
+  assert.deepEqual(parseEventDate("2026-08-15"), new Date("2026-08-15"));
 });
 
-Deno.test("parseEventDate returns null for empty/garbage input", () => {
-  assertEquals(parseEventDate(), null);
-  assertEquals(parseEventDate(""), null);
-  assertEquals(parseEventDate("not-a-date"), null);
+test("parseEventDate returns null for empty/garbage input", () => {
+  assert.deepEqual(parseEventDate(), null);
+  assert.deepEqual(parseEventDate(""), null);
+  assert.deepEqual(parseEventDate("not-a-date"), null);
 });
 
-Deno.test("isEventUpcoming is true for future dates", () => {
+test("isEventUpcoming is true for future dates", () => {
   const today = new Date("2026-08-03");
-  assertEquals(
+  assert.deepEqual(
     isEventUpcoming(new Date("2026-08-15"), false, false, today),
     true,
   );
 });
 
-Deno.test("isEventUpcoming treats today as upcoming", () => {
+test("isEventUpcoming treats today as upcoming", () => {
   const today = new Date("2026-08-03");
-  assertEquals(
+  assert.deepEqual(
     isEventUpcoming(new Date("2026-08-03"), false, false, today),
     true,
   );
 });
 
-Deno.test("isEventUpcoming is false for past dates", () => {
+test("isEventUpcoming is false for past dates", () => {
   const today = new Date("2026-08-03");
-  assertEquals(
+  assert.deepEqual(
     isEventUpcoming(new Date("2026-01-01"), false, false, today),
     false,
   );
 });
 
-Deno.test("isEventUpcoming falls back to ended flag when undated", () => {
+test("isEventUpcoming falls back to ended flag when undated", () => {
   const today = new Date("2026-08-03");
-  assertEquals(isEventUpcoming(null, false, false, today), true);
-  assertEquals(isEventUpcoming(null, true, false, today), false);
+  assert.deepEqual(isEventUpcoming(null, false, false, today), true);
+  assert.deepEqual(isEventUpcoming(null, true, false, today), false);
 });
 
-Deno.test("isEventUpcoming is false when cancelled", () => {
+test("isEventUpcoming is false when cancelled", () => {
   const today = new Date("2026-08-03");
-  assertEquals(
+  assert.deepEqual(
     isEventUpcoming(new Date("2026-08-15"), false, true, today),
     false,
   );
 });
 
-Deno.test("resolveVenueName prefers local override", () => {
+test("resolveVenueName prefers local override", () => {
   const local = { venue_name: "Local Venue" };
   const venueRel = {
     type: "place",
@@ -71,24 +72,24 @@ Deno.test("resolveVenueName prefers local override", () => {
     "target-credit": "Credit Venue",
     place: { id: "1", name: "MB Venue" },
   };
-  assertEquals(resolveVenueName(local, venueRel), "Local Venue");
+  assert.deepEqual(resolveVenueName(local, venueRel), "Local Venue");
 });
 
-Deno.test("resolveVenueName falls back to target-credit then place name", () => {
+test("resolveVenueName falls back to target-credit then place name", () => {
   const venueRel = {
     type: "place",
     "target-type": "place" as const,
     "target-credit": "Credit Venue",
     place: { id: "1", name: "MB Venue" },
   };
-  assertEquals(resolveVenueName(undefined, venueRel), "Credit Venue");
-  assertEquals(
+  assert.deepEqual(resolveVenueName(undefined, venueRel), "Credit Venue");
+  assert.deepEqual(
     resolveVenueName(undefined, { ...venueRel, "target-credit": undefined }),
     "MB Venue",
   );
 });
 
-Deno.test("extractArtists uses target-credit over artist name", () => {
+test("extractArtists uses target-credit over artist name", () => {
   const relations: MBRelation[] = [
     {
       type: "performer",
@@ -97,10 +98,10 @@ Deno.test("extractArtists uses target-credit over artist name", () => {
       artist: { id: "a", name: "Real Name", "sort-name": "Real Name" },
     },
   ];
-  assertEquals(extractArtists(relations), ["Stage Name"]);
+  assert.deepEqual(extractArtists(relations), ["Stage Name"]);
 });
 
-Deno.test("extractArtists excludes non-performer roles", () => {
+test("extractArtists excludes non-performer roles", () => {
   const relations: MBRelation[] = [
     {
       type: "graphic design",
@@ -113,10 +114,10 @@ Deno.test("extractArtists excludes non-performer roles", () => {
       artist: { id: "b", name: "Performer", "sort-name": "Performer" },
     },
   ];
-  assertEquals(extractArtists(relations), ["Performer"]);
+  assert.deepEqual(extractArtists(relations), ["Performer"]);
 });
 
-Deno.test("extractArtists drops entries without names", () => {
+test("extractArtists drops entries without names", () => {
   const relations: MBRelation[] = [
     {
       type: "performer",
@@ -129,41 +130,41 @@ Deno.test("extractArtists drops entries without names", () => {
       artist: { id: "b", name: "", "sort-name": "" },
     },
   ];
-  assertEquals(extractArtists(relations), ["Performer"]);
+  assert.deepEqual(extractArtists(relations), ["Performer"]);
 });
 
-Deno.test("buildDisplayTitle joins one, two, and many artists", () => {
-  assertEquals(buildDisplayTitle(["A"], "Event"), "A");
-  assertEquals(buildDisplayTitle(["A", "B"], "Event"), "A & B");
-  assertEquals(buildDisplayTitle(["A", "B", "C"], "Event"), "A, B & C");
+test("buildDisplayTitle joins one, two, and many artists", () => {
+  assert.deepEqual(buildDisplayTitle(["A"], "Event"), "A");
+  assert.deepEqual(buildDisplayTitle(["A", "B"], "Event"), "A & B");
+  assert.deepEqual(buildDisplayTitle(["A", "B", "C"], "Event"), "A, B & C");
 });
 
-Deno.test("buildDisplayTitle appends venue with @", () => {
-  assertEquals(buildDisplayTitle(["A"], "Event", "Venue"), "A @ Venue");
+test("buildDisplayTitle appends venue with @", () => {
+  assert.deepEqual(buildDisplayTitle(["A"], "Event", "Venue"), "A @ Venue");
 });
 
-Deno.test("buildDisplayTitle falls back to event name without artists", () => {
-  assertEquals(buildDisplayTitle([], "Event Name"), "Event Name");
-  assertEquals(
+test("buildDisplayTitle falls back to event name without artists", () => {
+  assert.deepEqual(buildDisplayTitle([], "Event Name"), "Event Name");
+  assert.deepEqual(
     buildDisplayTitle([], "Event Name", "Venue"),
     "Event Name @ Venue",
   );
 });
 
-Deno.test("detectCustomTitle is true when no artist appears in name", () => {
-  assertEquals(detectCustomTitle("A Night of Noise", ["Unknown"]), true);
+test("detectCustomTitle is true when no artist appears in name", () => {
+  assert.deepEqual(detectCustomTitle("A Night of Noise", ["Unknown"]), true);
 });
 
-Deno.test("detectCustomTitle is false when artist appears in name", () => {
-  assertEquals(detectCustomTitle("Artist Live", ["artist"]), false);
+test("detectCustomTitle is false when artist appears in name", () => {
+  assert.deepEqual(detectCustomTitle("Artist Live", ["artist"]), false);
 });
 
-Deno.test("detectCustomTitle is true for empty artist list with a name", () => {
-  assertEquals(detectCustomTitle("Event Name", []), true);
-  assertEquals(detectCustomTitle("", []), false);
+test("detectCustomTitle is true for empty artist list with a name", () => {
+  assert.deepEqual(detectCustomTitle("Event Name", []), true);
+  assert.deepEqual(detectCustomTitle("", []), false);
 });
 
-Deno.test("filterLabels removes excluded labels", () => {
+test("filterLabels removes excluded labels", () => {
   const relations: MBRelation[] = [
     {
       type: "signed by",
@@ -177,16 +178,19 @@ Deno.test("filterLabels removes excluded labels", () => {
     },
   ];
   const result = filterLabels(relations, ["drop"]);
-  assertEquals(result.length, 1);
-  assertEquals(result[0].label?.id, "keep");
+  assert.deepEqual(result.length, 1);
+  assert.deepEqual(result[0].label?.id, "keep");
 });
 
-Deno.test("sortByDate sorts ascending and descending", () => {
+test("sortByDate sorts ascending and descending", () => {
   const events = [
     { beginDate: "2026-08-01T00:00:00.000Z" },
     { beginDate: "2026-08-08T00:00:00.000Z" },
     { beginDate: null },
   ];
-  assertEquals(sortByDate(events[0], events[1]), -7 * 24 * 3600 * 1000);
-  assertEquals(sortByDate(events[0], events[1], true), 7 * 24 * 3600 * 1000);
+  assert.deepEqual(sortByDate(events[0], events[1]), -7 * 24 * 3600 * 1000);
+  assert.deepEqual(
+    sortByDate(events[0], events[1], true),
+    7 * 24 * 3600 * 1000,
+  );
 });

@@ -5,7 +5,9 @@
  * @module
  */
 
-import { join } from "@std/path";
+import { execFileSync } from "node:child_process";
+import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 /** Marks shims this script wrote, so it never overwrites someone else's hook. */
 const MARKER = "# installed by tools/install-hooks.ts";
@@ -14,25 +16,22 @@ const WRITTEN_BY_US = "# installed by ";
 const HOOKS = ["pre-commit"];
 
 /** Run git and return its trimmed stdout. */
-async function git(...args: string[]): Promise<string> {
-  const { stdout, success } = await new Deno.Command("git", { args }).output();
-  if (!success) throw new Error(`git ${args.join(" ")} failed`);
-  return new TextDecoder().decode(stdout).trim();
-}
+const git = (...args: string[]): string =>
+  execFileSync("git", args, { encoding: "utf8" }).trim();
 
 /** Read a file, or `null` when it does not exist. */
 async function readOrNull(path: string): Promise<string | null> {
   try {
-    return await Deno.readTextFile(path);
+    return await readFile(path, "utf8");
   } catch (error) {
-    if (error instanceof Deno.errors.NotFound) return null;
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
   }
 }
 
 if (import.meta.main) {
-  const hooksDir = await git("rev-parse", "--git-path", "hooks");
-  await Deno.mkdir(hooksDir, { recursive: true });
+  const hooksDir = git("rev-parse", "--git-path", "hooks");
+  await mkdir(hooksDir, { recursive: true });
 
   for (const hook of HOOKS) {
     const path = join(hooksDir, hook);
@@ -41,16 +40,16 @@ if (import.meta.main) {
       console.error(
         `✗ ${path} exists and was not written by this script; merge it by hand`,
       );
-      Deno.exitCode = 1;
+      process.exitCode = 1;
       continue;
     }
-    await Deno.writeTextFile(
+    await writeFile(
       path,
       `#!/bin/sh\n${MARKER}\nexec sh "$(git rev-parse --show-toplevel)/.githooks/${hook}" "$@"\n`,
       { mode: 0o755 },
     );
     // `mode` only applies to new files, so make an existing shim executable too.
-    await Deno.chmod(path, 0o755);
+    await chmod(path, 0o755);
     console.log(`✓ ${hook}`);
   }
 }

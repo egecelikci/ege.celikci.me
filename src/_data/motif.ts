@@ -2,8 +2,7 @@ import { HttpClient } from "../../lib/fetch-base.ts";
 import { onColor } from "../../lib/motif.ts";
 import { MOTIF_SHA } from "../../_config/metadata.ts";
 
-const SPEC_URL =
-  `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/spec/palette.json`;
+const SPEC_URL = `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/spec/palette.json`;
 
 type Scheme = "light" | "dark";
 
@@ -31,7 +30,6 @@ interface Group {
 
 const httpClient = new HttpClient({
   userAgent: "ege.celikci.me/1.0",
-  cacheName: "motif-spec-cache",
 });
 
 /** Pinned commit, so the Web Cache entry never goes stale; a cold build without network fails loudly rather than rendering a half-empty style guide. */

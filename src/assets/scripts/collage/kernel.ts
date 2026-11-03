@@ -139,7 +139,7 @@ export function renderBackground(input: BackgroundInput): boolean {
       const rowF = y * invH * (meshRows - 1);
       const rIdx = Math.min(Math.floor(rowF), meshRows - 2);
       const at = y * 3;
-      thermalRows[at] = (rIdx * meshCols) * 3;
+      thermalRows[at] = rIdx * meshCols * 3;
       thermalRows[at + 1] = Math.floor((rowF % 1) * 4) / 4;
       thermalRows[at + 2] = 0;
     }
@@ -165,13 +165,15 @@ export function renderBackground(input: BackgroundInput): boolean {
 
   for (let y = 0; y < height; y++) {
     const v = y * invH;
-    const scanlineNoise = bgMode === BG_MODE.terminal
-      ? (y % 3 === 0 ? grainMul * 0.45 : -grainMul * 0.15)
-      : 0;
+    const scanlineNoise =
+      bgMode === BG_MODE.terminal
+        ? y % 3 === 0
+          ? grainMul * 0.45
+          : -grainMul * 0.15
+        : 0;
     const fade = (1 - v) * (1 - v) * auraIntensity;
-    const darken = darkenBottom && v > 0.6
-      ? 1 - Math.min(1, (v - 0.6) / 0.4) * 0.4
-      : 1;
+    const darken =
+      darkenBottom && v > 0.6 ? 1 - Math.min(1, (v - 0.6) / 0.4) * 0.4 : 1;
 
     for (let x = 0; x < width; x++) {
       let r = BG_R;
@@ -256,8 +258,8 @@ export function renderBackground(input: BackgroundInput): boolean {
         r = lum;
         g = lum;
         b = lum;
-        const sheen = 0.08 +
-          (0.5 - Math.abs((x * invW + v) * 0.5 - 0.5)) * 0.14;
+        const sheen =
+          0.08 + (0.5 - Math.abs((x * invW + v) * 0.5 - 0.5)) * 0.14;
         r += 255 * sheen;
         g += 255 * sheen;
         b += 255 * sheen;
@@ -283,13 +285,14 @@ export function renderBackground(input: BackgroundInput): boolean {
         b *= darken;
       }
 
-      const noise = bgMode === BG_MODE.terminal
-        ? scanlineNoise
-        : bgMode === BG_MODE.thermal
-        ? (wangHashPositive(y * width + x) ? 0.4 : -0.4) * grainMul
-        : bgMode === BG_MODE.silver
-        ? wangHash((y >> 3) * blockCols + (x >> 3)) * grainMul
-        : wangHash(y * width + x) * grainMul;
+      const noise =
+        bgMode === BG_MODE.terminal
+          ? scanlineNoise
+          : bgMode === BG_MODE.thermal
+            ? (wangHashPositive(y * width + x) ? 0.4 : -0.4) * grainMul
+            : bgMode === BG_MODE.silver
+              ? wangHash((y >> 3) * blockCols + (x >> 3)) * grainMul
+              : wangHash(y * width + x) * grainMul;
 
       const at = (y * width + x) * 4;
       data[at] = clamp(r + noise);
@@ -321,7 +324,7 @@ function clamp(value: number): number {
  */
 function wangHashPositive(seed: number): boolean {
   let x = seed >>> 0;
-  x = ((x ^ 61) ^ (x >>> 16)) >>> 0;
+  x = (x ^ 61 ^ (x >>> 16)) >>> 0;
   x = Math.imul(x, 0x9e3779b9) >>> 0;
   x ^= x >>> 4;
   x = Math.imul(x, 0x27d4eb2d) >>> 0;
@@ -333,7 +336,7 @@ function wangHashPositive(seed: number): boolean {
 /** Wang hash: a u32 seed to a float in [-0.5, 0.5], wrapping exactly as the Rust version does. */
 function wangHash(seed: number): number {
   let x = seed >>> 0;
-  x = ((x ^ 61) ^ (x >>> 16)) >>> 0;
+  x = (x ^ 61 ^ (x >>> 16)) >>> 0;
   x = Math.imul(x, 0x9e3779b9) >>> 0;
   x ^= x >>> 4;
   x = Math.imul(x, 0x27d4eb2d) >>> 0;

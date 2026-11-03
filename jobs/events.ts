@@ -1,8 +1,8 @@
-import { join } from "@std/path";
-import { ensureDir } from "@std/fs/ensure-dir";
+import { existsSync } from "node:fs";
+import { mkdir, readdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
 import { HttpClient } from "../lib/fetch-base.ts";
-import { exists } from "@std/fs/exists";
 import type { MBEvent, MBRelation, RawIzmirEvents } from "../lib/schemas.ts";
 
 import { localPosterFile, posterPlan } from "./_lib/posters.ts";
@@ -24,7 +24,7 @@ const CONFIG = {
   rateLimitDelayMs: 1100,
 
   paths: {
-    cacheFile: join(Deno.cwd(), "src", "_data", "mb_events.json"),
+    cacheFile: join(process.cwd(), "src", "_data", "mb_events.json"),
     posters: "src/assets/images/posters",
   },
 } as const;
@@ -38,12 +38,11 @@ class PosterDownloader {
   /** Rebuilds the set of poster filenames already present on disk. */
   async inventory() {
     this.existingPosters.clear();
-    if (await exists(CONFIG.paths.posters)) {
-      for await (const entry of Deno.readDir(CONFIG.paths.posters)) {
-        if (entry.isFile) {
-          this.existingPosters.add(entry.name);
-        }
-      }
+    if (!existsSync(CONFIG.paths.posters)) return;
+    for (const entry of await readdir(CONFIG.paths.posters, {
+      withFileTypes: true,
+    })) {
+      if (entry.isFile()) this.existingPosters.add(entry.name);
     }
   }
 
@@ -82,23 +81,21 @@ class PosterDownloader {
     const publicPath = `/assets/images/posters/${fileName}`;
 
     try {
-      await ensureDir(CONFIG.paths.posters);
+      await mkdir(CONFIG.paths.posters, { recursive: true });
 
       if (!force && this.existingPosters.has(fileName)) {
         return publicPath;
       }
 
       console.log(`[mb_events] 📥 Downloading poster: ${eventId}`);
-      // no-cache: a forced re-download must reach the network. force-cache here would replay old bytes for an unchanged URL, so a replaced cover with a stable url never refreshed.
       const buffer = await httpClient.fetch<ArrayBuffer>(
         remoteUrl,
         "buffer",
-        "no-cache",
         true,
       );
 
       if (buffer) {
-        await Deno.writeFile(localPath, new Uint8Array(buffer));
+        await writeFile(localPath, new Uint8Array(buffer));
         this.existingPosters.add(fileName);
         return publicPath;
       }
@@ -134,7 +131,6 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
   const firstData = await httpClient.fetch<unknown>(
     firstUrl.toString(),
     "json",
-    "no-cache",
   );
 
   if (!firstData) return [];
@@ -151,7 +147,7 @@ async function fetchAllEvents(httpClient: HttpClient): Promise<MBEvent[]> {
     ) {
       const url = new URL(firstUrl.toString());
       url.searchParams.set("offset", String(offset));
-      pages.push(httpClient.fetch<unknown>(url.toString(), "json", "no-cache"));
+      pages.push(httpClient.fetch<unknown>(url.toString(), "json"));
     }
     const results = await Promise.all(pages);
     results.forEach((data, index) => {
@@ -180,12 +176,7 @@ async function fetchEventPosterInfo(
 ): Promise<{ url?: string; thumb?: string } | null> {
   const url = `${EAA_API}/event/${eventId}/`;
 
-  const data = await httpClient.fetch<unknown>(
-    url,
-    "json",
-    "no-cache",
-    true,
-  );
+  const data = await httpClient.fetch<unknown>(url, "json", true);
 
   // EAA 5xx / timeout: leave the existing poster untouched.
   if (data === null) return null;
@@ -210,7 +201,6 @@ async function syncEvents() {
   const httpClient = new HttpClient({
     userAgent: USER_AGENT,
     rateLimitMs: CONFIG.rateLimitDelayMs,
-    cacheName: "mb-events-api-cache",
   });
 
   const posterDownloader = new PosterDownloader();
@@ -243,10 +233,10 @@ async function syncEvents() {
 
         if (event.relations) {
           event.relations.sort((a: MBRelation, b: MBRelation) => {
-            const idA = a.artist?.id || a.place?.id || a.url?.id ||
-              a.label?.id || "";
-            const idB = b.artist?.id || b.place?.id || b.url?.id ||
-              b.label?.id || "";
+            const idA =
+              a.artist?.id || a.place?.id || a.url?.id || a.label?.id || "";
+            const idB =
+              b.artist?.id || b.place?.id || b.url?.id || b.label?.id || "";
             return idA.localeCompare(idB) || a.type.localeCompare(b.type);
           });
         }
@@ -299,7 +289,8 @@ async function syncEvents() {
       events: events.sort((a, b) => a.id.localeCompare(b.id)),
     };
 
-    const hasChanged = JSON.stringify(sortObjectKeys(newData)) !==
+    const hasChanged =
+      JSON.stringify(sortObjectKeys(newData)) !==
       JSON.stringify(sortObjectKeys(cachedData));
 
     if (hasChanged) {

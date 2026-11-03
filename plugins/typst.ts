@@ -42,7 +42,7 @@ export interface Options {
 // 2. Explicitly type defaults as `Options` instead of using `satisfies Options`
 export const defaults = {
   svg: {
-    mode: (path: string) => path.endsWith(".rich.svg") ? "rich" : "plain",
+    mode: (path: string) => (path.endsWith(".rich.svg") ? "rich" : "plain"),
   },
 } satisfies Options;
 
@@ -97,8 +97,8 @@ export class TypstEngine implements Engine {
     const inputs: Record<string, string> = {
       "x-target": format,
       ...Object.fromEntries(
-        Object.entries(data).filter(([, value]) =>
-          typeof value === "string" || typeof value === "number"
+        Object.entries(data).filter(
+          ([, value]) => typeof value === "string" || typeof value === "number",
         ),
       ),
     };
@@ -133,17 +133,21 @@ export class TypstEngine implements Engine {
 
   #renderSvg(args: CompileDocArgs, url: string) {
     const compiler = this.#getCompiler();
-    const mode = typeof this.#options.svg?.mode === "function"
-      ? this.#options.svg.mode(url)
-      : this.#options.svg?.mode ?? "plain";
+    const mode =
+      typeof this.#options.svg?.mode === "function"
+        ? this.#options.svg.mode(url)
+        : (this.#options.svg?.mode ?? "plain");
 
     return mode === "rich" ? compiler.svg(args) : compiler.plainSvg(args);
   }
 
   #renderPdf(args: CompileDocArgs) {
     const compiler = this.#getCompiler();
-    const { standard: pdfStandard, tags: pdfTags, creationTimestamp } =
-      this.#options.pdf ?? {};
+    const {
+      standard: pdfStandard,
+      tags: pdfTags,
+      creationTimestamp,
+    } = this.#options.pdf ?? {};
     return compiler.pdf(args, {
       pdfStandard,
       pdfTags,
@@ -170,10 +174,7 @@ export class TypstEngine implements Engine {
 }
 
 export function typst(userOptions?: Options) {
-  const options = merge(
-    defaults,
-    userOptions,
-  );
+  const options = merge(defaults, userOptions);
 
   return (site: Site) => {
     const engine = new TypstEngine(options);
@@ -199,21 +200,21 @@ export function typst(userOptions?: Options) {
             .filter((entry) => entry !== undefined),
         ];
 
-        blobs = await Promise.all(fonts.map(async (entry) => {
-          const { content } = await entry.getContent(binaryLoader);
-          return Buffer.from(content as Uint8Array);
-        }));
+        blobs = await Promise.all(
+          fonts.map(async (entry) => {
+            const { content } = await entry.getContent(binaryLoader);
+            return Buffer.from(content as Uint8Array);
+          }),
+        );
       }
 
-      const src: Entry[] = Array.from(site.fs.entries.values())
-        .filter((entry) => entry.path.endsWith(".typ"));
+      const src: Entry[] = Array.from(site.fs.entries.values()).filter(
+        (entry) => entry.path.endsWith(".typ"),
+      );
       const sources: [string, string][] = await Promise.all(
         src.map(async (entry) => {
           const { content } = await entry.getContent(textLoader);
-          return [
-            entry.path,
-            content as string,
-          ];
+          return [entry.path, content as string];
         }),
       );
 

@@ -1,4 +1,5 @@
-import { assertEquals, assertRejects, assertThrows } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import {
   dayStamp,
   extractName,
@@ -7,38 +8,38 @@ import {
   staleExtracts,
 } from "./tiles.ts";
 
-Deno.test("dayStamp formats in UTC", () => {
-  assertEquals(dayStamp(new Date("2026-10-07T23:30:00Z")), "20261007");
-  assertEquals(dayStamp(new Date("2026-10-08T00:00:00+03:00")), "20261007");
+test("dayStamp formats in UTC", () => {
+  assert.deepEqual(dayStamp(new Date("2026-10-07T23:30:00Z")), "20261007");
+  assert.deepEqual(dayStamp(new Date("2026-10-08T00:00:00+03:00")), "20261007");
 });
 
-Deno.test("extractName uses the build date, not today", () => {
-  assertEquals(
+test("extractName uses the build date, not today", () => {
+  assert.deepEqual(
     extractName("https://build.protomaps.com/20261005.pmtiles"),
     "izmir-20261005.pmtiles",
   );
-  assertThrows(() => extractName("https://example.com/latest.pmtiles"));
+  assert.throws(() => extractName("https://example.com/latest.pmtiles"));
 });
 
-Deno.test("pointMapAt rewrites the TILES constant once and is idempotent", () => {
+test("pointMapAt rewrites the TILES constant once and is idempotent", () => {
   const source =
     'const A = 1;\nconst TILES = "/assets/tiles/izmir-20261006.pmtiles";\n';
   const url = "/assets/tiles/izmir-20261007.pmtiles";
   const updated = pointMapAt(source, url);
-  assertEquals(updated, `const A = 1;\nconst TILES = "${url}";\n`);
-  assertEquals(pointMapAt(updated!, url), updated);
+  assert.deepEqual(updated, `const A = 1;\nconst TILES = "${url}";\n`);
+  assert.deepEqual(pointMapAt(updated!, url), updated);
 });
 
-Deno.test("pointMapAt returns null when the constant is missing", () => {
-  assertEquals(pointMapAt("const A = 1;", "/x"), null);
-  assertEquals(
+test("pointMapAt returns null when the constant is missing", () => {
+  assert.deepEqual(pointMapAt("const A = 1;", "/x"), null);
+  assert.deepEqual(
     pointMapAt('const TILES =\n  "/assets/tiles/izmir-20261006.pmtiles"', "/x"),
     null,
   );
 });
 
-Deno.test("staleExtracts lists older and partial extracts only", () => {
-  assertEquals(
+test("staleExtracts lists older and partial extracts only", () => {
+  assert.deepEqual(
     staleExtracts(
       [
         "izmir-20261006.pmtiles",
@@ -66,23 +67,23 @@ function stubFetch(answers: Record<string, number | "error">) {
   return { asked, fetcher };
 }
 
-Deno.test("newestBuild walks back to the first build that answers", async () => {
+test("newestBuild walks back to the first build that answers", async () => {
   const now = new Date("2026-10-07T12:00:00Z");
   const { asked, fetcher } = stubFetch({
     "https://build.protomaps.com/20261006.pmtiles": "error",
     "https://build.protomaps.com/20261005.pmtiles": 206,
   });
-  assertEquals(
+  assert.deepEqual(
     await newestBuild(fetcher, now),
     "https://build.protomaps.com/20261005.pmtiles",
   );
-  assertEquals(asked.length, 3);
+  assert.deepEqual(asked.length, 3);
 });
 
-Deno.test("newestBuild gives up after six days", async () => {
+test("newestBuild gives up after six days", async () => {
   const { asked, fetcher } = stubFetch({});
-  await assertRejects(() =>
-    newestBuild(fetcher, new Date("2026-10-07T12:00:00Z"))
+  await assert.rejects(() =>
+    newestBuild(fetcher, new Date("2026-10-07T12:00:00Z")),
   );
-  assertEquals(asked.length, 6);
+  assert.deepEqual(asked.length, 6);
 });

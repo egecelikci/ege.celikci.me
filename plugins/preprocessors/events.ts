@@ -49,8 +49,8 @@ export default function () {
           event.setlist = local.setlist;
         }
 
-        const venueRel = (event.relations || []).find((r: MBRelation) =>
-          r["target-type"] === "place"
+        const venueRel = (event.relations || []).find(
+          (r: MBRelation) => r["target-type"] === "place",
         );
         event.venueName = resolveVenueName(local, venueRel);
 
@@ -73,12 +73,14 @@ export default function () {
 
       rawEvents.forEach(enrichEvent);
 
-      const upcoming = rawEvents.filter((e) => e.isUpcoming).sort(
-        (a: EnrichedMBEvent, b: EnrichedMBEvent) => sortByDate(a, b),
-      );
-      const past = rawEvents.filter((e) => !e.isUpcoming).sort(
-        (a: EnrichedMBEvent, b: EnrichedMBEvent) => sortByDate(a, b, true),
-      );
+      const upcoming = rawEvents
+        .filter((e) => e.isUpcoming)
+        .sort((a: EnrichedMBEvent, b: EnrichedMBEvent) => sortByDate(a, b));
+      const past = rawEvents
+        .filter((e) => !e.isUpcoming)
+        .sort((a: EnrichedMBEvent, b: EnrichedMBEvent) =>
+          sortByDate(a, b, true),
+        );
 
       globalData.mb_events.all = rawEvents;
       globalData.mb_events.upcoming = upcoming;
@@ -88,7 +90,8 @@ export default function () {
         if (page.data.event) {
           enrichEvent(page.data.event);
           const event = page.data.event;
-          page.data.title = event.local?.title ||
+          page.data.title =
+            event.local?.title ||
             (event.isCustomTitle ? event.name : event.displayTitle);
         }
       }

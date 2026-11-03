@@ -46,9 +46,7 @@ export function calculateLayout(cols: number, rows: number): Layout {
   const available = CANVAS_WIDTH - MARGIN * 2;
   // Integer division, as in the wasm original: tiles must stay whole pixels or the grid drifts.
   const widthFit = Math.floor((available - gap * (safeCols - 1)) / safeCols);
-  const heightFit = Math.floor(
-    (TOP_AREA - gap * (safeRows - 1)) / safeRows,
-  );
+  const heightFit = Math.floor((TOP_AREA - gap * (safeRows - 1)) / safeRows);
   const itemSize = Math.max(1, Math.min(widthFit, heightFit));
 
   return {
@@ -73,8 +71,7 @@ export function gridCoordinates(cols: number, rows: number): Float32Array {
   const gap = layout.cols > 3 ? 16 : 30;
   const step = layout.itemSize + gap;
 
-  const gridHeight = layout.rows * layout.itemSize +
-    (layout.rows - 1) * gap;
+  const gridHeight = layout.rows * layout.itemSize + (layout.rows - 1) * gap;
   const startY = (CANVAS_WIDTH - gridHeight) / 2;
 
   const coords = new Float32Array(layout.cols * layout.rows * 2);

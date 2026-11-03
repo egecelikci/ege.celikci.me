@@ -25,9 +25,8 @@ export function onColor(
   darkText: string,
   minContrast = 4.5,
 ): string {
-  const paletteText = contrast(bg, lightText) >= contrast(bg, darkText)
-    ? lightText
-    : darkText;
+  const paletteText =
+    contrast(bg, lightText) >= contrast(bg, darkText) ? lightText : darkText;
 
   if (contrast(bg, paletteText) >= minContrast) return paletteText;
   return contrast(bg, "#ffffff") >= contrast(bg, "#000000")

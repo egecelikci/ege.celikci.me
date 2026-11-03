@@ -3,12 +3,21 @@
  *
  * @example
  * ```sh
- * deno task tiles
+ * npm run tiles
  * ```
  * @module
  */
 
-import { exists } from "@std/fs/exists";
+import { spawn, spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import {
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  rm,
+  writeFile,
+} from "node:fs/promises";
 
 /** Extract region covering every venue the site lists, plus a margin. The order is minLon,minLat,maxLon,maxLat. */
 const BBOX = "26.10,38.15,27.45,39.30";
@@ -78,8 +87,8 @@ export function pointMapAt(source: string, url: string): string | null {
  * @returns Older `izmir-*.pmtiles` extracts, including leftover partial downloads.
  */
 export function staleExtracts(names: string[], keep: string): string[] {
-  return names.filter((name) =>
-    name !== keep && /^izmir-\d{8}\.pmtiles(\.part)?$/.test(name)
+  return names.filter(
+    (name) => name !== keep && /^izmir-\d{8}\.pmtiles(\.part)?$/.test(name),
   );
 }
 
@@ -108,26 +117,28 @@ export async function newestBuild(
 }
 
 /** Find the pmtiles CLI by running it, which works the same on every platform. */
-async function findCli(): Promise<string | undefined> {
+function findCli(): string | undefined {
   for (const name of CLI_NAMES) {
-    try {
-      await new Deno.Command(name, {
-        args: ["version"],
-        stdout: "null",
-        stderr: "null",
-      }).output();
-      return name;
-    } catch (error) {
-      if (!(error instanceof Deno.errors.NotFound)) throw error;
-    }
+    const { error } = spawnSync(name, ["version"], { stdio: "ignore" });
+    if (!error) return name;
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
   }
 }
 
+/** Run a command with inherited output and resolve with its exit code. */
+function run(command: string, args: string[]): Promise<number | null> {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: "inherit" });
+    child.on("error", reject);
+    child.on("exit", resolve);
+  });
+}
+
 if (import.meta.main) {
-  const cli = await findCli();
+  const cli = findCli();
   if (!cli) {
     console.error(`pmtiles CLI not found on PATH. ${INSTALL}`);
-    Deno.exit(1);
+    process.exit(1);
   }
 
   const source = await newestBuild();
@@ -135,49 +146,44 @@ if (import.meta.main) {
   const output = `${DIR}/${name}`;
   const url = `/${DIR.replace(/^src\//, "")}/${name}`;
 
-  if (await exists(output)) {
+  if (existsSync(output)) {
     console.log(`${output} is already the newest build.`);
   } else {
     console.log(`Extracting ${source} -> ${output}`);
-    await Deno.mkdir(DIR, { recursive: true });
+    await mkdir(DIR, { recursive: true });
     // Extract next to the target and rename on success, so an interrupted run never leaves a partial file that looks finished.
     const partial = `${output}.part`;
-    const status = await new Deno.Command(cli, {
-      args: [
-        "extract",
-        source,
-        partial,
-        `--bbox=${BBOX}`,
-        `--maxzoom=${MAX_ZOOM}`,
-      ],
-      stdout: "inherit",
-      stderr: "inherit",
-    }).spawn().status;
-    if (!status.success) {
-      await Deno.remove(partial).catch(() => {});
-      console.error(`extract failed with exit code ${status.code}`);
-      Deno.exit(1);
+    const code = await run(cli, [
+      "extract",
+      source,
+      partial,
+      `--bbox=${BBOX}`,
+      `--maxzoom=${MAX_ZOOM}`,
+    ]);
+    if (code !== 0) {
+      await rm(partial, { force: true });
+      console.error(`extract failed with exit code ${code}`);
+      process.exit(1);
     }
-    await Deno.rename(partial, output);
+    await rename(partial, output);
   }
 
   // Repoint the map before deleting anything, so a failure here never leaves it aimed at a removed file.
-  const updated = pointMapAt(await Deno.readTextFile(MAP_TS), url);
+  const updated = pointMapAt(await readFile(MAP_TS, "utf8"), url);
   if (updated === null) {
     console.error(
       `${MAP_TS} has no TILES constant to update; set it to "${url}" by hand.`,
     );
-    Deno.exit(1);
+    process.exit(1);
   }
-  await Deno.writeTextFile(MAP_TS, updated);
+  await writeFile(MAP_TS, updated);
 
-  const names = [];
-  for await (const entry of Deno.readDir(DIR)) {
-    if (entry.isFile) names.push(entry.name);
-  }
+  const names = (await readdir(DIR, { withFileTypes: true }))
+    .filter((entry) => entry.isFile())
+    .map((entry) => entry.name);
   for (const stale of staleExtracts(names, name)) {
     console.log(`Removing older extract ${stale}`);
-    await Deno.remove(`${DIR}/${stale}`);
+    await rm(`${DIR}/${stale}`);
   }
 
   console.log(

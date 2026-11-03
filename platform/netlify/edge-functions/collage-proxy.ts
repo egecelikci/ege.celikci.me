@@ -4,8 +4,11 @@
  * all from a single Netlify Edge Function to avoid CORS and API key exposure.
  */
 
-const LASTFM_API_KEY = Deno.env.get("LASTFM_API_KEY");
-const LISTENBRAINZ_TOKEN = Deno.env.get("LISTENBRAINZ_TOKEN");
+/** The runtime global Netlify documents for edge functions, so this file needs no Deno types. */
+declare const Netlify: { env: { get(name: string): string | undefined } };
+
+const LASTFM_API_KEY = Netlify.env.get("LASTFM_API_KEY");
+const LISTENBRAINZ_TOKEN = Netlify.env.get("LISTENBRAINZ_TOKEN");
 /** ListenBrainz asks for `App/<version> ( contact )` and may block requests without it. */
 const USER_AGENT = "ege.celikci.me/1.0 ( ege@celikci.me )";
 
@@ -68,8 +71,10 @@ function coverUpstream(params: URLSearchParams): string | null {
   const release = params.get("release");
   const caa = params.get("caa");
   if (release || caa) {
-    return release && /^[0-9a-f-]{36}$/i.test(release) && caa &&
-        /^\d+$/.test(caa)
+    return release &&
+      /^[0-9a-f-]{36}$/i.test(release) &&
+      caa &&
+      /^\d+$/.test(caa)
       ? `https://coverartarchive.org/release/${release}/${caa}-500.jpg`
       : null;
   }
@@ -122,13 +127,10 @@ export default async (req: Request): Promise<Response> => {
     if (!upstream) return jsonError("Valid cover id required", 400);
 
     try {
-      const res = await fetch(
-        upstream,
-        {
-          headers: { "User-Agent": USER_AGENT },
-          signal: AbortSignal.timeout(8000),
-        },
-      );
+      const res = await fetch(upstream, {
+        headers: { "User-Agent": USER_AGENT },
+        signal: AbortSignal.timeout(8000),
+      });
 
       if (!res.ok) return jsonError(`Upstream error: ${res.status}`, 502);
 
@@ -222,11 +224,7 @@ export default async (req: Request): Promise<Response> => {
        *   TrueType (0x00010000), 'true' (0x74727565), OTTO (0x4F54544F)
        */
       const validMagics = new Set([
-        0x774f4646,
-        0x774f4632,
-        0x00010000,
-        0x74727565,
-        0x4f54544f,
+        0x774f4646, 0x774f4632, 0x00010000, 0x74727565, 0x4f54544f,
       ]);
       if (!validMagics.has(magic)) {
         return jsonError(
@@ -235,11 +233,12 @@ export default async (req: Request): Promise<Response> => {
         );
       }
 
-      const contentType = magic === 0x774f4632
-        ? "font/woff2"
-        : magic === 0x774f4646
-        ? "font/woff"
-        : "font/ttf";
+      const contentType =
+        magic === 0x774f4632
+          ? "font/woff2"
+          : magic === 0x774f4646
+            ? "font/woff"
+            : "font/ttf";
 
       return new Response(fontBuffer, {
         headers: {
@@ -271,9 +270,9 @@ export default async (req: Request): Promise<Response> => {
 
     if (source === "lb") {
       const res = await fetch(
-        `https://api.listenbrainz.org/1/stats/user/${
-          encodeURIComponent(user)
-        }/release-groups?range=${period}&count=100`,
+        `https://api.listenbrainz.org/1/stats/user/${encodeURIComponent(
+          user,
+        )}/release-groups?range=${period}&count=100`,
         {
           headers: {
             "User-Agent": USER_AGENT,
@@ -323,9 +322,10 @@ export default async (req: Request): Promise<Response> => {
           count: a.listen_count as number,
           mbid: a.release_group_mbid as string | undefined,
           // ListenBrainz names the exact cover image, which skips the release-group lookup and redirect.
-          img: a.caa_release_mbid && a.caa_id
-            ? `/api/collage-proxy?source=cover&release=${a.caa_release_mbid}&caa=${a.caa_id}`
-            : undefined,
+          img:
+            a.caa_release_mbid && a.caa_id
+              ? `/api/collage-proxy?source=cover&release=${a.caa_release_mbid}&caa=${a.caa_id}`
+              : undefined,
         }));
     } else {
       if (!LASTFM_API_KEY) {

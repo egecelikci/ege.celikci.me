@@ -13,9 +13,8 @@ export default function serviceWorker() {
   return (site: Lume.Site) => {
     site.addEventListener("afterBuild", async () => {
       const { swSrc, swDest, injectionPoint, ...globs } = serwistConfig;
-      const { count, size, manifestEntries, warnings } = await getManifest(
-        globs,
-      );
+      const { count, size, manifestEntries, warnings } =
+        await getManifest(globs);
       for (const warning of warnings) console.warn(`[sw] ${warning}`);
 
       await build({
@@ -31,9 +30,9 @@ export default function serviceWorker() {
         logLevel: "warning",
       });
       console.log(
-        `[sw] ${swDest}: precaching ${count} URLs, ${
-          (size / 1024).toFixed(0)
-        } kB`,
+        `[sw] ${swDest}: precaching ${count} URLs, ${(size / 1024).toFixed(
+          0,
+        )} kB`,
       );
     });
   };

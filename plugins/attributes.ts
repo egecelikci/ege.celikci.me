@@ -76,7 +76,7 @@ function handleAttributes(
 
   if (Array.isArray(name)) {
     return name.forEach((value) =>
-      handleAttributes(attributes, value, validNames)
+      handleAttributes(attributes, value, validNames),
     );
   }
 

@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "webworker.importscripts"
+    ],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "allowJs": true
+  },
+  "include": [
+    "_config.ts",
+    "_config/",
+    "sw.ts",
+    "lib/",
+    "plugins/",
+    "jobs/",
+    "tools/",
+    "src/",
+    "platform/netlify/",
+    "serwist.config.js"
+  ]
+}

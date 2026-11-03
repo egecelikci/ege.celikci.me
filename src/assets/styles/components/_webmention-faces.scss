@@ -28,8 +28,11 @@
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        border-color: color-mix(in srgb, var(--color-primary) 60%,
-          var(--color-bg));
+        border-color: color-mix(
+          in srgb,
+          var(--color-primary) 60%,
+          var(--color-bg)
+        );
       }
     }
   }

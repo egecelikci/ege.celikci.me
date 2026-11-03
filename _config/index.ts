@@ -50,122 +50,132 @@ export default function () {
   const isDev = !isProduction;
 
   return (site: Lume.Site) => {
-    site
-      .use(attributes())
-      .use(imageSize())
-      .use(slugifyPlugin())
-      .use(typst());
+    site.use(attributes()).use(imageSize()).use(slugifyPlugin()).use(typst());
 
     // Imported statically: Lume does not await an async plugin, so the plugins registered after an await would land after the config returned.
     if (!isDev) site.use(typstOgImages());
 
     site
       .use(metas())
-      .use(multilanguage({
-        languages: ["en", "tr"],
-        defaultLanguage: siteMetadata.lang,
-      }))
+      .use(
+        multilanguage({
+          languages: ["en", "tr"],
+          defaultLanguage: siteMetadata.lang,
+        }),
+      )
       .use(extractDate())
-      .use(date({
-        formats: { URL: "yyyyMMddHHmmss" },
-      }))
-      .use(sitemap({
-        stylesheet: "/sitemap.xsl",
-      }))
+      .use(
+        date({
+          formats: { URL: "yyyyMMddHHmmss" },
+        }),
+      )
+      .use(
+        sitemap({
+          stylesheet: "/sitemap.xsl",
+        }),
+      )
       .use(redirects({ output: "netlify" }))
-      .use(robots({
-        rules: [
-          {
-            userAgent: "*",
-            disallow: "/build.txt",
-          },
-        ],
-      }))
+      .use(
+        robots({
+          rules: [
+            {
+              userAgent: "*",
+              disallow: "/build.txt",
+            },
+          ],
+        }),
+      )
       .use(nav())
       .use(jsonLd())
-      .use(favicon({
-        input: "/assets/images/favicon/favicon.svg",
-        favicons: [
-          {
-            url: "/assets/images/favicon/favicon.ico",
-            size: [32],
-            rel: "icon",
-            format: "ico",
-          },
-          {
-            url: "/assets/images/favicon/apple-touch-icon.png",
-            size: [180],
-            rel: "apple-touch-icon",
-            format: "png",
-          },
-          {
-            url: "/assets/images/favicon/android-chrome-192x192.png",
-            size: [192],
-            rel: "icon",
-            format: "png",
-          },
-          {
-            url: "/assets/images/favicon/android-chrome-512x512.png",
-            size: [512],
-            rel: "icon",
-            format: "png",
-          },
-        ],
-      }))
+      .use(
+        favicon({
+          input: "/assets/images/favicon/favicon.svg",
+          favicons: [
+            {
+              url: "/assets/images/favicon/favicon.ico",
+              size: [32],
+              rel: "icon",
+              format: "ico",
+            },
+            {
+              url: "/assets/images/favicon/apple-touch-icon.png",
+              size: [180],
+              rel: "apple-touch-icon",
+              format: "png",
+            },
+            {
+              url: "/assets/images/favicon/android-chrome-192x192.png",
+              size: [192],
+              rel: "icon",
+              format: "png",
+            },
+            {
+              url: "/assets/images/favicon/android-chrome-512x512.png",
+              size: [512],
+              rel: "icon",
+              format: "png",
+            },
+          ],
+        }),
+      )
       .use(pwa())
-      .use(pagefind({
-        outputPath: "/pagefind",
-        // search.ts drives the JS API; the component UI injects an inline script that the CSP blocks, and v4 turns it on by default.
-        componentUI: false,
-        indexing: {
-          rootSelector: "html",
-          verbose: false,
-          // One Turkish page would otherwise get its own index that English pages never search.
-          forceLanguage: "en",
-        },
-      }))
-      .use(googleFonts({
-        fonts:
-          "https://fonts.google.com/share?selection.family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500|DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000",
-        fontsFolder: "/assets/fonts",
-        cssFile: "/assets/styles/site.scss",
-        placeholder: "/* google-fonts */",
-        subsets: ["latin", "latin-ext"],
-      }))
+      .use(
+        pagefind({
+          outputPath: "/pagefind",
+          // search.ts drives the JS API; the component UI injects an inline script that the CSP blocks, and v4 turns it on by default.
+          componentUI: false,
+          indexing: {
+            rootSelector: "html",
+            verbose: false,
+            // One Turkish page would otherwise get its own index that English pages never search.
+            forceLanguage: "en",
+          },
+        }),
+      )
+      .use(
+        googleFonts({
+          fonts:
+            "https://fonts.google.com/share?selection.family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500|DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000",
+          fontsFolder: "/assets/fonts",
+          cssFile: "/assets/styles/site.scss",
+          placeholder: "/* google-fonts */",
+          subsets: ["latin", "latin-ext"],
+        }),
+      )
       .use(assets())
       .use(feeds())
       .use(filters())
       .use(markdown())
       .use(gitDate({ varName: "updated" }))
       .use(gitInfo())
-      .use(wellKnown({
-        atProto: atproto.did,
-        webfinger: {
-          subject: `acct:${author.email}`,
-          links: [
-            {
-              rel: "http://openid.net/specs/connect/1.0/issuer",
-              href: `https://id.${siteMetadata.domain}`,
-            },
-          ],
-        },
-        security: {
-          contact: `mailto:${author.email}`,
-          expires: new Date("2027-07-11"),
-          preferredLanguages: ["en", "tr"],
-        },
-        trust: {
-          social: author.social.mastodon.url,
-          contact: `mailto:${author.email}`,
-          dataTrainingAllowed: false,
-        },
-      }));
+      .use(
+        wellKnown({
+          atProto: atproto.did,
+          webfinger: {
+            subject: `acct:${author.email}`,
+            links: [
+              {
+                rel: "http://openid.net/specs/connect/1.0/issuer",
+                href: `https://id.${siteMetadata.domain}`,
+              },
+            ],
+          },
+          security: {
+            contact: `mailto:${author.email}`,
+            expires: new Date("2027-07-11"),
+            preferredLanguages: ["en", "tr"],
+          },
+          trust: {
+            social: author.social.mastodon.url,
+            contact: `mailto:${author.email}`,
+            dataTrainingAllowed: false,
+          },
+        }),
+      );
 
     /** Production-only optimizations */
     if (!isDev) {
-      site
-        .use(minifyHTML())
-        .use(checkUrls());
+      site.use(minifyHTML()).use(checkUrls());
     }
 
     /**
@@ -173,32 +183,36 @@ export default function () {
      */
     if (process.env.LUME_CHECKS === "1") {
       site
-        .use(seo({
-          // The reports are only worth having on disk: the console line just says how many there were.
-          output: "_reports/seo.json",
-          options: {
-            // Lume's common-word checks count something other than the heading (they flag `a statue.`
-            // and `this is a note.` as over 45 words) and their message never interpolates `{count}`.
-            // An empty set makes the count zero everywhere, leaving the length and ordering checks.
-            commonWords: new Set<string>(),
-            body: false,
-            imgAlt: { min: 0, max: 1500, unit: "character" },
-            duplicateDescription: false,
-          },
-        }))
-        .use(validateHTML({
-          output: "_reports/html.json",
-          rules: {
-            "attribute-empty-style": "off",
-            "attribute-boolean-style": "off",
-            "no-inline-style": "off",
-            "no-implicit-input-type": "off",
-            // `minify_html` drops attributes that only restate the default, `type` on forms included.
-            "no-implicit-button-type": "off",
-            "long-title": "off",
-            "valid-id": "off",
-          },
-        }));
+        .use(
+          seo({
+            // The reports are only worth having on disk: the console line just says how many there were.
+            output: "_reports/seo.json",
+            options: {
+              // Lume's common-word checks count something other than the heading (they flag `a statue.`
+              // and `this is a note.` as over 45 words) and their message never interpolates `{count}`.
+              // An empty set makes the count zero everywhere, leaving the length and ordering checks.
+              commonWords: new Set<string>(),
+              body: false,
+              imgAlt: { min: 0, max: 1500, unit: "character" },
+              duplicateDescription: false,
+            },
+          }),
+        )
+        .use(
+          validateHTML({
+            output: "_reports/html.json",
+            rules: {
+              "attribute-empty-style": "off",
+              "attribute-boolean-style": "off",
+              "no-inline-style": "off",
+              "no-implicit-input-type": "off",
+              // `minify_html` drops attributes that only restate the default, `type` on forms included.
+              "no-implicit-button-type": "off",
+              "long-title": "off",
+              "valid-id": "off",
+            },
+          }),
+        );
     }
 
     site.data("site", siteMetadata);

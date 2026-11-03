@@ -1,5 +1,9 @@
-import "@std/dotenv/load";
-import { join } from "@std/path";
+import { existsSync } from "node:fs";
+import { stat } from "node:fs/promises";
+import { join } from "node:path";
+
+// Local runs read secrets from `.env`; Netlify sets them in the environment, which wins.
+if (existsSync(".env")) process.loadEnvFile();
 import type { GamesStore, SteamOwnedGame } from "../src/types/index.ts";
 import { loadState, saveState, sortObjectKeys } from "../lib/cache.ts";
 import {
@@ -14,7 +18,7 @@ const CONFIG = {
   rateLimitDelayMs: 1000,
 
   paths: {
-    cacheFile: join(Deno.cwd(), "src", "_data", "games.json"),
+    cacheFile: join(process.cwd(), "src", "_data", "games.json"),
   },
 
   api: {
@@ -22,10 +26,10 @@ const CONFIG = {
   },
 
   credentials: {
-    apiKey: Deno.env.get("STEAM_API_KEY") ?? "",
+    apiKey: process.env.STEAM_API_KEY ?? "",
   },
 
-  steamIds: (Deno.env.get("STEAM_USER_IDS") ?? "")
+  steamIds: (process.env.STEAM_USER_IDS ?? "")
     .split(",")
     .map((id) => id.trim())
     .filter((id) => id.length > 0),
@@ -37,7 +41,13 @@ const EMPTY_STORE: GamesStore = {
 };
 
 class SteamFetcher {
-  constructor(private httpClient: HttpClient, private apiKey: string) {}
+  private httpClient: HttpClient;
+  private apiKey: string;
+
+  constructor(httpClient: HttpClient, apiKey: string) {
+    this.httpClient = httpClient;
+    this.apiKey = apiKey;
+  }
 
   private url(path: string, params: Record<string, string>): string {
     const url = new URL(`${CONFIG.api.base}${path}`);
@@ -57,7 +67,6 @@ class SteamFetcher {
         include_played_free_games: "1",
       }),
       "json",
-      "no-cache",
     );
     const response = validateOrThrow(SteamOwnedGamesResponseSchema, data);
     return response.games ?? [];
@@ -68,7 +77,6 @@ async function getSteamData() {
   const httpClient = new HttpClient({
     userAgent: "ege.celikci.me/1.0",
     rateLimitMs: CONFIG.rateLimitDelayMs,
-    cacheName: "steam-api-cache",
   });
 
   const cachedData = await loadState<GamesStore>(
@@ -80,7 +88,7 @@ async function getSteamData() {
   if (!CONFIG.credentials.apiKey) {
     if (cachedData.games.length === 0) {
       try {
-        await Deno.stat(CONFIG.paths.cacheFile);
+        await stat(CONFIG.paths.cacheFile);
         console.warn(
           "[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache",
         );
@@ -95,9 +103,7 @@ async function getSteamData() {
         return [];
       }
     }
-    console.warn(
-      "[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache",
-    );
+    console.warn("[steam] ⚠️ STEAM_API_KEY is not set, keeping existing cache");
     return cachedData.games;
   }
 
@@ -139,7 +145,8 @@ async function getSteamData() {
       games,
     };
 
-    const hasChanged = JSON.stringify(sortObjectKeys(store)) !==
+    const hasChanged =
+      JSON.stringify(sortObjectKeys(store)) !==
       JSON.stringify(sortObjectKeys(cachedData));
 
     if (hasChanged) {

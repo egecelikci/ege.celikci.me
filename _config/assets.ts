@@ -24,52 +24,57 @@ export default function () {
 
   return (site: Lume.Site) => {
     site
-      .use(sass({
-        format: "expanded",
-      }))
+      .use(
+        sass({
+          format: "expanded",
+        }),
+      )
       .use(lightningcss())
       .use(svgo())
-      .use(esbuild({
-        extensions: [".ts"],
-        options: {
-          plugins: [],
-          bundle: true,
-          format: "esm",
-          splitting: true,
-          minify: !isDev,
-          target: "esnext",
-          logLevel: "info",
-          chunkNames: "assets/scripts/chunks/[name]-[hash]",
-          define: {
-            "process.env.MODE": JSON.stringify(
-              process.env.MODE || "development",
-            ),
+      .use(
+        esbuild({
+          extensions: [".ts"],
+          options: {
+            plugins: [],
+            bundle: true,
+            format: "esm",
+            splitting: true,
+            minify: !isDev,
+            target: "esnext",
+            logLevel: "info",
+            chunkNames: "assets/scripts/chunks/[name]-[hash]",
+            define: {
+              "process.env.MODE": JSON.stringify(
+                process.env.MODE || "development",
+              ),
+            },
           },
-        },
-      }))
-      .use(icons({
-        catalogs: [
-          {
-            id: "lucide",
-            src: "https://cdn.jsdelivr.net/npm/lucide-static/icons/{name}.svg",
-          },
-          {
-            id: "simpleicons",
-            src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
-          },
-          {
-            id: "solar",
-            src: "https://api.iconify.design/solar/{name}.svg",
-          },
-          {
-            id: "remixicon",
-            src:
-              `https://cdn.jsdelivr.net/npm/remixicon@${REMIXICON_VERSION}/icons/{name}.svg`,
-            name: (name) => `${REMIX_CATEGORIES[name] ?? "Others"}/${name}`,
-          },
-        ],
-        spriteFile: "/assets/icons/icons.sprite.svg",
-      }))
+        }),
+      )
+      .use(
+        icons({
+          catalogs: [
+            {
+              id: "lucide",
+              src: "https://cdn.jsdelivr.net/npm/lucide-static/icons/{name}.svg",
+            },
+            {
+              id: "simpleicons",
+              src: "https://cdn.jsdelivr.net/npm/simple-icons/icons/{name}.svg",
+            },
+            {
+              id: "solar",
+              src: "https://api.iconify.design/solar/{name}.svg",
+            },
+            {
+              id: "remixicon",
+              src: `https://cdn.jsdelivr.net/npm/remixicon@${REMIXICON_VERSION}/icons/{name}.svg`,
+              name: (name) => `${REMIX_CATEGORIES[name] ?? "Others"}/${name}`,
+            },
+          ],
+          spriteFile: "/assets/icons/icons.sprite.svg",
+        }),
+      )
       .use(inline())
       .use(picture())
       .use(transformImages())

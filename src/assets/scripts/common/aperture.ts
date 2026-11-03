@@ -6,7 +6,9 @@ export function initAperture(
   const faces = Array.from(
     aperture.querySelectorAll<HTMLElement>(".breadcrumb__letter-face"),
   );
-  const wheel = !!drum && faces.length === 2 &&
+  const wheel =
+    !!drum &&
+    faces.length === 2 &&
     !globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (drum) drum.style.transition = "none";

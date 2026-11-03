@@ -1,5 +1,9 @@
-import "@std/dotenv/load";
-import { join } from "@std/path";
+import { existsSync } from "node:fs";
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+
+// Local runs read secrets from `.env`; Netlify sets them in the environment, which wins.
+if (existsSync(".env")) process.loadEnvFile();
 import type {
   Album,
   CritiqueBrainzReview,
@@ -17,15 +21,13 @@ import {
 } from "../lib/schemas.ts";
 import { ditherWithSharp, saveColorVersion } from "../lib/images.ts";
 import { HttpClient } from "../lib/fetch-base.ts";
-import type { CachePolicy } from "../lib/fetch-base.ts";
-import { exists } from "@std/fs/exists";
 
 const CONFIG = {
   fetchLimit: 50,
   rateLimitDelayMs: 1100,
 
   paths: {
-    cacheFile: join(Deno.cwd(), "src", "_data", "music.json"),
+    cacheFile: join(process.cwd(), "src", "_data", "music.json"),
     coverColor: "src/assets/images/covers/colored",
     coverMono: "src/assets/images/covers/monochrome",
   },
@@ -37,21 +39,21 @@ const CONFIG = {
   },
 
   credentials: {
-    critiqueBrainzId: Deno.env.get("CRITIQUEBRAINZ_ID"),
+    critiqueBrainzId: process.env.CRITIQUEBRAINZ_ID,
   },
 } as const;
 
 class AlbumFetcher {
-  constructor(private httpClient: HttpClient) {}
+  private httpClient: HttpClient;
+
+  constructor(httpClient: HttpClient) {
+    this.httpClient = httpClient;
+  }
 
   async getFavoriteReviews(): Promise<Map<string, string>> {
     const allReviews: CritiqueBrainzReview[] = [];
     const firstUrl = this.buildReviewUrl(0);
-    const firstData = await this.httpClient.fetch<unknown>(
-      firstUrl,
-      "json",
-      "no-cache",
-    );
+    const firstData = await this.httpClient.fetch<unknown>(firstUrl, "json");
     const validatedFirst = validateOrThrow(
       CritiqueBrainzResponseSchema,
       firstData,
@@ -69,7 +71,6 @@ class AlbumFetcher {
           this.httpClient.fetch<unknown>(
             this.buildReviewUrl(offset),
             "json",
-            "no-cache",
             true,
           ),
         );
@@ -88,18 +89,11 @@ class AlbumFetcher {
     );
   }
 
-  async fetchMetadata(
-    rgid: string,
-    policy: CachePolicy = "force-cache",
-  ): Promise<Album | null> {
+  async fetchMetadata(rgid: string): Promise<Album | null> {
     const url = new URL(`${CONFIG.api.musicBrainz}${rgid}`);
     url.searchParams.set("fmt", "json");
     url.searchParams.set("inc", "artist-credits");
-    const data = await this.httpClient.fetch<unknown>(
-      url.toString(),
-      "json",
-      policy,
-    );
+    const data = await this.httpClient.fetch<unknown>(url.toString(), "json");
     return validate(AlbumSchema, data);
   }
 
@@ -124,11 +118,12 @@ class ImageProcessor {
 
   async inventory() {
     this.existingCovers.clear();
-    if (await exists(CONFIG.paths.coverColor)) {
-      for await (const entry of Deno.readDir(CONFIG.paths.coverColor)) {
-        if (entry.isFile && entry.name.endsWith(".webp")) {
-          this.existingCovers.add(entry.name.replace(".webp", ""));
-        }
+    if (!existsSync(CONFIG.paths.coverColor)) return;
+    for (const entry of await readdir(CONFIG.paths.coverColor, {
+      withFileTypes: true,
+    })) {
+      if (entry.isFile() && entry.name.endsWith(".webp")) {
+        this.existingCovers.add(entry.name.replace(".webp", ""));
       }
     }
   }
@@ -159,7 +154,6 @@ async function getMusicData() {
   const httpClient = new HttpClient({
     userAgent: "ege.celikci.me/1.0 ( https://ege.celikci.me )",
     rateLimitMs: CONFIG.rateLimitDelayMs,
-    cacheName: "music-api-cache",
   });
 
   const fetcher = new AlbumFetcher(httpClient);
@@ -177,9 +171,7 @@ async function getMusicData() {
   const favorites = await fetcher.getFavoriteReviews();
 
   if (favorites.size === 0 && cachedData.albums.length > 0) {
-    console.warn(
-      "[music] ⚠️ Empty favorites response, keeping existing cache",
-    );
+    console.warn("[music] ⚠️ Empty favorites response, keeping existing cache");
     return { albums: cachedData.albums };
   }
 
@@ -198,8 +190,9 @@ async function getMusicData() {
               console.log(`[music] 📥 Fetching cover for: ${metadata.title}`);
               const buf = await fetcher.fetchCoverImage(id);
               // Without a cover the album would point at missing images, so leave it out; with no cover file, the next run tries again.
-              const saved = buf &&
-                await imageProcessor.process(id, buf).then(
+              const saved =
+                buf &&
+                (await imageProcessor.process(id, buf).then(
                   () => true,
                   (error) => {
                     console.warn(
@@ -209,7 +202,7 @@ async function getMusicData() {
                     );
                     return false;
                   },
-                );
+                ));
               if (!saved) return album;
             }
 
@@ -233,7 +226,8 @@ async function getMusicData() {
 
     processed.sort((a, b) => a.id.localeCompare(b.id));
 
-    const hasChanged = JSON.stringify(sortObjectKeys(processed)) !==
+    const hasChanged =
+      JSON.stringify(sortObjectKeys(processed)) !==
       JSON.stringify(sortObjectKeys(cachedData.albums));
 
     if (hasChanged) {

@@ -35,16 +35,15 @@ export function computeWebmentionStats(
         !isOwnWebmention(entry),
     );
 
-    stats.likes = relevantMentions.filter((m) =>
-      m["wm-property"] === "like-of"
+    stats.likes = relevantMentions.filter(
+      (m) => m["wm-property"] === "like-of",
     ).length;
-    stats.reposts = relevantMentions.filter((m) =>
-      m["wm-property"] === "repost-of"
+    stats.reposts = relevantMentions.filter(
+      (m) => m["wm-property"] === "repost-of",
     ).length;
-    stats.replies =
-      relevantMentions.filter((m) =>
-        ["mention-of", "in-reply-to"].includes(m["wm-property"])
-      ).length;
+    stats.replies = relevantMentions.filter((m) =>
+      ["mention-of", "in-reply-to"].includes(m["wm-property"]),
+    ).length;
   }
 
   return stats;

@@ -34,7 +34,8 @@ export interface ParsedMentions {
  */
 export function parseMentions(data: unknown): ParsedMentions | null {
   if (
-    !data || typeof data !== "object" ||
+    !data ||
+    typeof data !== "object" ||
     !Array.isArray((data as { children?: unknown }).children)
   ) {
     return null;
@@ -70,9 +71,10 @@ export function mergeMentions(
     else continue;
     byId.set(mention["wm-id"], mention);
   }
-  const mentions = [...byId.values()].sort((a, b) =>
-    Date.parse(b["wm-received"]) - Date.parse(a["wm-received"]) ||
-    b["wm-id"] - a["wm-id"]
+  const mentions = [...byId.values()].sort(
+    (a, b) =>
+      Date.parse(b["wm-received"]) - Date.parse(a["wm-received"]) ||
+      b["wm-id"] - a["wm-id"],
   );
   return { mentions, added, updated };
 }
@@ -91,9 +93,12 @@ export async function syncWebmentions(
   feed: WebmentionFeed,
   fetchPage: FetchPage,
   options: SyncOptions = {},
-): Promise<
-  { feed: WebmentionFeed; added: number; updated: number; dropped: number }
-> {
+): Promise<{
+  feed: WebmentionFeed;
+  added: number;
+  updated: number;
+  dropped: number;
+}> {
   const { perPage = 1000, maxPages = 100, now = () => new Date() } = options;
   const sinceId = feed.children.reduce(
     (max, m) => Math.max(max, m["wm-id"]),

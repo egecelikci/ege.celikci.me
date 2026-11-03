@@ -39,11 +39,12 @@ export function vibrantColor(rgba: Uint8Array): Rgb {
     const min = Math.min(rf, gf, bf);
     const lightness = (max + min) / 2;
 
-    const saturation = max === min
-      ? 0
-      : lightness > 0.5
-      ? (max - min) / (2 - max - min)
-      : (max - min) / (max + min);
+    const saturation =
+      max === min
+        ? 0
+        : lightness > 0.5
+          ? (max - min) / (2 - max - min)
+          : (max - min) / (max + min);
 
     if (
       saturation > maxSaturation &&

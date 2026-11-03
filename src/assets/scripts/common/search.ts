@@ -86,7 +86,10 @@ export function initSearch() {
     let activeIndex = -1;
 
     function normalize(str: string) {
-      return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .replace(/[\s\-_.]/g, "");
     }
 
@@ -165,9 +168,9 @@ export function initSearch() {
       if (mode === "filter") {
         const items = document.querySelectorAll("[data-search-item]");
         items.forEach((el) => ((el as HTMLElement).style.display = ""));
-        document.querySelectorAll(".game-list .game-group").forEach((
-          el,
-        ) => ((el as HTMLElement).style.display = ""));
+        document
+          .querySelectorAll(".game-list .game-group")
+          .forEach((el) => ((el as HTMLElement).style.display = ""));
       }
 
       activeIndex = -1;
@@ -196,10 +199,10 @@ export function initSearch() {
                   <span>${safeTitle}</span>
                 </h3>
                 ${
-              safeDate
-                ? `<time class="search__result__date">${safeDate}</time>`
-                : ""
-            }
+                  safeDate
+                    ? `<time class="search__result__date">${safeDate}</time>`
+                    : ""
+                }
               </div>
               <p class="search__result__excerpt">
                 ${item.excerpt || ""}
@@ -207,24 +210,21 @@ export function initSearch() {
             </div>
           </a>
         `;
-          }).join("");
+          })
+          .join("");
       }
 
       resultsContainer.classList.add("is-visible");
 
       activeIndex = -1;
     }
-    input.addEventListener(
-      "focus",
-      () => {
-        if (mode !== "filter") {
-          ensurePagefind(cacheTag);
-        }
-      },
-    );
-    input.addEventListener(
-      "input",
-      (e) => handleSearch((e.target as HTMLInputElement).value),
+    input.addEventListener("focus", () => {
+      if (mode !== "filter") {
+        ensurePagefind(cacheTag);
+      }
+    });
+    input.addEventListener("input", (e) =>
+      handleSearch((e.target as HTMLInputElement).value),
     );
     clearBtn?.addEventListener("click", clearSearch);
 
@@ -295,7 +295,8 @@ export function initSearch() {
     ) as HTMLInputElement;
 
     if (
-      e.key === "/" && document.activeElement !== mainInput &&
+      e.key === "/" &&
+      document.activeElement !== mainInput &&
       !["INPUT", "TEXTAREA"].includes(document.activeElement?.tagName || "")
     ) {
       e.preventDefault();

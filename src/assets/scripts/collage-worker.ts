@@ -91,7 +91,10 @@ async function fetchCover(
   let bitmap: ImageBitmap | null = null;
   if (res?.ok) {
     // A corrupt or unsupported image leaves the tile empty instead of failing the collage.
-    bitmap = await res.blob().then(createImageBitmap).catch(() => null);
+    bitmap = await res
+      .blob()
+      .then(createImageBitmap)
+      .catch(() => null);
   }
   return { album, bitmap };
 }
@@ -118,9 +121,9 @@ function transformText(text: string, casing: TextCase): string {
 async function loadFont(family: string, weight = "400") {
   try {
     const res = await fetch(
-      `/api/collage-proxy?source=font&family=${
-        encodeURIComponent(family)
-      }&weight=${weight}`,
+      `/api/collage-proxy?source=font&family=${encodeURIComponent(
+        family,
+      )}&weight=${weight}`,
     );
     if (!res.ok) {
       console.error(
@@ -187,11 +190,7 @@ self.onmessage = async (e: MessageEvent) => {
       await ensureDefaultFonts();
     }
 
-    if (
-      fontFamily &&
-      fontFamily !== "DM Sans" &&
-      fontFamily !== "DM Mono"
-    ) {
+    if (fontFamily && fontFamily !== "DM Sans" && fontFamily !== "DM Mono") {
       post({ type: "status", text: `loading font: ${fontFamily}` });
       await Promise.all(["400", "700"].map((w) => loadFont(fontFamily, w)));
     }
@@ -288,23 +287,27 @@ self.onmessage = async (e: MessageEvent) => {
      * Terminal gets structural scanline grain regardless of applyGrain toggle;
      * Silver gets heavier grain for its analog-film character.
      */
-    const grainAmount = bgMode === "terminal"
-      ? 0.22
-      : bgMode === "silver"
-      ? applyGrain ? 0.14 : 0.0
-      : applyGrain
-      ? 0.05
-      : 0.0;
+    const grainAmount =
+      bgMode === "terminal"
+        ? 0.22
+        : bgMode === "silver"
+          ? applyGrain
+            ? 0.14
+            : 0.0
+          : applyGrain
+            ? 0.05
+            : 0.0;
 
-    const auraIntensity = bgMode === "aura"
-      ? 0.6
-      : bgMode === "thermal"
-      ? 0.72
-      : bgMode === "velvet"
-      ? 0.5
-      : bgMode === "silver"
-      ? 0.45
-      : 0.0;
+    const auraIntensity =
+      bgMode === "aura"
+        ? 0.6
+        : bgMode === "thermal"
+          ? 0.72
+          : bgMode === "velvet"
+            ? 0.5
+            : bgMode === "silver"
+              ? 0.45
+              : 0.0;
 
     const imageData = ctx.createImageData(W, H);
     /** Pass the underlying ArrayBuffer directly — zero extra copies. */
@@ -362,13 +365,7 @@ self.onmessage = async (e: MessageEvent) => {
       );
       ctx.clip();
       if (finalImages[i]) {
-        ctx.drawImage(
-          finalImages[i]!,
-          x,
-          y,
-          layout.itemSize,
-          layout.itemSize,
-        );
+        ctx.drawImage(finalImages[i]!, x, y, layout.itemSize, layout.itemSize);
       } else {
         ctx.fillStyle = "#18181b";
         ctx.fillRect(x, y, layout.itemSize, layout.itemSize);

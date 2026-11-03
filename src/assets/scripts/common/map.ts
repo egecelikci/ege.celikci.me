@@ -34,10 +34,12 @@ export function initVenueMaps() {
         attributionControl: false,
       });
 
-      L.control.attribution({
-        position: "topright",
-        prefix: false,
-      }).addTo(map);
+      L.control
+        .attribution({
+          position: "topright",
+          prefix: false,
+        })
+        .addTo(map);
 
       // The flavor supplies both paint and label rules, and `labelRules` is ignored whenever `flavor` is set. Going fully label-free means dropping `flavor` and passing `paintRules(namedFlavor("grayscale"))` with `labelRules: []` instead.
       leafletLayer({

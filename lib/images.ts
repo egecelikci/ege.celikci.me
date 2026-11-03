@@ -174,7 +174,8 @@ export function linearLuminance(
     return luma;
   }
   for (let i = 0, j = 0; i < count; i++, j += 3) {
-    luma[i] = LUMA_R * SRGB_TO_LINEAR[pixels[j]] +
+    luma[i] =
+      LUMA_R * SRGB_TO_LINEAR[pixels[j]] +
       LUMA_G * SRGB_TO_LINEAR[pixels[j + 1]] +
       LUMA_B * SRGB_TO_LINEAR[pixels[j + 2]];
   }
@@ -350,7 +351,9 @@ export async function ditherWithSharp(
     .toBuffer({ resolveWithObject: true });
 
   if (
-    info.width !== width || info.height !== width || info.channels !== 3 ||
+    info.width !== width ||
+    info.height !== width ||
+    info.channels !== 3 ||
     data.length !== width * width * 3
   ) {
     throw new RangeError(

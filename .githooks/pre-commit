@@ -1,43 +1,34 @@
 #!/bin/sh
-# Runs the same checks as `deno task ci` before a commit, fastest first.
-# Install with `deno task hooks`; skip once with `git commit --no-verify` or `SKIP_CHECKS=1`.
+# @file pre-commit
+# @brief Runs the same checks as `npm run ci` before a commit, fastest first.
+# @description Install with `npm run hooks`; skip once with `git commit --no-verify` or `SKIP_CHECKS=1`.
+# Content-only commits run the formatter check alone.
 set -u
 
 [ "${SKIP_CHECKS:-0}" = 1 ] && exit 0
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
+# @description Print a failure with the way to skip it, then abort the commit.
+# @arg $1 string The reason.
+# @exitcode 1 Always.
 fail() {
   printf '\npre-commit: %s\n  skip once: git commit --no-verify\n' "$1" >&2
   exit 1
 }
 
-# Non-interactive shells (GUI clients, NixOS, mise) often lack deno on PATH.
-if [ -z "${DENO:-}" ]; then
-  if command -v deno >/dev/null 2>&1; then
-    DENO=deno
-  elif command -v mise >/dev/null 2>&1 && DENO=$(mise which deno 2>/dev/null); then
-    :
-  elif [ -x /run/current-system/sw/bin/deno ]; then
-    DENO=/run/current-system/sw/bin/deno
-  elif [ -x "$HOME/.deno/bin/deno" ]; then
-    DENO="$HOME/.deno/bin/deno"
+# Non-interactive shells (GUI clients, NixOS) often lack the mise-managed npm on PATH.
+if ! command -v npm >/dev/null 2>&1; then
+  if command -v mise >/dev/null 2>&1 && npm_path=$(mise which npm 2>/dev/null); then
+    PATH="$(dirname "$npm_path"):$PATH" && export PATH
   else
-    fail "deno not found; set DENO=/path/to/deno"
+    fail "npm not found on PATH"
   fi
-fi
-# Tasks call `deno` by name, so the binary we found must come first on PATH.
-case $DENO in */*) PATH="$(dirname "$DENO"):$PATH" && export PATH ;; esac
-
-pinned=$(sed -n 's/^deno *= *"\([^"]*\)".*/\1/p' mise.toml 2>/dev/null)
-current=$("$DENO" --version | sed -n '1s/^deno \([^ ]*\).*/\1/p')
-if [ -n "$pinned" ] && [ "$pinned" != "$current" ]; then
-  echo "pre-commit: warning: deno $current, mise.toml pins $pinned" >&2
 fi
 
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
 [ -n "$staged" ] || exit 0
 
-code=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|mjs|vto|jsonc?|scss|rs)$|^(deno\.json|deno\.lock|mise\.toml|netlify\.toml)$' || true)
+code=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|mjs|vto|jsonc?|scss)$|^(package\.json|package-lock\.json|tsconfig\.json|\.oxfmtrc\.json|\.oxlintrc\.json|netlify\.toml)$' || true)
 
 # The checks read the working tree, so a half-staged file would be checked in a state that is not being committed.
 if [ -n "$code" ]; then
@@ -48,18 +39,18 @@ $partial"
   fi
 fi
 
+# @description Run one npm script, aborting the commit when it fails.
+# @arg $1 string The script name.
 run() {
-  name=$1
-  shift
-  printf '› %s\n' "$name" >&2
-  "$@" || fail "$name failed"
+  printf '› %s\n' "$1" >&2
+  npm run --silent "$1" || fail "$1 failed"
 }
 
-run fmt "$DENO" task fmt:check
+run fmt:check
 if [ -z "$code" ]; then
   echo "pre-commit: content only, skipped lint, check, and test" >&2
   exit 0
 fi
-run lint "$DENO" task lint
-run check "$DENO" task check
-run test "$DENO" task test
+run lint
+run check
+run test

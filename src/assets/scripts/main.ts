@@ -43,11 +43,7 @@ globalThis.addEventListener(
      * Unrevealed spoiler tiles reveal in place; never preload the
      * lightbox for them (see common/spoiler.ts).
      */
-    if (
-      target.closest(
-        ".media--spoiled:not(.is-revealed)",
-      )
-    ) {
+    if (target.closest(".media--spoiled:not(.is-revealed)")) {
       return;
     }
     const trigger = target.closest(
@@ -62,8 +58,8 @@ globalThis.addEventListener(
         await loadLightbox();
       } catch {
         // Offline or a stale chunk after a deploy: fall back to opening the full image.
-        const href = trigger.getAttribute("href") ??
-          trigger.getAttribute("src");
+        const href =
+          trigger.getAttribute("href") ?? trigger.getAttribute("src");
         if (href) globalThis.location.assign(href);
         return;
       }
@@ -111,9 +107,9 @@ async function init() {
   /** Map directions popover: native <details>, closed on outside click or Escape. */
   const POPOVER_SELECTOR = "details.event-page__map-nav";
   const closePopovers = () => {
-    document.querySelectorAll(`${POPOVER_SELECTOR}[open]`).forEach(
-      (el) => (el as HTMLDetailsElement).removeAttribute("open"),
-    );
+    document
+      .querySelectorAll(`${POPOVER_SELECTOR}[open]`)
+      .forEach((el) => (el as HTMLDetailsElement).removeAttribute("open"));
   };
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
@@ -128,9 +124,7 @@ async function init() {
     await import("./common/register-serviceworker.ts");
   }
 
-  const revealItems = document.querySelector(
-    ".album-item, .h-entry",
-  );
+  const revealItems = document.querySelector(".album-item, .h-entry");
 
   if (revealItems) {
     const { initTouchReveal } = await import("./common/touch.ts");

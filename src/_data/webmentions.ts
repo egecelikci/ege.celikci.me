@@ -17,7 +17,9 @@ import site from "./site.ts";
 // A missing .env is normal in CI, where the variables come from the environment.
 try {
   process.loadEnvFile();
-} catch { /* no .env */ }
+} catch {
+  /* no .env */
+}
 
 const CACHE_FILE = join(process.cwd(), "_cache", "webmentions_store.json");
 const API = "https://webmention.io/api/mentions.jf2";

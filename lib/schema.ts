@@ -21,7 +21,8 @@ const LISTING_ROUTES = [
 export function pageType(page: { url?: string; type?: string }): string {
   if (page.url === "/") return "https://schema.org/WebSite";
   if (
-    page.type === "tag" || page.type === "index" ||
+    page.type === "tag" ||
+    page.type === "index" ||
     LISTING_ROUTES.includes(page.url ?? "")
   ) {
     return "https://schema.org/CollectionPage";

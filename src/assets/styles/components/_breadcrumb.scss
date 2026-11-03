@@ -56,8 +56,11 @@
       @media (hover: hover) and (pointer: fine) {
         &:hover {
           color: var(--color-secondary);
-          border-color: color-mix(in srgb, var(--color-secondary) 30%,
-            transparent);
+          border-color: color-mix(
+            in srgb,
+            var(--color-secondary) 30%,
+            transparent
+          );
         }
       }
 

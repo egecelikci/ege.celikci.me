@@ -93,12 +93,14 @@ export async function enrichImagesWithDimensions(
   images: PostImage[],
   root = "src",
 ): Promise<PostImage[]> {
-  return await Promise.all(images.map(async (image) => {
-    if (image.width && image.height) return image;
-    const size = await probeLocalImageSize(image.src, root);
-    if (!size) return image;
-    return { ...image, width: size.width, height: size.height };
-  }));
+  return await Promise.all(
+    images.map(async (image) => {
+      if (image.width && image.height) return image;
+      const size = await probeLocalImageSize(image.src, root);
+      if (!size) return image;
+      return { ...image, width: size.width, height: size.height };
+    }),
+  );
 }
 
 const IMG_REGEX_SRC =
@@ -148,9 +150,10 @@ export function extractMediaImages(content: string): ExtractedMedia {
     entries.push({
       image: { src: node.url, alt: node.alt ?? "" },
       start: typeof start === "number" ? start : null,
-      range: typeof start === "number" && typeof end === "number"
-        ? [start, end]
-        : null,
+      range:
+        typeof start === "number" && typeof end === "number"
+          ? [start, end]
+          : null,
     });
   });
 
@@ -168,8 +171,8 @@ export function extractMediaImages(content: string): ExtractedMedia {
       continue;
     }
     const end = start + match[0].length;
-    const alreadyParsed = entries.some(({ range }) =>
-      range !== null && start < range[1] && range[0] < end
+    const alreadyParsed = entries.some(
+      ({ range }) => range !== null && start < range[1] && range[0] < end,
     );
 
     if (!alreadyParsed) {
@@ -190,9 +193,9 @@ export function extractMediaImages(content: string): ExtractedMedia {
 
   for (const entry of entries) {
     if (entry.range === null) continue;
-    const suffix = content.slice(entry.range[1]).match(
-      /^[ \t]*\{spoiler:[ \t]*([^}\n]+?)[ \t]*\}/,
-    );
+    const suffix = content
+      .slice(entry.range[1])
+      .match(/^[ \t]*\{spoiler:[ \t]*([^}\n]+?)[ \t]*\}/);
     if (!suffix) continue;
     entry.image.spoiler = { label: suffix[1].trim() };
     entry.range[1] += suffix[0].length;
@@ -201,7 +204,7 @@ export function extractMediaImages(content: string): ExtractedMedia {
   entries.sort((a, b) => (a.start ?? Infinity) - (b.start ?? Infinity));
   return {
     images: entries.map((e) => e.image),
-    ranges: entries.flatMap((e) => e.range === null ? [] : [e.range]),
+    ranges: entries.flatMap((e) => (e.range === null ? [] : [e.range])),
   };
 }
 
@@ -230,8 +233,11 @@ function nodeText(node: MdastNode): string {
   return (node.children ?? []).map(nodeText).join("");
 }
 function isSupportedSrc(src: string): boolean {
-  return src.startsWith("/") || src.startsWith("http") ||
-    /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(src);
+  return (
+    src.startsWith("/") ||
+    src.startsWith("http") ||
+    /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(src)
+  );
 }
 
 function matchAt(content: string, start: number) {
@@ -251,8 +257,8 @@ export default function () {
       for (const page of pages) {
         if (!page.data.url) continue;
 
-        const isNote = page.src.path.startsWith("/notes/") ||
-          page.data.type === "note";
+        const isNote =
+          page.src.path.startsWith("/notes/") || page.data.type === "note";
 
         if (!isNote) continue;
 
@@ -260,9 +266,8 @@ export default function () {
         if (typeof content !== "string" || content.length === 0) continue;
 
         const { images, ranges } = extractMediaImages(content);
-        const stripped = ranges.length > 0
-          ? stripMediaRanges(content, ranges)
-          : content;
+        const stripped =
+          ranges.length > 0 ? stripMediaRanges(content, ranges) : content;
         page.data.content = stripped;
 
         if (images.length === 0) continue;
@@ -288,9 +293,8 @@ export default function () {
             .trim();
 
           if (teaser) {
-            page.data.description = teaser.length > 200
-              ? teaser.substring(0, 197) + "…"
-              : teaser;
+            page.data.description =
+              teaser.length > 200 ? teaser.substring(0, 197) + "…" : teaser;
           }
         }
       }

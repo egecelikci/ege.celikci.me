@@ -5,7 +5,7 @@ import type { MBRelation } from "../../lib/schemas.ts";
 /**
  * Directory entries in shooting order.
  *
- * Neither Deno's `readDir` nor Node's `readdirSync` promises an order; on Netlify's filesystem it is effectively hash order, so the gallery used to come out differently per machine. Numeric collation that ignores case and punctuation puts camera files (`IMG_2549`, `img-2575`, `img-10`) in the order they were taken.
+ * `readdirSync` promises no order; on Netlify's filesystem it is effectively hash order, so the gallery used to come out differently per machine. Numeric collation that ignores case and punctuation puts camera files (`IMG_2549`, `img-2575`, `img-10`) in the order they were taken.
  *
  * @param path - The folder to list.
  * @returns Its entries, sorted by name.
@@ -16,7 +16,7 @@ function sortedEntries(path: string) {
       numeric: true,
       sensitivity: "base",
       ignorePunctuation: true,
-    })
+    }),
   );
 }
 
@@ -135,37 +135,43 @@ export default async function* ({ mb_events, events }: Lume.Data) {
     });
 
     /** Gather all credits from MB relations */
-    const allCredits: Credit[] = (event.relations || []).filter((
-      rel: MBRelation,
-    ) =>
-      ["illustration", "graphic design", "artwork", "design", "engineer"]
-        .includes(rel.type)
-    ).map((rel: MBRelation) => {
-      const artistId = rel.artist?.id;
-      const artistName = rel["target-credit"] || rel.artist?.name;
+    const allCredits: Credit[] = (event.relations || [])
+      .filter((rel: MBRelation) =>
+        [
+          "illustration",
+          "graphic design",
+          "artwork",
+          "design",
+          "engineer",
+        ].includes(rel.type),
+      )
+      .map((rel: MBRelation) => {
+        const artistId = rel.artist?.id;
+        const artistName = rel["target-credit"] || rel.artist?.name;
 
-      let role = "Artwork";
-      if (rel.type === "illustration") role = "Illustration";
-      if (rel.type === "graphic design" || rel.type === "design") {
-        role = "Design";
-      }
-      if (rel.type === "engineer") {
-        role = rel["attribute-values"]?.task
-          ? rel["attribute-values"].task.split(" ").map((w: string) =>
-            w.charAt(0).toUpperCase() + w.slice(1)
-          ).join(" ")
-          : "Sound";
-      }
+        let role = "Artwork";
+        if (rel.type === "illustration") role = "Illustration";
+        if (rel.type === "graphic design" || rel.type === "design") {
+          role = "Design";
+        }
+        if (rel.type === "engineer") {
+          role = rel["attribute-values"]?.task
+            ? rel["attribute-values"].task
+                .split(" ")
+                .map((w: string) => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(" ")
+            : "Sound";
+        }
 
-      return {
-        name: artistName,
-        url: artistId
-          ? `https://musicbrainz.org/artist/${artistId}`
-          : undefined,
-        role,
-        type: rel.type,
-      };
-    });
+        return {
+          name: artistName,
+          url: artistId
+            ? `https://musicbrainz.org/artist/${artistId}`
+            : undefined,
+          role,
+          type: rel.type,
+        };
+      });
 
     /**
      * Split credits by logic:
@@ -173,10 +179,10 @@ export default async function* ({ mb_events, events }: Lume.Data) {
      * 2. Technical/Motion roles → Video
      */
     let posterCredits = allCredits.filter((c) =>
-      ["illustration", "graphic design", "artwork"].includes(c.type ?? "")
+      ["illustration", "graphic design", "artwork"].includes(c.type ?? ""),
     );
     let videoCredits = allCredits.filter((c) =>
-      ["design", "engineer"].includes(c.type ?? "")
+      ["design", "engineer"].includes(c.type ?? ""),
     );
 
     if (!local.video) {

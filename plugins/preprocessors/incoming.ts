@@ -19,9 +19,10 @@ import {
 function entryOf(page: Lume.Page): IncomingEntry {
   const data = page.data;
   const source = data.content;
-  const bodyLinks = typeof source === "string"
-    ? extractBodyLinks(source, { siteUrl: settings.url })
-    : [];
+  const bodyLinks =
+    typeof source === "string"
+      ? extractBodyLinks(source, { siteUrl: settings.url })
+      : [];
   return {
     url: data.url as string,
     title: (data.title as string | undefined) ?? "",

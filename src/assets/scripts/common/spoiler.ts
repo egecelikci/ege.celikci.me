@@ -41,9 +41,11 @@ function toggleTile(veil: HTMLElement): void {
  * @returns The veil element, or `null` when the event is unrelated.
  */
 function veilTarget(target: EventTarget | null): HTMLElement | null {
-  return (target as HTMLElement | null)?.closest?.(".spoiler-veil") as
-    | HTMLElement
-    | null ?? null;
+  return (
+    ((target as HTMLElement | null)?.closest?.(
+      ".spoiler-veil",
+    ) as HTMLElement | null) ?? null
+  );
 }
 
 /**

@@ -22,11 +22,11 @@ export const BG_MODES = [
   "dark",
 ] as const;
 
-export type BgMode = typeof BG_MODES[number];
+export type BgMode = (typeof BG_MODES)[number];
 
 export const TEXT_CASES = ["none", "upper", "lower"] as const;
 
-export type TextCase = typeof TEXT_CASES[number];
+export type TextCase = (typeof TEXT_CASES)[number];
 
 /** Largest grid the page offers; keeps tiles above 100px. */
 export const MAX_GRID = 8;
@@ -115,8 +115,7 @@ export function isBgMode(value: unknown): value is BgMode {
 }
 
 export function isTextCase(value: unknown): value is TextCase {
-  return typeof value === "string" &&
-    TEXT_CASES.some((mode) => mode === value);
+  return typeof value === "string" && TEXT_CASES.some((mode) => mode === value);
 }
 
 function toGridSize(value: unknown, name: string): number {

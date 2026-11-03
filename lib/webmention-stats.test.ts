@@ -2,23 +2,24 @@
  * Unit tests for the pure webmention statistics helpers.
  */
 
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { computeWebmentionStats, normalizeUrl } from "./webmention-stats.ts";
 import type { WebmentionFeed } from "../src/types/index.ts";
 
-Deno.test("normalizeUrl strips trailing slashes", () => {
-  assertEquals(
+test("normalizeUrl strips trailing slashes", () => {
+  assert.deepEqual(
     normalizeUrl("https://ege.celikci.me/"),
     "https://ege.celikci.me",
   );
-  assertEquals(
+  assert.deepEqual(
     normalizeUrl("https://ege.celikci.me"),
     "https://ege.celikci.me",
   );
-  assertEquals(normalizeUrl(""), "");
+  assert.deepEqual(normalizeUrl(""), "");
 });
 
-Deno.test("computeWebmentionStats counts by type for the page URL", () => {
+test("computeWebmentionStats counts by type for the page URL", () => {
   const feed: WebmentionFeed = {
     schemaVersion: 1,
     lastFetched: null,
@@ -68,10 +69,10 @@ Deno.test("computeWebmentionStats counts by type for the page URL", () => {
     () => false,
   );
 
-  assertEquals(stats, { likes: 1, reposts: 1, replies: 2 });
+  assert.deepEqual(stats, { likes: 1, reposts: 1, replies: 2 });
 });
 
-Deno.test("computeWebmentionStats ignores own webmentions", () => {
+test("computeWebmentionStats ignores own webmentions", () => {
   const feed: WebmentionFeed = {
     schemaVersion: 1,
     lastFetched: null,
@@ -94,10 +95,10 @@ Deno.test("computeWebmentionStats ignores own webmentions", () => {
     (m) => m.author?.url?.replace(/\/+$/, "") === "https://ege.celikci.me",
   );
 
-  assertEquals(stats, { likes: 0, reposts: 0, replies: 0 });
+  assert.deepEqual(stats, { likes: 0, reposts: 0, replies: 0 });
 });
 
-Deno.test("computeWebmentionStats normalizes trailing slashes in targets", () => {
+test("computeWebmentionStats normalizes trailing slashes in targets", () => {
   const feed: WebmentionFeed = {
     schemaVersion: 1,
     lastFetched: null,
@@ -119,11 +120,11 @@ Deno.test("computeWebmentionStats normalizes trailing slashes in targets", () =>
     () => false,
   );
 
-  assertEquals(stats, { likes: 1, reposts: 0, replies: 0 });
+  assert.deepEqual(stats, { likes: 1, reposts: 0, replies: 0 });
 });
 
-Deno.test("computeWebmentionStats handles missing feed", () => {
-  assertEquals(
+test("computeWebmentionStats handles missing feed", () => {
+  assert.deepEqual(
     computeWebmentionStats(
       undefined,
       "https://ege.celikci.me",
@@ -134,7 +135,7 @@ Deno.test("computeWebmentionStats handles missing feed", () => {
   );
 });
 
-Deno.test("computeWebmentionStats excludes non-matching targets", () => {
+test("computeWebmentionStats excludes non-matching targets", () => {
   const feed: WebmentionFeed = {
     schemaVersion: 1,
     lastFetched: null,
@@ -163,5 +164,5 @@ Deno.test("computeWebmentionStats excludes non-matching targets", () => {
     () => false,
   );
 
-  assertEquals(stats, { likes: 1, reposts: 0, replies: 0 });
+  assert.deepEqual(stats, { likes: 1, reposts: 0, replies: 0 });
 });

@@ -7,21 +7,23 @@ import FastCache from "./lib/fast-cache.ts";
 import registerPreprocessors from "./plugins/preprocessors/index.ts";
 import { isProduction } from "./lib/env.ts";
 
-const site = lume({
-  src: "./src",
-  dest: "./dist",
-  location: new URL("https://ege.celikci.me"),
-}, {
-  // Templates print MusicBrainz and webmention text, so escape by default and opt trusted HTML in with `|> safe`.
-  vento: { options: { autoescape: true } },
-});
+const site = lume(
+  {
+    src: "./src",
+    dest: "./dist",
+    location: new URL("https://ege.celikci.me"),
+  },
+  {
+    // Templates print MusicBrainz and webmention text, so escape by default and opt trusted HTML in with `|> safe`.
+    vento: { options: { autoescape: true } },
+  },
+);
 
 /**
  * `emptyDest` deletes only the first entry of `dist/` in @lumeland/core 1.0.2 (`emptyDir` returns inside its loop), so stale chunks from earlier builds survive in Netlify's persisted checkout and end up in the service worker precache.
  */
-site.addEventListener(
-  "beforeBuild",
-  () => rm(site.dest(), { recursive: true, force: true }),
+site.addEventListener("beforeBuild", () =>
+  rm(site.dest(), { recursive: true, force: true }),
 );
 
 /** Before any plugin captures `site.cache`. */
@@ -44,18 +46,9 @@ function run(command: string, args: string[]) {
   });
 }
 
+/** Run a data job in its own Node process, so a crash in one never takes the build down. */
 const runFetch = async (script: string, label: string) => {
-  // The data jobs still run on Deno; `DENO` overrides the binary when PATH has none (mise, NixOS).
-  const code = await run(process.env.DENO ?? "deno", [
-    "run",
-    "--allow-net",
-    "--allow-read",
-    "--allow-write",
-    "--allow-env",
-    "--allow-ffi",
-    "--allow-run",
-    script,
-  ]).catch(() => null);
+  const code = await run(process.execPath, [script]).catch(() => null);
   if (code !== 0) {
     console.warn(
       `[${label}] exited with code ${code} — building with cached data.`,

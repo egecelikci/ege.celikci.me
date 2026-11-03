@@ -2,7 +2,8 @@
  * Unit tests for build-time image dimension probing.
  */
 
-import { assert, assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import {
   enrichImagesWithDimensions,
   extractMediaImages,
@@ -14,53 +15,54 @@ import {
 /** Tiny header-only images, kept out of Git LFS so the tests run on any clone. */
 const FIXTURES = new URL("./fixtures", import.meta.url).pathname;
 
-Deno.test("probeLocalImageSize reads PNG, JPEG, and GIF headers", async () => {
-  assertEquals(await probeLocalImageSize("/portrait.png", FIXTURES), {
+test("probeLocalImageSize reads PNG, JPEG, and GIF headers", async () => {
+  assert.deepEqual(await probeLocalImageSize("/portrait.png", FIXTURES), {
     width: 2,
     height: 3,
   });
-  assertEquals(await probeLocalImageSize("/landscape.jpg", FIXTURES), {
+  assert.deepEqual(await probeLocalImageSize("/landscape.jpg", FIXTURES), {
     width: 3,
     height: 2,
   });
-  assertEquals(await probeLocalImageSize("/square.gif", FIXTURES), {
+  assert.deepEqual(await probeLocalImageSize("/square.gif", FIXTURES), {
     width: 5,
     height: 5,
   });
 });
 
-Deno.test("probeLocalImageSize ignores query strings and fragments", async () => {
-  assertEquals(await probeLocalImageSize("/portrait.png?v=1#x", FIXTURES), {
+test("probeLocalImageSize ignores query strings and fragments", async () => {
+  assert.deepEqual(await probeLocalImageSize("/portrait.png?v=1#x", FIXTURES), {
     width: 2,
     height: 3,
   });
 });
 
-Deno.test("probeLocalImageSize returns undefined for truncated and empty files", async () => {
-  assertEquals(
+test("probeLocalImageSize returns undefined for truncated and empty files", async () => {
+  assert.deepEqual(
     await probeLocalImageSize("/truncated.png", FIXTURES),
     undefined,
   );
-  assertEquals(await probeLocalImageSize("/empty.webp", FIXTURES), undefined);
+  assert.deepEqual(
+    await probeLocalImageSize("/empty.webp", FIXTURES),
+    undefined,
+  );
 });
 
-Deno.test("probeLocalImageSize refuses remote, missing, and hostile paths", async () => {
-  for (
-    const src of [
-      "https://example.com/photo.jpg",
-      "/does-not-exist.jpg",
-      "/../media.ts",
-      "/fixtures//portrait.png",
-      "/a\\b.png",
-      "/notes/",
-      "/portrait.txt",
-    ]
-  ) {
-    assertEquals(await probeLocalImageSize(src, FIXTURES), undefined, src);
+test("probeLocalImageSize refuses remote, missing, and hostile paths", async () => {
+  for (const src of [
+    "https://example.com/photo.jpg",
+    "/does-not-exist.jpg",
+    "/../media.ts",
+    "/fixtures//portrait.png",
+    "/a\\b.png",
+    "/notes/",
+    "/portrait.txt",
+  ]) {
+    assert.deepEqual(await probeLocalImageSize(src, FIXTURES), undefined, src);
   }
 });
 
-Deno.test("enrichImagesWithDimensions fills gaps but never clobbers", async () => {
+test("enrichImagesWithDimensions fills gaps but never clobbers", async () => {
   const images: PostImage[] = [
     { src: "/portrait.png", alt: "probed" },
     { src: "/landscape.jpg", alt: "explicit", width: 4, height: 3 },
@@ -69,17 +71,17 @@ Deno.test("enrichImagesWithDimensions fills gaps but never clobbers", async () =
   const snapshot = structuredClone(images);
   const enriched = await enrichImagesWithDimensions(images, FIXTURES);
 
-  assertEquals([enriched[0].width, enriched[0].height], [2, 3]);
-  assertEquals(
+  assert.deepEqual([enriched[0].width, enriched[0].height], [2, 3]);
+  assert.deepEqual(
     [enriched[1].width, enriched[1].height],
     [4, 3],
     "explicit author dimensions must survive",
   );
-  assertEquals(enriched[2].width, undefined, "remote image stays unknown");
-  assertEquals(images, snapshot, "input is not mutated");
+  assert.deepEqual(enriched[2].width, undefined, "remote image stays unknown");
+  assert.deepEqual(images, snapshot, "input is not mutated");
 });
 
-Deno.test("extractMediaImages finds standard and sized images once each", () => {
+test("extractMediaImages finds standard and sized images once each", () => {
   const content = [
     "hello",
     "",
@@ -93,22 +95,29 @@ Deno.test("extractMediaImages finds standard and sized images once each", () => 
   ].join("\n");
   const { images, ranges } = extractMediaImages(content);
 
-  assertEquals(images.length, 3, "each markup image extracted exactly once");
-  assertEquals(images[0], {
+  assert.deepEqual(
+    images.length,
+    3,
+    "each markup image extracted exactly once",
+  );
+  assert.deepEqual(images[0], {
     src: "/assets/images/gallery/cat.jpg",
     alt: "cat alt",
   });
-  assertEquals(images[1].width, 800);
-  assertEquals(images[1].height, 600);
-  assertEquals(images[2].src, "https://example.com/r.png");
-  assertEquals(ranges.length, 3, "one range per image");
+  assert.deepEqual(images[1].width, 800);
+  assert.deepEqual(images[1].height, 600);
+  assert.deepEqual(images[2].src, "https://example.com/r.png");
+  assert.deepEqual(ranges.length, 3, "one range per image");
   for (const [start, end] of ranges) {
-    assert(start < end, "ranges are non-empty");
-    assert(content.slice(start, end).startsWith("!["), "ranges cover markup");
+    assert.ok(start < end, "ranges are non-empty");
+    assert.ok(
+      content.slice(start, end).startsWith("!["),
+      "ranges cover markup",
+    );
   }
 });
 
-Deno.test("stripMediaRanges excises markup and leaves ranges untouched", () => {
+test("stripMediaRanges excises markup and leaves ranges untouched", () => {
   const content =
     "before\n\n![a](/i/a.jpg)\n\nmiddle\n\n![b](/i/b.jpg =2x3)\n\nafter";
   const { ranges } = extractMediaImages(content);
@@ -116,14 +125,14 @@ Deno.test("stripMediaRanges excises markup and leaves ranges untouched", () => {
 
   const stripped = stripMediaRanges(content, ranges);
 
-  assert(!stripped.includes("!["), "no image markup remains");
-  assert(stripped.includes("before"), "prose before survives");
-  assert(stripped.includes("middle"), "prose between survives");
-  assert(stripped.includes("after"), "prose after survives");
-  assertEquals(ranges, snapshot, "input ranges are not mutated");
+  assert.ok(!stripped.includes("!["), "no image markup remains");
+  assert.ok(stripped.includes("before"), "prose before survives");
+  assert.ok(stripped.includes("middle"), "prose between survives");
+  assert.ok(stripped.includes("after"), "prose after survives");
+  assert.deepEqual(ranges, snapshot, "input ranges are not mutated");
 });
 
-Deno.test("extractMediaImages attaches {spoiler: label} spoiler and extends ranges", () => {
+test("extractMediaImages attaches {spoiler: label} spoiler and extends ranges", () => {
   const content = [
     "dinner",
     "",
@@ -133,27 +142,27 @@ Deno.test("extractMediaImages attaches {spoiler: label} spoiler and extends rang
   ].join("\n");
   const { images, ranges } = extractMediaImages(content);
 
-  assertEquals(images.length, 2);
-  assertEquals(images[0].spoiler, { label: "food photography" });
-  assertEquals(images[1].spoiler, undefined);
-  assertEquals(ranges.length, 2);
+  assert.deepEqual(images.length, 2);
+  assert.deepEqual(images[0].spoiler, { label: "food photography" });
+  assert.deepEqual(images[1].spoiler, undefined);
+  assert.deepEqual(ranges.length, 2);
 
   const stripped = stripMediaRanges(content, ranges);
-  assert(!stripped.includes("{spoiler:"), "spoiler suffix leaves the body");
-  assert(!stripped.includes("ramen.jpg"), "warned image leaves the body");
-  assert(stripped.includes("dinner"), "prose survives");
+  assert.ok(!stripped.includes("{spoiler:"), "spoiler suffix leaves the body");
+  assert.ok(!stripped.includes("ramen.jpg"), "warned image leaves the body");
+  assert.ok(stripped.includes("dinner"), "prose survives");
 });
 
-Deno.test("extractMediaImages combines =WxH sizes with spoilers", () => {
+test("extractMediaImages combines =WxH sizes with spoilers", () => {
   const { images } = extractMediaImages(
     '![big](/assets/images/gallery/big.jpg =800x600 "t"){spoiler: spans lots}',
   );
-  assertEquals(images.length, 1);
-  assertEquals([images[0].width, images[0].height], [800, 600]);
-  assertEquals(images[0].spoiler, { label: "spans lots" });
+  assert.deepEqual(images.length, 1);
+  assert.deepEqual([images[0].width, images[0].height], [800, 600]);
+  assert.deepEqual(images[0].spoiler, { label: "spans lots" });
 });
 
-Deno.test("extractMediaImages ignores empty and detached {cw} markers", () => {
+test("extractMediaImages ignores empty and detached {cw} markers", () => {
   const content = [
     "![a](/assets/images/gallery/a.jpg){spoiler:}",
     "",
@@ -164,7 +173,7 @@ Deno.test("extractMediaImages ignores empty and detached {cw} markers", () => {
   ].join("\n");
   const { images } = extractMediaImages(content);
 
-  assertEquals(images.length, 2);
-  assertEquals(images[0].spoiler, undefined, "empty marker ignored");
-  assertEquals(images[1].spoiler, undefined, "detached marker ignored");
+  assert.deepEqual(images.length, 2);
+  assert.deepEqual(images[0].spoiler, undefined, "empty marker ignored");
+  assert.deepEqual(images[1].spoiler, undefined, "detached marker ignored");
 });

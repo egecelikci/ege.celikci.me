@@ -1,16 +1,17 @@
-import { assertEquals } from "@std/assert";
+import assert from "node:assert/strict";
+import { test } from "node:test";
 import { localPosterFile, posterPlan } from "./posters.ts";
 
-Deno.test("a new event saves the original, not the thumbnail", () => {
-  assertEquals(posterPlan({ url: "o.jpg", thumb: "t.jpg" }), {
+test("a new event saves the original, not the thumbnail", () => {
+  assert.deepEqual(posterPlan({ url: "o.jpg", thumb: "t.jpg" }), {
     imageUrl: "o.jpg",
     source: "original",
     force: true,
   });
 });
 
-Deno.test("an event already saved as an original is left alone", () => {
-  assertEquals(
+test("an event already saved as an original is left alone", () => {
+  assert.deepEqual(
     posterPlan(
       { url: "o.jpg", thumb: "t.jpg" },
       { posterUrl: "o.jpg", posterSource: "original" },
@@ -19,18 +20,15 @@ Deno.test("an event already saved as an original is left alone", () => {
   );
 });
 
-Deno.test("a 500px poster from before this rule is replaced by the original", () => {
-  assertEquals(
-    posterPlan(
-      { url: "o.jpg", thumb: "t.jpg" },
-      { posterUrl: "o.jpg" },
-    ).force,
+test("a 500px poster from before this rule is replaced by the original", () => {
+  assert.deepEqual(
+    posterPlan({ url: "o.jpg", thumb: "t.jpg" }, { posterUrl: "o.jpg" }).force,
     true,
   );
 });
 
-Deno.test("a changed original is downloaded again", () => {
-  assertEquals(
+test("a changed original is downloaded again", () => {
+  assert.deepEqual(
     posterPlan(
       { url: "new.jpg" },
       { posterUrl: "old.jpg", posterSource: "original" },
@@ -39,22 +37,22 @@ Deno.test("a changed original is downloaded again", () => {
   );
 });
 
-Deno.test("the thumbnail is the fallback when there is no original, and is not re-downloaded for it", () => {
-  assertEquals(posterPlan({ thumb: "t.jpg" }, { posterSource: "thumb" }), {
+test("the thumbnail is the fallback when there is no original, and is not re-downloaded for it", () => {
+  assert.deepEqual(posterPlan({ thumb: "t.jpg" }, { posterSource: "thumb" }), {
     imageUrl: "t.jpg",
     source: "thumb",
     force: false,
   });
 });
 
-Deno.test("no poster means nothing to download", () => {
-  assertEquals(posterPlan({}), { force: false });
+test("no poster means nothing to download", () => {
+  assert.deepEqual(posterPlan({}), { force: false });
 });
 
-Deno.test("localPosterFile prefers the cached file, then any extension for the event", () => {
+test("localPosterFile prefers the cached file, then any extension for the event", () => {
   const names = ["abc.jpg", "def.png", "abc.webp.part"];
-  assertEquals(localPosterFile(names, "abc", "abc.jpg"), "abc.jpg");
-  assertEquals(localPosterFile(names, "def"), "def.png");
-  assertEquals(localPosterFile(names, "abc", "gone.jpg"), "abc.jpg");
-  assertEquals(localPosterFile(names, "xyz"), undefined);
+  assert.deepEqual(localPosterFile(names, "abc", "abc.jpg"), "abc.jpg");
+  assert.deepEqual(localPosterFile(names, "def"), "def.png");
+  assert.deepEqual(localPosterFile(names, "abc", "gone.jpg"), "abc.jpg");
+  assert.deepEqual(localPosterFile(names, "xyz"), undefined);
 });

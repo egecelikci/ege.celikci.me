@@ -57,13 +57,12 @@ export function createFilters({ site, author, git }: FilterMeta) {
     /**
      * Display title for a page: authored title, or `note from <date>` for untitled notes. Single source of truth shared with the incoming graph (see lib/incoming.ts noteTitle).
      */
-    noteTitle: function (
-      data: { title?: unknown; date?: unknown },
-    ): string {
+    noteTitle: function (data: { title?: unknown; date?: unknown }): string {
       const title = typeof data?.title === "string" ? data.title : "";
-      const date = data?.date instanceof Date || typeof data?.date === "string"
-        ? data.date
-        : undefined;
+      const date =
+        data?.date instanceof Date || typeof data?.date === "string"
+          ? data.date
+          : undefined;
       return buildNoteTitle(title, date);
     },
 
@@ -120,11 +119,12 @@ export function createFilters({ site, author, git }: FilterMeta) {
       const isSyndicated = (entry: Webmention) => {
         const source = cleanUrl(entry["wm-source"] || "");
         const entryUrl = Array.isArray(entry.url)
-          ? (entry.url[0] || "")
-          : (entry.url || "");
+          ? entry.url[0] || ""
+          : entry.url || "";
         const url = cleanUrl(entryUrl);
-        return syndicationUrls.includes(source) ||
-          syndicationUrls.includes(url);
+        return (
+          syndicationUrls.includes(source) || syndicationUrls.includes(url)
+        );
       };
 
       const clean = (entry: Webmention) => {
@@ -137,9 +137,9 @@ export function createFilters({ site, author, git }: FilterMeta) {
               const source = httpUrl(entry["wm-source"]);
               entry.content.value = source
                 ? xss(
-                  `mentioned this in <a href="${source}">${source}</a>`,
-                  xssOptions,
-                )
+                    `mentioned this in <a href="${source}">${source}</a>`,
+                    xssOptions,
+                  )
                 : "";
             } else {
               entry.content.value = xss(html, xssOptions);
@@ -165,10 +165,12 @@ export function createFilters({ site, author, git }: FilterMeta) {
     },
 
     resolveComp: (compPath: string, compRoot: Record<string, unknown>) => {
-      return compPath.split(".").reduce(
-        (obj, part) => obj?.[part] as Record<string, unknown>,
-        compRoot,
-      );
+      return compPath
+        .split(".")
+        .reduce(
+          (obj, part) => obj?.[part] as Record<string, unknown>,
+          compRoot,
+        );
     },
 
     resolveSourceUrl: function (path: string): string {

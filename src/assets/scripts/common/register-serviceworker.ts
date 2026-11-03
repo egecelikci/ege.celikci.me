@@ -5,7 +5,8 @@
  */
 
 function register() {
-  navigator.serviceWorker.register("/sw.js")
+  navigator.serviceWorker
+    .register("/sw.js")
     .then((registration) => {
       console.log("[SW] Registered successfully:", registration.scope);
     })

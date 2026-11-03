@@ -41,7 +41,8 @@ export function initRail(rail: HTMLElement) {
        * parent year links light up alongside their month, but only the
        * exact target is announced as current (single aria-current per nav)
        */
-      const grouped = !exact &&
+      const grouped =
+        !exact &&
         link.classList.contains("rail__link--primary") &&
         link.dataset.year !== undefined &&
         section.dataset.year === link.dataset.year;
@@ -63,9 +64,8 @@ export function initRail(rail: HTMLElement) {
       .trim();
     const num = parseFloat(raw) || 3.5;
     if (!raw.endsWith("rem")) return num;
-    const root = parseFloat(
-      getComputedStyle(document.documentElement).fontSize,
-    ) || 16;
+    const root =
+      parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     return num * root;
   }
 
@@ -85,7 +85,7 @@ export function initRail(rail: HTMLElement) {
     if (idx === -1) idx = 0;
     if (
       globalThis.innerHeight + globalThis.scrollY >=
-        document.documentElement.scrollHeight - 2
+      document.documentElement.scrollHeight - 2
     ) {
       idx = order.length - 1;
     }
@@ -136,8 +136,9 @@ export function initRail(rail: HTMLElement) {
 
   function linkAt(x: number, y: number): HTMLAnchorElement | null {
     const el = document.elementFromPoint(x, y);
-    return (el?.closest?.("a[data-target]") as HTMLAnchorElement | null) ??
-      null;
+    return (
+      (el?.closest?.("a[data-target]") as HTMLAnchorElement | null) ?? null
+    );
   }
 
   rail.addEventListener("pointerdown", (e) => {

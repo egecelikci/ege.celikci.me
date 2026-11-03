@@ -40,17 +40,20 @@ const BY_TYPE: Record<string, PageIcon> = {
 
 const FALLBACK: PageIcon = { icon: "file-text", catalog: "lucide" };
 
-export function pageIcon(
-  page: { type?: string; tags?: string | string[] },
-): PageIcon {
+export function pageIcon(page: {
+  type?: string;
+  tags?: string | string[];
+}): PageIcon {
   /** Lume page data allows a single tag as a bare string. */
   const tags = Array.isArray(page.tags)
     ? page.tags
     : page.tags
-    ? [page.tags]
-    : [];
+      ? [page.tags]
+      : [];
 
-  return tags.map((tag) => BY_TAG[tag]).find(Boolean) ??
+  return (
+    tags.map((tag) => BY_TAG[tag]).find(Boolean) ??
     BY_TYPE[page.type ?? ""] ??
-    FALLBACK;
+    FALLBACK
+  );
 }
