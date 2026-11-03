@@ -2,6 +2,25 @@ import { exists } from "@std/fs/exists";
 import { getLinkInfo } from "../../lib/links.ts";
 import type { MBRelation } from "../../lib/schemas.ts";
 
+/**
+ * Directory entries in shooting order.
+ *
+ * `Deno.readDir` promises no order; on Netlify's filesystem it is effectively hash order, so the gallery came out differently per machine. Numeric collation that ignores case and punctuation puts camera files (`IMG_2549`, `img-2575`, `img-10`) in the order they were taken.
+ *
+ * @param path - The folder to list.
+ * @returns Its entries, sorted by name.
+ */
+async function sortedEntries(path: string): Promise<Deno.DirEntry[]> {
+  const entries = await Array.fromAsync(Deno.readDir(path));
+  return entries.sort((a, b) =>
+    a.name.localeCompare(b.name, "en", {
+      numeric: true,
+      sensitivity: "base",
+      ignorePunctuation: true,
+    })
+  );
+}
+
 async function collectGalleryImages(
   eventId: string,
   basePath: string,
@@ -11,7 +30,7 @@ async function collectGalleryImages(
   const images: Array<{ src: string; alt: string; photographer?: object }> = [];
   if (!await exists(basePath)) return images;
 
-  for await (const entry of Deno.readDir(basePath)) {
+  for (const entry of await sortedEntries(basePath)) {
     if (entry.isFile && /\.(jpg|jpeg|png|webp|avif)$/i.test(entry.name)) {
       images.push({
         src: `/assets/images/events/${eventId}/${entry.name}`,
@@ -23,7 +42,7 @@ async function collectGalleryImages(
     } else if (entry.isDirectory) {
       const photographer = photographers[entry.name] ?? { name: entry.name };
       const subPath = `${basePath}/${entry.name}`;
-      for await (const sub of Deno.readDir(subPath)) {
+      for (const sub of await sortedEntries(subPath)) {
         if (sub.isFile && /\.(jpg|jpeg|png|webp|avif)$/i.test(sub.name)) {
           images.push({
             src: `/assets/images/events/${eventId}/${entry.name}/${sub.name}`,
