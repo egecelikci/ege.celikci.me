@@ -1,4 +1,4 @@
-import xss, { escapeHtml } from "xss";
+import xss from "xss";
 import { getLinkInfo } from "./links.ts";
 import { noteTitle as buildNoteTitle } from "./incoming.ts";
 import { pageType as schemaPageType } from "./schema.ts";
@@ -133,12 +133,14 @@ export function createFilters({ site, author, git }: FilterMeta) {
 
           if (html) {
             if (html.length > 2000) {
-              // The source URL comes from whoever sent the webmention, so it is escaped and the link still goes through xss to drop javascript: URLs.
-              const source = escapeHtml(entry["wm-source"] || "");
-              entry.content.value = xss(
-                `mentioned this in <a href="${source}">${source}</a>`,
-                xssOptions,
-              );
+              // The source URL comes from whoever sent the webmention. Parsing it keeps only http(s), and `href` percent-encodes the quotes and brackets that could break out of the attribute; xss still runs over the result.
+              const source = httpUrl(entry["wm-source"]);
+              entry.content.value = source
+                ? xss(
+                  `mentioned this in <a href="${source}">${source}</a>`,
+                  xssOptions,
+                )
+                : "";
             } else {
               entry.content.value = xss(html, xssOptions);
             }
@@ -176,4 +178,22 @@ export function createFilters({ site, author, git }: FilterMeta) {
   };
 
   return filters;
+}
+
+/**
+ * Normalise an untrusted URL, or reject it.
+ *
+ * @param value - A URL from a third party.
+ * @returns The serialised `http(s)` URL, safe inside an attribute, or `undefined`.
+ */
+function httpUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.href
+      : undefined;
+  } catch {
+    return undefined;
+  }
 }

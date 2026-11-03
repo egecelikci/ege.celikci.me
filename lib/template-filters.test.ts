@@ -166,3 +166,32 @@ function mention(overrides: Record<string, unknown>): Webmention {
     ...overrides,
   } as unknown as Webmention;
 }
+
+Deno.test("a long mention from a non-http source renders nothing instead of a link", () => {
+  const [kept] = filters.webmentionsByUrl(
+    [
+      mention({
+        "wm-source": "javascript:alert(1)",
+        content: { html: `<p>${"x".repeat(2500)}</p>` },
+      }),
+    ],
+    "/x/",
+  );
+  assertEquals(kept.content?.value, "");
+});
+
+Deno.test("a long mention's source cannot break out of the href", () => {
+  const [kept] = filters.webmentionsByUrl(
+    [
+      mention({
+        "wm-source": 'https://blog.example/p"onmouseover="alert(1)',
+        content: { html: `<p>${"x".repeat(2500)}</p>` },
+      }),
+    ],
+    "/x/",
+  );
+  const value = kept.content?.value as string;
+  // The quote is percent-encoded, so `onmouseover` stays inside the path instead of becoming an attribute.
+  assertEquals(value.includes('"onmouseover'), false);
+  assertEquals(value.includes("%22onmouseover=%22"), true);
+});
