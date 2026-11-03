@@ -1,6 +1,7 @@
 import lume from "@lumeland/lume";
 import { spawn } from "node:child_process";
 import { rm } from "node:fs/promises";
+import { log } from "@lumeland/core/utils/log.ts";
 import config from "./_config/index.ts";
 import serviceWorker from "./plugins/service-worker.ts";
 import FastCache from "./lib/fast-cache.ts";
@@ -67,6 +68,11 @@ site.addEventListener("beforeBuild", () => {
     runFetch("jobs/events.ts", "events"),
     runFetch("jobs/steam.ts", "steam"),
   ]);
+});
+
+/** `lume build` logs render errors and still exits 0, which would deploy pages that lost their content or layout. */
+site.addEventListener("afterBuild", () => {
+  if (log.hasErrors) process.exitCode = 1;
 });
 
 /** Service worker, built from `sw.ts` once the site is written. */
