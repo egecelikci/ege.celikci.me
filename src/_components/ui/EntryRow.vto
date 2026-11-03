@@ -105,7 +105,7 @@
 
       <div class="e-content markdown entry-row__content">
         {{ if isNote }}
-          {{ entry.content |> vto(vtoContext) |> md |> safe }}
+          {{ entry.content |> vto(vtoContext) |> mdRemark |> safe }}
         {{ else }}
           {{ entry.description || "" }}
         {{ /if }}

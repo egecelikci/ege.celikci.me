@@ -1,10 +1,10 @@
 [build]
-    command = "mise install && mise exec -- deno task ci && mise exec -- deno task build"
+    command = "mise install && mise exec -- npm ci --no-audit --no-fund && mise exec -- deno task ci && mise exec -- npm run build"
     publish = "dist"
     edge_functions = "platform/netlify/edge-functions"
 
 [dev]
-    command = "deno task serve"
+    command = "npm run serve"
     targetPort = 3000
     port = 8888
     framework = "#custom"

@@ -118,7 +118,9 @@ export class HttpClient {
     cachePolicy: CachePolicy = "force-cache",
     bypassRateLimit = false,
   ): Promise<T | null> {
-    const cache = await caches.open(this.cacheName);
+    // Node has no Web Cache API, so there every request goes to the network; Deno (the jobs) still caches.
+    const store = (globalThis as { caches?: CacheStorage }).caches;
+    const cache = store ? await store.open(this.cacheName) : undefined;
     const request = new Request(url, {
       headers: {
         "User-Agent": this.userAgent,
@@ -127,7 +129,7 @@ export class HttpClient {
       },
     });
 
-    if (cachePolicy !== "no-cache") {
+    if (cache && cachePolicy !== "no-cache") {
       const cachedResponse = await cache.match(request);
       if (cachedResponse) {
         if (type === "json") {
@@ -172,7 +174,7 @@ export class HttpClient {
   private async performFetch<T>(
     url: string,
     type: "json" | "buffer",
-    cache: Cache,
+    cache: Cache | undefined,
     request: Request,
   ): Promise<T | null> {
     try {
@@ -190,7 +192,7 @@ export class HttpClient {
 
       const contentType = response.headers.get("Content-Type") || "";
 
-      await cache.put(request, response.clone());
+      if (cache) await cache.put(request, response.clone());
 
       if (type === "json") {
         if (!contentType.includes("application/json")) {

@@ -5,7 +5,9 @@
  * the link/image structure the site actually renders.
  */
 
-import { remarkGfm, remarkParse, unified } from "lume/deps/remark.ts";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
 
 export interface MdastNode {
   type: string;
@@ -26,7 +28,7 @@ export interface MdastRoot extends MdastNode {
   children: MdastNode[];
 }
 
-const parser = unified.unified().use(remarkParse).use(remarkGfm);
+const parser = unified().use(remarkParse).use(remarkGfm);
 
 /** Parse Markdown source into an mdast tree. Returns `null` on failure. */
 export function parseMarkdown(content: string): MdastRoot | null {

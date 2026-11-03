@@ -3,8 +3,8 @@
  * Provides stable JSON file management with key sorting.
  */
 
-import { ensureDir } from "@std/fs/ensure-dir";
-import { dirname } from "@std/path";
+import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import type { z } from "zod";
 
 /**
@@ -32,9 +32,9 @@ export async function loadState<T>(
 ): Promise<T> {
   let text: string;
   try {
-    text = await Deno.readTextFile(filePath);
+    text = await readFile(filePath, "utf8");
   } catch (error) {
-    if (error instanceof Deno.errors.NotFound) return defaultValue;
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return defaultValue;
     throw error;
   }
 
@@ -77,12 +77,12 @@ export async function saveState<T>(
     }
   }
   try {
-    await ensureDir(dirname(filePath));
+    await mkdir(dirname(filePath), { recursive: true });
     const sorted = sortObjectKeys(data);
     // Write beside the target and rename over it: an interrupted write leaves the old file whole instead of a truncated one.
     const temp = `${filePath}.tmp`;
-    await Deno.writeTextFile(temp, JSON.stringify(sorted, null, 2));
-    await Deno.rename(temp, filePath);
+    await writeFile(temp, JSON.stringify(sorted, null, 2), "utf8");
+    await rename(temp, filePath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[state] ❌ Failed to save ${filePath}:`, message);

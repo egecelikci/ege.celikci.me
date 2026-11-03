@@ -1,5 +1,6 @@
-import { Page } from "lume/core/file.ts";
-import type { TypstEngine } from "typst";
+import { readFile, stat } from "node:fs/promises";
+import { Page } from "@lumeland/core/file.ts";
+import type { TypstEngine } from "./typst.ts";
 
 const LAYOUT = "/_includes/layouts/og.typ";
 
@@ -16,7 +17,7 @@ export default function typstOg() {
     async function getTemplate(path: string): Promise<string> {
       let src = templateCache.get(path);
       if (src === undefined) {
-        src = await Deno.readTextFile(site.src(path));
+        src = await readFile(site.src(path), "utf8");
         templateCache.set(path, src);
       }
       return src;
@@ -84,7 +85,7 @@ export default function typstOg() {
             try {
               imagePath = site.src(local);
               // ponytail: size rather than content, and git does not preserve mtimes, so a poster replaced by a file of the exact same size needs a manual _cache wipe. Hash the bytes here if that ever bites.
-              imageKey = `${local}:${(await Deno.stat(imagePath)).size}`;
+              imageKey = `${local}:${(await stat(imagePath)).size}`;
             } catch {
               console.warn(
                 `[typst-og] Image not found for ${page.data.url}: ${local}`,

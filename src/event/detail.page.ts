@@ -1,18 +1,17 @@
-import { exists } from "@std/fs/exists";
+import { existsSync, readdirSync } from "node:fs";
 import { getLinkInfo } from "../../lib/links.ts";
 import type { MBRelation } from "../../lib/schemas.ts";
 
 /**
  * Directory entries in shooting order.
  *
- * `Deno.readDir` promises no order; on Netlify's filesystem it is effectively hash order, so the gallery came out differently per machine. Numeric collation that ignores case and punctuation puts camera files (`IMG_2549`, `img-2575`, `img-10`) in the order they were taken.
+ * Neither Deno's `readDir` nor Node's `readdirSync` promises an order; on Netlify's filesystem it is effectively hash order, so the gallery used to come out differently per machine. Numeric collation that ignores case and punctuation puts camera files (`IMG_2549`, `img-2575`, `img-10`) in the order they were taken.
  *
  * @param path - The folder to list.
  * @returns Its entries, sorted by name.
  */
-async function sortedEntries(path: string): Promise<Deno.DirEntry[]> {
-  const entries = await Array.fromAsync(Deno.readDir(path));
-  return entries.sort((a, b) =>
+function sortedEntries(path: string) {
+  return readdirSync(path, { withFileTypes: true }).sort((a, b) =>
     a.name.localeCompare(b.name, "en", {
       numeric: true,
       sensitivity: "base",
@@ -21,17 +20,17 @@ async function sortedEntries(path: string): Promise<Deno.DirEntry[]> {
   );
 }
 
-async function collectGalleryImages(
+function collectGalleryImages(
   eventId: string,
   basePath: string,
   photographers: Record<string, { name: string; url?: string }>,
   defaultPhotographer?: { name: string; url?: string },
-): Promise<Array<{ src: string; alt: string; photographer?: object }>> {
+): Array<{ src: string; alt: string; photographer?: object }> {
   const images: Array<{ src: string; alt: string; photographer?: object }> = [];
-  if (!await exists(basePath)) return images;
+  if (!existsSync(basePath)) return images;
 
-  for (const entry of await sortedEntries(basePath)) {
-    if (entry.isFile && /\.(jpg|jpeg|png|webp|avif)$/i.test(entry.name)) {
+  for (const entry of sortedEntries(basePath)) {
+    if (entry.isFile() && /\.(jpg|jpeg|png|webp|avif)$/i.test(entry.name)) {
       images.push({
         src: `/assets/images/events/${eventId}/${entry.name}`,
         alt: defaultPhotographer
@@ -39,11 +38,11 @@ async function collectGalleryImages(
           : "Photograph from event",
         photographer: defaultPhotographer,
       });
-    } else if (entry.isDirectory) {
+    } else if (entry.isDirectory()) {
       const photographer = photographers[entry.name] ?? { name: entry.name };
       const subPath = `${basePath}/${entry.name}`;
-      for (const sub of await sortedEntries(subPath)) {
-        if (sub.isFile && /\.(jpg|jpeg|png|webp|avif)$/i.test(sub.name)) {
+      for (const sub of sortedEntries(subPath)) {
+        if (sub.isFile() && /\.(jpg|jpeg|png|webp|avif)$/i.test(sub.name)) {
           images.push({
             src: `/assets/images/events/${eventId}/${entry.name}/${sub.name}`,
             alt: `Photograph by ${photographer.name}`,
@@ -73,15 +72,17 @@ export default async function* ({ mb_events, events }: Lume.Data) {
 
     /** Check for local gallery images */
     const galleryPath = `src/assets/images/events/${event.id}`;
-    const gallery = await collectGalleryImages(
-      event.id,
-      galleryPath,
-      local.photographers ?? {},
-      local.photographer,
-    ).catch((err) => {
+    let gallery: ReturnType<typeof collectGalleryImages> = [];
+    try {
+      gallery = collectGalleryImages(
+        event.id,
+        galleryPath,
+        local.photographers ?? {},
+        local.photographer,
+      );
+    } catch (err) {
       console.warn(`[event_detail] gallery scan failed for ${event.id}:`, err);
-      return [];
-    });
+    }
 
     /**
      * 2. Header Extension Setup (Sources)

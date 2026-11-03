@@ -1,5 +1,5 @@
-import feed from "lume/plugins/feed.ts";
-import createSlugifier from "lume/core/slugifier.ts";
+import feed from "@lumeland/plugin-feed";
+import createSlugifier from "@lumeland/core/slugifier.ts";
 import { site as siteData } from "./metadata.ts";
 import feedConfigs from "../src/_data/feeds.ts";
 

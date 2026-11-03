@@ -2,35 +2,35 @@
  * Main configuration orchestrator.
  */
 
-Deno.env.set("TZ", "Europe/Istanbul");
+process.env.TZ = "Europe/Istanbul";
 
 import "./types.ts";
 
-import attributes from "lume/plugins/attributes.ts";
-import checkUrls from "lume/plugins/check_urls.ts";
-import date from "lume/plugins/date.ts";
-import extractDate from "lume/plugins/extract_date.ts";
-import favicon from "lume/plugins/favicon.ts";
-import gitDate from "lume/plugins/git_date.ts";
-import gitInfo from "lume/plugins/git_info.ts";
-import googleFonts from "lume/plugins/google_fonts.ts";
-import imageSize from "lume/plugins/image_size.ts";
-import jsonLd from "lume/plugins/json_ld.ts";
-import metas from "lume/plugins/metas.ts";
-import minifyHTML from "lume/plugins/minify_html.ts";
-import multilanguage from "lume/plugins/multilanguage.ts";
-import nav from "lume/plugins/nav.ts";
-import pagefind from "lume/plugins/pagefind.ts";
-import pwa from "lume/plugins/pwa.ts";
-import redirects from "lume/plugins/redirects.ts";
-import robots from "lume/plugins/robots.ts";
-import seo from "lume/plugins/seo.ts";
-import sitemap from "lume/plugins/sitemap.ts";
-import slugifyPlugin from "lume/plugins/slugify_urls.ts";
-import validateHTML from "lume/plugins/validate_html.ts";
-import wellKnown from "lume/plugins/well_known.ts";
+import attributes from "../plugins/attributes.ts";
+import checkUrls from "@lumeland/plugin-check-urls";
+import date from "@lumeland/plugin-date";
+import extractDate from "@lumeland/plugin-extract-date";
+import favicon from "@lumeland/plugin-favicon";
+import gitDate from "@lumeland/plugin-git-date";
+import gitInfo from "@lumeland/plugin-git-info";
+import googleFonts from "@lumeland/plugin-google-fonts";
+import imageSize from "@lumeland/plugin-image-size";
+import jsonLd from "@lumeland/plugin-json-ld";
+import metas from "@lumeland/plugin-metas";
+import minifyHTML from "@lumeland/plugin-minify-html";
+import multilanguage from "@lumeland/plugin-multilanguage";
+import nav from "@lumeland/plugin-nav";
+import pagefind from "@lumeland/plugin-pagefind";
+import pwa from "@lumeland/plugin-pwa";
+import redirects from "@lumeland/plugin-redirects";
+import robots from "@lumeland/plugin-robots";
+import seo from "@lumeland/plugin-seo";
+import sitemap from "@lumeland/plugin-sitemap";
+import slugifyPlugin from "@lumeland/plugin-slugify-urls";
+import validateHTML from "@lumeland/plugin-validate-html";
+import wellKnown from "@lumeland/plugin-well-known";
 
-import typst from "typst";
+import typst from "../plugins/typst.ts";
 
 import { isProduction } from "../lib/env.ts";
 import typstOgImages from "../plugins/typst_og.ts";
@@ -115,8 +115,8 @@ export default function () {
       .use(pwa())
       .use(pagefind({
         outputPath: "/pagefind",
-        // search.ts drives the JS API; the default UI injects an inline script that the CSP blocks.
-        ui: false,
+        // search.ts drives the JS API; the component UI injects an inline script that the CSP blocks, and v4 turns it on by default.
+        componentUI: false,
         indexing: {
           rootSelector: "html",
           verbose: false,
@@ -171,7 +171,7 @@ export default function () {
     /**
      * SEO and HTML validation parse every page and only report findings, so they cost seconds of CPU per build and are opt-in via `LUME_CHECKS=1`.
      */
-    if (Deno.env.get("LUME_CHECKS") === "1") {
+    if (process.env.LUME_CHECKS === "1") {
       site
         .use(seo({
           // The reports are only worth having on disk: the console line just says how many there were.

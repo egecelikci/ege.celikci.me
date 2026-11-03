@@ -3,8 +3,7 @@
  * @module
  */
 
-import "@std/dotenv/load";
-import { join } from "@std/path";
+import { join } from "node:path";
 import { loadState, saveState, StateError } from "../../lib/cache.ts";
 import { WebmentionFeedSchema } from "../../lib/schemas.ts";
 import {
@@ -15,7 +14,12 @@ import {
 import type { WebmentionFeed } from "../types/index.ts";
 import site from "./site.ts";
 
-const CACHE_FILE = join(Deno.cwd(), "_cache", "webmentions_store.json");
+// A missing .env is normal in CI, where the variables come from the environment.
+try {
+  process.loadEnvFile();
+} catch { /* no .env */ }
+
+const CACHE_FILE = join(process.cwd(), "_cache", "webmentions_store.json");
 const API = "https://webmention.io/api/mentions.jf2";
 const USER_AGENT = "ege.celikci.me/1.0 (ege@celikci.me)";
 
@@ -62,7 +66,7 @@ async function getWebmentionsData(): Promise<WebmentionFeed> {
     stored = empty;
   }
 
-  const token = Deno.env.get("WEBMENTION_IO_TOKEN");
+  const token = process.env.WEBMENTION_IO_TOKEN;
   if (!token || !site.host) {
     console.warn("[webmentions] ⚠️ No token configured, using the cache");
     return stored;

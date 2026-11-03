@@ -1,4 +1,5 @@
-import { log } from "lume/core/utils/log.ts";
+import { execFileSync } from "node:child_process";
+import { log } from "@lumeland/core/utils/log.ts";
 
 export default function () {
   return (site: Lume.Site) => {
@@ -59,19 +60,18 @@ function countCommits(root: string): Map<string, number> {
   return counts;
 }
 
-const decoder = new TextDecoder();
-
 function gitCommand(...args: string[]): string {
-  const { code, stderr, stdout } = new Deno.Command("git", {
-    args,
-    stdout: "piped",
-    stderr: "piped",
-  }).outputSync();
-
-  if (code !== 0) {
-    log.error(`[edited plugin] Git error: ${decoder.decode(stderr)}`);
+  try {
+    return execFileSync("git", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    }).trim();
+  } catch (error) {
+    log.error(
+      `[edited plugin] Git error: ${
+        (error as { stderr?: string }).stderr ?? error
+      }`,
+    );
     return "";
   }
-
-  return decoder.decode(stdout).trim();
 }

@@ -1,3 +1,7 @@
+import { createReadStream } from "node:fs";
+import { Readable } from "node:stream";
+import { imageDimensionsFromStream } from "image-dimensions";
+
 import { type MdastNode, parseMarkdown, walk } from "../../lib/mdast.ts";
 
 export interface PostImage {
@@ -65,9 +69,9 @@ export async function probeLocalImageSize(
 
   let size: ImageDimensions | undefined;
   try {
-    const { imageDimensionsFromStream } = await loadImageDimmensions();
-    using file = await Deno.open(path, { read: true });
-    const dims = await imageDimensionsFromStream(file.readable);
+    const dims = await imageDimensionsFromStream(
+      Readable.toWeb(createReadStream(path)) as ReadableStream<Uint8Array>,
+    );
     if (dims) size = { width: dims.width, height: dims.height };
   } catch {
     size = undefined;
@@ -102,14 +106,6 @@ const IMG_REGEX_SRC =
 
 /** Single sticky instance; `lastIndex` is set before every `exec`. */
 const IMG_REGEX_STICKY = new RegExp(IMG_REGEX_SRC.source, "y");
-
-/** Lazily-loaded dimension reader, memoized across probes. */
-type ImageDimmensions = typeof import("lume/deps/image_dimmensions.ts");
-let imageDimmensions: ImageDimmensions | undefined;
-
-async function loadImageDimmensions(): Promise<ImageDimmensions> {
-  return imageDimmensions ??= await import("lume/deps/image_dimmensions.ts");
-}
 
 /**
  * Images extracted from note Markdown plus the source ranges they

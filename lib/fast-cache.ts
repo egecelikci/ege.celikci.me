@@ -1,4 +1,4 @@
-import Cache, { type Options } from "lume/core/cache.ts";
+import Cache, { type Options } from "@lumeland/core/cache.ts";
 import { createHash } from "node:crypto";
 import { posix } from "node:path";
 

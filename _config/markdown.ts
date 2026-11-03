@@ -1,4 +1,4 @@
-import remark from "lume/plugins/remark.ts";
+import remark from "@lumeland/plugin-remark";
 import rehypeShiki from "@shikijs/rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";

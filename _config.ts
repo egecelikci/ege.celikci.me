@@ -1,4 +1,5 @@
-import lume from "lume/mod.ts";
+import lume from "@lumeland/lume";
+import { spawn } from "node:child_process";
 import config from "./_config/index.ts";
 import FastCache from "./lib/fast-cache.ts";
 import registerPreprocessors from "./plugins/preprocessors/index.ts";
@@ -24,26 +25,33 @@ site.use(config());
 /** Preprocessors */
 registerPreprocessors(site);
 
-const runFetch = async (script: string, label: string) => {
-  // Deno.execPath() is the deno running this build, which a bare "deno" on PATH may not be (mise, NixOS).
-  const cmd = new Deno.Command(Deno.execPath(), {
-    args: [
-      "run",
-      "--allow-net",
-      "--allow-read",
-      "--allow-write",
-      "--allow-env",
-      "--allow-ffi",
-      "--allow-run",
-      script,
-    ],
-    stdout: "inherit",
-    stderr: "inherit",
+/** Run a command with inherited output and resolve with its exit code. */
+function run(command: string, args: string[], env?: NodeJS.ProcessEnv) {
+  return new Promise<number | null>((resolve, reject) => {
+    const child = spawn(command, args, {
+      stdio: "inherit",
+      env: { ...process.env, ...env },
+    });
+    child.on("error", reject);
+    child.on("exit", resolve);
   });
-  const status = await cmd.spawn().status;
-  if (!status.success) {
+}
+
+const runFetch = async (script: string, label: string) => {
+  // The data jobs still run on Deno; `DENO` overrides the binary when PATH has none (mise, NixOS).
+  const code = await run(process.env.DENO ?? "deno", [
+    "run",
+    "--allow-net",
+    "--allow-read",
+    "--allow-write",
+    "--allow-env",
+    "--allow-ffi",
+    "--allow-run",
+    script,
+  ]).catch(() => null);
+  if (code !== 0) {
     console.warn(
-      `[${label}] exited with code ${status.code} — building with cached data.`,
+      `[${label}] exited with code ${code} — building with cached data.`,
     );
   }
 };
@@ -63,16 +71,12 @@ site.addEventListener("beforeBuild", () => {
 
 /** Service Worker generation (bundled + precache manifest injected) */
 site.addEventListener("afterBuild", async () => {
-  const command = new Deno.Command(Deno.execPath(), {
-    args: ["run", "-A", "@serwist/cli", "build"],
-    env: { NODE_ENV: "production" },
-    stdout: "inherit",
-    stderr: "inherit",
+  const code = await run("npx", ["--no-install", "serwist", "build"], {
+    NODE_ENV: "production",
   });
-  const status = await command.spawn().status;
   // A stale or missing sw.js would serve old pages offline, so a failed bundle fails the build.
-  if (!status.success) {
-    throw new Error(`service worker build exited with code ${status.code}`);
+  if (code !== 0) {
+    throw new Error(`service worker build exited with code ${code}`);
   }
 });
 

@@ -1,5 +1,5 @@
-import "lume/types.ts";
-import type Searcher from "lume/core/searcher.ts";
+import "@lumeland/core/types.ts";
+import type Searcher from "@lumeland/core/searcher.ts";
 import type {
   EnrichedIzmirEvents,
   EnrichedMBEvent,

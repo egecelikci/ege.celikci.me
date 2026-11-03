@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 const README_PATH = new URL("../../README.md", import.meta.url);
 
 const section = (title: string, readme: string): string => {
@@ -5,7 +7,7 @@ const section = (title: string, readme: string): string => {
   return part ? part.slice(title.length + 1).trim() : "";
 };
 
-const readme = await Deno.readTextFile(README_PATH);
+const readme = await readFile(README_PATH, "utf8");
 
 export default {
   license: section("license", readme),

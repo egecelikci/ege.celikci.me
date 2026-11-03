@@ -18,7 +18,7 @@ prose: false
   follow.
 {{ /set }}
 
-{{ intro |> md |> safe }}
+{{ intro |> mdRemark |> safe }}
 
 <div class="miniflux-index">
   {{ for index, item of miniflux }}

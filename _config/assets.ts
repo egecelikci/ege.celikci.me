@@ -1,11 +1,11 @@
-import esbuild from "lume/plugins/esbuild.ts";
-import icons from "lume/plugins/icons.ts";
-import inline from "lume/plugins/inline.ts";
-import lightningcss from "lume/plugins/lightningcss.ts";
-import picture from "lume/plugins/picture.ts";
-import sass from "lume/plugins/sass.ts";
-import svgo from "lume/plugins/svgo.ts";
-import transformImages from "lume/plugins/transform_images.ts";
+import esbuild from "@lumeland/plugin-esbuild";
+import icons from "@lumeland/plugin-icons";
+import inline from "@lumeland/plugin-inline";
+import lightningcss from "@lumeland/plugin-lightningcss";
+import picture from "@lumeland/plugin-picture";
+import sass from "@lumeland/plugin-sass";
+import svgo from "@lumeland/plugin-svgo";
+import transformImages from "@lumeland/plugin-transform-images";
 import { MOTIF_SHA } from "./metadata.ts";
 import { isProduction } from "../lib/env.ts";
 
@@ -42,7 +42,7 @@ export default function () {
           chunkNames: "assets/scripts/chunks/[name]-[hash]",
           define: {
             "process.env.MODE": JSON.stringify(
-              Deno.env.get("MODE") || "development",
+              process.env.MODE || "development",
             ),
           },
         },
@@ -74,7 +74,7 @@ export default function () {
       .use(picture())
       .use(transformImages())
       /** Palette partial, so `utils/_variables.scss` can `@use "motif"`. A local file at the same path wins over this remote fallback.*/
-      .remoteFile(
+      .remote(
         "assets/styles/utils/_motif.scss",
         `https://cdn.jsdelivr.net/gh/egecelikci/motif@${MOTIF_SHA}/website/_motif.scss`,
       )
