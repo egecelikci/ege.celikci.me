@@ -16,4 +16,4 @@ src/assets/images/88x31/**.png !filter !diff !merge
 *.ttf !filter !diff !merge
 
 # Tiny test fixtures; small enough to keep out of LFS so tests run on any clone
-utils/preprocessors/fixtures/** -text !filter !diff !merge
+plugins/preprocessors/fixtures/** -text !filter !diff !merge
