@@ -3,7 +3,6 @@
   A container for content with consistent styling.
 #}}
 {{- set tag = it.href ? "a" : "div" -}}
-<!-- deno-fmt-ignore -->
 <{{ tag }}{{ if it.href }}
   href="{{ it.href }}"{{ /if }} class="ledger-card {{ it.classes || "" }}"{{
   it.attributes
