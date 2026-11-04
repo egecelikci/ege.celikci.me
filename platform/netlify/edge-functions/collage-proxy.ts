@@ -121,6 +121,7 @@ export default async (req: Request): Promise<Response> => {
   /**
    * SOURCE: cover
    * Proxy Cover Art Archive and Last.fm covers, so the worker only ever talks to this origin.
+   * Cover Art Archive allows CORS, but it answers in 2–3 s through two redirects; a cached proxy response takes ~0.3 s. Netlify caches per edge node, so early repeats can still miss until each node has the cover.
    */
   if (source === "cover") {
     const upstream = coverUpstream(url.searchParams);
