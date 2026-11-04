@@ -1,0 +1,7 @@
+# Install scripts stay off: esbuild ships its binary as a package, and the watcher is only for `--serve`.
+allowBuilds:
+  "@parcel/watcher": false
+  esbuild: false
+# pnpm installs only versions published at least a day ago; Lume releases are exempt so fixes land right away.
+minimumReleaseAgeExclude:
+  - "@lumeland/*"

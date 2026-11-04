@@ -1,7 +1,7 @@
 #!/bin/sh
 # @file pre-commit
-# @brief Runs the same checks as `npm run ci` before a commit, fastest first.
-# @description Install with `npm run hooks`; skip once with `git commit --no-verify` or `SKIP_CHECKS=1`.
+# @brief Runs the same checks as `pnpm run ci` before a commit, fastest first.
+# @description Install with `pnpm run hooks`; skip once with `git commit --no-verify` or `SKIP_CHECKS=1`.
 # Content-only commits run the formatter check alone.
 set -u
 
@@ -16,19 +16,21 @@ fail() {
   exit 1
 }
 
-# Non-interactive shells (GUI clients, NixOS) often lack the mise-managed npm on PATH.
-if ! command -v npm >/dev/null 2>&1; then
-  if command -v mise >/dev/null 2>&1 && npm_path=$(mise which npm 2>/dev/null); then
-    PATH="$(dirname "$npm_path"):$PATH" && export PATH
+# Non-interactive shells (GUI clients, NixOS) often lack Homebrew or mise on PATH.
+if ! command -v pnpm >/dev/null 2>&1; then
+  if command -v mise >/dev/null 2>&1 && pnpm_path=$(mise which pnpm 2>/dev/null); then
+    PATH="$(dirname "$pnpm_path"):$PATH" && export PATH
+  elif [ -x /opt/homebrew/bin/pnpm ]; then
+    PATH="/opt/homebrew/bin:$PATH" && export PATH
   else
-    fail "npm not found on PATH"
+    fail "pnpm not found on PATH"
   fi
 fi
 
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
 [ -n "$staged" ] || exit 0
 
-code=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|mjs|vto|jsonc?|scss)$|^(package\.json|package-lock\.json|tsconfig\.json|\.oxfmtrc\.json|\.oxlintrc\.json|netlify\.toml)$' || true)
+code=$(printf '%s\n' "$staged" | grep -E '\.(ts|tsx|js|mjs|vto|jsonc?|scss)$|^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|tsconfig\.json|\.oxfmtrc\.json|\.oxlintrc\.json|netlify\.toml)$' || true)
 
 # The checks read the working tree, so a half-staged file would be checked in a state that is not being committed.
 if [ -n "$code" ]; then
@@ -39,11 +41,11 @@ $partial"
   fi
 fi
 
-# @description Run one npm script, aborting the commit when it fails.
+# @description Run one package script, aborting the commit when it fails.
 # @arg $1 string The script name.
 run() {
   printf '› %s\n' "$1" >&2
-  npm run --silent "$1" || fail "$1 failed"
+  pnpm run --silent "$1" || fail "$1 failed"
 }
 
 run fmt:check

@@ -1,11 +1,11 @@
 [build]
 # Node comes from .node-version, which Netlify reads before installing dependencies and running its own build process and plugins.
-command = "npm run ci && npm run build"
+command = "pnpm run ci && pnpm run build"
 publish = "dist"
 edge_functions = "platform/netlify/edge-functions"
 
 [dev]
-command = "npm run serve"
+command = "pnpm run serve"
 targetPort = 3000
 port = 8888
 framework = "#custom"

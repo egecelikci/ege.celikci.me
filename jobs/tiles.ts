@@ -3,7 +3,7 @@
  *
  * @example
  * ```sh
- * npm run tiles
+ * pnpm run tiles
  * ```
  * @module
  */
