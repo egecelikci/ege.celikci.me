@@ -2,6 +2,7 @@
  * Logic for the album collage generator tool.
  */
 
+import { collageApiUrl } from "../../../../lib/collage-api.ts";
 import {
   type Album,
   parseCollageOptions,
@@ -247,15 +248,14 @@ export function initCollageTool(defaultUsername: string) {
         updateStatus(`Using ${albums.length} albums already loaded`);
       } else {
         updateStatus("fetching stats from service");
-        const query = new URLSearchParams({
-          source: currentSource,
-          user,
-          period: periodSelect.value,
-        });
         // A new run makes the previous request pointless; abort it instead of letting it finish.
         statsRequest?.abort();
         statsRequest = new AbortController();
-        const res = await fetch(`/api/collage-proxy?${query}`, {
+        const statsUrl = collageApiUrl(currentSource, {
+          user,
+          period: periodSelect.value,
+        });
+        const res = await fetch(statsUrl, {
           signal: statsRequest.signal,
         });
         const data = await res.json().catch(() => null);

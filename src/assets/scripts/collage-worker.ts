@@ -1,12 +1,12 @@
 /**
  * Collage Generator Worker (Architect Edition - Dynamic Layouts)
- * OffscreenCanvas-based rendering with Rust/WASM acceleration.
+ * OffscreenCanvas-based rendering; the pixel loop lives in `collage/kernel.ts`.
  *
  * Rendering pipeline (order matters):
  *   1. Fonts
  *   2. Layout + cover fetching
  *   3. Color sampling + thermal clamping
- *   4. WASM background render → putImageData
+ *   4. Kernel background render → putImageData
  *   5. JS style overlays (velvet/silver tints, terminal phosphor, vignette)
  *   6. Glass blur [OPTIONAL] — applied to background layer only, before covers
  *   7. Grid tiles (covers — always sharp, never tinted)
@@ -16,6 +16,7 @@
  *  11. Encode to JPEG
  */
 
+import { collageApiUrl } from "../../../lib/collage-api.ts";
 import { renderBackground } from "./collage/kernel.ts";
 import { FALLBACK_COLOR, type Rgb, vibrantColor } from "./collage/color.ts";
 import { calculateLayout, gridCoordinates, MARGIN } from "./collage/layout.ts";
@@ -80,7 +81,7 @@ async function fetchCover(
   /** The proxy URL the stats came with first, then the release group's front cover. */
   const candidates = [
     album.img,
-    album.mbid && `/api/collage-proxy?source=cover&mbid=${album.mbid}`,
+    album.mbid && collageApiUrl("cover", { mbid: album.mbid }),
   ].filter((url): url is string => !!url);
 
   for (const url of candidates) {
@@ -120,11 +121,7 @@ function transformText(text: string, casing: TextCase): string {
 
 async function loadFont(family: string, weight = "400") {
   try {
-    const res = await fetch(
-      `/api/collage-proxy?source=font&family=${encodeURIComponent(
-        family,
-      )}&weight=${weight}`,
-    );
+    const res = await fetch(collageApiUrl("font", { family, weight }));
     if (!res.ok) {
       console.error(
         `[worker] font proxy error ${res.status}: ${family} w${weight}`,

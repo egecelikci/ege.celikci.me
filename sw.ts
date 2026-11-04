@@ -5,7 +5,12 @@
  */
 
 import { CacheFirst, ExpirationPlugin, NetworkFirst, Serwist } from "serwist";
-import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
+import type {
+  PrecacheEntry,
+  SerwistGlobalConfig,
+  SerwistPlugin,
+} from "serwist";
+import { COLLAGE_API } from "./lib/collage-api.ts";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -14,6 +19,22 @@ declare global {
 }
 
 declare const self: WorkerGlobalScope;
+
+/**
+ * Cache a response only when it has the content type the route expects.
+ * Netlify's edge once answered cover URLs with stats JSON; a cache-first route would have kept serving that for a year.
+ */
+const onlyContentTypes = (...prefixes: string[]): SerwistPlugin => ({
+  cacheWillUpdate: async ({ response }) => {
+    const type = response.headers.get("Content-Type") ?? "";
+    return response.ok && prefixes.some((p) => type.startsWith(p))
+      ? response
+      : null;
+  },
+});
+
+/** Runtime caches renamed to drop entries stored before the content type check. */
+const RETIRED_CACHES = ["collage-covers-v1", "collage-api-v1"];
 
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
@@ -44,12 +65,11 @@ const serwist = new Serwist({
       }),
     },
     {
-      matcher: ({ url }) =>
-        url.pathname === "/api/collage-proxy" &&
-        url.searchParams.get("source") === "cover",
+      matcher: ({ url }) => url.pathname.startsWith(`${COLLAGE_API}/cover/`),
       handler: new CacheFirst({
-        cacheName: "collage-covers-v1",
+        cacheName: "collage-covers-v2",
         plugins: [
+          onlyContentTypes("image/"),
           new ExpirationPlugin({
             maxEntries: 500,
             maxAgeSeconds: 365 * 24 * 60 * 60,
@@ -58,13 +78,12 @@ const serwist = new Serwist({
       }),
     },
     {
-      matcher: ({ url }) =>
-        url.pathname === "/api/collage-proxy" &&
-        url.searchParams.get("source") !== "cover",
+      matcher: ({ url }) => url.pathname.startsWith(`${COLLAGE_API}/`),
       handler: new NetworkFirst({
-        cacheName: "collage-api-v1",
+        cacheName: "collage-api-v2",
         networkTimeoutSeconds: 5,
         plugins: [
+          onlyContentTypes("application/json", "font/"),
           new ExpirationPlugin({
             maxEntries: 20,
             maxAgeSeconds: 60 * 60,
@@ -147,3 +166,6 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+// Idempotent, so running it on every worker start is cheaper than wiring an activate handler.
+void Promise.all(RETIRED_CACHES.map((name) => caches.delete(name)));

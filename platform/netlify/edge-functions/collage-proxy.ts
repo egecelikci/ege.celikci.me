@@ -4,6 +4,12 @@
  * all from a single Netlify Edge Function to avoid CORS and API key exposure.
  */
 
+import {
+  COLLAGE_API,
+  collageApiParams,
+  collageApiUrl,
+} from "../../../lib/collage-api.ts";
+
 /** The runtime global Netlify documents for edge functions, so this file needs no Deno types. */
 declare const Netlify: { env: { get(name: string): string | undefined } };
 
@@ -51,7 +57,7 @@ const LASTFM_COVER = /^[0-9a-f]{32}\.(?:png|jpe?g|gif|webp)$/;
 function proxiedLastfmCover(img: string | undefined): string | undefined {
   const file = img?.split("/").pop() ?? "";
   return LASTFM_COVER.test(file)
-    ? `/api/collage-proxy?source=cover&lfm=${file}`
+    ? collageApiUrl("cover", { lfm: file })
     : undefined;
 }
 
@@ -99,7 +105,8 @@ function jsonError(message: string, status: number): Response {
  * function. The route lives here rather than in `netlify.toml` so the two stay together.
  */
 export const config = {
-  path: "/api/collage-proxy",
+  // The bare path still serves the query string form to pages opened before the switch.
+  path: [COLLAGE_API, `${COLLAGE_API}/*`],
   cache: "manual",
 };
 
@@ -107,10 +114,11 @@ export default async (req: Request): Promise<Response> => {
   // Only the same-origin collage tool calls this, so no CORS headers: other sites' pages cannot read the responses and spend the API quota.
   if (req.method !== "GET") return jsonError("Method not allowed", 405);
 
-  const url = new URL(req.url);
-  const source = url.searchParams.get("source") ?? "lb";
-  const user = url.searchParams.get("user");
-  const period = url.searchParams.get("period") ?? "week";
+  const params = collageApiParams(new URL(req.url));
+  if (!params) return jsonError("Malformed request path", 400);
+  const source = params.get("source") ?? "lb";
+  const user = params.get("user");
+  const period = params.get("period") ?? "week";
   if (source === "lb" && !LISTENBRAINZ_RANGES.has(period)) {
     return jsonError(`Unknown ListenBrainz range: ${period}`, 400);
   }
@@ -124,7 +132,7 @@ export default async (req: Request): Promise<Response> => {
    * Cover Art Archive allows CORS, but it answers in 2–3 s through two redirects; a cached proxy response takes ~0.3 s. Netlify caches per edge node, so early repeats can still miss until each node has the cover.
    */
   if (source === "cover") {
-    const upstream = coverUpstream(url.searchParams);
+    const upstream = coverUpstream(params);
     if (!upstream) return jsonError("Valid cover id required", 400);
 
     try {
@@ -160,8 +168,8 @@ export default async (req: Request): Promise<Response> => {
    * Uses a modern UA to receive WOFF2, with fallback to weight-less and any-weight.
    */
   if (source === "font") {
-    const family = url.searchParams.get("family");
-    const weight = url.searchParams.get("weight") ?? "400";
+    const family = params.get("family");
+    const weight = params.get("weight") ?? "400";
 
     if (!family) return jsonError("Font family required", 400);
     // Interpolated into a Google Fonts query, so anything beyond a family name would inject parameters.
@@ -325,7 +333,10 @@ export default async (req: Request): Promise<Response> => {
           // ListenBrainz names the exact cover image, which skips the release-group lookup and redirect.
           img:
             a.caa_release_mbid && a.caa_id
-              ? `/api/collage-proxy?source=cover&release=${a.caa_release_mbid}&caa=${a.caa_id}`
+              ? collageApiUrl("cover", {
+                  release: String(a.caa_release_mbid),
+                  caa: String(a.caa_id),
+                })
               : undefined,
         }));
     } else {
