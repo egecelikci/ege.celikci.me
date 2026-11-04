@@ -12,8 +12,8 @@ This page will be a living documentation of how site is built and what are the c
 
 ## tech stack
 
-- **runtime:** [Deno](https://deno.com/)
-- **ssg:** [Lume](https://lume.deno.dev/)
+- **runtime:** [Node](https://nodejs.org/)
+- **ssg:** [Lume](https://lume.land/)
 - **templating:** [Vento](https://vento.js.org/)
 - **styling:** [Sass](https://sass-lang.com/)
 - **palette:** [Motif](/motif/)
