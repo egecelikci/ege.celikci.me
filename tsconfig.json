@@ -28,6 +28,7 @@
     "tools/",
     "src/",
     "platform/netlify/",
-    "serwist.config.js"
+    "serwist.config.js",
+    "e2e/"
   ]
 }

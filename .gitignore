@@ -17,3 +17,6 @@ _reports/
 
 # `netlify dev` runs edge functions on its own Deno and writes a lockfile here
 deno.lock
+
+# Playwright run output
+test-results/

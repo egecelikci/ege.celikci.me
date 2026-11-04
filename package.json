@@ -9,7 +9,9 @@
     "fmt:check": "oxfmt --check",
     "lint": "oxlint --deny-warnings",
     "check": "tsc -p .",
-    "test": "node --test lib/ plugins/ jobs/ src/assets/scripts/",
+    "test": "node --test lib/ plugins/ jobs/ src/assets/scripts/ tools/",
+    "test:e2e": "MODE=development lume build && playwright test -c e2e",
+    "smoke:collage": "node tools/smoke-collage-proxy.ts",
     "ci": "pnpm run fmt:check && pnpm run lint && pnpm run check && pnpm run test",
     "deploy": "pnpm run ci && pnpm run build && netlify deploy --prod",
     "hooks": "node tools/install-hooks.ts",
@@ -71,6 +73,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^26.0.0",
     "oxfmt": "0.75.0",
